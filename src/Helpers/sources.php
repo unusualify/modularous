@@ -186,16 +186,16 @@ if (! function_exists('get_modularity_navigation_config')) {
             }
         }
 
-        $sidebarConfigKey = 'modularity-navigation.sidebar.' . $sidebarKey;
-        $profileMenuConfigKey = 'modularity-navigation.profileMenu.' . $profileMenuKey;
-        $sidebarBottomConfigKey = 'modularity-navigation.sidebarBottom.' . $sidebarBottomKey;
+        $sidebarConfigKey = 'modularity.navigation.sidebar.' . $sidebarKey;
+        $profileMenuConfigKey = 'modularity.navigation.profileMenu.' . $profileMenuKey;
+        $sidebarBottomConfigKey = 'modularity.navigation.sidebarBottom.' . $sidebarBottomKey;
 
         $navigation = [
             'current_url' => url()->current(),
-            'sidebar' => array_values(Navigation::formatSidebarMenu(config($sidebarConfigKey, []))),
+            'sidebar' => array_values(Navigation::formatSidebarMenu(config($sidebarConfigKey, config('modularity-navigation.sidebar.' . $sidebarKey, [])))),
             'breadcrumbs' => [],
-            'profileMenu' => array_values(Navigation::formatSidebarMenu(config($profileMenuConfigKey, []))),
-            'sidebarBottom' => array_values(Navigation::formatSidebarMenu(config($sidebarBottomConfigKey, []))),
+            'profileMenu' => array_values(Navigation::formatSidebarMenu(config($profileMenuConfigKey, config('modularity-navigation.profileMenu.' . $profileMenuKey, [])))),
+            'sidebarBottom' => array_values(Navigation::formatSidebarMenu(config($sidebarBottomConfigKey, config('modularity-navigation.sidebarBottom.' . $sidebarBottomKey, [])))),
         ];
 
         return $navigation;

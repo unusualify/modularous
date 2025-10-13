@@ -45,7 +45,7 @@ final class LaravelServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/publishes/publish.php' => config_path(modularityBaseKey() . '.php'),
-            __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularityBaseKey() . '-navigation.php'),
+            // __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularityBaseKey() . '-navigation.php'),
             __DIR__ . '/../config/publishes/activitylog.php' => config_path('activitylog.php'),
             // __DIR__ . '/../config/publishes/geoip.php' => config_path('geoip.php'),
             __DIR__ . '/../config/publishes/modules.php' => config_path('modules.php'),

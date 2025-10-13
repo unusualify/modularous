@@ -42,7 +42,43 @@ class ModularityProvider extends ServiceProvider
     {
         // Has to be merged after routeServiceProvider registered
         if (exceptionalRunningInConsole()) {
-            $this->mergeConfigFrom(__DIR__ . '/../../config/navigation.php', modularityBaseKey() . '-navigation');
+            // $this->mergeConfigFrom(__DIR__ . '/../../config/navigation.php', modularityBaseKey() . '-navigation');
+            $this->booted(function () {
+
+                foreach (glob(__DIR__ . '/../../config/defers/*.php') as $path) {
+                    extract(pathinfo($path)); // $filename
+                    $this->mergeConfigFrom($path, $this->baseKey . ".{$filename}");
+                }
+
+                $newNavigationExists = false;
+
+                foreach (glob(base_path('modularity/*.php')) as $path) {
+                    extract(pathinfo($path)); // $filename
+                    // $this->mergeConfigFrom($path, $this->baseKey . ".{$filename}",);
+
+                    if ($filename === 'navigation') {
+                        $newNavigationExists = true;
+                    }
+
+                    $modularityConfigPart = $this->app->config->get($this->baseKey . ".{$filename}");
+                    $newConfigPart = require $path;
+
+                    if (! $this->app->config->get($this->baseKey . ".{$filename}", false)) {
+                        continue;
+                    }
+
+                    $this->app->config->set($this->baseKey . ".{$filename}", array_merge_recursive_preserve($modularityConfigPart, $newConfigPart));
+                }
+
+                /**
+                 * @deprecated 10.0.0 Remove this after 10.0.0 release
+                 *
+                 * @uses modularity/navigation.php instead
+                 */
+                if (! $newNavigationExists) {
+                    $this->app->config->set("{$this->baseKey}.navigation", array_merge_recursive_preserve($this->app->config->get("{$this->baseKey}.navigation"), $this->app->config->get("{$this->baseKey}-navigation", [])));
+                }
+            });
         }
     }
 
