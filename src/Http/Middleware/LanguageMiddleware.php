@@ -40,6 +40,10 @@ class LanguageMiddleware
             $locale = config('translatable.locales')[0];
         }
 
+        if($locale !== 'en' && \Illuminate\Support\Facades\Route::currentRouteName() == 'languages.translations.index'){
+            $locale = 'en';
+        }
+
         config([modularityBaseKey() . '.locale' => $locale]);
         config([modularityBaseKey() . '.timezone' => auth()->user()->timezone ?? 'Europe/London']);
 
