@@ -179,11 +179,18 @@ trait HasTranslation
      * @param string $key
      * @return Illuminate\Support\Collection
      */
-    public function translatedAttribute($key)
+    public function translatedAttribute($key, $locale = null)
     {
-        return $this->translations->mapWithKeys(function ($translation) use ($key) {
+        $translations = $this->translations->mapWithKeys(function ($translation) use ($key) {
             return [$translation->locale => $this->translate($translation->locale)->$key];
         });
+
+        if ($locale) {
+            // get first translation if not found
+            return $translations[$locale] ?? $translations->first() ?? null;
+        }
+
+        return $translations;
     }
 
     /**
