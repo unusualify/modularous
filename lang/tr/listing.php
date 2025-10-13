@@ -4,6 +4,30 @@ return [
     'add-new-button' => 'Yeni Ekle',
     'bulk-actions' => 'Toplu Eylemler',
     'bulk-clear' => 'Temizle',
+    'bulk-delete' => [
+        'error' => ':modelTitle öğeleri çöp kutusuna taşınamadı. Bir hata oluştu!',
+        'success' => ':modelTitle öğeleri çöp kutusuna taşındı!',
+    ],
+    'bulk-featured' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Öne Çıkanlara Eklenemedi.',
+        'featured' => ':modelTitle Öne Çıkanlara Eklendi.',
+        'unfeatured' => ':modelTitle Öne Çıkanlardan Kaldırıldı.',
+    ],
+    'bulk-force-delete' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Tamamen Silinemedi.',
+        'success' => ':modelTitle Tamamen Silindi!',
+    ],
+    'bulk-publish' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Yayından Kaldırılamadı.',
+        'published' => ':modelTitle Yayınlandı.',
+        'unpublished' => ':modelTitle Yayından Kaldırıldı.',
+    ],
+    'bulk-restore' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Kurtarılamadı.',
+        'success' => ':modelTitle Kurtarıldı!',
+    ],
+    'bulk-selected-item' => 'Öğe Seçildi',
+    'bulk-selected-items' => 'Öğe Seçildi',
     'columns' => [
         'featured' => 'Öne Çıkan',
         'name' => 'İsim',
@@ -11,6 +35,11 @@ return [
         'show' => 'Göster',
         'thumbnail' => 'Küçük Resim',
     ],
+    'delete' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Çöp Kutusuna Taşınamadı.',
+        'success' => ':modelTitle Çöp Kutusuna Taşındı!',
+    ],
+    'delete-superadmin-error' => 'Superadmin kaldırılamaz!',
     'dialogs' => [
         'delete' => [
             'confirm' => 'Sil',
@@ -30,91 +59,59 @@ return [
         'destroy' => 'Tamamen Sil',
         'duplicate' => 'Çoğalt',
         'edit' => 'Düzenle',
-        'publish' => 'Yayınla',
         'feature' => 'Öne Çıkar',
+        'publish' => 'Yayınla',
         'restore' => 'Kurtar',
         'unfeature' => 'Öne Çıkarma',
         'unpublish' => 'Yayından Kaldır',
     ],
+    'duplicate' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Çoğaltılamadı.',
+        'success' => ':modelTitle Çoğaltıldı.',
+    ],
+    'featured' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Öne Çıkanlara Eklenemedi.',
+        'featured' => ':modelTitle Öne Çıkanlara Eklendi.',
+        'unfeatured' => ':modelTitle Öne Çıkanlardan Kaldırıldı.',
+    ],
     'filter' => [
         'all-items' => 'Tüm İçerikler',
+        'authorized' => 'Yetkili',
+        'completed-assignments' => 'Tamamlanan Görevler',
         'draft' => 'Taslak',
         'mine' => 'Benim Eklediklerim',
+        'my-assignments' => 'Görevlerim',
+        'pending-assignments' => 'Bekleyen Görevler',
         'published' => 'Yayınlanan',
+        'team-completed-assignments' => 'Ekip Tarafından Tamamlanan Görevler',
+        'team-pending-assignments' => 'Ekip Tarafından Bekleyen Görevler',
         'trash' => 'Çöp',
-
-        'authorized' => 'Yetkili',
         'unauthorized' => 'Yetkisiz',
         'your-authorizations' => 'Yetkileriniz',
-
-        'my-assignments' => 'Görevlerim',
-        'your-role-assignments' => 'Ekip Görevleri',
-
-        'completed-assignments' => 'Tamamlanan Görevler',
-        'pending-assignments' => 'Bekleyen Görevler',
-
         'your-completed-assignments' => 'Tamamladığınız Görevler',
-        'team-completed-assignments' => 'Ekip Tarafından Tamamlanan Görevler',
         'your-pending-assignments' => 'Bekleyen Görevleriniz',
-        'team-pending-assignments' => 'Ekip Tarafından Bekleyen Görevler',
+        'your-role-assignments' => 'Ekip Görevleri',
+    ],
+    'force-delete' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Tamamen Silinemedi.',
+        'success' => ':modelTitle Tamamen Silindi!',
     ],
     'languages' => 'Diller',
     'listing-empty-message' => 'Henüz İçerik Eklenmemiş',
     'paginate' => [
         'rows-per-page' => 'Sayfa Başına Gösterilecek İçerik:',
     ],
-    'bulk-selected-item' => 'Öğe Seçildi',
-    'bulk-selected-items' => 'Öğe Seçildi',
+    'publish' => [
+        'error' => 'Bir Hata Meydana Geldi! :modelTitle Yayınlanamadı.',
+        'published' => ':modelTitle Yayındanlandı.',
+        'unpublished' => ':modelTitle Yayından Kaldırıldı.',
+    ],
     'reorder' => [
-        'success' => ':modelTitle Sıralama Değiştirildi.',
         'error' => 'Bir Hata Meydana Geldi! :modelTitle Sıralama Değiştirilemedi.',
+        'success' => ':modelTitle Sıralama Değiştirildi.',
     ],
     'restore' => [
-        'success' => ':modelTitle Kurtarıldı!',
         'error' => 'Bir Hata Meydana Geldi! :modelTitle Kurtarılamadı.',
-    ],
-    'bulk-restore' => [
         'success' => ':modelTitle Kurtarıldı!',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Kurtarılamadı.',
-    ],
-    'force-delete' => [
-        'success' => ':modelTitle Tamamen Silindi!',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Tamamen Silinemedi.',
-    ],
-    'bulk-force-delete' => [
-        'success' => ':modelTitle Tamamen Silindi!',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Tamamen Silinemedi.',
-    ],
-    'delete' => [
-        'success' => ':modelTitle Çöp Kutusuna Taşındı!',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Çöp Kutusuna Taşınamadı.',
-    ],
-    'bulk-delete' => [
-        'success' => ':modelTitle Çöp Kutusuna Taşındı!',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Çöp Kutusuna Taşınamadı.',
-    ],
-    'duplicate' => [
-        'success' => ':modelTitle Çoğaltıldı.',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Çoğaltılamadı.',
-    ],
-    'publish' => [
-        'unpublished' => ':modelTitle Yayından Kaldırıldı.',
-        'published' => ':modelTitle Yayındanlandı.',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Yayınlanamadı.',
-    ],
-    'featured' => [
-        'unfeatured' => ':modelTitle Öne Çıkanlardan Kaldırıldı.',
-        'featured' => ':modelTitle Öne Çıkanlara Eklendi.',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Öne Çıkanlara Eklenemedi.',
-    ],
-    'bulk-featured' => [
-        'unfeatured' => ':modelTitle Öne Çıkanlardan Kaldırıldı.',
-        'featured' => ':modelTitle Öne Çıkanlara Eklendi.',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Öne Çıkanlara Eklenemedi.',
-    ],
-    'bulk-publish' => [
-        'unpublished' => ':modelTitle Yayından Kaldırıldı.',
-        'published' => ':modelTitle Yayınlandı.',
-        'error' => 'Bir Hata Meydana Geldi! :modelTitle Yayından Kaldırılamadı.',
     ],
 ];
