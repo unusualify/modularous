@@ -125,7 +125,7 @@ trait ModelHelpers
 
     public function setStateablePreview(State $state)
     {
-        return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name')[app()->getLocale()]}</v-chip>";
+        return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
     }
 
     public function setStateablePreviewNull()
@@ -136,7 +136,7 @@ trait ModelHelpers
     public function setStateFormatted($state)
     {
         if ($state) {
-            return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name')[app()->getLocale()]}</v-chip>";
+            return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
         } else {
             return "<v-chip variant='text' color='grey' prepend-icon='mdi-alert-circle-outline'>" . __('No Status') . '</v-chip>';
         }
