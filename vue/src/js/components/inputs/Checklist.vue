@@ -94,14 +94,13 @@
                         </template>
                       </v-checkbox>
                       <ue-title v-else
-                        :text="group[`${itemTitle}`]"
+                        :text="group.title ?? group[`${itemTitle}`]"
                         type="body-1"
                         color="grey-darken-5"
                         weight="bold"
                         justify="space-between"
                         v-bind="{...groupExpandTitleProps, ...props}"
                       >
-                        <!-- {{ titleSerialized }} -->
                         <template v-slot:right>
                           <div class="d-flex align-center">
                             <v-icon
@@ -646,6 +645,7 @@
             const groupName = this.items[i][this.chunkField]
             const checklistTitle = this.items[i][this.chunkTitleKey]
             const item = this.items[i]
+
             if (Object.prototype.hasOwnProperty.call(groups, groupName)) {
               // if (__isset(groups[groupName].id)) delete groups[groupName].id
               groups[groupName].items.unshift({
@@ -655,6 +655,7 @@
             }else{
               groups[groupName] = {
                 name: this.$lodash.startCase(this.$lodash.camelCase(groupName)),
+                title: groupName,
                 items: [{
                   id: item.id,
                   // name: this.$lodash.startCase(this.$lodash.camelCase(checklistTitle))
@@ -679,6 +680,7 @@
 
                 groups[groupName] = {
                   name: this.$lodash.startCase(this.$lodash.camelCase(groupName)),
+                  title: groupName,
                   items: [{
                     id: this.items[i].id,
                     name: this.$lodash.startCase(this.$lodash.camelCase(checklistTitle))
