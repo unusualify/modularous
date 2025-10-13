@@ -49,7 +49,7 @@
                   class="d-flex w-100 align-center justify-center"
                 >
                   <v-divider />
-                  <div class="text-no-wrap px-3">or</div>
+                  <div class="text-no-wrap px-3">{{ $t('or') }}</div>
                   <v-divider />
                 </div>
 
