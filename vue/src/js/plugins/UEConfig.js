@@ -135,9 +135,6 @@ export default {
 
     // Global Vue mixin : Use global mixins sparsely and carefully!
     app.mixin({
-      mounted() {
-        console.log(this.$vuetify.locale)
-      },
       //   vuetify,
       //   i18n,
       methods: {
