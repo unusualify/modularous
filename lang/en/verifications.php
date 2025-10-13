@@ -10,10 +10,9 @@ return [
     | Email verification messages
     */
 
-    'success' => 'Registration has been completed successfully.',
+    'exists' => 'This email is already registered.',
     'sent' => 'We have emailed your email verification link.',
+    'success' => 'Registration has been completed successfully.',
     'throttled' => 'Please wait before retrying.',
     'token' => 'This email verification token is invalid.',
-    'exists' => 'This email is already registered.',
-
 ];
