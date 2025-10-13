@@ -1,6 +1,9 @@
 import pluralize from 'pluralize'
 import { upperFirst } from 'lodash-es'
 
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
+import { useI18n } from 'vue-i18n'
+
 import core from '@/core'
 // import VFormBase from 'vuetify-form-base';
 import VCustomFormBase from '__components/others/CustomFormBase.vue'
@@ -15,7 +18,8 @@ import DynamicModal from '__components/modals/DynamicModal.vue'
 import { MEDIA_LIBRARY } from '@/store/mutations'
 
 // Add-ons
-import vuetify from '@/plugins/vuetify'
+// import vuetify from '@/plugins/vuetify'
+import createModularityVuetify from '@/plugins/vuetify'
 import broadcasting from '@/plugins/broadcasting'
 import ModalService from '@/plugins/modalService'
 // Store
@@ -55,7 +59,6 @@ export default {
     //   return tag.startsWith('ue-')
     // }
 
-    app.use(vuetify)
     app.use(store)
     app.use(i18n)
     app.use(broadcasting)
@@ -70,6 +73,14 @@ export default {
     // set locale wrt user profile preference
     setI18nLocale(i18n, store.state.user.locale)
     loadLocaleMessages(i18n, window[import.meta.env.VUE_APP_NAME]?.ENDPOINTS.languages ?? '')
+
+    const vuetify = createModularityVuetify({
+      locale: {
+        adapter: createVueI18nAdapter({ i18n, useI18n }),
+      }
+    })
+    app.use(vuetify)
+
     // i18n.global.setDateTimeFormat('tr', 'Europe/Istanbul')
 
     // add Global methods to all components
@@ -124,6 +135,9 @@ export default {
 
     // Global Vue mixin : Use global mixins sparsely and carefully!
     app.mixin({
+      mounted() {
+        console.log(this.$vuetify.locale)
+      },
       //   vuetify,
       //   i18n,
       methods: {
