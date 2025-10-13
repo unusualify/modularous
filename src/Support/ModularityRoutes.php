@@ -11,6 +11,7 @@ use Unusualify\Modularity\Http\Middleware\CompanyRegistrationMiddleware;
 use Unusualify\Modularity\Http\Middleware\HostableMiddleware;
 use Unusualify\Modularity\Http\Middleware\ImpersonateMiddleware;
 use Unusualify\Modularity\Http\Middleware\LanguageMiddleware;
+use Unusualify\Modularity\Http\Middleware\LoadLocalizedConfig;
 use Unusualify\Modularity\Http\Middleware\LogMiddleware;
 use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
 use Unusualify\Modularity\Http\Middleware\RedirectIfAuthenticatedMiddleware;
@@ -115,11 +116,13 @@ class ModularityRoutes
 
         Route::aliasMiddleware('language', LanguageMiddleware::class);
         Route::aliasMiddleware('impersonate', ImpersonateMiddleware::class);
+        Route::aliasMiddleware('modularity.loadLocalizedConfig', LoadLocalizedConfig::class);
         Route::aliasMiddleware('navigation', NavigationMiddleware::class);
 
         Route::middlewareGroup('modularity.core', [
             'impersonate',
             'language',
+            'modularity.loadLocalizedConfig',
             'navigation',
             'inertia.middleware',
         ]);
