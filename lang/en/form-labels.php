@@ -26,6 +26,6 @@ return [
     'Surname' => 'Surname',
     'Tax ID' => 'Tax ID',
     'Timezone' => 'Timezone',
-    'VAT Number' => 'VAT Number',
+    'Vat Number' => 'Vat Number',
     'ZIP/Postal Code' => 'ZIP/Postal Code',
 ];
