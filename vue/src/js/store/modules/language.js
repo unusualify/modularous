@@ -72,6 +72,9 @@ const mutations = {
   },
   [LANGUAGE.RESET_LANGUAGES] (state) {
     state.all = state.initialAll
+  },
+  [LANGUAGE.SET_LANGUAGES] (state, newValue) {
+    state.all = newValue
   }
 }
 

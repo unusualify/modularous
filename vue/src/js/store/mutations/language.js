@@ -4,6 +4,7 @@ export const PUBLISH_LANG = 'updatePublishedLanguage'
 export const PUBLISH_SINGLE_LANG = 'publishLanguage'
 export const REPLACE_LANGUAGES = 'replaceLanguages'
 export const RESET_LANGUAGES = 'resetLanguages'
+export const SET_LANGUAGES = 'setLanguages'
 
 export default {
   SWITCH_LANG,
@@ -11,5 +12,6 @@ export default {
   PUBLISH_LANG,
   PUBLISH_SINGLE_LANG,
   REPLACE_LANGUAGES,
-  RESET_LANGUAGES
+  RESET_LANGUAGES,
+  SET_LANGUAGES
 }

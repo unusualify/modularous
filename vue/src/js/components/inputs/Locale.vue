@@ -147,6 +147,7 @@ export default {
           attributes.errorMessages = errorMessages[language.value]
           attributes.error = false
         }
+
         if (this.input) {
           attributes.modelValue = this.input[language.value]
         } else if (attributes.default) {
@@ -155,6 +156,7 @@ export default {
 
         localeAttributes[language.value] = attributes
       })
+
       // this.attributes.errorMessages = new Proxy({})
       return localeAttributes
     }

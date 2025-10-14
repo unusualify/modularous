@@ -33,9 +33,13 @@ trait ManageUtilities
             'endpoints' => $tableEndpoints,
         ] + $this->getViewLayoutVariables();
 
+        $eventualSchema = $this->filterSchemaByRoles($this->formSchema);
+
+        $translate = $this->routeHas('translations') || $this->hasTranslatedInput($eventualSchema);
+
         $options = [
             'moduleName' => $this->getHeadline($this->moduleName),
-            'translate' => $this->routeHas('translations') || $this->hasTranslatedInput(),
+            'translate' => $translate,
             'tableAttributes' => array_merge(
                 [
                     'rowActions' => $this->getTableRowActions(),
@@ -57,8 +61,10 @@ trait ManageUtilities
                     'isModuleTable' => true,
                     'defaultTableOptions' => $this->getDefaultTableOptions(),
 
-                    'formSchema' => $this->filterSchemaByRoles($this->formSchema),
+                    'formSchema' => $eventualSchema,
                     'endpoints' => $tableEndpoints,
+
+                    'languages' => getLanguagesForVueStore($eventualSchema, $translate)['all'] ?? [],
                 ],
                 ($this->isNested ? ['titlePrefix' => $this->nestedParentModel->getTitleValue() . ' \ '] : []),
                 array_merge_recursive_preserve(
@@ -126,9 +132,12 @@ trait ManageUtilities
         $itemId = $this->getItemIdentifier($item);
         $formAttributes = $this->formAttributes;
 
+        $eventualSchema = $this->filterSchemaByRoles($schema);
+        $translate = $this->routeHas('translations') || $this->hasTranslatedInput($eventualSchema);
+
         $data = [
             'model' => $item,
-            'translate' => $this->routeHas('translations') || $this->hasTranslatedInput(),
+            'translate' => $translate,
             'formAttributes' => array_merge([
                 'modelValue' => array_merge(
                     $item->toArray(),
@@ -144,7 +153,9 @@ trait ManageUtilities
                 // ...(($formAttributes['async'] ?? true) ? [] : ['actionUrl' => $this->getFormUrl($itemId)]),
                 'actionUrl' => $this->getFormUrl($itemId),
 
-                'schema' => $this->filterSchemaByRoles($schema),
+                'schema' => $eventualSchema,
+
+                'languages' => getLanguagesForVueStore($eventualSchema, $translate)['all'] ?? [],
             ], $formAttributes),
             'endpoints' => [
                 ((bool) $itemId ? 'update' : 'store') => $this->getFormUrl($itemId),

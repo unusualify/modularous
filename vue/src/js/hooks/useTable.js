@@ -9,6 +9,7 @@ import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import api from '@/store/api/datatable'
 
 import ACTIONS from '@/store/actions'
+import { LANGUAGE } from '@/store/mutations/index'
 
 import { getSubmitFormData } from '@/utils/getFormData.js'
 
@@ -200,6 +201,10 @@ export const makeTableProps = propsFactory({
     type: [String, Number],
     default: 'sm',
   },
+  languages: {
+    type: Array,
+    default: null,
+  },
 })
 
 // by convention, composable function names start with "use"
@@ -210,6 +215,10 @@ export default function useTable (props, context) {
   const store = useStore()
   const { smAndDown } = useDisplay()
   const { t, te, tm } = useI18n({ useScope: 'global' })
+
+  if(props.languages && _.isArray(props.languages) && props.languages.length > 0) {
+    store.commit(LANGUAGE.SET_LANGUAGES, props.languages)
+  }
 
   const editedIndex = ref(-1)
   let elements = ref(props.items ?? [])

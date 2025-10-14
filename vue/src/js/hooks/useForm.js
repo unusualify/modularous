@@ -3,11 +3,11 @@ import { ref, computed, watch, toRefs, reactive, nextTick, onMounted } from 'vue
 import { router } from '@inertiajs/vue3'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { cloneDeep, isEqual, find, reduce, set, get } from 'lodash-es'
+import { cloneDeep, isEqual, find, reduce, set, get, isArray } from 'lodash-es'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 
 import { useConfig, useInputHandlers, useValidation, useLocale, useItemActions, useAuthorization } from '@/hooks'
-import { ALERT } from '@/store/mutations/index'
+import { ALERT, LANGUAGE } from '@/store/mutations/index'
 import ACTIONS from '@/store/actions'
 import api from '@/store/api/form'
 import { getModel, getSubmitFormData, getSchema, getFormEventSchema, } from '@/utils/getFormData.js'
@@ -170,13 +170,21 @@ export const makeFormProps = propsFactory({
   reloadOnly: {
     type: Array,
     default: () => []
-  }
+  },
+  languages: {
+    type: Array,
+    default: null,
+  },
 })
 
 export default function useForm(props, context) {
   const store = useStore()
   const { t, te } = useI18n({ useScope: 'global' })
   const { shouldUseInertia } = useConfig()
+
+  if(props.languages && isArray(props.languages) && props.languages.length > 0) {
+    store.commit(LANGUAGE.SET_LANGUAGES, props.languages)
+  }
 
   // Composables
   const inputHandlers = useInputHandlers()
@@ -332,6 +340,7 @@ export default function useForm(props, context) {
       formLoading.value = true
 
       const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
+
       const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
 
       api[method](props.actionUrl, formData,

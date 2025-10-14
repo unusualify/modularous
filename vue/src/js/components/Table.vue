@@ -307,6 +307,7 @@
                   :schema="formSchema"
                   :subtitle="formSubtitle"
                   :isEditing="editedIndex > -1"
+                  :languages="languages"
                   :style="formModalBodyScope.isFullActive ? 'height: 95vh !important;' : 'height: 70vh !important;'"
                   :actions="formActions"
                   :actionUrl="editedIndex > -1 ? endpoints.update.replace(':id', editedItem.id) : endpoints.store"
@@ -490,6 +491,7 @@
                   no-default-form-padding
                   style="height: 80vh !important;"
                   v-bind="customFormAttributes"
+                  :languages="languages"
                 >
                   <!-- <template v-slot:header.right>
                     <v-btn class="ml-auto" variant="text" icon="$close" density="compact" color="deafult"
