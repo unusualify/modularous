@@ -9,7 +9,17 @@ import { useModule } from '@/hooks'
 import { useTableItem } from '@/hooks/table'
 
 export const makeTableNamesProps = propsFactory({
+  isModuleRoute: {
+    type: Boolean,
+    default: false
+  },
   name: {
+    type: String
+  },
+  moduleName: {
+    type: String
+  },
+  routeName: {
     type: String
   },
   customTitle: {
@@ -78,7 +88,7 @@ export default function useTableNames(props, context) {
   const Module = useModule(props, context)
 
   const transNameCountable = computed(() =>
-    t(`modules.${Module.snakeName.value}`, store.getters.totalElements)
+    t(Module.tableTranslationNotation.value, store.getters.totalElements)
   )
 
   // Titles

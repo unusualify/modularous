@@ -89,7 +89,7 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
             $langPath = base_path('lang/modules/' . $module->getLowerName());
 
             // Add lang paths to merge with laravel translations
-            $this->app['translator']->addPath($module->getDirectoryPath($lang_folder));
+            // $this->app['translator']->addPath($module->getDirectoryPath($lang_folder));
 
             if (is_dir($langPath)) {
                 $this->loadTranslationsFrom($langPath, $module->getLowerName());

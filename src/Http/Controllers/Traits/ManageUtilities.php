@@ -70,6 +70,9 @@ trait ManageUtilities
                 array_merge_recursive_preserve(
                     [
                         'name' => $this->getHeadline($this->routeName),
+                        'isModuleRoute' => true,
+                        'moduleName' => $this->getHeadline($this->moduleName),
+                        'routeName' => $this->routeName,
                         'titleKey' => $this->titleColumnKey,
                     ],
                     $tableAttributes,
@@ -135,6 +138,10 @@ trait ManageUtilities
         $eventualSchema = $this->filterSchemaByRoles($schema);
         $translate = $this->routeHas('translations') || $this->hasTranslatedInput($eventualSchema);
 
+        $moduleSnakeName = Str::snake($this->moduleName);
+        $snakeRouteName = Str::snake($this->routeName);
+        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}";
+
         $data = [
             'model' => $item,
             'translate' => $translate,
@@ -146,7 +153,7 @@ trait ManageUtilities
                 ),
                 'title' => __(((bool) $itemId
                     ? 'fields.edit-item'
-                    : 'fields.new-item'), ['item' => trans_choice('modules.' . snakeCase($this->routeName), 1)]
+                    : 'fields.new-item'), ['item' => trans_choice($translationRouteKey, 1)]
                 ),
                 'isEditing' => $itemId ? true : false,
                 'actions' => $this->getFormActions(),
@@ -211,8 +218,9 @@ trait ManageUtilities
     {
         $currentRoute = Route::current();
         $currentActionMethod = $currentRoute->getActionMethod();
+        $moduleSnakeName = Str::snake($this->moduleName);
         $snakeRouteName = Str::snake($this->routeName);
-        $translationRouteKey = "modules.{$snakeRouteName}";
+        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}";
 
         // Check for custom title from configuration first
         $customTitle = $this->tableAttributes['customTitle'] ?? null;
@@ -220,17 +228,17 @@ trait ManageUtilities
         switch ($currentActionMethod) {
             case 'create':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.new-item', ['item' => trans_choice('modules.' . snakeCase($this->routeName), 1)]);
+                $headerTitle = $customTitle ?: __('fields.new-item', ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             case 'edit':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.edit-item', ['item' => trans_choice('modules.' . snakeCase($this->routeName), 1)]);
+                $headerTitle = $customTitle ?: __('fields.edit-item', ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             case 'show':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.show-item', ['item' => trans_choice('modules.' . snakeCase($this->routeName), 1)]);
+                $headerTitle = $customTitle ?: __('fields.show-item', ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             default:

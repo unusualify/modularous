@@ -48,20 +48,47 @@ export default function useModule (props, context) {
   const { t, te } = useI18n({ useScope: 'global' })
   let loading = ref(false)
 
-  onMounted(() => {
+  const moduleSnakeName = _.snakeCase(props.moduleName ?? props.name)
+  const routeSnakeName = _.snakeCase(props.routeName ?? props.name)
+  const snakeName = _.snakeCase(props.name)
 
-  })
+  const tableTranslationNotation = props.isModuleRoute
+    ? [
+        'modules',
+        ...(props.moduleName ? [moduleSnakeName] : []),
+        ...(props.routeName ? [routeSnakeName] : []),
+      ].join('.')
+    : [
+        'modules',
+        ...(props.name ? [snakeName] : []),
+      ].join('.')
 
   const state = reactive({
-    snakeName: _.snakeCase(props.name),
-    permissionName: _.kebabCase(props.name),
-    transNameSingular: computed(() => te('modules.' + state.snakeName, 0) ? t('modules.' + state.snakeName, 0) : props.name),
-    transNamePlural: computed(() => t('modules.' + state.snakeName, 1)),
-    // transNameCountable: computed(() => t('modules.' + state.snakeName, getters.totalElements.value)),
-    moduleTitle: computed(() => {
-      const prefix = props.titlePrefix ? props.titlePrefix : ''
-      return prefix + (__isset(props.customTitle) ? props.customTitle : state.transNamePlural)
-    }),
+    moduleSnakeName,
+    routeSnakeName,
+    snakeName,
+    tableTranslationNotation,
+
+    transNameSingular: computed(() => te(tableTranslationNotation, 0)
+      ? t(tableTranslationNotation, 0)
+      : (props.isModuleRoute ? props.routeName : props.name)
+    ),
+    transNamePlural: computed(() => t(tableTranslationNotation, 1)),
+    permissionName: computed(() => _.kebabCase(props.isModuleRoute ? props.routeName : props.name)),
+
+
+    // snakeName: _.snakeCase(props.name),
+    // transNameSingular: computed(() => te('modules.' + state.snakeName, 0)
+    //   ? t('modules.' + state.snakeName, 0)
+    //   : props.name
+    // ),
+    // transNamePlural: computed(() => t('modules.' + state.snakeName, 1)),
+    // permissionName: _.kebabCase(props.name),
+    // // transNameCountable: computed(() => t('modules.' + state.snakeName, getters.totalElements.value)),
+    // moduleTitle: computed(() => {
+    //   const prefix = props.titlePrefix ? props.titlePrefix : ''
+    //   return prefix + (__isset(props.customTitle) ? props.customTitle : state.transNamePlural)
+    // }),
     windowSize: {x: 0,y: 0},
     elements: props.items,
     searchPlaceholder: t("Type to Search"),
