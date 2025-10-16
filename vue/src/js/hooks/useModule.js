@@ -57,6 +57,7 @@ export default function useModule (props, context) {
         'modules',
         ...(props.moduleName ? [moduleSnakeName] : []),
         ...(props.routeName ? [routeSnakeName] : []),
+        'name',
       ].join('.')
     : [
         'modules',

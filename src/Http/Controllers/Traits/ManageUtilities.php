@@ -140,7 +140,7 @@ trait ManageUtilities
 
         $moduleSnakeName = Str::snake($this->moduleName);
         $snakeRouteName = Str::snake($this->routeName);
-        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}";
+        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}.name";
 
         $data = [
             'model' => $item,
@@ -220,7 +220,7 @@ trait ManageUtilities
         $currentActionMethod = $currentRoute->getActionMethod();
         $moduleSnakeName = Str::snake($this->moduleName);
         $snakeRouteName = Str::snake($this->routeName);
-        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}";
+        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}.name";
 
         // Check for custom title from configuration first
         $customTitle = $this->tableAttributes['customTitle'] ?? null;
