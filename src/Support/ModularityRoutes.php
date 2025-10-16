@@ -314,7 +314,9 @@ class ModularityRoutes
      */
     public function registerModuleRoutes($module, array $options, string $type): void
     {
-        $config = $module->getConfig();
+        // $config = $module->getConfig();
+        $config = $module->getRawConfig();
+
         $moduleName = $config['name'] ?? $module->getName();
 
         if (! $moduleName) {
@@ -333,7 +335,8 @@ class ModularityRoutes
 
         $parentUrlSegment = $config['url'] ?? $pr['url'] ?? pluralize($parentKebabName);
 
-        $routes = $module->getRouteConfigs(valid: true);
+        $routes = $module->getRawRouteConfigs(valid: true);
+
         if (! is_array($routes)) {
             return;
         }
@@ -467,7 +470,7 @@ class ModularityRoutes
         array $parameters
     ): void {
         foreach ($item['belongs'] as $key => $belong) {
-            $belongRoute = $module->getRouteConfigs($belong);
+            $belongRoute = $module->getRawRouteConfigs($belong);
             if ($belongRoute) {
                 $belongRouteName = $belongRoute['route_name'] ?? snakeCase($belongRoute['name']);
                 $belongRouteUrl = $belongRoute['url'] ?? pluralize(kebabCase($belongRoute['name']));

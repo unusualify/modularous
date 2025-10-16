@@ -362,6 +362,9 @@ abstract class PanelController extends CoreController
      */
     protected function isParentRoute()
     {
+        $rawRouteConfig = $this->module ? $this->module->getRawRouteConfig($this->routeName) : [];
+
+        return $this->isParent ?? ($rawRouteConfig['parent'] ?? false) ?: $this->moduleName == $this->routeName;
         return $this->isParent ?? $this->getConfigFieldsByRoute('parent') ?: $this->moduleName == $this->routeName;
     }
 

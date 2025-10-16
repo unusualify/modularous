@@ -43,7 +43,7 @@ trait ManageModuleRoute
         if ($moduleName && $routeName) {
             $module = Modularity::find($moduleName);
 
-            return $module->getRouteConfig($routeName);
+            return $module->getRawRouteConfig($routeName);
         }
 
         return [];

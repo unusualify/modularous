@@ -644,7 +644,7 @@ class RouteGenerator extends Generator
 
             return 0;
         } else {
-            if ($this->module->getRouteConfig($name)) {
+            if ($this->module->getRawRouteConfig($name)) {
                 // dd($this->force);
                 if ($this->force) {
                     // $this->module->delete($name);
