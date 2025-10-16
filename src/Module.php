@@ -298,6 +298,31 @@ class Module extends NwidartModule
     }
 
     /**
+     * getRawRouteConfigs
+     *
+     * @param mixed $notation
+     * @param bool $valid
+     */
+    public function getRawRouteConfigs($notation = null, $valid = false): array
+    {
+        $notation = ! $notation ? $notation : ".{$notation}";
+
+        return ($valid && ! $notation) ? Arr::where($this->getRawConfig('routes' . $notation), function ($item, $key) {
+            return ! (! isset($item['name']));
+        }) : $this->getRawConfig('routes' . $notation);
+    }
+
+    /**
+     * getRawRouteConfig
+     *
+     * @param mixed $route_name
+     */
+    public function getRawRouteConfig($route_name): array
+    {
+        return $this->getRawRouteConfigs(snakeCase($route_name));
+    }
+
+    /**
      * getRouteConfigs
      *
      * @param mixed $notation
@@ -363,6 +388,20 @@ class Module extends NwidartModule
     }
 
     /**
+     * getRawConfig
+     *
+     * @param mixed $notation
+     */
+    public function getRawConfig($notation = null): mixed
+    {
+        $config_folder = GenerateConfigReader::read('config')->getPath();
+
+        $rawConfig = include $this->getDirectoryPath("{$config_folder}/config.php");
+
+        return $notation ? data_get($rawConfig, $notation, []) : $rawConfig;
+    }
+
+    /**
      * setConfig
      *
      * @param mixed $newConfig
@@ -384,7 +423,7 @@ class Module extends NwidartModule
      */
     public function getParentRoute(): array
     {
-        return array_values(array_filter($this->getRouteConfigs(), function ($r) {
+        return array_values(array_filter($this->getRawRouteConfigs(), function ($r) {
             return isset($r['parent']) && $r['parent'];
         }))[0] ?? [];
     }
@@ -425,7 +464,7 @@ class Module extends NwidartModule
      */
     public function hasSystemPrefix(): mixed
     {
-        return $this->getConfig('system_prefix') ?? $this->getConfig('base_prefix', false);
+        return $this->getRawConfig('system_prefix') ?? $this->getRawConfig('base_prefix', false);
     }
 
     /**
@@ -450,7 +489,7 @@ class Module extends NwidartModule
     public function prefix(): string
     {
         $pr = $this->getParentRoute();
-        $name = getValueOrNull($this->getConfig('name')) ?? $this->getName();
+        $name = getValueOrNull($this->getRawConfig('name')) ?? $this->getName();
 
         return $this->hasParentRoute() && (isset($pr['url']) || isset($pr['name']))
             ? ($pr['url'] ?? pluralize(kebabCase($pr['name'])))
@@ -484,11 +523,11 @@ class Module extends NwidartModule
      */
     public function routeNamePrefix(): string
     {
-        return snakeCase(getValueOrNull($this->getConfig('name')) ?? $this->getName());
+        return snakeCase(getValueOrNull($this->getRawConfig('name')) ?? $this->getName());
 
         return $this->hasParentRoute()
             ? ($this->getParentRoute()['route_name'] ?? $this->getSnakeName())
-            : snakeCase(getValueOrNull($this->getConfig('name')) ?? $this->getName());
+            : snakeCase(getValueOrNull($this->getRawConfig('name')) ?? $this->getName());
     }
 
     /**
@@ -882,16 +921,17 @@ class Module extends NwidartModule
         $autoMiddlewares = [];
 
         if (isset($this->middlewares[$snakeName])) {
-            $noAutoMiddleware = $this->getRouteConfig($routeName)['noAutoMiddleware'] ?? false;
+            $noAutoMiddleware = $this->getRawRouteConfig($routeName)['noAutoMiddleware'] ?? false;
 
             if (! $noAutoMiddleware) {
                 $autoMiddlewares = [$this->middlewares[$snakeName]['alias']];
             }
         }
 
+        $middlewares = $this->getRawRouteConfig($routeName)['middleware'] ?? [];
         return array_merge(
             $autoMiddlewares,
-            $this->getRouteConfigs($routeName)['middleware'] ?? $this->getRouteConfigs($routeName)['middlewares'] ?? []
+            $middlewares ?? $middlewares['middlewares'] ?? []
         );
     }
 }
