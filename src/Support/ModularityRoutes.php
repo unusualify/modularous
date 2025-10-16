@@ -141,6 +141,14 @@ class ModularityRoutes
         // Optional Middlewares for features
         Route::aliasMiddleware('hostable', HostableMiddleware::class);
 
+        /*
+        * Define Spatie Laravel-Permission Middleware (https://github.com/spatie/laravel-permission)
+        * See a typo? Note that since v6 the 'Middleware' namespace is singular. Prior to v6 it was 'Middlewares'. Time to upgrade your implementation!
+        */
+        Route::aliasMiddleware('role', \Spatie\Permission\Middlewares\RoleMiddleware::class);
+        Route::aliasMiddleware('permission', \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+        Route::aliasMiddleware('role_or_permission', \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class);
+
     }
 
     /**
