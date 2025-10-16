@@ -17,13 +17,10 @@ trait FormActions
      */
     protected function __afterConstructFormActions($app, $request)
     {
-        $this->setFormActions();
+        // $this->setFormActions();
     }
 
-    /**
-     * @var array
-     */
-    public function setFormActions()
+    public function preloadFormActions()
     {
         $this->defaultFormActions = (array) Config::get(modularityBaseKey() . '.default_form_actions', []);
 
@@ -42,6 +39,13 @@ trait FormActions
         $formActions = array_merge_recursive_preserve($this->repository ? $this->repository->getFormActions() : [], $formActions);
 
         $this->formActions = array_merge_recursive_preserve($formActions, $this->formActions ?? []);
+    }
+
+    /**
+     * @var array
+     */
+    public function setFormActions()
+    {
     }
 
     public function getFormActions(): array

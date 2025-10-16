@@ -22,6 +22,11 @@ trait TableActions
      */
     protected function __afterConstructTableActions($app, $request)
     {
+        // $this->setTableActions();
+    }
+
+    public function preloadTableActions()
+    {
         $this->setTableActions();
     }
 

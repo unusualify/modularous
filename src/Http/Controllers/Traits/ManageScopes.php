@@ -66,6 +66,11 @@ trait ManageScopes
         $this->defaultTableOrders = (array) Config::get(modularityBaseKey() . '.default_table_orders', ['created_at' => 'desc']);
 
         // $this->tableOrders = array_merge_recursive_preserve($this->getTableOrders(), $this->tableOrders ?? []);
+        // $this->tableOrders = $this->getTableOrders();
+    }
+
+    public function preloadManageScopes()
+    {
         $this->tableOrders = $this->getTableOrders();
     }
 

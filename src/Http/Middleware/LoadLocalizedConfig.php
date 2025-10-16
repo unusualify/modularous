@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
+use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Unusualify\Modularity\Facades\Modularity;
 
 class LoadLocalizedConfig
@@ -43,6 +44,19 @@ class LoadLocalizedConfig
          */
         if (! $newNavigationExists) {
             config("{$baseKey}.navigation", array_merge_recursive_preserve(config("{$baseKey}.navigation"), config("{$baseKey}-navigation", [])));
+        }
+
+        $config_folder = GenerateConfigReader::read('config')->getPath();
+
+        foreach (Modularity::allEnabled() as $module) {
+            // dd(__CLASS__);
+            // LOAD MODULE CONFIG
+            // if(file_exists(module_path($module->getName(), 'Config/config.php'))){
+            if (file_exists($module->getDirectoryPath("{$config_folder}/config.php"))) {
+                mergeConfigFrom(
+                    $module->getDirectoryPath("{$config_folder}/config.php"), $module->getSnakeName()
+                );
+            }
         }
 
         return $next($request);

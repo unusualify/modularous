@@ -51,21 +51,31 @@ abstract class BaseController extends PanelController
         parent::__construct($app, $request);
 
         // $this->setMiddlewarePermission();
-        $this->viewPrefix = $this->getViewPrefix();
+        // $this->viewPrefix = $this->getViewPrefix();
 
         $this->__afterConstruct($app, $request);
 
     }
 
+    public function preload()
+    {
+        parent::preload();
+
+        $this->addWiths();
+
+        $this->formSchema = $this->getModuleFormSchema();
+    }
+
     public function index($parentId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 
         $this->addIndexWiths();
 
         if ($this->request->ajax() && (method_exists($this, 'isInertiaRequest') ? ! $this->isInertiaRequest() : true)) {
+
             if ($this->request->has('ids')) {
                 $ids = $this->request->get('ids');
 
@@ -138,7 +148,8 @@ abstract class BaseController extends PanelController
      */
     public function create($parentModuleId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -169,7 +180,8 @@ abstract class BaseController extends PanelController
     {
         // $parentId = $this->parentId ?? $parentId;
 
-        $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -253,7 +265,8 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 
@@ -315,7 +328,8 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 
@@ -341,7 +355,8 @@ abstract class BaseController extends PanelController
      */
     public function update($id, $submoduleId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 
@@ -995,7 +1010,8 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 

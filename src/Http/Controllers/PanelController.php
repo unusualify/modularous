@@ -221,13 +221,13 @@ abstract class PanelController extends CoreController
         // $this->setMiddlewareBasePermission();
         $this->setMiddlewarePermission();
 
-        $this->titleColumnKey = $this->getConfigFieldsByRoute('title_column_key', 'name');
+        // $this->titleColumnKey = $this->getConfigFieldsByRoute('title_column_key', 'name');
 
         $this->isParent = $this->isParentRoute();
 
         $this->checkNestedAttributes();
 
-        $this->routePrefix = $this->getRoutePrefix();
+        // $this->routePrefix = $this->getRoutePrefix();
 
         $this->modelTitle = $this->getModelTitle();
 
@@ -238,13 +238,27 @@ abstract class PanelController extends CoreController
          */
         $this->applyFiltersDefaultOptions();
 
-        $this->fixedFilters = array_merge((array) $this->getConfigFieldsByRoute('filters.fixed', []), $this->fixedFilters ?? []);
+        // $this->fixedFilters = array_merge((array) $this->getConfigFieldsByRoute('filters.fixed', []), $this->fixedFilters ?? []);
 
         // $this->addWiths();
 
         // $this->addIndexWiths();
 
         // $this->addFormWiths();
+
+    }
+
+    public function preload()
+    {
+        $rawRouteConfig = $this->module ? $this->module->getRawRouteConfig($this->routeName) : [];
+
+        $this->titleColumnKey = $rawRouteConfig['title_column_key'] ?? 'name';
+
+        $this->fixedFilters = array_merge((array) ($rawRouteConfig['filters']['fixed'] ?? []), $this->fixedFilters ?? []);
+
+        parent::preload();
+
+        $this->routePrefix = $this->getRoutePrefix();
 
     }
 
@@ -710,6 +724,7 @@ abstract class PanelController extends CoreController
         $moduleModel = $this->repository->getModel();
         $isNestedKey = count($exploded) > 1;
         $lastIndex = count($exploded) - 1;
+
         foreach ($exploded as $i => $relation) {
             if (@method_exists($moduleModel, 'definedRelations')) {
                 $relations = $moduleModel->definedRelations();
@@ -786,25 +801,25 @@ abstract class PanelController extends CoreController
         return true;
     }
 
-    /**
-     * @return void
-     */
-    public function __afterConstruct(...$args)
-    {
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            $this->$method(...$args);
-        }
-    }
+    // /**
+    //  * @return void
+    //  */
+    // public function __afterConstruct(...$args)
+    // {
+    //     foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+    //         $this->$method(...$args);
+    //     }
+    // }
 
-    /**
-     * @return void
-     */
-    public function __beforeConstruct(...$args)
-    {
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            $this->$method(...$args);
-        }
-    }
+    // /**
+    //  * @return void
+    //  */
+    // public function __beforeConstruct(...$args)
+    // {
+    //     foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+    //         $this->$method(...$args);
+    //     }
+    // }
 
     /**
      * @param array $input

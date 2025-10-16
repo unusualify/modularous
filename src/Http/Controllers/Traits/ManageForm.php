@@ -19,6 +19,11 @@ trait ManageForm
     {
         $this->defaultFormAttributes = (array) Config::get(modularityBaseKey() . '.default_form_attributes');
 
+        // $this->formAttributes = array_merge_recursive_preserve($this->getFormAttributes(), $this->formAttributes ?? []);
+    }
+
+    public function preloadManageForm()
+    {
         $this->formAttributes = array_merge_recursive_preserve($this->getFormAttributes(), $this->formAttributes ?? []);
     }
 
