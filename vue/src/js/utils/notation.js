@@ -600,7 +600,13 @@ export function replaceCallback(haystack, match, variable) {
   for(const variableName of variableNames){
     let res = __data_get(haystack, variableName, false)
 
-    if(res){
+    if(Array.isArray(res)){
+      if(res.length > 0){
+        if(res.length === 1 && !!res[0]){
+          return res
+        }
+      }
+    }else if(res){
       return res
     }
   }
@@ -630,7 +636,6 @@ export function replacePattern(value, haystack) {
     return result;
   });
 }
-
 
 export function replaceVariablesFromHaystack(obj, haystack) {
   if (!obj || typeof obj !== 'object') return obj;
