@@ -6,6 +6,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 abstract class ModelEvent
@@ -16,6 +17,27 @@ abstract class ModelEvent
      * @var string
      */
     public $modelType;
+
+    /**
+     * The user model.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    public $user;
+
+    /**
+     * The recent URL.
+     *
+     * @var string
+     */
+    public $recentUrl;
+
+    /**
+     * The previous URL.
+     *
+     * @var string
+     */
+    public $previousUrl;
 
     /**
      * The channel name.
@@ -29,6 +51,12 @@ abstract class ModelEvent
      */
     public function __construct(public $model, public $serializedData = null)
     {
+        $this->user = Auth::user();
+
+        $this->recentUrl = url()->current() ?? null;
+
+        $this->previousUrl = url()->previous() ?? null;
+
         $this->modelType = get_class($this->model);
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
@@ -69,5 +97,45 @@ abstract class ModelEvent
         //     'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))))
         // );
         return 'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))));
+    }
+
+    /**
+     * Get the user model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Check if the user model exists.
+     *
+     * @return bool
+     */
+    public function hasUser()
+    {
+        return $this->user !== null;
+    }
+
+    /**
+     * Get the recent URL.
+     *
+     * @return string
+     */
+    public function getRecentUrl()
+    {
+        return $this->recentUrl;
+    }
+
+    /**
+     * Get the previous URL.
+     *
+     * @return string
+     */
+    public function getPreviousUrl()
+    {
+        return $this->previousUrl;
     }
 }
