@@ -420,6 +420,21 @@ class Module extends NwidartModule
 
 
     /**
+     * load  module config to the laravel config with the module snake name as the key
+     */
+    public function loadConfig() : void
+    {
+        $config_folder = GenerateConfigReader::read('config')->getPath();
+        $configPath = $this->getDirectoryPath("{$config_folder}/config.php");
+
+        if (file_exists($configPath)) {
+            $config = include $configPath;
+            $this->app['config']->set("{$this->getSnakeName()}", $config);
+        }
+    }
+
+
+    /**
      * resetConfig
      */
     public function resetConfig() : void

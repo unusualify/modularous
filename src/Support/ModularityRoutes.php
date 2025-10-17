@@ -114,16 +114,16 @@ class ModularityRoutes
 
         Route::aliasMiddleware('modularity.log', LogMiddleware::class);
 
-        Route::aliasMiddleware('language', LanguageMiddleware::class);
-        Route::aliasMiddleware('impersonate', ImpersonateMiddleware::class);
+        Route::aliasMiddleware('modularity.language', LanguageMiddleware::class);
+        Route::aliasMiddleware('modularity.impersonate', ImpersonateMiddleware::class);
         Route::aliasMiddleware('modularity.loadLocalizedConfig', LoadLocalizedConfig::class);
-        Route::aliasMiddleware('navigation', NavigationMiddleware::class);
+        Route::aliasMiddleware('modularity.navigation', NavigationMiddleware::class);
 
         Route::middlewareGroup('modularity.core', [
-            'impersonate',
-            'language',
+            'modularity.impersonate',
+            'modularity.language',
             'modularity.loadLocalizedConfig',
-            'navigation',
+            'modularity.navigation',
             'inertia.middleware',
         ]);
 

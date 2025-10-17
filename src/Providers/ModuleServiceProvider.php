@@ -56,12 +56,7 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
                 }
             }
             // LOAD MODULE CONFIG
-            // if(file_exists(module_path($module->getName(), 'Config/config.php'))){
-            // if (file_exists($module->getDirectoryPath("{$config_folder}/config.php"))) {
-            //     $this->mergeConfigFrom(
-            //         $module->getDirectoryPath("{$config_folder}/config.php"), $module->getSnakeName()
-            //     );
-            // }
+            $module->loadConfig();
 
             // LOAD MODULE MIGRATIONS
             $this->loadMigrationsFrom(

@@ -212,9 +212,11 @@ abstract class CoreController extends LaravelController
      */
     public function getModuleConfig()
     {
-        $snakeCase = $this->getSnakeCase($this->moduleName);
+        // $snakeCase = $this->getSnakeCase($this->moduleName);
 
-        return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
+        return array_to_object($this->module ? $this->module->getRawConfig() : []);
+
+        // return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
     }
 
     protected function getConfigFieldsByRoute($field_name, $default = null)

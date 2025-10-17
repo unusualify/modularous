@@ -46,19 +46,6 @@ class LoadLocalizedConfig
             config("{$baseKey}.navigation", array_merge_recursive_preserve(config("{$baseKey}.navigation"), config("{$baseKey}-navigation", [])));
         }
 
-        $config_folder = GenerateConfigReader::read('config')->getPath();
-
-        foreach (Modularity::allEnabled() as $module) {
-            // dd(__CLASS__);
-            // LOAD MODULE CONFIG
-            // if(file_exists(module_path($module->getName(), 'Config/config.php'))){
-            if (file_exists($module->getDirectoryPath("{$config_folder}/config.php"))) {
-                mergeConfigFrom(
-                    $module->getDirectoryPath("{$config_folder}/config.php"), $module->getSnakeName()
-                );
-            }
-        }
-
         return $next($request);
     }
 }

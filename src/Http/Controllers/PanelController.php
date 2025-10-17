@@ -215,6 +215,8 @@ abstract class PanelController extends CoreController
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
 
+            $this->preload();
+
             return $next($request);
         });
 

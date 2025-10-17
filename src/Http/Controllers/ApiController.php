@@ -102,6 +102,11 @@ abstract class ApiController extends CoreController
         $this->setApiResourceClasses();
         $this->setApiDefaults();
 
+        $this->middleware(function ($request, $next) {
+            $this->preload();
+            return $next($request);
+        });
+
         $this->__afterConstruct($app, $request);
     }
 

@@ -51,7 +51,7 @@ abstract class BaseController extends PanelController
         parent::__construct($app, $request);
 
         // $this->setMiddlewarePermission();
-        // $this->viewPrefix = $this->getViewPrefix();
+        $this->viewPrefix = $this->getViewPrefix();
 
         $this->__afterConstruct($app, $request);
 
@@ -68,8 +68,6 @@ abstract class BaseController extends PanelController
 
     public function index($parentId = null)
     {
-        $this->preload();
-
         $this->addWiths();
 
         $this->addIndexWiths();
@@ -148,7 +146,6 @@ abstract class BaseController extends PanelController
      */
     public function create($parentModuleId = null)
     {
-        $this->preload();
         // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
@@ -180,7 +177,6 @@ abstract class BaseController extends PanelController
     {
         // $parentId = $this->parentId ?? $parentId;
 
-        $this->preload();
         // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
@@ -266,7 +262,6 @@ abstract class BaseController extends PanelController
         $params = $this->request->route()->parameters();
 
         // $this->formSchema = $this->getModuleFormSchema();
-        $this->preload();
 
         $this->addWiths();
 
@@ -329,7 +324,6 @@ abstract class BaseController extends PanelController
         $params = $this->request->route()->parameters();
 
         // $this->formSchema = $this->getModuleFormSchema();
-        $this->preload();
 
         $this->addWiths();
 
@@ -356,7 +350,6 @@ abstract class BaseController extends PanelController
     public function update($id, $submoduleId = null)
     {
         // $this->formSchema = $this->getModuleFormSchema();
-        $this->preload();
 
         $this->addWiths();
 
