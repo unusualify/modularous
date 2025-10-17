@@ -50,9 +50,9 @@ trait FormSchema
 
         $inputs = method_exists($this, 'formSchema')
             ? $this->formSchema($inputs)
-            : $inputs;
+            : $inputs ?? [];
 
-        if ($this->repository) {
+        if ($this->module && $this->repository) {
             if (method_exists($this->repository, 'appendFormSchema')) {
                 $inputs = array_merge($inputs, $this->repository->appendFormSchema());
             }
