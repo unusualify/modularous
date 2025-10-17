@@ -260,7 +260,16 @@ class BaseServiceProvider extends ServiceProvider
     public function registerTranslationService()
     {
         $this->app->extend('translation.loader', function ($service, $app) {
-            return new FileLoader($app['files'], [base_path('vendor/laravel/framework/src/Illuminate/Translation/lang'), realpath(__DIR__ . '/../../lang'),  $app['path.lang']]);
+            if(file_exists(base_path('modularity/lang'))) {
+                $app->useLangPath(base_path('modularity/lang'));
+            }
+
+            return new FileLoader($app['files'], [
+                base_path('vendor/laravel/framework/src/Illuminate/Translation/lang'),
+                realpath(__DIR__ . '/../../lang'),
+                $app['path.lang'],
+                base_path('modularity/lang')
+            ]);
             // return new \Illuminate\Translation\FileLoader($app['files'], [base_path('vendor/laravel/framework/src/Illuminate/Translation/lang'), realpath(__DIR__.'/../../lang'),  $app['path.lang']]);
         });
 

@@ -18,6 +18,7 @@ final class LaravelServiceProvider extends ServiceProvider
         $this->publishViews();
         $this->publishResources();
         $this->publishOperations();
+        $this->publishIgnoredLang();
         // $this->publishMigrations();
     }
 
@@ -91,6 +92,13 @@ final class LaravelServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../lang' => base_path('lang'),
         ], 'lang');
+    }
+
+    private function publishIgnoredLang(): void
+    {
+        $this->publishes([
+           file_exists(base_path('lang')) ? base_path('lang') : __DIR__ . '/../lang' => base_path('modularity/lang'),
+        ], 'ignored-lang');
     }
 
     private function publishOperations(): void
