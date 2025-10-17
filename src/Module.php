@@ -418,6 +418,15 @@ class Module extends NwidartModule
         return $this->app['config']->set("{$this->getSnakeName()}{$notation}", $newConfigValue);
     }
 
+
+    /**
+     * resetConfig
+     */
+    public function resetConfig() : void
+    {
+        $this->app['config']->set("{$this->getSnakeName()}", $this->getRawConfig());
+    }
+
     /**
      * getParentRoute
      */
