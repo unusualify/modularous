@@ -113,6 +113,8 @@ trait HasStateable
     public function hydrateState(State $state)
     {
         $stateConfig = $this->getRawStateConfiguration($state->code);
+        $appLocale = app()->getLocale();
+        $fallbackLocale = config('app.fallback_locale');
 
         // Fill with icon and color from configuration
         $state->fill(Arr::only($stateConfig, ['icon', 'color']));
@@ -132,9 +134,15 @@ trait HasStateable
                                 $state->translations[$findIndex]->setAttribute($field, $value);
                             }
                         }
-
                     }
 
+                    if($appLocale === $locale) {
+                        if($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
+                            $state->name = $stateConfig[$locale]['name'];
+                        }else{
+                            $state->name = $stateConfig[$fallbackLocale]['name'];
+                        }
+                    }
                 }
             }
         }
