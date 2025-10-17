@@ -60,10 +60,11 @@ export default function useCastAttributes () {
         }else if(isString(newValue)){
           _value = newValue
 
-          let snakeCased = snakeCase(_value)
+          const splitValue = _value.split('.')
+          let snakeCased = splitValue.map(item => snakeCase(item)).join('.')
 
-          if(te(`modules.${snakeCased}`)){
-            _value = t(`modules.${snakeCased}`)
+          if(te(`modules.${snakeCased}.name`)){
+            _value = t(`modules.${snakeCased}.name`)
           }
         }else if(isNumber(newValue)){
           _value = newValue.toString()
