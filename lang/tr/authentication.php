@@ -6,14 +6,14 @@ return [
     'choose-password' => 'Şifre Girin',
     'company' => 'Şirket Adı',
     'confirm-provider' => '{provider} Hesabınızı Doğrulayın',
-    'complete-registration-title' => 'KAYIT OLUŞTUR',
     'complete-registration' => 'Kayıt Oluştur',
+    'complete-registration-title' => 'KAYIT OLUŞTUR',
     'conditions-policy' => 'Koşullar ve Politika',
     'create-an-account' => 'HESAP OLUŞTUR',
 
     'email' => 'E-posta Adresi',
 
-    'forgot-password' => 'Şifrenizi Mi Unuttunuz',
+    'forgot-password' => 'Şifrenizi Mi Unuttunuz?',
 
     'generate-password' => 'Şifre Oluştur',
     'go-to-sign-in' => 'Giriş Yap',
@@ -21,8 +21,8 @@ return [
     'have-an-account' => 'Hesabınız var mı?',
 
     'login' => 'Giriş Yap',
-    'login-success-message' => 'Giriş Başarılı!',
-    'login-title' => 'BAŞLAMAK İÇİN GİRİŞ YAP',
+    'login-success-message' => 'Giriş Başarılı. Hoşgeldiniz!',
+    'login-title' => 'Hedef Kitlenize Ulaşın',
     'logout' => 'Çıkış Yap',
     'logout-cancel' => 'İptal',
     'logout-confirm' => 'Onayla',
@@ -37,17 +37,15 @@ return [
     'password' => 'Şifre',
     'password-confirmation' => 'Şifre Tekrar',
     'password-sent' => 'Şifre Gönderildi',
-
-    'pre-register-title' => 'E-posta Doğrulama',
-    'pre-register-description' => 'Lütfen e-posta adresinize doğrulama linki gönderildi.',
     'pre-register-button-text' => 'Giriş Yap',
+    'pre-register-description' => 'Lütfen e-posta adresinize doğrulama linki gönderildi.',
+    'pre-register-title' => 'E-posta Doğrulama',
 
     'register' => 'Kayıt Ol',
-    'register-button-text' => 'Giriş Yap?',
-    'register-description' => 'Tebrikler! Kayıt işleminiz tamamlandı.',
-    'register-title' => 'Kayıt Tamamlandı',
-    'repeat_password' => 'Şifre Tekrar',
-    'reset' => 'Sıfırla',
+    'register-button-text' => 'Giriş Yap',
+    'register-description' => 'Hesabınız başarıyla oluşturuldu. Hoşgeldiniz!',
+    'register-title' => 'Hesabınız Oluşturuldu',
+    'repeat-password' => 'Şifre Tekrar',
     'reset-password' => 'Şifre Sıfırla',
     'reset-send' => 'Şifre Sıfırlama Bağlantısı Gönder',
 
@@ -59,10 +57,10 @@ return [
     'success-reset-email' => 'Lütfen e-posta adresinize şifre sıfırlama linki gönderildi.',
     'surname' => 'Soyadınız',
 
-    'terms-policy' => 'Koşullar ve Politika',
-    'tos' => 'Koşullar ve Politika\'ya onaylıyorum.',
-
     'verification-complete' => 'Doğrulama',
     'verification-complete-description' => 'E-posta adresiniz doğrulandı.',
     'verify-login' => 'Girişi Doğrula',
+
+    'terms-policy' => 'Koşullar ve Politika',
+    'tos' => 'Koşullar ve Politika\'yı onaylıyorum.'
 ];

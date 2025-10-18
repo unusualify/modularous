@@ -6,9 +6,12 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use JoeDixon\Translation\Drivers\Translation;
+use JoeDixon\Translation\Scanner;
 use Modules\SystemUser\Repositories\PermissionRepository;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
@@ -179,6 +182,8 @@ class RouteGenerator extends Generator
 
     protected $tableName;
 
+    protected Translation $translation;
+
     /**
      * The constructor.
      *
@@ -198,8 +203,11 @@ class RouteGenerator extends Generator
         $this->console = $console;
         $this->module = $module;
         $this->traits = Collection::make([]);
-
         $this->moduleName = $this->module ? $this->module->getName() : null;
+
+        if ($this->module) {
+            $this->createTranslation();
+        }
 
         // Stub::setBasePath( config('modules.paths.modules').'/Base/Console/stubs');
     }
@@ -358,7 +366,20 @@ class RouteGenerator extends Generator
         //     );
         // }
 
+        $this->createTranslation();
+
         return $this;
+    }
+
+    public function createTranslation()
+    {
+        $langPath = $this->module->isModularityModule()
+            ? Modularity::getVendorPath('lang')
+            : base_path('lang');
+        // : $this->app['path.lang'];
+
+        // $this->translation = new \JoeDixon\Translation\Drivers\File(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
+        $this->translation = new \Unusualify\Modularity\Services\FileTranslation(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
     }
 
     /**
@@ -616,7 +637,6 @@ class RouteGenerator extends Generator
      */
     public function generate(): int
     {
-
         $name = $this->getName();
 
         if ($this->getTest()) {
@@ -624,7 +644,7 @@ class RouteGenerator extends Generator
 
             return 0;
         } else {
-            if ($this->module->getRouteConfig($name)) {
+            if ($this->module->getRawRouteConfig($name)) {
                 // dd($this->force);
                 if ($this->force) {
                     // $this->module->delete($name);
@@ -1021,48 +1041,33 @@ class RouteGenerator extends Generator
     {
         $headline = $this->getHeadline($this->getName());
         $plural = pluralize($headline);
-
         $langDir = $this->module->getDirectoryPath(GenerateConfigReader::read('lang')->getPath());
 
-        foreach (getLocales() as $locale) {
-            $file = $langDir . "/{$locale}/modules.php";
+        // dd(
+        //     // $langDir,
+        //     // getLocales(),
+        //     // $this->translation->allLanguages(),
+        //     // $this->translation->getSourceLanguageTranslationsWith('en'),
+        //      // $this->translation->getGroupsFor('en'),
+        //      // $this->translation->filterTranslationsFor('en', 'announcement'),
 
-            if ($this->filesystem->exists($file)) {
-                $lang = include $file;
+        //     // $this->translation->addGroupTranslation('en', 'modules', 'announcement.ab.name', 'Blah | Blabs | {n} Blabs'),
+        //     // $this->translation->addGroupTranslation('tr', 'modules', 'announcement.ab.name', 'Blah | Blabs | {n} Blabs'),
 
-                if (! isset($lang[$this->getSnakeCase($this->name)])) {
-                    $lang[$this->getSnakeCase($this->name)] = "{$headline} | {$plural} | {n} {$plural}";
-                    $this->filesystem->put($file, php_array_file_content($lang));
-                }
-            } else {
-                $lang = [
-                    $this->getSnakeCase($this->name) => "{$headline} | {$plural} | {n} {$plural}",
-                ];
+        //     // $this->translation->addGroupTranslation('en', 'announcement_module::test', 'name', 'Test | Tests | {n} Tests'),
+        //     // $this->translation->addGroupTranslation('tr', 'announcement_module::test', 'name', 'Deneme | Denemeler | {n} Denemeler'),
+        //     // Arr::sortRecursive($lang),
+        // );
 
-                if (! $this->filesystem->isDirectory($dir = dirname($file))) {
-                    $this->filesystem->makeDirectory($dir, 0777, true);
-                }
+        $languageKey = "{$this->module->getSnakeName()}.{$this->getSnakeCase($this->name)}.name";
+        $languageValue = "{$headline} | {$plural} | {n} {$plural}";
 
-                $this->filesystem->put($file, php_array_file_content($lang));
-            }
+        $this->translation->addGroupTranslation('en', 'modules', $languageKey, $languageValue);
+
+        foreach($this->translation->allLanguages() as $locale) {
+            $this->translation->addGroupTranslation($locale, 'modules', $languageKey, $languageValue);
         }
 
-        // foreach(glob( base_path('lang') . "/**/modules.php") as $path) {
-        //     $lang = include($path);
-
-        //     if(!isset($lang[$this->getSnakeCase($this->name)])){
-        //         $lang[$this->getSnakeCase($this->name)] = "{$headline} | {$plural} | {n} {$plural}";
-        //         $this->filesystem->put($path, php_array_file_content($lang));
-        //     }
-
-        // }
-
-        // foreach (glob(__DIR__ . "/../../lang/*.json") as $filename) {
-        //     $arr = json_decode( file_get_contents($filename), true );
-        //     $arr['modules'][$this->getSnakeCase($this->name)] = "{$headline} | {$plural} | {n} {$plural}";
-        //     file_put_contents($filename, collect($arr)->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        // }
-        // \Illuminate\Support\Facades\File::get( __DIR__ . '/');
         return true;
     }
 
@@ -1378,6 +1383,8 @@ class RouteGenerator extends Generator
     protected function runTest()
     {
         if (! $this->plain) {
+
+            $this->addLanguageVariable();
 
             $this->updateConfigFile();
 

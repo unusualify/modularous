@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,7 +21,7 @@ use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
 
-class User extends Authenticatable implements MustVerifyEmailContract
+class User extends Authenticatable implements MustVerifyEmailContract, HasLocalePreference
 {
     use HasApiTokens,
         HasFactory,
@@ -288,5 +289,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \Unusualify\Modularity\Notifications\ResetPasswordNotification($token));
+    }
+
+    public function preferredLocale()
+    {
+        return 'tr';
+        // return $this->language;
     }
 }

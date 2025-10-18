@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\App;
 use Oobook\Priceable\Models\Currency;
+use Unusualify\Modularity\Facades\ModularityLog;
 
 class LanguageMiddleware
 {
@@ -16,26 +17,31 @@ class LanguageMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $defaultLocale = config('app.locale');
+        $defaultLocale = app()->getLocale();
+        $fallbackLocale = app()->getFallbackLocale();
         $locale = $defaultLocale;
-        $translatableLocales = config('translatable.locales');
+        $availableUserLocales = modularityConfig('available_user_locales');
 
-        if ($request->has('language')) {
-            $locale = $request->get('language');
-        }
-
-        if (! in_array($locale, $translatableLocales) && $request->user() && $request->user()->language) {
+        if ($request->user() && $request->user()->language) {
             $locale = $request->user()->language;
-        } else if (env('MODULARITY_AUTO_LOCALE_FINDER', false)) {
-            if (mb_strtolower(geoip()->getLocation($request->ip())->iso_code) === 'tr') {
-                if (in_array($locale, $translatableLocales)) {
-                    $locale = 'tr';
+        } else if ( $request->has('language')) {
+            $locale = $request->get('language');
+        } else {
+            try {
+                if (env('AUTO_LOCALE_FINDER', false)) {
+                    $newLocale = mb_strtolower(geoip()->getLocation($request->ip())->iso_code);
+                    if(in_array($newLocale, $availableUserLocales)){
+                        $locale = $newLocale;
+                    }
                 }
+
+            }catch(\Exception $e){
+                ModularityLog::error('LanguageMiddleware: Error while finding locale with geoip: ' . $e->getMessage());
             }
         }
 
-        if (! in_array($locale, config('translatable.locales'))) {
-            $locale = config('translatable.locales')[0];
+        if($locale !== $fallbackLocale && \Illuminate\Support\Facades\Route::currentRouteName() == 'languages.translations.index'){
+            $locale = $fallbackLocale;
         }
 
         config([modularityBaseKey() . '.locale' => $locale]);

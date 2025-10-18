@@ -102,8 +102,8 @@
 <template>
   <v-input
     v-model="input"
-    hide-details
     class="v-input-date"
+    :rules="$attrs.rules"
     >
     <template v-slot:default="defaultSlot">
       <v-date-input
@@ -112,6 +112,8 @@
         :label="label"
         :variant="variant"
         v-bind="$attrs"
+        :rules="[]"
+        hide-details
       />
     </template>
   </v-input>

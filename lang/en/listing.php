@@ -35,11 +35,11 @@ return [
         'show' => 'Show',
         'thumbnail' => 'Thumbnail',
     ],
-    'delete-superadmin-error' => 'Superadmin cannot be removed!',
     'delete' => [
         'error' => ':modelTitle was not moved to trash. Something wrong happened!',
         'success' => ':modelTitle moved to trash!',
     ],
+    'delete-superadmin-error' => 'Superadmin cannot be removed!',
     'dialogs' => [
         'delete' => [
             'confirm' => 'Delete',
@@ -76,25 +76,21 @@ return [
     ],
     'filter' => [
         'all-items' => 'All items',
+        'authorized' => 'Authorized',
+        'completed-assignments' => 'Completed Tasks',
         'draft' => 'Draft',
         'mine' => 'Mine',
+        'my-assignments' => 'My Tasks',
+        'pending-assignments' => 'Pending Tasks',
         'published' => 'Published',
+        'team-completed-assignments' => 'Team Completed Tasks',
+        'team-pending-assignments' => 'Team Pending Tasks',
         'trash' => 'Trash',
-
-        'authorized' => 'Authorized',
         'unauthorized' => 'Unauthorized',
         'your-authorizations' => 'Your authorizations',
-
-        'my-assignments' => 'My Tasks',
-        'your-role-assignments' => 'Team Tasks',
-
-        'completed-assignments' => 'Completed Tasks',
-        'pending-assignments' => 'Pending Tasks',
-
         'your-completed-assignments' => 'My Completed Tasks',
-        'team-completed-assignments' => 'Team Completed Tasks',
         'your-pending-assignments' => 'My Pending Tasks',
-        'team-pending-assignments' => 'Team Pending Tasks',
+        'your-role-assignments' => 'Team Tasks',
     ],
     'force-delete' => [
         'error' => ':modelTitle was not destroyed. Something wrong happened!',

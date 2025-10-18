@@ -181,7 +181,7 @@
   import { getModel } from '@/utils/getFormData.js'
   import { handleMultiFormEvents } from '@/utils/formEvents'
 
-  import { useInputHandlers, useValidation } from '@/hooks'
+  import { useInputHandlers, useValidation, useCastAttributes } from '@/hooks'
   import api from '@/store/api/form'
 
   import NotationUtil from '@/utils/notation';
@@ -318,6 +318,7 @@
     setup (props, context) {
       const inputHandlers = useInputHandlers()
       const validations = useValidation(props)
+      const {castAttribute} = useCastAttributes()
       const goTo = useGoTo()
 
       const stepperActionRef = ref(null)
@@ -336,6 +337,7 @@
         ...toRefs(state),
         formRefs,
         goTo,
+        castAttribute
       }
     },
     data () {
@@ -684,8 +686,39 @@
       previewTitles() {
         return map(this.models, (model, index) => {
           let form = this.forms[index]
-          let title = __isset(form['previewTitle']) ? form['previewTitle'] : form['title']
+          let schema = this.schemas[index]
+          let summarySearchHaystack = form['summarySearchHaystack'] ?? 'model'
+          let summarySearchInput = form['summarySearchInput'] ?? null
+
+          let title = form['summaryTitle'] ?? form['previewTitle'] ?? form['title']
           let castedTitle = this.$castValueMatch(title, model )
+
+          try {
+            if(summarySearchHaystack === 'schema' && summarySearchInput){
+              let parts = title.split('.')
+
+              let newParts = []
+              for(const j in parts){
+                let part = parts[j]
+                if(part === '*' ){
+                  let _id = model[summarySearchInput]
+                  newParts.push(`*id=${_id}`)
+                }else{
+                  newParts.push(part)
+                }
+              }
+              let notation = newParts.join('.')
+              castedTitle = this.castAttribute(notation, schema )
+            }
+          } catch (error) {
+            console.error(error, {
+              'summarySearchHaystack': summarySearchHaystack,
+              'summarySearchInput': summarySearchInput,
+              'title': title,
+              'model': model,
+              'schema': schema,
+            })
+          }
 
           return castedTitle
         })

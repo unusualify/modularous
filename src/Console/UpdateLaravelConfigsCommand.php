@@ -146,10 +146,11 @@ class UpdateLaravelConfigsCommand extends BaseCommand
                 'middleware' => [
                             'web',
                             'modularity.auth:modularity',
-                            'language',
+                            'modularity.language',
                             'auth',
-                            'navigation',
-                            'impersonate'
+                            'modularity.navigation',
+                            'modularity.impersonate'
+                            'role:superadmin|admin',
                         ]
                 CONFIG,
                 app()->configPath('translation.php')

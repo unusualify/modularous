@@ -40,7 +40,7 @@ trait ManageTraits
 
         if ($moduleName && $routeName) {
             $module = Modularity::find($moduleName);
-            $route_config = $module->getRouteConfig($routeName);
+            $route_config = $module->getRawRouteConfig($routeName);
 
             return $this->chunkInputs($route_config['inputs'], noGroupChunk: $noGroupChunk);
             // return $route_config['inputs'];

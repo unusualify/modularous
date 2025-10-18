@@ -56,13 +56,7 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
                 }
             }
             // LOAD MODULE CONFIG
-            // if(file_exists(module_path($module->getName(), 'Config/config.php'))){
-            if (file_exists($module->getDirectoryPath("{$config_folder}/config.php"))) {
-                $this->mergeConfigFrom(
-                    $module->getDirectoryPath("{$config_folder}/config.php"), $module->getSnakeName()
-                );
-
-            }
+            $module->loadConfig();
 
             // LOAD MODULE MIGRATIONS
             $this->loadMigrationsFrom(
@@ -86,10 +80,13 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
             Blade::componentNamespace($namespace, snakeCase($module_name));
 
             // LOAD MODULE TRANSLATION
-            $langPath = base_path('lang/modules/' . $module->getLowerName());
+            $langPath = base_path('lang/modules/' . $module->getSnakeName());
 
             // Add lang paths to merge with laravel translations
-            $this->app['translator']->addPath($module->getDirectoryPath($lang_folder));
+            /**
+             * Unusualify\Modularity\Translation\Translator::class instance is $this->app['translator']
+             */
+            // $this->app['translator']->addPath($module->getDirectoryPath($lang_folder));
 
             if (is_dir($langPath)) {
                 $this->loadTranslationsFrom($langPath, $module->getLowerName());

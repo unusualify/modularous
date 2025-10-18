@@ -89,6 +89,7 @@ trait FilesTrait
             // }
             $systemLocales = getLocales();
             $default_locale = config('app.locale');
+            $fallback_locale = config('app.fallback_locale');
             $filesByRole = $object->files->groupBy('pivot.role');
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
@@ -101,7 +102,8 @@ trait FilesTrait
                             });
                         }
                     } else {
-                        $fields[$role] = $filesByRole[$role]->groupBy('pivot.locale')[$default_locale]->map(function ($file) {
+                        $files = $filesByRole[$role]->groupBy('pivot.locale')[$default_locale] ?? $filesByRole[$role]->groupBy('pivot.locale')[$fallback_locale] ?? collect([]);
+                        $fields[$role] = $files->map(function ($file) {
                             return $file->mediableFormat();
                         });
                     }

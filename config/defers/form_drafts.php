@@ -110,7 +110,7 @@ return [
             'type' => 'checkbox',
             'name' => 'is_personal',
             'color' => 'primary',
-            'label' => 'I don\'t have a company',
+            'label' => __('I don\'t have a company'),
             'col' => ['cols' => 12],
             'hideDetails' => true,
             'default' => false,
@@ -150,7 +150,7 @@ return [
         ],
         'name' => [
             'type' => '_name',
-            'label' => 'Company Name',
+            'label' => __('Company Name'),
             'col' => ['sm' => 6],
             'rules' => 'max:99',
             // 'rules' => 'sometimes|min:3',
@@ -158,7 +158,7 @@ return [
         'tax_id' => [
             'type' => 'text',
             'name' => 'tax_id',
-            'label' => 'Tax ID / Personal ID',
+            'label' => __('Tax ID / Personal ID'),
             'default' => '',
             'col' => ['sm' => 6],
             // San Marino and Liechtenstein have a 6 character personal id
@@ -223,7 +223,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'Work E-mail',
+            'label' => __('Work E-mail'),
             'default' => '',
             'col' => ['sm' => 6],
             'rules' => 'sometimes|email',

@@ -57,15 +57,23 @@ abstract class BaseController extends PanelController
 
     }
 
+    public function preload()
+    {
+        parent::preload();
+
+        $this->addWiths();
+
+        $this->formSchema = $this->getModuleFormSchema();
+    }
+
     public function index($parentId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
-
         $this->addWiths();
 
         $this->addIndexWiths();
 
         if ($this->request->ajax() && (method_exists($this, 'isInertiaRequest') ? ! $this->isInertiaRequest() : true)) {
+
             if ($this->request->has('ids')) {
                 $ids = $this->request->get('ids');
 
@@ -138,7 +146,7 @@ abstract class BaseController extends PanelController
      */
     public function create($parentModuleId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -169,7 +177,7 @@ abstract class BaseController extends PanelController
     {
         // $parentId = $this->parentId ?? $parentId;
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -222,6 +230,8 @@ abstract class BaseController extends PanelController
         $storeSuccessTranslation = Collection::make([
             "$moduleName::messages.$routeName.store-success",
             "$moduleName::messages.$routeName.save-success",
+            "modules.$moduleName.$routeName.messages.store-success",
+            "modules.$moduleName.$routeName.messages.save-success",
             "$moduleName::messages.store-success",
             "$moduleName::messages.save-success",
             'messages.store-success',
@@ -251,7 +261,7 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -313,7 +323,7 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -339,7 +349,7 @@ abstract class BaseController extends PanelController
      */
     public function update($id, $submoduleId = null)
     {
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
 
         $this->addWiths();
 
@@ -404,6 +414,8 @@ abstract class BaseController extends PanelController
             $updateSuccessTranslation = Collection::make([
                 "$moduleName::messages.$routeName.update-success",
                 "$moduleName::messages.$routeName.save-success",
+                "modules.$moduleName.$routeName.messages.update-success",
+                "modules.$moduleName.$routeName.messages.save-success",
                 "$moduleName::messages.update-success",
                 "$moduleName::messages.save-success",
                 'messages.update-success',
@@ -454,6 +466,7 @@ abstract class BaseController extends PanelController
 
             $deleteSuccessTranslation = Collection::make([
                 "$moduleName::messages.$routeName.delete-success",
+                "modules.$moduleName.$routeName.messages.delete-success",
                 "$moduleName::messages.delete-success",
                 'listing.delete.success',
             ])->first(function ($notation) {
@@ -468,6 +481,7 @@ abstract class BaseController extends PanelController
 
         $deleteErrorTranslation = Collection::make([
             "$moduleName::messages.$routeName.delete-error",
+            "modules.$moduleName.$routeName.messages.delete-error",
             "$moduleName::messages.delete-error",
             'listing.delete.error',
         ])->first(function ($notation) {
@@ -494,6 +508,7 @@ abstract class BaseController extends PanelController
 
             $forceDeleteSuccessTranslation = Collection::make([
                 "$moduleName::messages.$routeName.force-delete-success",
+                "modules.$moduleName.$routeName.messages.force-delete-success",
                 "$moduleName::messages.force-delete-success",
             ])->first(function ($notation) {
                 return Lang::has($notation);
@@ -506,6 +521,7 @@ abstract class BaseController extends PanelController
 
         $forceDeleteErrorTranslation = Collection::make([
             "$moduleName::messages.$routeName.force-delete-error",
+            "modules.$moduleName.$routeName.messages.force-delete-error",
             "$moduleName::messages.force-delete-error",
             'listing.force-delete.error',
         ])->first(function ($notation) {
@@ -987,7 +1003,8 @@ abstract class BaseController extends PanelController
     {
         $params = $this->request->route()->parameters();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        // $this->formSchema = $this->getModuleFormSchema();
+        $this->preload();
 
         $this->addWiths();
 

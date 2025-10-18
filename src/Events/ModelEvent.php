@@ -6,6 +6,8 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 abstract class ModelEvent
@@ -16,6 +18,41 @@ abstract class ModelEvent
      * @var string
      */
     public $modelType;
+
+    /**
+     * The user model.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    public $user;
+
+    /**
+     * The recent URL.
+     *
+     * @var string
+     */
+    public $recentUrl;
+
+    /**
+     * The previous URL.
+     *
+     * @var string
+     */
+    public $previousUrl;
+
+    /**
+     * The changed attributes.
+     *
+     * @var array
+     */
+    protected $changedAttributes = [];
+
+    /**
+     * The changed relationships.
+     *
+     * @var array
+     */
+    protected $changedRelationships = [];
 
     /**
      * The channel name.
@@ -30,6 +67,11 @@ abstract class ModelEvent
     public function __construct(public $model, public $serializedData = null)
     {
         $this->modelType = get_class($this->model);
+        $this->user = Auth::user();
+        $this->recentUrl = url()->current() ?? null;
+        $this->previousUrl = url()->previous() ?? null;
+        $this->changedAttributes = $this->model->getChanges();
+        $this->changedRelationships = method_exists($this->model, 'getChangedRelationships') ? $this->model->getChangedRelationships() : [];
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
             $this->broadcastVia($this->broadcastService);
@@ -69,5 +111,60 @@ abstract class ModelEvent
         //     'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))))
         // );
         return 'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))));
+    }
+
+    /**
+     * Get the user model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Check if the user model exists.
+     *
+     * @return bool
+     */
+    public function hasUser()
+    {
+        return $this->user !== null;
+    }
+
+    /**
+     * Get the recent URL.
+     *
+     * @return string
+     */
+    public function getRecentUrl()
+    {
+        return $this->recentUrl;
+    }
+
+    /**
+     * Get the previous URL.
+     *
+     * @return string
+     */
+    public function getPreviousUrl()
+    {
+        return $this->previousUrl;
+    }
+
+    public function wasChanged($values = null)
+    {
+        if(empty($values)){
+            return count($this->changedAttributes) > 0 || count($this->changedRelationships) > 0;
+        }
+
+        foreach(Arr::wrap($values) as $value){
+            if(array_key_exists($value, $this->changedAttributes) || array_key_exists($value, $this->changedRelationships)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

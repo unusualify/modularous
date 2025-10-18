@@ -11,6 +11,7 @@ use Unusualify\Modularity\Http\Middleware\CompanyRegistrationMiddleware;
 use Unusualify\Modularity\Http\Middleware\HostableMiddleware;
 use Unusualify\Modularity\Http\Middleware\ImpersonateMiddleware;
 use Unusualify\Modularity\Http\Middleware\LanguageMiddleware;
+use Unusualify\Modularity\Http\Middleware\LoadLocalizedConfig;
 use Unusualify\Modularity\Http\Middleware\LogMiddleware;
 use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
 use Unusualify\Modularity\Http\Middleware\RedirectIfAuthenticatedMiddleware;
@@ -113,14 +114,16 @@ class ModularityRoutes
 
         Route::aliasMiddleware('modularity.log', LogMiddleware::class);
 
-        Route::aliasMiddleware('language', LanguageMiddleware::class);
-        Route::aliasMiddleware('impersonate', ImpersonateMiddleware::class);
-        Route::aliasMiddleware('navigation', NavigationMiddleware::class);
+        Route::aliasMiddleware('modularity.language', LanguageMiddleware::class);
+        Route::aliasMiddleware('modularity.impersonate', ImpersonateMiddleware::class);
+        Route::aliasMiddleware('modularity.loadLocalizedConfig', LoadLocalizedConfig::class);
+        Route::aliasMiddleware('modularity.navigation', NavigationMiddleware::class);
 
         Route::middlewareGroup('modularity.core', [
-            'impersonate',
-            'language',
-            'navigation',
+            'modularity.impersonate',
+            'modularity.language',
+            'modularity.loadLocalizedConfig',
+            'modularity.navigation',
             'inertia.middleware',
         ]);
 
@@ -137,6 +140,14 @@ class ModularityRoutes
 
         // Optional Middlewares for features
         Route::aliasMiddleware('hostable', HostableMiddleware::class);
+
+        /*
+        * Define Spatie Laravel-Permission Middleware (https://github.com/spatie/laravel-permission)
+        * See a typo? Note that since v6 the 'Middleware' namespace is singular. Prior to v6 it was 'Middlewares'. Time to upgrade your implementation!
+        */
+        Route::aliasMiddleware('role', \Spatie\Permission\Middlewares\RoleMiddleware::class);
+        Route::aliasMiddleware('permission', \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+        Route::aliasMiddleware('role_or_permission', \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class);
 
     }
 
@@ -303,7 +314,9 @@ class ModularityRoutes
      */
     public function registerModuleRoutes($module, array $options, string $type): void
     {
-        $config = $module->getConfig();
+        // $config = $module->getConfig();
+        $config = $module->getRawConfig();
+
         $moduleName = $config['name'] ?? $module->getName();
 
         if (! $moduleName) {
@@ -322,7 +335,8 @@ class ModularityRoutes
 
         $parentUrlSegment = $config['url'] ?? $pr['url'] ?? pluralize($parentKebabName);
 
-        $routes = $module->getRouteConfigs(valid: true);
+        $routes = $module->getRawRouteConfigs(valid: true);
+
         if (! is_array($routes)) {
             return;
         }
@@ -456,7 +470,7 @@ class ModularityRoutes
         array $parameters
     ): void {
         foreach ($item['belongs'] as $key => $belong) {
-            $belongRoute = $module->getRouteConfigs($belong);
+            $belongRoute = $module->getRawRouteConfigs($belong);
             if ($belongRoute) {
                 $belongRouteName = $belongRoute['route_name'] ?? snakeCase($belongRoute['name']);
                 $belongRouteUrl = $belongRoute['url'] ?? pluralize(kebabCase($belongRoute['name']));

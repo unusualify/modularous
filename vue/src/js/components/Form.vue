@@ -80,28 +80,29 @@
                   <slot name="actions.append" v-bind="actionsScope"></slot>
                 </template>
               </FormActions>
-
-              <FormEvents v-if="formEventSchema && formEventSchema.length && model"
-                :events="formEventSchema"
-                v-model="model"
-                :form-item="formItem"
-              />
             </div>
           </template>
         </ue-title>
         <div :class="[
-          'flex-1-0 d-flex',
+          'flex-1-0 d-flex ga-1',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
             || (hasAdditionalSection && $vuetify.display.mdAndDown)
+            || (formEventSchema && formEventSchema.length && model)
             || ($slots['header.right'])
           ) ? 'pl-2' : ''
         ]">
+          <FormEvents v-if="formEventSchema && formEventSchema.length && model"
+            :events="formEventSchema"
+            v-model="model"
+            :form-item="formItem"
+          />
           <!-- Language Selector -->
           <v-chip-group v-if="hasTraslationInputs && languages && languages.length && languages.length > 1"
             :modelValue="currentLocale.value"
             @update:modelValue="updateLocale($event)"
             selected-class="bg-primary"
             mandatory
+            class="mt-n2 pl-2"
           >
             <v-chip
               v-for="language in languages"

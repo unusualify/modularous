@@ -18,6 +18,7 @@ final class LaravelServiceProvider extends ServiceProvider
         $this->publishViews();
         $this->publishResources();
         $this->publishOperations();
+        $this->publishIgnoredLang();
         // $this->publishMigrations();
     }
 
@@ -45,7 +46,7 @@ final class LaravelServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/publishes/publish.php' => config_path(modularityBaseKey() . '.php'),
-            __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularityBaseKey() . '-navigation.php'),
+            // __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularityBaseKey() . '-navigation.php'),
             __DIR__ . '/../config/publishes/activitylog.php' => config_path('activitylog.php'),
             // __DIR__ . '/../config/publishes/geoip.php' => config_path('geoip.php'),
             __DIR__ . '/../config/publishes/modules.php' => config_path('modules.php'),
@@ -91,6 +92,13 @@ final class LaravelServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../lang' => base_path('lang'),
         ], 'lang');
+    }
+
+    private function publishIgnoredLang(): void
+    {
+        $this->publishes([
+           file_exists(base_path('lang')) ? base_path('lang') : __DIR__ . '/../lang' => base_path('modularity/lang'),
+        ], 'ignored-lang');
     }
 
     private function publishOperations(): void

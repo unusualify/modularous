@@ -236,7 +236,7 @@
               :variant="inputVariant"
               :disabled="loading"
               hide-details
-              placeholder="Type here..."
+              :placeholder="$t('Type here...')"
               density="compact"
               @click:append="sendMessage"
               @keydown.enter="handleEnterKey"

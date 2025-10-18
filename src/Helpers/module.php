@@ -556,3 +556,11 @@ if (! function_exists('benchmark')) {
         return $result;
     }
 }
+
+
+if (! function_exists('mergeConfigFrom')) {
+    function mergeConfigFrom($path, $key)
+    {
+        return app()->make('config')->set($key, array_merge_recursive_preserve(config($key, []), require $path));
+    }
+}

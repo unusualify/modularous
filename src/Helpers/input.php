@@ -94,7 +94,7 @@ if (! function_exists('hydrate_input_extension')) {
             if (isset($_input->type) && $_input->type === 'relationship') {
                 $additionalExt = [];
 
-                $foreignKeyExt = collect(Modularity::find($this->moduleName)->getRouteConfig(studlyName($_input->name) . '.inputs'))
+                $foreignKeyExt = collect(Modularity::find($this->moduleName)->getRawRouteConfig(studlyName($_input->name) . '.inputs'))
                     ->filter(fn ($_i) => $this->getCamelCase($_i['name'] ?? '') === $this->getCamelCase($this->routeName) . 'Id')
                     ->toArray()[1]['ext'] ?? '';
 

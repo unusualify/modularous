@@ -22,7 +22,7 @@ import {
 
 import { globalError } from './errors'
 import { checkItemConditions } from './itemConditions'
-import { getTranslationLanguages } from './locale'
+import { getTranslationLanguages, getTranslationLocales } from './locale'
 
 import sampleModel from '@/__snapshots/getFormData/model.json';
 import sampleSchema from '@/__snapshots/getFormData/schema.json';
@@ -282,7 +282,9 @@ export const getSubmitFormData = (inputs, item = null, rootState = null) => {
 
     if (__isObject(input)) {
       if (Object.prototype.hasOwnProperty.call(input, 'translated') && input.translated) { // translations
-        fields[name] = window[import.meta.env.VUE_APP_NAME].STORE.languages.all.reduce(function (map, lang) {
+        let languages = getTranslationLocales()
+
+        fields[name] = languages.reduce(function (map, lang) {
           if (__isObject(value)) {
             map[lang.value] = __isset(value[lang.value]) ? value[lang.value] : ''
           } else {

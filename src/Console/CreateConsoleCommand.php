@@ -13,11 +13,14 @@ class CreateConsoleCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:create:command {name} {signature}
+    protected $signature = 'modularity:create:command
+        {name}
+        {signature}
         {--d|description= : The description of the command}';
 
     protected $aliases = [
         'mod:c:cmd',
+        'modularity:make:command',
     ];
 
     /**

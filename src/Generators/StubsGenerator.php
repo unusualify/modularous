@@ -51,7 +51,7 @@ class StubsGenerator extends Generator
     {
         $name = $this->getName();
 
-        if ($this->module->getRouteConfig($name)) {
+        if ($this->module->getRawRouteConfig($name)) {
             if ($this->force) {
 
             } elseif (! $this->fix) {

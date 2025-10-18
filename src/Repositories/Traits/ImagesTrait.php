@@ -81,6 +81,8 @@ trait ImagesTrait
         if ($object->has('medias')) {
             $mediasByRole = $object->medias->groupBy('pivot.role');
             $default_locale = config('app.locale');
+            $fallback_locale = config('app.fallback_locale');
+
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
                 if (isset($mediasByRole[$role])) {
@@ -92,7 +94,8 @@ trait ImagesTrait
                             });
                         }
                     } else {
-                        $fields[$role] = $mediasByRole[$role]->groupBy('pivot.locale')[$default_locale]->map(function ($media) {
+                        $medias = $mediasByRole[$role]->groupBy('pivot.locale')[$default_locale] ?? $mediasByRole[$role]->groupBy('pivot.locale')[$fallback_locale];
+                        $fields[$role] = $medias->map(function ($media) {
                             return $media->mediableFormat();
                         });
                     }

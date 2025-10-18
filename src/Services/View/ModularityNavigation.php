@@ -151,7 +151,7 @@ class ModularityNavigation
             // $sr => sub route
 
             $name = $module->getName();
-            $config = $module->getConfig();
+            $config = $module->getRawConfig();
             $pr_name = $module->getSnakeName();
 
             $pr = $module->getParentRoute() ?: [
@@ -163,7 +163,7 @@ class ModularityNavigation
             //     $pr['url'] = pluralize(kebabCase($config['name']));
             //     $pr['route_name'] = snakeCase($config['name']);
             // }
-            $routes = $module->getRouteConfigs(valid: true);
+            $routes = $module->getRawRouteConfigs(valid: true);
             $number_route = count($routes);
             $array = [];
             if ($number_route > 0) {
@@ -197,7 +197,7 @@ class ModularityNavigation
                     } catch (\Throwable $th) {
                         dd(
                             $pr,
-                            $module->getConfig(),
+                            $module->getRawConfig(),
                             $module->getParentRoute()
                         );
                     }

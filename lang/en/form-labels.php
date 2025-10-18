@@ -13,8 +13,10 @@ return [
     'File' => 'File',
     'Guard Name' => 'Guard Name',
     'Job Title' => 'Job Title',
+    'Messages' => 'Messages',
     'Name' => 'Name',
     'New Password' => 'New Password',
+    'Open' => 'Open',
     'Password' => 'Password',
     'Password Confirmation' => 'Password Confirmation',
     'Phone Number' => 'Phone Number',
@@ -26,6 +28,6 @@ return [
     'Surname' => 'Surname',
     'Tax ID' => 'Tax ID',
     'Timezone' => 'Timezone',
-    'VAT Number' => 'VAT Number',
+    'Vat Number' => 'Vat Number',
     'ZIP/Postal Code' => 'ZIP/Postal Code',
 ];

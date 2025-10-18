@@ -1,8 +1,28 @@
 import { map } from 'lodash-es'
 
+import { useLocale } from '@/hooks'
+import store from '@/store'
+
 export const getTranslationLanguages = (input) => {
-  return map(window[import.meta.env.VUE_APP_NAME].STORE.languages.all, 'value')
+  try {
+    const Locale = useLocale()
+
+    return map(Locale.languages.value ?? window[import.meta.env.VUE_APP_NAME].STORE.languages.all, 'value')
+  } catch (error) {
+    return map(store?.state?.language?.all ?? window[import.meta.env.VUE_APP_NAME].STORE.languages.all, 'value')
+  }
 }
+
+export const getTranslationLocales = () => {
+  try {
+    const Locale = useLocale()
+
+    return Locale.languages.value ?? window[import.meta.env.VUE_APP_NAME].STORE.languages.all
+  } catch (error) {
+    return store?.state?.language?.all ?? window[import.meta.env.VUE_APP_NAME].STORE.languages.all
+  }
+}
+
 
 
 export function getCurrentLocale () {

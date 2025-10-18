@@ -142,4 +142,11 @@ const opts = {
   }
 }
 
-export default createVuetify(opts)
+export default function createModularityVuetify (options) {
+  return createVuetify({
+    ...opts,
+    ...options,
+  })
+}
+
+// export default createVuetify(opts)

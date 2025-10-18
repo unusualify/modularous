@@ -103,7 +103,7 @@ return [
             'table_row_actions' => [
                 'read' => [
                     'is' => 'v-btn',
-                    'label' => 'Open',
+                    'label' => __('Open'),
                     'icon' => 'mdi-bell-check',
                     'color' => 'info',
                     'iconColor' => 'white',
@@ -155,7 +155,7 @@ return [
                 ],
                 'unread' => [
                     'is' => 'v-btn',
-                    'label' => 'Open',
+                    'label' => __('Open'),
                     'icon' => 'mdi-bell-alert',
                     'color' => 'orange-darken-1',
                     'iconColor' => 'white',
@@ -242,12 +242,12 @@ return [
                 //     'scope' => 'myNotification',
                 // ],
                 'read' => [
-                    'name' => 'Read',
+                    'name' => __('Read'),
                     'slug' => 'read',
                     'scope' => 'read',
                 ],
                 'unread' => [
-                    'name' => 'Unread',
+                    'name' => __('Unread'),
                     'slug' => 'unread',
                     'scope' => 'unread',
                 ],

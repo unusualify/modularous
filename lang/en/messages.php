@@ -1,17 +1,15 @@
 <?php
 
 return [
-    'success' => 'Completed Successfully!',
-    'info' => 'Completed!',
-    'warning' => 'There is a warning!',
     'error' => 'There is an error!',
-
-    'save-success' => 'Content saved. All good!',
+    'info' => 'Completed!',
+    'invalid-company' => 'Company fields must be filled!',
     'password-saved' => 'Password saved successfully!',
-
+    'profile-update-success' => 'Your profile was successfully updated!',
     'notifications' => [
         'mark-read-success' => 'Notifications marked as read.',
     ],
-
-    'invalid-company' => 'Company fields must be filled!',
+    'save-success' => 'Content saved. All good!',
+    'success' => 'Completed Successfully!',
+    'warning' => 'There is a warning!',
 ];

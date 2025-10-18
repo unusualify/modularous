@@ -85,18 +85,46 @@ abstract class CoreController extends LaravelController
         $this->app = $app;
 
         $this->baseKey = modularityBaseKey();
-
         $this->request = $request;
 
         $this->moduleName = $this->getModuleName();
         $this->module = Modularity::find($this->moduleName);
-        $this->config = $this->getModuleConfig();
+        // $this->config = $this->getModuleConfig();
 
         $this->namespace = $this->getNamespace();
         $this->routeName = $this->getRouteName();
 
         $this->modelName = $this->getModelName();
         $this->repository = $this->getRepository();
+    }
+
+    /**
+     * @return void
+     */
+    public function __afterConstruct(...$args)
+    {
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $this->$method(...$args);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function __beforeConstruct(...$args)
+    {
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $this->$method(...$args);
+        }
+    }
+
+    public function preload()
+    {
+        $this->config = $this->getModuleConfig();
+
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $this->$method();
+        }
     }
 
     /**
@@ -184,9 +212,11 @@ abstract class CoreController extends LaravelController
      */
     public function getModuleConfig()
     {
-        $snakeCase = $this->getSnakeCase($this->moduleName);
+        // $snakeCase = $this->getSnakeCase($this->moduleName);
 
-        return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase));
+        return array_to_object($this->module ? $this->module->getRawConfig() : []);
+
+        // return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
     }
 
     protected function getConfigFieldsByRoute($field_name, $default = null)
@@ -285,26 +315,6 @@ abstract class CoreController extends LaravelController
     protected function routeHas($behavior)
     {
         return $this->repository->hasBehavior($behavior);
-    }
-
-    /**
-     * @return void
-     */
-    public function __afterConstruct(...$args)
-    {
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            $this->$method(...$args);
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public function __beforeConstruct(...$args)
-    {
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            $this->$method(...$args);
-        }
     }
 
     /**
