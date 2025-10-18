@@ -6,6 +6,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -40,6 +41,20 @@ abstract class ModelEvent
     public $previousUrl;
 
     /**
+     * The changed attributes.
+     *
+     * @var array
+     */
+    protected $changedAttributes = [];
+
+    /**
+     * The changed relationships.
+     *
+     * @var array
+     */
+    protected $changedRelationships = [];
+
+    /**
      * The channel name.
      *
      * @var string
@@ -51,13 +66,12 @@ abstract class ModelEvent
      */
     public function __construct(public $model, public $serializedData = null)
     {
-        $this->user = Auth::user();
-
-        $this->recentUrl = url()->current() ?? null;
-
-        $this->previousUrl = url()->previous() ?? null;
-
         $this->modelType = get_class($this->model);
+        $this->user = Auth::user();
+        $this->recentUrl = url()->current() ?? null;
+        $this->previousUrl = url()->previous() ?? null;
+        $this->changedAttributes = $this->model->getChanges();
+        $this->changedRelationships = $this->model->getChangedRelationships();
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
             $this->broadcastVia($this->broadcastService);
@@ -137,5 +151,20 @@ abstract class ModelEvent
     public function getPreviousUrl()
     {
         return $this->previousUrl;
+    }
+
+    public function wasChanged($values = null)
+    {
+        if(empty($values)){
+            return count($this->changedAttributes) > 0 || count($this->changedRelationships) > 0;
+        }
+
+        foreach(Arr::wrap($values) as $value){
+            if(array_key_exists($value, $this->changedAttributes) || array_key_exists($value, $this->changedRelationships)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
