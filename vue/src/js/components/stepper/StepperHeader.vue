@@ -28,7 +28,7 @@
     <!-- Summary step -->
     <v-stepper-item
       :complete="activeStep > forms.length"
-      title="Preview & Summary"
+      :title="$t('Preview & Summary')"
       :value="forms.length+1"
       color="primary"
       :step="`Step Summary`"

@@ -563,7 +563,7 @@
                       :validate-on="`submit blur`"
                       class="w-50"
 
-                      :rules="[requiredRule('classic', 1, undefined, 'Assignee is required')]"
+                      :rules="[requiredRule('classic', 1, undefined, $t('Assignee is required'))]"
 
                       required
 
@@ -614,7 +614,7 @@
 
                       :rules="[
                         requiredRule('classic', 1, 1, 'Description is required'),
-                        minRule(10, 'Description must be at least 10 characters')
+                        minRule(10, $t('Description must be at least 10 characters'))
                       ]"
 
                       validate-on="input lazy"

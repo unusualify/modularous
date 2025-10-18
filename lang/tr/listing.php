@@ -86,6 +86,7 @@ return [
         'team-completed-assignments' => 'Ekip Tarafından Tamamlanan Görevler',
         'team-pending-assignments' => 'Ekip Tarafından Bekleyen Görevler',
         'trash' => 'Çöp',
+        'unanswered-message' => 'Cevaplanmamış Mesaj',
         'unauthorized' => 'Yetkisiz',
         'your-authorizations' => 'Yetkileriniz',
         'your-completed-assignments' => 'Tamamladığınız Görevler',

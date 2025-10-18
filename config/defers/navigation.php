@@ -120,13 +120,13 @@ return [
         ],
         'default' => [
             [
-                'name' => 'Profile Settings',
+                'name' => __('Profile Settings'),
                 'route_name' => 'admin.profile',
                 'icon' => '$accountSettings',
 
             ],
             'permissions' => [
-                'name' => 'Permissions',
+                'name' => __('Permissions'),
                 'route_name' => 'admin.system.system_user.permission.index',
                 'icon' => '$accountSettings',
                 'can' => 'permission_view',

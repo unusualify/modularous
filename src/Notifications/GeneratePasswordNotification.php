@@ -78,7 +78,7 @@ class GeneratePasswordNotification extends Notification
     {
         return (new MailMessage)
             ->subject(Lang::get('Generate Your Password For New Account'))
-            ->line(Lang::get('Welcome to ' . env('APP_NAME') . '. Please click the button below to generate your password.'))
+            ->line(Lang::get('Welcome to :appName. Please click the button below to generate your password.', ['appName' => config('app.name')]))
             ->action(Lang::get('Generate Password'), $url);
         // ->line(Lang::get('If you did not create an account, no further action is required.'));
     }
