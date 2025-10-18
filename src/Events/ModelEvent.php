@@ -71,7 +71,7 @@ abstract class ModelEvent
         $this->recentUrl = url()->current() ?? null;
         $this->previousUrl = url()->previous() ?? null;
         $this->changedAttributes = $this->model->getChanges();
-        $this->changedRelationships = $this->model->getChangedRelationships();
+        $this->changedRelationships = method_exists($this->model, 'getChangedRelationships') ? $this->model->getChangedRelationships() : [];
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
             $this->broadcastVia($this->broadcastService);
