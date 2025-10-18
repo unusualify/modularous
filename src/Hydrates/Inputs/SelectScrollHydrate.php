@@ -86,7 +86,7 @@ class SelectScrollHydrate extends InputHydrate
         ) {
             array_unshift($input['items'], [
                 $input['itemValue'] => 0,
-                $input['itemTitle'] => 'Please Select',
+                $input['itemTitle'] => __('Please Select'),
             ]);
         }
     }
