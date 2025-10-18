@@ -91,6 +91,12 @@ class HasPaymentTest extends ModelTestCase
             });
         }
 
+        if (! Schema::hasTable('payment_currency_payment_service')) {
+            Schema::create('payment_currency_payment_service', function (Blueprint $table) {
+                createDefaultRelationshipTableFields($table, 'payment_currency', 'payment_service', config('priceable.tables.currencies', 'unfy_currencies'));
+            });
+        }
+
         $this->iyzicoPaymentService = PaymentService::firstOrCreate(
             [
                 'key' => 'iyzico',
