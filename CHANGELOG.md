@@ -2,6 +2,127 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.49.0 - 2025-10-18
+
+### :rocket: Features
+
+- add number input handling to getModel function by @OoBook in https://github.com/unusualify/modularity/commit/fc8a783166eb5c5bd1c3779b128696452789dbe1
+- add configuration option for including transaction fee by @OoBook in https://github.com/unusualify/modularity/commit/ab40791fa637804839fbd01c56a5ec9e21e8b8d2
+- add transaction fee percentage to payment services by @OoBook in https://github.com/unusualify/modularity/commit/544b6197f4e2c713cc811bdc501728e182743e1f
+- enhance transaction fee handling in payment process by @OoBook in https://github.com/unusualify/modularity/commit/e05a5df4d28d46fc80abb9162c9717adc201cdf6
+- enhance payment configuration with new input types and roles by @OoBook in https://github.com/unusualify/modularity/commit/b2a36c3298c01f1adbd6184f19d1d2f020e5d258
+- enhance currency handling and total amount calculations by @OoBook in https://github.com/unusualify/modularity/commit/d64cbbdcb7372a77c0e6a64f99de38106b5925d5
+- add computed attribute for name with rate by @OoBook in https://github.com/unusualify/modularity/commit/550375c33a9e83737aef32872c92b4c60469786f
+- enhance payment price updates with VAT and discount handling by @OoBook in https://github.com/unusualify/modularity/commit/f011edf1ef6b0b1bb7e01543a5cd1ae629bb5e86
+- add hide-details attribute to input component and remove debug log by @OoBook in https://github.com/unusualify/modularity/commit/f55eb43050c5b3f772d20a8fb1ad7974e7bfe4c4
+- update confirmation messages and translations in English and Turkish by @celikerde in https://github.com/unusualify/modularity/commit/43948392a43000fba19e770415225a2bc0208dc0
+- add new configuration files for deferring UI settings, navigation, and user forms by @OoBook in https://github.com/unusualify/modularity/commit/8d296599b3c7757ec113ba4274caada905302ed0
+- add English language file for Vuetify components by @OoBook in https://github.com/unusualify/modularity/commit/897c481fd30fdf535a339f84ad3eecf9f8f78256
+- add Turkish language file for Vuetify components by @OoBook in https://github.com/unusualify/modularity/commit/aa1901105cc7b612aeab572a865103940b82c0ed
+- enhance translatedAttribute method to support locale selection by @OoBook in https://github.com/unusualify/modularity/commit/a034dc3b7519dfc5a25c91bc55a4103f166b3218
+- add mergeConfigFrom function for configuration merging by @OoBook in https://github.com/unusualify/modularity/commit/7c5bc60c66169a02c96ed24fdbd254f351f318f4
+- introduce LoadLocalizedConfig middleware for dynamic configuration loading by @OoBook in https://github.com/unusualify/modularity/commit/43c532d11af6466a29fd7c718ea68bc74afc3a3d
+- enforce English locale for translations index route by @OoBook in https://github.com/unusualify/modularity/commit/587c7faa16b3b05f6176c7806c5ea564c537b3ba
+- enhance language handling and form translation support by @OoBook in https://github.com/unusualify/modularity/commit/1c3c9e3aa64a5678b9f65e3d621338fc83960bb5
+- restructure language files and enhance translation handling by @OoBook in https://github.com/unusualify/modularity/commit/53ef13e2db1e95c0c0bf96b26613c53f236ed06e
+- expand language files and improve translation structure by @OoBook in https://github.com/unusualify/modularity/commit/c5a273532103596f2b0c3053df9de97f1a489ba5
+- enhance title handling and add attribute casting by @OoBook in https://github.com/unusualify/modularity/commit/8e83f0c928b251c760a1e96c0b4ac5aa22fdfca8
+- add Spatie Laravel-Permission middleware aliases by @OoBook in https://github.com/unusualify/modularity/commit/5d80e49a2fabccb48b86a855f792906a4e3b19ac
+- add raw route and config retrieval methods by @OoBook in https://github.com/unusualify/modularity/commit/94bdfc65a0022f33d33cf63008d0bb361978ed65
+- add resetConfig method for configuration management by @OoBook in https://github.com/unusualify/modularity/commit/f23876e9ffc7d28ff91338b90d1fd165ac11c7e4
+- add SyncTranslationsCommand and enhance translation publishing by @OoBook in https://github.com/unusualify/modularity/commit/142aeb1d676f51711cdd26c7e03a2c5a69d4603f
+- add user and URL tracking to model events by @OoBook in https://github.com/unusualify/modularity/commit/be02f2f39f26e5d0dd19bab19c2d337e312ad331
+- add tracking for changed attributes and relationships by @OoBook in https://github.com/unusualify/modularity/commit/69f78f9425a2c5a4ac20d354fb79cea0cd39b932
+- add new labels for Messages and Open by @celikerde in https://github.com/unusualify/modularity/commit/723abc512935e7443ac6d7c77b23546b2d63a07b
+- add new labels for improved localization support by @celikerde in https://github.com/unusualify/modularity/commit/fb5f878ee1afeda12763d718904520655e81d6f5
+- enhance Turkish language support with new labels by @celikerde in https://github.com/unusualify/modularity/commit/150617d4dd104c73245d196ca2277b58316f7072
+- implement locale preference for user entity by @celikerde in https://github.com/unusualify/modularity/commit/f9d3753891406850ad5c5f1878a055a182589c18
+- expand English language support with new labels by @celikerde in https://github.com/unusualify/modularity/commit/7a2847926e113d1f1423a88002154b03b82e01a3
+- expand Turkish language support with new labels by @celikerde in https://github.com/unusualify/modularity/commit/1f54ace5498daaa0efdddd085880f3e342e6f65b
+
+### :wrench: Bug Fixes
+
+- enhance validation rules for name and surname fields by @celikerde in https://github.com/unusualify/modularity/commit/b64af91bcb72800a420da06a81906b9ba4ce4e15
+- enhance minRule and add nameRule for improved input validation by @celikerde in https://github.com/unusualify/modularity/commit/51f1eed795501e514b4d4c0ca90ef9d3149485e7
+- update validation rules for company field and refine name/surname rules by @celikerde in https://github.com/unusualify/modularity/commit/6322b522a1f38e299d4bfc1a723b9433ea7f0d15
+- normalize name and surname inputs during user registration by @celikerde in https://github.com/unusualify/modularity/commit/6e728010999128bc9d61dc5d763d7d3c54be9155
+- trim whitespace from name input in user registration test by @celikerde in https://github.com/unusualify/modularity/commit/aa0563d2f012590e915386904b27771bde46d43c
+- uncomment environment variable setup in runVueProcess method by @OoBook in https://github.com/unusualify/modularity/commit/d3f242c010224ae44a168dd9ddb14cae1960d2ba
+- enhance validation for name and surname fields by @celikerde in https://github.com/unusualify/modularity/commit/700ea6365066c2ff662f49c9934af726c7f570c2
+- refine name validation regex to disallow consecutive hyphens by @celikerde in https://github.com/unusualify/modularity/commit/05b495429c3747bf68554b8343831343fc79a1de
+- add allowed roles for payment refund dialog by @OoBook in https://github.com/unusualify/modularity/commit/03022496c094aa556c8e6f741f2aef6da69a78ba
+- set default active tab to 0 by @OoBook in https://github.com/unusualify/modularity/commit/adfef47c053f60a14c02252292f4d76137092673
+- update markReadMyNotifications method to handle Inertia requests by @OoBook in https://github.com/unusualify/modularity/commit/6f296ba9106d647647de33b263369fa48d64c0de
+- uncomment markAsRead logic in markReadMyNotifications method by @OoBook in https://github.com/unusualify/modularity/commit/106afe9fe743efaab68ee297561e7d72a06e5552
+- correct button text translation keys in registration success messages by @OoBook in https://github.com/unusualify/modularity/commit/5852fa7c8ef728db515f7f140259f9dc4c1b3c49
+- improve locale determination logic by refining conditions for auto locale detection by @OoBook in https://github.com/unusualify/modularity/commit/93e8ea20c7a3eb157310b4a74f53e19480974dea
+- standardize 'VAT' to 'Vat' and update Turkish state label by @celikerde in https://github.com/unusualify/modularity/commit/44a728b8b4fecb0f9dda6aa75768e57c025602cb
+- update English and Turkish language files for consistency and clarity by @celikerde in https://github.com/unusualify/modularity/commit/42f5400d31078d36b30bf0a82970c8cb6b473132
+- update media library dialogs in English and Turkish by @celikerde in https://github.com/unusualify/modularity/commit/6f965f431decf627e968fdaf627dfae146848baf
+- update English and Turkish messages for consistency and clarity by @celikerde in https://github.com/unusualify/modularity/commit/db14bad61a696eaa0cf25b2538f30d280a4be8d9
+- add 'price_type' entry to English and Turkish language files by @celikerde in https://github.com/unusualify/modularity/commit/554b214a463fb76859809b4e55ef49a2b7e41c15
+- restore 'previous' entry in English and Turkish pagination files by @celikerde in https://github.com/unusualify/modularity/commit/e45aaf984fbe42af6304beeb61447dae4cf2d16a
+- update English payment messages and add Turkish translations by @celikerde in https://github.com/unusualify/modularity/commit/75a0883fb40e12c36b7d03ece5d7723f5c95dad5
+- update English and Turkish table headers for consistency by @celikerde in https://github.com/unusualify/modularity/commit/33258907028f35da4f4d9214aa6797a0c8a401f4
+- update English and Turkish validation messages for consistency by @celikerde in https://github.com/unusualify/modularity/commit/bb97d09300680f1a0260bc578d9dbfc86b2e52d5
+- update English and add Turkish email verification messages by @celikerde in https://github.com/unusualify/modularity/commit/6b50bc13a61d5130994a427802ba91ebdb26c3ec
+- update English translation file for clarity and consistency by @celikerde in https://github.com/unusualify/modularity/commit/453eada666493a61547cdfbc21481ed7fdab5e6a
+- enhance English and Turkish language files with new entries and updates by @celikerde in https://github.com/unusualify/modularity/commit/56947391f7506ca961c34a6b63b2dc72ed4d42d6
+- update translation for 'or' prompt in Auth component by @celikerde in https://github.com/unusualify/modularity/commit/10818823a1a80874e421e660e0e2fc17e67d1a96
+- update setStateablePreview method to use locale parameter in translatedAttribute by @OoBook in https://github.com/unusualify/modularity/commit/429194791a7220798e9ca2de34d63f25bc3e9ceb
+- add rules prop and restore hide-details for date input component by @OoBook in https://github.com/unusualify/modularity/commit/f80feea44ca8cb2d7218ad119476bcdcfdff3eea
+- update group title handling and improve item grouping logic by @OoBook in https://github.com/unusualify/modularity/commit/1bd14c58fb9080bb7d98c307dc7b4e128d97bd7b
+- update English and Turkish authentication language files by @celikerde in https://github.com/unusualify/modularity/commit/d196db123c85d4c087d70e1d199839d9dfce316d
+- enhance state hydration with locale fallback support by @OoBook in https://github.com/unusualify/modularity/commit/b7176983cf277f35ffaa2b43cd4081b255c0ad7c
+- correct punctuation in 'forgot-password' label for localization consistency by @celikerde in https://github.com/unusualify/modularity/commit/02cc3539bc6e4214ab05cbf8afdba8ed91762a5b
+- correct button text key for email verification success form by @celikerde in https://github.com/unusualify/modularity/commit/031fff7b403ad850a995ab5830b6e014c8e821b1
+- handle missing getChangedRelationships method gracefully by @OoBook in https://github.com/unusualify/modularity/commit/34eba15b38ffb15504419cc0847859e80bfb1650
+
+### :recycle: Refactors
+
+- remove console logs for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/f973429eb80e9cfcec731d61060e73cf256ad034
+- modularize Vuetify initialization and enhance i18n integration by @OoBook in https://github.com/unusualify/modularity/commit/43c8231836fa8818bce0edd53c158d0819dffa33
+- remove console log from global Vue mixin by @OoBook in https://github.com/unusualify/modularity/commit/d7e579fb69b399cd3fa169b3fdefc167829ccc1f
+- replace getRouteConfig with getRawRouteConfig by @OoBook in https://github.com/unusualify/modularity/commit/35a38a62dccce507079d521e38d5ab4835144779
+- implement preload methods and clean up constructor logic by @OoBook in https://github.com/unusualify/modularity/commit/e573399e0d4281dc67381515c20f7061de6fc281
+- enhance file and image handling with fallback locale support by @OoBook in https://github.com/unusualify/modularity/commit/f0c1a42da4cd950438ee6f1b362aedc632370d34
+- implement loadConfig method for dynamic configuration loading by @OoBook in https://github.com/unusualify/modularity/commit/6165bfeefc969ac4d6cae402dd516c4bf6535d2b
+- improve input handling and repository checks by @OoBook in https://github.com/unusualify/modularity/commit/d946f3732a6fb1bd31ae4a4666c6574034752089
+- update middleware aliases for modularity by @OoBook in https://github.com/unusualify/modularity/commit/5650f5f56776fde24cb2235272e940f22bef1a75
+- enhance replaceCallback function for array handling by @OoBook in https://github.com/unusualify/modularity/commit/7f2f6478e2ce18fffddb599b5afd32f296377d4a
+- enhance attribute handling for nested keys by @OoBook in https://github.com/unusualify/modularity/commit/fd93b9e72ed2865aa135defeea6c3a45eb116cd9
+- improve locale handling and error logging by @OoBook in https://github.com/unusualify/modularity/commit/0c66c3a571bb1f0466c4371a3cfe418df96444e9
+- update labels for localization support by @celikerde in https://github.com/unusualify/modularity/commit/8656cdf93329266a40728156ba83cd5ee4d42199
+- update labels for localization support by @celikerde in https://github.com/unusualify/modularity/commit/d784091f0f53517a727cc276ef2e10cdc2186532
+- integrate translation function for validation messages by @celikerde in https://github.com/unusualify/modularity/commit/67d4536d0f6a2ff7aa5b5637b3abc059057f1692
+- update static labels to use translation function by @celikerde in https://github.com/unusualify/modularity/commit/abae7709a410dbe717afa6e59e87f784406e0077
+- implement translation function for input validation and placeholders by @celikerde in https://github.com/unusualify/modularity/commit/fb223070b75cb15844b52b22d1a5661847f9019e
+- update welcome message to use dynamic app name by @celikerde in https://github.com/unusualify/modularity/commit/a5a2cf6b6f03f77a74ec0872c981dbde13984d30
+
+### :lipstick: Styling
+
+- lint coding styles for v0.49.0 by @OoBook in https://github.com/unusualify/modularity/commit/1d46fe10473c4e1922a77c1dfe56b767a5eede1f
+
+### :white_check_mark: Testing
+
+- add unit test for normalizeName method by @celikerde in https://github.com/unusualify/modularity/commit/a1c4d01240439366645d62bbc9fdb74e0d9ae973
+- add setup for payment_currency_payment_service table creation by @OoBook in https://github.com/unusualify/modularity/commit/e2a6daa90e5925650b31fae4843f10e970c3fa38
+- add TranslationServiceProvider to package providers by @OoBook in https://github.com/unusualify/modularity/commit/0edeb47fb2c01eb52a311632f3f6a497bd903a37
+
+### :package: Build
+
+- update build artifacts for v0.49.0 by @OoBook in https://github.com/unusualify/modularity/commit/e4cc78ab5e0073a4a031ac8ba5f52364b43d6749
+
+### :green_heart: Workflow
+
+- enable pushing changes in release workflow by @OoBook in https://github.com/unusualify/modularity/commit/cd02ef028b72748c4504997238393f78f4e48652
+
+### :beers: Other Stuff
+
+- update English and Turkish language files with new authentication phrases and improve existing translations by @OoBook in https://github.com/unusualify/modularity/commit/64b14ab6e1ad09a3b29474d09dd662d01116205b
+- format command signature and add alias by @OoBook in https://github.com/unusualify/modularity/commit/9972288803e459bd7d798a713846c9d9cbf487b1
+- add available user locales configuration by @OoBook in https://github.com/unusualify/modularity/commit/c6cfdaaf3572fd8a92cc4f2d4ba389835563fdfb
+
 ## v0.48.1 - 2025-10-08
 
 ### :wrench: Bug Fixes
