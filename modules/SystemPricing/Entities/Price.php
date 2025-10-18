@@ -114,9 +114,8 @@ class Price extends \Oobook\Priceable\Models\Price
         $rawAmount = $this->discounted_raw_amount;
         $totalAmount = $this->total_amount;
 
-
         $currency = $defaultCurrency;
-        if(isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id){
+        if (isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
             $currency = Currency::find($payload['currency_id']);
             $rawAmount = CurrencyExchange::convertTo(
                 $rawAmount,
@@ -147,8 +146,6 @@ class Price extends \Oobook\Priceable\Models\Price
         $modularityPayload['transaction_fee_percentage'] = 0.0;
         $modularityPayload['transaction_fee_amount'] = 0.0;
         $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
-
-
 
         $payload = array_merge([
             'amount' => $totalAmount,

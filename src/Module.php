@@ -418,11 +418,10 @@ class Module extends NwidartModule
         return $this->app['config']->set("{$this->getSnakeName()}{$notation}", $newConfigValue);
     }
 
-
     /**
      * load  module config to the laravel config with the module snake name as the key
      */
-    public function loadConfig() : void
+    public function loadConfig(): void
     {
         $config_folder = GenerateConfigReader::read('config')->getPath();
         $configPath = $this->getDirectoryPath("{$config_folder}/config.php");
@@ -433,11 +432,10 @@ class Module extends NwidartModule
         }
     }
 
-
     /**
      * resetConfig
      */
-    public function resetConfig() : void
+    public function resetConfig(): void
     {
         $this->app['config']->set("{$this->getSnakeName()}", $this->getRawConfig());
     }
@@ -953,6 +951,7 @@ class Module extends NwidartModule
         }
 
         $middlewares = $this->getRawRouteConfig($routeName)['middleware'] ?? [];
+
         return array_merge(
             $autoMiddlewares,
             $middlewares ?? $middlewares['middlewares'] ?? []

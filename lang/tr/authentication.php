@@ -62,5 +62,5 @@ return [
     'verify-login' => 'Girişi Doğrula',
 
     'terms-policy' => 'Koşullar ve Politika',
-    'tos' => 'Koşullar ve Politika\'yı onaylıyorum.'
+    'tos' => 'Koşullar ve Politika\'yı onaylıyorum.',
 ];

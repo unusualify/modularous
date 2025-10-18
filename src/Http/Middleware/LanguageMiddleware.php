@@ -24,23 +24,23 @@ class LanguageMiddleware
 
         if ($request->user() && $request->user()->language) {
             $locale = $request->user()->language;
-        } else if ( $request->has('language')) {
+        } elseif ($request->has('language')) {
             $locale = $request->get('language');
         } else {
             try {
                 if (env('AUTO_LOCALE_FINDER', false)) {
                     $newLocale = mb_strtolower(geoip()->getLocation($request->ip())->iso_code);
-                    if(in_array($newLocale, $availableUserLocales)){
+                    if (in_array($newLocale, $availableUserLocales)) {
                         $locale = $newLocale;
                     }
                 }
 
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 ModularityLog::error('LanguageMiddleware: Error while finding locale with geoip: ' . $e->getMessage());
             }
         }
 
-        if($locale !== $fallbackLocale && \Illuminate\Support\Facades\Route::currentRouteName() == 'languages.translations.index'){
+        if ($locale !== $fallbackLocale && \Illuminate\Support\Facades\Route::currentRouteName() == 'languages.translations.index') {
             $locale = $fallbackLocale;
         }
 

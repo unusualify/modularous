@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
-use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Unusualify\Modularity\Facades\Modularity;
 
 class LoadLocalizedConfig

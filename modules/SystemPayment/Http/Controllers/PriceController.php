@@ -217,7 +217,7 @@ class PriceController extends Controller
         $transactionFeePercentage = 0.0;
         $transactionFeeAmount = 0.0;
         $totalAmountWithoutTransactionFee = $totalAmount;
-        if($hasTransactionFee){
+        if ($hasTransactionFee) {
             $transactionFeePercentage = $paymentService->transaction_fee_percentage;
             $transactionFeeAmount = round($totalAmount * $transactionFeePercentage / 100, 0);
             $totalAmount = $totalAmount + $transactionFeeAmount;

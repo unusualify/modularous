@@ -136,10 +136,10 @@ trait HasStateable
                         }
                     }
 
-                    if($appLocale === $locale) {
-                        if($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
+                    if ($appLocale === $locale) {
+                        if ($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
                             $state->name = $stateConfig[$locale]['name'];
-                        }else{
+                        } else {
                             $state->name = $stateConfig[$fallbackLocale]['name'];
                         }
                     }

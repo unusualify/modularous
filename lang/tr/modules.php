@@ -25,7 +25,7 @@ return [
         ],
         'payment_service' => [
             'name' => 'Ödeme Servisi | Ödeme Servisleri | {n} Ödeme Servisi',
-        ]
+        ],
     ],
 
     'system_pricing' => [
@@ -40,7 +40,7 @@ return [
         ],
         'vat_rate' => [
             'name' => 'Vergi Oranı | Vergi Oranları | {n} Vergi Oranı',
-        ]
+        ],
     ],
 
     'system_user' => [
@@ -55,7 +55,7 @@ return [
         ],
         'user' => [
             'name' => 'Kullanıcı | Kullanıcılar | {n} Kullanıcı',
-        ]
+        ],
     ],
 
     'system_utility' => [
@@ -64,6 +64,6 @@ return [
         ],
         'state' => [
             'name' => 'Durum | Durumlar | {n} Durum',
-        ]
+        ],
     ],
 ];

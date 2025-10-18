@@ -155,12 +155,12 @@ abstract class ModelEvent
 
     public function wasChanged($values = null)
     {
-        if(empty($values)){
+        if (empty($values)) {
             return count($this->changedAttributes) > 0 || count($this->changedRelationships) > 0;
         }
 
-        foreach(Arr::wrap($values) as $value){
-            if(array_key_exists($value, $this->changedAttributes) || array_key_exists($value, $this->changedRelationships)){
+        foreach (Arr::wrap($values) as $value) {
+            if (array_key_exists($value, $this->changedAttributes) || array_key_exists($value, $this->changedRelationships)) {
                 return true;
             }
         }

@@ -3,7 +3,6 @@
 return [
     'back-to-login' => 'Back to Login',
 
-
     'choose-password' => 'Choose password',
     'company' => 'Company Name',
     'confirm-provider' => 'Confirm your {provider} account',
@@ -21,14 +20,12 @@ return [
 
     'email' => 'E-mail address',
 
-
     'forgot-password' => 'Forgot password',
 
     'generate-password' => 'Generate Password',
     'go-to-sign-in' => 'Go to Sign In',
 
     'have-an-account' => 'Already have an account?',
-
 
     'generate-password' => 'Generate Password',
     'go-to-sign-in' => 'Go to Sign In',
@@ -57,7 +54,6 @@ return [
     'oauth-link-title' => 'Re-enter your password to link :provider to your account',
     'otp' => 'One-time password',
 
-
     'password' => 'Password',
     'password-confirmation' => 'Confirm password',
     'password-sent' => 'Password is sent',
@@ -72,7 +68,6 @@ return [
     'repeat-password' => 'Repeat Password',
     'reset-password' => 'Reset password',
     'reset-send' => 'Send password reset link',
-
 
     'sign-in' => 'Sign In',
     'sign-in-oauth' => 'Sign in with :provider',
@@ -89,5 +84,5 @@ return [
     'verify-login' => 'Verify login',
 
     'terms-policy' => 'Terms Policy',
-    'tos' => 'I agree with Terms and Conditions.'
+    'tos' => 'I agree with Terms and Conditions.',
 ];

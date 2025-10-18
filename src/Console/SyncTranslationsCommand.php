@@ -12,11 +12,11 @@ class SyncTranslationsCommand extends BaseCommand
     protected $hidden = true;
 
     /**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'modularity:sync:translations
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'modularity:sync:translations
                             {--dry-run : Show missing keys without syncing}
                             {--only-languages= : Sync only specific languages}
                             {--exclude-languages= : Exclude specific languages}
@@ -39,7 +39,6 @@ class SyncTranslationsCommand extends BaseCommand
     public function __construct()
     {
         parent::__construct();
-
 
     }
 
@@ -117,11 +116,11 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for a specific language.
      *
-     * @param  \Unusualify\Modularity\Services\FileTranslation  $translationFileClass
-     * @param  string  $laravelLangPath
-     * @param  string  $modularityLangPath
-     * @param  string  $language
-     * @param  bool  $isDryRun
+     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param string $laravelLangPath
+     * @param string $modularityLangPath
+     * @param string $language
+     * @param bool $isDryRun
      * @return void
      */
     protected function handleLanguageSync($translationFileClass, $laravelLangPath, $modularityLangPath, $language, $isDryRun)
@@ -136,15 +135,16 @@ class SyncTranslationsCommand extends BaseCommand
 
         if (empty($missingKeys)) {
             $this->info("✅ No missing keys for language '{$language}'");
+
             return;
         }
 
         $this->displayMissingKeys($missingKeys, $language);
 
         if ($isDryRun) {
-            $this->warn("🔎 Dry run mode - no files were modified");
+            $this->warn('🔎 Dry run mode - no files were modified');
         } else {
-            $this->info("📝 Syncing missing keys...");
+            $this->info('📝 Syncing missing keys...');
             $translationFileClass->syncMissingKeysToPath(
                 $laravelLangPath,
                 $modularityLangPath,
@@ -158,10 +158,10 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for all languages.
      *
-     * @param  \Unusualify\Modularity\Services\FileTranslation  $translationFileClass
-     * @param  string  $laravelLangPath
-     * @param  string  $modularityLangPath
-     * @param  bool  $isDryRun
+     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param string $laravelLangPath
+     * @param string $modularityLangPath
+     * @param bool $isDryRun
      * @return void
      */
     protected function handleAllLanguagesSync($translationFileClass, $laravelLangPath, $modularityLangPath, $isDryRun)
@@ -172,7 +172,8 @@ class SyncTranslationsCommand extends BaseCommand
         );
 
         if (empty($allMissingKeys)) {
-            $this->info("✅ No missing keys found in any language");
+            $this->info('✅ No missing keys found in any language');
+
             return;
         }
 
@@ -183,16 +184,16 @@ class SyncTranslationsCommand extends BaseCommand
         }
 
         if ($isDryRun) {
-            $this->warn("🔎 Dry run mode - no files were modified");
+            $this->warn('🔎 Dry run mode - no files were modified');
         } else {
-            $this->info("📝 Syncing all missing keys...");
+            $this->info('📝 Syncing all missing keys...');
             $stats = $translationFileClass->syncAllMissingKeys(
                 $laravelLangPath,
                 $modularityLangPath
             );
 
             $this->newLine();
-            $this->info("✅ Sync completed successfully!");
+            $this->info('✅ Sync completed successfully!');
             $this->info("Total keys synced: {$stats['total_keys']}");
 
             foreach ($stats['languages'] as $language => $count) {
@@ -204,16 +205,16 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for specific languages.
      *
-     * @param  \Unusualify\Modularity\Services\FileTranslation  $translationFileClass
-     * @param  string  $laravelLangPath
-     * @param  string  $modularityLangPath
-     * @param  array  $languages
-     * @param  bool  $isDryRun
+     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param string $laravelLangPath
+     * @param string $modularityLangPath
+     * @param array $languages
+     * @param bool $isDryRun
      * @return void
      */
     protected function handleSpecificLanguagesSync($translationFileClass, $laravelLangPath, $modularityLangPath, $languages, $isDryRun)
     {
-        $this->info("Languages: " . implode(', ', $languages));
+        $this->info('Languages: ' . implode(', ', $languages));
 
         foreach ($languages as $language) {
             $this->handleLanguageSync(
@@ -225,20 +226,19 @@ class SyncTranslationsCommand extends BaseCommand
             );
         }
 
-        $this->info("✅ Successfully synced missing keys for all languages");
+        $this->info('✅ Successfully synced missing keys for all languages');
     }
 
     /**
      * Handle sync for exclude specific languages.
      *
-     * @param  \Unusualify\Modularity\Services\FileTranslation  $translationFileClass
-     * @param  string  $laravelLangPath
-     * @param  string  $modularityLangPath
+     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param string $laravelLangPath
+     * @param string $modularityLangPath
     /**
      * Display missing keys for a language.
-     *
-     * @param  array  $missingKeys
-     * @param  string  $language
+     * @param array $missingKeys
+     * @param string $language
      * @return void
      */
     protected function displayMissingKeys($missingKeys, $language)
@@ -276,10 +276,10 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Ensure language folders exist in the target path.
      *
-     * @param  \Unusualify\Modularity\Services\FileTranslation  $translationFileClass
-     * @param  string  $laravelLangPath
-     * @param  string  $modularityLangPath
-     * @param  string|null  $specificLanguage
+     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param string $laravelLangPath
+     * @param string $modularityLangPath
+     * @param string|null $specificLanguage
      * @return void
      */
     protected function ensureLanguageFoldersExist($translationFileClass, $laravelLangPath, $modularityLangPath, $specificLanguage = null)
@@ -308,7 +308,7 @@ class SyncTranslationsCommand extends BaseCommand
 
         // Create language folders if they don't exist
         foreach ($languages as $language) {
-            $languageFolder = $modularityLangPath.DIRECTORY_SEPARATOR.$language;
+            $languageFolder = $modularityLangPath . DIRECTORY_SEPARATOR . $language;
 
             if (! $disk->exists($languageFolder)) {
                 $this->warn("📁 Creating language folder: {$language}");

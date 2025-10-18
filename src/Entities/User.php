@@ -21,7 +21,7 @@ use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
 
-class User extends Authenticatable implements MustVerifyEmailContract, HasLocalePreference
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
 {
     use HasApiTokens,
         HasFactory,

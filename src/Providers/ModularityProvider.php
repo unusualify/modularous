@@ -43,8 +43,7 @@ class ModularityProvider extends ServiceProvider
         // Has to be merged after routeServiceProvider registered
         if (exceptionalRunningInConsole()) {
             // $this->mergeConfigFrom(__DIR__ . '/../../config/navigation.php', modularityBaseKey() . '-navigation');
-            $this->booted(function () {
-            });
+            $this->booted(function () {});
         }
     }
 

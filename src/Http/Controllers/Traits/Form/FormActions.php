@@ -44,9 +44,7 @@ trait FormActions
     /**
      * @var array
      */
-    public function setFormActions()
-    {
-    }
+    public function setFormActions() {}
 
     public function getFormActions(): array
     {

@@ -104,6 +104,7 @@ abstract class ApiController extends CoreController
 
         $this->middleware(function ($request, $next) {
             $this->preload();
+
             return $next($request);
         });
 

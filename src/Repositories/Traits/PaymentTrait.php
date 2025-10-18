@@ -163,7 +163,7 @@ trait PaymentTrait
                 ...($fields['price_discount_percentage'] ? ['discount_percentage' => $fields['price_discount_percentage']] : []),
             ];
 
-            if(!empty($paymentPricePayload)){
+            if (! empty($paymentPricePayload)) {
                 $paymentPrice->update($paymentPricePayload);
                 $paymentPrice->refresh();
             }

@@ -41,18 +41,20 @@ trait CreateVerifiedEmailAccount
                 function ($_, $value, $fail) {
                     if (preg_match('/\s{2,}/', $value)) {
                         $fail('This field cannot contain multiple consecutive spaces in between the names.');
+
                         return;
                     }
-                }
+                },
             ],
             'surname' => [
                 'required',
                 function ($_, $value, $fail) {
                     if (preg_match('/\s{2,}/', $value)) {
                         $fail('This field cannot contain multiple consecutive spaces in between the names.');
+
                         return;
                     }
-                }
+                },
             ],
             'company' => 'required',
             'password' => ['required', 'confirmed'],

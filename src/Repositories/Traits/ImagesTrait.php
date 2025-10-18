@@ -83,7 +83,6 @@ trait ImagesTrait
             $default_locale = config('app.locale');
             $fallback_locale = config('app.fallback_locale');
 
-
             foreach ($this->getColumns(__TRAIT__) as $role) {
                 if (isset($mediasByRole[$role])) {
                     $input = $this->inputs()[$role];

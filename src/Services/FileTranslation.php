@@ -40,8 +40,8 @@ class FileTranslation extends File
     /**
      * Get all translations from a different language path.
      *
-     * @param  string  $languageFilesPath
-     * @param  string  $language
+     * @param string $languageFilesPath
+     * @param string $language
      * @return Collection
      */
     public function getTranslationsFromPath($languageFilesPath, $language)
@@ -54,9 +54,9 @@ class FileTranslation extends File
     /**
      * Find translation keys that exist in source path but not in target path.
      *
-     * @param  string  $sourcePath
-     * @param  string  $targetPath
-     * @param  string  $language
+     * @param string $sourcePath
+     * @param string $targetPath
+     * @param string $language
      * @return array
      */
     public function findMissingKeysFromPath($sourcePath, $targetPath, $language)
@@ -70,8 +70,6 @@ class FileTranslation extends File
     /**
      * Compare two translation collections and find missing keys.
      *
-     * @param  Collection  $source
-     * @param  Collection  $target
      * @return array
      */
     protected function compareTranslations(Collection $source, Collection $target)
@@ -102,8 +100,8 @@ class FileTranslation extends File
     /**
      * Find all missing translation keys across all languages.
      *
-     * @param  string  $sourcePath
-     * @param  string  $targetPath
+     * @param string $sourcePath
+     * @param string $targetPath
      * @return array
      */
     public function findAllMissingKeys($sourcePath, $targetPath)
@@ -127,10 +125,10 @@ class FileTranslation extends File
     /**
      * Sync missing keys from source path to target path for a specific language.
      *
-     * @param  string  $sourcePath
-     * @param  string  $targetPath
-     * @param  string  $language
-     * @param  array  $missingKeys
+     * @param string $sourcePath
+     * @param string $targetPath
+     * @param string $language
+     * @param array $missingKeys
      * @return void
      */
     public function syncMissingKeysToPath($sourcePath, $targetPath, $language, $missingKeys)
@@ -153,10 +151,10 @@ class FileTranslation extends File
     /**
      * Sync group translations to target path.
      *
-     * @param  FileTranslation  $targetInstance
-     * @param  string  $language
-     * @param  string  $group
-     * @param  array  $translations
+     * @param FileTranslation $targetInstance
+     * @param string $language
+     * @param string $group
+     * @param array $translations
      * @return void
      */
     protected function syncGroupTranslations($targetInstance, $language, $group, $translations)
@@ -174,10 +172,10 @@ class FileTranslation extends File
     /**
      * Sync single (JSON) translations to target path.
      *
-     * @param  FileTranslation  $targetInstance
-     * @param  string  $language
-     * @param  string  $group
-     * @param  array  $translations
+     * @param FileTranslation $targetInstance
+     * @param string $language
+     * @param string $group
+     * @param array $translations
      * @return void
      */
     protected function syncSingleTranslations($targetInstance, $language, $group, $translations)
@@ -195,20 +193,19 @@ class FileTranslation extends File
     /**
      * Save single translations to specific path.
      *
-     * @param  FileTranslation  $targetInstance
-     * @param  string  $language
-     * @param  string  $group
-     * @param  Collection  $translations
+     * @param FileTranslation $targetInstance
+     * @param string $language
+     * @param string $group
      * @return void
      */
     protected function saveSingleTranslationsToPath($targetInstance, $language, $group, Collection $translations)
     {
         $vendor = Str::before($group, '::single');
         $languageFilePath = $vendor !== 'single'
-            ? 'vendor'.DIRECTORY_SEPARATOR."{$vendor}".DIRECTORY_SEPARATOR."{$language}.json"
+            ? 'vendor' . DIRECTORY_SEPARATOR . "{$vendor}" . DIRECTORY_SEPARATOR . "{$language}.json"
             : "{$language}.json";
 
-        $targetPath = $targetInstance->languageFilesPath.DIRECTORY_SEPARATOR.$languageFilePath;
+        $targetPath = $targetInstance->languageFilesPath . DIRECTORY_SEPARATOR . $languageFilePath;
         $directory = dirname($targetPath);
 
         // Create directory if it doesn't exist
@@ -225,8 +222,8 @@ class FileTranslation extends File
     /**
      * Sync all missing keys from source path to target path.
      *
-     * @param  string  $sourcePath
-     * @param  string  $targetPath
+     * @param string $sourcePath
+     * @param string $targetPath
      * @return array Statistics about synced keys
      */
     public function syncAllMissingKeys($sourcePath, $targetPath)
@@ -258,29 +255,30 @@ class FileTranslation extends File
     /**
      * Save namespaced group type language translations.
      *
-     * @param  string  $language
-     * @param  string  $group
-     * @param  array  $translations
+     * @param string $language
+     * @param string $group
+     * @param array $translations
      * @return void
      */
     private function saveNamespacedGroupTranslations($language, $group, $translations)
     {
         [$namespace, $group] = explode('::', $group);
-        $directory = "{$this->languageFilesPath}".DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR."{$namespace}".DIRECTORY_SEPARATOR."{$language}";
+        $directory = "{$this->languageFilesPath}" . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . "{$namespace}" . DIRECTORY_SEPARATOR . "{$language}";
 
         if (! $this->disk->exists($directory)) {
             $this->disk->makeDirectory($directory, 0755, true);
         }
 
         // $this->disk->put("$directory".DIRECTORY_SEPARATOR."{$group}.php", "<?php\n\nreturn ".var_export($translations, true).';'.\PHP_EOL);
-        $this->disk->put("$directory".DIRECTORY_SEPARATOR."{$group}.php", php_array_file_content($translations));
+        $this->disk->put("$directory" . DIRECTORY_SEPARATOR . "{$group}.php", php_array_file_content($translations));
     }
+
     /**
      * Save group type language translations.
      *
-     * @param  string  $language
-     * @param  string  $group
-     * @param  array  $translations
+     * @param string $language
+     * @param string $group
+     * @param array $translations
      * @return void
      */
     public function saveGroupTranslations($language, $group, $translations)
@@ -295,6 +293,6 @@ class FileTranslation extends File
         }
 
         // $this->disk->put("{$this->languageFilesPath}".DIRECTORY_SEPARATOR."{$language}".DIRECTORY_SEPARATOR."{$group}.php", "<?php\n\nreturn ".var_export($translations, true).';'.\PHP_EOL);
-        $this->disk->put("{$this->languageFilesPath}".DIRECTORY_SEPARATOR."{$language}".DIRECTORY_SEPARATOR."{$group}.php", php_array_file_content($translations));
+        $this->disk->put("{$this->languageFilesPath}" . DIRECTORY_SEPARATOR . "{$language}" . DIRECTORY_SEPARATOR . "{$group}.php", php_array_file_content($translations));
     }
 }

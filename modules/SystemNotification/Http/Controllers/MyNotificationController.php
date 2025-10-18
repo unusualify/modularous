@@ -47,11 +47,11 @@ class MyNotificationController extends BaseController
     {
         $this->repository->getModel()->myNotification()->get()->markAsRead();
 
-        if ($this->request->ajax() && !$this->isInertiaRequest()) {
+        if ($this->request->ajax() && ! $this->isInertiaRequest()) {
             return $this->respondWithSuccess(Lang::get('messages.notifications.mark-read-success'));
         }
 
-        if($this->isInertiaRequest()){
+        if ($this->isInertiaRequest()) {
             return to_route('admin.system.system_notification.my_notification.index');
         }
 

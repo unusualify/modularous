@@ -557,7 +557,6 @@ if (! function_exists('benchmark')) {
     }
 }
 
-
 if (! function_exists('mergeConfigFrom')) {
     function mergeConfigFrom($path, $key)
     {

@@ -42,7 +42,6 @@ class PaymentService extends Model
         'paymentCurrencies',
     ];
 
-
     protected function hasTransactionFee(): Attribute
     {
         return Attribute::make(

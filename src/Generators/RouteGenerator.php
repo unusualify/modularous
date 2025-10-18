@@ -1064,7 +1064,7 @@ class RouteGenerator extends Generator
 
         $this->translation->addGroupTranslation('en', 'modules', $languageKey, $languageValue);
 
-        foreach($this->translation->allLanguages() as $locale) {
+        foreach ($this->translation->allLanguages() as $locale) {
             $this->translation->addGroupTranslation($locale, 'modules', $languageKey, $languageValue);
         }
 

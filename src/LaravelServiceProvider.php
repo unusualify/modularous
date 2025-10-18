@@ -97,7 +97,7 @@ final class LaravelServiceProvider extends ServiceProvider
     private function publishIgnoredLang(): void
     {
         $this->publishes([
-           file_exists(base_path('lang')) ? base_path('lang') : __DIR__ . '/../lang' => base_path('modularity/lang'),
+            file_exists(base_path('lang')) ? base_path('lang') : __DIR__ . '/../lang' => base_path('modularity/lang'),
         ], 'ignored-lang');
     }
 
