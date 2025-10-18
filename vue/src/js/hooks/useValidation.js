@@ -11,10 +11,11 @@ export default function useValidation (props) {
   // const { d } = useI18n({ useScope: 'global' })
 
   // const formatterColumns = ref(headers.filter((h) =>
-  //   h.hasOwnProperty('formatter') && h.formatter.length > 0
+    //   h.hasOwnProperty('formatter') && h.formatter.length > 0
   // ))
 
   const { valid } = toRefs(props)
+  const { t } = useI18n()
 
   const state = reactive({
     validModel: valid?.value ?? null,
@@ -39,14 +40,14 @@ export default function useValidation (props) {
         // Basic format check
         const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!basicEmailRegex.test(v)) {
-            return msg || 'Invalid email format';
+            return msg || t('Invalid email format');
         }
 
         // Strict format check
         if (strict) {
             const strictEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!strictEmailRegex.test(v)) {
-                return msg || 'Email contains invalid characters';
+                return msg || t('Email contains invalid characters');
             }
         }
 
@@ -109,7 +110,7 @@ export default function useValidation (props) {
     requiredRule: (type ='classic',  minOrExact = 1, max, msg) => v => {
       switch(type) {
         case 'classic':
-          return !!v || msg || 'Required';
+          return !!v || msg || t('Required');
         case 'array':
         case 'object':
           max = _.toNumber(max)
