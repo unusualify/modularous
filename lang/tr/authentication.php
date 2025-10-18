@@ -13,7 +13,7 @@ return [
 
     'email' => 'E-posta Adresi',
 
-    'forgot-password' => 'Şifrenizi Mi Unuttunuz',
+    'forgot-password' => 'Şifrenizi Mi Unuttunuz?',
 
     'generate-password' => 'Şifre Oluştur',
     'go-to-sign-in' => 'Giriş Yap',
