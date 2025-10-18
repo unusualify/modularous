@@ -511,6 +511,12 @@
         if(props.orderBy){
           items.sort((a, b) => {
             if(props.orderByDirection === 'asc'){
+              try {
+                return a[props.orderBy].localeCompare(b[props.orderBy])
+              } catch (error) {
+                console.log(props.orderBy, a, b)
+                return 0
+              }
               return a[props.orderBy].localeCompare(b[props.orderBy])
             } else {
               return b[props.orderBy].localeCompare(a[props.orderBy])

@@ -380,13 +380,13 @@ export default {
                   formRef.validate()
                   break loopValues;
                 }else{
-                  console.info('FormTabs validateInput', {
-                    id,
-                    formRef,
-                    formRefValue: this.getFormRef(id)?.value,
-                    activeTab: this.activeTab,
-                    formRefs: this.formRefs,
-                  })
+                  // console.info('FormTabs validateInput', {
+                  //   id,
+                  //   formRef,
+                  //   formRefValue: this.getFormRef(id)?.value,
+                  //   activeTab: this.activeTab,
+                  //   formRefs: this.formRefs,
+                  // })
                 }
               }
 
