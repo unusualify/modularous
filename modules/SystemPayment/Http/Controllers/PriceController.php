@@ -390,6 +390,22 @@ class PriceController extends Controller
             return redirect()->back()->with('error', 'Payment service does not support built-in form');
         }
 
+        $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
+        $transactionFeePercentage = 0.0;
+        $transactionFeeAmount = 0.0;
+        $totalAmountWithoutTransactionFee = $totalAmount;
+        if ($hasTransactionFee) {
+            $transactionFeePercentage = $paymentService->transaction_fee_percentage;
+            $transactionFeeAmount = round($totalAmount * $transactionFeePercentage / 100, 0);
+            $totalAmount = $totalAmount + $transactionFeeAmount;
+        }
+
+        $modularityPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
+        $modularityPayload['transaction_fee_exists'] = $hasTransactionFee;
+        $modularityPayload['transaction_fee_percentage'] = $transactionFeePercentage;
+        $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
+        $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
+
         $orderId = uniqid('ORD');
         $modularityPayload = [
             'previous_url' => url()->previous(),
