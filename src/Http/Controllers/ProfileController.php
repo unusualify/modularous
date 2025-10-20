@@ -119,6 +119,8 @@ class ProfileController extends BaseController
             'hasSubmit' => true,
             'stickyButton' => false,
             'modelValue' => $userFields,
+            'refreshOnSaved' => true,
+            'forceRefresh' => true,
             'schema' => $userSchema,
             'defaultItem' => collect($userSchema)->mapWithKeys(function ($item, $key) {
                 return [$item['name'] => $item['default'] ?? ''];
