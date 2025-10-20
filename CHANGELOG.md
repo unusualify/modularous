@@ -2,6 +2,13 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.49.1 - 2025-10-20
+
+### :wrench: Bug Fixes
+
+- add transaction fee calculation to checkout process by @OoBook in https://github.com/unusualify/modularity/commit/e46d4e5603cd7e7b349b001872994c7329709372
+- add refresh options to edit method by @OoBook in https://github.com/unusualify/modularity/commit/002e8cdaea2fc49630db5a73d36638b5bf9d64ec
+
 ## v0.49.0 - 2025-10-18
 
 ### :rocket: Features
