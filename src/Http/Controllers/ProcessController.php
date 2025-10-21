@@ -99,7 +99,7 @@ class ProcessController extends Controller
 
         return response()->json([
             'variant' => 'success',
-            'message' => 'Process updated successfully',
+            'message' => __('Process updated successfully'),
             'process_status' => $process->status,
         ]);
     }
