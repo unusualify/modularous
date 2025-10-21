@@ -101,7 +101,7 @@ class PaymentServiceHydrate extends InputHydrate
             [
                 'type' => 'filepond',
                 'name' => 'bank_receipt',
-                'label' => 'Upload Transfer Receipt',
+                'label' => __('Upload Transfer Receipt'),
                 'col' => ['cols' => 12],
                 'acceptedExtensions' => ['pdf', 'jpg', 'jpeg', 'png'],
                 'max-files' => 2,
@@ -112,7 +112,7 @@ class PaymentServiceHydrate extends InputHydrate
                 'type' => 'checkbox',
                 'name' => 'tos',
                 'col' => ['cols' => 12],
-                'label' => 'I have made the transfer',
+                'label' => __('I have made the transfer'),
                 'rules' => 'required',
             ],
         ]);
