@@ -223,7 +223,7 @@
         (response) => {
           if(response.status === 200) {
             Alert.openAlert({
-              message: 'You have successfully assigned a task!',
+              message: t('You have successfully assigned a task!'),
               location: 'top',
               variant: 'success',
               ...response.data,
@@ -575,7 +575,7 @@
                       :variant="variant"
                       :label="$t('Due Date')"
                       :rules="[
-                        requiredRule('classic', 1, 1, 'Pick a due date'),
+                        requiredRule('classic', 1, 1, $t('Pick a due date')),
                         dateRule(),
                         futureDateRule(minDueDays, 'days')
                       ]"
@@ -613,7 +613,7 @@
                       class="flex-grow-1"
 
                       :rules="[
-                        requiredRule('classic', 1, 1, 'Description is required'),
+                        requiredRule('classic', 1, 1, $t('Description is required')),
                         minRule(10, $t('Description must be at least 10 characters'))
                       ]"
 

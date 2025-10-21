@@ -65,17 +65,17 @@
           {{ statusCode }}
         </h1>
         <h2 class="text-h4 font-weight-medium mb-6">
-          {{ statusText }}
+          {{ $t(statusText) }}
         </h2>
         <p class="text-h6 text-medium-emphasis mb-4">
-          {{ description }}
+          {{ $t(description) }}
         </p>
         <v-alert
           :type="alert"
           variant="tonal"
           class="mb-6"
         >
-          {{ alertText }}
+          {{ $t(alertText) }}
         </v-alert>
         <v-btn
           color="primary"

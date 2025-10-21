@@ -23,7 +23,7 @@
         </td>
         <td class="border-0 h-auto py-1 d-flex justify-end pr-0 font-weight-bold">
           <slot name="total">
-            <ue-text-display class="text-h5 text-white" text="$2500" subText="+ VAT" />
+            <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" />
           </slot>
         </td>
       </tr>
