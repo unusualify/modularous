@@ -499,9 +499,9 @@ class PriceController extends Controller
         $modularityPayload = new \stdClass;
         if ($request->get('id')) {
             $payment = Payment::find($request->get('id'));
-            if($payment && $payment->parameters) {
+            if ($payment && $payment->parameters) {
                 $modularityPayload = $payment->parameters->modularity ?? new \stdClass;
-                if(isset($modularityPayload->locale)) {
+                if (isset($modularityPayload->locale)) {
                     app()->setLocale($modularityPayload->locale);
                 }
             }
