@@ -11,7 +11,7 @@
           <v-select
             v-model="currencyModel"
             :items="formattedCurrencies"
-            label="Currency"
+            :label="$t('Currency')"
             variant="outlined"
             density="comfortable"
             item-title="display"
@@ -74,7 +74,7 @@
             </div>
             <div v-if="currencyHasTransactionFee" class="service-container" style="border: none;">
               <div class="text-body-1">
-                {{ '* ' + transactionFeeDescription }}
+                {{ '* ' + $t(transactionFeeDescription) }}
               </div>
             </div>
           </v-radio-group>
@@ -259,11 +259,6 @@ export default {
     includeTransactionFee: {
       type: Boolean,
       default: false
-    },
-
-    transactionFeePercentage: {
-      type: Number,
-      default: 3
     },
     transactionFeeDescription: {
       type: String,
