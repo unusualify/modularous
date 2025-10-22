@@ -144,6 +144,7 @@ trait CreateVerifiedEmailAccount
         $company->save();
 
         $user->company_id = $company->id;
+        $user->language = $credentials['language'] ?? app()->getLocale();
         $user->save();
 
         event(new ModularityUserRegistered($user, request()));

@@ -193,6 +193,7 @@ class RegisterController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
+            'language' => $request['language'] ?? app()->getLocale(),
         ]);
 
         $user->assignRole('client-manager');
