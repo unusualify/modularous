@@ -2,6 +2,42 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.49.2 - 2025-10-22
+
+### :wrench: Bug Fixes
+
+- update VAT display to use translation key for localization by @celikerde in https://github.com/unusualify/modularity/commit/5a053008d647a2300fdea81a5a243f6b9f5396ab
+- update button text to use translation keys for localization by @celikerde in https://github.com/unusualify/modularity/commit/a89ff1a15beedde7012a5bcacbdc2bc3f6867885
+- update labels to use translation functions for localization by @celikerde in https://github.com/unusualify/modularity/commit/b696b7c7a78fa5bc521a9a8fcfb83be4fc336cff
+- apply translation functions to status labels for localization by @celikerde in https://github.com/unusualify/modularity/commit/0a60d43e22d7aaf79ed4ba7540e2a7023f7058b6
+- apply translation functions to labels for localization by @celikerde in https://github.com/unusualify/modularity/commit/66765bdfa0bce732eeae4fb12605e133e419169a
+- apply translation functions to alert messages and validation rules for localization by @celikerde in https://github.com/unusualify/modularity/commit/ba3dd24360a65cc15ee472b7084ba9859db77358
+- apply translation function to "Total Pay" label for localization by @celikerde in https://github.com/unusualify/modularity/commit/08a9c42a7a07f9a5581d70de124d0239ec7afd24
+- update VAT display to use translation key for localization by @celikerde in https://github.com/unusualify/modularity/commit/69c26bda2dc1985b04babaaab8511948af4fd247
+- apply translation function to status text, description, and alert messages for localization by @celikerde in https://github.com/unusualify/modularity/commit/e06c7b06a6c67228c8946aeaaa27d65ee3705cde
+- apply translation function to sub-text for localization by @celikerde in https://github.com/unusualify/modularity/commit/81a0c02a9d049de37281e247f61a6dad1cb700c7
+- apply translation function to success message for localization by @celikerde in https://github.com/unusualify/modularity/commit/0eb7e11bed840a993cbd75d69f3ffce9cc318d90
+- add locale to modularity payload and refactor transaction fee handling for improved localization by @OoBook in https://github.com/unusualify/modularity/commit/c1114ad7fe82efbd87d44c2bce1b5a08fa50f46b
+- reorder locale determination logic for improved user language handling by @OoBook in https://github.com/unusualify/modularity/commit/d1192d3537439adef2bc774b44caa478a7fdb4c4
+- update middleware key for consistency in localization handling by @OoBook in https://github.com/unusualify/modularity/commit/8dbc0662d6a14fade27de271dcd146ac003cfea5
+- apply translation function to currency label and transaction fee description for improved localization by @OoBook in https://github.com/unusualify/modularity/commit/84c9f8a2682bc3b85d3289dbf61c476cc63df09c
+- update preferredLocale method to return user language or app locale for improved localization by @OoBook in https://github.com/unusualify/modularity/commit/96c576c36549f77e371ad3ecf07d1c904d832fdd
+- add edit message for My Payment in English and Turkish language files by @OoBook in https://github.com/unusualify/modularity/commit/7f5b9790aef02d45983cd845fa2b4fe3f86d12cb
+
+### :recycle: Refactors
+
+- enhance validation messages with translation support by @celikerde in https://github.com/unusualify/modularity/commit/880485b5e647cc62cf02f0803036684486682e52
+- integrate moment.js for locale handling and add additional locales for improved localization support by @OoBook in https://github.com/unusualify/modularity/commit/36a8af636b2825ba74d99368cb13c33e6a26c140
+- add language files for German, English, French, Dutch, and Turkish in FilePond component by @OoBook in https://github.com/unusualify/modularity/commit/db77c60aa1a93d28bf282f95572f0330c8f4b7bc
+
+### :lipstick: Styling
+
+- lint coding styles for v0.49.2 by @OoBook in https://github.com/unusualify/modularity/commit/0a5b1075cf2d6c8ca60378a757e153da3c681331
+
+### :package: Build
+
+- update build artifacts for v0.49.2 by @OoBook in https://github.com/unusualify/modularity/commit/59d6f2dfacb210a21eccc9653e2eef9ae02d5642
+
 ## v0.49.1 - 2025-10-20
 
 ### :wrench: Bug Fixes
