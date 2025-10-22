@@ -22,10 +22,10 @@ class LanguageMiddleware
         $locale = $defaultLocale;
         $availableUserLocales = modularityConfig('available_user_locales');
 
-        if ($request->user() && $request->user()->language) {
-            $locale = $request->user()->language;
-        } elseif ($request->has('language')) {
+        if ($request->has('language')) {
             $locale = $request->get('language');
+        } elseif ($request->user() && $request->user()->language) {
+            $locale = $request->user()->language;
         } else {
             try {
                 if (env('AUTO_LOCALE_FINDER', false)) {
