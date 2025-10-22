@@ -3,6 +3,7 @@ import { upperFirst } from 'lodash-es'
 
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { useI18n } from 'vue-i18n'
+import moment from 'moment/dist/moment'
 
 import core from '@/core'
 // import VFormBase from 'vuetify-form-base';
@@ -73,6 +74,7 @@ export default {
     // set locale wrt user profile preference
     setI18nLocale(i18n, store.state.user.locale)
     loadLocaleMessages(i18n, window[import.meta.env.VUE_APP_NAME]?.ENDPOINTS.languages ?? '')
+    moment.locale(store.state.user.locale)
 
     const vuetify = createModularityVuetify({
       locale: {
