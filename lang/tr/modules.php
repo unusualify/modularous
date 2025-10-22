@@ -16,6 +16,9 @@ return [
         ],
         'my_payment' => [
             'name' => 'Ödemem | Ödemelerim | {n} Ödemem',
+            'messages' => [
+                'edit' => 'Ödemeyi Görüntüle',
+            ],
         ],
         'payment' => [
             'name' => 'Ödeme | Ödemeler | {n} Ödeme',

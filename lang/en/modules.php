@@ -16,6 +16,9 @@ return [
         ],
         'my_payment' => [
             'name' => 'My Payment | My Payments | {n} My Payment',
+            'messages' => [
+                'edit' => 'Show Payment',
+            ],
         ],
         'payment' => [
             'name' => 'Payment | Payments | {n} Payment',
