@@ -21,6 +21,7 @@ class LanguageMiddleware
         $fallbackLocale = app()->getFallbackLocale();
         $locale = $defaultLocale;
         $availableUserLocales = modularityConfig('available_user_locales');
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $request->ip();
 
         if ($request->has('language')) {
             $locale = $request->get('language');
@@ -28,8 +29,9 @@ class LanguageMiddleware
             $locale = $request->user()->language;
         } else {
             try {
-                if (env('AUTO_LOCALE_FINDER', false)) {
-                    $newLocale = mb_strtolower(geoip()->getLocation($request->ip())->iso_code);
+                if (env('MODULARITY_AUTO_LOCALE_FINDER', false)) {
+                    $newLocale = mb_strtolower(geoip()->getLocation($ip)->iso_code);
+
                     if (in_array($newLocale, $availableUserLocales)) {
                         $locale = $newLocale;
                     }
