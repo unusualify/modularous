@@ -274,6 +274,7 @@ return [
             'type' => 'password',
             'name' => 'password',
             'label' => 'Password',
+            'hideDetails' => 'auto',
         ],
     ],
     'login_form' => [
@@ -306,6 +307,7 @@ return [
             'col' => [
                 'lg' => 12,
             ],
+            'hideDetails' => 'auto',
         ],
     ],
     'forgot_password_form' => [
@@ -314,6 +316,8 @@ return [
             'name' => 'email',
             'label' => 'Email',
             'default' => '',
+            'hideDetails' => 'auto',
+            'rules' => 'required|email',
         ],
     ],
     'reset_password_form' => [
@@ -353,6 +357,7 @@ return [
             'col' => [
                 'cols' => 12,
             ],
+            'hideDetails' => 'auto',
         ],
         'token' => [
             'type' => 'hidden',
@@ -422,7 +427,7 @@ return [
                 ['required', 'classic', null, null, 'Password is required'],
                 ['min', 8, 'Password must be at least 8 characters'],
             ],
-
+            'hideDetails' => 'auto',
         ],
         'password_confirmation' => [
             'type' => 'password',
@@ -440,6 +445,7 @@ return [
             'rules' => [
                 ['required', 'classic', null, null, 'Confirm Password'],
             ],
+            'hideDetails' => 'auto',
         ],
         'tos' => [
             'type' => 'input-terms-checkbox',
@@ -461,6 +467,7 @@ return [
             'default' => '',
             'rules' => 'required|email',
             'validateOn' => 'lazy input',
+            'hideDetails' => 'auto',
         ],
         'tos' => [
             'type' => 'input-terms-checkbox',
@@ -538,6 +545,7 @@ return [
             'col' => ['cols' => 12, 'lg' => 12],
             'rules' => 'min:8',
             'validateOn' => '',
+            'hideDetails' => 'auto',
         ],
         'token' => [
             'type' => 'hidden',
