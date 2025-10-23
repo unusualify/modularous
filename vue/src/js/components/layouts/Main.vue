@@ -54,6 +54,7 @@
     <ue-sidebar v-if="!hideDefaultSidebar"
       ref="sidebar"
       :items="sidebarItems"
+      v-bind="sidebarAttributes"
       :profileMenu="profileMenu"
     >
       <template v-slot:bottom>
@@ -344,6 +345,14 @@
         }
       },
       authorization: {
+        type: Object,
+        default () {
+          return {
+
+          }
+        }
+      },
+      sidebarAttributes: {
         type: Object,
         default () {
           return {

@@ -17,7 +17,7 @@ if (! function_exists('getLocales')) {
      */
     function getLocales()
     {
-        $locales = collect(config('translatable.locales', ['tr']))->map(function ($locale, $index) {
+        $locales = collect(config('translatable.locales', ['en']))->map(function ($locale, $index) {
             return collect($locale)->map(function ($country) use ($locale, $index) {
                 return is_numeric($index)
                     ? $locale
@@ -283,6 +283,9 @@ if (! function_exists('get_modularity_inertia_main_configuration')) {
             'hideDefaultSidebar' => $data['hideDefaultSidebar'] ?? false,
             'fixedAppBar' => $data['fixedAppBar'] ?? false,
             'appBarOrder' => $data['appBarOrder'] ?? 0,
+            'sidebarAttributes' => [
+                'logoSymbol' => modularityConfig('ui_settings.sidebar.logoSymbol', 'main-logo-dark'),
+            ],
 
             'navigation' => get_modularity_navigation_config(),
             'impersonation' => get_modularity_impersonation_config(),

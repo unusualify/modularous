@@ -18,6 +18,9 @@ return [
             'rail' => true,
             'permanent' => true,
         ],
+
+        // runs on Main.vue component but not on store/modules/config.js
+        'logoSymbol' => 'main-logo-dark',
     ],
     'secondarySidebar' => [
         'exists' => false,

@@ -31,7 +31,7 @@
         >
           <template v-slot:prepend>
             <v-avatar class="ue-sidebar__avatar" color="primary">
-              <ue-svg-icon class="ue-sidebar__logo" symbol="main-logo-dark"></ue-svg-icon>
+              <ue-svg-icon class="ue-sidebar__logo" :symbol="logoSymbol"></ue-svg-icon>
             </v-avatar>
           </template>
         </v-list-item>
@@ -212,6 +212,10 @@
       rating: {
         type: Number,
         default: 0,
+      },
+      logoSymbol: {
+        type: String,
+        default: 'main-logo-dark',
       },
     },
     data() {
