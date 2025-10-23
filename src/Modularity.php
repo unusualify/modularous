@@ -666,6 +666,18 @@ class Modularity extends FileRepository
         return concatenate_path($this->vendorDir, $dir);
     }
 
+    final public function getThemePath($dir = '')
+    {
+        $themeName = $this->config('app_theme');
+        $themePath = $this->getVendorPath("vue/src/sass/themes/{$themeName}");
+
+        if (!file_exists($themePath)) {
+            $themePath = $this->getVendorPath("vue/src/sass/themes/customs/{$themeName}");
+        }
+
+        return concatenate_path($themePath, $dir);
+    }
+
     /**
      * Get modularity namespace.
      *
