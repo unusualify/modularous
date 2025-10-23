@@ -65,7 +65,12 @@
             class="px-xs-12 py-xs-3 px-sm-12 py-sm-3 pa-12 pa-md-0 d-flex flex-column align-center justify-center col-right bg-primary"
           >
             <div class="mw-420">
-              <ue-svg-icon :symbol="logoSymbol" class="mx-0 "></ue-svg-icon>
+              <ue-svg-icon
+                :symbol="logoSymbol"
+                class="mx-0"
+                :class="logoClass"
+                :style="logoStyle"
+              />
 
               <slot name="description">
                 <h2 class="text-white mt-5 text-h4 custom-mb-8rem fs-2rem">
@@ -142,6 +147,14 @@ export default {
     logoSymbol: {
       type: String,
       default: 'main-logo'
+    },
+    logoClass: {
+      type: String,
+      default: ''
+    },
+    logoStyle: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({

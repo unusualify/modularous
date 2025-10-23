@@ -18,7 +18,6 @@
       <v-icon color="green darken-2" large icon="fa:fab fa-atlassian"/>
     </v-avatar> -->
 
-    <!-- <ue-svg-icon class="ue-sidebar__logo" symbol="main-logo-light"></ue-svg-icon> -->
     <template v-slot:prepend>
 
       <v-list class="ue-sidebar__info">
@@ -31,7 +30,7 @@
         >
           <template v-slot:prepend>
             <v-avatar class="ue-sidebar__avatar" color="primary">
-              <ue-svg-icon class="ue-sidebar__logo" :symbol="logoSymbol"></ue-svg-icon>
+              <ue-svg-icon class="ue-sidebar__logo" :symbol="logoSymbol"/>
             </v-avatar>
           </template>
         </v-list-item>

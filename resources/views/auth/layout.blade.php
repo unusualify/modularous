@@ -8,6 +8,17 @@
 
 @php
     $logoSymbol = modularityConfig('ui_settings.auth.logoSymbol');
+    $locale = app()->getLocale();
+
+    $logoSymbol = get_modularity_logo_symbol([
+        "{$logoSymbol}-{$locale}",
+        $logoSymbol,
+        'main-logo',
+    ]);
+
+    $attributes['logoSymbol'] = $logoSymbol;
+    $attributes['logoClass'] = modularityConfig('ui_settings.auth.logoClass', '');
+    $attributes['logoStyle'] = modularityConfig('ui_settings.auth.logoStyle', '');
 @endphp
 
 {{-- @dd(get_defined_vars()) --}}
@@ -17,7 +28,6 @@
         <ue-auth
             title="'{{ __('authentication.create-an-account') ?? 'CREATE AN ACCOUNT' }}'"
             v-bind='@json($attributes ?? [])'
-            logoSymbol="{{ $logoSymbol }}"
             @if(isset($taskState))
                 no-divider
             @endif
