@@ -50,40 +50,38 @@
         </span>
       </slot>
     </template>
-    <template v-slot:append>
-      <ue-modal
-        v-model="showDialog"
-        Xtitle="Terms and Conditions"
-        max-width="600px"
-        no-cancel-button
-
-        :confirm-callback="agreeAndClose"
-        confirm-text="I agree"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            v-if="isRead && false"
-            variant="text"
-            density="compact"
-            color="primary"
-            v-bind="props"
-            @click.stop="showDialog = true"
-          >
-            {{ $t('Read Terms') }}
-          </v-btn>
-        </template>
-        <template v-slot:body.description>
-          <div class="d-flex flex-column align-center justify-center">
-            <ue-title justify="center" :text="$t(`${readType}`)" class="mb-4"></ue-title>
-            <v-sheet class="pa-4 overflow-y-auto" max-height="400px">
-              <!-- Replace this with your actual terms and conditions content -->
-              <div v-html="modalContent"></div>
-            </v-sheet>
-          </div>
-        </template>
-      </ue-modal>
-    </template>
   </v-checkbox>
+  <ue-modal
+    v-model="showDialog"
+    Xtitle="Terms and Conditions"
+    max-width="600px"
+    no-cancel-button
+
+    :confirm-callback="agreeAndClose"
+    confirm-text="I agree"
+  >
+    <template v-slot:activator="{ props }">
+      <v-btn
+        v-if="isRead && false"
+        variant="text"
+        density="compact"
+        color="primary"
+        v-bind="props"
+        @click.stop="showDialog = true"
+      >
+        {{ $t('Read Terms') }}
+      </v-btn>
+    </template>
+    <template v-slot:body.description>
+      <div class="d-flex flex-column align-center justify-center">
+        <ue-title justify="center" :text="$t(`${readType}`)" class="mb-4"></ue-title>
+        <v-sheet class="pa-4 overflow-y-auto" max-height="400px">
+          <!-- Replace this with your actual terms and conditions content -->
+          <div v-html="modalContent"></div>
+        </v-sheet>
+      </div>
+    </template>
+  </ue-modal>
 </template>
 
 <script>
