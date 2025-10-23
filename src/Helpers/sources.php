@@ -278,13 +278,22 @@ if (! function_exists('get_modularity_head_layout_config')) {
 if (! function_exists('get_modularity_inertia_main_configuration')) {
     function get_modularity_inertia_main_configuration(array $data)
     {
+        $locale = app()->getLocale();
+        $sidebarLogoSymbol = modularityConfig('ui_settings.sidebar.logoSymbol', 'mini-logo-dark');
+
+        $sidebarLogoSymbol = get_modularity_logo_symbol([
+            "{$sidebarLogoSymbol}-{$locale}",
+            $sidebarLogoSymbol,
+            'main-logo',
+        ]);
+
         return array_merge([
             'headerTitle' => $data['headerTitle'] ?? config('app.name'),
             'hideDefaultSidebar' => $data['hideDefaultSidebar'] ?? false,
             'fixedAppBar' => $data['fixedAppBar'] ?? false,
             'appBarOrder' => $data['appBarOrder'] ?? 0,
             'sidebarAttributes' => [
-                'logoSymbol' => modularityConfig('ui_settings.sidebar.logoSymbol', 'main-logo-dark'),
+                'logoSymbol' => $sidebarLogoSymbol,
             ],
 
             'navigation' => get_modularity_navigation_config(),
