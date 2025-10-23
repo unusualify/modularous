@@ -17,7 +17,10 @@
   >
     <template v-slot:label="labelScope">
       <slot name="label" v-bind="labelScope">
-        <span class="text-grey-lighten-2">
+        <template v-if="htmlLabel">
+          <div v-html="htmlLabel"></div>
+        </template>
+        <span v-else class="text-grey-lighten-2">
           {{ $t('I agree with') }}
           <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
@@ -129,6 +132,9 @@ export default {
     noHandleClick: {
       type: Boolean,
       default: false
+    },
+    htmlLabel: {
+      type: String,
     }
   },
   setup (props, context) {
