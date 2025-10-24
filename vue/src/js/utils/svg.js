@@ -1,6 +1,8 @@
 // SVGs
 // Should output : '<span class="icon icon--${id}"><svg><title>id</title><use xlink:href="#icon--${id}"></use></svg></span>';
 // <svg class="icon icon--${id}"><title>id</title><use xlink:href="#icon--${id}"></use></svg> if node is already a svg
+import { isString } from 'lodash-es'
+import { useConfig, useLocale } from '@/hooks'
 
 export function addSvg (el, binding, vnode) {
   const classNames = ['icon']
@@ -46,4 +48,52 @@ export function removeSvg (el) {
   classNames.forEach(function (className) {
     el.classList.remove(className)
   })
+}
+
+// Helpers to detect where the sprite lives and check for symbol existence
+export function isHotSvgMode () {
+  const config = useConfig()
+
+  console.log(config.isHot.value)
+
+  // return config.isHot.value
+  return !!document.getElementById('vite-plugin-svg-spritemap')
+}
+
+export function getSvgSpriteContainer () {
+  return document.getElementById('vite-plugin-svg-spritemap') || document.querySelector('.svg-sprite') || document
+}
+
+export function normalizeSymbolId (symbol) {
+  return symbol && symbol.startsWith('icon--') ? symbol : `icon--${symbol}`
+}
+
+export function svgSymbolExists (symbol) {
+  const id = normalizeSymbolId(symbol)
+  const root = getSvgSpriteContainer()
+
+  // Prefer querying <symbol id="..."> within the sprite root
+  const bySymbol = root.querySelector(`symbol[id="${id}"]`)
+  if (bySymbol) return true
+
+  // Fallback: an element with the id might be at document level
+  return !!document.getElementById(id)
+}
+
+export function getSymbol(symbols) {
+  const firstSymbol = symbols.findIndex(symbol => svgSymbolExists(symbol))
+
+  if (firstSymbol !== -1) {
+    return symbols[firstSymbol]
+  }
+
+  return null
+}
+
+export function getLocaleSymbol(symbol, fallback) {
+  let fallbacks = Array.isArray(fallback) ? fallback : (isString(fallback) ? [fallback] : [])
+  const { currentLocale } = useLocale()
+  const locale = currentLocale?.value?.value ?? 'en'
+
+  return getSymbol([`${symbol}-${locale}`, symbol, ...fallbacks])
 }
