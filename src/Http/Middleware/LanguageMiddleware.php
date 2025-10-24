@@ -46,8 +46,6 @@ class LanguageMiddleware
             $locale = $fallbackLocale;
         }
 
-        $locale = 'tr';
-
         config([modularityBaseKey() . '.locale' => $locale]);
         config([modularityBaseKey() . '.timezone' => auth()->user()->timezone ?? 'Europe/London']);
 
