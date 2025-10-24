@@ -89,3 +89,19 @@ if (! function_exists('get_modularity_logo_symbol')) {
         });
     }
 }
+
+if (! function_exists('get_modularity_locale_symbol')) {
+    function get_modularity_locale_symbol(string $symbol, $default = null)
+    {
+        $locale = app()->getLocale();
+        $defaults = is_array($default) ? $default : [$default];
+
+        $symbols = [
+            "{$symbol}-{$locale}",
+            $symbol,
+            ...$defaults,
+        ];
+
+        return get_modularity_logo_symbol($symbols);
+    }
+}
