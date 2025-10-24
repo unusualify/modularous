@@ -18,10 +18,9 @@
 <script>
 import { ref, computed, toRefs, toRef } from 'vue'
 import { useStore } from 'vuex'
-import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
+import { useInput, makeInputProps, makeInputEmits, useCache } from '@/hooks'
 import api from '@/store/api/form'
-import { FORM } from '@/store/mutations'
-
+import { FORM, CACHE } from '@/store/mutations'
 
 export default {
   name: 'v-input-tag',
