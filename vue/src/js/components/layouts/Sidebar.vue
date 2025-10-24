@@ -30,7 +30,7 @@
         >
           <template v-slot:prepend>
             <v-avatar class="ue-sidebar__avatar" color="primary">
-              <ue-svg-icon class="ue-sidebar__logo" :symbol="logoSymbol"/>
+              <ue-svg-icon class="ue-sidebar__logo" :symbol="miniSymbol"/>
             </v-avatar>
           </template>
         </v-list-item>
@@ -181,7 +181,7 @@
 <script>
   import { computed } from 'vue';
   import { useGoTo } from 'vuetify'
-  import { useSidebar } from '@/hooks';
+  import { useSidebar, useSvg } from '@/hooks';
   import { USER } from '@/store/mutations';
 
   export default {
@@ -192,10 +192,16 @@
     },
     setup() {
       const goTo = useGoTo()
+      const { getLocaleSymbol } = useSvg()
+
+      const miniSymbol = computed(() => {
+        return getLocaleSymbol('mini-logo-dark', 'main-logo-dark')
+      })
 
       return {
         ...useSidebar(),
-        goTo
+        goTo,
+        miniSymbol
       }
     },
     props: {

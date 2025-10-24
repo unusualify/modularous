@@ -7,16 +7,13 @@
 @endpush
 
 @php
-    $logoSymbol = modularityConfig('ui_settings.auth.logoSymbol');
-    $locale = app()->getLocale();
+    // $logoSymbol = modularityConfig('ui_settings.auth.logoSymbol');
+    // $locale = app()->getLocale();
 
-    $logoSymbol = get_modularity_logo_symbol([
-        "{$logoSymbol}-{$locale}",
-        $logoSymbol,
-        'main-logo',
-    ]);
+    // $logoSymbol = get_modularity_locale_symbol($logoSymbol, 'main-logo');
 
-    $attributes['logoSymbol'] = $logoSymbol;
+    $attributes['logoSymbol'] = 'main-logo-dark';
+    $attributes['logoLightSymbol'] = 'main-logo-light';
     $attributes['logoClass'] = modularityConfig('ui_settings.auth.logoClass', '');
     $attributes['logoStyle'] = modularityConfig('ui_settings.auth.logoStyle', '');
 @endphp
