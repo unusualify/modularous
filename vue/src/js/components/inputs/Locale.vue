@@ -64,7 +64,7 @@ import { LANGUAGE } from '@/store/mutations'
 import {  LocaleMixin } from '@/mixins'
 import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
 
-import { cloneDeep, omit } from 'lodash-es'
+import { cloneDeep, omit, isObject } from 'lodash-es'
 
 export default {
   name: 'v-input-locale',
@@ -96,8 +96,7 @@ export default {
   },
   watch: {
     modelValue (value) {
-      if (__isObject(value)) {
-        // this.input = value
+      if (isObject(value)) {
         for (const locale in value) {
           this.input[locale] = value[locale]
         }
@@ -116,6 +115,7 @@ export default {
         return this.modelValue
       },
       set (val, old) {
+        console.log('input set', val, old);
         this.inputOnSet(val, old)
         this.updateModelValue(val)
         // context.emit('update:modelValue', val)
@@ -134,6 +134,7 @@ export default {
 
       this.languages.forEach((language) => {
         const attributes = cloneDeep(omit(this.attributes, ['errorMessages']))
+
         // for textfields set initial values using the initialValues prop
         // if (this.initialValues && typeof this.initialValues === 'object' && this.initialValues[lang]) {
         //   attributes.initialValue = this.initialValues[lang]
@@ -142,6 +143,15 @@ export default {
         // }
         attributes.required = !!language.published && this.isRequired
         attributes.name = `${attributes.name}[${language.value}]`
+
+        // if items is an object, and has a property for the current language, set the items to the property value
+        if(!!attributes.items && isObject(attributes.items)) {
+          if(attributes.items[language.value]) {
+            attributes.items = attributes.items[language.value];
+          }else {
+            attributes.items = [];
+          }
+        }
 
         if (__isset(errorMessages[language.value])) {
           attributes.errorMessages = errorMessages[language.value]
@@ -232,8 +242,10 @@ export default {
     modelUpdated (value, lang) {
       try {
         if (this.input && __isset(this.input[lang])) {
-          this.input[lang] = value
-          this.updateModelValue(this.input)
+          const input = cloneDeep(this.input);
+          input[lang] = value
+          this.input = input
+          // this.updateModelValue(this.input)
         } else if (this.input && !__isset(this.input[lang]) && value) {
           this.input = {}
           this.input[lang] = value
