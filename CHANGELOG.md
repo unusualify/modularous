@@ -2,6 +2,49 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.50.0 - 2025-10-27
+
+### :rocket: Features
+
+- introduce dynamic logo symbol and sidebar attributes for improved customization by @OoBook in https://github.com/unusualify/modularity/commit/2692be0056d5fff5b7e70fd7d7d2716f624f3436
+- add support for HTML labels and enhance label slot functionality by @OoBook in https://github.com/unusualify/modularity/commit/6462db4ebb4b46fc7ca4641b34231fb09a710274
+- add functions to check SVG symbol existence and retrieve modularity logo symbol for enhanced icon management by @OoBook in https://github.com/unusualify/modularity/commit/2c063c81e9bb0787cf5112a9639505269e7a44da
+- add getThemePath method to retrieve theme directory for enhanced theming support by @OoBook in https://github.com/unusualify/modularity/commit/5fc3f5cb2044fffcd8a0776fb3b94372af7966d4
+- enhance sidebar logo symbol retrieval with locale support for improved customization by @OoBook in https://github.com/unusualify/modularity/commit/d98fc83955b4580d11ff04f4e4c272f5b2b8fcfb
+- add get_modularity_locale_symbol function for locale-based logo symbol retrieval by @OoBook in https://github.com/unusualify/modularity/commit/06971b60b21fb065075d928bcf0f9b64c3f6e56f
+- add computed properties for ambient state including isHot, appName, and appEnv for enhanced configuration management by @OoBook in https://github.com/unusualify/modularity/commit/df44726057d9d8b54035d5d76bdc38aeb4ac7a13
+- add helper functions for SVG symbol management, including existence checks and locale-based symbol retrieval by @OoBook in https://github.com/unusualify/modularity/commit/987a4296c567ebd57b4ef2ee839250b28619f3b2
+- introduce useSvg hook for SVG symbol management, including existence checks and locale symbol retrieval by @OoBook in https://github.com/unusualify/modularity/commit/d388d761a5b6e6b626597c0c87e223bc9920d7d2
+- implement localization for state names using dynamic localization notation for improved multi-language support by @OoBook in https://github.com/unusualify/modularity/commit/308ea67fc42c227370b6d6ea5e491f6fa70099ec
+
+### :wrench: Bug Fixes
+
+- update IP retrieval method for geoip locale detection by @OoBook in https://github.com/unusualify/modularity/commit/cc884aeb3febb8a1bc3b7fe5b7fb893c503bb4d7
+- add language attribute to user registration for improved localization by @OoBook in https://github.com/unusualify/modularity/commit/71f2e7618135e55f2694e46aa9e317389a937519
+- enhance tag component by integrating cache functionality and updating store mutations for improved state management by @OoBook in https://github.com/unusualify/modularity/commit/21e47cc90b0118c9ea0a9cf5c3604d617c9f66b3
+
+### :recycle: Refactors
+
+- streamline modal structure and improve slot usage for terms and conditions by @OoBook in https://github.com/unusualify/modularity/commit/eb029ad339788ae7d491a867833ea9e0f2f4f0f1
+- remove style prop and simplify template structure for better readability by @OoBook in https://github.com/unusualify/modularity/commit/96a3f3a1668ac816c0a39fbd403f5a22e32fc89f
+- enhance logo customization by adding locale support and dynamic attributes for improved branding by @OoBook in https://github.com/unusualify/modularity/commit/88afbe029472ab19324e4d2fbed5ddeed50268a8
+- add 'hideDetails' attribute to various form fields for improved UI customization by @OoBook in https://github.com/unusualify/modularity/commit/593f9d8f3351767ef741b0a95005bce6f250f6ec
+- streamline logo symbol management by replacing dynamic retrieval with static assignments for improved performance and consistency by @OoBook in https://github.com/unusualify/modularity/commit/85af66ea067bfad6dc3d52db3876039181f8f237
+- remove hardcoded locale assignment to allow dynamic locale configuration by @OoBook in https://github.com/unusualify/modularity/commit/8e7394aee3d43dfc902c818c9bc94120363d65cc
+- comment out unused attribute casting and remove empty data and created hooks for cleaner component structure by @OoBook in https://github.com/unusualify/modularity/commit/7da9883d50ae2f6add30881c30c57fff3520a3bb
+- replace useStore with direct store import for improved clarity and performance by @OoBook in https://github.com/unusualify/modularity/commit/45fbfe217b825a9bf41a28686b8948d6b556ca05
+- remove variant binding from combobox and add default variant prop for improved flexibility by @OoBook in https://github.com/unusualify/modularity/commit/f1cb1b9b8244f229ef2bcd886eee79d64b99d21c
+- enhance locale input handling by replacing lodash's __isObject with isObject and improving item assignment logic for better clarity by @OoBook in https://github.com/unusualify/modularity/commit/42dbe5d1d9dfa9f5fac690e0bc5c1de90ffa566b
+- integrate useCastAttributes for improved attribute handling in locale input by @OoBook in https://github.com/unusualify/modularity/commit/229e48251f4e752ebebbd74d94e0a63736332839
+
+### :lipstick: Styling
+
+- lint coding styles for v0.50.0 by @OoBook in https://github.com/unusualify/modularity/commit/4fdeeab5ccd0490bf81c57445ee5c75ebbcb75c2
+
+### :package: Build
+
+- update build artifacts for v0.50.0 by @OoBook in https://github.com/unusualify/modularity/commit/364dd848d408fa4a966c58366f7bec0ec701476d
+
 ## v0.49.2 - 2025-10-22
 
 ### :wrench: Bug Fixes
