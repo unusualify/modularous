@@ -73,7 +73,7 @@ export default {
     }
 
     const items = computed(() => {
-      return Cache.states[cacheKey] ?? []
+      return Cache.get(cacheKey) ?? []
       // return store.state.form.taggableItems[props.taggable]
     })
 
