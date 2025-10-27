@@ -1,10 +1,10 @@
 {
   "_UEConfig.!~{00b}~.js": {
-    "file": "css/UEConfig.DZTLnvR4.css",
+    "file": "css/UEConfig.BiWyKIik.css",
     "src": "_UEConfig.!~{00b}~.js"
   },
-  "_UEConfig.D9Hn_KE5.js": {
-    "file": "js/UEConfig.D9Hn_KE5.js",
+  "_UEConfig.D7WFNDOv.js": {
+    "file": "js/UEConfig.D7WFNDOv.js",
     "name": "UEConfig",
     "imports": [
       "_vendor.DJ_2BeGB.js",
@@ -13,7 +13,7 @@
       "_awesome-phonenumber.CPpBdrPW.js"
     ],
     "css": [
-      "css/UEConfig.DZTLnvR4.css"
+      "css/UEConfig.BiWyKIik.css"
     ],
     "assets": [
       "fonts/fa-brands-400.O7nZalfM.woff2",
@@ -116,51 +116,51 @@
     "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
   },
   "src/js/core-auth.js": {
-    "file": "entries/core-auth.BYrXGU_0.js",
+    "file": "entries/core-auth.f5PWS2_F.js",
     "name": "core-auth",
     "src": "src/js/core-auth.js",
     "isEntry": true,
     "imports": [
       "_vendor.DJ_2BeGB.js",
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_awesome-phonenumber.CPpBdrPW.js",
       "_fine-uploader.C8t-Jhyu.js",
       "_vuetify.DZUvVkCx.js"
     ]
   },
   "src/js/core-dashboard.js": {
-    "file": "entries/core-dashboard.NAebdsno.js",
+    "file": "entries/core-dashboard.CogtX8PF.js",
     "name": "core-dashboard",
     "src": "src/js/core-dashboard.js",
     "isEntry": true,
     "imports": [
       "_vendor.DJ_2BeGB.js",
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_awesome-phonenumber.CPpBdrPW.js",
       "_fine-uploader.C8t-Jhyu.js",
       "_vuetify.DZUvVkCx.js"
     ]
   },
   "src/js/core-form.js": {
-    "file": "entries/core-form.NAebdsno.js",
+    "file": "entries/core-form.CogtX8PF.js",
     "name": "core-form",
     "src": "src/js/core-form.js",
     "isEntry": true,
     "imports": [
       "_vendor.DJ_2BeGB.js",
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_awesome-phonenumber.CPpBdrPW.js",
       "_fine-uploader.C8t-Jhyu.js",
       "_vuetify.DZUvVkCx.js"
     ]
   },
   "src/js/core-free.js": {
-    "file": "entries/core-free.C1_YEns_.js",
+    "file": "entries/core-free.UvbnFZ1z.js",
     "name": "core-free",
     "src": "src/js/core-free.js",
     "isEntry": true,
     "imports": [
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_vendor.DJ_2BeGB.js",
       "_vuetify.DZUvVkCx.js",
       "_fine-uploader.C8t-Jhyu.js",
@@ -168,26 +168,26 @@
     ]
   },
   "src/js/core-index.js": {
-    "file": "entries/core-index.NAebdsno.js",
+    "file": "entries/core-index.CogtX8PF.js",
     "name": "core-index",
     "src": "src/js/core-index.js",
     "isEntry": true,
     "imports": [
       "_vendor.DJ_2BeGB.js",
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_awesome-phonenumber.CPpBdrPW.js",
       "_fine-uploader.C8t-Jhyu.js",
       "_vuetify.DZUvVkCx.js"
     ]
   },
   "src/js/core-inertia.js": {
-    "file": "entries/core-inertia.DlRVJpAt.js",
+    "file": "entries/core-inertia.CEbiJN7-.js",
     "name": "core-inertia",
     "src": "src/js/core-inertia.js",
     "isEntry": true,
     "imports": [
       "_vendor.DJ_2BeGB.js",
-      "_UEConfig.D9Hn_KE5.js",
+      "_UEConfig.D7WFNDOv.js",
       "_vuetify.DZUvVkCx.js",
       "_awesome-phonenumber.CPpBdrPW.js",
       "_fine-uploader.C8t-Jhyu.js"
