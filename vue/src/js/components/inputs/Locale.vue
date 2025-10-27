@@ -62,7 +62,7 @@
 import { mapState } from 'vuex'
 import { LANGUAGE } from '@/store/mutations'
 import {  LocaleMixin } from '@/mixins'
-import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
+import { useInput, makeInputProps, makeInputEmits, useCastAttributes } from '@/hooks'
 
 import { cloneDeep, omit, isObject } from 'lodash-es'
 
@@ -71,8 +71,11 @@ export default {
   emits: [...makeInputEmits],
   mixins: [LocaleMixin],
   setup (props, context) {
+    const { castObjectAttributes } = useCastAttributes()
+
     return {
-      ...useInput(props, context)
+      ...useInput(props, context),
+      castObjectAttributes
     }
   },
   props: {
@@ -133,7 +136,9 @@ export default {
       const errorMessages = this.attributes.errorMessages
 
       this.languages.forEach((language) => {
-        const attributes = cloneDeep(omit(this.attributes, ['errorMessages']))
+        let attributes = cloneDeep(omit(this.attributes, ['errorMessages']))
+
+        attributes = this.castObjectAttributes(attributes, {localeParameter: language.value})
 
         // for textfields set initial values using the initialValues prop
         // if (this.initialValues && typeof this.initialValues === 'object' && this.initialValues[lang]) {
