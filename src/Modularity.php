@@ -671,7 +671,7 @@ class Modularity extends FileRepository
         $themeName = $this->config('app_theme');
         $themePath = $this->getVendorPath("vue/src/sass/themes/{$themeName}");
 
-        if (!file_exists($themePath)) {
+        if (! file_exists($themePath)) {
             $themePath = $this->getVendorPath("vue/src/sass/themes/customs/{$themeName}");
         }
 

@@ -21,7 +21,7 @@ class LanguageMiddleware
         $fallbackLocale = app()->getFallbackLocale();
         $locale = $defaultLocale;
         $availableUserLocales = modularityConfig('available_user_locales');
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $request->ip();
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $request->ip();
 
         if ($request->has('language')) {
             $locale = $request->get('language');

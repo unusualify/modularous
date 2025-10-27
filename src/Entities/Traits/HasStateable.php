@@ -144,7 +144,7 @@ trait HasStateable
                         $localizationNotation = str_replace('{model}', $shortClassName, $this->localizationNotation);
                         $localizationNotation = str_replace('{code}', $state->code, $localizationNotation);
 
-                        if(Lang::has($localizationNotation, app()->getLocale(), false)) {
+                        if (Lang::has($localizationNotation, app()->getLocale(), false)) {
                             $state->name = __($localizationNotation);
                         } elseif ($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
                             $state->name = $stateConfig[$locale]['name'];
