@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.50.1 - 2025-10-27
+
+### :recycle: Refactors
+
+- update cache retrieval method in Tag component for improved state management by @OoBook in https://github.com/unusualify/modularity/commit/25d00bd2e0e2d2cf6db523b701971d918ac83019
+
+### :package: Build
+
+- update build artifacts for v0.50.1 by @OoBook in https://github.com/unusualify/modularity/commit/2b0863af8d491795d15af7e1e31d45751e7f45ef
+
 ## v0.50.0 - 2025-10-27
 
 ### :rocket: Features
