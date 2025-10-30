@@ -22,6 +22,10 @@ export default function useCastAttributes () {
     return EvalPattern.test(value)
   }
 
+  const matchAnyPattern = (value) => {
+    return matchAttribute(value) || matchEvalAttribute(value) || matchStandardAttribute(value)
+  }
+
   const castStandardAttribute = (value, ownerItem, options = {}) => {
     let returnValue = value
 
@@ -129,6 +133,7 @@ export default function useCastAttributes () {
   }
 
   const castObjectAttribute = (value, ownerItem, options = {}) => {
+
     if(!isString(value))
       return value
 
@@ -174,7 +179,29 @@ export default function useCastAttributes () {
     }
 
     if(isArray(data)){
-      return data.map(item => castObjectAttributes(item, ownerItem))
+      let value = data.map(item => castObjectAttributes(item, ownerItem))
+
+      try {
+        let castingArray = data.every((item, index) => index === 0
+          ? (isString(item) && matchAnyPattern(item))
+          : (isString(item) && __isset(window[item]) && typeof window[item] === 'function')
+        )
+
+        if(castingArray){
+          value = castObjectAttributes(data.shift(), ownerItem)
+
+          let funcs = data
+
+          funcs.forEach((func) => {
+            if(window[func] && typeof window[func] === 'function')
+              value = window[func](value)
+          })
+        }
+      } catch (e) {
+        console.error('Error array casting', data, e)
+      }
+
+      return value
     }
 
     if(isObject(data)){
@@ -191,6 +218,7 @@ export default function useCastAttributes () {
     matchAttribute,
     matchStandardAttribute,
     matchEvalAttribute,
+    matchAnyPattern,
     castAttribute,
     castStandardAttribute,
     castEvalAttribute,
