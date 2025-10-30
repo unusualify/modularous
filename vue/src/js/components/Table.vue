@@ -378,17 +378,6 @@
                     </slot>
                   </template>
 
-                  <template v-if="$store.getters.isSuperAdmin" v-slot:options="optionsScope">
-                    <v-btn-secondary
-                      v-if="optionsScope.isSubmittable"
-                      :slim="false"
-                      variant="outlined"
-                      @click="$refs.UeForm.validate()"
-                    >
-                      {{ $t('fields.validate') }}
-                    </v-btn-secondary>
-                  </template>
-
                 </ue-form>
               </v-card>
             </template>

@@ -342,6 +342,15 @@
       <div :class="['px-1',scrollable ? 'flex-grow-0' : '']" v-if="(hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
         <v-divider v-if="hasSubmit && !stickyButton && hasDivider" class=""></v-divider>
         <div class="d-flex flex-wrap justify-center justify-md-start pt-6 w-100 ga-4 flex-md-row" v-if="hasSubmit && !stickyButton">
+          <template v-if="$store.getters.isSuperAdmin">
+            <v-btn-secondary
+              :slim="false"
+              variant="outlined"
+              @click="validate()"
+            >
+              {{ $t('fields.validate') }}
+            </v-btn-secondary>
+          </template>
           <slot name="submit"
             v-bind="{
               isSubmittable,
