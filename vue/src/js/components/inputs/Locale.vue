@@ -138,7 +138,12 @@ export default {
       this.languages.forEach((language) => {
         let attributes = cloneDeep(omit(this.attributes, ['errorMessages']))
 
-        attributes = this.castObjectAttributes(attributes, {localeParameter: language.value})
+        attributes = {
+          ...this.castObjectAttributes(attributes, {localeParameter: language.value}),
+          ...{
+            rules: attributes.rules ?? []
+          }
+        }
 
         // for textfields set initial values using the initialValues prop
         // if (this.initialValues && typeof this.initialValues === 'object' && this.initialValues[lang]) {
