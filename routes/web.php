@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Unusualify\Modularity\Http\Controllers\ChatController;
 use Unusualify\Modularity\Http\Controllers\ProcessController;
 use Unusualify\Modularity\Http\Controllers\ProfileController;
+use Unusualify\Modularity\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +77,11 @@ Route::prefix('api')->group(function () {
     Route::group(['prefix' => 'process', 'as' => 'process.'], function () {
         Route::get('{process}', [ProcessController::class, 'show'])->name('show');
         Route::put('{process}', [ProcessController::class, 'update'])->name('update');
+    });
+
+    Route::group(['prefix' => 'tag', 'as' => 'tag.', 'controller' => TagController::class], function () {
+        Route::get('index', 'index')->name('index');
+        Route::put('update', 'update')->name('update');
     });
 
     if (modularityConfig('enabled.media-library')) {

@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 
 abstract class Model extends LaravelModel implements TaggableInterface
 {
@@ -21,6 +22,7 @@ abstract class Model extends LaravelModel implements TaggableInterface
         ModelHelpers,
         SoftDeletes,
         TaggableTrait,
+        LocaleTags,
         Notifiable;
 
     public $timestamps = true;
