@@ -20,7 +20,6 @@
             </v-chip>
           </template>
           <template v-slot:label="labelScope">
-            <!-- <slot name="label"></slot> -->
             {{ labelScope.label }}
             <v-chip v-if="labelScope.label && (labelScope.isActive) &&  (labelScope.isActive.value || labelScope.isFocused.value)" style="font-size: var(--v-field-label-scale); height: calc(var(--v-field-label-scale) * 1.5);"
               size="x-small"
@@ -31,6 +30,14 @@
               {{ displayedLocale }}
             </v-chip>
             <v-chip v-else-if="labelScope.label && !$isset(labelScope.isActive)" style=""
+              size="x-small"
+              density="compact"
+              color="primary"
+              class="ml-1"
+            >
+              {{ displayedLocale }}
+            </v-chip>
+            <v-chip v-else-if="!labelScope.label && ['v-select', 'v-combobox', 'v-autocomplete', 'v-input-tag'].includes(type)" style=""
               size="x-small"
               density="compact"
               color="primary"
