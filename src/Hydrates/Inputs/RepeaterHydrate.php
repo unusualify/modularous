@@ -60,8 +60,9 @@ class RepeaterHydrate extends InputHydrate
                 //     $inputSnakeName = $this->getSnakeCase($inputStudlyName);
                 // }
             }
+
             foreach ($input['schema'] as $key => &$_input) {
-                $_input['translated'] = false;
+                $_input['translated'] = $_input['translated'] ?? false;
                 switch ($_input['type']) {
                     case 'select':
                     case 'combobox':
