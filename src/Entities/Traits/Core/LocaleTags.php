@@ -32,8 +32,8 @@ trait LocaleTags
             // Check if the virtual attribute was set (in attributes array)
             if($model->offsetExists($fieldName)) {
                 $model->localeTagsUpdatingPayload = $model->getAttributes()[$fieldName];
-                // Remove from attributes so it doesn't try to save to DB
             }
+            // Remove from attributes so it doesn't try to save to DB
             $model->offsetUnset($fieldName);
         });
 
@@ -48,20 +48,11 @@ trait LocaleTags
 
     public function initializeLocaleTags()
     {
-        $this->mergeFillable([
-            self::$localeTagsField,
-        ]);
-
-        // Register the custom cast for the dynamic field
-        if(isset(self::$loadLocalizedTags) && self::$loadLocalizedTags === true) {
-            // $this->mergeCasts([
-            //     self::$localeTagsField => LocaleTagsCast::class,
-            // ]);
+        if(isset($this->allowLocaleTagsFillable) && $this->allowLocaleTagsFillable) {
+            $this->mergeFillable([
+                self::$localeTagsField
+            ]);
         }
-
-        // if(isset($this->appendLocaleTags) && $this->appendLocaleTags) {
-        //     $this->append(self::$localeTagsField);
-        // }
     }
 
     public static function allLocaleTags(?string $locale = null): \Illuminate\Database\Eloquent\Builder

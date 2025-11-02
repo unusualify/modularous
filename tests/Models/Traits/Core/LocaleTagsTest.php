@@ -228,6 +228,8 @@ class LocaleTagsModel extends Model
 
     protected static $loadLocalizedTags = true;
 
+    protected $allowLocaleTagsFillable = true;
+
     protected $table = 'locale_tags_models';
 
     protected $fillable = ['name'];
