@@ -26,7 +26,13 @@ return [
                 [
                     'title' => 'Name',
                     'key' => 'name',
-                    'sortable' => false,
+                    'sortable' => true,
+                    'searchable' => true,
+                ],
+                [
+                    'title' => 'Surname',
+                    'key' => 'surname',
+                    'sortable' => true,
                     'searchable' => true,
                 ],
                 [
