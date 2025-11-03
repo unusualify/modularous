@@ -22,6 +22,21 @@ return [
                 'isRowEditing' => true,
                 'rowActionsType' => 'inline',
             ],
+            'filters' => [
+                'relations' => [
+                    [
+                        'type' => 'select',
+                        'slug' => 'company',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'solo',
+                            'label' => 'Company',
+                        ],
+                        'repository' => 'Modules\\SystemUser\\Repositories\\CompanyRepository',
+                    ],
+                ],
+            ],
             'headers' => [
                 [
                     'title' => 'Name',
