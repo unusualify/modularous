@@ -351,29 +351,14 @@ abstract class CoreController extends LaravelController
      */
     public function tagsUpdate()
     {
-
-        // dd($this->request->all());
-        // $this->repository
-        //     ->getModel()
-        //     ->addTag($this->request->input('value'));
-
         $name = $this->request->input('value');
         $model = $this->repository
             ->getModel();
 
-        // $model->addTag($name);
-        // // $model->removeTag($this->request->input('value'));
-
-        // $tag = $model->createTagsModel()
-        //     ->select(['id'])
-        //     ->whereName($name)
-        //     ->whereNamespace(get_class($model))
-        //     ->first();
-
         // Create new tag with namespace
         $tag = $model->createTagsModel()->create([
-            'name' => $this->request->input('value'),
-            'slug' => Str::slug($this->request->input('value')),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'namespace' => get_class($model),
         ]);
 

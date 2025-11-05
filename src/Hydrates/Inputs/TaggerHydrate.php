@@ -33,23 +33,10 @@ class TaggerHydrate extends InputHydrate
     {
         $input = $this->input;
 
+        $translated = $input['translated'] ?? false;
+
         // add your logic
-        $modelInstance = null;
-        if (isset($input['modelx'])) {
-            if (! class_exists($input['model'])) {
-                throw new \Exception('Model ' . $input['model'] . ' does not exist in ' . $this->input['name'] . ' input');
-            }
-
-            $modelInstance = App::make($input['model']);
-        } elseif (isset($input['repositoryx'])) {
-            if (! class_exists($input['repository'])) {
-                throw new \Exception('Repository ' . $input['repository'] . ' does not exist in ' . $this->input['name'] . ' input');
-            }
-
-            $repositoryInstance = App::make($input['repository']);
-
-            $modelInstance = $repositoryInstance->getModel();
-        } elseif (isset($input['_moduleName']) && isset($input['_routeName'])) {
+        if (isset($input['_moduleName']) && isset($input['_routeName'])) {
             $module = Modularity::find($input['_moduleName']);
             $repository = $module->getRouteClass($input['_routeName'], 'repository');
             $repository = App::make($repository);
@@ -60,18 +47,24 @@ class TaggerHydrate extends InputHydrate
 
             $input['fetchEndpoint'] = $module->getRouteActionUrl($input['_routeName'], 'tags');
             $input['updateEndpoint'] = $module->getRouteActionUrl($input['_routeName'], 'tagsUpdate');
-            // $repository->getTagsList()->toArray() // this get used tags
-            // $repository->getTags()->toArray() // this get all tags
 
-            $items = ! $this->skipQueries
-                ? $repository->getTags()->map(fn ($tag, $index) => [
-                    'id' => $tag->id,
-                    'name' => $tag->name,
-                    'color' => $input['colors'][$index % count($input['colors'])],
-                ])->toArray()
-                : [];
+            $items = ! $this->skipQueries ? $repository->getTags(translated: $translated, map: fn ($tag, $index) => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'color' => $input['colors'][$index % count($input['colors'])],
+            ])->toArray() : [];
 
-            $input['items'] = array_merge([['header' => true, $input['itemTitle'] => __('Select an option or create one')]], $items);
+
+            if($translated) {
+                $input['items'] = collect($items)->map(function ($group) use ($input) {
+                    array_unshift($group, ['header' => true, 'name' => __('Select an option or create one')]);
+
+                    return $group;
+                })->toArray();
+            }else {
+                $input['items'] = array_merge([['header' => true, $input['itemTitle'] => __('Select an option or create one')]], $items);
+            }
+
             $input['taggable'] = get_class($repository->getModel());
 
         } else {

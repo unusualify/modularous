@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Entities\Tag;
 use Unusualify\Modularity\Facades\Modularity;
 
 class TagHydrate extends InputHydrate
@@ -29,6 +30,11 @@ class TagHydrate extends InputHydrate
         $input = $this->input;
 
         $input['type'] = 'input-tag';
+        $translated = $input['translated'] ?? false;
+
+        $input['returnObject'] = false;
+        $input['chips'] = false;
+        $input['multiple'] ??= false;
 
         if (isset($input['_moduleName'])) {
             $module = Modularity::find($input['_moduleName']);
@@ -36,26 +42,32 @@ class TagHydrate extends InputHydrate
             $repository = $module->getRouteClass($input['_routeName'], 'repository');
             $repository = App::make($repository);
 
-            $input['returnObject'] = false;
-            $input['chips'] = false;
-            $input['multiple'] ??= false;
-
             $input['endpoint'] = $module->getRouteActionUrl($input['_routeName'], 'tags');
             $input['updateEndpoint'] = $module->getRouteActionUrl($input['_routeName'], 'tagsUpdate');
             $input['items'] = ! $this->skipQueries
-                ? $repository->getTags()->toArray()
+                ? $repository->getTags(translated: $translated)->toArray()
                 : [];
+
             $input['taggable'] = get_class($repository->getModel());
+        } else if(isset($input['taggable']) && @class_exists($input['taggable'])) {
+            $taggableModel = App::make($input['taggable']);
 
-            if (! isset($input['default']) && count($input['items']) > 0) {
-                $input['default'] = $input['items'][0][$input['itemValue']];
-            }
-            // dd($input, $repository->getTags()->toArray());
+            $input['items'] = !$this->skipQueries
+                ? ($translated ? $taggableModel->localeTagsList() : Tag::whereNamespace($input['taggable'])->get())
+                : collect([]);
+        }
 
-            // dd(
-            //     $repository->getTagsList(),
-            //     $repository->getTags()
-            // );
+        if(!isset($input['updateEndpoint'])) {
+            $input['updateEndpoint'] = route('admin.tag.update');
+        }
+
+        if($translated) {
+            $input['cacheKey'] = '${localeParameter}$_' . $input['taggable'];
+            $input['updatePayload'] = ['locale' => '${localeParameter}$'];
+        }
+
+        if (! $translated && ! isset($input['default']) && count($input['items']) > 0) {
+            $input['default'] = $input['items'][0][$input['itemValue']];
         }
 
         return $input;

@@ -189,7 +189,7 @@ export default {
       const attributes = props.configuration.attributes ?? {}
       const attrs = cloneDeep(attributes)
 
-      // return castObjectAttributes(attrs, props.bindData)
+      return castObjectAttributes(attrs, props.bindData)
 
       return reduce(attrs, (o, v, k) => {
         if (!(isArray(v) || isString(v) || isObject(v))) {
