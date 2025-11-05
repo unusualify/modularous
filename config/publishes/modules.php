@@ -119,7 +119,7 @@ return [
             'provider' => ['path' => 'Providers', 'generate' => false],
             'assets' => ['path' => 'Resources/assets', 'generate' => false],
             'lang' => ['path' => 'Resources/lang', 'generate' => true],
-            'views' => ['path' => 'Resources/views', 'generate' => true],
+            'views' => ['path' => 'Resources/views', 'generate' => false],
             'test' => ['path' => 'Tests/Unit', 'generate' => false],
             'test-feature' => ['path' => 'Tests/Feature', 'generate' => false],
             'repository' => ['path' => 'Repositories', 'generate' => false],
