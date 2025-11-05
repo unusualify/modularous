@@ -1384,8 +1384,6 @@ class RouteGenerator extends Generator
     {
         if (! $this->plain) {
 
-            $this->addLanguageVariable();
-
             $this->updateConfigFile();
 
             // $this->generateFolders();
