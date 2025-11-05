@@ -7,6 +7,10 @@ import { CONFIG } from '@/store/mutations'
 export default function useConfig() {
   const store = useStore()
 
+  const isHot = computed(() => store.state.ambient.isHot ?? false)
+  const appName = computed(() => store.state.ambient.appName ?? '')
+  const appEnv = computed(() => store.state.ambient.appEnv ?? '')
+
   const shouldUseInertia = computed(() => store.state.config.isInertia ?? false)
   const isRequestInProgress = computed(() => store.state.config.isRequestInProgress ?? false)
 
@@ -23,6 +27,9 @@ export default function useConfig() {
   }
 
   const states = reactive({
+    isHot,
+    appName,
+    appEnv,
     shouldUseInertia,
     isRequestInProgress,
   })

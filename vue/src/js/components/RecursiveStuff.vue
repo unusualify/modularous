@@ -429,13 +429,6 @@ export default {
       hasDirectives,
       renderComponentWithDirectives
     }
-  },
-  data () {
-    return {
-
-    }
-  },
-  created () {
   }
 }
 </script>

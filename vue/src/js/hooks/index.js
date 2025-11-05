@@ -41,3 +41,5 @@ export { default as useCastAttributes } from './useCastAttributes'
 export { default as useInertiaRequests, useInertiaLoading } from './useInertiaRequests'
 
 export { default as useUser } from './useUser'
+
+export { default as useSvg } from './useSvg'

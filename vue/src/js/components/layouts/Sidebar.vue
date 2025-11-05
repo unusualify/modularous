@@ -18,7 +18,6 @@
       <v-icon color="green darken-2" large icon="fa:fab fa-atlassian"/>
     </v-avatar> -->
 
-    <!-- <ue-svg-icon class="ue-sidebar__logo" symbol="main-logo-light"></ue-svg-icon> -->
     <template v-slot:prepend>
 
       <v-list class="ue-sidebar__info">
@@ -31,7 +30,7 @@
         >
           <template v-slot:prepend>
             <v-avatar class="ue-sidebar__avatar" color="primary">
-              <ue-svg-icon class="ue-sidebar__logo" symbol="main-logo-dark"></ue-svg-icon>
+              <ue-svg-icon class="ue-sidebar__logo" :symbol="miniSymbol"/>
             </v-avatar>
           </template>
         </v-list-item>
@@ -182,7 +181,7 @@
 <script>
   import { computed } from 'vue';
   import { useGoTo } from 'vuetify'
-  import { useSidebar } from '@/hooks';
+  import { useSidebar, useSvg } from '@/hooks';
   import { USER } from '@/store/mutations';
 
   export default {
@@ -193,10 +192,16 @@
     },
     setup() {
       const goTo = useGoTo()
+      const { getLocaleSymbol } = useSvg()
+
+      const miniSymbol = computed(() => {
+        return getLocaleSymbol('mini-logo-dark', 'main-logo-dark')
+      })
 
       return {
         ...useSidebar(),
-        goTo
+        goTo,
+        miniSymbol
       }
     },
     props: {
@@ -212,6 +217,10 @@
       rating: {
         type: Number,
         default: 0,
+      },
+      logoSymbol: {
+        type: String,
+        default: 'main-logo-dark',
       },
     },
     data() {

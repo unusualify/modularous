@@ -1,9 +1,8 @@
 // hooks/useLocale.js
 import { reactive, computed, onMounted, toRefs, getCurrentInstance } from 'vue'
-import { useStore } from 'vuex'
+import store from '@/store'
 import { LANGUAGE } from '@/store/mutations'
 export default function useLocale () {
-  const store = useStore()
 
   const state = reactive({
     currentLocale: computed(() => store.state.language.active),

@@ -1,5 +1,5 @@
 <template>
-  <div :style="style">
+  <div>
     <span v-svg :symbol="symbol"></span>
   </div>
 </template>
@@ -18,11 +18,6 @@ export default {
     },
     width: {
       type: String
-
-    },
-    style: {
-      type: String,
-      default : ""
     }
   },
   setup(props) {

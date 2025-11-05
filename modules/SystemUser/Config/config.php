@@ -26,7 +26,13 @@ return [
                 [
                     'title' => 'Name',
                     'key' => 'name',
-                    'sortable' => false,
+                    'sortable' => true,
+                    'searchable' => true,
+                ],
+                [
+                    'title' => 'Surname',
+                    'key' => 'surname',
+                    'sortable' => true,
                     'searchable' => true,
                 ],
                 [
@@ -390,15 +396,15 @@ return [
                     'type' => 'radio',
                     'options' => [
                         [
-                            'label' => 'WAITING',
+                            'label' => __('WAITING'),
                             'value' => 1,
                         ],
                         [
-                            'label' => 'FAILURE',
+                            'label' => __('FAILURE'),
                             'value' => 2,
                         ],
                         [
-                            'label' => 'COMPLETED',
+                            'label' => __('COMPLETED'),
                             'value' => 3,
                         ],
                     ],
@@ -705,15 +711,15 @@ return [
                     'default' => 1,
                     'options' => [
                         [
-                            'label' => 'WAITING',
+                            'label' => __('WAITING'),
                             'value' => 1,
                         ],
                         [
-                            'label' => 'FAILURE',
+                            'label' => __('FAILURE'),
                             'value' => 2,
                         ],
                         [
-                            'label' => 'COMPLETED',
+                            'label' => __('COMPLETED'),
                             'value' => 3,
                         ],
                     ],

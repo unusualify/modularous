@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Modules\SystemNotification\Events\StateableUpdated;
 use Unusualify\Modularity\Entities\Scopes\StateableScopes;
@@ -15,6 +16,8 @@ use Unusualify\Modularity\Entities\Stateable;
 trait HasStateable
 {
     use StateableScopes;
+
+    protected $localizationNotation = 'stateable.{model}.{code}';
 
     protected static $cachedStates = [];
 
@@ -137,7 +140,13 @@ trait HasStateable
                     }
 
                     if ($appLocale === $locale) {
-                        if ($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
+                        $shortClassName = Str::snake(class_basename(get_class($this)));
+                        $localizationNotation = str_replace('{model}', $shortClassName, $this->localizationNotation);
+                        $localizationNotation = str_replace('{code}', $state->code, $localizationNotation);
+
+                        if (Lang::has($localizationNotation, app()->getLocale(), false)) {
+                            $state->name = __($localizationNotation);
+                        } elseif ($stateConfig[$locale] ? $stateConfig[$locale]['name'] ?? null : null) {
                             $state->name = $stateConfig[$locale]['name'];
                         } else {
                             $state->name = $stateConfig[$fallbackLocale]['name'];

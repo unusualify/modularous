@@ -39,6 +39,7 @@
         <div
           :class="fileFieldClasses"
         >
+          {{ $log($attrs) }}
           <FilePond
             ref="pond"
             :key="key"
@@ -68,8 +69,16 @@
             :max-file-size="maxFileSize"
             :min-file-size="minFileSize"
             :max-total-file-size="maxTotalFileSize"
+
             :label-max-file-size="labelMaxFileSize"
             :label-max-file-size-exceeded="labelMaxFileSizeExceeded"
+
+            :labelIdle="$attrs.labelIdle"
+            :labelInvalidField="$attrs.labelInvalidField"
+            :labelFileLoading="$attrs.labelFileLoading"
+            :labelFileLoadError="$attrs.labelFileLoadError"
+            :labelFileProcessing="$attrs.labelFileProcessing"
+            :labelFileRemoveError="$attrs.labelFileRemoveError"
 
             :files="files"
             :server="server"

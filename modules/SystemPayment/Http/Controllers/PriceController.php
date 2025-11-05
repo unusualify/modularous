@@ -134,6 +134,7 @@ class PriceController extends Controller
 
         $orderId = uniqid('ORD');
         $modularityPayload = [
+            'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
             'original_raw_amount' => $price->discounted_raw_amount,
@@ -392,6 +393,7 @@ class PriceController extends Controller
 
         $orderId = uniqid('ORD');
         $modularityPayload = [
+            'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
             'original_raw_amount' => $price->discounted_raw_amount,
@@ -408,6 +410,22 @@ class PriceController extends Controller
             'converted_currency_id' => $currency->id,
             'exchange_rate' => $exchangeRate,
         ];
+
+        $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
+        $transactionFeePercentage = 0.0;
+        $transactionFeeAmount = 0.0;
+        $totalAmountWithoutTransactionFee = $totalAmount;
+        if ($hasTransactionFee) {
+            $transactionFeePercentage = $paymentService->transaction_fee_percentage;
+            $transactionFeeAmount = round($totalAmount * $transactionFeePercentage / 100, 0);
+            $totalAmount = $totalAmount + $transactionFeeAmount;
+        }
+
+        $modularityPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
+        $modularityPayload['transaction_fee_exists'] = $hasTransactionFee;
+        $modularityPayload['transaction_fee_percentage'] = $transactionFeePercentage;
+        $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
+        $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
 
         Session::put('payable_payment_service', $paymentService->key);
 
@@ -477,16 +495,22 @@ class PriceController extends Controller
 
     public function response(Request $request)
     {
+        $payment = null;
+        $modularityPayload = new \stdClass;
+        if ($request->get('id')) {
+            $payment = Payment::find($request->get('id'));
+            if ($payment && $payment->parameters) {
+                $modularityPayload = $payment->parameters->modularity ?? new \stdClass;
+                if (isset($modularityPayload->locale)) {
+                    app()->setLocale($modularityPayload->locale);
+                }
+            }
+        }
         $color = 'error';
         $title = __('payment.error-title');
         $description = __('payment.failed-description');
         $icon = 'mdi-alert-circle-outline';
         $modalProps = [];
-
-        $payment = null;
-        if ($request->get('id')) {
-            $payment = Payment::find($request->get('id'));
-        }
 
         if ($request->status == 'success') {
             $color = 'success';
@@ -523,8 +547,6 @@ class PriceController extends Controller
                 'noConfirmButton' => true,
             ];
         }
-
-        $modularityPayload = $payment ? $payment->parameters->modularity ?? new \stdClass : new \stdClass;
 
         if ($request->ajax()) {
             return response()->json([

@@ -95,7 +95,7 @@ return [
                 // ],
                 [
                     'name' => 'paymentCurrencies',
-                    'label' => 'Payment Currencies',
+                    'label' => __('Payment Currencies'),
                     'type' => 'select',
                     'multiple',
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentCurrencyRepository',
@@ -103,7 +103,7 @@ return [
                 ],
                 [
                     'name' => 'transaction_fee_percentage',
-                    'label' => 'Transaction Fee Percentage',
+                    'label' => __('Transaction Fee Percentage'),
                     'type' => 'number-input',
                     'clearable' => false,
                     'default' => 0.00,
@@ -115,7 +115,7 @@ return [
                 [
                     'type' => 'radio-group',
                     'name' => 'type',
-                    'label' => 'Service Type',
+                    'label' => __('Service Type'),
                     'spreadable' => true,
                     'items' => [
                         [
@@ -148,7 +148,7 @@ return [
                         [
                             'type' => 'text',
                             'name' => 'account_holder',
-                            'label' => 'Account Holder',
+                            'label' => __('Account Holder'),
                             'col' => ['cols' => 12, 'lg' => 6],
                             'rules' => '',
                             '_cached-rawRules' => 'required',
@@ -157,7 +157,7 @@ return [
                         [
                             'type' => 'text',
                             'name' => 'iban',
-                            'label' => 'IBAN',
+                            'label' => __('IBAN'),
                             'col' => ['cols' => 12, 'lg' => 6],
                             'rules' => '',
                             // '_cached-rawRules' => 'required',
@@ -166,7 +166,7 @@ return [
                         [
                             'type' => 'text',
                             'name' => 'swift_code',
-                            'label' => 'SWIFT/BIC',
+                            'label' => __('SWIFT/BIC'),
                             'col' => ['cols' => 12, 'lg' => 6],
                             'rules' => '',
                             '_cached-rawRules' => 'required',
@@ -175,7 +175,7 @@ return [
                         [
                             'type' => 'text',
                             'name' => 'description',
-                            'label' => 'Payment Description',
+                            'label' => __('Payment Description'),
                             'col' => ['cols' => 12, 'lg' => 6],
                             'rules' => '',
                             '_cached-rawRules' => 'required',
@@ -183,7 +183,7 @@ return [
                         [
                             'type' => 'textarea',
                             'name' => 'address',
-                            'label' => 'Bank Name & Address',
+                            'label' => __('Bank Name & Address'),
                             'col' => ['cols' => 12],
                             'rules' => '',
                             '_cached-rawRules' => 'required',
@@ -193,18 +193,18 @@ return [
 
                 [
                     'name' => 'is_external',
-                    'label' => 'Is an external service ?',
+                    'label' => __('Is an external service ?'),
                     'type' => 'checkbox',
                     'col' => ['cols' => 12, 'lg' => 6],
                 ],
                 [
                     'name' => 'is_internal',
-                    'label' => 'Is an internal service ?',
+                    'label' => __('Is an internal service ?'),
                     'type' => 'checkbox',
                     'col' => ['cols' => 12, 'lg' => 6],
                 ],
                 [
-                    'label' => 'Logo',
+                    'label' => __('Logo'),
                     'type' => 'image',
                     'name' => 'logo',
                     // 'rules' => 'sometimes|required:array',
@@ -213,7 +213,7 @@ return [
                     'imageCol' => ['cols' => 12, 'md' => 6, 'lg' => 6],
                 ],
                 [
-                    'label' => 'Button Logo',
+                    'label' => __('Button Logo'),
                     'type' => 'image',
                     'name' => 'button_logo',
                     'rules' => '',
@@ -223,7 +223,7 @@ return [
                 ],
                 [
                     'name' => 'button_style',
-                    'label' => 'Button Style',
+                    'label' => __('Button Style'),
                     'type' => 'textarea',
                 ],
             ],
@@ -367,7 +367,7 @@ return [
                 [
                     'type' => 'number-input',
                     'name' => 'amount',
-                    'label' => 'Payment Amount',
+                    'label' => __('Payment Amount'),
                     'controlVariant' => 'stacked',
                     'col' => ['cols' => 12, 'lg' => 6],
                     'allowedRoles' => ['superadmin'],
@@ -375,7 +375,7 @@ return [
                 [
                     'type' => 'combobox',
                     'name' => 'currency_id',
-                    'label' => 'Currency',
+                    'label' => __('Currency'),
                     'itemTitle' => 'name',
                     'itemValue' => 'id',
                     'connector' => 'SystemPricing:Currency|repository:list:column=name',
@@ -387,14 +387,14 @@ return [
                 [
                     'type' => 'text',
                     'name' => 'email',
-                    'label' => 'Payer Email',
+                    'label' => __('Payer Email'),
                     'col' => ['cols' => 12, 'lg' => 6],
                     'allowedRoles' => ['superadmin'],
                 ],
                 [
                     'type' => 'preview',
                     'name' => 'description',
-                    'label' => 'Description',
+                    'label' => __('Description'),
                     'col' => ['cols' => 12, 'lg' => 12],
                     'configuration' => [
                         'elements' => [
@@ -454,7 +454,7 @@ return [
                 [
                     'type' => 'select',
                     'name' => 'payment_service_id',
-                    'label' => 'Payment Service',
+                    'label' => __('Payment Service'),
                     'col' => ['cols' => 12, 'lg' => 6],
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
                     'rules' => 'sometimes|required',
@@ -463,7 +463,7 @@ return [
                 [
                     'type' => 'select',
                     'name' => 'status',
-                    'label' => 'Status',
+                    'label' => __('Status'),
                     'col' => ['cols' => 12, 'lg' => 6],
                     'itemTitle' => 'name',
                     'itemValue' => 'value',
@@ -477,7 +477,7 @@ return [
                     'label' => 'Invoice',
                     'max' => 3,
                     'conditions' => [
-                        ['status', '=', 'COMPLETED', 'REFUNDED', 'CANCELLED'],
+                        ['status', '=', PaymentStatus::COMPLETED, PaymentStatus::REFUNDED, PaymentStatus::CANCELLED],
                     ],
                     'allowedRoles' => ['superadmin', 'admin', 'manager', 'account-executive'],
                     'acceptedExtensions' => ['pdf'],
@@ -536,13 +536,13 @@ return [
             'inputs' => [
                 [
                     'name' => 'name',
-                    'label' => 'Name',
+                    'label' => __('Name'),
                     'type' => 'text',
                     'disabled',
                 ],
                 [
                     'name' => 'payment_service_id',
-                    'label' => 'Internal Payment Service (for credit card payment)',
+                    'label' => __('Internal Payment Service (for credit card payment)'),
                     'type' => 'select',
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
                     'multiple' => false,
@@ -601,18 +601,18 @@ return [
                 [
                     'type' => 'text',
                     'name' => 'card_type',
-                    'label' => 'Card Type',
+                    'label' => __('Card Type'),
                     'rules' => 'sometimes|required',
                 ],
                 [
                     'name' => 'paymentServices',
-                    'label' => 'Payment Services',
+                    'label' => __('Payment Services'),
                     'type' => 'select',
                     'multiple',
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
                 ],
                 [
-                    'label' => 'Logo',
+                    'label' => __('Logo'),
                     'type' => 'image',
                     'name' => 'logo',
                     'rules' => 'sometimes|required:array',
@@ -622,7 +622,7 @@ return [
         ],
         'my_payment' => [
             'name' => 'MyPayment',
-            'headline' => 'Payments',
+            'headline' => 'My Payments',
             'url' => 'my-payments',
             'route_name' => 'my_payment',
             'icon' => '$submodule',

@@ -6,6 +6,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Unusualify\Modularity\Exceptions\AuthConfigurationException;
@@ -339,6 +340,15 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function bootMacros()
     {
+        \Illuminate\Support\Str::macro('modularitySlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
+            $dictionary = array_merge(Lang::get('slug-dictionary', locale: $language), $dictionary ?? []);
+
+            if(array_key_exists($separator, $dictionary)) {
+                unset($dictionary[$separator]);
+            }
+
+            return \Illuminate\Support\Str::slug($string, $separator,language: null, dictionary: $dictionary);
+        });
 
         \Illuminate\Support\Collection::macro('recursive', function () {
             return $this->map(function ($value) {

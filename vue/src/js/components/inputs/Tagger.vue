@@ -2,13 +2,13 @@
   <v-input
     v-model="input"
     hideDetails="auto"
-    :variant="boundProps.variant"
     class="v-input-tagger"
     >
     <template v-slot:default="defaultSlot">
       <v-combobox
-        v-bind="$lodash.pick(boundProps, ['variant', 'menuProps', 'selectClasses', 'selectLabel', 'dense', 'density', 'color'])"
+        v-bind="$lodash.pick(boundProps, ['menuProps', 'selectClasses', 'selectLabel', 'dense', 'density', 'color'])"
 
+        :variant="variant"
         :label="label"
         hide-selected
 
@@ -129,6 +129,10 @@ export default {
     returnItemValue: {
       type: Boolean,
       default: false,
+    },
+    variant: {
+      type: String,
+      default: 'solo',
     },
   },
   setup (props, context) {

@@ -9,19 +9,20 @@
     :multiple="multiple"
     @updatex:search="handleSearch"
     @keydown.enter="handleEnter"
-
     class="v-input-tag"
   >
+    <template v-for="slot in Object.keys($slots)" :key="slot" v-slot:[slot]="data">
+      <slot :name="slot" v-bind="data" />
+    </template>
   </v-combobox>
 </template>
 
 <script>
 import { ref, computed, toRefs, toRef } from 'vue'
 import { useStore } from 'vuex'
-import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
+import { useInput, makeInputProps, makeInputEmits, useCache } from '@/hooks'
 import api from '@/store/api/form'
-import { FORM } from '@/store/mutations'
-
+import { FORM, CACHE } from '@/store/mutations'
 
 export default {
   name: 'v-input-tag',
@@ -48,6 +49,10 @@ export default {
       type: String,
       required: null
     },
+    updatePayload: {
+      type: Object,
+      default: () => ({})
+    },
     itemValue: {
       type: String,
       default: 'value'
@@ -55,13 +60,17 @@ export default {
     itemTitle: {
       type: String,
       default: 'label'
+    },
+    cacheKey: {
+      type: String,
+      default: null
     }
   },
 
   setup(props, context) {
     const store = useStore()
     const Cache = useCache()
-    const cacheKey = `taggable_items_${props.taggable}`
+    const cacheKey = `taggable_items_${props.cacheKey ?? props.taggable}`
 
     const loading = ref(false)
 
@@ -74,14 +83,24 @@ export default {
     }
 
     const items = computed(() => {
-      return Cache.states[cacheKey] ?? []
+      return Cache.get(cacheKey) ?? []
       // return store.state.form.taggableItems[props.taggable]
     })
+
+    const addNewTag = (id, value) => {
+      Cache.push(cacheKey, {
+        [props.itemValue]: id,
+        [props.itemTitle]: value
+      })
+    }
+
+    // console.log('items', cacheKey, props.items, items.value, Cache.states)
 
     return {
       ...useInput(props, context),
       loading,
       items,
+      addNewTag,
     }
   },
 
@@ -97,12 +116,10 @@ export default {
       try {
         this.loading = true
         let self = this
-        api.put(this.updateEndpoint, { value: value, taggable: this.taggable }, function(res) {
+        api.put(this.updateEndpoint, { value: value, taggable: this.taggable, ...this.updatePayload }, function(res) {
           if(res.status === 200) {
-            self.$store.commit(FORM.ADD_TAGGABLE_ITEM, { taggable_type: self.taggable, item: {
-              [self.itemValue]: res.data.id,
-              [self.itemTitle]: value
-            }})
+            const newTagId = res?.data?.id
+            self.addNewTag(newTagId, value)
           }
 
         })

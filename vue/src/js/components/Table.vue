@@ -212,7 +212,7 @@
                             id="advanced-filter-btn"
                             v-bind="{...filterBtnOptions, ...filterBtnTitle, ...props}"
                             :icon="$vuetify.display.smAndDown ? filterBtnOptions['prepend-icon'] : null"
-                            :text="$vuetify.display.smAndDown ? null : 'Filters'"
+                            :text="$vuetify.display.smAndDown ? null : $t('Filters')"
                             :prepend-icon="$vuetify.display.smAndDown ? null : filterBtnOptions['prepend-icon']"
                             :block="$vuetify.display.mdAndUp ? false : (filterBtnOptions['block'] ?? false)"
                             :density="$vuetify.display.smAndDown ? 'compact' : (filterBtnOptions['density'] ?? 'comfortable')"
@@ -235,14 +235,14 @@
                           <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn
-                              text="Clear"
+                              :text="$t('Clear')"
                               variant="plain"
                               @click="resetAdvancedFilter"
                             ></v-btn>
 
                             <v-btn
                               color="primary"
-                              text="Apply"
+                              :text="$t('Apply')"
                               variant="tonal"
                               @click="changeAdvancedFilter"
                             ></v-btn>
@@ -376,17 +376,6 @@
                     <slot name="form.actions.append" v-bind="actionsScope">
 
                     </slot>
-                  </template>
-
-                  <template v-if="$store.getters.isSuperAdmin" v-slot:options="optionsScope">
-                    <v-btn-secondary
-                      v-if="optionsScope.isSubmittable"
-                      :slim="false"
-                      variant="outlined"
-                      @click="$refs.UeForm.validate()"
-                    >
-                      {{ $t('fields.validate') }}
-                    </v-btn-secondary>
                   </template>
 
                 </ue-form>
@@ -694,7 +683,7 @@
               <v-card-actions>
                 <v-btn
                   color="primary"
-                  text="Save"
+                  :text="$t('Save')"
                   variant="tonal"
                   @click="applyHeaders"
                   block

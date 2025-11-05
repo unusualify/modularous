@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Illuminate\Support\Arr;
+
 trait TagsTrait
 {
     public function setColumnsTagsTrait($columns, $inputs)
@@ -28,9 +30,24 @@ trait TagsTrait
      */
     public function afterSaveTagsTrait($object, $fields)
     {
+        $schema = $this->inputs() ?? [];
+
         if (! isset($fields['bulk_tags']) && ! isset($fields['previous_common_tags'])) {
             if (! $this->shouldIgnoreFieldBeforeSave('tags')) {
-                $object->setTags($fields['tags'] ?? []);
+                $translated = false;
+                if($schema && isset($schema['tags']['translated']) && $schema['tags']['translated']) {
+                    $translated = true;
+                }
+
+                $values = $fields['tags'] ?? [];
+
+                if($translated || Arr::isAssoc($values)) {
+                    foreach ($values as $locale => $value) {
+                        $object->setLocaleTags(tags: $value, locale: $locale);
+                    }
+                } else {
+                    $object->setTags($fields['tags'] ?? []);
+                }
             }
 
         } else {
@@ -52,7 +69,26 @@ trait TagsTrait
     {
         if ($object->has('tags')) {
             foreach ($this->getColumns(__TRAIT__) as $column) {
-                $fields[$column] = $object->tags->map(fn ($tag) => $tag->name);
+                $translated = false;
+
+                $tagInput = $schema[$column] ?? null;
+
+                if($tagInput && isset($tagInput['translated']) && $tagInput['translated']) {
+                    $translated = true;
+                }
+
+                if($translated) {
+                    $locales = getLocales();
+                    $fields[$column] = $object->tags->groupBy('locale')->map(function ($group) {
+                        return $group->map(fn ($tag) => $tag->name);
+                    });
+
+                    foreach($locales as $locale) {
+                        $fields[$column][$locale] = $fields[$column][$locale] ?? ($tagInput && $tagInput['default'] ? $tagInput['default'] : ($tagInput && ($tagInput['multiple'] ?? true) ? collect([]) : null));
+                    }
+                } else {
+                    $fields[$column] = $object->tags->map(fn ($tag) => $tag->name);
+                }
             }
         }
 
@@ -74,7 +110,7 @@ trait TagsTrait
      * @param array $ids
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getTags($query = '', $ids = [])
+    public function getTags($query = '', $ids = [], $translated = false, ?callable $map = null)
     {
         $tagQuery = $this->getTagsQuery();
 
@@ -91,7 +127,28 @@ trait TagsTrait
             }
         }
 
-        return $tagQuery->get();
+        $result = $tagQuery->get();
+
+
+        if($translated) {
+            $result = $result->groupBy('locale');
+
+            $locales = getLocales();
+
+            foreach($locales as $locale) {
+                $result[$locale] = $result[$locale] ?? collect([]);
+            }
+
+            if($map) {
+                $result = $result->map(function ($group) use ($map) {
+                    return $group->map($map);
+                });
+            }
+        } else if($map) {
+            $result = $result->map($map);
+        }
+
+        return $result;
     }
 
     /**

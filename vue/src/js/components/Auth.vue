@@ -15,10 +15,8 @@
             <!-- <v-card class="mx-auto"> -->
               <v-row width="85%" class="d-flex flex-column justify-center align-center">
                 <!-- <h1 class="text-primary">{{ title }}</h1> -->
-                <div class="bg-primary darken-3">
-                </div>
 
-                <span v-if="noSecondSection" v-svg symbol="main-logo-full-light"></span>
+                <span v-if="noSecondSection" v-svg :symbol="lightSymbol"></span>
 
                 <slot name="cardTop"></slot>
 
@@ -65,7 +63,12 @@
             class="px-xs-12 py-xs-3 px-sm-12 py-sm-3 pa-12 pa-md-0 d-flex flex-column align-center justify-center col-right bg-primary"
           >
             <div class="mw-420">
-              <ue-svg-icon :symbol="logoSymbol" class="mx-0 "></ue-svg-icon>
+              <ue-svg-icon
+                :symbol="darkSymbol"
+                class="mx-0"
+                :class="logoClass"
+                :style="logoStyle"
+              />
 
               <slot name="description">
                 <h2 class="text-white mt-5 text-h4 custom-mb-8rem fs-2rem">
@@ -99,6 +102,7 @@
 <script>
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
+import { useSvg } from '@/hooks'
 
 export default {
   props: {
@@ -139,9 +143,21 @@ export default {
       type: [Boolean, Number],
       default: false
     },
+    logoLightSymbol: {
+      type: String,
+      default: 'main-logo-light'
+    },
     logoSymbol: {
       type: String,
-      default: 'main-logo'
+      default: 'main-logo-dark'
+    },
+    logoClass: {
+      type: String,
+      default: ''
+    },
+    logoStyle: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({
@@ -173,6 +189,17 @@ export default {
   }),
   setup (props) {
     const { name } = useDisplay()
+    const { getLocaleSymbol } = useSvg()
+
+    const lightSymbol = computed(() => {
+      return getLocaleSymbol(props.logoLightSymbol, 'main-logo-light')
+    })
+
+    const darkSymbol = computed(() => {
+      return getLocaleSymbol(props.logoSymbol, 'main-logo-dark')
+    })
+
+    console.log( darkSymbol.value, lightSymbol.value)
 
     const width = computed(() => {
       // name is reactive and
@@ -219,6 +246,8 @@ export default {
     // Fix for showDivider logic
 
     return {
+      lightSymbol,
+      darkSymbol,
       width,
       title,
       description,

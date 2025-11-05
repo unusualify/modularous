@@ -27,7 +27,7 @@
         <ue-text-display
           class="text-h5"
           :text="getDisplayText(values)"
-          :sub-text="getSubText(values)"
+          :sub-text="$t(getSubText(values))"
         />
       </template>
     </template>

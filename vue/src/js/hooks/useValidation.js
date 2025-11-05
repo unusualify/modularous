@@ -22,12 +22,12 @@ export default function useValidation (props) {
   })
 
   const ruleMethods = reactive({
-    minRule: (l, msg) => v => (!!v && (typeof v === 'string' ? v.trim().length : v.length) >= l) || msg || `min. ${l} ${Array.isArray(v) ? 'Selections' : 'Characters'}`,
-    maxRule: (l, msg) => v => (!v || v.length <= l) || msg || `max. ${l} ${Array.isArray(v) ? 'Selections' : 'Characters'}`,
+    minRule: (l, msg) => v => (!!v && (typeof v === 'string' ? v.trim().length : v.length) >= l) || msg || `${t('validation.min_label')} ${l} ${Array.isArray(v) ? t('validation.selections') : t('validation.characters')}`,
+    maxRule: (l, msg) => v => (!v || v.length <= l) || msg || `${t('validation.max_label')} ${l} ${Array.isArray(v) ? t('validation.selections') : t('validation.characters')}`,
     nameRule: (msg) => v => {
       if (!v) return true;
       const trimmed = v.trim().replace(/\s+/g, ' ');
-      return /^[\p{L}'\-]+(?: [\p{L}'\-]+)*$/u.test(trimmed) || msg || 'Only letters, apostrophes, and hyphens allowed.';
+      return /^[\p{L}'\-]+(?: [\p{L}'\-]+)*$/u.test(trimmed) || msg || t('validation.only_letters_apostrophes_hyphens');
     },
     // requiredRule: msg => v => !!v || msg || 'Required',
     emailRule: (options = {}, msg) => v => {
@@ -45,24 +45,24 @@ export default function useValidation (props) {
         // Basic format check
         const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!basicEmailRegex.test(v)) {
-            return msg || t('Invalid email format');
+            return msg || t('validation.invalid_email_format');
         }
 
         // Strict format check
         if (strict) {
             const strictEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!strictEmailRegex.test(v)) {
-                return msg || t('Email contains invalid characters');
+                return msg || t('validation.email_contains_invalid_characters');
             }
         }
 
         // Length checks
         const [localPart, domain] = v.split('@');
         if (localPart.length < minLength) {
-            return msg || `Email username must be at least ${minLength} characters`;
+            return msg || t('validation.email_username_min_length', { minLength });
         }
         if (v.length > maxLength) {
-            return msg || `Email cannot exceed ${maxLength} characters`;
+            return msg || t('validation.email_max_length', { maxLength });
         }
 
         // Domain checks
@@ -75,7 +75,7 @@ export default function useValidation (props) {
                 return emailDomain === allowed.toLowerCase();
             });
             if (!isAllowed) {
-                return msg || `Email domain must be one of: ${allowedDomains.join(', ')}`;
+                return msg || t('validation.email_domain_must_be_one_of', { allowedDomains: allowedDomains.join(', ') });
             }
         }
 
@@ -89,7 +89,7 @@ export default function useValidation (props) {
                 return emailDomain === blocked.toLowerCase();
             });
             if (isBlocked) {
-                return msg || `Email domain not allowed`;
+                return msg || t('validation.email_domain_not_allowed');
             }
         }
 
@@ -107,7 +107,7 @@ export default function useValidation (props) {
 
         const domainWithoutTLD = domain.split('.')[0].toLowerCase();
         if (commonTypos[domainWithoutTLD]) {
-            return msg || `Did you mean ${commonTypos[domainWithoutTLD]}?`;
+            return msg || t('validation.email_typo_suggestion', { suggestion: commonTypos[domainWithoutTLD] });
         }
 
         return true;
@@ -115,12 +115,12 @@ export default function useValidation (props) {
     requiredRule: (type ='classic',  minOrExact = 1, max, msg) => v => {
       switch(type) {
         case 'classic':
-          return !!v || msg || t('Required');
+          return !!v || msg || t('validation.required_simple');
         case 'array':
         case 'object':
           max = _.toNumber(max)
           max = _.isNaN(max) ? -1 : max;
-          let $msg = ((minOrExact == max || max < 0) ? `Requires exactly ${minOrExact} items` : `Requires at least ${minOrExact}${((max != Infinity  && max != undefined) ? ', and maximum of:' + max : '')}) elements`);
+          let $msg = ((minOrExact == max || max < 0) ? t('Requires exactly ${minOrExact} items') : t('Requires at least ${minOrExact}${((max != Infinity  && max != undefined) ? \', and maximum of:\' + max : \'\')}) elements'));
           // let $msg = ((max != Infinity) ? ', maximum:' + max : '');
           if(Array.isArray(v)) {
             return v.length >= minOrExact && ( max < 0 || v.length <= max) || msg || $msg;
@@ -130,7 +130,7 @@ export default function useValidation (props) {
           }
 
           if(v == null) {
-            return msg || 'Must select at least one item';
+            return msg || t('validation.must_select_at_least_one_item');
           }
 
           return 'dev error: nsupported value type';
@@ -138,7 +138,7 @@ export default function useValidation (props) {
           return 'dev error: unknown rule type';
       }
     },
-    arrayRule: (msg) => v => Array.isArray(v) || msg || `Value must be array`,
+    arrayRule: (msg) => v => Array.isArray(v) || msg || t('validation.value_must_be_array'),
     // requiredArrayRule: (msg, l = 1) => v => (Array.isArray(v) && v.length >= l) || msg || ''
     // confirmedRule: (confirmInputValue, msg) => v => {
     //   // const _val = toRef('model.' + confirmationValue)
@@ -147,25 +147,25 @@ export default function useValidation (props) {
     // }
 
     // Numeric validation rules
-    numberRule: (msg) => v => !isNaN(parseFloat(v)) && isFinite(v) || msg || 'Must be a valid number',
-    integerRule: (msg) => v => Number.isInteger(Number(v)) || msg || 'Must be an integer',
-    minValueRule: (min, msg) => v => v === undefined || v === null || Number(v) >= min  || msg || `Must be at least ${min}`,
-    maxValueRule: (max, msg) => v => !v || Number(v) <= max || msg || `Must not exceed ${max}`,
+    numberRule: (msg) => v => !isNaN(parseFloat(v)) && isFinite(v) || msg || t('validation.must_be_valid_number'),
+    integerRule: (msg) => v => Number.isInteger(Number(v)) || msg || t('validation.must_be_integer'),
+    minValueRule: (min, msg) => v => v === undefined || v === null || Number(v) >= min  || msg || t('validation.must_be_at_least', { min }),
+    maxValueRule: (max, msg) => v => !v || Number(v) <= max || msg || t('validation.must_not_exceed', { max }),
 
     // String format validation rules
-    phoneRule: (msg) => v => !v || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(v) || msg || 'Invalid phone number',
-    urlRule: (msg) => v => !v || /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v) || msg || 'Invalid URL',
-    alphaRule: (msg) => v => !v || /^[A-Za-z]+$/.test(v) || msg || 'Only letters allowed',
-    alphaNumRule: (msg) => v => !v || /^[A-Za-z0-9]+$/.test(v) || msg || 'Only letters and numbers allowed',
+    phoneRule: (msg) => v => !v || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(v) || msg || t('validation.invalid_phone_number'),
+    urlRule: (msg) => v => !v || /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v) || msg || t('validation.invalid_url'),
+    alphaRule: (msg) => v => !v || /^[A-Za-z]+$/.test(v) || msg || t('validation.only_letters_allowed'),
+    alphaNumRule: (msg) => v => !v || /^[A-Za-z0-9]+$/.test(v) || msg || t('validation.only_letters_numbers_allowed'),
 
     // Password validation rules
     passwordRule: (minLength = 8, msg) => v => !v || /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{${minLength},}$/.test(v) ||
-        msg || `Password must be at least ${minLength} characters, contain at least one letter and one number`,
+        msg || t('validation.password_min_length', { minLength }),
     strongPasswordRule: (minLength = 8, msg) => v => !v || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{${minLength},}$/.test(v) ||
-        msg || `Password must be at least ${minLength} characters, contain uppercase, lowercase, number and special character`,
+        msg || t('validation.password_strong', { minLength }),
 
     // Date validation rules
-    dateRule: (msg) => v => !v || !isNaN(Date.parse(v)) || msg || 'Invalid date format',
+    dateRule: (msg) => v => !v || !isNaN(Date.parse(v)) || msg || t('validation.invalid_date_format'),
     futureDateRule: (interval = 0, unit = 'days', msg) => v => {
         if (!v) return true;
         let today = new Date();
@@ -198,7 +198,7 @@ export default function useValidation (props) {
         }
 
         return new Date(v) >= futureDate ||
-            msg || `Date must be at least ${interval} ${unit} in the future`;
+            msg || t('validation.date_must_be_future', { interval, unit });
     },
     pastDateRule: (interval = 0, unit = 'days', msg) => v => {
         if (!v) return true;
@@ -226,48 +226,48 @@ export default function useValidation (props) {
         }
 
         return new Date(v) <= pastDate ||
-            msg || `Date must be at least ${interval} ${unit} in the past`;
+            msg || t('validation.date_must_be_past', { interval, unit });
     },
 
     // Custom format validation rules
-    zipCodeRule: (msg) => v => !v || /^\d{5}(-\d{4})?$/.test(v) || msg || 'Invalid ZIP code',
-    ipAddressRule: (msg) => v => !v || /^(\d{1,3}\.){3}\d{1,3}$/.test(v) || msg || 'Invalid IP address',
+    zipCodeRule: (msg) => v => !v || /^\d{5}(-\d{4})?$/.test(v) || msg || t('validation.invalid_zip_code'),
+    ipAddressRule: (msg) => v => !v || /^(\d{1,3}\.){3}\d{1,3}$/.test(v) || msg || t('validation.invalid_ip_address'),
 
     // File validation rules
     fileTypeRule: (types, msg) => v => {
         if (!v || !v.type) return true;
         const allowedTypes = Array.isArray(types) ? types : [types];
-        return allowedTypes.includes(v.type) || msg || `File type must be: ${allowedTypes.join(', ')}`;
+        return allowedTypes.includes(v.type) || msg || t('validation.file_type_must_be', { types: allowedTypes.join(', ') });
     },
     fileSizeRule: (maxSize, msg) => v => {
         if (!v || !v.size) return true;
-        return v.size <= maxSize || msg || `File size must not exceed ${maxSize/1024/1024}MB`;
+        return v.size <= maxSize || msg || t('validation.file_size_must_not_exceed', { size: (maxSize/1024/1024).toFixed(2) });
     },
     // Comparison validation rules
-    equalsRule: (target, msg) => v => v === target || msg || `Must equal ${target}`,
-    notEqualsRule: (target, msg) => v => v !== target || msg || `Must not equal ${target}`,
-    matchesRule: (field, msg) => (v, formData) => v === formData[field] || msg || `Must match ${field}`,
+    equalsRule: (target, msg) => v => v === target || msg || t('validation.must_equal', { target }),
+    notEqualsRule: (target, msg) => v => v !== target || msg || t('validation.must_not_equal', { target }),
+    matchesRule: (field, msg) => (v, formData) => v === formData[field] || msg || t('validation.must_match', { field }),
 
     // Range validation rules
     betweenRule: (min, max, msg) => v => {
         if (!v) return true;
         const num = Number(v);
-        return (num >= min && num <= max) || msg || `Must be between ${min} and ${max}`;
+        return (num >= min && num <= max) || msg || t('validation.must_be_between', { min, max });
     },
     notBetweenRule: (min, max, msg) => v => {
         if (!v) return true;
         const num = Number(v);
-        return (num < min || num > max) || msg || `Must not be between ${min} and ${max}`;
+        return (num < min || num > max) || msg || t('validation.must_not_be_between', { min, max });
     },
 
     // String content validation rules
-    containsRule: (substring, msg) => v => !v || v.includes(substring) || msg || `Must contain "${substring}"`,
-    notContainsRule: (substring, msg) => v => !v || !v.includes(substring) || msg || `Must not contain "${substring}"`,
-    startsWithRule: (prefix, msg) => v => !v || v.startsWith(prefix) || msg || `Must start with "${prefix}"`,
-    endsWithRule: (suffix, msg) => v => !v || v.endsWith(suffix) || msg || `Must end with "${suffix}"`,
+    containsRule: (substring, msg) => v => !v || v.includes(substring) || msg || t('validation.must_contain', { substring }),
+    notContainsRule: (substring, msg) => v => !v || !v.includes(substring) || msg || t('validation.must_not_contain', { substring }),
+    startsWithRule: (prefix, msg) => v => !v || v.startsWith(prefix) || msg || t('validation.must_start_with', { prefix }),
+    endsWithRule: (suffix, msg) => v => !v || v.endsWith(suffix) || msg || t('validation.must_end_with', { suffix }),
 
     // Pattern validation rules
-    patternRule: (pattern, msg) => v => !v || pattern.test(v) || msg || 'Invalid format',
+    patternRule: (pattern, msg) => v => !v || pattern.test(v) || msg || t('validation.invalid_format'),
     customFormatRule: (formats, msg) => v => {
         if (!v) return true;
         const patterns = {
@@ -278,31 +278,31 @@ export default function useValidation (props) {
             isbn: /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$/,
         };
         const formatArray = Array.isArray(formats) ? formats : [formats];
-        return formatArray.every(format => patterns[format].test(v)) || msg || `Invalid ${formatArray.join(' and ')} format`;
+        return formatArray.every(format => patterns[format].test(v)) || msg || t('validation.invalid_custom_format', { formats: formatArray.join(' and ') });
     },
 
     // Array/Collection validation rules
     uniqueRule: (msg) => v => {
         if (!Array.isArray(v)) return true;
-        return v.length === new Set(v).size || msg || 'Must contain unique values';
+        return v.length === new Set(v).size || msg || t('validation.must_contain_unique_values');
     },
     includesAnyRule: (values, msg) => v => {
         if (!Array.isArray(v)) return true;
-        return values.some(val => v.includes(val)) || msg || `Must include at least one of: ${values.join(', ')}`;
+        return values.some(val => v.includes(val)) || msg || t('validation.must_include_at_least_one_of', { values: values.join(', ') });
     },
     includesAllRule: (values, msg) => v => {
         if (!Array.isArray(v)) return true;
-        return values.every(val => v.includes(val)) || msg || `Must include all of: ${values.join(', ')}`;
+        return values.every(val => v.includes(val)) || msg || t('validation.must_include_all_of', { values: values.join(', ') });
     },
 
     // Conditional validation rules
     whenRule: (condition, thenRules, elseRules = []) => (v, formData) => {
         const rules = (typeof condition === 'function' ? condition(formData) : condition) ? thenRules : elseRules;
-        return rules.every(rule => rule(v, formData) === true) || 'Conditional validation failed';
+        return rules.every(rule => rule(v, formData) === true) || t('validation.conditional_validation_failed');
     },
     dependentRule: (field, rules, msg) => (v, formData) => {
         if (!formData[field]) return true;
-        return rules.every(rule => rule(v, formData) === true) || msg || `Invalid based on ${field}`;
+        return rules.every(rule => rule(v, formData) === true) || msg || t('validation.invalid_based_on', { field });
     },
 
 

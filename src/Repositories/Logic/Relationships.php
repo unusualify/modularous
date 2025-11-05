@@ -21,7 +21,6 @@ trait Relationships
      */
     public function afterSaveRelationships($object, $fields)
     {
-
         foreach ($this->getMorphToManyRelations() as $relationName) {
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
                 $object->{$relationName}()->sync($fields[$relationName]);
@@ -97,10 +96,21 @@ trait Relationships
                         }
 
                     }
-                    // dd($relation, $fields[$relation], $object);
-                    $object->{$relation}()->sync(
-                        $fields[$relation]
-                    );
+
+                    $pivotClass = $object->{$relation}()->getPivotClass();
+                    $hasLocaleTags = classHasTrait($pivotClass, 'Unusualify\Modularity\Entities\Traits\Core\LocaleTags');
+
+                    if($hasLocaleTags){
+                        $object->{$relation}()->sync(
+                            $fields[$relation]
+                        );
+                    } else {
+                        $object->{$relation}()->sync(
+                            $fields[$relation]
+                        );
+                    }
+
+
                 } catch (\Throwable $th) {
                     dd(
                         $relation,
@@ -296,21 +306,15 @@ trait Relationships
         foreach ($inputs as $key => $input) {
             if (isset($input['name'])) {
                 if (in_array($input['name'], $belongsToManyRelations)) {
+                    $relationshipName = $input['name'];
                     if (preg_match('/repeater/', $input['type'])) {
-                        $query = $object->{$input['name']}();
+                        $query = $object->{$relationshipName}();
 
                         if ($input['orderable'] ?? false) {
                             $query->orderBy('position');
                         }
 
-                        $fields[$input['name']] = $query->get()->map(function ($item) {
-                            // dd(
-                            //     $item->pivot->active,
-                            //     get_class_methods($item->pivot),
-                            //     $item->pivot->getCasts(),
-                            //     $item->pivot->toArray(),
-                            //     // $item->getRawAttributes(),
-                            // );
+                        $fields[$relationshipName] = $query->get()->map(function ($item) {
                             return $item->pivot->toArray();
                         });
 
@@ -354,6 +358,11 @@ trait Relationships
             }
 
             if (isset($input['connectedRelationship']) && is_string($input['connectedRelationship'])) {
+                // dd(
+                //     $input['connectedRelationship'],
+                //     $object->{$input['connectedRelationship']}->toArray(),
+                //     $object->packageFeatureTagRows()
+                // );
                 $fields[$input['connectedRelationship']] = $object->{$input['connectedRelationship']};
             }
         }

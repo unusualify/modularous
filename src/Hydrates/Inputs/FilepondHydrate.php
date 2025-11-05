@@ -45,8 +45,6 @@ class FilepondHydrate extends InputHydrate
         'maxFileSize' => '5MB', // 5MB
         'minFileSize' => '1KB', // 1KB
         'maxTotalFileSize' => null,
-        'labelMaxFileSize' => 'Maximum file size is {filesize}',
-        'labelMaxFileSizeExceeded' => 'File is too large',
     ];
 
     /**
@@ -81,13 +79,15 @@ class FilepondHydrate extends InputHydrate
         }
 
         // Custom Labels
-        $input['label-idle'] ??= __('Drag & Drop your files or Browse');
+        $input['labelIdle'] ??= __('filepond.labelIdle');
+        $input['labelInvalidField'] ??= __('filepond.labelInvalidField');
+        $input['labelFileLoading'] ??= __('filepond.labelFileLoading');
+        $input['labelFileLoadError'] ??= __('filepond.labelFileLoadError');
+        $input['labelFileProcessing'] ??= __('filepond.labelFileProcessing');
+        $input['labelFileRemoveError'] ??= __('filepond.labelFileRemoveError');
 
-        $input['label-invalid-field'] ??= __('filepon-invalid-field-label');
-        $input['label-file-loading'] ??= __('filepond-loading-lable');
-        $input['label-file-load-error'] ??= __('filepond-loading-error-lable');
-        $input['label-file-processing'] ??= __('filepond-processing-lable');
-        $input['label-file-remove-error'] ??= __('filepond-removing-error-lable');
+        $input['labelMaxFileSize'] ??= __('filepond.labelMaxFileSize');
+        $input['labelMaxFileSizeExceeded'] ??= __('filepond.labelMaxFileSizeExceeded');
 
         return $input;
     }

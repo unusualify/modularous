@@ -4,7 +4,12 @@ import axios from 'axios'
 import jquery from 'jquery'
 import lodash, { snakeCase } from 'lodash-es'
 import pluralize from 'pluralize'
-import moment from 'moment'
+import moment from 'moment/dist/moment'
+import 'moment/dist/locale/tr'
+import 'moment/dist/locale/de'
+import 'moment/dist/locale/fr'
+import 'moment/dist/locale/nl'
+
 import { useI18n } from 'vue-i18n'
 
 import store from '@/store' // Adjust the import based on your store structure

@@ -173,7 +173,7 @@ class ModularityRoutes
     public function getApiMiddlewares(): array
     {
         return array_values(array_unique(modularityConfig('api.middlewares', [
-            'language',
+            'modularity.language',
             'api',
             'throttle:api',
         ])));
