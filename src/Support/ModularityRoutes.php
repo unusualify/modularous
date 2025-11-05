@@ -128,13 +128,13 @@ class ModularityRoutes
         ]);
 
         Route::aliasMiddleware('authorization', AuthorizationMiddleware::class);
-        Route::aliasMiddleware('company_registration', CompanyRegistrationMiddleware::class);
+        Route::aliasMiddleware('modularity.company.registration', CompanyRegistrationMiddleware::class);
         Route::aliasMiddleware('modularity.redirector', \Unusualify\Modularity\Http\Middleware\RedirectorMiddleware::class);
 
         Route::middlewareGroup('modularity.panel', [
             // 'modularity.core',
             'authorization',
-            'company_registration',
+            'modularity.company.registration',
             'modularity.redirector',
         ]);
 
