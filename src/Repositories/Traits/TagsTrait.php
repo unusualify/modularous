@@ -59,12 +59,12 @@ trait TagsTrait
         return $fields;
     }
 
-    protected function filterTagsTrait($query, &$scopes)
+    protected function filterTagsTrait(&$query, &$scopes)
     {
         $this->addRelationFilterScope($query, $scopes, 'tag_id', 'tags');
     }
 
-    private function getTagsQuery()
+    protected function getTagsQuery()
     {
         return $this->model->allTags()->orderBy('count', 'desc');
     }

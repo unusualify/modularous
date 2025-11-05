@@ -11,7 +11,6 @@ trait FilesTrait
 {
     public function setColumnsFilesTrait($columns, $inputs)
     {
-
         $traitName = get_class_short_name(__TRAIT__);
 
         $columns[$traitName] = collect($inputs)->reduce(function ($acc, $curr) {
@@ -173,34 +172,6 @@ trait FilesTrait
                 // }
             } else {
                 // dd($role);
-            }
-        }
-
-        return $files;
-
-        if (isset($fields['medias'])) {
-            foreach ($fields['medias'] as $role => $filesForRole) {
-                if (Str::contains($role, ['[', ']'])) {
-                    $start = mb_strpos($role, '[') + 1;
-                    $finish = mb_strpos($role, ']', $start);
-                    $locale = mb_substr($role, $start, $finish - $start);
-                    $role = strtok($role, '[');
-                }
-
-                $locale = $locale ?? config('app.locale');
-
-                if (in_array($role, $this->model->filesColumns ?? [])
-                    || in_array($role, $this->setColumnsFilesTrait() ?: [])
-                    || in_array($role, modularityConfig('block_editor.files', []))) {
-
-                    Collection::make($filesForRole)->each(function ($file) use (&$files, $role, $locale) {
-                        $files->push([
-                            'id' => $file['id'],
-                            'role' => $role,
-                            'locale' => $locale,
-                        ]);
-                    });
-                }
             }
         }
 

@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemPricing\Entities\Price;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
@@ -50,6 +51,7 @@ trait PaymentTrait
         $priceSavingKey = Price::$priceSavingKey ?? 'price_value';
 
         $paymentPrice = $object->paymentPrice()->first();
+        $forcePaymentUpdate = isset($fields['force_payment_update']) && $fields['force_payment_update'];
 
         if (isset($fields['payment_price'])) {
             $val = Arr::isAssoc($fields['payment_price']) ? $fields['payment_price'] : $fields['payment_price'][0];
@@ -80,14 +82,14 @@ trait PaymentTrait
                     'role',
                     'valid_from',
                     'valid_till',
-
                     'discount_percentage',
 
                     $priceSavingKey,
                 ]));
+
                 $newPrice->save();
             }
-        } elseif (! $paymentPrice || (isset($fields['force_payment_update']) && $fields['force_payment_update'])) {
+        } elseif (! $paymentPrice || $forcePaymentUpdate) {
             $session_currency = request()->getUserCurrency()->id;
             // dd($fields);
             $currencyId = isset($fields['currency_id'])
@@ -159,8 +161,8 @@ trait PaymentTrait
             $paymentPrice = $object->paymentPrice()->first();
 
             $paymentPricePayload = [
-                ...($fields['price_vat_rate_id'] ? ['vat_rate_id' => $fields['price_vat_rate_id']] : []),
-                ...($fields['price_discount_percentage'] ? ['discount_percentage' => $fields['price_discount_percentage']] : []),
+                ...(isset($fields['price_vat_rate_id']) ? ['vat_rate_id' => $fields['price_vat_rate_id']] : []),
+                ...(isset($fields['price_discount_percentage']) ? ['discount_percentage' => $fields['price_discount_percentage']] : []),
             ];
 
             if (! empty($paymentPricePayload)) {
@@ -175,6 +177,7 @@ trait PaymentTrait
                 ];
                 $extraPayload = [];
                 $user = null;
+
                 if (Auth::check()) {
                     $user = Auth::user();
                 }
@@ -209,12 +212,10 @@ trait PaymentTrait
 
     public function getFormFieldsPaymentTrait($object, $fields)
     {
-
-        if (method_exists($object, 'paymentPrice') && $object->has('paymentPrice')) {
+        if (method_exists($object, 'paymentPrice') && $object->paymentPrice()->exists() && $object->payment()->exists()) {
             // $priceSavingKey = Price::$priceSavingKey;
             // $query = $object->paymentPrice;
             $fields['payment'] = $object->payment;
-
         }
 
         return $fields;
@@ -266,7 +267,7 @@ trait PaymentTrait
                 'tooltip' => __('Pay'),
                 'color' => 'success',
                 'density' => 'compact',
-                'endpoint' => route('admin.system.system_payment.pay'),
+                'endpoint' => Route::has('admin.system.system_payment.pay') ? route('admin.system.system_payment.pay') : null,
                 'schema' => modularity_format_inputs([
                     [
                         'type' => 'hidden',
@@ -278,8 +279,6 @@ trait PaymentTrait
                         'type' => 'payment-service',
                         'name' => 'payment_service',
                         'label' => 'Payment',
-                        'transaction_fee_percentage' => 3,
-                        'transaction_fee_description' => __('transaction fee'),
                         'price_object' => '${payment_price}$',
                     ],
                 ]),

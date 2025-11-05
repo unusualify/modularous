@@ -41,9 +41,15 @@ trait FilepondsTrait
                     $nestedRole = preg_replace('/\.\*\./', ".$index.", $column);
                     if (Arr::isAssoc($nestedFiles)) {
                         foreach ($nestedFiles as $locale => $nestedFilesByLocale) {
+                            if (empty($nestedFilesByLocale)) {
+                                continue;
+                            }
                             Filepond::saveFile($object, $nestedFilesByLocale, $nestedRole, $locale);
                         }
                     } else {
+                        if (empty($nestedFiles)) {
+                            continue;
+                        }
                         Filepond::saveFile($object, $nestedFiles, $nestedRole);
                     }
                 }
@@ -51,6 +57,9 @@ trait FilepondsTrait
 
                 if (Arr::isAssoc($files)) {
                     foreach ($files as $locale => $filesByLocale) {
+                        if (empty($filesByLocale)) {
+                            continue;
+                        }
                         Filepond::saveFile($object, $filesByLocale, $role, $locale);
                     }
                 } else {
@@ -58,22 +67,6 @@ trait FilepondsTrait
                 }
             }
         }
-    }
-
-    public function _beforeSaveFilepondsTrait($object, $fields)
-    {
-        $columns = $this->getColumns(__TRAIT__);
-        dd($columns, $fields);
-        foreach ($columns as $role) {
-            $files = data_get($fields, $role);
-            if ($files) {
-                dd($role, $files, $fields);
-                // $this->saveFilePond($value, $object, $fields);
-                // $this->saveFilePond($object, $files, $role);
-                Filepond::saveFile($object, $files, $role);
-            }
-        }
-        dd($columns);
     }
 
     public function getFormFieldsFilepondsTrait($object, $fields, $schema)

@@ -22,7 +22,9 @@ trait Dates
      */
     public function prepareFieldsBeforeSaveDates($object, $fields)
     {
-        foreach ($this->model->getDates() as $f) {
+        $model = $this->getModel();
+
+        foreach ($model->getDates() as $f) {
             if (isset($fields[$f])) {
                 if (! empty($fields[$f])) {
                     $fields = $this->prepareDatesField($fields, $f);

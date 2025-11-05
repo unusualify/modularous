@@ -174,7 +174,12 @@ trait Relationships
             }
         }
 
+
         foreach ($this->getMorphManyRelations() as $relationName) {
+            // PricesTrait is a special case, we don't want to update prices when morphMany relations are updated
+            if(classHasTrait($this, 'Unusualify\Modularity\Repositories\Traits\PricesTrait') && in_array($relationName, $this->getColumns('Unusualify\Modularity\Repositories\Traits\PricesTrait'))){
+                continue;
+            }
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
                 $relation = $object->{$relationName}();
                 $relatedLocalKey = $relation->getLocalKeyName(); // id

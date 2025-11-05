@@ -9,15 +9,6 @@ trait TranslationsTrait
 {
     protected $nullableFields = [];
 
-    /**
-     * @param array $fields
-     * @return array
-     */
-    public function prepareFieldsBeforeCreateTranslationsTrait($fields)
-    {
-        return $this->prepareFieldsBeforeSaveTranslationsTrait(null, $fields);
-    }
-
     public function setColumnsTranslationsTrait($columns, $inputs)
     {
         $traitName = get_class_short_name(__TRAIT__);
@@ -36,6 +27,15 @@ trait TranslationsTrait
     }
 
     /**
+     * @param array $fields
+     * @return array
+     */
+    public function prepareFieldsBeforeCreateTranslationsTrait($fields)
+    {
+        return $this->prepareFieldsBeforeSaveTranslationsTrait(null, $fields);
+    }
+
+    /**
      * @param \Unusualify\Modularity\Entities\Model|null $object
      * @param array $fields
      * @return array
@@ -43,7 +43,7 @@ trait TranslationsTrait
     public function prepareFieldsBeforeSaveTranslationsTrait($object, $fields)
     {
         if ($this->model->isTranslatable()) {
-            $attributes = Collection::make($this->model->translatedAttributes);
+            $attributes = Collection::make($this->model->getTranslatedAttributes());
             $translationsFields = $fields['translations'] ?? [];
 
             // Check if any translated fields are present
@@ -109,10 +109,10 @@ trait TranslationsTrait
     public function getFormFieldsTranslationsTrait($object, $fields)
     {
         unset($fields['translations']);
-
-        if ($object->translations != null && $object->translatedAttributes != null) {
+        $translatedAttributes = $object->getTranslatedAttributes();
+        if ($object->translations != null && $translatedAttributes != null) {
             foreach ($object->translations as $translation) {
-                foreach ($object->translatedAttributes as $attribute) {
+                foreach ($translatedAttributes as $attribute) {
                     unset($fields[$attribute]);
 
                     if (array_key_exists($attribute, $this->fieldsGroups) && is_array($translation->{$attribute})) {
@@ -139,7 +139,7 @@ trait TranslationsTrait
     protected function filterTranslationsTrait($query, &$scopes)
     {
         if ($this->model->isTranslatable()) {
-            $attributes = $this->model->translatedAttributes;
+            $attributes = $this->model->getTranslatedAttributes();
 
             $translatableValues = [];
             if (isset($scopes['searches'])) {
@@ -176,13 +176,14 @@ trait TranslationsTrait
     public function orderTranslationsTrait($query, &$orders)
     {
         if ($this->model->isTranslatable()) {
-            $attributes = $this->model->translatedAttributes;
+            $attributes = $this->model->getTranslatedAttributes();
             $table = $this->model->getTable();
             $tableTranslation = $this->model->translations()->getRelated()->getTable();
             $foreignKeyMethod = method_exists($this->model->translations(), 'getQualifiedForeignKeyName') ? 'getQualifiedForeignKeyName' : 'getForeignKey';
             $foreignKey = $this->model->translations()->$foreignKeyMethod();
 
             $isOrdered = false;
+
             foreach ($attributes as $attribute) {
                 if (isset($orders[$attribute])) {
                     $query->orderBy($tableTranslation . '.' . $attribute, $orders[$attribute]);
@@ -196,6 +197,8 @@ trait TranslationsTrait
                     ->join($tableTranslation, $foreignKey, '=', $table . '.id')
                     ->where($tableTranslation . '.locale', '=', $orders['locale'] ?? app()->getLocale())
                     ->select($table . '.*');
+
+                unset($orders['locale']);
             }
         }
     }

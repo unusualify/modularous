@@ -83,20 +83,12 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @return \Unusualify\Modularity\Models\Model
-     */
-    public function firstOrCreate($attributes, $fields = [])
-    {
-        return $this->model->where($attributes)->first() ?? $this->create($attributes + $fields);
-    }
-
-    /**
      * @param string[] $fields
      * @return \Unusualify\Modularity\Models\Model
      */
     public function create($fields, $schema = null)
     {
-        $this->traitColumns = $this->setColumns($this->traitColumns, $schema ?? $this->chunkInputs(all: true));
+        $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
         return DB::transaction(function () use ($fields) {
             LogBatch::startBatch();
@@ -124,6 +116,14 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @return \Unusualify\Modularity\Models\Model
+     */
+    public function firstOrCreate($attributes, $fields = [], $schema = null)
+    {
+        return $this->model->where($attributes)->first() ?? $this->create($attributes + $fields, $schema);
+    }
+
+    /**
      * @param array $fields
      * @return \Unusualify\Modularity\Models\Model
      */
@@ -131,7 +131,9 @@ abstract class Repository implements RepositoryContract
     {
         $fields = $this->prepareFieldsBeforeCreate($fields);
 
-        $object = $this->model->newInstance(Arr::except($fields, $this->getReservedFields()));
+        $model = $this->getModel();
+
+        $object = $model->newInstance(Arr::except($fields, $this->getReservedFields()));
 
         return $this->hydrate($object, $fields);
     }
@@ -159,7 +161,7 @@ abstract class Repository implements RepositoryContract
      */
     public function update($id, $fields, $schema = null)
     {
-        $this->traitColumns = $this->setColumns($this->traitColumns, $schema ?? $this->chunkInputs(all: true));
+        $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
         DB::transaction(function () use ($id, $fields) {
             LogBatch::startBatch();
@@ -241,8 +243,8 @@ abstract class Repository implements RepositoryContract
      */
     public function setNewOrder($ids)
     {
-        DB::transaction(function () use ($ids) {
-            $this->model->setNewOrder($ids);
+        return DB::transaction(function () use ($ids) {
+            return $this->model->setNewOrder($ids);
         }, 3);
     }
 
@@ -256,7 +258,7 @@ abstract class Repository implements RepositoryContract
             return false;
         }
 
-        $this->traitColumns = $this->setColumns($this->traitColumns, $this->chunkInputs(all: true));
+        $this->setColumns($this->chunkInputs(all: true));
 
         return DB::transaction(function () use ($duplicated, $schema) {
 
@@ -492,7 +494,7 @@ abstract class Repository implements RepositoryContract
      * @param string $scopeRelation
      * @return void
      */
-    public function addRelationFilterScope($query, &$scopes, $scopeField, $scopeRelation)
+    public function addRelationFilterScope(&$query, &$scopes, $scopeField, $scopeRelation)
     {
         if (isset($scopes[$scopeField])) {
             // $value
@@ -502,8 +504,26 @@ abstract class Repository implements RepositoryContract
                 $value = explode(',', $value);
             }
 
-            $query->whereHas($scopeRelation, function ($query) use ($value, $scopeField) {
-                $query->whereIn($scopeField, $value);
+            $relationNotation = "$scopeField";
+            try {
+                //code...
+                $table = $query->getModel()->$scopeRelation()->getTable();
+                $relationNotation = "$table.$scopeField";
+            } catch (\Throwable $th) {
+                try {
+                    $table = $query->getModel()->$scopeRelation()->getRelated()->getTable();
+                    $relationNotation = "$table.$scopeField";
+                } catch (\Throwable $th) {
+                    dd(
+                        $th->getMessage(),
+                        $query->getModel()->$scopeRelation()
+                    );
+                }
+            }
+
+
+            $query->whereHas($scopeRelation, function ($query) use ($value, $scopeField, $scopeRelation, $relationNotation) {
+                $query->whereIn($relationNotation, $value);
             });
             unset($scopes[$scopeField]);
         }
@@ -573,6 +593,7 @@ abstract class Repository implements RepositoryContract
                 }
             }
 
+
             // Add whereHas for each relationship group
             foreach ($relationshipGroups as $relationshipName => $columns) {
                 $query->orWhereHas($relationshipName, function ($q) use ($columns, $searchValue) {
@@ -617,14 +638,6 @@ abstract class Repository implements RepositoryContract
                 });
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUniqueFeature()
-    {
-        return false;
     }
 
     /**
@@ -675,49 +688,6 @@ abstract class Repository implements RepositoryContract
     public function getModel()
     {
         return $this->model;
-    }
-
-    /**
-     * @param string $relation
-     * @param \Unusualify\Modularity\Models\Model|\Unusualify\Modularity\Repositories\ModuleRepository|null $modelOrRepository
-     * @return mixed
-     */
-    protected function getModelRepository($relation, $modelOrRepository = null)
-    {
-        if (! $modelOrRepository) {
-            if (class_exists($relation) && (new $relation) instanceof Model) {
-                $modelOrRepository = str_after_last($relation, '\\');
-            } else {
-                $morphedModel = Relation::getMorphedModel($relation);
-                if (class_exists($morphedModel) && (new $morphedModel) instanceof Model) {
-                    $modelOrRepository = (new ReflectionClass($morphedModel))->getShortName();
-                } else {
-                    $modelOrRepository = ucfirst(Str::singular($relation));
-                }
-            }
-        }
-
-        $repository = class_exists($modelOrRepository)
-        ? App::make($modelOrRepository)
-        : $modelOrRepository;
-
-        if ($repository instanceof ModuleRepository) {
-            return $repository;
-        }
-
-        $class = Config::get('twill.namespace') . '\\Repositories\\' . ucfirst($modelOrRepository) . 'Repository';
-
-        if (class_exists($class)) {
-            return App::make($class);
-        }
-
-        $capsule = TwillCapsules::getCapsuleForModel($modelOrRepository);
-
-        if (blank($capsule)) {
-            throw new Exception("Repository class not found for model '{$modelOrRepository}'");
-        }
-
-        return App::make($capsule->getRepositoryClass());
     }
 
     /**

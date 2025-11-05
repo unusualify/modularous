@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
+use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
 use Unusualify\Modularity\Facades\Modularity;
@@ -119,9 +120,15 @@ class PaymentServiceHydrate extends InputHydrate
 
         $input['includeTransactionFee'] = Modularity::shouldIncludeTransactionFee();
 
-        $input['paymentUrl'] = route('admin.system.system_payment.pay');
-        $input['checkoutUrl'] = route('admin.system.system_payment.checkout');
-        $input['completeUrl'] = route('admin.system.system_payment.payment.response');
+        $input['paymentUrl'] = Route::has('admin.system.system_payment.pay')
+            ? route('admin.system.system_payment.pay')
+            : null;
+        $input['checkoutUrl'] = Route::has('admin.system.system_payment.checkout')
+            ? route('admin.system.system_payment.checkout')
+            : null;
+        $input['completeUrl'] = Route::has('admin.system.system_payment.payment.response')
+            ? route('admin.system.system_payment.payment.response')
+            : null;
 
         return $input;
     }
