@@ -94,10 +94,30 @@ trait HasSpreadable
         // $this->append($this->getSpreadableSavingKey());
     }
 
+    protected function getSpreadableClass(): \Illuminate\Database\Eloquent\Model
+    {
+        if (!property_exists(static::class, 'spreadableClass') || ! static::$spreadableClass || ! class_exists(static::$spreadableClass)) {
+            return $this;
+        }
+
+        $class = new static::$spreadableClass;
+
+        $class->setAttribute($this->getKeyName(), $this->getKey());
+        $class->fill($this->getAttributes());
+        $class->setRelations($this->getRelations());
+
+        return $class;
+    }
+
     // TODO: rename relation to spread as well
     public function spreadable(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
-        return $this->morphOne(\Unusualify\Modularity\Entities\Spread::class, 'spreadable');
+        $spreadableClass = $this->getSpreadableClass();
+
+        return $spreadableClass->morphOne(
+            \Unusualify\Modularity\Entities\Spread::class,
+            'spreadable'
+        );
     }
 
     protected function isProtectedAttribute(string $key): bool

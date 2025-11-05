@@ -34,8 +34,10 @@ trait MethodTransformers
      */
     public function cleanupFields($object, $fields)
     {
-        if (property_exists($this->model, 'checkboxes')) {
-            foreach ($this->model->checkboxes as $field) {
+        $model = $this->getModel();
+
+        if (property_exists($model, 'checkboxes')) {
+            foreach ($model->checkboxes as $field) {
                 if (! $this->shouldIgnoreFieldBeforeSave($field)) {
                     if (! isset($fields[$field])) {
                         $fields[$field] = false;
@@ -46,50 +48,25 @@ trait MethodTransformers
             }
         }
 
-        if (property_exists($this->model, 'nullable')) {
-            foreach ($this->model->nullable as $field) {
+        if (property_exists($model, 'nullable')) {
+            foreach ($model->nullable as $field) {
                 if (! isset($fields[$field]) && ! $this->shouldIgnoreFieldBeforeSave($field)) {
                     $fields[$field] = null;
                 }
             }
         }
 
-        foreach ($fields as $key => $value) {
-            if (! $this->shouldIgnoreFieldBeforeSave($key)) {
-                // if (is_array($value) && empty($value)) {
-                //     dd($value, $key, empty($value));
-                //     $fields[$key] = null;
-                // }
-                // if ($value === '') {
-                //     $fields[$key] = null;
-                // }
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
-     * @param \Unusualify\Modularity\Models\Model $object
-     * @return array
-     */
-    public function castFormFields($fields)
-    {
-        foreach ($this->chunkInputs($this->inputs()) as $input) {
-            if (isset($input['ext'])) {
-                switch ($input['ext']) {
-                    case 'date':
-                        // code...
-                        $fields[$input['name']] = '';
-
-                        break;
-
-                    default:
-                        // code...
-                        break;
-                }
-            }
-        }
+        // foreach ($fields as $key => $value) {
+        //     if (! $this->shouldIgnoreFieldBeforeSave($key)) {
+        //         if (is_array($value) && empty($value)) {
+        //             dd($value, $key, empty($value));
+        //             $fields[$key] = null;
+        //         }
+        //         if ($value === '') {
+        //             $fields[$key] = null;
+        //         }
+        //     }
+        // }
 
         return $fields;
     }
@@ -99,13 +76,16 @@ trait MethodTransformers
      * @param array $inputs
      * @return array
      */
-    public function setColumns($columns, $inputs)
+    public function setColumns($inputs)
     {
+        $columns = $this->traitColumns;
+
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
             $columns = $this->$method($columns, $inputs);
         }
 
-        return $columns;
+        $this->traitColumns = $columns;
+        // return $columns;
     }
 
     /**
@@ -285,15 +265,13 @@ trait MethodTransformers
     {
         $chunkedInputs = $this->chunkInputs(all: true, schema: empty($schema) ? null : $schema);
 
-        $this->traitColumns = $this->setColumns($this->traitColumns, $chunkedInputs);
+        $this->setColumns($chunkedInputs);
 
         if (! $noSerialization) {
             $fields = $object->attributesToArray();
         } else {
             $fields = [];
         }
-
-        // $fields = $this->castFormFields($fields);
 
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
             $fields = $this->$method($object, $fields, $schema);
@@ -320,7 +298,7 @@ trait MethodTransformers
     {
         $chunkedInputs = $this->chunkInputs(all: true, schema: empty($schema) ? null : $schema);
 
-        $this->traitColumns = $this->setColumns($this->traitColumns, $chunkedInputs);
+        $this->setColumns($chunkedInputs);
 
         if (method_exists($object, 'setRelationsShowFormat')) {
             $object->setRelationsShowFormat();
@@ -409,7 +387,9 @@ trait MethodTransformers
         }
 
         $searchesFields = $scopes['searches'] ?? [];
+
         unset($scopes['searches'], $scopes['search']);
+
         foreach ($searchesFields as $field) {
             if (array_key_exists($field, $scopes)) {
                 unset($scopes[$field]);

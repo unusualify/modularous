@@ -61,7 +61,7 @@ trait AssignmentTrait
         $scopes['everAssignedToYourRoleOrHasAuthorization'] = true;
     }
 
-    public function getTableFiltersAssignmentTrait($scope): array
+    public function getTableFiltersAssignmentTrait($scope = null): array
     {
         $tableFilters = [];
 

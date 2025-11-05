@@ -41,12 +41,13 @@ trait PricesTrait
      */
     public function afterSavePricesTrait($object, $fields)
     {
-        if ($this->shouldIgnoreFieldBeforeSave('prices')) {
-            return;
-        }
+        // if ($this->shouldIgnoreFieldBeforeSave('prices')) {
+        //     return;
+        // }
 
         $onlyBaseCurrency = modularityConfig('services.currency_exchange.active');
-        $baseCurrency = modularityConfig('services.currency_exchange.base_currency');
+        $baseCurrencyIso4217 = modularityConfig('services.currency_exchange.base_currency');
+
         $priceSavingKey = Price::$priceSavingKey;
 
         foreach ($this->getColumns(__TRAIT__) as $name) {
@@ -60,10 +61,22 @@ trait PricesTrait
                         : null;
                     $data = array_merge_recursive_preserve($defaultPriceAttributes, $priceData + ['role' => $name]);
 
+
+                    if ($priceModel) {
+                        // Update existing price
+                        $priceModel->update($data);
+                    } else {
+                        // Create a new price
+                        $object->prices()->create(Arr::except($data, ['id']));
+                    }
+
                     if ($onlyBaseCurrency) {
-                        foreach ([1, 2, 3] as $key => $id) {
-                            $_currency = Currency::find($id);
-                            if ($_currency->iso_4217 !== $baseCurrency) {
+                        foreach (['EUR', 'USD', 'TRY'] as $key => $iso4217) {
+                            $_currency = Currency::where('iso_4217', $iso4217)->first();
+                            if(!$_currency) {
+                                continue;
+                            }
+                            if ($_currency->iso_4217 !== $baseCurrencyIso4217) {
                                 $_data = array_merge($data, [
                                     $priceSavingKey => round(CurrencyExchange::convertTo($data[$priceSavingKey], $_currency->iso_4217), 2),
                                     'currency_id' => $_currency->id,
@@ -74,16 +87,9 @@ trait PricesTrait
                                 } else {
                                     $existingPrices->where('currency_id', $_currency->id)->first()->update(Arr::except($_data, ['id']));
                                 }
+                                sleep(1);
                             }
                         }
-                    }
-
-                    if ($priceModel) {
-                        // Update existing price
-                        $priceModel->update($data);
-                    } else {
-                        // Create a new price
-                        $object->prices()->create(Arr::except($data, ['id']));
                     }
 
                 }
@@ -104,7 +110,7 @@ trait PricesTrait
      */
     public function getFormFieldsPricesTrait($object, $fields)
     {
-        if (method_exists($object, 'prices') && $object->has('prices')) {
+        if (method_exists($object, 'prices') && get_class($object->prices()) === 'Illuminate\Database\Eloquent\Relations\MorphMany') {
             $priceSavingKey = Price::$priceSavingKey;
             $onlyBaseCurrency = modularityConfig('services.currency_exchange.active');
             $priceModel = $object->prices()->getRelated();
@@ -118,7 +124,6 @@ trait PricesTrait
 
             $prices = $query->get();
             $pricesByRole = $prices->groupBy('role');
-            // dd($prices, $pricesByRole);
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
                 if (isset($pricesByRole[$role])) {
@@ -141,17 +146,6 @@ trait PricesTrait
                     ];
                 }
             }
-
-            // foreach ($object->prices->groupBy('role') as $role => $pricesByRole) {
-            //     $fields[$role] = $pricesByRole->map(function ($price) {
-            //         return Arr::only($price->toArray(), $this->formatableColumns);
-            //     });
-            //     // foreach ($pricesByRole->groupBy('pivot.locale') as $locale => $filesByLocale) {
-            //     //     $fields[$role][$locale] = $filesByLocale->map(function ($file) {
-            //     //         return $file->mediableFormat();
-            //     //     });
-            //     // }
-            // }
         }
 
         return $fields;

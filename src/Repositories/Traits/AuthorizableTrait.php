@@ -9,13 +9,13 @@ trait AuthorizableTrait
      * @param array $scopes
      * @return void
      */
-    public function filterAuthorizableTrait($query, &$scopes)
-    {
-        // set, cast, unset or manipulate the scopes by using query and scopes
-        // $scopes['hasAuthorization'] = true;
-    }
+    // public function filterAuthorizableTrait($query, &$scopes)
+    // {
+    //     // set, cast, unset or manipulate the scopes by using query and scopes
+    //     // $scopes['hasAuthorization'] = true;
+    // }
 
-    public function getTableFiltersAuthorizableTrait($scope): array
+    public function getTableFiltersAuthorizableTrait($scope = null): array
     {
         $model = $this->getModel();
 
