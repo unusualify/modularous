@@ -477,7 +477,7 @@ return [
                     'label' => 'Invoice',
                     'max' => 3,
                     'conditions' => [
-                        ['status', '=', __('COMPLETED'), __('REFUNDED'), __('CANCELLED')],
+                        ['status', '=', PaymentStatus::COMPLETED, PaymentStatus::REFUNDED, PaymentStatus::CANCELLED],
                     ],
                     'allowedRoles' => ['superadmin', 'admin', 'manager', 'account-executive'],
                     'acceptedExtensions' => ['pdf'],
@@ -622,7 +622,7 @@ return [
         ],
         'my_payment' => [
             'name' => 'MyPayment',
-            'headline' => 'Payments',
+            'headline' => 'My Payments',
             'url' => 'my-payments',
             'route_name' => 'my_payment',
             'icon' => '$submodule',
