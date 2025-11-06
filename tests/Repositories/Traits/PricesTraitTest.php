@@ -216,3 +216,4 @@ class PricesTraitTestRepository extends \Unusualify\Modularity\Tests\Repositorie
 }
 
 
+
