@@ -49,6 +49,13 @@ abstract class InputHydrate
     protected $skipQueries = false;
 
     /**
+     * Selectable
+     *
+     * @var bool
+     */
+    public $selectable = false;
+
+    /**
      * Default values to set before hydrating
      *
      *
@@ -220,10 +227,61 @@ abstract class InputHydrate
                     $input['itemTitle'] = array_keys(Arr::except($input['items'][0], [$input['itemValue']]))[0];
                 }
             }
+
+            if($this->selectable)
+               $this->hydrateSelectableInput($input);
+
             $this->afterHydrateRecords($input);
         }
 
         return $input;
+    }
+
+    private function hydrateSelectableInput(&$input)
+    {
+        $input['itemValueType'] = 'integer';
+        if (isset($input['cascades'])) {
+            $items = $input['items'];
+
+            $input['cascadeKey'] ??= 'items';
+
+            $patterns = [];
+            foreach ($input['cascades'] as $key => $cascade) {
+                $explodes = explode('.', explode(':', $cascade)[0]);
+                $patterns[] = "/{$this->getSnakeCase(
+                    $explodes[count($explodes) - 1]
+                )}/";
+            }
+            $flat = Arr::dot($items);
+            $newArray = [];
+            foreach ($flat as $key => $value) {
+                $newKey = preg_replace($patterns, 'items', $key);
+                Arr::set($newArray, $newKey, $value);
+            }
+
+            $input['items'] = $newArray;
+        }
+
+        if (
+            isset($input['items'])
+            && count($input['items'])
+            && isset($input['items'][0][$input['itemValue']])
+            && $input['items'][0][$input['itemValue']]
+        ) {
+            $itemValue = $input['itemValue'];
+
+            if(count($input['items']) > 0) {
+                $firstItem = $input['items'][0];
+                $itemValueType = gettype($firstItem[$itemValue]);
+                $input['itemValueType'] = $itemValueType;
+                array_unshift($input['items'], [
+                    // $itemValue => 0,
+                    'id' => 0,
+                    $itemValue => $itemValueType == 'integer' ? 0 : '',
+                    $input['itemTitle'] => __('Please Select'),
+                ]);
+            }
+        }
     }
 
     /**
