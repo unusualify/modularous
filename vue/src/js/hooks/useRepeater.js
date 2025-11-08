@@ -1,7 +1,7 @@
-// hooks/formatter .js
-import { reactive, toRefs, computed, ref } from 'vue'
+// hooks/useRepeater.js
+import { reactive, toRefs, computed, ref, watch } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
-import { transform, cloneDeep, filter, omit, find, isEmpty, map, reduce } from 'lodash-es'
+import { transform, cloneDeep, filter, omit, find, isEmpty, map, reduce, isArray, isObject, isEqual } from 'lodash-es'
 import { getModel } from '@/utils/getFormData'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
@@ -117,13 +117,16 @@ export const makeRepeaterProps = propsFactory({
   noWaitSourceLoading: {
     type: Boolean,
     default: false
+  },
+  asObject: {
+    type: Boolean,
+    default: false
   }
 })
 
 // by convention, composable function names start with "use"
 export default function useRepeater (props, context) {
   const store = useStore()
-
   const { invokeRuleGenerator } = useValidation(props, context)
   const inputHook = useInput(props, context)
 
@@ -152,11 +155,40 @@ export default function useRepeater (props, context) {
     }
     return null
   })
+
   const uniqueInput = computed(() => {
     if (isUnique && window.__isset(rawSchema.value) && Object.keys(rawSchema.value).length > 0) {
       return rawSchema.value[uniqueField.value]
     }
     return null
+  })
+
+  const asObject = props.isUnique && props.uniqueField && props.asObject
+
+  const uniqueInputItems = computed(() => {
+    let uniqueInputValueType = uniqueInput.value.itemValueType ?? 'integer';
+
+    return (uniqueInput.value?.items ?? []).filter((item) => {
+      if(uniqueInputValueType === 'integer') {
+        return item[uniqueValue] !== null && item[uniqueValue] > 0
+      } else if(uniqueInputValueType === 'string') {
+        return item[uniqueValue] !== null && item[uniqueValue] !== ''
+      } else {
+        return item[uniqueValue] !== null
+      }
+    })
+  })
+
+  const availableUniqueInputItems = computed(() => {
+    return uniqueInputItems.value.filter((item) => !uniqueFilledValues.value.includes(item[uniqueValue]))
+  })
+
+  const usedUniqueInputItems = computed(() => {
+    return uniqueInputItems.value.filter((item) => uniqueFilledValues.value.includes(item[uniqueValue]))
+  })
+
+  const uniqueInputValidItemsLength = computed(() => {
+    return uniqueInputItems.value.length
   })
 
   function namingRepeaterField (index, name) {
@@ -169,6 +201,38 @@ export default function useRepeater (props, context) {
     }
 
     return `${id}[${index}][${name}]`
+  }
+
+  function flattenModel (model) {
+    let values = []
+
+    if (asObject && isObject(model)) {
+      Object.keys(model).forEach(key => {
+        let value = model[key]
+        values.push({
+          [props.uniqueField]: key,
+          ...value
+        })
+      })
+    } else if (isArray(model)) {
+      values = model
+    }
+
+    return values
+  }
+
+  function roughenModel (model) {
+    let values = asObject ? {} : model
+
+    if (asObject && isArray(model)) {
+      values = model.reduce((acc, item) => {
+        acc[item[props.uniqueField]] = omit(item, [props.uniqueField])
+
+        return acc
+      }, {})
+    }
+
+    return values
   }
 
   function hydrateRepeaterModel (item, index) {
@@ -189,7 +253,6 @@ export default function useRepeater (props, context) {
   }
 
   function hydrateRepeaterModels(model) {
-    // return model; // Burayı açman gerekebilir.
     return model.map((item, i) => {
       return hydrateRepeaterModel(item, i)
     })
@@ -206,7 +269,8 @@ export default function useRepeater (props, context) {
         if (clonedSchema[uniqueField.value]) {
           const _model = parseRepeaterModel(inputs[i])
           const selfValue = _model[uniqueField.value]
-          clonedSchema[uniqueField.value].items = uniqueInput.value.items.filter(item => !(uniqueFilledValues.value.includes(item[uniqueValue]) && selfValue !== item[uniqueValue]))
+          clonedSchema[uniqueField.value].items = uniqueInputItems.value.filter(item => !(uniqueFilledValues.value.includes(item[uniqueValue]) && selfValue !== item[uniqueValue]))
+          clonedSchema[uniqueField.value].clearable = false
         }
       }
 
@@ -254,55 +318,122 @@ export default function useRepeater (props, context) {
   }
 
   function parseRepeaterModels (model) {
+
     return model.map((object, i) => {
       return parseRepeaterModel(object, i)
     })
   }
 
-  const repeaterModels = computed({
-    get: () => {
-      if (isEmpty(rawSchema.value)) {
-        return []
-      }
-      // let clonedSchema = cloneDeep(rawSchema.value)
-      const initialValue = Array.isArray(modelValue.value) ? modelValue.value : []
-      const initialRepeats = hydrateRepeaterModels(initialValue)
-
-
-      if (props.min > 0 && initialValue.length < props.min) {
-        const schema = invokeRuleGenerator(rawSchema.value)
-        initialRepeats.push(hydrateRepeaterModel(getModel(schema), 1))
-      }
-
-      if (initialRepeats.length > 0) {
-        const parsedInitialRepeats = parseRepeaterModels(initialRepeats).map(item => {
-          const omitKeys = props.autoIdGenerator ? ['id'] : []
-          return omit(item, omitKeys)
-        })
-        if (JSON.stringify(modelValue.value) !== JSON.stringify(parsedInitialRepeats)) {
-          parsedInitialRepeats.forEach((item, index) => {
-            modelValue.value[index] = item
-          })
-        }
-      }
-
-      if (isUnique) {
-        uniqueFilledValues.value = reduce(cloneDeep(initialRepeats), (acc, _rawModel) => {
-          const _model = parseRepeaterModel(_rawModel)
-          if (uniqueField.value && _model[uniqueField.value]) {
-            acc.push(_model[uniqueField.value])
-          }
-          return acc
-        }, [])
-
-      }
-
-      return initialRepeats
-    },
-    set: (val, old) => {
-      // working on only deleting a repeat
-      inputHook.updateModelValue.value(parseRepeaterModels(val))
+  function getInitialRepeaterModels() {
+    if (isEmpty(rawSchema.value)) {
+      return []
     }
+
+    const initialValue = flattenModel(modelValue.value)
+    const initialRepeats = hydrateRepeaterModels(initialValue)
+
+    if (props.min > 0 && initialValue.length < props.min) {
+      const schema = invokeRuleGenerator(rawSchema.value)
+      initialRepeats.push(hydrateRepeaterModel(getModel(schema), 1))
+    }
+
+    if (initialRepeats.length > 0) {
+      const parsedInitialRepeats = parseRepeaterModels(initialRepeats).map(item => {
+        const omitKeys = props.autoIdGenerator ? ['id'] : []
+        return omit(item, omitKeys)
+      })
+
+      if (JSON.stringify(initialValue) !== JSON.stringify(parsedInitialRepeats)) {
+        parsedInitialRepeats.forEach((item, index) => {
+          modelValue.value[index] = item
+        })
+      }
+    }
+
+    if (isUnique) {
+      uniqueFilledValues.value = reduce(cloneDeep(initialRepeats), (acc, _rawModel) => {
+        const _model = parseRepeaterModel(_rawModel)
+        let uniqueInputValueType = uniqueInput.value.itemValueType ?? 'integer';
+
+        if (uniqueField.value && _model[uniqueField.value]) {
+          let value = _model[uniqueField.value]
+          if(uniqueInputValueType === 'integer') {
+            if(!isNaN(value) && value > 0) {
+              acc.push(value)
+            }
+          } else if(uniqueInputValueType === 'string') {
+            if(value !== null && value !== '') {
+              acc.push(value)
+            }
+          } else {
+            if(value !== null) {
+              acc.push(value)
+            }
+          }
+        }
+
+        return acc
+      }, [])
+    }
+
+    return initialRepeats
+  }
+
+  const repeaterModels = ref(getInitialRepeaterModels())
+
+  watch(() => modelValue.value, (newVal, oldVal) => {
+    // if(JSON.stringify(newVal) !== JSON.stringify(oldVal) && JSON.stringify(newVal) !== JSON.stringify(roughenModel(parseRepeaterModels(state.repeaterModels)))) {
+    if(JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+      repeaterModels.value = getInitialRepeaterModels()
+    }
+  }, {
+    deep: true
+  })
+
+  watch(() => repeaterModels.value, (newVal, oldVal) => {
+    let parsedItems = parseRepeaterModels(newVal)
+
+    if(props.draggable) {
+      // reorder the items based on the order key
+      parsedItems = parsedItems.map((item, index) => {
+        return {
+          ...item,
+          [props.orderKey]: index + 1
+        }
+      })
+    }
+
+    if (isUnique) {
+      uniqueFilledValues.value = reduce(parsedItems, (acc, _rawModel) => {
+        const _model = parseRepeaterModel(_rawModel)
+        let uniqueInputValueType = uniqueInput.value.itemValueType ?? 'integer';
+
+        if (uniqueField.value && _model[uniqueField.value]) {
+          let value = _model[uniqueField.value]
+          if(uniqueInputValueType === 'integer') {
+            if(!isNaN(value) && value > 0) {
+              acc.push(value)
+            }
+          } else if(uniqueInputValueType === 'string') {
+            if(value !== null && value !== '') {
+              acc.push(value)
+            }
+          } else {
+            if(value !== null) {
+              acc.push(value)
+            }
+          }
+        }
+
+        return acc
+      }, [])
+    }
+
+    inputHook.updateModelValue.value(roughenModel(parsedItems))
+    if(!isEqual(newVal, oldVal)) {
+    }
+  }, {
+    deep: true
   })
 
   const state = reactive({
@@ -312,7 +443,10 @@ export default function useRepeater (props, context) {
     totalRepeats: computed(() => state.repeaterModels.length),
     hasRepeaterModels: computed(() => state.repeaterModels.length > 0),
 
-    isRemainingAddible: computed(() => (!isUnique || (state.totalRepeats < uniqueInput.value.items.length && state.totalRepeats < uniqueInput.value.items.filter(item => item[uniqueValue] > 0).length))),
+    isRemainingAddible: computed(() => (!isUnique
+      || (state.totalRepeats < uniqueInput.value.items.length
+        && state.totalRepeats < uniqueInputValidItemsLength.value))
+      ),
     isAddible: computed(() => ((props.max < 1) || state.totalRepeats < props.max) && state.isRemainingAddible),
     isDeletable: computed(() => (props.min < 1) || state.totalRepeats > props.min),
     addButtonIsActive: computed(() => !props.disableAddButton || state.isAddible),
@@ -361,14 +495,15 @@ export default function useRepeater (props, context) {
   const methods = reactive({
     onUpdateRepeaterModel (value, index) {
       const newVal = parseRepeaterModel(value, index)
+      const flattenedModel = flattenModel(modelValue.value)
 
-      if(modelValue.value[index] && JSON.stringify(modelValue.value[index]) !== JSON.stringify(newVal)) {
-
-        if(props.idResetter && modelValue.value[index][props.idResetter] && modelValue.value[index][props.idResetter] !== newVal[props.idResetter]) {
+      if(flattenedModel[index] && JSON.stringify(flattenedModel[index]) !== JSON.stringify(newVal)) {
+        if(props.idResetter && flattenedModel[index][props.idResetter] && flattenedModel[index][props.idResetter] !== newVal[props.idResetter]) {
           delete newVal['id']
         }
       }
-      modelValue.value[index] = newVal
+
+      state.repeaterModels[index] = value
     },
     onUpdateRepeaterSchema (value, index) {
       const newSchema = parseRepeaterModel(value, index)
@@ -378,13 +513,20 @@ export default function useRepeater (props, context) {
         rawSchema.value[key] = Object.assign({}, rawSchema.value[key], omit(newSchema[key], ['name']))
       })
     },
-    onHoverContent (index) {
-
-    },
+    onHoverContent (index) {},
     addRepeaterBlock: function () {
       if (state.isAddible) {
         const schema = invokeRuleGenerator(cloneDeep(rawSchema.value))
-        modelValue.value.push(hydrateRepeaterModel(getModel(schema), state.totalRepeats))
+        const value = getModel(schema)
+
+        if(isUnique) {
+          value[props.uniqueField] = availableUniqueInputItems.value[0][uniqueValue] ?? null;
+        }
+        const newModel = hydrateRepeaterModel(value, state.totalRepeats)
+        const models = cloneDeep(state.repeaterModels)
+
+        models.push(newModel)
+        state.repeaterModels = models
       } else {
         let message = `You cannot add new item, because the number of elements should be at much ${props.max}`
         if (!state.isRemainingAddible) {
