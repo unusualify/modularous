@@ -437,6 +437,36 @@ class PaymentTraitTest extends RepositoryTestCase
         $this->assertNotEmpty($object->paymentPrice);
         $this->assertSame(500, $object->paymentPrice->price_value);
     }
+
+    public function test_default_payment_price_fields(): void
+    {
+        $this->assertEquals([], $this->repository->getDefaultPaymentPriceFields());
+
+        // I wanna mock getDefaultPaymentPriceFields method to return empty array
+        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('getDefaultPaymentPriceFields')->andReturn([
+                'price_type_id' => 0,
+                'vat_rate_id' => 0,
+                'currency_id' => 0,
+            ]);
+        });
+
+        $this->assertEquals([], $mock->defaultPaymentPriceFields());
+
+        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('getDefaultPaymentPriceFields')->andReturn([
+                'price_type_id' => 1,
+                'vat_rate_id' => 1,
+                'currency_id' => 1,
+            ]);
+        });
+
+        $this->assertEquals([
+            'price_type_id' => 1,
+            'vat_rate_id' => 1,
+            'currency_id' => 1,
+        ], $mock->defaultPaymentPriceFields());
+    }
 }
 
 class Item extends \Unusualify\Modularity\Entities\Model
