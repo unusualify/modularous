@@ -6,6 +6,8 @@ enum PaymentStatus: string
 {
     case PENDING = 'PENDING';
     case FAILED = 'FAILED';
+    case CHECKOUT = 'CHECKOUT';
+    case PROVISION = 'PROVISION';
     case COMPLETED = 'COMPLETED';
     case CANCELLED = 'CANCELLED';
     case REFUNDED = 'REFUNDED';
@@ -26,6 +28,8 @@ enum PaymentStatus: string
         return match ($this) {
             self::PENDING => __('Pending'),
             self::FAILED => __('Failed'),
+            self::CHECKOUT => __('Checkout'),
+            self::PROVISION => __('Provision'),
             self::COMPLETED => __('Completed'),
             self::CANCELLED => __('Cancelled'),
             self::REFUNDED => __('Refunded'),
@@ -37,6 +41,8 @@ enum PaymentStatus: string
         return match ($this) {
             self::PENDING => 'grey',
             self::FAILED => 'warning',
+            self::CHECKOUT => 'primary',
+            self::PROVISION => 'secondary',
             self::COMPLETED => 'success',
             self::CANCELLED => 'error',
             self::REFUNDED => 'grey',
@@ -48,6 +54,8 @@ enum PaymentStatus: string
         return match ($this) {
             self::PENDING => 'mdi-clock-alert-outline',
             self::FAILED => 'mdi-close-circle-outline',
+            self::CHECKOUT => 'mdi-cart-outline',
+            self::PROVISION => 'mdi-progress-clock-outline',
             self::COMPLETED => 'mdi-check-circle-outline',
             self::CANCELLED => 'mdi-close-circle-outline',
             self::REFUNDED => 'mdi-credit-card-refund-outline',
