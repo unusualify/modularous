@@ -70,9 +70,7 @@ trait SendsEmailVerificationRegister
                 'widthType' => 'md',
                 'noCancelButton' => true,
                 'confirmText' => __('authentication.pre-register-button-text'),
-
             ],
-
         );
 
         $redirectUrl = merge_url_query(route('admin.login'), [
