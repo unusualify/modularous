@@ -80,3 +80,55 @@ if (! function_exists('modularity_modal_service_form')) {
         ];
     }
 }
+
+if (! function_exists('modularity_new_modal_service')) {
+    function modularity_new_modal_service(string $color, string $icon, string $title, string $description, array $modalProps = [])
+    {
+        return [
+            'component' => 'ue-recursive-stuff',
+            'props' => [
+                'configuration' => modularity_new_response_modal_body_component($color, $icon, $title, $description, $modalProps),
+            ],
+            'modalProps' => $modalProps,
+        ];
+    }
+}
+
+if (! function_exists('modularity_new_response_modal_body_component')) {
+    function modularity_new_response_modal_body_component($color, $icon, string $title, string $description, $redirector = null, array $modalProps = [])
+    {
+        return Component::makeDiv()
+            ->setElements([
+                Component::makeDiv()
+                    ->setAttributes([
+                        'class' => 'd-flex justify-center',
+                    ])
+                    ->setElements([
+                        Component::makeVIcon()
+                            ->setAttributes([
+                                'icon' => $icon,
+                                'size' => '64',
+                                'color' => $color,
+                                'class' => 'mb-4',
+                            ]),
+                    ]),
+                Component::makeUeTitle()
+                    ->setAttributes([
+                        'tag' => 'h4',
+                        'type' => 'h4',
+                        'color' => $color,
+                        'weight' => 'regular',
+                        'transform' => 'capitalize',
+                        'justify' => 'center',
+                    ])
+                    ->setElements($title),
+                Component::makeDiv()
+                    ->setAttributes([
+                        'class' => 'text-subtitle-1 grey--text text-center',
+                        'style' => 'white-space: pre-line;',
+                    ])
+                    ->setElements($description),
+            ])
+            ->render();
+    }
+}
