@@ -405,7 +405,9 @@ export default function useRepeater (props, context) {
 
     if (isUnique) {
       uniqueFilledValues.value = reduce(parsedItems, (acc, _rawModel) => {
-        const _model = parseRepeaterModel(_rawModel)
+        // const _model = parseRepeaterModel(_rawModel)
+        const _model = _rawModel
+
         let uniqueInputValueType = uniqueInput.value.itemValueType ?? 'integer';
 
         if (uniqueField.value && _model[uniqueField.value]) {
