@@ -2,8 +2,10 @@
 
 namespace Modules\SystemPricing\Entities;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
 use Modules\SystemPayment\Entities\Payment;
+use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPricing\Entities\Mutators\PriceMutators;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
@@ -66,6 +68,11 @@ class Price extends \Oobook\Priceable\Models\Price
         return $this->belongsTo(config('priceable.models.currency'));
     }
 
+    public function paymentCurrency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(PaymentCurrency::class, 'currency_id');
+    }
+
     public function priceable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
@@ -87,6 +94,15 @@ class Price extends \Oobook\Priceable\Models\Price
     public function completedPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->payments('COMPLETED');
+    }
+
+    protected function hasPaymentCurrencyCorporateVatRate(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->paymentCurrency->hasCorporateVatRate();
+            },
+        );
     }
 
     public function updateOrNewPayment($payload, $extraPayload = [])

@@ -4,7 +4,9 @@ namespace Unusualify\Modularity\Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Modules\SystemPayment\Entities\PaymentCurrency;
 
 class DefaultCurrencySeeder extends Seeder
 {
@@ -18,18 +20,39 @@ class DefaultCurrencySeeder extends Seeder
                 'symbol' => '€',
                 'iso_4217' => 'EUR',
                 'iso_4217_number' => 978,
+                'default_vat_rates' => [
+                    'corporate' => [
+                        'vat_rate_id' => 12,
+                    ],
+                    'personal' => [
+                        'vat_rate_id' => 3,
+                    ],
+                ],
             ],
             [
                 'name' => 'US Dollar',
                 'symbol' => '$',
                 'iso_4217' => 'USD',
                 'iso_4217_number' => 840,
+                'default_vat_rates' => [
+                    'corporate' => [
+                        'vat_rate_id' => 12,
+                    ],
+                    'personal' => [
+                        'vat_rate_id' => 3,
+                    ],
+                ],
             ],
             [
                 'name' => 'Turkish Lira',
                 'symbol' => '₺',
                 'iso_4217' => 'TRY',
                 'iso_4217_number' => 949,
+                'default_vat_rates' => [
+                    'personal' => [
+                        'vat_rate_id' => 1,
+                    ],
+                ],
             ],
             [
                 'name' => 'British Pound',
@@ -134,8 +157,17 @@ class DefaultCurrencySeeder extends Seeder
                 'iso_4217_number' => 710,
             ],
         ];
-        $now = Carbon::now()->format('Y-m-d H:i:s');
-        $currencyTypes = array_map(fn ($currencyType) => $currencyType += ['created_at' => $now], $seedArray);
-        DB::table($table)->insert($currencyTypes);
+
+        foreach($seedArray as $currency) {
+            $paymentCurrency = PaymentCurrency::create(Arr::only($currency, ['name', 'symbol', 'iso_4217', 'iso_4217_number']));
+
+            if(isset($currency['default_vat_rates'])) {
+                $paymentCurrency->repeaters()->create([
+                    'role' => 'default_vat_rates',
+                    'locale' => app()->getFallbackLocale(),
+                    'content' => $currency['default_vat_rates'],
+                ]);
+            }
+        }
     }
 }

@@ -519,6 +519,14 @@ return [
                     'itemTitle' => 'name',
                 ],
                 [
+                    'title' => __('VAT Rate') . ' (' . __('for personals') . ')',
+                    'key' => 'personal_vat_rate_name_with_rate',
+                ],
+                [
+                    'title' => __('VAT Rate') . ' (' . __('for corporates') . ')',
+                    'key' => 'corporate_vat_rate_name_with_rate',
+                ],
+                [
                     'title' => 'Created Time',
                     'key' => 'created_at',
                     'formatter' => [
@@ -538,7 +546,9 @@ return [
                     'name' => 'name',
                     'label' => __('Name'),
                     'type' => 'text',
-                    'disabled',
+                    'readonly' => true,
+                    'clearable' => false,
+                    'noSubmit' => true,
                 ],
                 [
                     'name' => 'payment_service_id',
@@ -547,6 +557,61 @@ return [
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
                     'multiple' => false,
                     'itemTitle' => 'name',
+                ],
+                [
+                    'name' => 'default_vat_rates',
+                    'label' => __('Default VAT Rates'),
+                    'type' => 'json-repeater',
+                    'default' => [],
+                    'formRowAttribute' => [
+                        'noGutters' => true,
+                    ],
+                    'col' => [
+                        'cols' => 12,
+                    ],
+                    'isUnique' => true,
+                    'uniqueField' => 'company_type',
+                    'uniqueValue' => 'id',
+                    'autoIdGenerator' => false,
+                    'asObject' => true,
+                    'schema' => [
+                        [
+                            'type' => 'select',
+                            'name' => 'company_type',
+                            'label' => __('Company Type'),
+                            'hideDetails' => 'auto',
+                            'itemValue' => 'id',
+                            'itemTitle' => 'name',
+                            'itemValueType' => 'string',
+                            'col' => [
+                                'cols' => 6,
+                                'class' => 'pr-4',
+                            ],
+                            'items' => [
+                                [
+                                    'id' => 'corporate',
+                                    'name' => __('Corporate Company'),
+                                ],
+                                [
+                                    'id' => 'personal',
+                                    'name' => __('Personal Company'),
+                                ],
+                            ],
+                            'rules' => 'required',
+                        ],
+                        [
+                            'name' => 'vat_rate_id',
+                            'label' => __('VAT Rate'),
+                            'type' => 'select',
+                            'connector' => 'SystemPricing:VatRate|repository:list:column=name,rate:appends=name_with_rate',
+                            'itemTitle' => 'name_with_rate',
+                            'hideDetails' => 'auto',
+                            'col' => [
+                                'cols' => 6,
+                            ],
+                            'rules' => 'required',
+                        ],
+                    ],
                 ],
             ],
         ],
