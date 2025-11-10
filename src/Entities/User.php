@@ -19,6 +19,7 @@ use Unusualify\Modularity\Entities\Traits\Auth\HasOauth;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
 
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
@@ -77,6 +78,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         'name_with_company',
         'email_with_company',
         'valid_company',
+        'show_billing_banner'
     ];
 
     protected $isCreatingCompany = false;
@@ -294,5 +296,12 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function preferredLocale()
     {
         return $this->language ?? app()->getLocale();
+    }
+
+    protected function showBillingBanner(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !modularityConfig('disable_billing_banner', false) && $this->isClient() && !$this->valid_company && Modularity::shouldUseCountryBasedVatRates(),
+        );
     }
 }

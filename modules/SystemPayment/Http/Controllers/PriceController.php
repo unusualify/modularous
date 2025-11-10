@@ -60,10 +60,11 @@ class PriceController extends Controller
 
         $user = Auth::user();
         $company = $user->company;
-        $isTransfer = false;
 
         $requestCurrencyIso4217 = null;
         $paymentService = null;
+
+        $isTransfer = false;
 
         if (isset($params['payment_service_id'])) {
             $paymentService = PaymentService::isTransfer()->find($params['payment_service_id']);
@@ -111,14 +112,57 @@ class PriceController extends Controller
             $requestCurrencyIso4217 = $params['payment_service']['currency']['iso_4217'];
         }
 
+        $useCountryBasedVatRates = Modularity::shouldUseCountryBasedVatRates();
+
         $rawAmount = $price->discounted_raw_amount;
         $totalAmount = $price->total_amount;
 
+        $vatRateFrom = 'default';
+        $isCompanyBasedVatRate = false;
+        $companyType = $company->company_type;
+        $companyBasedTotalAmount = $totalAmount;
+        $companyBasedVatRateId = null;
+        $companyBasedVatRateName = null;
+        $companyBasedVatRate = null;
+        $companyBasedVatRateMultiplier = null;
+
+        $paymentCurrency = $price->paymentCurrency;
         $currency = $price->currency;
+        $isPriceCurrency = true;
+
+        if($useCountryBasedVatRates){
+
+            if (Str::upper($paymentCurrency->iso_4217) != Str::upper($requestCurrencyIso4217)) {
+                $paymentCurrency = PaymentCurrency::where('iso_4217', $requestCurrencyIso4217)->first();
+                $currency = $paymentCurrency;
+                $isPriceCurrency = false;
+            }
+
+            if($paymentCurrency->hasCompanyVatRate()){
+                $paymentCurrency->setCompanyVatRate();
+                $companyVatRate = $paymentCurrency->companyVatRate;
+                if($companyVatRate){
+                    $vatRateFrom = $paymentCurrency->isUserCorporateVatRate() ? 'country' : 'currency';
+                    $totalAmount = $price->calculateTotalAmount($price->discounted_raw_amount, $companyVatRate->vat_multiplier);
+
+                    $isCompanyBasedVatRate = true;
+                    $companyBasedTotalAmount = $totalAmount;
+                    $companyBasedVatRateId = $companyVatRate->id;
+                    $companyBasedVatRateName = $companyVatRate->name;
+                    $companyBasedVatRate = $companyVatRate->rate;
+                    $companyBasedVatRateMultiplier = $companyVatRate->vat_multiplier;
+                }
+
+            }
+        } else if(Str::upper($currency->iso_4217) != Str::upper($requestCurrencyIso4217)){
+            $currency = Currency::where('iso_4217', $requestCurrencyIso4217)->first();
+            $isPriceCurrency = false;
+        }
+
         $converted = false;
         $exchangeRate = null;
 
-        if (Str::upper($currency->iso_4217) != Str::upper($requestCurrencyIso4217)) {
+        if (!$isPriceCurrency) {
             $converted = true;
             $currency = Currency::where('iso_4217', $requestCurrencyIso4217)->first();
 
@@ -129,7 +173,12 @@ class PriceController extends Controller
                 round: 'round'
             );
             $exchangeRate = CurrencyExchange::getExchangeRate(mb_strtoupper($requestCurrencyIso4217));
-            $totalAmount = intval($rawAmount * (1 + $price->vat_multiplier));
+
+            if($isCompanyBasedVatRate){
+                $totalAmount = intval($rawAmount * (1 + $companyBasedVatRateMultiplier));
+            } else {
+                $totalAmount = intval($rawAmount * (1 + $price->vat_multiplier));
+            }
         }
 
         $orderId = uniqid('ORD');
@@ -139,16 +188,30 @@ class PriceController extends Controller
             'datetime' => now()->format('Y-m-d H:i:s'),
             'original_raw_amount' => $price->discounted_raw_amount,
             'original_total_amount' => $price->total_amount,
-            'converted_raw_amount' => $rawAmount,
-            'converted_total_amount' => $totalAmount,
+            'discount_percentage' => $price->discount_percentage,
+
+            'vat_rate_id' => $price->vat_rate_id,
+            'vat_rate_name' => $price->vatRate->name,
             'vat_percentage' => $price->vat_percentage,
             'vat_multiplier' => $price->vat_multiplier,
-            'discount_percentage' => $price->discount_percentage,
+
+            'using_country_based_vat_rates' => $useCountryBasedVatRates,
+            'vat_rate_from' => $vatRateFrom,
+            'company_type' => $companyType,
+            'is_company_based_vat_rate' => $isCompanyBasedVatRate,
+            'company_based_vat_rate_id' => $companyBasedVatRateId,
+            'company_based_vat_rate_name' => $companyBasedVatRateName,
+            'company_based_vat_percentage' => $companyBasedVatRate,
+            'company_based_vat_multiplier' => $companyBasedVatRateMultiplier,
+            'company_based_total_amount' => $companyBasedTotalAmount,
+
             'converted' => $converted,
-            'original_currency' => $price->currency->iso_4217,
+            'converted_raw_amount' => $rawAmount,
+            'converted_total_amount' => $totalAmount,
             'original_currency_id' => $price->currency_id,
-            'converted_currency' => $currency->iso_4217,
+            'original_currency' => $price->currency->iso_4217,
             'converted_currency_id' => $currency->id,
+            'converted_currency' => $currency->iso_4217,
             'exchange_rate' => $exchangeRate,
         ];
 
@@ -220,8 +283,10 @@ class PriceController extends Controller
         $totalAmountWithoutTransactionFee = $totalAmount;
         if ($hasTransactionFee) {
             $transactionFeePercentage = $paymentService->transaction_fee_percentage;
-            $transactionFeeAmount = round($totalAmount * $transactionFeePercentage / 100, 0);
+            $transactionFeeMultiplier = $transactionFeePercentage / 100;
+            $transactionFeeAmount = round($totalAmount * $transactionFeeMultiplier, 0);
             $totalAmount = $totalAmount + $transactionFeeAmount;
+
         }
 
         $modularityPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
@@ -229,8 +294,6 @@ class PriceController extends Controller
         $modularityPayload['transaction_fee_percentage'] = $transactionFeePercentage;
         $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
         $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
-
-        // dd($params);
 
         $payable = new Payable($paymentService->key);
         Session::put('payable_payment_service', $paymentService->key);
@@ -262,7 +325,7 @@ class PriceController extends Controller
             'company_name' => $company ? $company->name : null,
             'user_address' => $company ? $company->address : null,
             'user_city' => $company ? $company->city : null,
-            'user_country' => $company ? $company->country : null,
+            'user_country' => $company ? ($company->country ? $company->country->name : null) : null,
             'user_zip_code' => $company ? $company->zip_code : null,
 
             'basket_id' => uniqid(),
@@ -346,14 +409,57 @@ class PriceController extends Controller
             $requestCurrencyIso4217 = $params['payment_service']['currency']['iso_4217'];
         }
 
+        $useCountryBasedVatRates = Modularity::shouldUseCountryBasedVatRates();
+
         $rawAmount = $price->discounted_raw_amount;
         $totalAmount = $price->total_amount;
 
+        $vatRateFrom = 'default';
+        $isCompanyBasedVatRate = false;
+        $companyType = $company->company_type ?? 'system';
+        $companyBasedTotalAmount = $totalAmount;
+        $companyBasedVatRateId = null;
+        $companyBasedVatRateName = null;
+        $companyBasedVatRate = null;
+        $companyBasedVatRateMultiplier = null;
+
+        $paymentCurrency = $price->paymentCurrency;
         $currency = $price->currency;
+        $isPriceCurrency = true;
+
+        if($useCountryBasedVatRates && $companyType !== 'system'){
+
+            if (Str::upper($paymentCurrency->iso_4217) != Str::upper($requestCurrencyIso4217)) {
+                $paymentCurrency = PaymentCurrency::where('iso_4217', $requestCurrencyIso4217)->first();
+                $currency = $paymentCurrency;
+                $isPriceCurrency = false;
+            }
+
+            if($paymentCurrency->hasCompanyVatRate()){
+                $paymentCurrency->setCompanyVatRate();
+                $companyVatRate = $paymentCurrency->companyVatRate;
+                if($companyVatRate){
+                    $vatRateFrom = $paymentCurrency->isUserCorporateVatRate() ? 'country' : 'currency';
+                    $totalAmount = $price->calculateTotalAmount($price->discounted_raw_amount, $companyVatRate->vat_multiplier);
+
+                    $isCompanyBasedVatRate = true;
+                    $companyBasedTotalAmount = $totalAmount;
+                    $companyBasedVatRateId = $companyVatRate->id;
+                    $companyBasedVatRateName = $companyVatRate->name;
+                    $companyBasedVatRate = $companyVatRate->rate;
+                    $companyBasedVatRateMultiplier = $companyVatRate->vat_multiplier;
+                }
+
+            }
+        } else if(Str::upper($currency->iso_4217) != Str::upper($requestCurrencyIso4217)){
+            $currency = Currency::where('iso_4217', $requestCurrencyIso4217)->first();
+            $isPriceCurrency = false;
+        }
+
         $converted = false;
         $exchangeRate = null;
 
-        if (Str::upper($currency->iso_4217) != Str::upper($requestCurrencyIso4217)) {
+        if (!$isPriceCurrency) {
             $converted = true;
             $currency = Currency::where('iso_4217', $requestCurrencyIso4217)->first();
 
@@ -364,7 +470,12 @@ class PriceController extends Controller
                 round: 'round'
             );
             $exchangeRate = CurrencyExchange::getExchangeRate(mb_strtoupper($requestCurrencyIso4217));
-            $totalAmount = intval($rawAmount * (1 + $price->vat_multiplier));
+
+            if($isCompanyBasedVatRate){
+                $totalAmount = intval($rawAmount * (1 + $companyBasedVatRateMultiplier));
+            } else {
+                $totalAmount = intval($rawAmount * (1 + $price->vat_multiplier));
+            }
         }
 
         if (isset($params['payment_service']) && $params['payment_service']['payment_method'] == -1) {
@@ -378,7 +489,6 @@ class PriceController extends Controller
             $paymentService = PaymentService::find($params['payment_service']['payment_method']);
         }
 
-        $payable = new Payable($paymentService->key);
 
         if (! $paymentService->serviceClass::hasBuiltInForm()) {
             if ($request->ajax()) {
@@ -398,16 +508,30 @@ class PriceController extends Controller
             'datetime' => now()->format('Y-m-d H:i:s'),
             'original_raw_amount' => $price->discounted_raw_amount,
             'original_total_amount' => $price->total_amount,
-            'converted_raw_amount' => $rawAmount,
-            'converted_total_amount' => $totalAmount,
+            'discount_percentage' => $price->discount_percentage,
+
+            'vat_rate_id' => $price->vat_rate_id,
+            'vat_rate_name' => $price->vatRate->name,
             'vat_percentage' => $price->vat_percentage,
             'vat_multiplier' => $price->vat_multiplier,
-            'discount_percentage' => $price->discount_percentage,
+
+            'using_country_based_vat_rates' => $useCountryBasedVatRates,
+            'vat_rate_from' => $vatRateFrom,
+            'company_type' => $companyType,
+            'is_company_based_vat_rate' => $isCompanyBasedVatRate,
+            'company_based_vat_rate_id' => $companyBasedVatRateId,
+            'company_based_vat_rate_name' => $companyBasedVatRateName,
+            'company_based_vat_percentage' => $companyBasedVatRate,
+            'company_based_vat_multiplier' => $companyBasedVatRateMultiplier,
+            'company_based_total_amount' => $companyBasedTotalAmount,
+
             'converted' => $converted,
-            'original_currency' => $price->currency->iso_4217,
+            'converted_raw_amount' => $rawAmount,
+            'converted_total_amount' => $totalAmount,
             'original_currency_id' => $price->currency_id,
-            'converted_currency' => $currency->iso_4217,
+            'original_currency' => $price->currency->iso_4217,
             'converted_currency_id' => $currency->id,
+            'converted_currency' => $currency->iso_4217,
             'exchange_rate' => $exchangeRate,
         ];
 
@@ -427,6 +551,7 @@ class PriceController extends Controller
         $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
         $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
 
+        $payable = new Payable($paymentService->key);
         Session::put('payable_payment_service', $paymentService->key);
 
         $payload = [

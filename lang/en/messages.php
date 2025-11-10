@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'billing-banner' => 'Please complete your company details to continue.',
     'error' => 'There is an error!',
     'info' => 'Completed!',
     'invalid-company' => 'Company fields must be filled!',

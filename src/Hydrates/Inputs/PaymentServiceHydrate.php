@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
@@ -34,15 +35,56 @@ class PaymentServiceHydrate extends InputHydrate
         $input['default_payment_service'] = config('modularity.default_payment_service');
         $input['currencyConversionEndpoint'] = route('currency.convert');
 
-        $input['supportedCurrencies'] = ! $this->skipQueries
-            ? PaymentCurrency::whereHas('paymentServices')
-                ->orWhereHas('paymentService')
-                ->with('paymentServices', 'paymentService')
-                ->get()
-                ->each(function ($item) {
+        $input['useCountryBasedVatRates'] = Modularity::shouldUseCountryBasedVatRates();
+        if($input['useCountryBasedVatRates']) {
+            if(!$this->skipQueries) {
+                $userPaymentCountryCurrencies = get_user_payment_country_currencies();
+
+                $userPaymentCountryCurrencies = $userPaymentCountryCurrencies->filter(function ($item) {
+                    return $item->paymentServices()->exists() || $item->paymentService()->exists();
+                })->each(function ($item) {
+                    $item->load('paymentServices', 'paymentService');
+                });
+
+                // $defaultPaymentCurrencies = PaymentCurrency::whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))->get();
+                $query= PaymentCurrency::whereHas('paymentServices')
+                    ->orWhereHas('paymentService')
+                    ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
+                    ->with('paymentServices', 'paymentService');
+
+                if(Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
+                    if($user->company->isCorporateCompany) {
+                        $query = $query->defaultCorporatePaymentCurrency();
+                    } else {
+                        $query = $query->defaultPersonalPaymentCurrency();
+                    }
+                } else {
+                    $query = PaymentCurrency::whereHas('paymentServices')
+                        ->orWhereHas('paymentService')
+                        ->with('paymentServices', 'paymentService');
+                }
+
+                $defaultPaymentCurrencies = $query->get();
+
+                $input['supportedCurrencies'] = $defaultPaymentCurrencies->merge($userPaymentCountryCurrencies)->sortBy('id')->values()->map(function ($item) {
                     $item->append('has_built_in_form');
-                })
-            : [];
+                    $item->setCompanyVatRate();
+                    return $item;
+                });
+            } else {
+                $input['supportedCurrencies'] = [];
+            }
+        } else {
+            $input['supportedCurrencies'] = ! $this->skipQueries
+                ? PaymentCurrency::whereHas('paymentServices')
+                    ->orWhereHas('paymentService')
+                    ->with('paymentServices', 'paymentService')
+                    ->get()
+                    ->each(function ($item) {
+                        $item->append('has_built_in_form');
+                    })
+                : [];
+        }
 
         $input['items'] = ! $this->skipQueries
             ? PaymentService::published()

@@ -58,6 +58,21 @@ class Price extends \Oobook\Priceable\Models\Price
         ];
     }
 
+    final public function calculateDiscountedAmount($amount)
+    {
+        return (int) round($amount * (1 - $this->discount_percentage / 100)) * 100;
+    }
+
+    final public function calculateDiscountedVatAmount($discountedRawAmount, $vatMultiplier)
+    {
+        return (int)($discountedRawAmount * $vatMultiplier);
+    }
+
+    final public function calculateTotalAmount($amount, $vatMultiplier)
+    {
+        return (int)($amount * (1 + $vatMultiplier));
+    }
+
     public function vatRate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(config('priceable.models.vat'));

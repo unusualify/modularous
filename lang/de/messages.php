@@ -1,8 +1,13 @@
 <?php
 
 return [
-    'success' => 'Completed Successfully!',
-    'info' => 'Completed!',
-    'warning' => 'There is a warning!',
+    'billing-banner' => 'Please complete your company details to continue.',
+
     'error' => 'There is an error!',
+
+    'info' => 'Completed!',
+
+    'success' => 'Completed Successfully!',
+
+    'warning' => 'There is a warning!',
 ];

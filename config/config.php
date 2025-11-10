@@ -33,6 +33,8 @@ return [
     'use_big_integers_on_migrations' => true,
     'use_inertia' => env('MODULARITY_USE_INERTIA', false),
     'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),
+    'use_country_based_vat_rates' => env('MODULARITY_USE_COUNTRY_BASED_VAT_RATES', false),
+    'disable_billing_banner' => env('MODULARITY_DISABLE_BILLING_BANNER', false),
 
     'locale' => 'en',
     'fallback_locale' => 'en',

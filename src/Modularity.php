@@ -311,6 +311,16 @@ class Modularity extends FileRepository
     }
 
     /**
+     * Check if country based VAT rates should be used.
+     *
+     * @return bool
+     */
+    final public function shouldUseCountryBasedVatRates()
+    {
+        return $this->config('use_country_based_vat_rates', false);
+    }
+
+    /**
      * Create a page title callback.
      *
      * @param \Closure $callback

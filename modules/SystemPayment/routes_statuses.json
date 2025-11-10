@@ -3,5 +3,6 @@
     "Payments": true,
     "Currency": true,
     "CardType": true,
-    "MyPayment": true
+    "MyPayment": true,
+    "PaymentCountry": true
 }

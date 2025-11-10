@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'billing-banner' => 'Şirket detaylarınızı doldurarak devam edebilirsiniz.',
     'error' => 'Bir Hata Oluştu!',
     'info' => 'Tamamlandı!',
     'invalid-company' => 'Şirket detayları doldurulmak zorundadır!',
