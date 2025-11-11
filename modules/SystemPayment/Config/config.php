@@ -794,7 +794,7 @@ return [
                 ],
             ],
         ],
-    	'payment_country' => [
+        'payment_country' => [
             'name' => 'PaymentCountry',
             'headline' => 'Payment Countries',
             'url' => 'payment-countries',
@@ -890,5 +890,5 @@ return [
                 ],
             ],
         ],
-	],
+    ],
 ];

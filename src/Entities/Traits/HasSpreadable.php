@@ -96,7 +96,7 @@ trait HasSpreadable
 
     protected function getSpreadableClass(): \Illuminate\Database\Eloquent\Model
     {
-        if (!property_exists(static::class, 'spreadableClass') || ! static::$spreadableClass || ! class_exists(static::$spreadableClass)) {
+        if (! property_exists(static::class, 'spreadableClass') || ! static::$spreadableClass || ! class_exists(static::$spreadableClass)) {
             return $this;
         }
 

@@ -3,14 +3,6 @@
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery\MockInterface;
 use Unusualify\Modularity\Facades\Filepond;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -71,7 +63,7 @@ class FilepondsTraitTest extends RepositoryTestCase
 
         $fields = [
             'pond-1' => [
-                'en' => [ ['id' => 21] ],
+                'en' => [['id' => 21]],
                 'tr' => [],
             ],
         ];
@@ -92,7 +84,7 @@ class FilepondsTraitTest extends RepositoryTestCase
 
         $fields = [
             'sections' => [
-                ['pond' => [ ['id' => 31] ]],
+                ['pond' => [['id' => 31]]],
                 ['pond' => []],
             ],
         ];
@@ -115,20 +107,50 @@ class FilepondsTraitTest extends RepositoryTestCase
             (object) [
                 'role' => 'pond-1',
                 'locale' => 'en',
-                'mediableFormat' => function () { return ['name' => 'x.pdf']; },
+                'mediableFormat' => function () {
+                    return ['name' => 'x.pdf'];
+                },
             ],
         ])->map(function ($item) {
-            return new class($item) {
-                public $role; public $locale; private $base;
-                public function __construct($base) { $this->role = $base->role; $this->locale = $base->locale; $this->base = $base; }
-                public function mediableFormat() { $fn = $this->base->mediableFormat; return $fn(); }
+            return new class($item)
+            {
+                public $role;
+
+                public $locale;
+
+                private $base;
+
+                public function __construct($base)
+                {
+                    $this->role = $base->role;
+                    $this->locale = $base->locale;
+                    $this->base = $base;
+                }
+
+                public function mediableFormat()
+                {
+                    $fn = $this->base->mediableFormat;
+
+                    return $fn();
+                }
             };
         });
 
-        $object = new class($fileponds) {
-            public $id = 5; public $fileponds;
-            public function __construct($f) { $this->fileponds = $f; }
-            public function has($rel) { return $rel === 'fileponds'; }
+        $object = new class($fileponds)
+        {
+            public $id = 5;
+
+            public $fileponds;
+
+            public function __construct($f)
+            {
+                $this->fileponds = $f;
+            }
+
+            public function has($rel)
+            {
+                return $rel === 'fileponds';
+            }
         };
 
         $mapped = $this->repository->getFormFieldsFilepondsTrait($object, [], $schema);
@@ -148,4 +170,3 @@ class FilepondTestRepository extends \Unusualify\Modularity\Tests\Repositories\T
         $this->model = $model;
     }
 }
-

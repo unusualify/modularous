@@ -2,10 +2,8 @@
 
 namespace Unusualify\Modularity\Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 
 class DefaultCurrencySeeder extends Seeder
@@ -158,10 +156,10 @@ class DefaultCurrencySeeder extends Seeder
             ],
         ];
 
-        foreach($seedArray as $currency) {
+        foreach ($seedArray as $currency) {
             $paymentCurrency = PaymentCurrency::create(Arr::only($currency, ['name', 'symbol', 'iso_4217', 'iso_4217_number']));
 
-            if(isset($currency['default_vat_rates'])) {
+            if (isset($currency['default_vat_rates'])) {
                 $paymentCurrency->repeaters()->create([
                     'role' => 'default_vat_rates',
                     'locale' => app()->getFallbackLocale(),

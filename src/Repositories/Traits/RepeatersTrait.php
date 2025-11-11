@@ -90,7 +90,7 @@ trait RepeatersTrait
                     $exist_locale = $intersect_locales[0];
                 }
 
-                if($isTranslated) {
+                if ($isTranslated) {
 
                     foreach ($system_locales as $system_locale) {
                         $content = $fields[$name];
@@ -123,7 +123,7 @@ trait RepeatersTrait
                 } else {
                     $payload = $fields[$name];
 
-                    if($localized) {
+                    if ($localized) {
                         $payload = isset($fields[$name][$fallbackLocale]) ? $fields[$name][$fallbackLocale] : $fields[$name][$exist_locale];
                     }
 
@@ -236,7 +236,7 @@ trait RepeatersTrait
     public function getFormFieldsRepeatersTrait($object, $fields, $schema)
     {
         // not possess any repeater data
-        if(classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && $object->repeaters()->exists()){
+        if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && $object->repeaters()->exists()) {
             if ($object->repeaters->isEmpty()) {
                 $fields += Arr::mapWithKeys($this->getRepeaterInputs(), function ($input) {
                     return [

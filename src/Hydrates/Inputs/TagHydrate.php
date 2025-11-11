@@ -49,19 +49,19 @@ class TagHydrate extends InputHydrate
                 : [];
 
             $input['taggable'] = get_class($repository->getModel());
-        } else if(isset($input['taggable']) && @class_exists($input['taggable'])) {
+        } elseif (isset($input['taggable']) && @class_exists($input['taggable'])) {
             $taggableModel = App::make($input['taggable']);
 
-            $input['items'] = !$this->skipQueries
+            $input['items'] = ! $this->skipQueries
                 ? ($translated ? $taggableModel->localeTagsList() : Tag::whereNamespace($input['taggable'])->get())
                 : collect([]);
         }
 
-        if(!isset($input['updateEndpoint'])) {
+        if (! isset($input['updateEndpoint'])) {
             $input['updateEndpoint'] = route('admin.tag.update');
         }
 
-        if($translated) {
+        if ($translated) {
             $input['cacheKey'] = '${localeParameter}$_' . $input['taggable'];
             $input['updatePayload'] = ['locale' => '${localeParameter}$'];
         }

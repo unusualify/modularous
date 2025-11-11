@@ -65,12 +65,12 @@ class Price extends \Oobook\Priceable\Models\Price
 
     final public function calculateDiscountedVatAmount($discountedRawAmount, $vatMultiplier)
     {
-        return (int)($discountedRawAmount * $vatMultiplier);
+        return (int) ($discountedRawAmount * $vatMultiplier);
     }
 
     final public function calculateTotalAmount($amount, $vatMultiplier)
     {
-        return (int)($amount * (1 + $vatMultiplier));
+        return (int) ($amount * (1 + $vatMultiplier));
     }
 
     public function vatRate(): \Illuminate\Database\Eloquent\Relations\BelongsTo

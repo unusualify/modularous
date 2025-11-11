@@ -93,13 +93,13 @@ class Company extends Model
     {
         return new Attribute(
             get: fn ($value) => $this->isPersonalCompany
-                ? !(! $this->address
+                ? ! (! $this->address
                 || ! $this->city
                 || ! $this->state
                 || ! $this->zip_code
                 || ! $this->country_id
                 )
-                : !(! $this->name
+                : ! (! $this->name
                     || ! $this->tax_id
                     || ! $this->email
                     || ! $this->address

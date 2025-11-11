@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -32,14 +32,30 @@ class CreatorTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_sets_custom_creator_id_when_creator_exists_without_roles(): void
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
         };
 
-        $object = new class {
+        $object = new class
+        {
             public $creator;
-            public function __construct() { $this->creator = (object) ['id' => 77]; }
-            public function creator() { return new class { public function exists() { return true; } }; }
+
+            public function __construct()
+            {
+                $this->creator = (object) ['id' => 77];
+            }
+
+            public function creator()
+            {
+                return new class
+                {
+                    public function exists()
+                    {
+                        return true;
+                    }
+                };
+            }
         };
 
         $schema = [
@@ -58,20 +74,40 @@ class CreatorTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_respects_allowed_roles_and_sets_id_when_authorized(): void
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
         };
 
         // Auth user with role
         Auth::shouldReceive('check')->andReturn(true);
-        Auth::shouldReceive('user')->andReturn(new class {
-            public function hasRole($roles) { return in_array('admin', (array) $roles, true); }
+        Auth::shouldReceive('user')->andReturn(new class
+        {
+            public function hasRole($roles)
+            {
+                return in_array('admin', (array) $roles, true);
+            }
         });
 
-        $object = new class {
+        $object = new class
+        {
             public $creator;
-            public function __construct() { $this->creator = (object) ['id' => 99]; }
-            public function creator() { return new class { public function exists() { return true; } }; }
+
+            public function __construct()
+            {
+                $this->creator = (object) ['id' => 99];
+            }
+
+            public function creator()
+            {
+                return new class
+                {
+                    public function exists()
+                    {
+                        return true;
+                    }
+                };
+            }
         };
 
         $schema = [
@@ -88,20 +124,40 @@ class CreatorTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_respects_allowed_roles_and_skips_when_unauthorized(): void
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
         };
 
         // Auth user without required role
         Auth::shouldReceive('check')->andReturn(true);
-        Auth::shouldReceive('user')->andReturn(new class {
-            public function hasRole($roles) { return false; }
+        Auth::shouldReceive('user')->andReturn(new class
+        {
+            public function hasRole($roles)
+            {
+                return false;
+            }
         });
 
-        $object = new class {
+        $object = new class
+        {
             public $creator;
-            public function __construct() { $this->creator = (object) ['id' => 55]; }
-            public function creator() { return new class { public function exists() { return true; } }; }
+
+            public function __construct()
+            {
+                $this->creator = (object) ['id' => 55];
+            }
+
+            public function creator()
+            {
+                return new class
+                {
+                    public function exists()
+                    {
+                        return true;
+                    }
+                };
+            }
         };
 
         $schema = [
@@ -118,7 +174,8 @@ class CreatorTraitTest extends RepositoryTestCase
 
     public function test_prepend_form_schema_returns_creator_component(): void
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
         };
 
@@ -138,5 +195,3 @@ class CreatorTestRepository extends \Unusualify\Modularity\Tests\Repositories\Te
         $this->model = $model;
     }
 }
-
-

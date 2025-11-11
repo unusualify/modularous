@@ -14,7 +14,7 @@ class PaymentCountryRequest extends Request
     public function rulesForAll()
     {
         return [
-		];
+        ];
     }
 
     /**

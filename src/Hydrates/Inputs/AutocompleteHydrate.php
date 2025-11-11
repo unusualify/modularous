@@ -2,11 +2,10 @@
 
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
-use Illuminate\Support\Arr;
-
 class AutocompleteHydrate extends InputHydrate
 {
     public $selectable = true;
+
     /**
      * Default values to set before hydrating
      *

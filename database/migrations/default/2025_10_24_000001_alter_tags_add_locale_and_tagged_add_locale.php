@@ -31,7 +31,10 @@ return new class extends Migration
                     $table->dropColumn('locale');
                 }
                 // drop index if exists
-                try { $table->dropIndex($tagsTable . '_ns_slug_locale_idx'); } catch (Throwable $e) {}
+                try {
+                    $table->dropIndex($tagsTable . '_ns_slug_locale_idx');
+                } catch (Throwable $e) {
+                }
             });
         }
     }

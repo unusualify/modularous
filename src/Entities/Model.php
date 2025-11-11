@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 // use Modules\Notification\Events\ModelCreated;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
-use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 
 abstract class Model extends LaravelModel implements TaggableInterface
 {

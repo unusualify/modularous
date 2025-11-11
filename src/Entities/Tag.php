@@ -10,6 +10,7 @@ class Tag extends IlluminateTag
 
     /**
      * Override fillable to include locale for localized tags.
+     *
      * @var array<int, string>
      */
     protected $fillable = [
@@ -17,7 +18,7 @@ class Tag extends IlluminateTag
         'slug',
         'count',
         'namespace',
-        'locale'
+        'locale',
     ];
 
     public function getTable()

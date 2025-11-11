@@ -347,11 +347,11 @@ class BaseServiceProvider extends ServiceProvider
         \Illuminate\Support\Str::macro('modularitySlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
             $dictionary = array_merge(Lang::get('slug-dictionary', locale: $language), $dictionary ?? []);
 
-            if(array_key_exists($separator, $dictionary)) {
+            if (array_key_exists($separator, $dictionary)) {
                 unset($dictionary[$separator]);
             }
 
-            return \Illuminate\Support\Str::slug($string, $separator,language: null, dictionary: $dictionary);
+            return \Illuminate\Support\Str::slug($string, $separator, language: null, dictionary: $dictionary);
         });
 
         \Illuminate\Support\Collection::macro('recursive', function () {

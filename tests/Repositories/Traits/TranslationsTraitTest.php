@@ -5,8 +5,8 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
@@ -69,7 +69,6 @@ class TranslationsTraitTest extends RepositoryTestCase
         $this->assertContains('title', $columns);
         $this->assertContains('active', $columns);
     }
-
 
     public function test_prepare_fields_before_save_translations_trait_restructures_translated_fields()
     {
@@ -171,7 +170,6 @@ class TranslationsTraitTest extends RepositoryTestCase
     }
 }
 
-
 class TranslationsTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
 {
     use \Unusualify\Modularity\Entities\Traits\HasTranslation;
@@ -199,4 +197,3 @@ class TranslationsTestRepository extends \Unusualify\Modularity\Tests\Repositori
         $this->model = $model;
     }
 }
-

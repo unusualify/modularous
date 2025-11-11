@@ -164,7 +164,7 @@ class CompanyTest extends ModelTestCase
             'country_id' => 1,
             'spread_payload' => [
                 'is_personal' => true,
-                'email' => 'test@example.com'
+                'email' => 'test@example.com',
             ],
         ]);
 
@@ -186,7 +186,7 @@ class CompanyTest extends ModelTestCase
             'country_id' => 1,
             'spread_payload' => [
                 'is_personal' => false,
-                'email' => 'test@example.com'
+                'email' => 'test@example.com',
             ],
         ]);
         $this->assertEquals('corporate', $corporateCompany->company_type);

@@ -36,8 +36,8 @@ class PaymentServiceHydrate extends InputHydrate
         $input['currencyConversionEndpoint'] = route('currency.convert');
 
         $input['useCountryBasedVatRates'] = Modularity::shouldUseCountryBasedVatRates();
-        if($input['useCountryBasedVatRates']) {
-            if(!$this->skipQueries) {
+        if ($input['useCountryBasedVatRates']) {
+            if (! $this->skipQueries) {
                 $userPaymentCountryCurrencies = get_user_payment_country_currencies();
 
                 $userPaymentCountryCurrencies = $userPaymentCountryCurrencies->filter(function ($item) {
@@ -47,13 +47,13 @@ class PaymentServiceHydrate extends InputHydrate
                 });
 
                 // $defaultPaymentCurrencies = PaymentCurrency::whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))->get();
-                $query= PaymentCurrency::whereHas('paymentServices')
+                $query = PaymentCurrency::whereHas('paymentServices')
                     ->orWhereHas('paymentService')
                     ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
                     ->with('paymentServices', 'paymentService');
 
-                if(Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
-                    if($user->company->isCorporateCompany) {
+                if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
+                    if ($user->company->isCorporateCompany) {
                         $query = $query->defaultCorporatePaymentCurrency();
                     } else {
                         $query = $query->defaultPersonalPaymentCurrency();
@@ -69,6 +69,7 @@ class PaymentServiceHydrate extends InputHydrate
                 $input['supportedCurrencies'] = $defaultPaymentCurrencies->merge($userPaymentCountryCurrencies)->sortBy('id')->values()->map(function ($item) {
                     $item->append('has_built_in_form');
                     $item->setCompanyVatRate();
+
                     return $item;
                 });
             } else {

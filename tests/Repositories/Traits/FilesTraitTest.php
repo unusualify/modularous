@@ -2,11 +2,10 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
 use Unusualify\Modularity\Entities\File as LibraryFile;
+use Unusualify\Modularity\Entities\Traits\HasFiles;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
@@ -33,14 +32,15 @@ class FilesTraitTest extends RepositoryTestCase
             'file-1' => [
                 'type' => 'input-file',
                 'name' => 'file-1',
-                'translated' => false
-            ]
+                'translated' => false,
+            ],
         ];
     }
 
     public function test_set_columns_files_trait_collects_file_inputs()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\FilesTrait;
         };
 
@@ -71,7 +71,7 @@ class FilesTraitTest extends RepositoryTestCase
             $mock->shouldReceive('getColumns')->andReturn(['photo']);
         });
 
-        $object = new FilesTestModel();
+        $object = new FilesTestModel;
         $object = $mock->hydrateFilesTrait($object, $fields);
 
         $this->assertCount(0, $object->files);
@@ -135,7 +135,7 @@ class FilesTraitTest extends RepositoryTestCase
 
         // First attach one file
         $this->repository->update($model->id, [
-            'file-1' => [[ 'id' => $file->id ]],
+            'file-1' => [['id' => $file->id]],
         ], $schema);
         $this->assertTrue($model->fresh()->files->contains('id', $file->id));
 
@@ -167,7 +167,7 @@ class FilesTraitTest extends RepositoryTestCase
 
         $fields = [
             'file-1' => [
-                'en' => [[ 'id' => $file->id ]],
+                'en' => [['id' => $file->id]],
                 // another locale intentionally empty
             ],
         ];
@@ -202,7 +202,7 @@ class FilesTraitTest extends RepositoryTestCase
         $this->repository->addIgnoreFieldsBeforeSave('files');
 
         $this->repository->update($model->id, [
-            'file-1' => [[ 'id' => $file->id ]],
+            'file-1' => [['id' => $file->id]],
         ], $schema);
 
         $this->assertSame(0, $model->fresh()->files()->count());
@@ -223,5 +223,3 @@ class FilesTestRepository extends \Unusualify\Modularity\Tests\Repositories\Test
         $this->model = $model;
     }
 }
-
-

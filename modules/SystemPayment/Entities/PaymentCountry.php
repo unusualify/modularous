@@ -4,7 +4,6 @@ namespace Modules\SystemPayment\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\SystemPricing\Entities\VatRate;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasRepeaters;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
 
@@ -48,9 +47,9 @@ class PaymentCountry extends \Modules\SystemUtility\Entities\Country
             get: function ($value) use ($locale) {
                 $currency_vat_rate = $this->getRepeaterField('currency_vat_rate', $locale, default: []);
                 $currencyVatRates = collect();
-                foreach($currency_vat_rate as $currencyIso4217 => $object) {
-                    if(isset($object['vat_rate_id']) && ($paymentCurrency = PaymentCurrency::where('iso_4217', $currencyIso4217)->first()) && ($vatRate = VatRate::find($object['vat_rate_id']))) {
-                        $currencyVatRates->push((object)[
+                foreach ($currency_vat_rate as $currencyIso4217 => $object) {
+                    if (isset($object['vat_rate_id']) && ($paymentCurrency = PaymentCurrency::where('iso_4217', $currencyIso4217)->first()) && ($vatRate = VatRate::find($object['vat_rate_id']))) {
+                        $currencyVatRates->push((object) [
                             'iso_4217' => $currencyIso4217,
                             'payment_currency_id' => $paymentCurrency->id,
                             'paymentCurrency' => $paymentCurrency,
@@ -59,6 +58,7 @@ class PaymentCountry extends \Modules\SystemUtility\Entities\Country
                         ]);
                     }
                 }
+
                 return $currencyVatRates;
             },
         );

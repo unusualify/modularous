@@ -2,16 +2,10 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Schema;
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\Assignable;
 use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Repositories\Repository;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
@@ -30,8 +24,10 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_set_columns_assignment_trait_collects_assignment_inputs()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+
             public array $traitColumns = [];
         };
 
@@ -46,13 +42,22 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_assignment_trait_sets_model_key_on_fields()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
-            public function getColumns($trait) { return ['assignee']; }
+
+            public function getColumns($trait)
+            {
+                return ['assignee'];
+            }
         };
 
-        $object = new class {
-            public function getKey() { return 42; }
+        $object = new class
+        {
+            public function getKey()
+            {
+                return 42;
+            }
         };
 
         $fields = $repo->getFormFieldsAssignmentTrait($object, [], []);
@@ -61,7 +66,8 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_filter_assignment_trait_sets_scope_flag()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
         };
 
@@ -73,7 +79,8 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_get_table_filters_assignment_trait()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
         };
 
@@ -97,7 +104,7 @@ class AssignmentTraitTest extends RepositoryTestCase
             'your-completed-assignments',
             'team-completed-assignments',
             'your-pending-assignments',
-            'team-pending-assignments'
+            'team-pending-assignments',
         ], array_column($filters, 'slug'));
 
         $this->assertEquals([
@@ -108,9 +115,8 @@ class AssignmentTraitTest extends RepositoryTestCase
             ['yourCompletedAssignments'],
             ['teamCompletedAssignments'],
             ['yourPendingAssignments'],
-            ['teamPendingAssignments']
+            ['teamPendingAssignments'],
         ], array_column($filters, 'params'));
-
 
         $this->actingAs($editor);
         $repo->setAllowableUser($editor);
@@ -122,7 +128,7 @@ class AssignmentTraitTest extends RepositoryTestCase
             'your-completed-assignments',
             'team-completed-assignments',
             'your-pending-assignments',
-            'team-pending-assignments'
+            'team-pending-assignments',
         ], array_column($filters, 'slug'));
 
     }
@@ -167,5 +173,3 @@ class TestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepos
         $this->model = $model;
     }
 }
-
-

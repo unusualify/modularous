@@ -7,18 +7,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
-use Mockery as m;
 use Modules\SystemUser\Entities\Role;
 use Unusualify\Modularity\Entities\TemporaryFilepond;
-use Unusualify\Modularity\Facades\Filepond;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class PaymentTraitTest extends RepositoryTestCase
 {
     use RefreshDatabase, RepositorySources;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -205,7 +203,6 @@ class PaymentTraitTest extends RepositoryTestCase
 
         $price = $object->paymentPrice()->first();
 
-
         $orderId = uniqid('ORD');
         $price->payment()->create([
             'price_id' => $price->id,
@@ -256,7 +253,7 @@ class PaymentTraitTest extends RepositoryTestCase
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
             'published' => true,
-            'language' => 1
+            'language' => 1,
         ]);
         $role = Role::firstOrCreate([
             'name' => 'admin',
@@ -270,7 +267,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $item = Item::create([
             'name' => 'Test Payment Item',
             'is_active' => true,
-            'published' => true
+            'published' => true,
         ]);
 
         $item->prices()->create([
@@ -302,7 +299,7 @@ class PaymentTraitTest extends RepositoryTestCase
             'payment_receipts' => [
                 [
                     'uuid' => $temporaryFile->folder_name,
-                ]
+                ],
             ],
         ];
 
@@ -355,13 +352,13 @@ class PaymentTraitTest extends RepositoryTestCase
 
     public function test_after_save_payment_trait_with_creator_trait(): void
     {
-        $this->repository = App::makeWith(PaymentTraitTestRepository::class, ['model' => new HasCreatorTestModel()]);
+        $this->repository = App::makeWith(PaymentTraitTestRepository::class, ['model' => new HasCreatorTestModel]);
         $user = \Unusualify\Modularity\Entities\User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
             'published' => true,
-            'language' => 1
+            'language' => 1,
         ]);
         $role = Role::firstOrCreate([
             'name' => 'admin',
@@ -374,7 +371,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $item = Item::create([
             'name' => 'Test Payment Item',
             'is_active' => true,
-            'published' => true
+            'published' => true,
         ]);
 
         $item->prices()->create([
@@ -404,7 +401,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $newItem = Item::create([
             'name' => 'Test Payment Item New',
             'is_active' => true,
-            'published' => true
+            'published' => true,
         ]);
 
         $newItem->prices()->create([
@@ -524,7 +521,7 @@ class HasPaymentTestModel extends \Unusualify\Modularity\Tests\Repositories\Test
     public function getFormActionsConditionsForPayment(): array
     {
         return [
-            ['state.code','in',['pending-payment']],
+            ['state.code', 'in', ['pending-payment']],
         ];
     }
 
@@ -560,7 +557,6 @@ class PaymentTraitTestRepository extends \Unusualify\Modularity\Tests\Repositori
     }
 }
 
-
 class CopyPostRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
 {
     public function __construct(CopyPost $model)
@@ -568,4 +564,3 @@ class CopyPostRepository extends \Unusualify\Modularity\Tests\Repositories\TestR
         $this->model = $model;
     }
 }
-

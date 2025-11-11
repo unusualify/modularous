@@ -9,5 +9,6 @@ class LaravelTestModel extends \Illuminate\Database\Eloquent\Model
     use ModelHelpers;
 
     protected $table = 'laravel_test_models';
+
     protected $fillable = ['name'];
 }

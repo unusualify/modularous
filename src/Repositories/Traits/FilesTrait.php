@@ -4,7 +4,6 @@ namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Unusualify\Modularity\Entities\File;
 
 trait FilesTrait

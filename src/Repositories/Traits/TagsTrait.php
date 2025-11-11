@@ -35,13 +35,13 @@ trait TagsTrait
         if (! isset($fields['bulk_tags']) && ! isset($fields['previous_common_tags'])) {
             if (! $this->shouldIgnoreFieldBeforeSave('tags')) {
                 $translated = false;
-                if($schema && isset($schema['tags']['translated']) && $schema['tags']['translated']) {
+                if ($schema && isset($schema['tags']['translated']) && $schema['tags']['translated']) {
                     $translated = true;
                 }
 
                 $values = $fields['tags'] ?? [];
 
-                if($translated || Arr::isAssoc($values)) {
+                if ($translated || Arr::isAssoc($values)) {
                     foreach ($values as $locale => $value) {
                         $object->setLocaleTags(tags: $value, locale: $locale);
                     }
@@ -73,17 +73,17 @@ trait TagsTrait
 
                 $tagInput = $schema[$column] ?? null;
 
-                if($tagInput && isset($tagInput['translated']) && $tagInput['translated']) {
+                if ($tagInput && isset($tagInput['translated']) && $tagInput['translated']) {
                     $translated = true;
                 }
 
-                if($translated) {
+                if ($translated) {
                     $locales = getLocales();
                     $fields[$column] = $object->tags->groupBy('locale')->map(function ($group) {
                         return $group->map(fn ($tag) => $tag->name);
                     });
 
-                    foreach($locales as $locale) {
+                    foreach ($locales as $locale) {
                         $fields[$column][$locale] = $fields[$column][$locale] ?? ($tagInput && $tagInput['default'] ? $tagInput['default'] : ($tagInput && ($tagInput['multiple'] ?? true) ? collect([]) : null));
                     }
                 } else {
@@ -129,22 +129,21 @@ trait TagsTrait
 
         $result = $tagQuery->get();
 
-
-        if($translated) {
+        if ($translated) {
             $result = $result->groupBy('locale');
 
             $locales = getLocales();
 
-            foreach($locales as $locale) {
+            foreach ($locales as $locale) {
                 $result[$locale] = $result[$locale] ?? collect([]);
             }
 
-            if($map) {
+            if ($map) {
                 $result = $result->map(function ($group) use ($map) {
                     return $group->map($map);
                 });
             }
-        } else if($map) {
+        } elseif ($map) {
             $result = $result->map($map);
         }
 

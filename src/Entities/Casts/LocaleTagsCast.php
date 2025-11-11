@@ -12,11 +12,7 @@ final class LocaleTagsCast implements CastsAttributes
     /**
      * Cast the given value (acts as an accessor).
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array<string, mixed>  $attributes
-     * @return array
+     * @param array<string, mixed> $attributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): array
     {
@@ -30,9 +26,10 @@ final class LocaleTagsCast implements CastsAttributes
 
         return $tags
             ->map(function ($tags, $locale) use ($singularLocaleTags) {
-                if($singularLocaleTags) {
+                if ($singularLocaleTags) {
                     return $tags->first()?->name;
                 }
+
                 return $tags->pluck('name')->toArray();
             })
             ->toArray();
@@ -41,11 +38,7 @@ final class LocaleTagsCast implements CastsAttributes
     /**
      * Prepare the given value for storage (acts as a mutator).
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array<string, mixed>  $attributes
-     * @return mixed
+     * @param array<string, mixed> $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
@@ -53,4 +46,3 @@ final class LocaleTagsCast implements CastsAttributes
         return $value;
     }
 }
-

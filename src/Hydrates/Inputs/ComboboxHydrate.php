@@ -2,8 +2,6 @@
 
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
-use Illuminate\Support\Arr;
-
 class ComboboxHydrate extends InputHydrate
 {
     public $selectable = true;

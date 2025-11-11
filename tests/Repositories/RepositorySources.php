@@ -14,6 +14,7 @@ trait RepositorySources
     protected $repository;
 
     protected $laravelRepository;
+
     public function loadRepositorySources()
     {
         Schema::create('owners', function (Blueprint $table) {

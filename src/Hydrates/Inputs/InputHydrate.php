@@ -228,8 +228,9 @@ abstract class InputHydrate
                 }
             }
 
-            if($this->selectable)
-               $this->hydrateSelectableInput($input);
+            if ($this->selectable) {
+                $this->hydrateSelectableInput($input);
+            }
 
             $this->afterHydrateRecords($input);
         }
@@ -270,7 +271,7 @@ abstract class InputHydrate
         ) {
             $itemValue = $input['itemValue'];
 
-            if(count($input['items']) > 0) {
+            if (count($input['items']) > 0) {
                 $firstItem = $input['items'][0];
                 $itemValueType = gettype($firstItem[$itemValue]);
                 $input['itemValueType'] = $itemValueType;

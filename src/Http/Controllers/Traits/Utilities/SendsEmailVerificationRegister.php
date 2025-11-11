@@ -48,7 +48,7 @@ trait SendsEmailVerificationRegister
             $user->sendRegisterNotification($token, $parameters);
         });
 
-        if($response == RegisterBroker::VERIFICATION_LINK_SENT) {
+        if ($response == RegisterBroker::VERIFICATION_LINK_SENT) {
             event(new ModularityUserVerification($request));
         }
 

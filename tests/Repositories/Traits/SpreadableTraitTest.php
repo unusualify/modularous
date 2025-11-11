@@ -4,11 +4,10 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Mockery\MockInterface;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
 
 class SpreadableTraitTest extends RepositoryTestCase
 {
@@ -43,7 +42,7 @@ class SpreadableTraitTest extends RepositoryTestCase
 
     public function test_prepare_fields_before_save_moves_spreadable_fields_into_spread_key()
     {
-        $mock = \Mockery::mock(SpreadableTestRepository::class, [new SpreadableTestModel()])
+        $mock = \Mockery::mock(SpreadableTestRepository::class, [new SpreadableTestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -73,7 +72,7 @@ class SpreadableTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_spreadable_trait_merges_content_excluding_input_keys()
     {
-        $mock = \Mockery::mock(SpreadableTestRepository::class, [new SpreadableTestModel()])
+        $mock = \Mockery::mock(SpreadableTestRepository::class, [new SpreadableTestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -99,7 +98,6 @@ class SpreadableTraitTest extends RepositoryTestCase
         $this->assertSame('Hello', $formFields['spread_payload']['headline']);
         $this->assertSame('Short', $formFields['spread_payload']['summary']);
     }
-
 }
 
 class SpreadableTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel

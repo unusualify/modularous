@@ -78,7 +78,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         'name_with_company',
         'email_with_company',
         'valid_company',
-        'show_billing_banner'
+        'show_billing_banner',
     ];
 
     protected $isCreatingCompany = false;
@@ -301,7 +301,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     protected function showBillingBanner(): Attribute
     {
         return Attribute::make(
-            get: fn () => !modularityConfig('disable_billing_banner', false) && $this->isClient() && !$this->valid_company && Modularity::shouldUseCountryBasedVatRates(),
+            get: fn () => ! modularityConfig('disable_billing_banner', false) && $this->isClient() && ! $this->valid_company && Modularity::shouldUseCountryBasedVatRates(),
         );
     }
 }

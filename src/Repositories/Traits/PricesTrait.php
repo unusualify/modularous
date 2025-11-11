@@ -61,7 +61,6 @@ trait PricesTrait
                         : null;
                     $data = array_merge_recursive_preserve($defaultPriceAttributes, $priceData + ['role' => $name]);
 
-
                     if ($priceModel) {
                         // Update existing price
                         $priceModel->update($data);
@@ -73,7 +72,7 @@ trait PricesTrait
                     if ($onlyBaseCurrency) {
                         foreach (['EUR', 'USD', 'TRY'] as $key => $iso4217) {
                             $_currency = Currency::where('iso_4217', $iso4217)->first();
-                            if(!$_currency) {
+                            if (! $_currency) {
                                 continue;
                             }
                             if ($_currency->iso_4217 !== $baseCurrencyIso4217) {

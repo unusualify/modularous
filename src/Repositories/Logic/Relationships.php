@@ -100,7 +100,7 @@ trait Relationships
                     $pivotClass = $object->{$relation}()->getPivotClass();
                     $hasLocaleTags = classHasTrait($pivotClass, 'Unusualify\Modularity\Entities\Traits\Core\LocaleTags');
 
-                    if($hasLocaleTags){
+                    if ($hasLocaleTags) {
                         $object->{$relation}()->sync(
                             $fields[$relation]
                         );
@@ -109,7 +109,6 @@ trait Relationships
                             $fields[$relation]
                         );
                     }
-
 
                 } catch (\Throwable $th) {
                     dd(
@@ -184,10 +183,9 @@ trait Relationships
             }
         }
 
-
         foreach ($this->getMorphManyRelations() as $relationName) {
             // PricesTrait is a special case, we don't want to update prices when morphMany relations are updated
-            if(classHasTrait($this, 'Unusualify\Modularity\Repositories\Traits\PricesTrait') && in_array($relationName, $this->getColumns('Unusualify\Modularity\Repositories\Traits\PricesTrait'))){
+            if (classHasTrait($this, 'Unusualify\Modularity\Repositories\Traits\PricesTrait') && in_array($relationName, $this->getColumns('Unusualify\Modularity\Repositories\Traits\PricesTrait'))) {
                 continue;
             }
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {

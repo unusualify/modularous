@@ -308,10 +308,10 @@ if (! function_exists('get_user_currency_vat_rates')) {
     function get_user_currency_vat_rates(): Collection
     {
         return tap(Collection::make(), function ($collection) {
-            if((($guard = Auth::guard('modularity')) !== null) && $guard->check()) {
+            if ((($guard = Auth::guard('modularity')) !== null) && $guard->check()) {
                 $user = $guard->user();
 
-                if($user->isClient() && $user->validCompany) {
+                if ($user->isClient() && $user->validCompany) {
                     $company = $user->company;
                     $paymentCountry = $company->paymentCountry;
                     $collection->push(...$paymentCountry->currencyVatRates);

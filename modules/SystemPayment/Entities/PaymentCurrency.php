@@ -5,7 +5,6 @@ namespace Modules\SystemPayment\Entities;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Auth;
-use Modules\SystemPricing\Entities\Price;
 use Unusualify\Modularity\Entities\Traits\HasRepeaters;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
 
@@ -65,15 +64,16 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
             get: function ($value) use ($locale) {
                 $company_vat_rates = $this->getRepeaterField('default_vat_rates', $locale, default: []);
                 $companyVatRates = collect();
-                foreach($company_vat_rates as $company_type => $object) {
-                    if(isset($object['vat_rate_id']) && ($vatRate = \Modules\SystemPricing\Entities\VatRate::find($object['vat_rate_id']))) {
-                        $companyVatRates->push((object)[
+                foreach ($company_vat_rates as $company_type => $object) {
+                    if (isset($object['vat_rate_id']) && ($vatRate = \Modules\SystemPricing\Entities\VatRate::find($object['vat_rate_id']))) {
+                        $companyVatRates->push((object) [
                             'company_type' => $company_type,
                             'vat_rate_id' => $vatRate->id,
                             'vatRate' => $vatRate,
                         ]);
                     }
                 }
+
                 return $companyVatRates;
             },
         );
@@ -111,14 +111,14 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
         );
     }
 
-    public function scopeDefaultCorporatePaymentCurrency($query) : Builder
+    public function scopeDefaultCorporatePaymentCurrency($query): Builder
     {
         return $query->whereHas('repeaters', function ($query) {
             $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->corporate');
         });
     }
 
-    public function scopeDefaultPersonalPaymentCurrency($query) : Builder
+    public function scopeDefaultPersonalPaymentCurrency($query): Builder
     {
         return $query->whereHas('repeaters', function ($query) {
             $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->personal');
@@ -165,7 +165,7 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
      */
     public function hasCompanyVatRate()
     {
-        return $this->hasUserCorporateVatRate() || (!!$this->personalVatRate ? true : false);
+        return $this->hasUserCorporateVatRate() || ((bool) $this->personalVatRate ? true : false);
     }
 
     /**
@@ -190,7 +190,7 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
     {
         $corporateVatRate = $this->getUserCorporateVatRate();
 
-        if(!$corporateVatRate) {
+        if (! $corporateVatRate) {
             $corporateVatRate = $this->corporateVatRate;
         }
 
@@ -201,7 +201,6 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
         return $this;
     }
 
-
     /**
      * Set the company VAT rate for the currency.
      *
@@ -209,10 +208,10 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
      */
     public function setCompanyVatRate()
     {
-        if(Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
-            if($user->company->isCorporateCompany) {
+        if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
+            if ($user->company->isCorporateCompany) {
                 $this->setCorporateVatRate();
-            } else if($user->company->isPersonalCompany) {
+            } elseif ($user->company->isPersonalCompany) {
                 $this->companyVatRate = $this->personalVatRate;
             }
         } else {

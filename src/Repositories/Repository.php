@@ -3,16 +3,11 @@
 namespace Unusualify\Modularity\Repositories;
 
 use Exception;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use PDO;
-use ReflectionClass;
 use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularity\Traits\ManageNames;
@@ -506,7 +501,7 @@ abstract class Repository implements RepositoryContract
 
             $relationNotation = "$scopeField";
             try {
-                //code...
+                // code...
                 $table = $query->getModel()->$scopeRelation()->getTable();
                 $relationNotation = "$table.$scopeField";
             } catch (\Throwable $th) {
@@ -521,8 +516,7 @@ abstract class Repository implements RepositoryContract
                 }
             }
 
-
-            $query->whereHas($scopeRelation, function ($query) use ($value, $scopeField, $scopeRelation, $relationNotation) {
+            $query->whereHas($scopeRelation, function ($query) use ($value, $relationNotation) {
                 $query->whereIn($relationNotation, $value);
             });
             unset($scopes[$scopeField]);
@@ -592,7 +586,6 @@ abstract class Repository implements RepositoryContract
                     unset($scopes[$field]);
                 }
             }
-
 
             // Add whereHas for each relationship group
             foreach ($relationshipGroups as $relationshipName => $columns) {

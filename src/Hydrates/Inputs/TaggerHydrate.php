@@ -54,14 +54,13 @@ class TaggerHydrate extends InputHydrate
                 'color' => $input['colors'][$index % count($input['colors'])],
             ])->toArray() : [];
 
-
-            if($translated) {
-                $input['items'] = collect($items)->map(function ($group) use ($input) {
+            if ($translated) {
+                $input['items'] = collect($items)->map(function ($group) {
                     array_unshift($group, ['header' => true, 'name' => __('Select an option or create one')]);
 
                     return $group;
                 })->toArray();
-            }else {
+            } else {
                 $input['items'] = array_merge([['header' => true, $input['itemTitle'] => __('Select an option or create one')]], $items);
             }
 

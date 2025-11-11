@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Str;
 use Unusualify\Modularity\Services\MessageStage;
 
 class TagController extends Controller
@@ -53,7 +52,7 @@ class TagController extends Controller
             'id' => 451,
         ], 200);
 
-        if(!$tag->exists) {
+        if (! $tag->exists) {
             $tag->name = $value;
             $tag->save();
         }

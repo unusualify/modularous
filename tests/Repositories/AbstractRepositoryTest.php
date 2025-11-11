@@ -320,7 +320,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             [
                 'name' => 'owner_id',
                 'type' => 'select',
-            ]
+            ],
         ];
 
         $object = $this->repository->create(['name' => 'Test', 'owner_id' => $owner->id], $schema);
@@ -631,8 +631,3 @@ class AbstractRepositoryTest extends RepositoryTestCase
         ]);
     }
 }
-
-
-
-
-

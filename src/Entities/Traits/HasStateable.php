@@ -437,4 +437,3 @@ trait HasStateable
         return $this->currentStateableState;
     }
 }
-

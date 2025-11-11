@@ -46,11 +46,11 @@ trait HasRepeaters
             'repeatable',
         );
 
-        if($role) {
+        if ($role) {
             $query->where('role', $role);
         }
 
-        if($locale) {
+        if ($locale) {
             $query->where('locale', $locale);
         }
 
@@ -78,7 +78,7 @@ trait HasRepeaters
 
         $repeater = $this->repeaters($role, $locale)->first();
 
-        if(!$repeater) {
+        if (! $repeater) {
             return $default;
         }
 
@@ -126,14 +126,14 @@ trait HasRepeaters
     {
         $locale = $locale ?? app()->getLocale();
         $repeaterLocaleRoles = $this->getRepeaterLocaleRoles();
-        if(!isset($repeaterLocaleRoles[$locale])) {
+        if (! isset($repeaterLocaleRoles[$locale])) {
             return false;
         }
 
         [$role, $contentArrowNotation, $contentDotNotation, $fullArrowNotation, $fullDotNotation] = $this->parseRepeaterField($key);
 
         return $this->relationLoaded('repeaters') ? $this->repeaters->contains(function ($repeater) use ($role, $contentDotNotation, $value) {
-            return $repeater->role === $role && ( ($v = data_get_with_dot_keys($repeater->content, $contentDotNotation)) ? $v === $value : false);
+            return $repeater->role === $role && (($v = data_get_with_dot_keys($repeater->content, $contentDotNotation)) ? $v === $value : false);
         }) : $this->repeaters()->where('role', $role)->whereJsonContains($fullArrowNotation, $value)->exists();
     }
 }

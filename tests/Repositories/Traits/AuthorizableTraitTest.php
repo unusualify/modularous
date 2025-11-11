@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
@@ -30,9 +29,13 @@ class AuthorizableTraitTest extends RepositoryTestCase
         $this->assertContains('unauthorized', $slugs);
         $this->assertContains('your-authorizations', $slugs);
 
-        $mock = $this->partialMock(AuthorizableTestRepository::class, function(MockInterface $mock){
-            $mock->shouldReceive('getModel')->andReturn(new class {
-                public function hasAuthorizationUsage() { return false; }
+        $mock = $this->partialMock(AuthorizableTestRepository::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getModel')->andReturn(new class
+            {
+                public function hasAuthorizationUsage()
+                {
+                    return false;
+                }
             });
         });
 
@@ -63,5 +66,3 @@ class AuthorizableTestRepository extends \Unusualify\Modularity\Tests\Repositori
         $this->model = $model;
     }
 }
-
-

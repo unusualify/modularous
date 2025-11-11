@@ -82,7 +82,6 @@ class LocaleTagsTest extends ModelTestCase
         $object->addLocaleTag('test2', 'tr');
         $object->untagLocale('test', 'tr');
 
-
         $this->assertEquals(2, $object->tags->count());
         $this->assertEquals('test2', $object->tags()->where('locale', 'tr')->first()->name);
     }

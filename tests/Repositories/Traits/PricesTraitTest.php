@@ -3,9 +3,7 @@
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Mockery as m;
 use Unusualify\Modularity\Facades\CurrencyExchange;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -14,7 +12,7 @@ class PricesTraitTest extends RepositoryTestCase
 {
     use RefreshDatabase, RepositorySources;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,13 +57,13 @@ class PricesTraitTest extends RepositoryTestCase
                 [
                     'price_value' => 100,
                     'currency_id' => 1,
-                ]
-            ]
+                ],
+            ],
         ], [
             'prices' => [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ]);
 
         $this->assertCount(2, $object->prices);
@@ -76,7 +74,6 @@ class PricesTraitTest extends RepositoryTestCase
         $this->assertEquals(100, $object->prices->where('currency_id', 1)->first()->price_value);
         $this->assertEquals(11400, $object->prices->where('currency_id', 2)->first()->raw_amount);
         $this->assertEquals(114, $object->prices->where('currency_id', 2)->first()->price_value);
-
 
         $this->assertNotEmpty($object->basePrice);
         $this->assertEquals(10000, $object->basePrice->raw_amount);
@@ -89,18 +86,17 @@ class PricesTraitTest extends RepositoryTestCase
                     'id' => 1,
                     'price_value' => 200,
                     'currency_id' => 1,
-                ]
-            ]
+                ],
+            ],
         ], [
             'prices' => [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ]);
 
         $object->load('prices');
         $object->load('basePrice');
-
 
         $this->assertCount(2, $object->prices);
         $this->assertEquals(20000, $object->prices->where('currency_id', 1)->first()->raw_amount);
@@ -119,7 +115,7 @@ class PricesTraitTest extends RepositoryTestCase
             'prices' => [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ];
         $object = $this->repository->create([
             'name' => 'Test Priceable',
@@ -141,8 +137,8 @@ class PricesTraitTest extends RepositoryTestCase
                 [
                     'price_value' => 100,
                     'currency_id' => 1,
-                ]
-            ]
+                ],
+            ],
         ], $schema);
         $formFields = $this->repository->getFormFields($object, $schema);
 
@@ -165,13 +161,13 @@ class PricesTraitTest extends RepositoryTestCase
                 [
                     'price_value' => 100,
                     'currency_id' => 1,
-                ]
-            ]
+                ],
+            ],
         ], [
             'prices' => [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ]);
 
         $this->repository->update($object->id, [
@@ -179,13 +175,13 @@ class PricesTraitTest extends RepositoryTestCase
                 [
                     'price_value' => 200,
                     'currency_id' => 1,
-                ]
-            ]
+                ],
+            ],
         ], [
             'prices' => [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ]);
 
         $object->load('prices');
@@ -202,7 +198,6 @@ class HasPriceableTestModel extends \Unusualify\Modularity\Tests\Repositories\Te
     use \Unusualify\Modularity\Entities\Traits\HasPriceable;
 
     public static $priceSavingKey = 'price_value';
-
 }
 
 class PricesTraitTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
@@ -214,6 +209,3 @@ class PricesTraitTestRepository extends \Unusualify\Modularity\Tests\Repositorie
         $this->model = $model;
     }
 }
-
-
-

@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Core;
 
-use Cartalyst\Tags\TaggableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Casts\LocaleTagsCast;
@@ -19,7 +18,7 @@ trait LocaleTags
             // Register a custom cast for the dynamic locale tags field
             $fieldName = $model::$localeTagsField;
 
-            if(isset(self::$loadLocalizedTags) && self::$loadLocalizedTags === true) {
+            if (isset(self::$loadLocalizedTags) && self::$loadLocalizedTags === true) {
                 $model->mergeCasts([
                     $fieldName => LocaleTagsCast::class,
                 ]);
@@ -30,7 +29,7 @@ trait LocaleTags
             $fieldName = $model::$localeTagsField;
 
             // Check if the virtual attribute was set (in attributes array)
-            if($model->offsetExists($fieldName)) {
+            if ($model->offsetExists($fieldName)) {
                 $model->localeTagsUpdatingPayload = $model->getAttributes()[$fieldName];
             }
             // Remove from attributes so it doesn't try to save to DB
@@ -38,8 +37,8 @@ trait LocaleTags
         });
 
         static::saved(function ($model) {
-            if($model->localeTagsUpdatingPayload) {
-                foreach($model->localeTagsUpdatingPayload as $locale => $tags) {
+            if ($model->localeTagsUpdatingPayload) {
+                foreach ($model->localeTagsUpdatingPayload as $locale => $tags) {
                     $model->setLocaleTags($tags, locale: $locale);
                 }
             }
@@ -48,19 +47,22 @@ trait LocaleTags
 
     public function initializeLocaleTags()
     {
-        if(isset($this->allowLocaleTagsFillable) && $this->allowLocaleTagsFillable) {
+        if (isset($this->allowLocaleTagsFillable) && $this->allowLocaleTagsFillable) {
             $this->mergeFillable([
-                self::$localeTagsField
+                self::$localeTagsField,
             ]);
         }
     }
 
     public static function allLocaleTags(?string $locale = null): \Illuminate\Database\Eloquent\Builder
     {
-        $instance = new static();
+        $instance = new static;
         $tagsModel = $instance->createTagsModel();
         $query = $tagsModel->whereNamespace($instance->getEntityClassName());
-        if ($locale !== null) { $query->where($tagsModel->getTable() . '.locale', $locale); }
+        if ($locale !== null) {
+            $query->where($tagsModel->getTable() . '.locale', $locale);
+        }
+
         return $query;
     }
 
@@ -70,7 +72,7 @@ trait LocaleTags
     public static function scopeWhereLocaleTag(Builder $query, $tags, string $type = 'slug', $locale = null): Builder
     {
         $locale = $locale ?: app()->getLocale();
-        $tags = (new static())->prepareTags($tags);
+        $tags = (new static)->prepareTags($tags);
 
         foreach ($tags as $tag) {
             $query->whereHas('tags', function ($query) use ($type, $tag, $locale) {
@@ -87,7 +89,7 @@ trait LocaleTags
     public static function scopeWithLocaleTag(Builder $query, $tags, string $type = 'slug', $locale = null): Builder
     {
         $locale = $locale ?: app()->getLocale();
-        $tags = (new static())->prepareTags($tags);
+        $tags = (new static)->prepareTags($tags);
 
         return $query->whereHas('tags', function ($query) use ($type, $tags, $locale) {
             $query->whereIn($type, $tags)->where('locale', $locale);
@@ -100,7 +102,7 @@ trait LocaleTags
     public static function scopeWithoutLocaleTag(Builder $query, $tags, string $type = 'slug', $locale = null): Builder
     {
         $locale = $locale ?: app()->getLocale();
-        $tags = (new static())->prepareTags($tags);
+        $tags = (new static)->prepareTags($tags);
 
         return $query->whereDoesntHave('tags', function ($query) use ($type, $tags, $locale) {
             $query->whereIn($type, $tags)->where('locale', $locale);
@@ -146,14 +148,15 @@ trait LocaleTags
         foreach ($this->prepareTags($tags) as $name) {
             $this->removeLocaleTag($name, $locale);
         }
+
         return true;
     }
 
     /**
      * Tag current model with given tags, scoped by locale.
+     *
      * @param array|string $tags
      * @param string|null $locale
-     * @return bool
      */
     public function tagLocale($tags, $locale = null): bool
     {
@@ -161,6 +164,7 @@ trait LocaleTags
         foreach ($this->prepareTags($tags) as $tagName) {
             $this->addLocaleTag($tagName, $locale);
         }
+
         return true;
     }
 
@@ -231,13 +235,12 @@ trait LocaleTags
             modularityConfig('tables.tagged', 'tagged'),
             'taggable_id',
             'tag_id'
-        // )->withPivot(['locale']);
+            // )->withPivot(['locale']);
         )->where($tagsModel->getTable() . '.locale', $locale);
     }
 
     /**
      * Get the list of tags for all locales
-     * @return Collection
      */
     public function localeTagsList(): Collection
     {
@@ -253,7 +256,6 @@ trait LocaleTags
 
     /**
      * Get the dictionary of tags for the model
-     * @return array
      */
     public function getLocaleTagsDictionary(): array
     {

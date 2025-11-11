@@ -75,6 +75,7 @@ abstract class ModelEvent
      * @var bool
      */
     public $hasStateable = false;
+
     /**
      * The current route name.
      *
@@ -108,7 +109,7 @@ abstract class ModelEvent
         $this->changedAttributes = $this->model->getChanges();
         $this->changedRelationships = method_exists($this->model, 'getChangedRelationships') ? $this->model->getChangedRelationships() : [];
 
-        if(classHasTrait($this->model, HasStateable::class)){
+        if (classHasTrait($this->model, HasStateable::class)) {
             $this->hasStateable = true;
             $this->stateableChanged = $this->model->stateableChanged();
             $this->previousStateableState = $this->model->previousStateableState();

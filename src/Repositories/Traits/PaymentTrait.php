@@ -310,33 +310,33 @@ trait PaymentTrait
         ];
     }
 
-    protected function defaultPaymentPriceFields() :array
+    protected function defaultPaymentPriceFields(): array
     {
         $fields = method_exists($this, 'getDefaultPaymentPriceFields') ? $this->getDefaultPaymentPriceFields() : [];
 
-        if(!empty($fields)) {
-            if(isset($fields['price_type_id'])) {
+        if (! empty($fields)) {
+            if (isset($fields['price_type_id'])) {
                 $priceTypeId = PriceType::where('id', $fields['price_type_id'])->orWhere('name', $fields['price_type_id'])->value('id');
-                if(!$priceTypeId) {
+                if (! $priceTypeId) {
                     unset($fields['price_type_id']);
                 } else {
                     $fields['price_type_id'] = $priceTypeId;
                 }
             }
 
-            if(isset($fields['vat_rate_id'])) {
+            if (isset($fields['vat_rate_id'])) {
                 $vatRateId = VatRate::where('id', $fields['vat_rate_id'])->orWhere('name', $fields['vat_rate_id'])->orWhere('slug', $fields['vat_rate_id'])->value('id');
 
-                if(!$vatRateId) {
+                if (! $vatRateId) {
                     unset($fields['vat_rate_id']);
                 } else {
                     $fields['vat_rate_id'] = $vatRateId;
                 }
             }
 
-            if(isset($fields['currency_id'])) {
+            if (isset($fields['currency_id'])) {
                 $currencyId = Currency::where('id', $fields['currency_id'])->orWhere('name', $fields['currency_id'])->orWhere('symbol', $fields['currency_id'])->orWhere('iso_4217', $fields['currency_id'])->orWhere('iso_4217_number', $fields['currency_id'])->value('id');
-                if(!$currencyId) {
+                if (! $currencyId) {
                     unset($fields['currency_id']);
                 } else {
                     $fields['currency_id'] = $currencyId;
@@ -347,7 +347,7 @@ trait PaymentTrait
         return $fields;
     }
 
-    public function getDefaultPaymentPriceFields() :array
+    public function getDefaultPaymentPriceFields(): array
     {
         return [];
     }

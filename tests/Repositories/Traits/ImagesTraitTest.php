@@ -23,7 +23,8 @@ class ImagesTraitTest extends RepositoryTestCase
 
     public function test_set_columns_images_trait_collects_image_inputs()
     {
-        $repo = new class {
+        $repo = new class
+        {
             use \Unusualify\Modularity\Repositories\Traits\ImagesTrait;
         };
 
@@ -61,7 +62,7 @@ class ImagesTraitTest extends RepositoryTestCase
             'image-1' => [
                 [
                     'id' => $media->id,
-                    'metadatas' => [ 'default' => ['caption' => null, 'altText' => null, 'video' => null] ],
+                    'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]],
                 ],
             ],
         ];
@@ -93,7 +94,7 @@ class ImagesTraitTest extends RepositoryTestCase
         ];
 
         $this->repository->update($model->id, [
-            'image-1' => [[ 'id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]] ]],
+            'image-1' => [['id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]]]],
         ], $schema);
         $this->assertTrue($model->fresh()->medias->contains('id', $media->id));
 
@@ -124,7 +125,7 @@ class ImagesTraitTest extends RepositoryTestCase
 
         $fields = [
             'image-1' => [
-                'en' => [[ 'id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]] ]],
+                'en' => [['id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]]]],
             ],
         ];
 
@@ -159,7 +160,7 @@ class ImagesTraitTest extends RepositoryTestCase
         $this->repository->addIgnoreFieldsBeforeSave('medias');
 
         $this->repository->update($model->id, [
-            'image-1' => [[ 'id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]] ]],
+            'image-1' => [['id' => $media->id, 'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]]]],
         ], $schema);
 
         $this->assertSame(0, $model->fresh()->medias()->count());
@@ -180,5 +181,3 @@ class ImagesTestRepository extends \Unusualify\Modularity\Tests\Repositories\Tes
         $this->model = $model;
     }
 }
-
-

@@ -35,7 +35,6 @@ class VatRate extends \Oobook\Priceable\Models\VatRate
         );
     }
 
-
     protected function vatPercentage(): Attribute
     {
         return Attribute::make(
