@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.1 - 2025-11-11
+
+### :wrench: Bug Fixes
+
+- update billing banner reference to use profile object by @OoBook in https://github.com/unusualify/modularity/commit/3d37eeb2934dd60bd62f369e76897dc56a050f6e
+
+### :package: Build
+
+- update build artifacts for v0.51.1 by @OoBook in https://github.com/unusualify/modularity/commit/5d192547b06150364679bf1c91bdd41aa292c176
+
 ## v0.51.0 - 2025-11-11
 
 ### :rocket: Features
