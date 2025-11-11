@@ -24,7 +24,7 @@ export default function useUser() {
       return store.state.user.valid_company ?? false
     }),
     showBillingBanner: computed(() => {
-      return store.state.user.show_billing_banner ?? false
+      return store.state.user.profile.show_billing_banner ?? false
     })
   })
 
