@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Unusualify\Modularity\Brokers\RegisterBroker;
+use Unusualify\Modularity\Events\ModularityUserVerification;
 use Unusualify\Modularity\Facades\Register;
 use Unusualify\Modularity\Services\MessageStage;
 
@@ -46,6 +47,10 @@ trait SendsEmailVerificationRegister
         $response = $this->broker()->sendVerificationLink($this->credentials($request), function ($user, $token) use ($parameters) {
             $user->sendRegisterNotification($token, $parameters);
         });
+
+        if($response == RegisterBroker::VERIFICATION_LINK_SENT) {
+            event(new ModularityUserVerification($request));
+        }
 
         return $response == RegisterBroker::VERIFICATION_LINK_SENT
             ? $this->sendVerificationLinkResponse($request, $response)
