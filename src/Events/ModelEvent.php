@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Entities\Traits\HasStateable;
 
 abstract class ModelEvent
 {
@@ -41,6 +42,13 @@ abstract class ModelEvent
     public $previousUrl;
 
     /**
+     * The current route name.
+     *
+     * @var string|null
+     */
+    public $route;
+
+    /**
      * The changed attributes.
      *
      * @var array
@@ -62,6 +70,33 @@ abstract class ModelEvent
     public $broadcastService = 'reverb';
 
     /**
+     * The model has stateable trait.
+     *
+     * @var bool
+     */
+    public $hasStateable = false;
+    /**
+     * The current route name.
+     *
+     * @var string|null
+     */
+    public $stateableChanged = false;
+
+    /**
+     * The previous state name.
+     *
+     * @var string|null
+     */
+    public $previousStateableState = null;
+
+    /**
+     * The current state name.
+     *
+     * @var string|null
+     */
+    public $currentStateableState = null;
+
+    /**
      * Create a new event instance.
      */
     public function __construct(public $model, public $serializedData = null)
@@ -72,6 +107,13 @@ abstract class ModelEvent
         $this->previousUrl = url()->previous() ?? null;
         $this->changedAttributes = $this->model->getChanges();
         $this->changedRelationships = method_exists($this->model, 'getChangedRelationships') ? $this->model->getChangedRelationships() : [];
+
+        if(classHasTrait($this->model, HasStateable::class)){
+            $this->hasStateable = true;
+            $this->stateableChanged = $this->model->stateableChanged();
+            $this->previousStateableState = $this->model->previousStateableState();
+            $this->currentStateableState = $this->model->currentStateableState();
+        }
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
             $this->broadcastVia($this->broadcastService);

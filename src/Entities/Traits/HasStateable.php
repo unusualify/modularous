@@ -36,6 +36,12 @@ trait HasStateable
 
     protected $modelStateableIsUpdatingId = null;
 
+    protected $stateableChanged = false;
+
+    protected $previousStateableState = null;
+
+    protected $currentStateableState = null;
+
     public static function bootHasStateable(): void
     {
         self::saving(static function (Model $model) {
@@ -388,6 +394,9 @@ trait HasStateable
         if ($oldState && $oldState->code !== $newState->code) {
             $cloneModel = clone $this;
             $cloneModel->refresh();
+            $this->stateableChanged = true;
+            $this->previousStateableState = $oldState;
+            $this->currentStateableState = $newState;
             StateableUpdated::dispatch($cloneModel, $cloneModel->state, $oldState);
         }
     }
@@ -412,4 +421,20 @@ trait HasStateable
 
         return $newStates;
     }
+
+    public function stateableChanged()
+    {
+        return $this->stateableChanged;
+    }
+
+    public function previousStateableState()
+    {
+        return $this->previousStateableState;
+    }
+
+    public function currentStateableState()
+    {
+        return $this->currentStateableState;
+    }
 }
+
