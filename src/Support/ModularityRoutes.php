@@ -15,6 +15,7 @@ use Unusualify\Modularity\Http\Middleware\LoadLocalizedConfig;
 use Unusualify\Modularity\Http\Middleware\LogMiddleware;
 use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
 use Unusualify\Modularity\Http\Middleware\RedirectIfAuthenticatedMiddleware;
+use Unusualify\Modularity\Http\Middleware\UtmMiddleware;
 
 class ModularityRoutes
 {
@@ -112,14 +113,15 @@ class ModularityRoutes
             // 'auth',
         ]);
 
+        Route::aliasMiddleware('modularity.utm', UtmMiddleware::class);
         Route::aliasMiddleware('modularity.log', LogMiddleware::class);
 
         Route::aliasMiddleware('modularity.language', LanguageMiddleware::class);
         Route::aliasMiddleware('modularity.impersonate', ImpersonateMiddleware::class);
         Route::aliasMiddleware('modularity.loadLocalizedConfig', LoadLocalizedConfig::class);
         Route::aliasMiddleware('modularity.navigation', NavigationMiddleware::class);
-
         Route::middlewareGroup('modularity.core', [
+            'modularity.utm',
             'modularity.impersonate',
             'modularity.language',
             'modularity.loadLocalizedConfig',

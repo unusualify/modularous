@@ -178,6 +178,10 @@ class BaseServiceProvider extends ServiceProvider
             return new \Unusualify\Modularity\Services\RedirectService;
         });
 
+        $this->app->singleton('modularity.utm', function (Application $app) {
+            return new \Unusualify\Modularity\Services\UtmParameters($app['request']);
+        });
+
         $this->app->singleton('auth.register', function (Application $app) {
             return new \Unusualify\Modularity\Brokers\RegisterBrokerManager($app);
         });
