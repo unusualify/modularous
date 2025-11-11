@@ -2,6 +2,74 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.0 - 2025-11-11
+
+### :rocket: Features
+
+- add matchAnyPattern function and enhance array casting logic for improved attribute handling by @OoBook in https://github.com/unusualify/modularity/commit/4d6d8b158b9507f93845114207e8c50083a3593e
+- add English and Turkish slug dictionaries for enhanced string handling by @OoBook in https://github.com/unusualify/modularity/commit/cd6d8166b2b5e0bda5829dbbb8926df2d4c9a26d
+- enhance tag management by adding dynamic slot support and update payload handling by @OoBook in https://github.com/unusualify/modularity/commit/bbd2a9faf404853b1254a62367115e8c82e5add1
+- implement locale-specific tagging functionality with migration, controller, and model updates by @OoBook in https://github.com/unusualify/modularity/commit/340b17b1aceadcd44ad2d74fc576160d01bdd746
+- add maxFileSize parameter to attachment input for enhanced file upload control by @celikerde in https://github.com/unusualify/modularity/commit/cc68e0167606555a6ff82bb80ad65689e41565ee
+- enable sorting and searching for 'name' and 'surname' fields in user configuration by @OoBook in https://github.com/unusualify/modularity/commit/78ae5a0b73941c15a9734b8a0d8565ab15083d21
+- add filter options for company selection in user configuration by @OoBook in https://github.com/unusualify/modularity/commit/8ded4a75bc4ff1f84ee890dcf405ef2789a28ac3
+- add repeatable method for morphTo relationship handling by @OoBook in https://github.com/unusualify/modularity/commit/f379303ab8217a3f823f322309fc30024b048f86
+- update registration notification to use configurable email verification class by @celikerde in https://github.com/unusualify/modularity/commit/862abd4cb8f9752ea2c08120fc73cf9202e0db6c
+- add success message for request submission in English and Turkish by @celikerde in https://github.com/unusualify/modularity/commit/b856fc73ba486dc691d4f3ecb1f13383125f2c5b
+- update isInApp method to exclude blank items from modularity route check by @OoBook in https://github.com/unusualify/modularity/commit/c733a490c20202e44aab3775571e2bbc5f30dcb7
+- enhance repeater functionality with role and locale filtering, and add utility methods for retrieving repeater fields and roles by @OoBook in https://github.com/unusualify/modularity/commit/99b70376ac6d07187cfb2aec4b5ac6de850446b4
+- enhance repeater functionality with new object handling, unique input filtering, and improved model hydration methods by @OoBook in https://github.com/unusualify/modularity/commit/600e32315c31a91d2bd298919b2b0da40f3295c2
+- add new modal service and response component for email verification by @celikerde in https://github.com/unusualify/modularity/commit/79aa22a386a80a4db606c2a1a713b7c3010973cd
+- add new payment statuses CHECKOUT and PROVISION with corresponding labels, colors, and icons by @OoBook in https://github.com/unusualify/modularity/commit/566408b25ba643e42c75ab51f2252830b307b4f7
+- add default VAT rates for currencies and enhance PaymentCurrency model with VAT rate handling by @OoBook in https://github.com/unusualify/modularity/commit/49c9cb3c2cac6ffbad3de0b2b0fe2f48dfc88c50
+- :sparkles: implement country-based VAT rates and billing banner functionality by @OoBook in https://github.com/unusualify/modularity/commit/2db64ff132bb1ab5430ab24cf3eb3e5c629f7a6b
+- add defaultPaymentPriceFields method for dynamic price field handling by @OoBook in https://github.com/unusualify/modularity/commit/8084a12e11f8e4f90ace57b4c5d5d7d1fd866c1e
+- implement user verification event and trigger on email link send by @OoBook in https://github.com/unusualify/modularity/commit/3d6464f6b80b7d52c21d0dd0fe42fae75f681368
+- :sparkles: implement UTM parameters service with middleware and facade by @OoBook in https://github.com/unusualify/modularity/commit/424b214ee1f6e0c428d3ac9800a66b7ce0b568a5
+- enhance state management in models by @celikerde in https://github.com/unusualify/modularity/commit/cd1ae86b0c4066f541c22864fd486fdad6990f6a
+- revert success route for email verification registration and update redirect logic in SendsEmailVerificationRegister trait by @celikerde in https://github.com/unusualify/modularity/commit/5777e653283a8b6844d4c35284dd57097e7cdab1
+
+### :wrench: Bug Fixes
+
+- enhance attribute handling in Locale component by ensuring rules are initialized properly by @OoBook in https://github.com/unusualify/modularity/commit/89f603fe9ed02247cb5c1f8df68c990498575792
+- correct return statement for attribute casting in RecursiveStuff component by @OoBook in https://github.com/unusualify/modularity/commit/3bf64ca928445501a25a54cb3bd20063aacc71c7
+- ensure 'translated' property defaults to false if not set in schema inputs by @OoBook in https://github.com/unusualify/modularity/commit/3c8b05738462b3b4dec410fb7f1ccd220de55185
+- add conditional rendering for displayedLocale in Locale component by @OoBook in https://github.com/unusualify/modularity/commit/2cd3fc1d81ef82a62b799e7173d1cb0f4cf4943a
+- ensure formatter is an array and validate its presence before filtering by @OoBook in https://github.com/unusualify/modularity/commit/dc0a66d6e12bb5b9655840db86a78173bb6f69fd
+- adjust conversion decimals to zero for accurate currency conversion results by @OoBook in https://github.com/unusualify/modularity/commit/cffd359cf4129c43e9abf6e70ee2d8b4e1341315
+- simplify model parsing by directly using raw model values by @OoBook in https://github.com/unusualify/modularity/commit/ab46a6c141e39ca21f1fc9602d21e6d01c8d640c
+
+### :recycle: Refactors
+
+- add validate button for super admins in Form component; remove redundant validate button from Table component by @OoBook in https://github.com/unusualify/modularity/commit/2ee2efacd83ac32a21c8af7ddb4d9826210e9c7a
+- update payment status conditions to use constants and modify headline for MyPayment by @celikerde in https://github.com/unusualify/modularity/commit/078876fc399badc165aa029e484359947aaaaeec
+- streamline tag creation logic by removing commented code and simplifying variable usage by @OoBook in https://github.com/unusualify/modularity/commit/82b907fdccdaa589cb54c3d25f3e3a555c1a05fa
+- simplify locale tags initialization and improve fillable attribute handling by @OoBook in https://github.com/unusualify/modularity/commit/ff5ba7d06f03afcc4808aae80ae429d56939b9cb
+- remove unnecessary language variable addition in runTest method by @OoBook in https://github.com/unusualify/modularity/commit/7e19ede22f43f85521cae171c2a054ff482c2cf8
+- rename company_registration middleware to modularity.company.registration for consistency by @OoBook in https://github.com/unusualify/modularity/commit/2cdb8298e8abf0bed749047424b08f2cc6f2c161
+- restore and clean up definedRelations method with proper documentation by @OoBook in https://github.com/unusualify/modularity/commit/d5918a0353b067d8c477a40f045d1f97178ef953
+- disable view generation in modules configuration for improved clarity by @OoBook in https://github.com/unusualify/modularity/commit/33fcc0e50be02b53d7699af43195cdcce4a20c56
+- add selectable property to input hydrates and implement selectable input handling by @OoBook in https://github.com/unusualify/modularity/commit/a8af8a712f13d3be787013107a8d2c5ac8cc6b64
+- comment out success route for email verification registration by @celikerde in https://github.com/unusualify/modularity/commit/155495f4ed15de8fbb8c14851e45a0bf4e70ea7b
+- clean up response structure in sendVerificationLinkResponse method by @celikerde in https://github.com/unusualify/modularity/commit/a51a7db77ee01f84e169ce1f5a6d9921deb8f418
+
+### :lipstick: Styling
+
+- lint coding styles for v0.51.0 by @OoBook in https://github.com/unusualify/modularity/commit/a204630117a2dbd26acf1e3926f517ee642a1d8a
+
+### :white_check_mark: Testing
+
+- enhance PHPUnit commands and add repository tests by @OoBook in https://github.com/unusualify/modularity/commit/6a083972e407f7cea044d6ed5d2b2befdbdf1feb
+- add empty line for improved readability in PricesTraitTest by @OoBook in https://github.com/unusualify/modularity/commit/a26bc4fc5022904496969f720ba9e8f7214f68b3
+
+### :package: Build
+
+- update build artifacts for v0.51.0 by @OoBook in https://github.com/unusualify/modularity/commit/5ea841a4356caaf06a3c2bf91706bba3a7037fe5
+
+### :beers: Other Stuff
+
+- remove console log for dark and light symbol values by @OoBook in https://github.com/unusualify/modularity/commit/03d9c15e8ddb123b7c9e33ba891275a90243cc35
+
 ## v0.50.1 - 2025-10-27
 
 ### :recycle: Refactors
