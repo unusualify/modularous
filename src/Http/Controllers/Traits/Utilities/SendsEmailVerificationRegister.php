@@ -64,11 +64,31 @@ trait SendsEmailVerificationRegister
 
     protected function sendVerificationLinkResponse(Request $request, $response)
     {
+        $previousUrl = url()->previous();
+        $description = $previousUrl === route('admin.register.verification') ? __('authentication.pre-register-description') : __('authentication.pre-register-description-from-website');
+        $modalService = modularity_new_modal_service(
+            'success',
+            'mdi-check-circle-outline',
+            __('authentication.pre-register-title'),
+            __($description),
+            [
+                'widthType' => 'md',
+                'noCancelButton' => true,
+                'confirmText' => __('authentication.pre-register-button-text'),
+            ],
+        );
+
+        $useRegistrationRedirectWithModal = (bool) env('MODULARITY_USE_REGISTRATION_REDIRECT_WITH_MODAL', true);
+
         return $request->wantsJson()
             ? new JsonResponse([
                 'message' => __($response),
                 'variant' => MessageStage::SUCCESS,
-                'redirector' => route('admin.register.verification.success'),
+                'redirector' => $useRegistrationRedirectWithModal
+                    ? merge_url_query(route('admin.login'), [
+                        'modalService' => $modalService,
+                    ])
+                    : route('admin.register.verification.success'),
             ], 200)
             : back()->with('status', ___($response));
     }

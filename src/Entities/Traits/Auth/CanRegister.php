@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Auth;
 
+use Illuminate\Support\Facades\App;
 use Unusualify\Modularity\Notifications\EmailVerification;
 
 trait CanRegister
@@ -24,6 +25,7 @@ trait CanRegister
      */
     public function sendRegisterNotification($token, $parameters = [])
     {
-        $this->notify(new EmailVerification($token, $parameters));
+        $emailVerificationClass = config('modularity.verification_email_class', EmailVerification::class);
+        $this->notify(App::makeWith($emailVerificationClass, ['token' => $token, 'parameters' => $parameters]));
     }
 }
