@@ -73,14 +73,17 @@ trait SendsEmailVerificationRegister
             ],
         );
 
-        $redirectUrl = merge_url_query(route('admin.login'), [
-            'modalService' => $modalService,
-        ]);
+        $useRegistrationRedirectWithModal = (bool) env('MODULARITY_USE_REGISTRATION_REDIRECT_WITH_MODAL', true);
+
         return $request->wantsJson()
             ? new JsonResponse([
                 'message' => __($response),
                 'variant' => MessageStage::SUCCESS,
-                'redirector' => $redirectUrl,
+                'redirector' => $useRegistrationRedirectWithModal
+                    ? merge_url_query(route('admin.login'), [
+                        'modalService' => $modalService,
+                    ])
+                    : route('admin.register.verification.success'),
             ], 200)
             : back()->with('status', ___($response));
     }
