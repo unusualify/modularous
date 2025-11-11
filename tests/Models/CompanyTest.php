@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\SystemUser\Entities\Company;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class CompanyTest extends ModelTestCase
@@ -123,5 +124,75 @@ class CompanyTest extends ModelTestCase
         $this->assertTrue(Company::all()->contains('id', $company1->id));
         $this->assertCount(1, Company::all());
 
+    }
+
+    public function test_company_users()
+    {
+        $company = Company::create([
+            'name' => 'Test Company',
+            'address' => '123 Test St',
+            'city' => 'Test City',
+            'state' => 'Test State',
+            'zip_code' => '12345',
+            'phone' => '123-456-7890',
+            'vat_number' => 'VAT123456',
+            'tax_id' => 'TAX123456',
+        ]);
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'company_id' => $company->id,
+        ]);
+
+        $this->assertNotNull($user->company);
+        $this->assertCount(1, $company->users);
+        $this->assertTrue($company->users->contains('id', $user->id));
+    }
+
+    public function test_company_company_type()
+    {
+        $personalCompany = Company::create([
+            'name' => 'Test Company',
+            'address' => '123 Test St',
+            'city' => 'Test City',
+            'state' => 'Test State',
+            'zip_code' => '12345',
+            'phone' => '123-456-7890',
+            'vat_number' => 'VAT123456',
+            'tax_id' => 'TAX123456',
+            'country_id' => 1,
+            'spread_payload' => [
+                'is_personal' => true,
+                'email' => 'test@example.com'
+            ],
+        ]);
+
+        $this->assertEquals('personal', $personalCompany->company_type);
+        $this->assertTrue($personalCompany->is_personal_company);
+        $this->assertTrue($personalCompany->isPersonalCompany);
+        $this->assertFalse($personalCompany->isCorporateCompany);
+        $this->assertTrue($personalCompany->isValid);
+
+        $corporateCompany = Company::create([
+            'name' => 'Test Company',
+            'address' => '123 Test St',
+            'city' => 'Test City',
+            'state' => 'Test State',
+            'zip_code' => '12345',
+            'phone' => '123-456-7890',
+            'vat_number' => 'VAT123456',
+            'tax_id' => 'TAX123456',
+            'country_id' => 1,
+            'spread_payload' => [
+                'is_personal' => false,
+                'email' => 'test@example.com'
+            ],
+        ]);
+        $this->assertEquals('corporate', $corporateCompany->company_type);
+        $this->assertFalse($corporateCompany->is_personal_company);
+        $this->assertFalse($corporateCompany->isPersonalCompany);
+        $this->assertTrue($corporateCompany->isCorporateCompany);
+        $this->assertTrue($corporateCompany->isValid);
     }
 }

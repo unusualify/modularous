@@ -17,12 +17,29 @@ class VatRate extends \Oobook\Priceable\Models\VatRate
 
     protected $appends = [
         'name_with_rate',
+        'vat_multiplier',
+        'vat_percentage',
     ];
 
     protected function nameWithRate(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $this->name . ' (' . $this->rate . '%)',
+        );
+    }
+
+    protected function vatMultiplier(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->rate / 100,
+        );
+    }
+
+
+    protected function vatPercentage(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->rate,
         );
     }
 }

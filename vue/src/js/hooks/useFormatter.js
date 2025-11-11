@@ -19,6 +19,8 @@ export default function useFormatter (props, context, headers = null) {
   const formatterColumns = computed(() => {
     return (headers?.value ?? []).filter((h) =>
       (Object.prototype.hasOwnProperty.call(h, 'formatter') &&
+      h.formatter &&
+      Array.isArray(h.formatter) &&
       h.formatter.length > 0 &&
       (!Object.prototype.hasOwnProperty.call(props, 'ignoreFormatters') || !props.ignoreFormatters.includes(h.formatter[0]))
       ) || (Object.prototype.hasOwnProperty.call(h, 'formatterName') && ['edit', 'activate'].includes(h.formatterName))
@@ -35,7 +37,6 @@ export default function useFormatter (props, context, headers = null) {
 
   const methods = reactive({
     dateFormatter: function (value, datetimeFormat = 'long') {
-
       return {
         configuration: methods.makeText(d(new Date(value), datetimeFormat))
       }

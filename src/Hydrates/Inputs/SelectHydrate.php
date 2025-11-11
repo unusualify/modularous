@@ -6,6 +6,8 @@ use Illuminate\Support\Arr;
 
 class SelectHydrate extends InputHydrate
 {
+    public $selectable = true;
+
     /**
      * Default values to set before hydrating
      *
@@ -46,47 +48,5 @@ class SelectHydrate extends InputHydrate
         }
 
         return $input;
-    }
-
-    /**
-     *  Handle input after records set
-     *
-     * @return void
-     */
-    public function afterHydrateRecords(&$input)
-    {
-        if (isset($input['cascades'])) {
-            $items = $input['items'];
-
-            $input['cascadeKey'] ??= 'items';
-
-            $patterns = [];
-            foreach ($input['cascades'] as $key => $cascade) {
-                $explodes = explode('.', explode(':', $cascade)[0]);
-                $patterns[] = "/{$this->getSnakeCase(
-                    $explodes[count($explodes) - 1]
-                )}/";
-            }
-            $flat = Arr::dot($items);
-            $newArray = [];
-            foreach ($flat as $key => $value) {
-                $newKey = preg_replace($patterns, 'items', $key);
-                Arr::set($newArray, $newKey, $value);
-            }
-
-            $input['items'] = $newArray;
-        }
-
-        if (
-            isset($input['items'])
-            && count($input['items'])
-            && isset($input['items'][0][$input['itemValue']])
-            && $input['items'][0][$input['itemValue']]
-        ) {
-            array_unshift($input['items'], [
-                $input['itemValue'] => 0,
-                $input['itemTitle'] => __('Please Select'),
-            ]);
-        }
     }
 }

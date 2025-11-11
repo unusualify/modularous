@@ -519,6 +519,14 @@ return [
                     'itemTitle' => 'name',
                 ],
                 [
+                    'title' => __('VAT Rate') . ' (' . __('for personals') . ')',
+                    'key' => 'personal_vat_rate_name_with_rate',
+                ],
+                [
+                    'title' => __('VAT Rate') . ' (' . __('for corporates') . ')',
+                    'key' => 'corporate_vat_rate_name_with_rate',
+                ],
+                [
                     'title' => 'Created Time',
                     'key' => 'created_at',
                     'formatter' => [
@@ -538,7 +546,9 @@ return [
                     'name' => 'name',
                     'label' => __('Name'),
                     'type' => 'text',
-                    'disabled',
+                    'readonly' => true,
+                    'clearable' => false,
+                    'noSubmit' => true,
                 ],
                 [
                     'name' => 'payment_service_id',
@@ -547,6 +557,61 @@ return [
                     'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
                     'multiple' => false,
                     'itemTitle' => 'name',
+                ],
+                [
+                    'name' => 'default_vat_rates',
+                    'label' => __('Default VAT Rates'),
+                    'type' => 'json-repeater',
+                    'default' => [],
+                    'formRowAttribute' => [
+                        'noGutters' => true,
+                    ],
+                    'col' => [
+                        'cols' => 12,
+                    ],
+                    'isUnique' => true,
+                    'uniqueField' => 'company_type',
+                    'uniqueValue' => 'id',
+                    'autoIdGenerator' => false,
+                    'asObject' => true,
+                    'schema' => [
+                        [
+                            'type' => 'select',
+                            'name' => 'company_type',
+                            'label' => __('Company Type'),
+                            'hideDetails' => 'auto',
+                            'itemValue' => 'id',
+                            'itemTitle' => 'name',
+                            'itemValueType' => 'string',
+                            'col' => [
+                                'cols' => 6,
+                                'class' => 'pr-4',
+                            ],
+                            'items' => [
+                                [
+                                    'id' => 'corporate',
+                                    'name' => __('Corporate Company'),
+                                ],
+                                [
+                                    'id' => 'personal',
+                                    'name' => __('Personal Company'),
+                                ],
+                            ],
+                            'rules' => 'required',
+                        ],
+                        [
+                            'name' => 'vat_rate_id',
+                            'label' => __('VAT Rate'),
+                            'type' => 'select',
+                            'connector' => 'SystemPricing:VatRate|repository:list:column=name,rate:appends=name_with_rate',
+                            'itemTitle' => 'name_with_rate',
+                            'hideDetails' => 'auto',
+                            'col' => [
+                                'cols' => 6,
+                            ],
+                            'rules' => 'required',
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -729,5 +794,101 @@ return [
                 ],
             ],
         ],
-    ],
+    	'payment_country' => [
+            'name' => 'PaymentCountry',
+            'headline' => 'Payment Countries',
+            'url' => 'payment-countries',
+            'route_name' => 'payment_country',
+            'icon' => '$submodule',
+            'title_column_key' => 'name',
+            'table_options' => [
+                'createOnModal' => true,
+                'editOnModal' => true,
+                'isRowEditing' => false,
+                'rowActionsType' => 'inline',
+            ],
+            'headers' => [
+                [
+                    'title' => 'Name',
+                    'key' => 'name',
+                    'formatter' => [
+                        'edit',
+                    ],
+                    'searchable' => true,
+                ],
+                [
+                    'title' => 'EUR VAT Rate',
+                    'key' => 'EURVatRate',
+                ],
+                [
+                    'title' => 'USD VAT Rate',
+                    'key' => 'USDVatRate',
+                ],
+                [
+                    'title' => 'TRY VAT Rate',
+                    'key' => 'TRYVatRate',
+                ],
+                [
+                    'title' => 'Actions',
+                    'key' => 'actions',
+                    'sortable' => false,
+                ],
+            ],
+            'inputs' => [
+                [
+                    'name' => 'name',
+                    'label' => 'Name',
+                    'type' => 'text',
+                    'readonly' => true,
+                    'clearable' => false,
+                    'noSubmit' => true,
+                ],
+                [
+                    'type' => 'json-repeater',
+                    'name' => 'currency_vat_rate',
+                    'default' => [],
+                    'label' => __('Supported Languages'),
+                    'formRowAttribute' => [
+                        'noGutters' => true,
+                    ],
+                    'col' => [
+                        'cols' => 12,
+                    ],
+                    'autoIdGenerator' => false,
+                    'isUnique' => true,
+                    'uniqueField' => 'currency_id',
+                    'uniqueValue' => 'iso_4217',
+                    'asObject' => true,
+                    'schema' => [
+                        [
+                            'type' => 'select',
+                            'name' => 'currency_id',
+                            'label' => __('Currency'),
+                            'connector' => 'SystemPayment:PaymentCurrency|repository:list:column=name,iso_4217:scopes=hasAnyPaymentService',
+                            'itemValue' => 'iso_4217',
+                            'itemTitle' => 'name',
+                            'hideDetails' => 'auto',
+                            'col' => [
+                                'cols' => 6,
+                                'class' => 'pr-4',
+                            ],
+                            'rules' => 'required',
+                        ],
+                        [
+                            'type' => 'select',
+                            'name' => 'vat_rate_id',
+                            'label' => __('VAT Rate'),
+                            'connector' => 'SystemPricing:VatRate|repository:list:column=name,rate:appends=name_with_rate',
+                            'itemTitle' => 'name_with_rate',
+                            'hideDetails' => 'auto',
+                            'col' => [
+                                'cols' => 6,
+                            ],
+                            'rules' => 'required',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+	],
 ];

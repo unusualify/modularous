@@ -199,8 +199,6 @@ export default {
       return getLocaleSymbol(props.logoSymbol, 'main-logo-dark')
     })
 
-    console.log( darkSymbol.value, lightSymbol.value)
-
     const width = computed(() => {
       // name is reactive and
       // must use .value

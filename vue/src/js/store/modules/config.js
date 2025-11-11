@@ -3,6 +3,7 @@ import { CONFIG } from '../mutations'
 const state = {
   test: window[import.meta.env.VUE_APP_NAME]?.STORE.config.test ?? false,
   isInertia: window[import.meta.env.VUE_APP_NAME]?.STORE.config.isInertia ?? false,
+  useCountryBasedVatRates: window[import.meta.env.VUE_APP_NAME]?.STORE.config.useCountryBasedVatRates ?? false,
 
   profileMenu: window[import.meta.env.VUE_APP_NAME]?.STORE.config.profileMenu ?? [],
   sidebarStatus: true,

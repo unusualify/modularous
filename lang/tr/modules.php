@@ -2,26 +2,28 @@
 
 return [
     'system_notification' => [
-        'notification' => [
-            'name' => 'Bildirim | Bildirimler | {n} Bildirim',
-        ],
         'my_notification' => [
             'name' => 'Bildirimim | Bildirimlerim | {n} Bildirimim',
         ],
+        'notification' => [
+            'name' => 'Bildirim | Bildirimler | {n} Bildirim',
+        ],
     ],
-
     'system_payment' => [
         'card_type' => [
             'name' => 'Kart Tipi | Kart Tipleri | {n} Kart Tipi',
         ],
         'my_payment' => [
-            'name' => 'Ödemem | Ödemelerim | {n} Ödemem',
             'messages' => [
                 'edit' => 'Ödemeyi Görüntüle',
             ],
+            'name' => 'Ödemem | Ödemelerim | {n} Ödemem',
         ],
         'payment' => [
             'name' => 'Ödeme | Ödemeler | {n} Ödeme',
+        ],
+        'payment_country' => [
+            'name' => 'Payment Country | Payment Countries | {n} Payment Countries',
         ],
         'payment_currency' => [
             'name' => 'Ödeme Para Birimi | Ödeme Para Birimleri | {n} Ödeme Para Birimi',
@@ -30,7 +32,6 @@ return [
             'name' => 'Ödeme Servisi | Ödeme Servisleri | {n} Ödeme Servisi',
         ],
     ],
-
     'system_pricing' => [
         'currency' => [
             'name' => 'Para Birimi | Para Birimleri | {n} Para Birimi',
@@ -45,22 +46,20 @@ return [
             'name' => 'Vergi Oranı | Vergi Oranları | {n} Vergi Oranı',
         ],
     ],
-
     'system_user' => [
         'company' => [
             'name' => 'Şirket | Şirketler | {n} Şirket',
         ],
-        'role' => [
-            'name' => 'Rol | Roller | {n} Rol',
-        ],
         'permission' => [
             'name' => 'İzin | İzinler | {n} İzin',
+        ],
+        'role' => [
+            'name' => 'Rol | Roller | {n} Rol',
         ],
         'user' => [
             'name' => 'Kullanıcı | Kullanıcılar | {n} Kullanıcı',
         ],
     ],
-
     'system_utility' => [
         'country' => [
             'name' => 'Ülke | Ülkeler | {n} Ülke',
@@ -70,3 +69,5 @@ return [
         ],
     ],
 ];
+
+    

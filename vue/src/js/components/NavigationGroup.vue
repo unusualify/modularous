@@ -285,7 +285,7 @@ export default {
     isHeader: (item) => !item.href && !item.route && !item.items && !!item.name,
     isMenu: (item) => !!item.menuItems,
     isMenuRoute(item){ return !item.menuItems && this.profileMenu && (!!item.route || !!item.href)},
-    isInApp(item){ return item.is_modularity_route ?? false},
+    isInApp(item){ return !item.blank && (item.is_modularity_route ?? false)},
     isInertiaLink(item){ return this.isInApp(item) && this.$shouldUseInertia()},
 
     formatBadgeContent(badge) {

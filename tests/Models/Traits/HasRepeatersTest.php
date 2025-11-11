@@ -232,6 +232,164 @@ class HasRepeatersTest extends ModelTestCase
         $this->assertEquals('repeatable_id', $relation->getForeignKeyName());
     }
 
+    public function test_repeaters_can_be_filtered_by_role_and_locale()
+    {
+        $this->model->repeaters()->saveMany([
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => ['name' => 'Feature EN'],
+                'role' => 'features',
+                'locale' => 'en',
+            ]),
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => ['name' => 'Feature TR'],
+                'role' => 'features',
+                'locale' => 'tr',
+            ]),
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => ['name' => 'Specs EN'],
+                'role' => 'specs',
+                'locale' => 'en',
+            ]),
+        ]);
+
+        $this->assertEquals(1, $this->model->repeaters('features', 'en')->count());
+        $this->assertEquals(1, $this->model->repeaters('features', 'tr')->count());
+        $this->assertEquals(1, $this->model->repeaters('specs', 'en')->count());
+        $this->assertEquals(0, $this->model->repeaters('specs', 'tr')->count());
+    }
+
+    public function test_get_repeater_field_returns_values_and_default()
+    {
+        $this->model->repeaters()->save(new Repeater([
+            'repeatable_id' => $this->model->id,
+            'repeatable_type' => get_class($this->model),
+            'content' => [
+                'title' => 'Hello',
+                'meta' => ['description' => 'Desc'],
+            ],
+            'role' => 'seo',
+            'locale' => 'en',
+        ]));
+
+        $this->model->refresh();
+
+        $this->assertSame('Hello', $this->model->getRepeaterField('seo.title', 'en'));
+        $this->assertSame('Desc', $this->model->getRepeaterField('seo.meta.description', 'en'));
+        $this->assertSame('N/A', $this->model->getRepeaterField('seo.meta.key', 'en', 'N/A'));
+        $this->assertSame('Default', $this->model->getRepeaterField('seo.title', 'fr', 'Default'));
+    }
+
+    public function test_repeater_roles_and_locale_roles_populated_on_retrieved()
+    {
+        $this->model->repeaters()->saveMany([
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => [],
+                'role' => 'seo',
+                'locale' => 'en',
+            ]),
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => [],
+                'role' => 'seo',
+                'locale' => 'tr',
+            ]),
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => [],
+                'role' => 'features',
+                'locale' => 'en',
+            ]),
+        ]);
+
+        $this->model->refresh();
+
+        $this->model = TestRepeatableModel::find(1);
+
+        $this->assertEqualsCanonicalizing(['seo', 'features'], $this->model->getRepeaterRoles());
+
+        $localeRoles = $this->model->getRepeaterLocaleRoles();
+        $this->assertArrayHasKey('en', $localeRoles);
+        $this->assertArrayHasKey('tr', $localeRoles);
+        $this->assertEqualsCanonicalizing(['seo', 'features'], $localeRoles['en']);
+        $this->assertEqualsCanonicalizing(['seo'], $localeRoles['tr']);
+    }
+
+    public function test_has_repeater_role_and_has_repeater_locale_role()
+    {
+        $this->model->repeaters()->saveMany([
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => [],
+                'role' => 'seo',
+                'locale' => 'en',
+            ]),
+            new Repeater([
+                'repeatable_id' => $this->model->id,
+                'repeatable_type' => get_class($this->model),
+                'content' => [],
+                'role' => 'features',
+                'locale' => 'tr',
+            ]),
+        ]);
+
+        $this->model->refresh();
+
+        $this->model = TestRepeatableModel::find(1);
+
+        $this->assertTrue($this->model->hasRepeaterRole('seo'));
+        $this->assertTrue($this->model->hasRepeaterRole('features'));
+        $this->assertFalse($this->model->hasRepeaterRole('unknown'));
+
+        $this->assertTrue($this->model->hasRepeaterLocaleRole('seo', 'en'));
+        $this->assertTrue($this->model->hasRepeaterLocaleRole('features', 'tr'));
+        $this->assertFalse($this->model->hasRepeaterLocaleRole('seo', 'tr'));
+        $this->assertFalse($this->model->hasRepeaterLocaleRole('features', 'en'));
+    }
+
+    public function test_is_repeater_value_equal_loaded_and_unloaded_relations()
+    {
+        $this->model->repeaters()->save(new Repeater([
+            'repeatable_id' => $this->model->id,
+            'repeatable_type' => get_class($this->model),
+            'content' => [
+                'title' => 'Hello',
+                'meta' => ['description' => 'Desc'],
+            ],
+            'role' => 'seo',
+            'locale' => 'en',
+        ]));
+
+        $this->model->refresh();
+
+        $this->model = TestRepeatableModel::find(1);
+        $this->assertTrue($this->model->isRepeaterValueEqual('seo.title', 'Hello', 'en'));
+        $this->assertFalse($this->model->isRepeaterValueEqual('seo.title', 'World', 'en'));
+        $this->assertFalse($this->model->isRepeaterValueEqual('seo.title', 'World', 'fr'));
+        $this->assertTrue($this->model->isRepeaterValueEqual('seo.meta.description', 'Desc', 'en'));
+
+        $this->model->load('repeaters');
+        $this->assertTrue($this->model->isRepeaterValueEqual('seo.title', 'Hello', 'en'));
+        $this->assertFalse($this->model->isRepeaterValueEqual('seo.title', 'World', 'en'));
+        $this->assertFalse($this->model->isRepeaterValueEqual('seo.title', 'World', 'fr'));
+        $this->assertTrue($this->model->isRepeaterValueEqual('seo.meta.description', 'Desc', 'en'));
+
+        $fresh = TestRepeatableModel::find($this->model->id);
+        $this->assertTrue($fresh->isRepeaterValueEqual('seo.title', 'Hello', 'en'));
+        $this->assertFalse($fresh->isRepeaterValueEqual('seo.title', 'World', 'en'));
+        $this->assertTrue($fresh->isRepeaterValueEqual('seo.meta.description', 'Desc', 'en'));
+    }
+
     protected function tearDown(): void
     {
         Schema::dropIfExists('test_repeaters_models');

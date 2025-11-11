@@ -45,7 +45,6 @@ trait RepeatersTrait
      */
     public function afterSaveRepeatersTrait($object, $fields)
     {
-
         if ($this->shouldIgnoreFieldBeforeSave('repeaters')) {
             return $object;
         }
@@ -53,6 +52,7 @@ trait RepeatersTrait
         $defaultLocale = config('app.locale');
         // $locales = getLocales();
         $system_locales = getLocales();
+        $fallbackLocale = app()->getFallbackLocale();
 
         foreach ($this->getColumns(__TRAIT__) as $name) {
             $input = $this->inputs()[$name];
@@ -90,32 +90,60 @@ trait RepeatersTrait
                     $exist_locale = $intersect_locales[0];
                 }
 
-                foreach ($system_locales as $system_locale) {
-                    $content = $fields[$name];
+                if($isTranslated) {
 
-                    if ($localized) {
-                        $content = isset($fields[$name][$system_locale]) ? $fields[$name][$system_locale] : $fields[$name][$exist_locale];
+                    foreach ($system_locales as $system_locale) {
+                        $content = $fields[$name];
+
+                        if ($localized) {
+                            $content = isset($fields[$name][$system_locale]) ? $fields[$name][$system_locale] : $fields[$name][$exist_locale];
+                        }
+
+                        foreach ($unsetColumns as $unsetColumn) {
+                            foreach ($content as &$item) {
+                                // code...
+                                unset($item[$unsetColumn]);
+                            }
+                        }
+
+                        $data = [
+                            'role' => $name,
+                            'content' => $content,
+                            'locale' => $system_locale,
+                        ];
+
+                        $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $system_locale)->first() : null;
+
+                        $existingRepeater
+                            ? $existingRepeater->update($data)
+                            : $object->repeaters()->create($data);
+
+                    }
+
+                } else {
+                    $payload = $fields[$name];
+
+                    if($localized) {
+                        $payload = isset($fields[$name][$fallbackLocale]) ? $fields[$name][$fallbackLocale] : $fields[$name][$exist_locale];
                     }
 
                     foreach ($unsetColumns as $unsetColumn) {
-                        foreach ($content as &$item) {
-                            // code...
+                        foreach ($payload as &$item) {
                             unset($item[$unsetColumn]);
                         }
                     }
 
                     $data = [
                         'role' => $name,
-                        'content' => $content,
-                        'locale' => $system_locale,
+                        'content' => $payload,
+                        'locale' => $fallbackLocale,
                     ];
 
-                    $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $system_locale)->first() : null;
+                    $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $fallbackLocale)->first() : null;
 
                     $existingRepeater
                         ? $existingRepeater->update($data)
                         : $object->repeaters()->create($data);
-
                 }
             }
         }
@@ -208,35 +236,37 @@ trait RepeatersTrait
     public function getFormFieldsRepeatersTrait($object, $fields, $schema)
     {
         // not possess any repeater data
-        if ($object->repeaters->isEmpty()) {
-            $fields += Arr::mapWithKeys($this->getRepeaterInputs(), function ($input) {
-                return [
-                    $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
-                        return [$locale => []];
-                    }) : ($input['default'] ?? []),
-                ];
-            });
-        } else {
+        if(classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && $object->repeaters()->exists()){
+            if ($object->repeaters->isEmpty()) {
+                $fields += Arr::mapWithKeys($this->getRepeaterInputs(), function ($input) {
+                    return [
+                        $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
+                            return [$locale => []];
+                        }) : ($input['default'] ?? []),
+                    ];
+                });
+            } else {
 
-            foreach ($object->repeaters->groupBy('locale') as $repeatersByLocale) {
+                foreach ($object->repeaters->groupBy('locale') as $repeatersByLocale) {
 
-                foreach ($repeatersByLocale as $repeater) {
-                    // dd($repeater->content);
-                    if ($this->inputs()[$repeater->role]['translated'] ?? false) {
-                        $name = $repeater->role . '.' . $repeater->locale;
+                    foreach ($repeatersByLocale as $repeater) {
+                        // dd($repeater->content);
+                        if ($this->inputs()[$repeater->role]['translated'] ?? false) {
+                            $name = $repeater->role . '.' . $repeater->locale;
 
-                        foreach (Arr::dot($repeater->content) as $notation => $value) {
-                            Arr::set($fields, "{$name}.{$notation}", $value);
-                        }
+                            foreach (Arr::dot($repeater->content) as $notation => $value) {
+                                Arr::set($fields, "{$name}.{$notation}", $value);
+                            }
 
-                    } else {
-                        $name = $repeater->role;
-                        foreach (Arr::dot($repeater->content) as $notation => $value) {
-                            Arr::set($fields, "{$name}.{$notation}", $value);
+                        } else {
+                            $name = $repeater->role;
+                            foreach (Arr::dot($repeater->content) as $notation => $value) {
+                                Arr::set($fields, "{$name}.{$notation}", $value);
+                            }
                         }
                     }
+                    // $fields[$repeater->role] = $repeater->content;
                 }
-                // $fields[$repeater->role] = $repeater->content;
             }
         }
 

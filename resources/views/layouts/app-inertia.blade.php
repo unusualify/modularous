@@ -67,6 +67,7 @@
             window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
             window['{{ modularityConfig('js_namespace') }}'].STORE.config = {
                 isInertia: {{ json_encode(\Unusualify\Modularity\Facades\Modularity::shouldUseInertia()) }},
+                useCountryBasedVatRates: {{ json_encode(\Unusualify\Modularity\Facades\Modularity::shouldUseCountryBasedVatRates()) }},
                 test: false,
                 profileMenu: {!! json_encode($navigation['profileMenu'] ?? []) !!},
                 sidebarOptions: {!! json_encode(modularityConfig('ui_settings.sidebar')) !!},

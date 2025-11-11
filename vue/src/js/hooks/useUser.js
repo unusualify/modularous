@@ -19,6 +19,12 @@ export default function useUser() {
     }),
     timezone: computed(() => {
       return store.state.user.timezone ?? 'Europe/London'
+    }),
+    validCompany: computed(() => {
+      return store.state.user.valid_company ?? false
+    }),
+    showBillingBanner: computed(() => {
+      return store.state.user.show_billing_banner ?? false
     })
   })
 

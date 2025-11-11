@@ -186,6 +186,7 @@
 
 <script>
 import { computed, ref, reactive, watch, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
 import _ from 'lodash-es';
 import { getModel, getSchema } from '@/utils/getFormData.js'
 import { makeInputProps, makeInputEmits, useCurrency } from '@/hooks';
@@ -264,11 +265,16 @@ export default {
       type: String,
       default: 'Transaction fee for the payment service'
     },
+    useCountryBasedVatRates: {
+      type: Boolean,
+      default: false
+    },
   },
 
   setup(props, { emit }) {
     const submitForm = inject('submitForm');
     const { formatPrice } = useCurrency();
+    const { t } = useI18n();
 
     // Refs
     const localPaymentMethod = ref('');
@@ -298,14 +304,20 @@ export default {
     });
 
     const calculatePrice = (amount) => {
-      let transactionFee = props.includeTransactionFee ? selectedPaymentService.value?.transaction_fee_percentage ?? 0 : 0;
+      let transactionFeePercentage = props.includeTransactionFee ? selectedPaymentService.value?.transaction_fee_percentage ?? 0 : 0;
+      let transactionFeeMultiplier = transactionFeePercentage / 100;
+      let transactionFee = transactionFeeMultiplier * amount;
 
-      return amount + ( transactionFee * amount / 100);
+      return (amount + Math.round(transactionFee)) / 100;
     }
 
-    const priceAmount = ref(props.price_object.total_amount);
+    const priceAmount = ref(props.useCountryBasedVatRates && selectedCurrency.value.companyVatRate
+      ? props.price_object.discounted_raw_amount * (1 + selectedCurrency.value.companyVatRate.vat_multiplier)
+      : props.price_object.total_amount
+    );
+
     const calculatedPriceAmount = computed(() => {
-      return calculatePrice(priceAmount.value / 100);
+      return calculatePrice(priceAmount.value);
     });
 
     const displayPriceFormatted = computed(() => {
@@ -325,9 +337,9 @@ export default {
     });
 
     const formattedCurrencies = computed(() =>
-      props.supportedCurrencies.map(currency => ({
-        id: currency.id,
-        display: `${currency.symbol} - ${currency.name}`,
+      props.supportedCurrencies.map(supportedCurrency => ({
+        id: supportedCurrency.id,
+        display: `${supportedCurrency.symbol} - ${supportedCurrency.name}` + (props.useCountryBasedVatRates && supportedCurrency.companyVatRate? ` (+${supportedCurrency.companyVatRate.vat_percentage}% ` + t('VAT') + ')'  : ''),
       }))
     );
 
@@ -467,14 +479,19 @@ export default {
       try {
         const response = await axios.post(props.currencyConversionEndpoint, {
           currency: selectedCurrency.value.iso_4217,
-          amount: props.price_object.discounted_raw_amount / 100
+          amount: props.price_object.discounted_raw_amount
         });
 
         exchangeRate.value = response.data.exchange_rate;
 
-        const calculatedAmount = response.data.converted_amount * ( 1 + props.price_object.vat_multiplier);
+        let vatMultiplier = props.price_object.vat_multiplier;
+        if(props.useCountryBasedVatRates && selectedCurrency.value.companyVatRate){
+          vatMultiplier = selectedCurrency.value.companyVatRate.vat_multiplier;
+        }
 
-        priceAmount.value = calculatedAmount * 100;
+        // const calculatedAmount = response.data.converted_amount * ( 1 + vatMultiplier);
+        const calculatedAmount = parseInt(response.data.converted_amount * ( 1 + vatMultiplier));
+        priceAmount.value = calculatedAmount;
 
         emit('update:price', displayPriceFormatted.value);
         emit('currency-converted', displayPriceFormatted.value);

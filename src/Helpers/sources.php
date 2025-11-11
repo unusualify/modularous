@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -300,5 +301,35 @@ if (! function_exists('get_modularity_inertia_main_configuration')) {
             'impersonation' => get_modularity_impersonation_config(),
             'authorization' => get_modularity_authorization_config(),
         ], $data['_mainConfiguration'] ?? []);
+    }
+}
+
+if (! function_exists('get_user_currency_vat_rates')) {
+    function get_user_currency_vat_rates(): Collection
+    {
+        return tap(Collection::make(), function ($collection) {
+            if((($guard = Auth::guard('modularity')) !== null) && $guard->check()) {
+                $user = $guard->user();
+
+                if($user->isClient() && $user->validCompany) {
+                    $company = $user->company;
+                    $paymentCountry = $company->paymentCountry;
+                    $collection->push(...$paymentCountry->currencyVatRates);
+                    // if($company->isCorporateCompany) {
+                    // }
+                }
+            }
+        });
+    }
+}
+
+if (! function_exists('get_user_payment_country_currencies')) {
+    function get_user_payment_country_currencies(): Collection
+    {
+        return tap(Collection::make(), function ($collection) {
+            get_user_currency_vat_rates()->each(function ($currencyVatRate) use ($collection) {
+                $collection->push($currencyVatRate->paymentCurrency);
+            });
+        });
     }
 }

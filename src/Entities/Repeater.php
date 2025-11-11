@@ -28,6 +28,11 @@ class Repeater extends Model
         'content' => 'array',
     ];
 
+    public function repeatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
+    }
+
     public function getTable()
     {
         return modularityConfig('tables.repeaters', parent::getTable());

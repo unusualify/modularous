@@ -2,8 +2,10 @@
 
 namespace Modules\SystemPricing\Entities;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
 use Modules\SystemPayment\Entities\Payment;
+use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPricing\Entities\Mutators\PriceMutators;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
@@ -56,6 +58,21 @@ class Price extends \Oobook\Priceable\Models\Price
         ];
     }
 
+    final public function calculateDiscountedAmount($amount)
+    {
+        return (int) round($amount * (1 - $this->discount_percentage / 100)) * 100;
+    }
+
+    final public function calculateDiscountedVatAmount($discountedRawAmount, $vatMultiplier)
+    {
+        return (int)($discountedRawAmount * $vatMultiplier);
+    }
+
+    final public function calculateTotalAmount($amount, $vatMultiplier)
+    {
+        return (int)($amount * (1 + $vatMultiplier));
+    }
+
     public function vatRate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(config('priceable.models.vat'));
@@ -64,6 +81,11 @@ class Price extends \Oobook\Priceable\Models\Price
     public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(config('priceable.models.currency'));
+    }
+
+    public function paymentCurrency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(PaymentCurrency::class, 'currency_id');
     }
 
     public function priceable(): \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -87,6 +109,15 @@ class Price extends \Oobook\Priceable\Models\Price
     public function completedPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->payments('COMPLETED');
+    }
+
+    protected function hasPaymentCurrencyCorporateVatRate(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->paymentCurrency->hasCorporateVatRate();
+            },
+        );
     }
 
     public function updateOrNewPayment($payload, $extraPayload = [])
