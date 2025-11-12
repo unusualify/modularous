@@ -240,7 +240,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
     public function isClient()
     {
-        return (bool) preg_match('/client-/', $this->roles[0]->name);
+        return (bool) $this->roles()->whereName('like', 'client%')->exists();
     }
 
     protected function avatar(): Attribute
@@ -301,7 +301,10 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     protected function showBillingBanner(): Attribute
     {
         return Attribute::make(
-            get: fn () => ! modularityConfig('disable_billing_banner', false) && $this->isClient() && ! $this->valid_company && Modularity::shouldUseCountryBasedVatRates(),
+            get: fn () => ! modularityConfig('disable_billing_banner', false)
+                && $this->isClient()
+                && ! $this->validCompany
+                && Modularity::shouldUseCountryBasedVatRates()
         );
     }
 }
