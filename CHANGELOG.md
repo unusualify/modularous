@@ -2,6 +2,20 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.2 - 2025-11-12
+
+### :rocket: Features
+
+- add lock_company_edit configuration and update ProfileController to handle company edit locking by @OoBook in https://github.com/unusualify/modularity/commit/73bd4e81ba0a75eb726ff8ab80412ba89c84b5fe
+
+### :recycle: Refactors
+
+- optimize isClient method and update billing banner logic for better clarity by @OoBook in https://github.com/unusualify/modularity/commit/b7cf264dfae31bde8d2955606a9d769069cac9f2
+
+### :lipstick: Styling
+
+- lint coding styles for v0.51.2 by @OoBook in https://github.com/unusualify/modularity/commit/d5a0c6b19bed45b87cac083456175867e6f4b26b
+
 ## v0.51.1 - 2025-11-11
 
 ### :wrench: Bug Fixes
