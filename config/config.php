@@ -32,10 +32,12 @@ return [
     'js_namespace' => env('VUE_APP_NAME', 'MODULARITY'),
     'build_timeout' => 300,
     'use_big_integers_on_migrations' => true,
+
     'use_inertia' => env('MODULARITY_USE_INERTIA', false),
     'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),
     'use_country_based_vat_rates' => env('MODULARITY_USE_COUNTRY_BASED_VAT_RATES', false),
     'disable_billing_banner' => env('MODULARITY_DISABLE_BILLING_BANNER', false),
+    'lock_company_edit' => env('MODULARITY_LOCK_COMPANY_EDIT', true),
 
     'locale' => 'en',
     'fallback_locale' => 'en',
@@ -43,7 +45,6 @@ return [
 
     'log_dir' => storage_path('logs/modularity'),
     'email_verified_register' => env('MODULARITY_EMAIL_VERIFIED_REGISTER', true),
-
     'benchmark_enabled' => env('MODULARITY_BENCHMARK_ENABLED', false),
     'benchmark_log_level' => env('MODULARITY_BENCHMARK_LOG_LEVEL', null),
     'benchmark_log_file' => env('MODULARITY_BENCHMARK_LOG_FILE', 'modularity-benchmark.log'),

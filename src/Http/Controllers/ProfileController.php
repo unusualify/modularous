@@ -190,9 +190,16 @@ class ProfileController extends BaseController
             $company = $this->companyRepository->getById($company->id);
             $companyFields = $this->companyRepository->getFormFields($company, $companySchema);
 
-            // $companyFields['country_id'] = 1;
-            // $companyFields['city_id'] = 1;
-            // $companyFields['district_id'] = 2;
+            $lockCompanyEdit = config('modularity.lock_company_edit') && $user->validCompany;
+            if ($lockCompanyEdit) {
+                $companySchema = array_map(function ($item) {
+                    $item['noSubmit'] = false;
+                    $item['clearable'] = false;
+                    $item['readonly'] = true;
+                    return $item;
+                }, $companySchema);
+            }
+
 
             $sectionFields[] = [
                 'content' => [
@@ -215,7 +222,7 @@ class ProfileController extends BaseController
                             ],
                             // 'editable' => true,
                             'buttonText' => 'Update',
-                            'hasSubmit' => true,
+                            'hasSubmit' => !$lockCompanyEdit,
                             'stickyButton' => false,
 
                             'modelValue' => $companyFields,
@@ -224,7 +231,9 @@ class ProfileController extends BaseController
                                 return [$item['name'] => $item['default'] ?? ''];
                                 $carry[$key] = $item->default ?? '';
                             })->toArray(),
-                            'actionUrl' => route(Route::hasAdmin('profile.company')),
+                            'refreshOnSaved' => true,
+                            'forceRefresh' => true,
+                            'actionUrl' => $lockCompanyEdit ? null : route(Route::hasAdmin('profile.company')),
                         ]),
                 ],
             ];
