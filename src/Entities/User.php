@@ -240,7 +240,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
     public function isClient()
     {
-        return (bool) $this->roles()->whereName('like', 'client%')->exists();
+        return (bool) $this->roles()->where('name', 'like', 'client%')->exists();
     }
 
     protected function avatar(): Attribute
