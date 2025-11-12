@@ -388,7 +388,7 @@ export default {
 
       // Handle slots
       const slotElements = {}
-      Object.entries(slots.value).forEach(([slotName, slotConf]) => {
+      Object.entries(slots.value ?? {}).forEach(([slotName, slotConf]) => {
         slotElements[slotName] = (slotScope = {}) =>
           h('ue-recursive-stuff', {
             level: props.level + 1,
