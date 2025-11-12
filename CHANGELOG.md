@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.4 - 2025-11-12
+
+### :wrench: Bug Fixes
+
+- handle undefined slots gracefully by using optional chaining by @OoBook in https://github.com/unusualify/modularity/commit/fbe1c835fedf65ab58b4698003844169a40c3192
+
+### :package: Build
+
+- update build artifacts for v0.51.4 by @OoBook in https://github.com/unusualify/modularity/commit/4d232bcf54db78a5fd45f825e31ba2867f54884b
+
 ## v0.51.3 - 2025-11-12
 
 ### :wrench: Bug Fixes
