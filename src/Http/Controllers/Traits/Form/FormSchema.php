@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Services\Connector;
 use Unusualify\Modularity\Support\Finder;
 use Unusualify\Modularity\Traits\Allowable;
 
@@ -444,17 +445,34 @@ trait FormSchema
                 $polymorphics = collect($input['morphs'])->map(function ($p) {
                     $polymorphic = $p;
                     $repository = $p;
-                    if (is_array($polymorphic)) {
-                        $repository = $polymorphic['repository'];
-                    } else {
-                        throw new \Exception('Invalid polymorphic input');
+                    $hasConnector = false;
+                    $items = [];
+
+                    if (isset($polymorphic['newConnector'])) {
+                        $connector = new Connector($polymorphic['newConnector']);
+                        $items = ! $this->request->ajax() ? $connector->run($polymorphic, 'items') : [];
+                        $hasConnector = true;
                     }
 
-                    if (! class_exists($repository)) {
+                    $repository = $polymorphic['repository'] ?? '';
+
+                    if (is_string($repository) && ! class_exists($repository) && ! $hasConnector) {
                         throw new \Exception('Repository ' . $repository . ' does not exist on polymorphic input');
                     }
 
-                    $repositoryInstance = App::make($repository);
+                    $repositoryInstance = null;
+
+                    try {
+                        if ( class_exists($repository) ) {
+                            $repositoryInstance = App::make($repository);
+                        }
+                    }catch (\Throwable $th) {
+                        dd($th);
+                    }
+
+                    if (! $hasConnector) {
+                        $items = ! $this->request->ajax() ? $repositoryInstance->list() : [];
+                    }
 
                     if (is_string($polymorphic)) {
                         $polymorphic = [
@@ -474,8 +492,9 @@ trait FormSchema
 
                     return [
                         'name' => $polymorphic['name'],
-                        'type' => $repositoryInstance->getModel()::class,
-                        'items' => ! $this->request->ajax() ? $repositoryInstance->list() : [],
+                        'type' => $repositoryInstance ? $repositoryInstance->getModel()::class : null,
+                        'items' => $items,
+                        ...($polymorphic['rules'] ? ['rules' => $polymorphic['rules']] : []),
                     ];
                 })->toArray();
 
@@ -495,6 +514,7 @@ trait FormSchema
                             'items' => $polymorphic['items'],
                         ];
                     })->toArray(),
+                    ...($input['rules'] ? ['rules' => $input['rules']] : []),
                 ];
 
                 $idInput = [
@@ -505,6 +525,7 @@ trait FormSchema
                     'itemValue' => 'id',
                     'itemTitle' => 'name',
                     'items' => [],
+                    ...($input['rules'] ? ['rules' => $input['rules']] : []),
                 ];
 
                 $input = [

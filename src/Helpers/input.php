@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Hydrates\InputHydrator;
+use Unusualify\Modularity\Services\Connector;
 
 if (! function_exists('configure_input')) {
     function configure_input(array $input)
@@ -50,7 +51,11 @@ if (! function_exists('hydrate_input_type')) {
 if (! function_exists('hydrate_input_connector')) {
     function hydrate_input_connector(array &$input, $moduleName = null, $routeName = null)
     {
-        if (isset($input['connector'])) {
+        if(isset($input['newConnector'])) {
+            $connector = new Connector($input['newConnector']);
+
+            $connector->run($action, 'items');
+        } else if (isset($input['connector'])) {
             // 'moduleName:routeName|uri:edit'
             $targetType = 'uri';
 
@@ -606,9 +611,38 @@ if (! function_exists('format_input')) {
                 }
 
                 // Transform models into options for the type combobox
-                $polymorphics = collect($input['morphs'])->map(function ($p) {
+                $polymorphics = collect($input['morphs'])->map(function ($p) use ($skipQueries) {
                     $polymorphic = $p;
                     $repository = $p;
+                    $hasConnector = false;
+                    $items = [];
+
+                    if (isset($polymorphic['newConnector'])) {
+                        $connector = new Connector($polymorphic['newConnector']);
+                        $items = ! $skipQueries ? $connector->run($polymorphic, 'items') : [];
+                        $hasConnector = true;
+                    }
+
+                    $repository = $polymorphic['repository'] ?? '';
+
+                    if (is_string($repository) && ! class_exists($repository) && ! $hasConnector) {
+                        throw new \Exception('Repository ' . $repository . ' does not exist on polymorphic input');
+                    }
+
+                    $repositoryInstance = null;
+
+                    try {
+                        if ( class_exists($repository) ) {
+                            $repositoryInstance = App::make($repository);
+                        }
+                    }catch (\Throwable $th) {
+                        dd($th);
+                    }
+
+                    if (! $hasConnector) {
+                        $items = ! $this->request->ajax() ? $repositoryInstance->list() : [];
+                    }
+
                     if (is_array($polymorphic)) {
                         $repository = $polymorphic['repository'];
                     } else {
@@ -637,10 +671,14 @@ if (! function_exists('format_input')) {
                         $polymorphic['name'] = get_class_short_name($repositoryInstance->getModel()::class);
                     }
 
+                    if (! $hasConnector) {
+                        $items = ! $skipQueries ? $repositoryInstance->list() : [];
+                    }
+
                     return [
                         'name' => $polymorphic['name'],
-                        'type' => $repositoryInstance->getModel()::class,
-                        'items' => ! $this->request->ajax() ? $repositoryInstance->list() : [],
+                        'type' => $repositoryInstance ? $repositoryInstance->getModel()::class : null,
+                        'items' => $items,
                     ];
                 })->toArray();
 
