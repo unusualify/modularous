@@ -196,10 +196,10 @@ class ProfileController extends BaseController
                     $item['noSubmit'] = false;
                     $item['clearable'] = false;
                     $item['readonly'] = true;
+
                     return $item;
                 }, $companySchema);
             }
-
 
             $sectionFields[] = [
                 'content' => [
@@ -222,7 +222,7 @@ class ProfileController extends BaseController
                             ],
                             // 'editable' => true,
                             'buttonText' => 'Update',
-                            'hasSubmit' => !$lockCompanyEdit,
+                            'hasSubmit' => ! $lockCompanyEdit,
                             'stickyButton' => false,
 
                             'modelValue' => $companyFields,
