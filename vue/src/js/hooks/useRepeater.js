@@ -344,9 +344,7 @@ export default function useRepeater (props, context) {
       })
 
       if (JSON.stringify(initialValue) !== JSON.stringify(parsedInitialRepeats)) {
-        parsedInitialRepeats.forEach((item, index) => {
-          modelValue.value[index] = item
-        })
+        inputHook.updateModelValue.value(parsedInitialRepeats)
       }
     }
 
@@ -382,7 +380,6 @@ export default function useRepeater (props, context) {
   const repeaterModels = ref(getInitialRepeaterModels())
 
   watch(() => modelValue.value, (newVal, oldVal) => {
-    // if(JSON.stringify(newVal) !== JSON.stringify(oldVal) && JSON.stringify(newVal) !== JSON.stringify(roughenModel(parseRepeaterModels(state.repeaterModels)))) {
     if(JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
       repeaterModels.value = getInitialRepeaterModels()
     }
@@ -432,8 +429,6 @@ export default function useRepeater (props, context) {
     }
 
     inputHook.updateModelValue.value(roughenModel(parsedItems))
-    if(!isEqual(newVal, oldVal)) {
-    }
   }, {
     deep: true
   })
