@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.3 - 2025-11-12
+
+### :wrench: Bug Fixes
+
+- correct query syntax in isClient method for role checking by @OoBook in https://github.com/unusualify/modularity/commit/a3cff0089b51e5d5c8af48507de0e40324282e3b
+
 ## v0.51.2 - 2025-11-12
 
 ### :rocket: Features
