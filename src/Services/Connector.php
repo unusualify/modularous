@@ -94,11 +94,6 @@ class Connector
      */
     private function parseConnector(string $connector)
     {
-        // 'Package|PackageFeature^uri:tags'
-        // 'User|User^repository:getCountForAll'
-        // 'SystemUser|User^repository:listAll:with=roles,permissions'
-        // 'Package&PackageRegion^repository:list:scopes=hasVendablePackage:appends=number_of_countries,number_of_package_languages'
-
         // 'Package|PackageRegion^repository->list?scopes=hasVendablePackage&appends=number_of_countries,number_of_package_languages';
 
         $exploded = explode($this->firstLevelSeparator, $connector); // ^
@@ -234,6 +229,18 @@ class Connector
                                     }, $values);
 
                                     $args[$argKey] = $values;
+                                } else if (preg_match('/^\{.*\}$/', $parameter)) {
+                                    // it would parse object notation like {name:value,name2:value2} to array [name => value, name2 => value2]
+                                    $parameter = str_replace(['{', '}'], '', $parameter);
+
+                                    $keyValues = explode(',', $parameter);
+                                    $parameter = array_reduce($keyValues, function ($acc, $item) {
+                                        $keyValue = explode(':', $item);
+                                        $acc[$keyValue[0]] = $keyValue[1];
+                                        return $acc;
+                                    }, []);
+
+                                    $args[$argKey] = $parameter;
                                 } else {
                                     $args[$argKey] = $parameter;
                                 }
