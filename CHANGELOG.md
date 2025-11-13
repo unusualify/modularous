@@ -2,6 +2,25 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.5 - 2025-11-13
+
+### :rocket: Features
+
+- enhance parseConnector method to support object notation parsing by @OoBook in https://github.com/unusualify/modularity/commit/cf383031b7fd653eece9435fd17115c13a4caca5
+- integrate newConnector handling in input hydration for polymorphic inputs by @OoBook in https://github.com/unusualify/modularity/commit/cec3b3e87327540f72f31bd71806b8beb62b6e1f
+
+### :wrench: Bug Fixes
+
+- simplify model value updates and remove redundant checks by @OoBook in https://github.com/unusualify/modularity/commit/9b8a7744ab9e091931039f4e44781d6ecf61c080
+
+### :lipstick: Styling
+
+- lint coding styles for v0.51.5 by @OoBook in https://github.com/unusualify/modularity/commit/34e53307fdda251e2dae66f142fa123bbb5b5b43
+
+### :package: Build
+
+- update build artifacts for v0.51.5 by @OoBook in https://github.com/unusualify/modularity/commit/93831b61abdc6fe42ae9227906b419629e1882e5
+
 ## v0.51.4 - 2025-11-12
 
 ### :wrench: Bug Fixes
