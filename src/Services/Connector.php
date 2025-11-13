@@ -229,7 +229,7 @@ class Connector
                                     }, $values);
 
                                     $args[$argKey] = $values;
-                                } else if (preg_match('/^\{.*\}$/', $parameter)) {
+                                } elseif (preg_match('/^\{.*\}$/', $parameter)) {
                                     // it would parse object notation like {name:value,name2:value2} to array [name => value, name2 => value2]
                                     $parameter = str_replace(['{', '}'], '', $parameter);
 
@@ -237,6 +237,7 @@ class Connector
                                     $parameter = array_reduce($keyValues, function ($acc, $item) {
                                         $keyValue = explode(':', $item);
                                         $acc[$keyValue[0]] = $keyValue[1];
+
                                         return $acc;
                                     }, []);
 

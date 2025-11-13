@@ -51,11 +51,11 @@ if (! function_exists('hydrate_input_type')) {
 if (! function_exists('hydrate_input_connector')) {
     function hydrate_input_connector(array &$input, $moduleName = null, $routeName = null)
     {
-        if(isset($input['newConnector'])) {
+        if (isset($input['newConnector'])) {
             $connector = new Connector($input['newConnector']);
 
             $connector->run($action, 'items');
-        } else if (isset($input['connector'])) {
+        } elseif (isset($input['connector'])) {
             // 'moduleName:routeName|uri:edit'
             $targetType = 'uri';
 
@@ -632,10 +632,10 @@ if (! function_exists('format_input')) {
                     $repositoryInstance = null;
 
                     try {
-                        if ( class_exists($repository) ) {
+                        if (class_exists($repository)) {
                             $repositoryInstance = App::make($repository);
                         }
-                    }catch (\Throwable $th) {
+                    } catch (\Throwable $th) {
                         dd($th);
                     }
 

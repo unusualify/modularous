@@ -463,10 +463,10 @@ trait FormSchema
                     $repositoryInstance = null;
 
                     try {
-                        if ( class_exists($repository) ) {
+                        if (class_exists($repository)) {
                             $repositoryInstance = App::make($repository);
                         }
-                    }catch (\Throwable $th) {
+                    } catch (\Throwable $th) {
                         dd($th);
                     }
 
