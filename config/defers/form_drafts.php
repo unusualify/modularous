@@ -114,8 +114,8 @@ return [
             'col' => ['cols' => 12],
             'hideDetails' => true,
             'default' => false,
-            'trueValue' => true,
-            'falseValue' => false,
+            'trueValue' => 1,
+            'falseValue' => 0,
             'ext' => [
                 [
                     'set',
