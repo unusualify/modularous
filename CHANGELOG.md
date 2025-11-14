@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.51.6 - 2025-11-14
+
+### :wrench: Bug Fixes
+
+- update trueValue and falseValue to use integers instead of booleans by @OoBook in https://github.com/unusualify/modularity/commit/f1831ea23e0426999a9b419eafb626b6e1b43c33
+
 ## v0.51.5 - 2025-11-13
 
 ### :rocket: Features
