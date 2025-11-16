@@ -6,12 +6,18 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
+use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
+use Unusualify\Modularity\Entities\Traits\HasStateable;
 use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularity\Tests\ModelTestCase;
 use Unusualify\Modularity\Tests\TestCase;
 
-class ModelEventTest extends TestCase
+class ModelEventTest extends ModelTestCase
 {
     use RefreshDatabase;
 
@@ -21,6 +27,11 @@ class ModelEventTest extends TestCase
     {
         parent::setUp();
 
+        Schema::create('test_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+        });
         // Create a test model instance
         $this->testModel = new TestModel([
             'id' => 1,
@@ -267,11 +278,78 @@ class ModelEventTest extends TestCase
         $eventEndingEvent = new TestEndingEvent($this->testModel);
         $this->assertEquals('modularity.test.ending', $eventEndingEvent->broadcastAs());
     }
+
+    public function test_get_user_returns_null()
+    {
+        $event = new TestModelEvent($this->testModel);
+        $this->assertNull($event->getUser());
+    }
+
+    public function test_has_user_returns_false()
+    {
+        $role = \Modules\SystemUser\Entities\Role::create([
+            'name' => 'Admin',
+            'guard_name' => 'modularity',
+        ]);
+
+        $user = \Unusualify\Modularity\Entities\User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $user->assignRole($role);
+
+        $this->actingAs($user);
+
+        $event = new TestModelEvent($this->testModel);
+        $this->assertTrue($event->hasUser());
+        $this->assertEquals($user, $event->getUser());
+    }
+
+    public function test_get_recent_url_and_previous_url()
+    {
+        $event = new TestModelEvent($this->testModel);
+        $this->assertSame('http://localhost', $event->getRecentUrl());
+
+        URL::shouldReceive('current')->andReturn('https://example.com/current');
+        URL::shouldReceive('previous')->andReturn('https://example.com/previous');
+
+        $event = new TestModelEvent($this->testModel);
+        $this->assertSame('https://example.com/current', $event->getRecentUrl());
+        $this->assertSame('https://example.com/previous', $event->getPreviousUrl());
+    }
+
+    public function test_was_changed()
+    {
+        $event = new TestModelEvent($this->testModel);
+        $this->assertFalse($event->wasChanged('user'));
+
+        $this->testModel->addChangedRelationships('user', new UserModel(['id' => 1, 'name' => 'John']));
+        $event = new TestModelEvent($this->testModel);
+        $this->assertTrue($event->wasChanged());
+        $this->assertTrue($event->wasChanged('user'));
+    }
+
+    public function test_has_stateable()
+    {
+        $this->testModel->stateable_id = 2;
+        $this->testModel->save();
+        $this->testModel->refresh();
+
+        $event = new TestModelEvent($this->testModel);
+        $this->assertTrue($event->stateableChanged);
+        $this->assertEquals('draft', $event->previousStateableState?->code);
+        $this->assertEquals('published', $event->currentStateableState?->code);
+    }
+
 }
 
 // Test model classes
 class TestModel extends Model
 {
+    use ChangeRelationships, HasStateable;
+
     protected $fillable = ['id', 'name', 'email'];
 
     public $timestamps = false;
@@ -279,6 +357,23 @@ class TestModel extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    public static $default_states = [
+        [
+            'code' => 'draft',
+            'name' => [
+                'tr' => 'Taslak',
+                'en' => 'Draft',
+            ],
+        ],
+        [
+            'code' => 'published',
+            'name' => [
+                'tr' => 'Yayınlandı',
+                'en' => 'Published',
+            ],
+        ],
+    ];
 }
 
 class UserModel extends Model

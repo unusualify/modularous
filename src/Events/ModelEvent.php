@@ -157,6 +157,16 @@ abstract class ModelEvent
     }
 
     /**
+     * Check if the user model exists.
+     *
+     * @return bool
+     */
+    public function hasUser()
+    {
+        return $this->user !== null;
+    }
+
+    /**
      * Get the user model.
      *
      * @return \Illuminate\Database\Eloquent\Model
@@ -166,15 +176,6 @@ abstract class ModelEvent
         return $this->user;
     }
 
-    /**
-     * Check if the user model exists.
-     *
-     * @return bool
-     */
-    public function hasUser()
-    {
-        return $this->user !== null;
-    }
 
     /**
      * Get the recent URL.
