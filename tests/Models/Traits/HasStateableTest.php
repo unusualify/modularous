@@ -371,6 +371,10 @@ class HasStateableTest extends ModelTestCase
         // Refresh model to get updated state
         $model->refresh();
 
+        $this->assertTrue($model->stateableChanged());
+        $this->assertEquals($draftState->id, $model->previousStateableState()->id);
+        $this->assertEquals($publishedState->id, $model->currentStateableState()->id);
+
         $this->assertEquals($publishedState->id, $model->stateable->state_id);
     }
 
