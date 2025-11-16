@@ -12,6 +12,8 @@ class PaymentStatusTest extends TestCase
         $expectedCases = [
             'PENDING' => 'PENDING',
             'FAILED' => 'FAILED',
+            'CHECKOUT' => 'CHECKOUT',
+            'PROVISION' => 'PROVISION',
             'COMPLETED' => 'COMPLETED',
             'CANCELLED' => 'CANCELLED',
             'REFUNDED' => 'REFUNDED',
@@ -26,11 +28,13 @@ class PaymentStatusTest extends TestCase
     public function test_all_cases_exist()
     {
         $cases = PaymentStatus::cases();
-        $this->assertCount(5, $cases);
+        $this->assertCount(7, $cases);
 
         $caseValues = array_map(fn ($case) => $case->value, $cases);
         $this->assertContains('PENDING', $caseValues);
         $this->assertContains('FAILED', $caseValues);
+        $this->assertContains('CHECKOUT', $caseValues);
+        $this->assertContains('PROVISION', $caseValues);
         $this->assertContains('COMPLETED', $caseValues);
         $this->assertContains('CANCELLED', $caseValues);
         $this->assertContains('REFUNDED', $caseValues);
@@ -40,6 +44,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals('PENDING', PaymentStatus::get('PENDING'));
         $this->assertEquals('FAILED', PaymentStatus::get('FAILED'));
+        $this->assertEquals('CHECKOUT', PaymentStatus::get('CHECKOUT'));
+        $this->assertEquals('PROVISION', PaymentStatus::get('PROVISION'));
         $this->assertEquals('COMPLETED', PaymentStatus::get('COMPLETED'));
         $this->assertEquals('CANCELLED', PaymentStatus::get('CANCELLED'));
         $this->assertEquals('REFUNDED', PaymentStatus::get('REFUNDED'));
@@ -50,6 +56,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals(__('Pending'), PaymentStatus::PENDING->label());
         $this->assertEquals(__('Failed'), PaymentStatus::FAILED->label());
+        $this->assertEquals(__('Checkout'), PaymentStatus::CHECKOUT->label());
+        $this->assertEquals(__('Provision'), PaymentStatus::PROVISION->label());
         $this->assertEquals(__('Completed'), PaymentStatus::COMPLETED->label());
         $this->assertEquals(__('Cancelled'), PaymentStatus::CANCELLED->label());
         $this->assertEquals(__('Refunded'), PaymentStatus::REFUNDED->label());
@@ -59,6 +67,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals('grey', PaymentStatus::PENDING->color());
         $this->assertEquals('warning', PaymentStatus::FAILED->color());
+        $this->assertEquals('primary', PaymentStatus::CHECKOUT->color());
+        $this->assertEquals('secondary', PaymentStatus::PROVISION->color());
         $this->assertEquals('success', PaymentStatus::COMPLETED->color());
         $this->assertEquals('error', PaymentStatus::CANCELLED->color());
         $this->assertEquals('grey', PaymentStatus::REFUNDED->color());
@@ -68,6 +78,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals('mdi-clock-alert-outline', PaymentStatus::PENDING->icon());
         $this->assertEquals('mdi-close-circle-outline', PaymentStatus::FAILED->icon());
+        $this->assertEquals('mdi-cart-outline', PaymentStatus::CHECKOUT->icon());
+        $this->assertEquals('mdi-progress-clock-outline', PaymentStatus::PROVISION->icon());
         $this->assertEquals('mdi-check-circle-outline', PaymentStatus::COMPLETED->icon());
         $this->assertEquals('mdi-close-circle-outline', PaymentStatus::CANCELLED->icon());
         $this->assertEquals('mdi-credit-card-refund-outline', PaymentStatus::REFUNDED->icon());
@@ -77,6 +89,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('PENDING'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('FAILED'));
+        $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('CHECKOUT'));
+        $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('PROVISION'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('COMPLETED'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('CANCELLED'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::from('REFUNDED'));
@@ -92,6 +106,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('PENDING'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('FAILED'));
+        $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('CHECKOUT'));
+        $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('PROVISION'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('COMPLETED'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('CANCELLED'));
         $this->assertInstanceOf(PaymentStatus::class, PaymentStatus::tryFrom('REFUNDED'));
@@ -121,6 +137,8 @@ class PaymentStatusTest extends TestCase
         $result = match ($status) {
             PaymentStatus::PENDING => 'waiting',
             PaymentStatus::FAILED => 'error',
+            PaymentStatus::CHECKOUT => 'checkout',
+            PaymentStatus::PROVISION => 'provision',
             PaymentStatus::COMPLETED => 'success',
             PaymentStatus::CANCELLED => 'stopped',
             PaymentStatus::REFUNDED => 'returned',
@@ -163,6 +181,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals('PENDING', PaymentStatus::PENDING->name);
         $this->assertEquals('FAILED', PaymentStatus::FAILED->name);
+        $this->assertEquals('CHECKOUT', PaymentStatus::CHECKOUT->name);
+        $this->assertEquals('PROVISION', PaymentStatus::PROVISION->name);
         $this->assertEquals('COMPLETED', PaymentStatus::COMPLETED->name);
         $this->assertEquals('CANCELLED', PaymentStatus::CANCELLED->name);
         $this->assertEquals('REFUNDED', PaymentStatus::REFUNDED->name);
@@ -172,6 +192,8 @@ class PaymentStatusTest extends TestCase
     {
         $this->assertEquals('PENDING', PaymentStatus::PENDING->value);
         $this->assertEquals('FAILED', PaymentStatus::FAILED->value);
+        $this->assertEquals('CHECKOUT', PaymentStatus::CHECKOUT->value);
+        $this->assertEquals('PROVISION', PaymentStatus::PROVISION->value);
         $this->assertEquals('COMPLETED', PaymentStatus::COMPLETED->value);
         $this->assertEquals('CANCELLED', PaymentStatus::CANCELLED->value);
         $this->assertEquals('REFUNDED', PaymentStatus::REFUNDED->value);
