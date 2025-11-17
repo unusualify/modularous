@@ -3,8 +3,11 @@
 namespace Unusualify\Modularity\Tests\Models;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Modules\SystemNotification\Events\AssignmentCreated;
@@ -12,6 +15,7 @@ use Modules\SystemNotification\Events\AssignmentUpdated;
 use Unusualify\Modularity\Entities\Assignment;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
 use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularity\Facades\Filepond;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class AssignmentTest extends ModelTestCase
@@ -289,6 +293,11 @@ class AssignmentTest extends ModelTestCase
 
         $assignment->update(['status' => AssignmentStatus::REJECTED]);
         $this->assertEquals(AssignmentStatus::REJECTED, $assignment->status);
+
+        $this->assertEquals(__('Rejected'), $assignment->status_label);
+        $this->assertEquals('text-error', $assignment->status_color);
+        $this->assertEquals('mdi-close-circle-outline', $assignment->status_icon);
+        $this->assertEquals('error', $assignment->status_icon_color);
     }
 
     public function test_has_fileponds_trait()
@@ -462,5 +471,232 @@ class AssignmentTest extends ModelTestCase
         $this->assertCount(2, $assignments);
         $this->assertTrue($assignments->contains('id', $assignment1->id));
         $this->assertTrue($assignments->contains('id', $assignment2->id));
+    }
+
+    public function test_status_accessors_return_expected_values()
+    {
+        $assignee = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        $assignment = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::PENDING,
+            'description' => 'Accessor check',
+            'due_at' => Carbon::now()->addDay(),
+        ]);
+
+        $this->assertEquals(__('Pending'), $assignment->status_label);
+        $this->assertEquals('text-warning', $assignment->status_color);
+        $this->assertEquals('mdi-clock-outline', $assignment->status_icon);
+        $this->assertEquals('info', $assignment->status_icon_color);
+        $this->assertStringContainsString('v-icon', $assignment->status_vuetify_icon);
+        $this->assertStringContainsString('mdi-clock-outline', $assignment->status_vuetify_icon);
+        $this->assertStringContainsString('info', $assignment->status_vuetify_icon);
+    }
+
+    public function test_status_interval_description_uses_correct_times()
+    {
+        Carbon::setTestNow(Carbon::parse('2025-01-01 12:00:00'));
+
+        $assignee = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        // Pending -> uses due_at
+        $pending = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::PENDING,
+            'description' => 'Pending',
+            'due_at' => Carbon::now()->addDay(), // 2025-01-02
+        ]);
+
+        Storage::fake('local');
+
+        $request = Request::create('/filepond', 'POST', [], [], [
+            'attachments' => UploadedFile::fake()->image('anonymous.jpg', 64, 64),
+        ]);
+        $response = Filepond::createTemporaryFilepond($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $fileUniqueId = $response->getContent();
+
+        Filepond::saveFile($pending, [['uuid' => $fileUniqueId]], 'attachments');
+
+        $pending = $pending->fresh();
+        $this->assertStringContainsString(__('Until'), $pending->status_interval_description);
+        $this->assertStringContainsString('font-weight-bold text-blue-darken-1', $pending->status_interval_description);
+        $this->assertEquals(1, $pending->attachments->count());
+
+        // Completed -> uses completed_at
+        $completed = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::COMPLETED,
+            'description' => 'Completed',
+            'due_at' => Carbon::now()->addDay(),
+            'completed_at' => Carbon::now(),
+        ]);
+        $this->assertStringContainsString(__('Completed'), $completed->status_interval_description);
+        $this->assertStringContainsString('font-weight-bold text-success', $completed->status_interval_description);
+
+        // Cancelled -> uses updated_at
+        $cancelled = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::CANCELLED,
+            'description' => 'Cancelled',
+            'due_at' => Carbon::now()->addDay(),
+        ]);
+
+        $cancelled->touch(); // ensure updated_at is present
+        $this->assertStringContainsString(__('Cancelled'), $cancelled->status_interval_description);
+        $this->assertStringContainsString('font-weight-bold text-warning', $cancelled->status_interval_description);
+
+        $this->assertEquals($assignee->name, $cancelled->assignee_name);
+        $this->assertEquals('/vendor/modularity/jpg/anonymous.jpg', $cancelled->assignee_avatar);
+        $this->assertEquals($assigner->name, $cancelled->assigner_name);
+
+        Carbon::setTestNow(); // clear
+    }
+
+    public function test_due_at_mutator_formats_value()
+    {
+        $assignee = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        $dateString = '2025-02-03 14:15:16';
+
+        $assignment = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'description' => 'Due at format',
+            'due_at' => $dateString,
+        ]);
+
+        $this->assertEquals($dateString, $assignment->getRawOriginal('due_at'));
+        $this->assertInstanceOf(Carbon::class, $assignment->due_at);
+        $this->assertEquals($dateString, $assignment->due_at->format('Y-m-d H:i:s'));
+    }
+
+    public function test_assigner_is_auto_populated_when_authenticated()
+    {
+        $assignee = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        Auth::login($assigner);
+
+        $assignment = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            // no explicit assigner fields
+            'description' => 'Auth assigner',
+            'due_at' => Carbon::now()->addDays(3),
+        ]);
+
+        $this->assertEquals($assigner->id, $assignment->assigner_id);
+        $this->assertEquals(get_class($assigner), $assignment->assigner_type);
+    }
+
+    public function test_attachments_accessor_is_empty_by_default()
+    {
+        $assignee = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        $assignment = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'description' => 'No attachments yet',
+            'due_at' => Carbon::now()->addDays(7),
+        ]);
+
+        $this->assertIsIterable($assignment->attachments);
+        $this->assertCount(0, $assignment->attachments);
+    }
+
+    public function test_assignment_scopes_filter_by_status_and_participants()
+    {
+        $assigneeA = User::factory()->create();
+        $assigneeB = User::factory()->create();
+        $assigner = User::factory()->create();
+        $assignable = User::factory()->create();
+
+        $pending = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assigneeA->id,
+            'assignee_type' => get_class($assigneeA),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::PENDING,
+            'description' => 'P',
+            'due_at' => Carbon::now()->addDay(),
+        ]);
+
+        $completed = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assigneeB->id,
+            'assignee_type' => get_class($assigneeB),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::COMPLETED,
+            'description' => 'C',
+            'due_at' => Carbon::now()->addDay(),
+        ]);
+
+        $cancelled = Assignment::create([
+            'assignable_id' => $assignable->id,
+            'assignable_type' => get_class($assignable),
+            'assignee_id' => $assigneeB->id,
+            'assignee_type' => get_class($assigneeB),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'status' => AssignmentStatus::CANCELLED,
+            'description' => 'X',
+            'due_at' => Carbon::now()->addDay(),
+        ]);
+
+        $this->assertCount(1, Assignment::query()->isPending()->get());
+        $this->assertTrue(Assignment::query()->isPending()->first()->is($pending));
+
+        $this->assertCount(1, Assignment::query()->isCompleted()->get());
+        $this->assertTrue(Assignment::query()->isCompleted()->first()->is($completed));
+
+        $this->assertCount(1, Assignment::query()->isCancelled()->get());
+        $this->assertTrue(Assignment::query()->isCancelled()->first()->is($cancelled));
+
+        $this->assertCount(3, Assignment::query()->isAssigneeType(get_class($assigneeA))->get());
+        $this->assertCount(1, Assignment::query()->isAssignee($assigneeA)->get());
     }
 }

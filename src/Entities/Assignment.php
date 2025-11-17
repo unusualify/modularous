@@ -195,6 +195,6 @@ class Assignment extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.assignments', 'm_assignments');
+        return modularityConfig('tables.assignments', 'um_assignments');
     }
 }
