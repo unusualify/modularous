@@ -36,6 +36,6 @@ trait AssignmentScopes
 
     public function scopeIsCancelled($query)
     {
-        return $query->where('status', AssignmentStatus::REJECTED);
+        return $query->where('status', AssignmentStatus::CANCELLED);
     }
 }
