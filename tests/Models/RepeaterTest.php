@@ -495,4 +495,19 @@ class RepeaterTest extends ModelTestCase
         $decodedJson = json_decode($jsonString, true);
         $this->assertEquals($content, $decodedJson['content']);
     }
+
+    public function test_repeatable_relationship()
+    {
+        $user = User::factory()->create();
+        $repeater = Repeater::create([
+            'repeatable_id' => $user->id,
+            'repeatable_type' => get_class($user),
+            'content' => ['title' => 'Repeater Test'],
+            'role' => 'features',
+            'locale' => 'en',
+        ]);
+
+        $this->assertEquals($user->id, $repeater->repeatable->id);
+        $this->assertEquals(get_class($user), $repeater->repeatable->getMorphClass());
+    }
 }
