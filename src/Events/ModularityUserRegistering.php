@@ -8,5 +8,14 @@ class ModularityUserRegistering
 {
     use SerializesModels;
 
-    public function __construct(public $request) {}
+    protected $isOauth = false;
+
+    public function __construct(public $request, bool $isOauth = false) {
+        $this->isOauth = $isOauth;
+    }
+
+    public function isOauth(): bool
+    {
+        return $this->isOauth;
+    }
 }

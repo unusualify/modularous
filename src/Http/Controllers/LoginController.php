@@ -438,9 +438,9 @@ class LoginController extends Controller
             }
         } else {
             // If the user doesn't exist, create it
-            event(new ModularityUserRegistering($request));
+            event(new ModularityUserRegistering($request, isOauth: true));
             $user = $repository->oauthCreateUser($oauthUser);
-            event(new ModularityUserRegistered($user, $request));
+            event(new ModularityUserRegistered($user, $request, isOauth: true));
             $user->linkProvider($oauthUser, $provider);
 
             // Login and redirect
