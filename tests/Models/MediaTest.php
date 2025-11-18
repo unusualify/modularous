@@ -61,6 +61,27 @@ class MediaTest extends ModelTestCase
         $this->assertEquals('1920x1080', $this->media->dimensions);
     }
 
+    public function test_extra_metadatas_fields()
+    {
+        $this->assertNotContains('test_field', $this->media->getFillable());
+        config(['modularity.media_library.extra_metadatas_fields' => [
+            'test_field' => [
+                'name' => 'test_field',
+                'type' => 'text',
+                'label' => 'Test Field',
+            ]
+        ]]);
+        $media = Media::find($this->media->id);
+        $this->assertContains('test_field', $media->getFillable());
+
+        config(['modularity.media_library.translatable_metadatas_fields' => [
+            'test_field'
+        ]]);
+        $media = Media::find($this->media->id);
+        $this->assertContains('test_field', $media->getFillable());
+        $this->assertEquals('json', $media->getCasts()['test_field']);
+    }
+
     public function test_alt_text_from_filename()
     {
         $testCases = [
@@ -137,6 +158,17 @@ class MediaTest extends ModelTestCase
 
     public function test_mediable_format()
     {
+        $this->media->setTags(['test-tag']);
+
+        config(['modularity.media_library.extra_metadatas_fields' => [
+            'test_field' => [
+                'name' => 'test_field',
+                'type' => 'text',
+                'label' => 'Test Field',
+            ]
+        ]]);
+        $this->media = Media::find($this->media->id);
+
         $expected = [
             'id' => $this->media->id,
             'name' => 'test-image.jpg',
@@ -145,7 +177,9 @@ class MediaTest extends ModelTestCase
             'medium' => ImageService::getUrl('test-uuid-1', ['h' => '430']),
             'width' => 1920,
             'height' => 1080,
-            'tags' => Collection::make([]),
+            'tags' => Collection::make([
+                'test-tag',
+            ])->map(fn($tag) => $tag),
             'deleteUrl' => moduleRoute('media', adminRouteNamePrefix() . '.media-library', 'destroy', ['media' => $this->media->id]),
             'updateUrl' => route(Route::hasAdmin('media-library.media.single-update')),
             'updateBulkUrl' => route(Route::hasAdmin('media-library.media.bulk-update')),
@@ -155,6 +189,7 @@ class MediaTest extends ModelTestCase
                     'caption' => 'Test Caption',
                     'altText' => 'Test Alt Text',
                     'video' => null,
+                    'test_field' => null,
                 ],
                 'custom' => [
                     'caption' => null,
