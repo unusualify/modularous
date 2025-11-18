@@ -4,7 +4,9 @@ namespace Unusualify\Modularity\Tests\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Entities\Filepond;
@@ -129,9 +131,90 @@ class UserTest extends ModelTestCase
 
     }
 
+    public function test_create_user_with_company_name()
+    {
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'saving_company_name' => 'Test Company',
+        ]);
+
+        $this->assertEquals('Test Company', $user->company_name);
+        $this->assertInstanceOf(Company::class, $user->company);
+        $this->assertEquals(1, $user->company->id);
+        $this->assertEquals('test@example.com (Test Company)', $user->email_with_company);
+        $this->assertFalse($user->valid_company);
+    }
+
+    public function test_valid_company_with_respect_to_company_type()
+    {
+        $role = Role::create(['name' => 'client', 'guard_name' => 'modularity']);
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'saving_company_name' => 'Test Company',
+        ]);
+        $user->assignRole($role);
+
+        $this->assertEquals('corporate', $user->company_type);
+
+        // for personal company, address, city, state, zip_code are required
+        $user->company->update([
+            'address' => '123 Test St',
+            'spread_payload' => [
+                'is_personal' => true,
+                'email' => '',
+            ],
+        ]);
+        $user->refresh();
+        $this->assertEquals('personal', $user->company_type);
+        $this->assertFalse($user->valid_company);
+
+        $user->company->update([
+            'city' => 'Test City',
+        ]);
+        $user->refresh();
+        $this->assertFalse($user->valid_company);
+
+        $user->company->update([
+            'state' => 'Test State',
+        ]);
+        $user->refresh();
+        $this->assertFalse($user->valid_company);
+
+        $user->company->update([
+            'zip_code' => '12345',
+        ]);
+        $user->refresh();
+
+        $this->assertFalse($user->valid_company);
+        $this->assertFalse($user->show_billing_banner);
+
+        config(['modularity.use_country_based_vat_rates' => true]);
+        $this->assertTrue($user->show_billing_banner);
+
+        // for corporate company, name, tax_id, email, address, country_id, city, state, zip_code are required
+        $user->company->update([
+            'spread_payload' => [
+                'is_personal' => false,
+                'email' => 'test@example.com',
+            ],
+        ]);
+        $user->refresh();
+        $this->assertFalse($user->valid_company);
+
+        $user->company->update([
+            'tax_id' => '1234567890',
+            'country_id' => 1,
+        ]);
+        $user->refresh();
+        $this->assertTrue($user->valid_company);
+
+        $this->assertFalse($user->show_billing_banner);
+    }
+
     public function test_user_belongs_to_a_company()
     {
-
         $company = Company::create([
             'name' => 'Test Company',
             'address' => '123 Test St',
@@ -154,6 +237,8 @@ class UserTest extends ModelTestCase
 
         $this->assertInstanceOf(Company::class, $user->company);
         $this->assertEquals($company->id, $user->company->id);
+
+        $this->assertEquals($company->name, $user->company_name);
     }
 
     // checks for setImpersonating, stopImpersonating and isImpersonating
@@ -418,5 +503,40 @@ class UserTest extends ModelTestCase
         $this->assertFalse($company2->users->contains($user1));
         $this->assertFalse($company2->users->contains($user2));
 
+    }
+
+    public function test_preferred_locale()
+    {
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        $this->assertEquals(app()->getLocale(), $user->preferredLocale());
+
+        $user->update([
+            'language' => 'tr',
+        ]);
+        $user->refresh();
+        $this->assertEquals('tr', $user->preferredLocale());
+    }
+
+    public function test_notifications()
+    {
+        Notification::fake();
+        $user = User::factory()->create();
+        $token = Str::uuid();
+        $user->sendGeneratePasswordNotification($token);
+        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\GeneratePasswordNotification::class, 1);
+        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\GeneratePasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
+            return $notification->token === $token;
+        });
+
+        $this->assertEquals($user->email, $user->getEmailForPasswordGeneration());
+
+        $user->sendPasswordResetNotification($token);
+        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\ResetPasswordNotification::class, 1);
+        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\ResetPasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
+            return $notification->token === $token;
+        });
     }
 }

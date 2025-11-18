@@ -15,14 +15,6 @@ class Company extends Model
     use HasFactory,
         HasSpreadable;
 
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory(): Factory
-    {
-        return CompanyFactory::new();
-    }
-
     protected $fillable = [
         'id',
         'name',
@@ -35,6 +27,14 @@ class Company extends Model
         'vat_number',
         'tax_id',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return CompanyFactory::new();
+    }
 
     public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -78,36 +78,38 @@ class Company extends Model
     protected function isPersonalCompany(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->companyType == 'personal',
+            get: fn ($value) => $this->company_type == 'personal',
         );
     }
 
     protected function isCorporateCompany(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->companyType == 'corporate',
+            get: fn ($value) => $this->company_type == 'corporate',
         );
     }
 
     protected function isValid(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->isPersonalCompany
-                ? ! (! $this->address
-                || ! $this->city
-                || ! $this->state
-                || ! $this->zip_code
-                || ! $this->country_id
-                )
-                : ! (! $this->name
-                    || ! $this->tax_id
-                    || ! $this->email
-                    || ! $this->address
-                    || ! $this->country_id
-                    || ! $this->city
-                    || ! $this->state
-                    || ! $this->zip_code
-                )
+            get: function ($value) {
+                return $this->isPersonalCompany
+                    ? ! (! $this->address
+                        || ! $this->city
+                        || ! $this->state
+                        || ! $this->zip_code
+                        || ! $this->country_id
+                    )
+                    : ! (! $this->name
+                        || ! $this->tax_id
+                        || ! $this->email
+                        || ! $this->address
+                        || ! $this->country_id
+                        || ! $this->city
+                        || ! $this->state
+                        || ! $this->zip_code
+                    );
+            }
         );
     }
 

@@ -16,10 +16,10 @@ use Spatie\Permission\Traits\HasRoles;
 use Unusualify\Modularity\Database\Factories\UserFactory;
 use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;
 use Unusualify\Modularity\Entities\Traits\Auth\HasOauth;
+use Unusualify\Modularity\Entities\Traits\Core\HasCompany;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
 
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
@@ -32,7 +32,8 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         Notifiable,
         HasFileponds,
         HasOauth,
-        CanRegister;
+        CanRegister,
+        HasCompany;
 
     /**
      * The attributes that are mass assignable.
@@ -73,18 +74,6 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = [
-        'company_name',
-        'name_with_company',
-        'email_with_company',
-        'valid_company',
-        'show_billing_banner',
-    ];
-
-    protected $isCreatingCompany = false;
-
-    protected $bootingCompanyName = null;
-
     protected static function boot()
     {
         parent::boot();
@@ -92,21 +81,6 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         static::creating(function ($model) {
             if ($model->password == null) {
                 $model->password = Hash::make(env('DEFAULT_USER_PASSWORD', 'Hj84TlN!'));
-            }
-
-            if ($model->company_name && $model->company_id == null) {
-                $model->isCreatingCompany = true;
-                $model->bootingCompanyName = $model->company_name;
-            }
-
-            $model->offsetUnset('company_name');
-        });
-
-        static::created(function ($model) {
-            if ($model->isCreatingCompany) {
-                $model->company_id = Company::create([
-                    'name' => $model->bootingCompanyName,
-                ])->id;
             }
         });
 
@@ -118,23 +92,9 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         });
     }
 
-    public function initialize()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        parent::initialize();
-
-        dd(
-            class_uses_recursive($this)
-        );
-
-        $this->mergeFillable([
-            'company_name',
-        ]);
-
-    }
-
-    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Company::class);
+        return UserFactory::new();
     }
 
     public function setImpersonating($id)
@@ -155,87 +115,11 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function isSuperAdmin()
     {
         return $this->hasRole('superadmin');
-
-        return $this->roles === 'SUPERADMIN';
     }
 
     public function isAdmin()
     {
         return $this->hasRole('admin');
-    }
-
-    protected function validCompany(): Attribute
-    {
-        $valid = true;
-
-        if ($this->company_id != null && ($company = $this->company)) {
-            $companyType = 'company';
-
-            try {
-                $companyType = $company->is_personal ? 'personal' : 'company';
-            } catch (\Exception $e) {
-
-            }
-
-            switch ($companyType) {
-                case 'personal':
-                    if (! $company->address
-                        || ! $company->city
-                        || ! $company->state
-                        || ! $company->zip_code
-                        || ! $company->country_id
-                    ) {
-                        $valid = false;
-                    }
-
-                    break;
-                default:
-                    if (! $company->name
-                        || ! $company->tax_id
-                        // || ! $company->phone
-                        || ! $company->email
-                        || ! $company->address
-                        || ! $company->country_id
-                        || ! $company->city
-                        || ! $company->state
-                        || ! $company->zip_code
-                    ) {
-                        $valid = false;
-                    }
-
-                    break;
-            }
-        }
-
-        return Attribute::make(
-            get: fn () => $valid,
-        );
-    }
-
-    protected function companyName(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->company()->exists() ? $this->company->name : null,
-        );
-    }
-
-    protected function nameWithCompany(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->name . ' (' . ($this->company_name ? $this->company_name : __('System User')) . ')',
-        );
-    }
-
-    protected function emailWithCompany(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->email . ' (' . ($this->company_name ? $this->company_name : __('System User')) . ')',
-        );
-    }
-
-    public function scopeCompanyUser($query)
-    {
-        return $query->whereNotNull("{$this->getTable()}.company_id");
     }
 
     public function isClient()
@@ -250,6 +134,11 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
                 ->where('role', 'avatar')
                 ->first()?->mediableFormat()['source'] ?? '/vendor/modularity/jpg/anonymous.jpg',
         );
+    }
+
+    public function getTable()
+    {
+        return modularityConfig('tables.users', parent::getTable());
     }
 
     /**
@@ -273,21 +162,6 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $this->email;
     }
 
-    public function getTable()
-    {
-        return modularityConfig('tables.users', parent::getTable());
-    }
-
-    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
-    {
-        return UserFactory::new();
-    }
-
-    public function sendEmailVerification($token)
-    {
-        $this->notify(new \Unusualify\Modularity\Notifications\EmailVerification($token));
-    }
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \Unusualify\Modularity\Notifications\ResetPasswordNotification($token));
@@ -296,15 +170,5 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function preferredLocale()
     {
         return $this->language ?? app()->getLocale();
-    }
-
-    protected function showBillingBanner(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => ! modularityConfig('disable_billing_banner', false)
-                && $this->isClient()
-                && ! $this->validCompany
-                && Modularity::shouldUseCountryBasedVatRates()
-        );
     }
 }
