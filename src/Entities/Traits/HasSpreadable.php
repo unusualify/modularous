@@ -17,6 +17,8 @@ trait HasSpreadable
 
     protected $spreadableMutatorAttributes = [];
 
+    protected $spreadableKeys = [];
+
     public static function bootHasSpreadable()
     {
         // TODO: Keep the old spreadable data from model and remove attributes based on that don't remove all column fields
@@ -63,7 +65,8 @@ trait HasSpreadable
         self::retrieved(static function (Model $model) {
             // If there's a spread model, load its attributes
             if ($model->spreadable()->exists()) {
-                $jsonData = $model->spreadable->content ?? [];
+                $model->spreadableKeys = array_keys($model->spreadable?->content ?? []);
+                $jsonData = $model->spreadable?->content ?? [];
 
                 // Set spreadable attributes on model, excluding protected attributes
                 // dd($jsonData, $model);
@@ -165,6 +168,11 @@ trait HasSpreadable
             }
         }
 
+    }
+
+    public function getSpreadableKeys(): array
+    {
+        return $this->spreadableKeys;
     }
 
     final public static function getSpreadableSavingKey()
