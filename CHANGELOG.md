@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.52.1 - 2025-11-19
+
+### :wrench: Bug Fixes
+
+- replace hardcoded strings with translatable strings for payment status warnings by @celikerde in https://github.com/unusualify/modularity/commit/641b28ccf7938d12bbc27ee66fcfbb7871a0b3c2
+
+### :lipstick: Styling
+
+- lint coding styles for v0.52.0 by @OoBook in https://github.com/unusualify/modularity/commit/c472f84843e1bb97d14f0480de36661e9346cdca
+
 ## v0.52.0 - 2025-11-19
 
 ### :rocket: Features
