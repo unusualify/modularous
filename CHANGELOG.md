@@ -2,6 +2,40 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.52.0 - 2025-11-19
+
+### :rocket: Features
+
+- add support for OAuth registration in ModularityUserRegistering and ModularityUserRegistered events by @OoBook in https://github.com/unusualify/modularity/commit/7e4a6180f07360b2a535cc81a2aca3509300a45c
+- add spreadableKeys property and method to retrieve keys from spreadable content by @OoBook in https://github.com/unusualify/modularity/commit/db8035bfd08854f77ce989879f6af43af31a242a
+
+### :wrench: Bug Fixes
+
+- update scopeIsCancelled to reflect correct status as CANCELLED by @OoBook in https://github.com/unusualify/modularity/commit/540bbe7e01018ac23df27e7d2041ad40bc913850
+- update table name in getTable method and enhance tests for assignment status accessors and relationships by @OoBook in https://github.com/unusualify/modularity/commit/443dbf72c9ef91e89057abf8f89762b57c2fa26b
+- add spreadableClass property to extend ModularityCompany functionality by @OoBook in https://github.com/unusualify/modularity/commit/edab9509f8a0d1dc86857abddad991d2179dac9c
+
+### :recycle: Refactors
+
+- rename user-related methods for clarity and update tests for user existence checks by @OoBook in https://github.com/unusualify/modularity/commit/f3d14bad2e7dd9502e4931c690b38eaa3397da34
+- remove unused route binding methods to streamline code by @OoBook in https://github.com/unusualify/modularity/commit/d3078cf774a51678ec81a808dd6fbab6e29b0b27
+- implement HasCompany trait for user-company relationship and enhance company validation logic by @OoBook in https://github.com/unusualify/modularity/commit/e8db90c69f5187fafdcd045a4a2ac9197b0cbcd5
+
+### :lipstick: Styling
+
+- lint coding styles for v0.52.0 by @OoBook in https://github.com/unusualify/modularity/commit/458f6a0657b26cd87a8684130409acce1974b524
+
+### :white_check_mark: Testing
+
+- add CHECKOUT and PROVISION statuses to enum tests by @OoBook in https://github.com/unusualify/modularity/commit/b2f9a132dce29d4dc4698f65e2d834da6c819435
+- add assertions for stateable state changes in updating check by @OoBook in https://github.com/unusualify/modularity/commit/e0e9501bea05dc731c89d1e82a211d864423ed41
+- add test for repeatable relationship and create TaggedTest for table retrieval by @OoBook in https://github.com/unusualify/modularity/commit/ff103a647ad501c463a2f3763849c8765b7ba04b
+- add tests for extra metadata fields and ensure proper handling in fillable attributes by @OoBook in https://github.com/unusualify/modularity/commit/26f83b6223b0692133166708ae6583b152c1f68a
+
+### :beers: Other Stuff
+
+- add docblock for spreadableClass property to improve code documentation by @OoBook in https://github.com/unusualify/modularity/commit/8d7161b2bfb6cba26bf7fc35ad686baae31d7daf
+
 ## v0.51.6 - 2025-11-14
 
 ### :wrench: Bug Fixes
