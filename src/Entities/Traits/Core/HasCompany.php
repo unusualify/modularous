@@ -16,7 +16,7 @@ trait HasCompany
     public static function bootHasCompany()
     {
         static::creating(function ($model) {
-            if($model->{$model->savingCompanyFieldName()}){
+            if ($model->{$model->savingCompanyFieldName()}) {
                 $model->isCreatingCompany = true;
                 $model->bootingCompanyName = $model->{$model->savingCompanyFieldName()};
             }
@@ -28,7 +28,7 @@ trait HasCompany
         });
 
         static::saved(function ($model) {
-            if($model->isCreatingCompany){
+            if ($model->isCreatingCompany) {
                 $model->updateQuietly(['company_id' => Company::create([
                     'name' => $model->bootingCompanyName,
                 ])->id]);
@@ -51,7 +51,7 @@ trait HasCompany
                 'name_with_company',
                 'email_with_company',
                 'valid_company',
-                'show_billing_banner'
+                'show_billing_banner',
             ]));
         }
     }
