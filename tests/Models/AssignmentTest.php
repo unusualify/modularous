@@ -3,13 +3,13 @@
 namespace Unusualify\Modularity\Tests\Models;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 use Modules\SystemNotification\Events\AssignmentCreated;
 use Modules\SystemNotification\Events\AssignmentUpdated;
 use Unusualify\Modularity\Entities\Assignment;

@@ -10,7 +10,8 @@ class ModularityUserRegistering
 
     protected $isOauth = false;
 
-    public function __construct(public $request, bool $isOauth = false) {
+    public function __construct(public $request, bool $isOauth = false)
+    {
         $this->isOauth = $isOauth;
     }
 

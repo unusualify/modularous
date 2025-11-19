@@ -176,7 +176,6 @@ abstract class ModelEvent
         return $this->user;
     }
 
-
     /**
      * Get the recent URL.
      *

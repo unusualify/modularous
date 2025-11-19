@@ -11,7 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
-use Modules\SystemUser\Entities\Company;
 use Spatie\Permission\Traits\HasRoles;
 use Unusualify\Modularity\Database\Factories\UserFactory;
 use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;

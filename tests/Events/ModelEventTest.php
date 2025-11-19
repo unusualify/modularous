@@ -15,7 +15,6 @@ use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
 use Unusualify\Modularity\Entities\Traits\HasStateable;
 use Unusualify\Modularity\Events\ModelEvent;
 use Unusualify\Modularity\Tests\ModelTestCase;
-use Unusualify\Modularity\Tests\TestCase;
 
 class ModelEventTest extends ModelTestCase
 {
@@ -342,7 +341,6 @@ class ModelEventTest extends ModelTestCase
         $this->assertEquals('draft', $event->previousStateableState?->code);
         $this->assertEquals('published', $event->currentStateableState?->code);
     }
-
 }
 
 // Test model classes

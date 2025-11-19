@@ -69,13 +69,13 @@ class MediaTest extends ModelTestCase
                 'name' => 'test_field',
                 'type' => 'text',
                 'label' => 'Test Field',
-            ]
+            ],
         ]]);
         $media = Media::find($this->media->id);
         $this->assertContains('test_field', $media->getFillable());
 
         config(['modularity.media_library.translatable_metadatas_fields' => [
-            'test_field'
+            'test_field',
         ]]);
         $media = Media::find($this->media->id);
         $this->assertContains('test_field', $media->getFillable());
@@ -165,7 +165,7 @@ class MediaTest extends ModelTestCase
                 'name' => 'test_field',
                 'type' => 'text',
                 'label' => 'Test Field',
-            ]
+            ],
         ]]);
         $this->media = Media::find($this->media->id);
 
@@ -179,7 +179,7 @@ class MediaTest extends ModelTestCase
             'height' => 1080,
             'tags' => Collection::make([
                 'test-tag',
-            ])->map(fn($tag) => $tag),
+            ])->map(fn ($tag) => $tag),
             'deleteUrl' => moduleRoute('media', adminRouteNamePrefix() . '.media-library', 'destroy', ['media' => $this->media->id]),
             'updateUrl' => route(Route::hasAdmin('media-library.media.single-update')),
             'updateBulkUrl' => route(Route::hasAdmin('media-library.media.bulk-update')),
