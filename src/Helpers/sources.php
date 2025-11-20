@@ -238,12 +238,23 @@ if (! function_exists('get_modularity_impersonation_config')) {
 
         $userRepository = app()->make(\Modules\SystemUser\Repositories\UserRepository::class);
 
+        $defaultInput = modularityConfig('default_input');
+
         return [
             'active' => $activeUser ? $activeUser->isSuperAdmin() || $activeUser->isImpersonating() : false,
-            'users' => $canFetchUsers ? $userRepository->whereNot(fn ($query) => $query->role(['superadmin']))->get(['id', 'name', 'email', 'company_id'])->toArray() : [],
             'impersonated' => $activeUser ? $activeUser->isImpersonating() : false,
             'stopRoute' => route(Route::hasAdmin('impersonate.stop')),
             'route' => route(Route::hasAdmin('impersonate'), ['id' => ':id']),
+
+            'fetchEndpoint' => route(Route::hasAdmin('admin.system.user.index', [
+                'eager' => ['roles'], 'appends' => ['company_name'],
+                'column' => ['id', 'name', 'email', 'company_id'],
+                'appends' => ['email_with_company'],
+            ])),
+            'density' => $defaultInput['density'] ?? 'comfortable',
+            'variant' => $defaultInput['variant'] ?? 'outlined',
+            'itemTitle' => 'email_with_company',
+            'searchKeys' => ['name', 'email', 'company.name'],
         ];
     }
 }

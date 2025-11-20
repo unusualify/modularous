@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, computed } from 'vue'
+import { watch, ref, computed, nextTick } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -27,6 +27,26 @@ const props = defineProps({
   stopRoute: {
     type: String,
     default: '/users/impersonate/stop'
+  },
+  fetchEndpoint: {
+    type: String,
+    default: null
+  },
+  itemTitle: {
+    type: String,
+    default: 'name'
+  },
+  itemValue: {
+    type: String,
+    default: 'id'
+  },
+  density: {
+    type: String,
+    default: 'comfortable'
+  },
+  variant: {
+    type: String,
+    default: 'outlined'
   }
 })
 const emit = defineEmits(['update:modelValue'])
@@ -43,11 +63,18 @@ const show = computed({
 })
 
 watch(selected, function (newValue, oldValue) {
-
+  if(newValue) {
+    nextTick(() => {
+      window.location.href = impersonateRoute.value
+    })
+  }
 })
+
 const impersonateRoute = computed(() => {
   return props.route.replace(':id', selected.value)
 })
+
+
 </script>
 <template>
   <v-bottom-sheet v-model="show">
@@ -68,7 +95,7 @@ const impersonateRoute = computed(() => {
       <v-btn v-if="impersonated" color="red" :href="stopRoute">
           Stop Impersonating
       </v-btn>
-      <v-select v-if="!impersonated"
+      <!-- <v-select v-if="!impersonated"
         class="mt-5"
         v-model="selected"
         :items="users"
@@ -81,8 +108,22 @@ const impersonateRoute = computed(() => {
         <template v-slot:item="{ props: itemProps, item }">
           <v-list-item v-bind="itemProps" :title="`${item.raw.name} (${item.raw.company_name})`" :subtitle="item.raw.email"></v-list-item>
         </template>
-      </v-select>
-      <v-btn v-if="!impersonated" :href="impersonateRoute" :disabled="!selected">Impersonate</v-btn>
+      </v-select> -->
+      <v-input-browser v-if="!impersonated"
+        class="mt-5"
+        v-model="selected"
+
+        :endpoint="fetchEndpoint"
+        :variant="variant"
+        :density="density"
+        :item-title="itemTitle"
+        :item-value="itemValue"
+        >
+        <template v-slot:item="{ item }">
+          <v-list-item :title="`${item.raw.name} (${item.raw.company_name})`" :subtitle="item.raw.email"></v-list-item>
+        </template>
+      </v-input-browser>
+      <!-- <v-btn v-if="!impersonated" :href="impersonateRoute" :disabled="!selected">Impersonate</v-btn> -->
     </div>
   </v-bottom-sheet>
 
