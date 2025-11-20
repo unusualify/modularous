@@ -97,7 +97,7 @@ trait TagsTrait
 
     protected function filterTagsTrait(&$query, &$scopes)
     {
-        $this->addRelationFilterScope($query, $scopes, 'tag_id', 'tags');
+        $this->addRelationFilterScopeByRelationName($query, $scopes, 'tag_id', 'tags');
     }
 
     protected function getTagsQuery()

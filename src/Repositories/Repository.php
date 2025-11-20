@@ -499,6 +499,23 @@ abstract class Repository implements RepositoryContract
                 $value = explode(',', $value);
             }
 
+            $query->whereHas($scopeRelation, function ($query) use ($value, $scopeField) {
+                $query->whereIn($scopeField, $value);
+            });
+            unset($scopes[$scopeField]);
+        }
+    }
+
+    public function addRelationFilterScopeByRelationName($query, &$scopes, $scopeField, $scopeRelation)
+    {
+        if (isset($scopes[$scopeField])) {
+            // $value
+            // '1' or '1,7' or [1,7,9,11]
+            $value = $scopes[$scopeField];
+            if (is_string($value)) {
+                $value = explode(',', $value);
+            }
+
             $relationNotation = "$scopeField";
             try {
                 // code...
