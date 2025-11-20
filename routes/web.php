@@ -40,9 +40,6 @@ Route::prefix('register')->as('register.')
     });
 
 Route::singleton('profile', 'ProfileController', ['names' => ['edit' => 'profile']]);
-Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
-    Route::get('show', [ProfileController::class, 'display'])->name('show');
-});
 Route::put('profile/company', 'ProfileController@updateCompany')->name('profile.company');
 
 Route::resource('', 'DashboardController', ['as' => 'dashboard', 'names' => ['index' => 'dashboard']])->only(['index']);
