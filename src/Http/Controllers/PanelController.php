@@ -803,36 +803,6 @@ abstract class PanelController extends CoreController
 
         return true;
     }
-
-    // /**
-    //  * @return void
-    //  */
-    // public function __afterConstruct(...$args)
-    // {
-    //     foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-    //         $this->$method(...$args);
-    //     }
-    // }
-
-    // /**
-    //  * @return void
-    //  */
-    // public function __beforeConstruct(...$args)
-    // {
-    //     foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-    //         $this->$method(...$args);
-    //     }
-    // }
-
-    /**
-     * @param array $input
-     * @return void
-     */
-    protected function fireEvent__($input = [])
-    {
-        fireCmsEvent('cms-module.saved', $input);
-    }
-
     /**
      * @return Collection|Block[]
      */

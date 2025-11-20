@@ -348,8 +348,6 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     public function bulkDelete()
     {
         if ($this->repository->bulkDelete(explode(',', $this->request->get('ids')))) {
-            // $this->fireEvent();
-
             return $this->respondWithSuccess(___('listing.bulk-delete.success', ['modelTitle' => $this->modelTitle]));
         }
 

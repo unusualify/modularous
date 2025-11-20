@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\ModularityLog;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageEvents;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
@@ -23,7 +22,7 @@ use Unusualify\Modularity\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
-    use ManagePrevious, ManageUtilities, ManageEvents, ManageSingleton, ManageInertia;
+    use ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia;
 
     /**
      * @var string
@@ -199,9 +198,6 @@ abstract class BaseController extends PanelController
         $item = $this->repository->create($input + $optionalParent, $this->getPreviousRouteSchema());
 
         activity()->performedOn($item)->log('created');
-
-        // $this->handleActionEvent($item, __FUNCTION__);
-        // $this->fireEvent($input);
 
         Session::put($this->routeName . '_retain', true);
 
@@ -379,8 +375,6 @@ abstract class BaseController extends PanelController
 
             // $this->handleActionEvent($item, __FUNCTION__);
 
-            // $this->fireEvent();
-
             if (isset($input['cmsSaveType'])) {
                 if (Str::endsWith($input['cmsSaveType'], '-close')) {
                     return $this->respondWithRedirect($this->getBackLink());
@@ -455,13 +449,10 @@ abstract class BaseController extends PanelController
 
         $item = $this->repository->getById($id);
 
-        // $this->handleActionEvent($item, __FUNCTION__);
-
         $moduleName = $this->module->getSnakeName();
         $routeName = Str::snake($this->routeName);
 
         if ($this->repository->delete($id)) {
-            // $this->fireEvent();
             // activity()->performedOn($item)->log('deleted');
 
             $deleteSuccessTranslation = Collection::make([
@@ -503,9 +494,6 @@ abstract class BaseController extends PanelController
         $routeName = Str::snake($this->routeName);
 
         if ($this->repository->forceDelete($this->request->get('id'))) {
-            // $this->fireEvent();
-            // $this->handleActionEvent($item, __FUNCTION__);
-
             $forceDeleteSuccessTranslation = Collection::make([
                 "$moduleName::messages.$routeName.force-delete-success",
                 "modules.$moduleName.$routeName.messages.force-delete-success",
@@ -538,9 +526,7 @@ abstract class BaseController extends PanelController
     {
 
         if ($this->repository->restore($this->request->get('id'))) {
-            // $this->fireEvent();
             activity()->performedOn($this->repository->getById($this->request->get('id')))->log('restored');
-            // $this->handleActionEvent($this->repository->getById($this->request->get('id')), __FUNCTION__);
 
             return $this->respondWithSuccess(__('listing.restore.success', ['modelTitle' => $this->modelTitle]), attributes: ['location' => 'top']);
         }
@@ -1015,7 +1001,6 @@ abstract class BaseController extends PanelController
         $item = $this->repository->getById($id);
 
         if ($newItem = $this->repository->duplicate($id, $this->titleColumnKey, $this->formSchema)) {
-            // $this->fireEvent();
             activity()->performedOn($item)->log('duplicated');
 
             return Response::json([
