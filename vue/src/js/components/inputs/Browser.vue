@@ -19,6 +19,14 @@ const props = defineProps({
   ...makeInputProps(),
   ...makeSelectProps(),
   ...makePaginationProps(),
+  variant: {
+    type: String,
+    default: 'outlined'
+  },
+  density: {
+    type: String,
+    default: 'comfortable'
+  },
   rules: {
     type: [String, Array],
     default: () => []
@@ -239,10 +247,12 @@ const performSearch = async () => {
         : searchResult[props.itemValue] === initialValue.value)
 
       if(foundIndex === -1) {
-        combinedElements.unshift({
-          ...(props.returnObject ? initialValue.value : initialObject.value),
-          [props.itemValue]: props.returnObject ? initialValue.value[objectDefinerKey] : initialValue.value,
-        })
+        if(initialValue.value) {
+          combinedElements.unshift({
+            ...(props.returnObject ? initialValue.value : initialObject.value),
+            [props.itemValue]: props.returnObject ? initialValue.value[objectDefinerKey] : initialValue.value,
+          })
+        }
       }else{
         let sourceItem = combinedElements[foundIndex]
         combinedElements[foundIndex] = {
@@ -407,19 +417,21 @@ onMounted(() => {
       <v-combobox
         v-model="comboboxModel"
         v-bind="$lodash.pick(boundProps, [
-          'variant', 'density', 'color', 'disabled', 'error', 'errorMessages',
+          'color', 'disabled', 'error', 'errorMessages',
           'prependIcon', 'appendIcon', 'prependInnerIcon', 'appendInnerIcon',
           'itemTitle', 'itemValue'
         ])"
+        :variant="variant"
+        :density="density"
+        :itemValue="itemValue"
+        :itemTitle="itemTitle"
         :return-object="returnObject"
         :clearable="false"
         :label="label"
         :items="elements"
         append-inner-icon="mdi-magnify"
         readonly
-
         chips
-
         @click:append-inner="performSearch"
         @click="openDialog"
         @keyup.enter="performSearch"
@@ -433,7 +445,7 @@ onMounted(() => {
             size="small"
             variant="flat"
             label
-            />
+          />
             <!-- closable
             @click:close="removeSelection(index)" -->
         </template>
@@ -453,7 +465,9 @@ onMounted(() => {
           <div style="height: 500px !important;">
             <v-text-field
               v-model="searchModel"
-              v-bind="$lodash.pick(boundProps, ['variant', 'density', 'color'])"
+              v-bind="$lodash.pick(boundProps, ['color'])"
+              :variant="variant"
+              :density="density"
               @keyup.enter="performSearch"
               @click:append-inner="performSearch"
               append-inner-icon="mdi-magnify"
@@ -468,6 +482,7 @@ onMounted(() => {
                 :multiple="multiple"
                 select-strategy="classic"
               >
+                {{ console.log('elements', elements) }}
                 <v-list-item v-for="item in elements"
                   :key="`${item[props.itemValue]}-${itemIsClickable(item)}`"
                   @click="toggleItemSelection(item)"
@@ -486,7 +501,24 @@ onMounted(() => {
                   </template>
 
                   <v-list-item-title>
-                    {{ item[props.itemTitle] }}
+                    <slot name="item" v-bind="{
+                        item: {
+                          props: {
+                            title: item[props.itemTitle],
+                            value: item[props.itemValue],
+                          },
+                          raw: item,
+                          title: item[props.itemTitle],
+                          value: item[props.itemValue],
+                        },
+                        itemProps: {
+                          title: item[props.itemTitle],
+                          value: item[props.itemValue],
+                        },
+                      }"
+                    >
+                      {{ item[props.itemTitle] }}
+                    </slot>
                     <v-chip
                       v-if="isInitialItem(item)"
                       color='red-lighten-3'
