@@ -300,10 +300,6 @@ trait MethodTransformers
 
         $this->setColumns($chunkedInputs);
 
-        if (method_exists($object, 'setRelationsShowFormat')) {
-            $object->setRelationsShowFormat();
-        }
-
         $fields = $object->attributesToArray();
 
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
@@ -440,6 +436,8 @@ trait MethodTransformers
                             $foreignKey = $this->$method($related, $scopes, $value);
                         }
                         $scopes[$foreignKey] = $value;
+
+                        // dd($column, $relationName, $foreignKey, $value, $scopes);
                         $this->addRelationFilterScope($query, $scopes, $foreignKey, $relationName);
                     }
                 }
@@ -473,45 +471,6 @@ trait MethodTransformers
             } elseif (is_string($value) && $this->model->hasScope($value)) {
                 // $query->{$this->getCamelCase($value)}(...$arguments);
                 $query->{$this->getCamelCase($value)}(...$arguments);
-            } else {
-                if (is_array($value)) {
-                    $query->whereIn($column, $value);
-                } elseif ($column[0] == '%') {
-                    $value && ($value[0] == '!') ? $query->where(mb_substr($column, 1), "not $likeOperator", '%' . mb_substr($value, 1) . '%') : $query->where(mb_substr($column, 1), $likeOperator, '%' . $value . '%');
-                } elseif (isset($value[0]) && $value[0] == '!') {
-                    $query->where($column, '<>', mb_substr($value, 1));
-                } elseif ($value !== '') {
-                    $query->where($column, $value);
-                }
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function filterBack($query, array $scopes = [])
-    {
-        $likeOperator = $this->getLikeOperator();
-
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            $this->$method($query, $scopes);
-        }
-
-        unset($scopes['search']);
-
-        if (isset($scopes['exceptIds'])) {
-            $query->whereNotIn($this->model->getTable() . '.id', $scopes['exceptIds']);
-            unset($scopes['exceptIds']);
-        }
-
-        foreach ($scopes as $column => $value) {
-
-            if (method_exists($this->model, 'scope' . ucfirst($column))) {
-                $query->$column();
             } else {
                 if (is_array($value)) {
                     $query->whereIn($column, $value);
