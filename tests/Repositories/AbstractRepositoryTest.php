@@ -311,7 +311,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_create()
     {
-        $owner = Owner::create(['name' => 'Test Owner']);
+        $owner = Owner::create(['name' => 'Test Owner', ]);
         $schema = [
             [
                 'name' => 'name',
@@ -323,7 +323,14 @@ class AbstractRepositoryTest extends RepositoryTestCase
             ],
         ];
 
-        $object = $this->repository->create(['name' => 'Test', 'owner_id' => $owner->id], $schema);
+        $object = $this->repository->create([
+            'name' => 'Test',
+            'owner_id' => $owner->id,
+            'created_at' => 'ss',
+            'updated_at' => ''
+        ], $schema);
+
+        $this->assertEquals(false, $this->repository->dispatchEvent($object, 'null'));
 
         $this->assertEquals('Test', $object->name);
         $this->assertEquals($owner->id, $object->owner_id);

@@ -44,9 +44,10 @@ trait Dates
      */
     public function prepareDatesField($fields, $f)
     {
-        if ($date = Carbon::parse($fields[$f])) {
+        try {
+            $date = Carbon::parse($fields[$f]);
             $fields[$f] = $date->format('Y-m-d H:i:s');
-        } else {
+        } catch (\Throwable $e) {
             $fields[$f] = null;
         }
 

@@ -33,17 +33,10 @@ trait DispatchEvents
         });
     }
 
-    public function fireEventIf($condition, $event, $data = [])
-    {
-        if ($condition) {
-            $this->fireEvent($event, $data);
-        }
-    }
-
     public function dispatchEvent($model, $action)
     {
         if (! isset($this->events[$action])) {
-            return;
+            return false;
         }
 
         $event = $this->events[$action];
@@ -54,5 +47,7 @@ trait DispatchEvents
         }
 
         $this->commitEvent($event, $model, $serializedData);
+
+        return true;
     }
 }
