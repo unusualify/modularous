@@ -39,7 +39,7 @@ class AuthorizableTraitTest extends RepositoryTestCase
             });
         });
 
-        $filters = $mock->getTableFiltersAuthorizableTrait([]);
+        $filters = $mock->getTableFilters([]);
 
         $this->assertCount(1, $filters);
         $slugs = array_column($filters, 'slug');

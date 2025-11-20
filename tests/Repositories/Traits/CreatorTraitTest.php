@@ -174,12 +174,7 @@ class CreatorTraitTest extends RepositoryTestCase
 
     public function test_prepend_form_schema_returns_creator_component(): void
     {
-        $repo = new class
-        {
-            use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
-        };
-
-        $schema = $repo->prependFormSchemaCreatorTrait();
+        $schema = $this->repository->prependFormSchema();
         $this->assertIsArray($schema);
         $this->assertTrue(isset($schema[0]) && is_object($schema[0]));
         $this->assertSame('creator', $schema[0]->type);

@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Repositories;
 
 use Mockery;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class AbstractRepositoryTest extends RepositoryTestCase
@@ -232,6 +234,17 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
         // No name filter applied, returns all
         $this->assertSame([1, 2, 3, 4, 5], $ids);
+    }
+
+    public function test_filter_add_relation_filter_scope(): void
+    {
+        $this->seedFilterFixtures();
+
+        $query = $this->repository->newQuery();
+        $scopes = ['addRelationOwner' => [1]];
+
+        $result = $this->repository->filter($query, $scopes)->pluck('id')->all();
+        $this->assertSame([1, 2, 5], $result);
     }
 
     public function test_add_like_filter_scope(): void
@@ -596,6 +609,105 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->repository->updateOneToMany($m, $fields, 'notes', 'note_ids', 'external_id');
 
         $this->assertSame([20, 30], $m->notes()->pluck('external_id')->sort()->values()->all());
+    }
+
+    public function test_get_count_by_status_slug(): void
+    {
+        // Ensure published column exists for scopes
+        Schema::table('test_models', function (Blueprint $table) {
+            if (! Schema::hasColumn('test_models', 'published')) {
+                $table->boolean('published')->default(false);
+            }
+        });
+
+        $ownerA = Owner::create(['name' => 'Owner A']);
+        $ownerB = Owner::create(['name' => 'Owner B']);
+
+        // Create records with varying published status
+        (new TestModel)->forceFill([
+            'name' => 'P1',
+            'owner_id' => $ownerA->id,
+            'is_active' => true,
+            'description' => null,
+            'published' => true,
+        ])->save();
+
+        (new TestModel)->forceFill([
+            'name' => 'P2',
+            'owner_id' => $ownerB->id,
+            'is_active' => true,
+            'description' => null,
+            'published' => true,
+        ])->save();
+
+        (new TestModel)->forceFill([
+            'name' => 'D1',
+            'owner_id' => $ownerA->id,
+            'is_active' => false,
+            'description' => null,
+            'published' => false,
+        ])->save();
+
+        (new TestModel)->forceFill([
+            'name' => 'D2',
+            'owner_id' => $ownerB->id,
+            'is_active' => false,
+            'description' => null,
+            'published' => false,
+        ])->save();
+
+        $trashed = (new TestModel)->forceFill([
+            'name' => 'P3-TRASH',
+            'owner_id' => $ownerA->id,
+            'is_active' => true,
+            'description' => null,
+            'published' => true,
+        ]);
+        $trashed->save();
+        $trashed->delete();
+
+        // Repository counts without scope
+        $this->assertSame(4, $this->repository->getCountByStatusSlug('all'));
+        $this->assertSame(2, $this->repository->getCountByStatusSlug('published'));
+        $this->assertSame(2, $this->repository->getCountByStatusSlug('draft'));
+        $this->assertSame(1, $this->repository->getCountByStatusSlug('trash'));
+
+        // Repository counts scoped to Owner B
+        $this->assertSame(2, $this->repository->getCountByStatusSlug('all', ['owner_id' => $ownerB->id]));
+        $this->assertSame(1, $this->repository->getCountByStatusSlug('published', ['owner_id' => $ownerB->id]));
+        $this->assertSame(1, $this->repository->getCountByStatusSlug('draft', ['owner_id' => $ownerB->id]));
+        $this->assertSame(0, $this->repository->getCountByStatusSlug('trash', ['owner_id' => $ownerB->id]));
+        $this->assertSame(0, $this->repository->getCountByStatusSlug('_deneme', ['owner_id' => $ownerB->id]));
+    }
+
+    public function test_get_show_fields(): void
+    {
+        $owner = Owner::create(['name' => 'Test Owner', ]);
+        $schema = [
+            [
+                'name' => 'name',
+                'type' => 'text',
+            ],
+            [
+                'name' => 'owner_id',
+                'type' => 'select',
+            ],
+        ];
+
+        $object = $this->repository->create([
+            'name' => 'Test',
+            'owner_id' => $owner->id,
+            'created_at' => 'ss',
+            'updated_at' => ''
+        ], $schema);
+
+        $fields = $this->repository->getShowFields($object, $schema);
+
+        $this->assertEquals('Test', $fields['name']);
+        $this->assertEquals($owner->id, $fields['owner_id']);
+        $this->assertEquals(null, $fields['description']);
+        $this->assertEquals(1, $fields['position']);
+        $this->assertEquals(false, $fields['is_active']);
     }
 
     /**

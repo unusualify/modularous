@@ -19,7 +19,7 @@ class AssignmentTraitTest extends RepositoryTestCase
 
         $this->loadRepositorySources();
 
-        $this->repository = App::make(TestRepository::class);
+        $this->repository = App::make(AssignmentTestRepository::class);
     }
 
     public function test_set_columns_assignment_trait_collects_assignment_inputs()
@@ -79,11 +79,6 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_get_table_filters_assignment_trait()
     {
-        $repo = new class
-        {
-            use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
-        };
-
         $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
         $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
 
@@ -93,7 +88,7 @@ class AssignmentTraitTest extends RepositoryTestCase
         $editor->assignRole('editor');
 
         $this->actingAs($admin);
-        $filters = $repo->getTableFiltersAssignmentTrait();
+        $filters = $this->repository->getTableFilters();
 
         $this->assertCount(8, $filters);
         $this->assertEquals([
@@ -119,8 +114,8 @@ class AssignmentTraitTest extends RepositoryTestCase
         ], array_column($filters, 'params'));
 
         $this->actingAs($editor);
-        $repo->setAllowableUser($editor);
-        $filters = $repo->getTableFiltersAssignmentTrait();
+        $this->repository->setAllowableUser($editor);
+        $filters = $this->repository->getTableFilters();
         $this->assertCount(6, $filters);
         $this->assertEquals([
             'my-assignments',
@@ -164,7 +159,7 @@ class TestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
     use Assignable;
 }
 
-class TestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class AssignmentTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
 {
     use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
 
