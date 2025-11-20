@@ -494,7 +494,7 @@ trait FormSchema
                         'name' => $polymorphic['name'],
                         'type' => $repositoryInstance ? $repositoryInstance->getModel()::class : null,
                         'items' => $items,
-                        ...($polymorphic['rules'] ? ['rules' => $polymorphic['rules']] : []),
+                        ...(isset($polymorphic['rules']) ? ['rules' => $polymorphic['rules']] : []),
                     ];
                 })->toArray();
 
@@ -514,7 +514,7 @@ trait FormSchema
                             'items' => $polymorphic['items'],
                         ];
                     })->toArray(),
-                    ...($input['rules'] ? ['rules' => $input['rules']] : []),
+                    ...(isset($input['rules']) ? ['rules' => $input['rules']] : []),
                 ];
 
                 $idInput = [
@@ -525,7 +525,7 @@ trait FormSchema
                     'itemValue' => 'id',
                     'itemTitle' => 'name',
                     'items' => [],
-                    ...($input['rules'] ? ['rules' => $input['rules']] : []),
+                    ...(isset($input['rules']) ? ['rules' => $input['rules']] : []),
                 ];
 
                 $input = [
