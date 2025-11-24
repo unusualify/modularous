@@ -207,6 +207,115 @@ class FilesTraitTest extends RepositoryTestCase
 
         $this->assertSame(0, $model->fresh()->files()->count());
     }
+
+    public function test_hydrate_images_trait_sets_medias_relation()
+    {
+        $file = LibraryFile::create([
+            'uuid' => 'uploads/folder/file-5.pdf',
+            'filename' => 'file-5.pdf',
+            'size' => 100,
+        ]);
+        $model = $this->repository->create(['name' => 'With File']);
+        $schema = [
+            'file-1' => [
+                'type' => 'input-file',
+                'name' => 'file-1',
+                'translated' => false,
+            ],
+        ];
+        $this->repository->setColumns($this->repository->chunkInputs($schema));
+        $fields = [
+            'file-1' => [['id' => $file->id]],
+        ];
+        $model = $this->repository->hydrate($model, $fields);
+        $this->assertTrue($model->relationLoaded('files'));
+        $this->assertSame(1, $model->files->count());
+        $pivot = $model->files->first()->pivot;
+        $this->assertSame('file-1', $pivot->role);
+        $this->assertNotEmpty($pivot->locale);
+
+        $model = $model->fresh();
+        $this->repository->addIgnoreFieldsBeforeSave('files');
+        $hydrated = $this->repository->hydrate($model, $fields);
+        $this->assertFalse($hydrated->relationLoaded('files'));
+    }
+
+    public function test_get_form_fields_files_files_trait_non_translated()
+    {
+        $file = LibraryFile::create([
+            'uuid' => 'uploads/folder/file-5.pdf',
+            'filename' => 'file-5.pdf',
+            'size' => 100,
+        ]);
+        $model = $this->repository->create(['name' => 'With File']);
+        $model->files()->attach($file->id, [
+            'role' => 'file-1',
+            'locale' => config('app.locale', 'en'),
+        ]);
+        $model = $model->fresh();
+        $schema = [
+            'file-1' => ['name' => 'file-1', 'type' => 'input-file', 'translated' => false],
+        ];
+        $fields = $this->repository->getFormFields($model, $schema);
+        $this->assertArrayHasKey('file-1', $fields);
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-1']);
+        $this->assertSame('file-5.pdf', $fields['file-1'][0]['name']);
+        $this->assertSame('100 B', $fields['file-1'][0]['size']);
+    }
+
+    public function test_get_form_fields_files_files_trait_translated()
+    {
+        config(['translatable.locales' => ['en', 'tr']]);
+        $file = LibraryFile::create([
+            'uuid' => 'uploads/folder/file-6.pdf',
+            'filename' => 'file-6.pdf',
+            'size' => 100,
+        ]);
+        $model = $this->repository->create(['name' => 'With File']);
+        $model->files()->attach($file->id, [
+            'role' => 'file-1',
+            'locale' => 'en',
+        ]);
+        $model->files()->attach($file->id, [
+            'role' => 'file-1',
+            'locale' => 'tr',
+        ]);
+        $model = $model->load('files');
+        $schema = [
+            'file-1' => ['name' => 'file-1', 'type' => 'input-file', 'translated' => true],
+        ];
+        $fields = $this->repository->getFormFields($model, $schema);
+
+        $this->assertArrayHasKey('file-1', $fields);
+        $this->assertCount(2, $fields['file-1']);
+        $this->assertArrayHasKey('en', $fields['file-1']);
+        $this->assertArrayHasKey('tr', $fields['file-1']);
+        $this->assertSame('file-6.pdf', $fields['file-1']['en'][0]['name']);
+        $this->assertSame('100 B', $fields['file-1']['en'][0]['size']);
+        $this->assertSame('file-6.pdf', $fields['file-1']['tr'][0]['name']);
+        $this->assertSame('100 B', $fields['file-1']['tr'][0]['size']);
+    }
+
+    public function test_get_form_fields_files_files_trait_returns_empty_array_if_no_files()
+    {
+        config(['translatable.locales' => ['en', 'tr']]);
+        $model = $this->repository->create(['name' => 'No Files']);
+        $schema = [
+            'file-1' => ['name' => 'file-1', 'type' => 'input-file', 'translated' => false],
+            'file-2' => ['name' => 'file-2', 'type' => 'input-file', 'translated' => true],
+        ];
+        $fields = $this->repository->getFormFields($model, $schema);
+        $this->assertArrayHasKey('file-1', $fields);
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-1']);
+        $this->assertCount(0, $fields['file-1']);
+        $this->assertArrayHasKey('file-2', $fields);
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-2']);
+        $this->assertCount(2, $fields['file-2']);
+        $this->assertArrayHasKey('en', $fields['file-2']);
+        $this->assertArrayHasKey('tr', $fields['file-2']);
+        $this->assertCount(0, $fields['file-2']['en']);
+        $this->assertCount(0, $fields['file-2']['tr']);
+    }
 }
 
 class FilesTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel

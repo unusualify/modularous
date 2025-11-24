@@ -72,9 +72,10 @@ trait FilesTrait
      * @param array $fields
      * @return array
      */
-    public function getFormFieldsFilesTrait($object, $fields)
+    public function getFormFieldsFilesTrait($object, $fields, $schema)
     {
         if ($object->has('files')) {
+            $schema = $schema ?? $this->inputs();
             // foreach ($object->files->groupBy('pivot.role') as $role => $filesByRole) {
             //     foreach ($filesByRole->groupBy('pivot.locale') as $locale => $filesByLocale) {
             //         // $fields['files'][$locale][$role] = $filesByLocale->map(function ($file) {
@@ -92,7 +93,7 @@ trait FilesTrait
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
                 if (isset($filesByRole[$role])) {
-                    $input = $this->inputs()[$role];
+                    $input = $schema[$role];
                     if ($input['translated'] ?? false) {
                         foreach ($filesByRole[$role]->groupBy('pivot.locale') as $locale => $filesByLocale) {
                             $fields[$role][$locale] = $filesByLocale->map(function ($file) {
@@ -106,13 +107,13 @@ trait FilesTrait
                         });
                     }
                 } else {
-                    $input = $this->inputs()[$role] ?? null;
+                    $input = $schema[$role] ?? null;
 
                     if ($input) {
                         $fields += [
-                            $input['name'] => ($input['translated']) ?? false ? Arr::mapWithKeys(getLocales(), function ($locale) {
+                            $input['name'] => ($input['translated']) ?? false ? Collection::make(Arr::mapWithKeys(getLocales(), function ($locale) {
                                 return [$locale => []];
-                            }) : [],
+                            })) : Collection::make([]),
                         ];
                     }
 
