@@ -562,9 +562,8 @@ abstract class Repository implements RepositoryContract
      */
     public function searchIn($query, &$scopes, $scopeField, $orFields = [])
     {
-
         if (isset($scopes[$scopeField]) && is_string($scopes[$scopeField])) {
-            $query->where(function ($query) use (&$scopes, $scopeField, $orFields) {
+            $query->orWhere(function ($query) use (&$scopes, $scopeField, $orFields) {
                 foreach ($orFields as $field) {
                     $query->orWhere($field, $this->getLikeOperator(), '%' . $scopes[$scopeField] . '%');
                     unset($scopes[$field]);
@@ -617,6 +616,7 @@ abstract class Repository implements RepositoryContract
                     $regularColumns = [];
                     $translatedColumns = [];
 
+
                     foreach ($columns as $column) {
                         if ($isTranslatable && in_array($column, $translatedAttributes)) {
                             $translatedColumns[] = $column;
@@ -659,6 +659,11 @@ abstract class Repository implements RepositoryContract
         $this->ignoreFieldsBeforeSave = is_array($ignore)
         ? array_merge($this->ignoreFieldsBeforeSave, $ignore)
         : array_merge($this->ignoreFieldsBeforeSave, [$ignore]);
+    }
+
+    public function getIgnoreFieldsBeforeSave()
+    {
+        return $this->ignoreFieldsBeforeSave;
     }
 
     /**

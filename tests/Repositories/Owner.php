@@ -14,4 +14,9 @@ class Owner extends Model
     {
         return $this->hasMany(TestModel::class);
     }
+
+    public function posts(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Post::class, 'postable');
+    }
 }

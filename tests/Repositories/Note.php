@@ -6,7 +6,7 @@ class Note extends \Illuminate\Database\Eloquent\Model
 {
     protected $table = 'notes';
 
-    protected $fillable = ['test_model_id', 'external_id'];
+    protected $fillable = ['test_model_id', 'external_id', 'content'];
 
     public function testModel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

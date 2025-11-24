@@ -37,6 +37,11 @@ trait RepositorySources
             $table->softDeletes();
         });
 
+        Schema::create('test_model_repo_translations', function (Blueprint $table) {
+            createDefaultTranslationsTableFields($table, 'test_model');
+            $table->string('context')->nullable();
+        });
+
         Schema::create('test_model_test_role', function (Blueprint $table) {
             $table->foreignId('test_model_id')
                 ->constrained('test_models')
@@ -67,8 +72,23 @@ trait RepositorySources
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('test_model_id')->constrained('test_models')->onDelete('cascade');
-            $table->unsignedBigInteger('external_id');
+            $table->unsignedBigInteger('external_id')->nullable();
+            $table->text('content')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->uuidMorphs('postable');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('post_translations', function (Blueprint $table) {
+            createDefaultTranslationsTableFields($table, 'post');
+            $table->string('title');
+            $table->text('content');
         });
 
         $this->repository = App::make(TestRepository::class);
@@ -101,6 +121,121 @@ trait RepositorySources
             'name' => 'US Dollar',
             'symbol' => '$',
             'iso_4217_number' => 840,
+        ]);
+    }
+
+    /**
+     * Seed owners and test models for filter tests.
+     */
+    protected function seedFilterFixtures(): void
+    {
+        $o1 = Owner::create(['name' => 'Owner A']);
+        $o2 = Owner::create(['name' => 'Owner B']);
+
+        $o1->posts()->create([
+            'en' => [
+                'title' => 'Post of Owner A',
+                'content' => 'Content of Post of Owner A',
+            ],
+        ]);
+        $o2->posts()->create([
+            'en' => [
+                'title' => 'Post of Owner B',
+                'content' => 'Content of Post of Owner B',
+            ],
+        ]);
+
+        $tm1 = TestModel::create([
+            'name' => 'Alice',
+            'owner_id' => $o1->id,
+            'is_active' => true,
+            'description' => 'hello',
+            'en' => [
+                'context' => 'Alice Context',
+            ],
+        ]);
+        $tm2 = TestModel::create([
+            'name' => 'Alice B',
+            'owner_id' => $o1->id,
+            'is_active' => false,
+            'description' => 'world',
+            'en' => [
+                'context' => 'Alice B Context',
+            ],
+        ]);
+        $tm3 = TestModel::create([
+            'name' => 'Bob',
+            'owner_id' => $o2->id,
+            'is_active' => true,
+            'description' => 'hello',
+            'en' => [
+                'context' => 'Bob Context',
+            ],
+        ]);
+        $tm4 = TestModel::create([
+            'name' => 'Carla',
+            'owner_id' => $o2->id,
+            'is_active' => true,
+            'description' => 'abc',
+            'en' => [
+                'context' => 'Carla Context',
+            ],
+        ]);
+        $tm5 = TestModel::create([
+            'name' => 'John',
+            'owner_id' => $o1->id,
+            'is_active' => false,
+            'description' => null,
+            'en' => [
+                'context' => 'John Context',
+            ],
+        ]);
+
+        $tm1->notes()->create([
+            'content' => 'Note of Test Model 1',
+        ]);
+        $tm2->notes()->create([
+            'content' => 'Note of Test Model 2',
+        ]);
+        $tm3->notes()->create([
+            'content' => 'Note of Test Model 3',
+        ]);
+        $tm4->notes()->create([
+            'content' => 'Note of Test Model 4',
+        ]);
+        $tm5->notes()->create([
+            'content' => 'Note of Test Model 5',
+        ]);
+
+        $tm1->posts()->create([
+            'en' => [
+                'title' => 'Post of Test Model 1',
+                'content' => 'Content of Post of Test Model 1',
+            ],
+        ]);
+        $tm2->posts()->create([
+            'en' => [
+                'title' => 'Post of Test Model 2',
+                'content' => 'Content of Post of Test Model 2',
+            ],
+        ]);
+        $tm3->posts()->create([
+            'en' => [
+                'title' => 'Post of Test Model 3',
+                'content' => 'Content of Post of Test Model 3',
+            ],
+        ]);
+        $tm4->posts()->create([
+            'en' => [
+                'title' => 'Post of Test Model 4',
+                'content' => 'Content of Post of Test Model 4',
+            ],
+        ]);
+        $tm5->posts()->create([
+            'en' => [
+                'title' => 'Post of Test Model 5',
+                'content' => 'Content of Post of Test Model 5',
+            ],
         ]);
     }
 }

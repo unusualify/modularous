@@ -709,44 +709,4 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $fields['position']);
         $this->assertEquals(false, $fields['is_active']);
     }
-
-    /**
-     * Seed owners and test models for filter tests.
-     */
-    private function seedFilterFixtures(): void
-    {
-        $o1 = Owner::create(['name' => 'Owner A']);
-        $o2 = Owner::create(['name' => 'Owner B']);
-
-        TestModel::create([
-            'name' => 'Alice',
-            'owner_id' => $o1->id,
-            'is_active' => true,
-            'description' => 'hello',
-        ]);
-        TestModel::create([
-            'name' => 'Alice B',
-            'owner_id' => $o1->id,
-            'is_active' => false,
-            'description' => 'world',
-        ]);
-        TestModel::create([
-            'name' => 'Bob',
-            'owner_id' => $o2->id,
-            'is_active' => true,
-            'description' => 'hello',
-        ]);
-        TestModel::create([
-            'name' => 'Carla',
-            'owner_id' => $o2->id,
-            'is_active' => true,
-            'description' => 'abc',
-        ]);
-        TestModel::create([
-            'name' => 'John',
-            'owner_id' => $o1->id,
-            'is_active' => false,
-            'description' => null,
-        ]);
-    }
 }
