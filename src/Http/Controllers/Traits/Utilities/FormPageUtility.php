@@ -16,13 +16,15 @@ trait FormPageUtility
             // Generate scopes for authorization
             $scopes = $this->filterScope($this->nestedParentScopes());
 
-            $item = $this->repository->getByIdWithScopes(
+            $item = $this->repository->getById(
                 $id,
                 $this->formWith,
                 $this->formWithCount,
                 lazy: [],
-                scopes: $scopes
+                scopes: $scopes,
+                useDefaultScopes: true
             );
+
         } else {
             $item = $this->repository->newInstance();
         }

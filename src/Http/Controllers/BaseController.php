@@ -107,7 +107,6 @@ abstract class BaseController extends PanelController
                         with: $eagers,
                         scopes: $scopes,
                         orders: $orders,
-                        isFormatted: false,
                     )
                 );
             }
