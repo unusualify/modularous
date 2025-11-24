@@ -344,10 +344,17 @@ class ModularityRoutes
         }
 
         // Fix route precedence - define parent route last
-        usort($routes, fn ($i, $j) => (isset($i['parent']) || isset($j['parent']))
-                ? ((isset($i['parent']) && $i['parent']) ?: false)
-                : false
-        );
+        usort($routes, function ($i, $j) {
+            $iParent = isset($i['parent']) && $i['parent'];
+            $jParent = isset($j['parent']) && $j['parent'];
+
+            if ($iParent === $jParent) {
+                return 0;
+            }
+
+            return $iParent ? 1 : -1;
+        });
+
 
         foreach ($routes as $key => $item) {
             // Skip if front routes are required but not enabled
