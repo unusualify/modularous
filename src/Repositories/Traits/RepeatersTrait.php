@@ -24,7 +24,6 @@ trait RepeatersTrait
 
     public function setColumnsRepeatersTrait($columns, $inputs)
     {
-
         $traitName = get_class_short_name(__TRAIT__);
 
         $columns[$traitName] = collect($this->inputs())->reduce(function ($acc, $curr) {
@@ -53,6 +52,8 @@ trait RepeatersTrait
         // $locales = getLocales();
         $system_locales = getLocales();
         $fallbackLocale = app()->getFallbackLocale();
+
+        $schema = $schema ?? $this->inputs();
 
         foreach ($this->getColumns(__TRAIT__) as $name) {
             $input = $this->inputs()[$name];
@@ -147,83 +148,14 @@ trait RepeatersTrait
                 }
             }
         }
-
-        return;
-        foreach ($this->getRepeaterInputs() as $repeaterInput) {
-            $repeaterName = $repeaterInput['name'] ?? $repeaterInput;
-
-            $repeaterTranslated = $repeaterInput['translated'] ?? false;
-
-            if (isset($fields[$repeaterName])) {
-                $repeater = $fields[$repeaterName];
-
-                $existingRepeaters = $object->repeaters()->where('role', $repeaterName)->get();
-                // dd($object->id, $existingRepeaters, $existingRepeaters->where('repeatable_id', $object->id));
-                $repeaterModels = isset($object->id) ? $existingRepeaters->where('repeatable_id', $object->id) : null;
-
-                // dd($repeater, $repeaterModel, $existingRepeaters);
-                // dd($locales, $defaultLocale);
-                foreach ($locales as $locale) {
-                    $saveFormat = [
-                        'role' => $repeaterName,
-                        'locale' => $locale,
-                    ];
-                    // dd($repeater, $saveFormat);
-                    if ($repeaterTranslated) {
-                        if (isset($repeater[$locale])) {
-                            $saveFormat['content'] = $repeater[$locale];
-                        } else {
-                            $saveFormat['content'] = $repeater[$defaultLocale];
-                            // dd($repeater, $saveFormat, $locale, $defaultLocale);
-                        }
-                    } else {
-                        $saveFormat['content'] = $repeater;
-                    }
-
-                    // dd($repeaterModels);
-                    $repeaterModel = $repeaterModels ? $repeaterModels->where('locale', $locale)->first() : null;
-                    if ($repeaterModel) {
-                        // dd($repeaterModel, $saveFormat);
-                        $repeaterModel->update($saveFormat);
-                    } else {
-                        // dd($saveFormat);
-                        $object->repeaters()->create($saveFormat);
-                    }
-                }
-                /**
-                 * these are not correc, keepin em for reference
-                 // $repeaterModel = isset($repeaterData['id']) ? $existingRepeaters->where('id', $repeaterData['id'])->first() : null;
-                 // $repeater = $fields[$repeaterName];
-                 // if($repeaterModel) {
-                 //     $repeaterModel->update($repeater);
-                 // } else {
-                 //     $repeaterModel = $object->repeaters()->create($repeater);
-                 // }
-                 // foreach($fields[$name] as $index => $repeaterData) {
-                     // foreach($repeaterData as $index => $repeater) {
-                     // }
-                         // dd($repeater, $repeaterData, $index);
-                     // dd($existingRepeaters, $repeaterModel, $repeaterData);
-
-                     // Here, we establish the releationship between the repeater and the parent aka object,
-                     // the [repeater] fields should be saved as json.
-                     // dd($repeaterData, $object->repeaters());
-                     // $object->repeaters()->attach($repeaterData);
-                     // $object->save();
-                     // dd($object, $repeaterData, $object->repeaters);
-                 // }
-                 */
-            }
-        }
-
-        return $object;
     }
 
     /**
      * From objects input
      */
-    public function getRepeaterInputs()
+    public function getRepeaterInputs($schema = null)
     {
+        $schema = $schema ?? $this->inputs();
         return collect($this->inputs())->reduce(function ($acc, $curr) {
             if (isset($curr['name']) && preg_match('/json-repeater/', $curr['type'])) {
                 $acc[] = $curr + ['translated' => $curr['translated'] ?? false];
@@ -233,12 +165,13 @@ trait RepeatersTrait
         }, []);
     }
 
-    public function getFormFieldsRepeatersTrait($object, $fields, $schema)
+    public function getFormFieldsRepeatersTrait($object, $fields, $schema = null)
     {
         // not possess any repeater data
         if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && $object->repeaters()->exists()) {
+            $schema = $schema ?? $this->inputs();
             if ($object->repeaters->isEmpty()) {
-                $fields += Arr::mapWithKeys($this->getRepeaterInputs(), function ($input) {
+                $fields += Arr::mapWithKeys($this->getRepeaterInputs($schema), function ($input) {
                     return [
                         $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
                             return [$locale => []];
@@ -251,7 +184,7 @@ trait RepeatersTrait
 
                     foreach ($repeatersByLocale as $repeater) {
                         // dd($repeater->content);
-                        if ($this->inputs()[$repeater->role]['translated'] ?? false) {
+                        if ($schema[$repeater->role]['translated'] ?? false) {
                             $name = $repeater->role . '.' . $repeater->locale;
 
                             foreach (Arr::dot($repeater->content) as $notation => $value) {
