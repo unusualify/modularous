@@ -37,6 +37,7 @@ class FilepondsTraitTest extends RepositoryTestCase
     {
         $schema = [
             'pond-1' => ['type' => 'filepond', 'name' => 'pond-1', 'translated' => false],
+            'pond-2' => ['type' => 'filepond', 'name' => 'pond-2', 'translated' => false],
         ];
         $this->repository->setColumns($schema);
 
@@ -45,6 +46,7 @@ class FilepondsTraitTest extends RepositoryTestCase
                 ['id' => 10, 'name' => 'a.pdf'],
                 ['id' => 12, 'name' => 'b.pdf'],
             ],
+            'pond-2' => null,
         ];
 
         Filepond::shouldReceive('saveFile')->once()->withArgs(function ($object, $files, $role, $locale = null) {
@@ -78,6 +80,7 @@ class FilepondsTraitTest extends RepositoryTestCase
     public function test_after_save_fileponds_trait_saves_wildcard_nested_roles(): void
     {
         $schema = [
+            'translated_sections.*.pond' => ['type' => 'filepond', 'name' => 'translated_sections.*.pond', 'translated' => true],
             'sections.*.pond' => ['type' => 'filepond', 'name' => 'sections.*.pond', 'translated' => false],
         ];
         $this->repository->setColumns($schema);
@@ -87,19 +90,37 @@ class FilepondsTraitTest extends RepositoryTestCase
                 ['pond' => [['id' => 31]]],
                 ['pond' => []],
             ],
+            'translated_sections' => [
+                ['pond' => ['en' => [['id' => 32]], 'tr' => []]],
+                ['pond' => ['tr' => [['id' => 33]], 'en' => []]],
+            ],
         ];
 
         Filepond::shouldReceive('saveFile')->once()->withArgs(function ($object, $files, $role, $locale = null) {
-            return $role === 'sections.0.pond' && is_array($files) && count($files) === 1 && $locale === null;
+            return ($role === 'sections.0.pond' || $role === 'sections.1.pond') && is_array($files) && count($files) === 1 && $locale === null;
+        });
+
+        Filepond::shouldReceive('saveFile')->once()->withArgs(function ($object, $files, $role, $locale) {
+            return $role === 'translated_sections.0.pond' && $locale === 'en' && is_array($files) && count($files) === 1;
+        });
+
+        Filepond::shouldReceive('saveFile')->once()->withArgs(function ($object, $files, $role, $locale) {
+            return $role === 'translated_sections.1.pond' && $locale === 'tr' && is_array($files) && count($files) === 1;
         });
 
         $this->repository->afterSaveFilepondsTrait((object) ['id' => 3], $fields);
+
+        Filepond::shouldHaveReceived('saveFile')->times(3);
     }
 
     public function test_get_form_fields_fileponds_trait_maps_translated_role(): void
     {
+        config(['translatable.locales' => ['en', 'tr']]);
         $schema = [
             'pond-1' => ['type' => 'filepond', 'name' => 'pond-1', 'translated' => true],
+            'pond-2' => ['type' => 'filepond', 'name' => 'pond-2', 'translated' => false],
+            'pond-3' => ['type' => 'filepond', 'name' => 'pond-3', 'translated' => false],
+            'pond-4' => ['type' => 'filepond', 'name' => 'pond-4', 'translated' => true],
         ];
         $this->repository->setColumns($schema);
 
@@ -109,6 +130,13 @@ class FilepondsTraitTest extends RepositoryTestCase
                 'locale' => 'en',
                 'mediableFormat' => function () {
                     return ['name' => 'x.pdf'];
+                },
+            ],
+            (object) [
+                'role' => 'pond-2',
+                'locale' => 'en',
+                'mediableFormat' => function () {
+                    return ['name' => 'y.pdf'];
                 },
             ],
         ])->map(function ($item) {
@@ -158,7 +186,28 @@ class FilepondsTraitTest extends RepositoryTestCase
         $this->assertArrayHasKey('pond-1', $mapped);
         $this->assertArrayHasKey('en', $mapped['pond-1']);
         $this->assertSame('x.pdf', $mapped['pond-1']['en']->first()['name']);
+
+        $this->assertArrayHasKey('pond-2', $mapped);
+        $this->assertCount(1, $mapped['pond-2']);
+        $this->assertSame('y.pdf', $mapped['pond-2'][0]['name']);
+
+        $this->assertArrayHasKey('pond-3', $mapped);
+        $this->assertCount(0, $mapped['pond-3']);
+
+        $this->assertArrayHasKey('pond-4', $mapped);
+        $this->assertCount(2, $mapped['pond-4']);
+        $this->assertEmpty($mapped['pond-4']['en']);
+        $this->assertEmpty($mapped['pond-4']['tr']);
     }
+
+    // public function test_get_form_fields_fileponds_trait_returns_empty_array_for_null_values(): void
+    // {
+    //     $schema = [
+    //         'pond-1' => ['type' => 'filepond', 'name' => 'pond-1', 'translated' => false],
+    //     ];
+    //     $this->repository->setColumns($schema);
+
+    // }
 }
 
 class FilepondTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
