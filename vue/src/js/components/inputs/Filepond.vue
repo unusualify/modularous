@@ -39,7 +39,6 @@
         <div
           :class="fileFieldClasses"
         >
-          {{ $log($attrs) }}
           <FilePond
             ref="pond"
             :key="key"
