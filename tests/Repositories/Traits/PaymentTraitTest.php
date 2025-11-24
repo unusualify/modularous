@@ -31,7 +31,7 @@ class PaymentTraitTest extends RepositoryTestCase
             $table->softDeletes();
         });
 
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             createDefaultTableFields($table);
             $table->string('name');
             $table->string('content');
@@ -39,7 +39,7 @@ class PaymentTraitTest extends RepositoryTestCase
             $table->softDeletes();
         });
 
-        Schema::create('copy_posts', function (Blueprint $table) {
+        Schema::create('copy_products', function (Blueprint $table) {
             createDefaultTableFields($table);
             $table->foreignId('test_model_id')->nullable();
             $table->timestamps();
@@ -411,19 +411,19 @@ class PaymentTraitTest extends RepositoryTestCase
             'currency_id' => 1,
         ]);
 
-        $post = Post::create([
+        $product = Product::create([
             'name' => 'Test Payment Post',
             'content' => 'Test Payment Content',
         ]);
-        $post->prices()->create([
+        $product->prices()->create([
             'price_value' => 200,
             'price_type_id' => 1,
             'vat_rate_id' => 1,
             'currency_id' => 1,
         ]);
-        $copyPost = CopyPost::create([
+        $copyProduct = CopyProduct::create([
             'test_model_id' => $object->id,
-            'post_id' => $post->id,
+            'product_id' => $product->id,
         ]);
 
         $this->repository->update($object->id, [
@@ -480,22 +480,22 @@ class Item extends \Unusualify\Modularity\Entities\Model
     }
 }
 
-class Post extends \Unusualify\Modularity\Entities\Model
+class Product extends \Unusualify\Modularity\Entities\Model
 {
     use \Unusualify\Modularity\Entities\Traits\HasPriceable;
 
-    public $table = 'posts';
+    public $table = 'products';
 
     public $fillable = ['name', 'content'];
 }
 
-class CopyPost extends \Unusualify\Modularity\Entities\Model
+class CopyProduct extends \Unusualify\Modularity\Entities\Model
 {
     use \Oobook\Snapshot\Traits\HasSnapshot;
 
-    public static $snapshotSourceModel = Post::class;
+    public static $snapshotSourceModel = Product::class;
 
-    public $table = 'copy_posts';
+    public $table = 'copy_products';
 
     public $fillable = [
         'test_model_id',
@@ -506,16 +506,16 @@ class HasPaymentTestModel extends \Unusualify\Modularity\Tests\Repositories\Test
 {
     use \Unusualify\Modularity\Entities\Traits\HasPayment;
 
-    public $hasPaymentRelations = ['items', 'copyPosts'];
+    public $hasPaymentRelations = ['items', 'copyProducts'];
 
     public function items(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Item::class, 'test_model_item', 'test_model_id', 'item_id');
     }
 
-    public function copyPosts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function copyProducts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(CopyPost::class, 'test_model_id');
+        return $this->hasMany(CopyProduct::class, 'test_model_id');
     }
 
     public function getFormActionsConditionsForPayment(): array
@@ -557,9 +557,9 @@ class PaymentTraitTestRepository extends \Unusualify\Modularity\Tests\Repositori
     }
 }
 
-class CopyPostRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class CopyProductRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
 {
-    public function __construct(CopyPost $model)
+    public function __construct(CopyProduct $model)
     {
         $this->model = $model;
     }
