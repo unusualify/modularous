@@ -79,13 +79,14 @@ trait ImagesTrait
     {
         // $t = [];
         if ($object->has('medias')) {
+            $schema = $schema ?? $this->inputs();
             $mediasByRole = $object->medias->groupBy('pivot.role');
             $default_locale = config('app.locale');
             $fallback_locale = config('app.fallback_locale');
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
                 if (isset($mediasByRole[$role])) {
-                    $input = $this->inputs()[$role];
+                    $input = $schema[$role];
                     if ($input['translated'] ?? false) {
                         foreach ($mediasByRole[$role]->groupBy('pivot.locale') as $locale => $mediasByLocale) {
                             $fields[$role][$locale] = $mediasByLocale->map(function ($media) {
@@ -99,15 +100,15 @@ trait ImagesTrait
                         });
                     }
                 } else {
-                    $input = $this->inputs()[$role] ?? null;
+                    $input = $schema[$role] ?? null;
 
                     if ($input) {
                         $fields += [
-                            $input['name'] => ($input['translated']) ?? false ? Arr::mapWithKeys(getLocales(), function ($locale) {
-                                return [$locale => []];
-                            }) : [],
-                        ];
-                    }
+                            $input['name'] => ($input['translated'] ?? false) ? Collection::make(Arr::mapWithKeys(getLocales(), function ($locale) {
+                                    return [$locale => []];
+                                })) : Collection::make([]),
+                            ];
+                        }
                 }
             }
         }
