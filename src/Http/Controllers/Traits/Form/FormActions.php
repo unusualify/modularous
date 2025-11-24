@@ -13,6 +13,16 @@ trait FormActions
     use Allowable, ResponsiveVisibility;
 
     /**
+     * @var array
+     */
+    protected $defaultFormActions = [];
+
+    /**
+     * @var array
+     */
+    protected $formActions = [];
+
+    /**
      * @return void
      */
     protected function __afterConstructFormActions($app, $request)

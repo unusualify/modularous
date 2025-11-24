@@ -15,6 +15,11 @@ trait TableActions
     /**
      * @var array
      */
+    protected $defaultTableActions = [];
+
+    /**
+     * @var array
+     */
     protected $tableActions = [];
 
     /**

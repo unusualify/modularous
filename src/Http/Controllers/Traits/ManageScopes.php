@@ -61,6 +61,19 @@ trait ManageScopes
     // protected $defaultOrders = [
     //     'created_at' => 'desc',
     // ];
+
+    /**
+     *
+     *
+     */
+    protected $defaultTableOrders = [];
+
+    /**
+     *
+     *
+     */
+    protected $tableOrders = [];
+
     protected function __afterConstructManageScopes($app, $request)
     {
         $this->defaultTableOrders = (array) Config::get(modularityBaseKey() . '.default_table_orders', ['created_at' => 'desc']);

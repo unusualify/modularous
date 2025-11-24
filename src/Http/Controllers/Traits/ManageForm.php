@@ -11,6 +11,11 @@ trait ManageForm
         Form\FormActions;
 
     /**
+     * @var array
+     */
+    protected $formAttributes = [];
+
+    /**
      * @param \Illuminate\Foundation\Application $app
      * @param \Illuminate\Http\Request $request
      * @return void

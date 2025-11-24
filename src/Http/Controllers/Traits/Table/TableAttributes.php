@@ -27,6 +27,11 @@ trait TableAttributes
     ];
 
     /**
+     * @var array
+     */
+    protected $tableAttributes = [];
+
+    /**
      * getTableOptions
      *
      * @return void
