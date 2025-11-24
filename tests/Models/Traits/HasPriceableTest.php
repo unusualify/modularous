@@ -362,14 +362,23 @@ class HasPriceableTest extends ModelTestCase
         $this->assertTrue($this->model->base_price_has_discount);
         $this->assertEquals(10000, $this->model->base_price_raw_amount); // $100.00 in cents
         $this->assertEquals(2000, $this->model->base_price_vat_amount); // 20% VAT
+        $this->assertMatchesRegularExpression('/US\$\s20,00/u', $this->model->base_price_vat_amount_formatted);
+        $this->assertEquals(10000, $this->model->base_price_subtotal_amount); // $100.00 subtotal
+        $this->assertMatchesRegularExpression('/US\$\s100,00/u', $this->model->base_price_subtotal_amount_formatted);
         $this->assertEquals(10800, $this->model->base_price_total_amount); // $120.00 total
+        $this->assertMatchesRegularExpression('/US\$\s108,00/u', $this->model->base_price_total_amount_formatted);
 
         // Test discount attributes
         $this->assertEquals(1000, $this->model->base_price_raw_discount_amount); // 10% of $100
+        $this->assertMatchesRegularExpression('/US\$\s10,00/u', $this->model->base_price_raw_discount_amount_formatted);
         $this->assertEquals(9000, $this->model->base_price_discounted_raw_amount); // $90.00
+        $this->assertMatchesRegularExpression('/US\$\s90,00/u', $this->model->base_price_discounted_raw_amount_formatted);
         $this->assertEquals(200, $this->model->base_price_vat_discount_amount); // VAT on discount
+        $this->assertMatchesRegularExpression('/US\$\s2,00/u', $this->model->base_price_vat_discount_amount_formatted);
         $this->assertEquals(1800, $this->model->base_price_discounted_vat_amount); // VAT on discounted price
+        $this->assertMatchesRegularExpression('/US\$\s18,00/u', $this->model->base_price_discounted_vat_amount_formatted);
         $this->assertEquals(1200, $this->model->base_price_total_discount_amount); // Total discount
+        $this->assertMatchesRegularExpression('/US\$\s12,00/u', $this->model->base_price_total_discount_amount_formatted);
 
         // Test formatted attributes
         $this->assertEquals('10%', $this->model->base_price_discount_percentage_formatted);
@@ -377,6 +386,7 @@ class HasPriceableTest extends ModelTestCase
         $this->assertNotNull($this->model->base_price_raw_amount_formatted);
         $this->assertNotNull($this->model->base_price_total_amount_formatted);
         $this->assertNotNull($this->model->base_price_formatted);
+
     }
 
     public function test_base_price_formatted_attributes_with_price_service()
