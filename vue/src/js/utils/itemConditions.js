@@ -1,3 +1,5 @@
+import { isObject, omit } from 'lodash-es';
+
 /**
  * Helper method to get nested object values using dot notation
  * @param {Object} obj - The object to extract values from
@@ -80,17 +82,17 @@ export const evaluateCondition = (condition, item) => {
  *   ]
  *
  * @param {Array|Object} conditions - Conditions to evaluate
- * @param {Object} item - The item to check conditions against
+ * @param {Object} haystack - The haystack to check conditions against
  * @returns {boolean} True if all conditions are met, false otherwise
  */
-export const checkItemConditions = (conditions, item) => {
-  if (!item || !window.__isObject(item) || !conditions) {
+export const checkItemConditions = (conditions, haystack) => {
+  if (!haystack || !window.__isObject(haystack) || !conditions) {
     return true;
   }
 
   // Handle single condition group object
   if (window.__isObject(conditions) && conditions.operator && conditions.conditions) {
-    return evaluateConditionGroup(conditions, item);
+    return evaluateConditionGroup(conditions, haystack);
   }
 
   // Handle array of conditions
@@ -98,7 +100,65 @@ export const checkItemConditions = (conditions, item) => {
     return true;
   }
 
-  return evaluateConditionArray(conditions, item);
+  return evaluateConditionArray(conditions, haystack);
+};
+
+
+/**
+ * Handles item conditions
+ * @param {Array|Object} conditions - Conditions to evaluate
+ * @param {Object} haystack - The haystack to check conditions against
+ * @param {Object} item - The item to manipulate
+ * @returns {Object} The item if conditions are met, false otherwise
+ */
+export const handleItemConditions = (conditions, haystack, item) => {
+  if (!haystack || !window.__isObject(haystack) || !conditions) {
+    return item;
+  }
+
+  let condition = true
+
+  if (window.__isObject(conditions) && conditions.operator && conditions.conditions) { // Handle single condition group object
+    condition = evaluateConditionGroup(conditions, haystack)
+  } else if (!Array.isArray(conditions) || conditions.length === 0) { // Handle array of conditions
+    condition = true
+  } else {
+    condition = evaluateConditionArray(conditions, haystack)
+  }
+
+  if(item && isObject(item) && item.readonlyOnCondition) {
+    if(!condition) {
+      let previousReadonly = Object.prototype.hasOwnProperty.call(item, '_originalReadonly')
+        ? item._originalReadonly
+        : Object.prototype.hasOwnProperty.call(item, 'readonly')
+          ? item.readonly
+          : false
+      item._originalReadonly = previousReadonly
+      item.readonly = true
+      condition = true
+    }else if(Object.prototype.hasOwnProperty.call(item, '_originalReadonly')) {
+      item.readonly = item._originalReadonly
+    }
+
+  } else if(item && isObject(item) && item.disabledOnCondition) {
+
+    if(!condition) {
+      let previousDisabled = Object.prototype.hasOwnProperty.call(item, '_originalDisabled')
+        ? item._originalDisabled
+        : Object.prototype.hasOwnProperty.call(item, 'disabled')
+          ? item.disabled
+          : false
+
+      item._originalDisabled = previousDisabled
+      item.disabled = true
+      condition = true
+
+    }else if(Object.prototype.hasOwnProperty.call(item, '_originalDisabled')) {
+      item.disabled = item._originalDisabled
+    }
+  }
+
+  return condition ? item : false;
 };
 
 /**
