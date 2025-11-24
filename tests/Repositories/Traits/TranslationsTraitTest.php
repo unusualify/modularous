@@ -178,6 +178,8 @@ class TranslationsTestModel extends \Unusualify\Modularity\Tests\Repositories\Te
 
     protected $translationModel = TranslationsTestModelTranslation::class;
 
+    public $translationForeignKey = 'translations_test_model_id';
+
     protected $translatedAttributes = ['title', 'active'];
 }
 
