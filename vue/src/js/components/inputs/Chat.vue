@@ -533,8 +533,6 @@
 
         if(this.textareaRows > 0) {
           const messageBoxHeight = this.$jquery('#messageBox').height();
-          console.log(messageBoxHeight)
-
           extraHeight += this.textareaRows * 20;
         }
 
