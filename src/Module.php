@@ -595,12 +595,14 @@ class Module extends NwidartModule
     }
 
     /**
-     * getRepository
+     *
      *
      * @param mixed $routeName
      * @param bool $asClass
+     *
+     * @return \Unusualify\Modularity\Repositories\Repository|string
      */
-    public function getRepository($routeName, $asClass = true)
+    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
     {
         return (new Finder)->getRouteRepository($routeName, $asClass);
     }
