@@ -21,7 +21,7 @@ import {
 } from './formEvents'
 
 import { globalError } from './errors'
-import { checkItemConditions } from './itemConditions'
+import { handleItemConditions } from './itemConditions'
 import { getTranslationLanguages, getTranslationLocales } from './locale'
 
 import sampleModel from '@/__snapshots/getFormData/model.json';
@@ -35,11 +35,11 @@ const numberable = 'number-input'
 
 export const getSchema = (inputs, model = null, isEditing = false) => {
   let _inputs = _.omitBy(inputs, (value, key) => {
-    return !checkItemConditions(value.conditions, model)
-      || Object.prototype.hasOwnProperty.call(value, 'slotable')
+    return Object.prototype.hasOwnProperty.call(value, 'slotable')
       || isFormEventInput(value, model)
       || isViewOnlyInput(value)
   })
+
 
   // if (_.find(_inputs, (input) => Object.prototype.hasOwnProperty.call(input, 'wrap'))) {
   //   _.reduce(_inputs, (acc, input, key) => {
@@ -50,7 +50,7 @@ export const getSchema = (inputs, model = null, isEditing = false) => {
   //     }
   //     return acc
   //   }, {})
-  // }
+  //
 
   _inputs = _.reduce(_inputs, (acc, input, key) => {
     let parsedKey = parseInt(key)
@@ -60,6 +60,7 @@ export const getSchema = (inputs, model = null, isEditing = false) => {
 
     input.col.class = input._originalClass || input.col?.class || [];
     input._originalClass = input.col.class || [];
+
     input.disabled = __isset(input._originalDisabled)
       ? input._originalDisabled
       : __isset(input.disabled)
@@ -105,8 +106,10 @@ export const getSchema = (inputs, model = null, isEditing = false) => {
     input.editable = isEditable
     input.isEditing = isEditing
 
-    // Always add the input to the accumulator
-    acc[key] = input;
+    let res = handleItemConditions(input.conditions, model, input)
+    if(res !== false){
+      acc[key] = res
+    }
 
     return acc;
   }, {});
@@ -237,15 +240,23 @@ export const getModel = (inputs, item = null, rootState = null) => {
 }
 
 export const getFormEventSchema = (inputs, model = null, isEditing = false) => {
-  return _.filter(inputs, (input) => {
+  return _.reduce(inputs, (acc, input, key) => {
+    if(!isFormEventInput(input, model))
+      return acc
+
     if(isEditing && __isset(input.editable) && (input.editable === false || input.editable === 'hidden'))
-      return false
+      return acc
 
     if(!isEditing && __isset(input.creatable) && (input.creatable === false || input.creatable === 'hidden'))
-      return false
+      return acc
 
-    return isFormEventInput(input, model) && (input.conditions ? checkItemConditions(input.conditions, model) : true)
-  })
+    let res = handleItemConditions(input.conditions, model, input)
+    if(res !== false){
+      acc.push(res)
+    }
+
+    return acc
+  }, [])
 }
 
 export const getSubmitFormData = (inputs, item = null, rootState = null) => {
