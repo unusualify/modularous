@@ -120,7 +120,10 @@ export default function useValidation (props) {
         case 'object':
           max = _.toNumber(max)
           max = _.isNaN(max) ? -1 : max;
-          let $msg = ((minOrExact == max || max < 0) ? t('Requires exactly ${minOrExact} items') : t('Requires at least ${minOrExact}${((max != Infinity  && max != undefined) ? \', and maximum of:\' + max : \'\')}) elements'));
+          let $msg = ((minOrExact == max || max < 0)
+            ? t('Requires exactly {numberOfItems} items', { numberOfItems: minOrExact })
+            : t('Requires at least {numberOfItems} items', { numberOfItems: minOrExact }) + ((max != Infinity  && max != undefined) ? ', and maximum of: {max}' : ''));
+            // : t('Requires at least {numberOfItems}${((max != Infinity  && max != undefined) ? \', and maximum of:\' + max : \'\')}) elements', { numberOfItems: minOrExact, max: max }));
           // let $msg = ((max != Infinity) ? ', maximum:' + max : '');
           if(Array.isArray(v)) {
             return v.length >= minOrExact && ( max < 0 || v.length <= max) || msg || $msg;
