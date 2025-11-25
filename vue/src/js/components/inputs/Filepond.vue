@@ -236,6 +236,7 @@
           this.input = newInput
         }else {
           console.error('removeFilepond error not found', file, this.input)
+          this.input = this.input
         }
       },
 
