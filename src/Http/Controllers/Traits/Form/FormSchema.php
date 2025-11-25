@@ -864,12 +864,7 @@ trait FormSchema
                         $inputToFormat = array_shift($args) ?? '';
                         $inputPropToFormat = array_shift($args) ?? null;
                         $setProp = array_shift($args) ?? "items.*.{$inputPropToFormat}";
-                        // dd(
-                        //     $inputToFormat,
-                        //     $inputPropToFormat,
-                        //     $setProp,
-                        //     $inputs
-                        // );
+                        $modelNotation = array_shift($args) ?? null;
                         $changers = [
                             'wrap_location' => [
                                 'default',
@@ -877,10 +872,7 @@ trait FormSchema
                             ],
                         ];
                         if ($inputToFormat && $inputPropToFormat) {
-                            if ($inputToFormat == '3.content.schema.wrap-content.schema.1_content') {
-                                // dump($inputToFormat, $inputPropToFormat, $setProp);
-                            }
-                            $events[] = "formatSet:{$inputToFormat}:{$inputPropToFormat}:{$setProp}";
+                            $events[] = "formatSet:{$inputToFormat}:{$inputPropToFormat}:{$setProp}:{$modelNotation}";
                         }
 
                         break;

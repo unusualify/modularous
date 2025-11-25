@@ -22,7 +22,7 @@ export default async function formatSet(args, model, schema, input, index = null
 
   let { handlerName, handlerSchema, handlerValue } = formatHelpers.handlers(input, model, index)
 
-  if (Array.isArray(handlerValue) && handlerValue.length < 1)
+  if (!(handlerSchema.accordingToEmptiness ?? false) && Array.isArray(handlerValue) && handlerValue.length < 1)
     return
 
   if (handlerValue) {
@@ -81,7 +81,9 @@ export default async function formatSet(args, model, schema, input, index = null
           _.set(model, inputToFormat, values)
         } else if (!isArrayValue) {
           try {
-            _.set(model, targetInputName, newValue)
+            let modelNotation = formatHelpers.hydrateModelNotation(args.shift() ?? inputToFormat, model, schema, input, index)
+
+            _.set(model, modelNotation, newValue)
           } catch (e) {
             console.error(e)
           }

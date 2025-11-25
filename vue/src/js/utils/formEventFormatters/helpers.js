@@ -49,10 +49,45 @@ export default {
     return inputNotationParts.join('.')
   },
 
+  hydrateModelNotation: (modelNotation, model, schema, input, index) => {
+    let modelNotationParts = []
+    let stages = modelNotation.split('.')
+    let targetFormIndex = parseInt(stages[0])
+
+    if(isNaN(targetFormIndex)){
+      targetFormIndex = index
+    } else if(!Array.isArray(model)){
+      return false
+    }
+
+    if(Array.isArray(model)){
+      if(!isNaN(targetFormIndex)){
+        targetFormIndex -= 1
+        stages.shift()
+      }
+      modelNotationParts.push(`[${targetFormIndex}]`)
+    }
+
+    modelNotationParts.push(stages.join('.'))
+
+    return modelNotationParts.join('.')
+  },
+
   getNewValue: (setPropFormat, handlerValue, handlerSchema) => {
     let newValue
 
     if(handlerValue){
+      if((handlerSchema.accordingToEmptiness ?? false) && ['string', 'number', 'array', 'object'].includes(typeof handlerValue)){
+        if( (typeof handlerValue === 'string' && handlerValue.trim() !== '' )
+          || (typeof handlerValue === 'number' && handlerValue > 0 )
+          || (Array.isArray(handlerValue) && handlerValue.length > 0 )
+          || (typeof handlerValue === 'object' && Object.keys(handlerValue).length > 0)){
+          handlerValue = 1
+        }else{
+          handlerValue = 0
+        }
+      }
+
       let dataSet = []
       let notation = __wildcard_change(setPropFormat, handlerValue)
 
