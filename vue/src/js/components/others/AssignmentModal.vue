@@ -5,6 +5,8 @@
     useValidation
   } from '@/hooks'
 
+  const emit = defineEmits(['update:modelValue', 'update:form', 'submit'])
+
   const props = defineProps({
     modelValue: {
       type: Object,
