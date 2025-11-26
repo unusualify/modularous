@@ -169,7 +169,7 @@ export default function useValidation (props) {
 
     // Date validation rules
     dateRule: (msg) => v => !v || !isNaN(Date.parse(v)) || msg || t('validation.invalid_date_format'),
-    futureDateRule: (interval = 0, unit = 'days', msg) => v => {
+    futureDateRule: (interval = 0, unit = 'day', msg) => v => {
         if (!v) return true;
         let today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -180,28 +180,62 @@ export default function useValidation (props) {
           interval = parseInt(interval)
         }
 
+        if(['days', 'minutes', 'hours', 'months', 'years'].includes(unit)) {
+          unit = unit.replace('s', '')
+        }
+
         switch (unit.toLowerCase()) {
-            case 'minutes':
+            case 'minute':
                 futureDate.setMinutes(today.getMinutes() + interval);
                 break;
-            case 'hours':
+            case 'hour':
                 futureDate.setHours(today.getHours() + interval);
                 break;
-            case 'days':
+            case 'day':
                 futureDate.setDate(today.getDate() + interval);
                 break;
-            case 'months':
+            case 'month':
                 futureDate.setMonth(today.getMonth() + interval);
                 break;
-            case 'years':
+            case 'year':
                 futureDate.setFullYear(today.getFullYear() + interval);
                 break;
             default:
                 futureDate.setDate(today.getDate() + interval);
         }
 
-        return new Date(v) >= futureDate ||
-            msg || t('validation.date_must_be_future', { interval, unit });
+        let humanIntervalLabel = null;
+        if (interval === 0) {
+          try {
+            const mValue = window.$moment(new Date(v));
+            const mFuture = window.$moment(futureDate);
+            switch ((unit || '').toLowerCase()) {
+              case 'minute':
+                humanIntervalLabel = t('fields.this_minute');
+                break;
+              case 'hour':
+                humanIntervalLabel = t('fields.this_hour');
+                break;
+              case 'month':
+                humanIntervalLabel = t('fields.this_month');
+                break;
+              case 'year':
+                humanIntervalLabel = t('fields.this_year');
+                break;
+              default:
+                humanIntervalLabel = t('fields.today');
+            }
+          } catch (e) {}
+        }
+
+        return new Date(v) >= futureDate || msg
+          || (interval === 0
+            ? t('validation.date_must_be_now', { interval: humanIntervalLabel || t('fields.' + unit, interval) })
+            : (interval > 0
+              ? t('validation.date_must_be_future', { interval: t('fields.' + unit, interval) })
+              : t('validation.date_must_be_past', { interval: t('fields.' + unit, interval) })
+            )
+          );
     },
     pastDateRule: (interval = 0, unit = 'days', msg) => v => {
         if (!v) return true;
