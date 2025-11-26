@@ -58,8 +58,6 @@
     },
   })
 
-  console.log(props.formattedAssignment, props.assignment)
-
 </script>
 
 <template>
