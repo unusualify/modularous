@@ -12,6 +12,7 @@
   } from '@/hooks'
   import axios from 'axios'
 
+  import AssigneeDetails from '@/components/others/AssigneeDetails.vue'
   import AssignmentModal from '@/components/others/AssignmentModal.vue'
 
   const props = defineProps({
@@ -325,120 +326,19 @@
           <div class="d-flex flex-wrap gc-4">
 
             <!-- Assignee Details -->
-            <v-menu v-if="hasAssignment"
-              :close-on-content-click="false"
-              location="end"
-              Xopen-on-hover
-            >
-              <template v-slot:activator="{ props }">
-                <v-list v-if="(isAssignee || isAuthorized) && lastFormattedAssignment"
-                  id="assigneeList"
-                  :items="[{title: $t('Assignee'), prependAvatar: lastFormattedAssignment.prependAvatar ?? '', subtitle: lastFormattedAssignment.assigneeName}]"
-                  lines="three"
-                  item-props
-                  class="pa-0 v-input-assignment__list--assignee flex-grow-1 flex-shrink-0"
-                  color="primary"
-                  v-bind="props"
+            <AssigneeDetails v-if="hasAssignment"
+              v-model:attachments="attachments"
+              v-model:attachmentsLoading="attachmentsLoading"
+              :loading="updating"
 
-                  variant="plain"
-                >
-                  <template v-slot:title="{ title }">
-                    <div class="text-primary font-weight-bold" v-html="title"></div>
-                  </template>
-                  <template v-slot:subtitle="{ subtitle }">
-                    <div class="font-weight-medium" v-html="subtitle"></div>
-                  </template>
-                </v-list>
-              </template>
-              <v-card min-width="300" max-width="500">
-
-                <!-- Task Summary -->
-                <v-list
-                  id="assigneeList"
-                  :items="[lastFormattedAssignment]"
-                  lines="three"
-                  item-props
-                  class="pa-0 v-input-assignment__list--assignee"
-                >
-                  <template v-slot:title="{ title }">
-                    <div v-html="title"></div>
-                  </template>
-                  <template v-slot:subtitle="subtitleScope">
-                    <div v-html="lastFormattedAssignment.subDescription"></div>
-                  </template>
-                </v-list>
-
-                <v-divider></v-divider>
-
-                <v-list lines="10">
-                  <!-- Last Assignment Description -->
-                  <v-list-item
-                    :title="$t('Description')"
-                    :subtitle="lastAssignment.description"
-                    class=""
-                  >
-                    <template v-slot:prepend="{ isSelected, select }">
-                      <v-icon icon="mdi-information-outline"></v-icon>
-                    </template>
-                  </v-list-item>
-
-                  <v-list-item
-                    v-if="isAuthorized && !isAssignee && lastAssignment.attachments && lastAssignment.attachments.length > 0"
-                    :title="$t('Files')"
-                    subtitle="Files subtitle"
-                  >
-                    <template v-slot:prepend="{ isSelected, select }">
-                      <v-icon icon="mdi-file-outline"></v-icon>
-                    </template>
-                    <template v-slot:subtitle="{ subtitle }">
-                      <ue-filepond-preview :source="lastAssignment.attachments ?? []" show-inline-file-name image-size="24"/>
-                    </template>
-
-                  </v-list-item>
-                </v-list>
-
-                <v-card-text v-if="isAssignee">
-                  <v-input-filepond
-                    v-if="filepond"
-                    label="Files"
-                    ref="inputFilepond"
-                    v-bind="invokeRule($lodash.omit(filepond, ['type']))"
-                    v-model="attachments"
-
-                    :xmodelValue="attachments"
-                    @xupdate:modelValue="$log('update:modelValue', $event)"
-                    @loadingFile="attachmentsLoading = true"
-                    @loadedFile="attachmentsLoading = false"
-                  >
-                  </v-input-filepond>
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions v-if="isAssignee">
-                  <v-btn
-                    variant="tonal"
-                    color="success"
-                    @click="openCompleteModal"
-                  >
-                    Complete
-                  </v-btn>
-
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="primary"
-                    variant="tonal"
-                    @click="attachments.length > 0 && updateAssignment({
-                      attachments: attachments
-                    })"
-                    :loading="attachmentsLoading || updating"
-                    :disabled="attachments.length < 1"
-                  >
-                    Save
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-menu>
+              :isAssignee="isAssignee"
+              :isAuthorized="isAuthorized"
+              :assignment="lastAssignment"
+              :formattedAssignment="lastFormattedAssignment"
+              :filepond="filepond"
+              @click:complete="openCompleteModal"
+              @click:save="updateAssignment"
+            />
 
             <template v-if="isAuthorized">
               <!-- Create Assignment -->
