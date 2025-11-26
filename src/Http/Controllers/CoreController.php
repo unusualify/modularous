@@ -73,7 +73,7 @@ abstract class CoreController extends LaravelController
     /**
      * @var \Unusualify\Modularity\Repositories\Repository
      */
-    protected \Unusualify\Modularity\Repositories\Repository|null $repository;
+    protected \Unusualify\Modularity\Repositories\Repository | null $repository;
 
     /**
      * @var \Unusualify\Modularity\Module
@@ -172,7 +172,7 @@ abstract class CoreController extends LaravelController
     }
 
     /**
-     * @return \Unusualify\Modularity\Repositories\ModuleRepository
+     * @return \Unusualify\Modularity\Repositories\Repository | null
      */
     protected function getRepository()
     {
