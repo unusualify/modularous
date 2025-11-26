@@ -12,6 +12,8 @@
   } from '@/hooks'
   import axios from 'axios'
 
+  import AssignmentModal from '@/components/others/AssignmentModal.vue'
+
   const props = defineProps({
     ...makeInputProps(),
     variant: {
@@ -75,7 +77,7 @@
 
   const listAssignmentsModalActive = ref(false)
 
-  const createForm = ref(null)
+  const createFormModal = ref(null)
   const createFormModalActive = ref(false)
   const createFormModel = ref({
     assignee_id: null,
@@ -203,7 +205,7 @@
 
   const createAssignment = async () => {
     if (input.value) {
-      const valid = await createForm.value.validate()
+      const valid = await createFormModal.value.validateForm()
 
       if (!valid || !valid.valid) {
         return
@@ -531,124 +533,20 @@
           </div>
 
           <!-- Create Assignment Modal -->
-          <ue-modal
+          <AssignmentModal
             ref="createFormModal"
             v-model="createFormModalActive"
-            widthType="md"
+            :form="createFormModel"
+            :variant="variant"
+            :users="items"
+            :minDueDays="minDueDays"
 
-            persistent
-            transition="scale-transition"
-            validate-on="submit lazy"
-          >
-            <v-card>
-              <v-card-text >
-                <v-form
-                  id="createAssignmentForm"
-                  ref="createForm"
-                  class="d-flex flex-column"
-                  @submit.prevent="createAssignment"
-                >
-                  <div class="d-flex justify-space-between gc-4">
-                    <v-select
-                      v-model="createFormModel.assignee_id"
-                      :items="items"
+            :loading="updating"
+            :disabled="!input || updating"
 
-                      :label="label"
-                      :variant="variant"
+            @submit="createAssignment"
+          />
 
-                      density="compact"
-                      item-title="name"
-                      item-value="id"
-                      :return-object="false"
-                      :validate-on="`submit blur`"
-                      class="w-50"
-
-                      :rules="[requiredRule('classic', 1, undefined, $t('Assignee is required'))]"
-
-                      required
-
-                      auto-select-first="exact"
-                    ></v-select>
-
-                    <v-input-date
-                      v-model="createFormModel.due_at"
-                      :variant="variant"
-                      :label="$t('Due Date')"
-                      :rules="[
-                        requiredRule('classic', 1, 1, $t('Pick a due date')),
-                        dateRule(),
-                        futureDateRule(minDueDays, 'days')
-                      ]"
-                      :validate-on="`submit blur`"
-
-                      class="w-50"
-
-                      density="compact"
-                      prepend-icon=""
-                      append-inner-icon="$calendar"
-                      persistent-placeholder
-                      show-adjacent-months
-                      show-week
-                      required
-
-                      Xmultiple="4"
-                      Ymultiple="range"
-
-                    >
-                      <!-- <template v-slot:actions="{ save, cancel, isPristine }">
-                        sss
-                      </template> -->
-                    </v-input-date>
-
-                  </div>
-
-                  <div class="d-flex justify-space-between gc-4 mt-2">
-                    <v-textarea
-                      v-model="createFormModel.description"
-                      :variant="variant"
-                      :label="$t('Description')"
-
-                      density="compact"
-
-                      class="flex-grow-1"
-
-                      :rules="[
-                        requiredRule('classic', 1, 1, $t('Description is required')),
-                        minRule(10, $t('Description must be at least 10 characters'))
-                      ]"
-
-                      validate-on="input lazy"
-
-                    />
-                  </div>
-
-                  <v-divider />
-
-                  <div class="d-flex justify-end gc-4">
-                    <v-btn-secondary
-                      class="mt-4"
-                      density="comfortable"
-                      variant="plain"
-                      :loading="updating"
-                      @click="createFormModalActive = false"
-                    >
-                      {{ $t('Cancel') }}
-                    </v-btn-secondary>
-                    <v-btn
-                      class="mt-4"
-                      density="comfortable"
-                      type="submit"
-                      :loading="updating"
-                      :disabled="!input || updating"
-                    >
-                      {{ $t('Assign') }}
-                    </v-btn>
-                  </div>
-                </v-form>
-
-              </v-card-text>
-            </v-card>
-          </ue-modal>
         </template>
       </div>
     </template>
