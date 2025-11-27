@@ -58,6 +58,9 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
             // LOAD MODULE CONFIG
             $module->loadConfig();
 
+            // LOAD MODULE COMMANDS
+            $module->loadCommands();
+
             // LOAD MODULE MIGRATIONS
             $this->loadMigrationsFrom(
                 $module->getDirectoryPath($migration_folder)
