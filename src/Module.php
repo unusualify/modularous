@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity;
 
+use Illuminate\Console\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
@@ -429,6 +430,31 @@ class Module extends NwidartModule
         if (file_exists($configPath)) {
             $config = include $configPath;
             $this->app['config']->set("{$this->getSnakeName()}", $config);
+        }
+    }
+
+    public function loadCommands(): void
+    {
+        $command_folder = GenerateConfigReader::read('command')->getPath();
+        $command_path = $this->getDirectoryPath("{$command_folder}/*.php");
+
+        $cmds = [];
+
+        foreach (glob($command_path) as $commandFile) {
+            $filePath = realpath($commandFile);
+            $fileContents = file_get_contents($filePath);
+            // Extract namespace using regex
+            if (preg_match('/namespace\s+([^;]+);/', $fileContents, $matches)) {
+                $namespace = $matches[1];
+                $className = basename($filePath, '.php');
+                $cmds[] = $namespace . '\\' . $className;
+            }
+        }
+
+        if (count($cmds) > 0) {
+            Application::starting(function ($artisan) use ($cmds) {
+                $artisan->resolveCommands($cmds);
+            });
         }
     }
 
