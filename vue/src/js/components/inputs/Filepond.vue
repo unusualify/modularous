@@ -19,14 +19,14 @@
           'w-100',
         ]"
         >
-        <ue-title v-if="label" transform="none" padding="a-0" :weight="labelWeight" color="grey-darken-5">
-          <slot name="label" v-bind="{
-            label: label,
-            ref: $refs.VInput,
-          }">
+        <slot name="label" v-bind="{
+          label: label,
+          ref: $refs.VInput,
+        }">
+          <ue-title v-if="label" transform="none" padding="a-0" :weight="labelWeight" color="grey-darken-5">
             {{ label }}
-          </slot>
-        </ue-title>
+          </ue-title>
+        </slot>
         <ue-title v-if="subtitle" type="caption" transform="none" padding="a-0" :weight="subtitleWeight" color="grey-darken-5">
           <slot name="subtitle" v-bind="{
             subtitle: subtitle,
