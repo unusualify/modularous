@@ -49,6 +49,7 @@ class Assignment extends Model
         'status_vuetify_icon',
 
         'attachments',
+        'preliminaries',
     ];
 
     protected $casts = [
@@ -188,6 +189,15 @@ class Assignment extends Model
     {
         return Attribute::make(
             get: fn ($value) => $this->fileponds()->whereRole('attachments')->get()->map(function ($filepond) {
+                return $filepond->mediableFormat();
+            }),
+        );
+    }
+
+    protected function preliminaries(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->fileponds()->whereRole('preliminaries')->get()->map(function ($filepond) {
                 return $filepond->mediableFormat();
             }),
         );

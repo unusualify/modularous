@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'assignment' => [
+        'task-to-assignee-by-assigner' => 'to {assigneeName} &mdash; by {assignerName}',
+    ],
     'billing-banner' => 'Please complete your company details to continue.',
     'error' => 'There is an error!',
     'info' => 'Completed!',

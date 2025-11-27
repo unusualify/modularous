@@ -38,6 +38,7 @@ return [
     'neighbourhood' => 'Mahalle',
     'new-item' => 'Yeni {item}',
     'no' => 'Hayır',
+    'preliminary-documents' => 'Ön Belgeler',
     'reset' => 'Sıfırla',
     'restore' => 'Geri Yükle',
     'save' => 'Kaydet',

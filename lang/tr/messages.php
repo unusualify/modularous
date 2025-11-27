@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'assignment' => [
+        'task-to-assignee-by-assigner' => 'İlgili kullanıcı: {assigneeName} &mdash; Oluşturan: {assignerName}',
+    ],
     'billing-banner' => 'Şirket detaylarınızı doldurarak devam edebilirsiniz.',
     'error' => 'Bir Hata Oluştu!',
     'info' => 'Tamamlandı!',

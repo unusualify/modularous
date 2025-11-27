@@ -118,6 +118,18 @@
           </template>
         </v-list-item>
 
+        <v-list-item v-if="assignment.preliminaries && assignment.preliminaries.length > 0"
+          :title="$t('fields.preliminary-documents')"
+          :subtitle="assignment.preliminaries"
+        >
+          <template v-slot:prepend="{ isSelected, select }">
+            <v-icon icon="mdi-file-document-alert-outline"></v-icon>
+          </template>
+          <template v-slot:subtitle="{ subtitle }">
+            <ue-filepond-preview :source="assignment.preliminaries ?? []" show-inline-file-name image-size="24"/>
+          </template>
+        </v-list-item>
+
         <v-list-item
           v-if="isAuthorized && !isAssignee && assignment.attachments && assignment.attachments.length > 0"
           :title="$t('fields.files')"

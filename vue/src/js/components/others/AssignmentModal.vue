@@ -24,6 +24,10 @@
       type: Boolean,
       default: false,
     },
+    filepond: {
+      type: Object,
+      default: () => ({}),
+    },
     form: {
       type: Object,
       default: () => ({}),
@@ -53,6 +57,7 @@
         assignee_id: null,
         due_at: null,
         description: null,
+        preliminaries: [],
       }
     },
     set(value) {
@@ -69,6 +74,9 @@
 
     return isValid
   }
+
+  const preliminaryLoading = ref(false)
+  const preliminariesFilepond = ref(null)
 
   defineExpose({
     validateForm,
@@ -131,10 +139,6 @@
               show-adjacent-months
               show-week
               required
-
-              Xmultiple="4"
-              Ymultiple="range"
-
             >
               <!-- <template v-slot:actions="{ save, cancel, isPristine }">
                 sss
@@ -158,6 +162,38 @@
 
             />
           </div>
+          <div class="d-flex justify-space-between gc-4 mt-2">
+            <v-input-filepond
+              v-bind="invokeRule($lodash.omit(filepond, ['type']))"
+
+              ref="preliminariesFilepond"
+              v-model="formModel.preliminaries"
+              density="compact"
+              class="flex-grow-1"
+              :variant="variant"
+              :label="$t('fields.preliminary-documents')"
+
+              @loadingFile="fileLoading = true"
+              @loadedFile="preliminaryLoading = false"
+              :disabled="preliminaryLoading"
+            >
+
+            <template v-slot:label="{ label }">
+              <v-badge
+                color="secondary"
+                textColor="white"
+                icon="mdi-creation"
+                location="top left"
+                floating
+              >
+                <span class="text-black">
+                  {{ label }}
+                </span>
+              </v-badge>
+            </template>
+
+            </v-input-filepond>
+          </div>
 
           <v-divider />
 
@@ -176,7 +212,7 @@
               density="comfortable"
               type="submit"
               :loading="loading"
-              :disabled="disabled"
+              :disabled="disabled || preliminaryLoading"
             >
               {{ $t('Assign') }}
             </v-btn>

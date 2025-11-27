@@ -38,6 +38,7 @@ return [
     'neighbourhood' => 'Neighbourhood',
     'new-item' => 'New {item}',
     'no' => 'No',
+    'preliminary-documents' => 'Preliminary Documents',
     'reset' => 'Reset',
     'restore' => 'Restore',
     'save' => 'Save',

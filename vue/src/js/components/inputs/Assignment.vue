@@ -84,6 +84,7 @@
     assignee_id: null,
     due_at: null,
     description: null,
+    preliminaries: [],
   })
   const completeModal = ref(false)
   const attachments = ref([])
@@ -115,7 +116,8 @@
       let assignerName = Authorization.isYou(assignment.assigner_id) ? t('You') : assignment.assigner_name
       let assigneeName = Authorization.isYou(assignment.assignee_id) ? t('You') : assignment.assignee_name
 
-      let title = `to <span class="text-blue-darken-1">${assigneeName}</span> &mdash; by <span class="text-success">${assignerName}</span>`
+      // let title = `to <span class="text-blue-darken-1">${assigneeName}</span> &mdash; by <span class="text-success">${assignerName}</span>`
+      let title = t('messages.assignment.task-to-assignee-by-assigner', {  assigneeName: `<span class="text-blue-darken-1">${assigneeName}</span>`, assignerName: `<span class="text-success">${assignerName}</span>` })
 
       let untilText = `${t('Until')}: <span class="font-weight-bold text-blue-darken-1"> ${d(new Date(assignment.due_at), 'medium')}</span>`
       let fromText = `${t('From')}: <span class="">${d(assignment.created_at ? new Date(assignment.created_at) : new Date(), 'medium')}</span>`
@@ -142,6 +144,7 @@
         appendInnerIcon,
 
         attachments: assignment.attachments ?? [],
+        preliminaries: assignment.preliminaries ?? [],
       })
 
       if(index !== assignments.value.length - 1) {
@@ -370,7 +373,7 @@
                 widthType="md"
                 transition="scroll-y-reverse-transition"
                 scrollable
-                height="450"
+                height="600"
                 :title="$t('Task History')"
                 has-close-button
                 has-title-divider
@@ -416,7 +419,21 @@
                       </template>
                       <template v-slot:subtitle="{ item, subtitle }">
                         <div class="w-100" style="word-break: break-word;white-space: pre-wrap;" v-html="subtitle"></div>
-                        <ue-filepond-preview class="my-2" v-if="item.attachments && item.attachments.length > 0" :source="item.attachments" show-inline-file-name image-size="24"/>
+                        <v-expansion-panels class="my-2">
+                          <v-expansion-panel v-if="item.preliminaries && item.preliminaries.length > 0">
+                            <v-expansion-panel-title>{{ $t('fields.preliminary-documents') }}</v-expansion-panel-title>
+                            <v-expansion-panel-text>
+                              <ue-filepond-preview :source="item.preliminaries" show-inline-file-name image-size="24"/>
+                            </v-expansion-panel-text>
+                          </v-expansion-panel>
+                          <v-expansion-panel v-if="item.attachments && item.attachments.length > 0">
+                            <v-expansion-panel-title>{{ $t('Attachments') }}</v-expansion-panel-title>
+                            <v-expansion-panel-text>
+                              <ue-filepond-preview :source="item.attachments" show-inline-file-name image-size="24"/>
+                            </v-expansion-panel-text>
+                          </v-expansion-panel>
+                        </v-expansion-panels>
+                        <!-- <ue-filepond-preview class="my-2" v-if="item.attachments && item.attachments.length > 0" :source="item.attachments" show-inline-file-name image-size="24"/> -->
 
                       </template>
                       <template v-slot:append="appendScope" >
@@ -440,6 +457,7 @@
             :variant="variant"
             :users="items"
             :minDueDays="minDueDays"
+            :filepond="filepond"
 
             :loading="updating"
             :disabled="!input || updating"

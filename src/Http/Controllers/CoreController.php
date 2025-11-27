@@ -450,6 +450,10 @@ abstract class CoreController extends LaravelController
             'description',
         ]));
 
+        if ($preliminaries = $this->request->get('preliminaries')) {
+            Filepond::saveFile($assignment, $preliminaries, 'preliminaries');
+        }
+
         $assignment->refresh();
 
         return Response::json($assignment);
