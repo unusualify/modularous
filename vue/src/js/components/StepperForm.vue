@@ -298,11 +298,15 @@
       },
       responseModalTitle: {
         type: String,
-        default: 'Request Complete'
+        default: () => {
+          return this.$t('Request Complete')
+        }
       },
       responseModalMessage: {
         type: String,
-        default: 'Congratulations! Your request was completed successfully.'
+        default: () => {
+          return this.$t('Congratulations! Your request was completed successfully.')
+        }
       },
       responseModalButtonText: {
         type: String,
