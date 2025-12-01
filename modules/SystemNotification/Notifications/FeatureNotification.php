@@ -50,7 +50,19 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      */
     public $validChannels = ['mail', 'database', 'broadcast', 'vonage', 'slack'];
 
+    /**
+     * The default channels of the notification.
+     *
+     * @var array<string>
+     */
     public $defaultChannels = [];
+
+    /**
+     * The outro lines of the notification.
+     *
+     * @var array<string>
+     */
+    public $outroLines = [];
 
     /**
      * The module route headline of the model.
@@ -687,14 +699,33 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
         $mailMessage = (new MailMessage)
             ->subject($mailSubject)
             ->greeting(__('Hi, :name', ['name' => $notifiable->name]))
-            ->line($message);
+            ->line(new HtmlString($message));
 
         if ($redirector) {
             $mailMessage->action($this->getNotificationMailActionText($notifiable, $this->model), $redirector);
         }
 
+        $mailMessage = $this->loadOutroLines($mailMessage);
+
         $mailMessage = $mailMessage->salutation($this->getMailSalutation());
 
         return $this->getMailMessage($mailMessage, $notifiable, $this->model);
+    }
+
+    protected function loadOutroLines(MailMessage $mailMessage): MailMessage
+    {
+        $mailMessage->outroLines = array_merge($mailMessage->outroLines, $this->getOutroLines());
+
+        return $mailMessage;
+    }
+
+    protected function getOutroLines(): array
+    {
+        return $this->outroLines ?? [];
+    }
+
+    public function addOutroLine(string $line): void
+    {
+        $this->outroLines[] = $line;
     }
 }
