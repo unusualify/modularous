@@ -6,61 +6,23 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularity\Events\Traits\EventChanges;
+use Unusualify\Modularity\Events\Traits\EventStateable;
+use Unusualify\Modularity\Events\Traits\EventUrls;
+use Unusualify\Modularity\Events\Traits\EventUser;
 
 abstract class ModelEvent
 {
+    use EventUrls, EventChanges, EventStateable, EventUser;
+
     /**
      * The class of the model.
      *
      * @var string
      */
     public $modelType;
-
-    /**
-     * The user model.
-     *
-     * @var \Illuminate\Database\Eloquent\Model
-     */
-    public $user;
-
-    /**
-     * The recent URL.
-     *
-     * @var string
-     */
-    public $recentUrl;
-
-    /**
-     * The previous URL.
-     *
-     * @var string
-     */
-    public $previousUrl;
-
-    /**
-     * The current route name.
-     *
-     * @var string|null
-     */
-    public $route;
-
-    /**
-     * The changed attributes.
-     *
-     * @var array
-     */
-    protected $changedAttributes = [];
-
-    /**
-     * The changed relationships.
-     *
-     * @var array
-     */
-    protected $changedRelationships = [];
 
     /**
      * The channel name.
@@ -70,51 +32,16 @@ abstract class ModelEvent
     public $broadcastService = 'reverb';
 
     /**
-     * The model has stateable trait.
-     *
-     * @var bool
-     */
-    public $hasStateable = false;
-
-    /**
-     * The current route name.
-     *
-     * @var string|null
-     */
-    public $stateableChanged = false;
-
-    /**
-     * The previous state name.
-     *
-     * @var string|null
-     */
-    public $previousStateableState = null;
-
-    /**
-     * The current state name.
-     *
-     * @var string|null
-     */
-    public $currentStateableState = null;
-
-    /**
      * Create a new event instance.
      */
     public function __construct(public $model, public $serializedData = null)
     {
         $this->modelType = get_class($this->model);
-        $this->user = Auth::user();
-        $this->recentUrl = url()->current() ?? null;
-        $this->previousUrl = url()->previous() ?? null;
-        $this->changedAttributes = $this->model->getChanges();
-        $this->changedRelationships = method_exists($this->model, 'getChangedRelationships') ? $this->model->getChangedRelationships() : [];
 
-        if (classHasTrait($this->model, HasStateable::class)) {
-            $this->hasStateable = true;
-            $this->stateableChanged = $this->model->stateableChanged();
-            $this->previousStateableState = $this->model->previousStateableState();
-            $this->currentStateableState = $this->model->currentStateableState();
-        }
+        $this->setupEventUser();
+        $this->setupEventUrls();
+        $this->setupEventChanges();
+        $this->setupEventStateable();
 
         if (in_array(InteractsWithBroadcasting::class, class_uses_recursive($this))) {
             $this->broadcastVia($this->broadcastService);
@@ -154,60 +81,5 @@ abstract class ModelEvent
         //     'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))))
         // );
         return 'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))));
-    }
-
-    /**
-     * Check if the user model exists.
-     *
-     * @return bool
-     */
-    public function hasUser()
-    {
-        return $this->user !== null;
-    }
-
-    /**
-     * Get the user model.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Get the recent URL.
-     *
-     * @return string
-     */
-    public function getRecentUrl()
-    {
-        return $this->recentUrl;
-    }
-
-    /**
-     * Get the previous URL.
-     *
-     * @return string
-     */
-    public function getPreviousUrl()
-    {
-        return $this->previousUrl;
-    }
-
-    public function wasChanged($values = null)
-    {
-        if (empty($values)) {
-            return count($this->changedAttributes) > 0 || count($this->changedRelationships) > 0;
-        }
-
-        foreach (Arr::wrap($values) as $value) {
-            if (array_key_exists($value, $this->changedAttributes) || array_key_exists($value, $this->changedRelationships)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
