@@ -413,6 +413,7 @@ abstract class CoreController extends LaravelController
 
             if ($attachments) {
                 Filepond::saveFile($lastAssignment, $attachments, 'attachments');
+                $lastAssignment->touch();
             }
 
             return Response::json([

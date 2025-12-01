@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -117,7 +118,7 @@ class FilepondManager
                 Storage::delete($new_path);
             }
 
-            $this->createFilepond($model, $temp_filepond, role: $role, locale: $locale);
+            $filepond = $this->createFilepond($model, $temp_filepond, role: $role, locale: $locale);
 
             $this->deleteFilePondFromSession($temp_filepond);
 
@@ -129,10 +130,10 @@ class FilepondManager
 
             $temp_filepond->delete();
 
-            return $new_folder;
+            return $filepond;
         }
 
-        return '';
+        return null;
 
     }
 
@@ -141,7 +142,7 @@ class FilepondManager
         $filepondable_id = $object->id;
         $filepondable_type = get_class($object);
 
-        Filepond::create([
+        return Filepond::create([
             'filepondable_id' => $filepondable_id,
             'filepondable_type' => $filepondable_type,
             'file_name' => $temp_filepond->file_name,
@@ -162,14 +163,25 @@ class FilepondManager
         }
 
         $fileponds = $fileponds->get();
+        $anyDeleted = false;
+
         // files listesinde gelmeyip object->fileponds listesinde olanlari fileponds tablosundan ve storage'tan sil
+        $deletedUuids = [];
+        $deletedFileponds = Collection::make();
         foreach ($fileponds as $file) {
             if (! in_array($file->uuid, $existingUuids)) {
+                $anyDeleted = true;
+                $deletedUuids[] = $file->uuid;
+                $deletedFileponds->push($file);
                 $file->delete();
             }
         }
 
-        // dd($files, $fileponds);
+        $fileponds = $fileponds->whereNotIn('uuid', $deletedUuids);
+
+        $anyCreated = false;
+        $addedFileponds = Collection::make();
+
         foreach ($files as $file) {
             if ((bool) $fileponds->select('uuid', $file['uuid']) && Storage::exists($this->file_path . $file['uuid'])) {
                 continue;
@@ -178,10 +190,26 @@ class FilepondManager
             $tmp_file = TemporaryFilepond::where('folder_name', $file['uuid'])->first();
 
             if ($tmp_file) {
-                $this->persistFile($tmp_file, $object, role: $role, locale: $locale);
+                $filepond = $this->persistFile($tmp_file, $object, role: $role, locale: $locale);
+                if ($filepond) {
+                    $anyCreated = true;
+                    $addedFileponds->push($filepond);
+                    $fileponds->push($filepond);
+                }
             }
-
         }
+
+        if ($anyDeleted || $anyCreated) {
+            $object->addFilepondsAsChanged($fileponds);
+            if($anyDeleted) {
+                $object->setDeletedFilepondsAsChanged($deletedFileponds);
+            }
+            if($anyCreated) {
+                $object->setNewFilepondsAsChanged($addedFileponds);
+            }
+        }
+
+        return false;
 
     }
 

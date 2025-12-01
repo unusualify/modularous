@@ -2,10 +2,34 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Unusualify\Modularity\Entities\Filepond;
+use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
 
 trait HasFileponds
 {
+    use ChangeRelationships;
+
+    /**
+     * The deleted fileponds relationship.
+     *
+     * @var Collection
+     */
+    protected Collection $deletedFileponds;
+
+    /**
+     * The new fileponds relationship.
+     *
+     * @var Collection
+     */
+    protected Collection $newFileponds;
+
+    public function initializeHasFileponds()
+    {
+        $this->deletedFileponds = Collection::make();
+        $this->newFileponds = Collection::make();
+    }
+
     public function getFilepondableClass()
     {
         if (! $this->filepondableClass) {
@@ -44,5 +68,45 @@ trait HasFileponds
         return (bool) $role
             ? $this->fileponds()->where('role', $role)->exists()
             : $this->fileponds()->exists();
+    }
+
+    public function addFilepondsAsChanged($fileponds)
+    {
+        $this->mergeChangedRelationships('fileponds', $fileponds);
+    }
+
+    public function setDeletedFilepondsAsChanged($fileponds)
+    {
+        $this->deletedFileponds = $fileponds;
+    }
+
+    public function mergeDeletedFilepondsAsChanged($fileponds)
+    {
+        $this->deletedFileponds = $this->deletedFileponds->merge($fileponds);
+    }
+
+    public function setNewFilepondsAsChanged($fileponds)
+    {
+        $this->newFileponds = $fileponds;
+    }
+
+    public function hasDeletedFileponds()
+    {
+        return !empty($this->deletedFileponds);
+    }
+
+    public function hasNewFileponds()
+    {
+        return !empty($this->newFileponds);
+    }
+
+    public function getDeletedFileponds()
+    {
+        return $this->deletedFileponds;
+    }
+
+    public function getNewFileponds()
+    {
+        return $this->newFileponds;
     }
 }
