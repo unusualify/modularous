@@ -17,7 +17,7 @@ class Stateable extends Model
         'stateable_type',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function state(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

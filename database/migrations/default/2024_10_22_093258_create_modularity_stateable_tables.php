@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Unusualify\Modularity\Facades\MigrationBackup;
 use Unusualify\Modularity\Facades\Modularity;
 
 return new class extends Migration
@@ -35,10 +36,14 @@ return new class extends Migration
         if (! Schema::hasTable($stateablesTable)) {
             Schema::create($stateablesTable, function (Blueprint $table) use ($stateablesTable, $stateTable) {
                 createDefaultMorphPivotTableFields($table, modelName: 'State', tableName: $stateablesTable, morphedTableName: $stateTable);
-                // $table->boolean('is_active')->default(false);
+                $table->timestamp('created_at')->useCurrent();
+                $table->timestamp('updated_at')->useCurrent();
             });
         }
 
+        MigrationBackup::restore($stateTable);
+        MigrationBackup::restore($stateTranslationsTable);
+        MigrationBackup::restore($stateablesTable);
     }
 
     public function down()
@@ -46,6 +51,10 @@ return new class extends Migration
         $stateTable = Modularity::config('tables.states', 'modularity_states');
         $stateTranslationsTable = Modularity::config('tables.state_translations', 'modularity_state_translations');
         $stateablesTable = Modularity::config('tables.stateables', 'modularity_stateables');
+
+        MigrationBackup::backup($stateablesTable);
+        MigrationBackup::backup($stateTranslationsTable);
+        MigrationBackup::backup($stateTable);
 
         Schema::dropIfExists($stateablesTable);
         Schema::dropIfExists($stateTranslationsTable);
