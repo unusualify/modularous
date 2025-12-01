@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Core;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 trait ChangeRelationships
@@ -16,6 +17,11 @@ trait ChangeRelationships
     public function addChangedRelationships($relationshipName, $relationship)
     {
         $this->changedRelationships[$relationshipName] = $relationship;
+    }
+
+    public function mergeChangedRelationships($relationshipName, $relationships)
+    {
+        $this->changedRelationships[$relationshipName] = ($this->changedRelationships[$relationshipName] ?? Collection::make())->merge($relationships);
     }
 
     public function getChangedRelationships()

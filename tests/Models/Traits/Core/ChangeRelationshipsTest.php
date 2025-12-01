@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits\Core;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -120,6 +122,36 @@ class ChangeRelationshipsTest extends ModelTestCase
         $expected = ['users' => []];
         $this->assertEquals($expected, $this->model->getChangedRelationships());
         $this->assertTrue($this->model->wasChangedRelationships());
+    }
+
+    public function test_merge_changed_relationships()
+    {
+        if(!Schema::hasTable('um_chats')) {
+            Schema::create('um_chats', function (Blueprint $table) {
+                $table->id();
+                $table->string('chatable_type');
+                $table->unsignedBigInteger('chatable_id');
+                $table->timestamps();
+            });
+        }
+        $chat1 = Chat::create([
+            'chatable_type' => get_class($this->model),
+            'chatable_id' => $this->model->id,
+        ]);
+        $chat2 = Chat::create([
+            'chatable_type' => get_class($this->model),
+            'chatable_id' => $this->model->id,
+        ]);
+        $chat3 = Chat::create([
+            'chatable_type' => get_class($this->model),
+            'chatable_id' => $this->model->id,
+        ]);
+        $this->model->addChangedRelationships('chats', Collection::make([$chat1, $chat2, $chat3]));
+        $this->model->addChangedRelationships('chats', Collection::make([]));
+        $this->model->mergeChangedRelationships('chats', Collection::make([$chat1, $chat2, $chat3]));
+
+        $expected = ['chats' => Collection::make([$chat1, $chat2, $chat3])];
+        $this->assertEquals($expected, $this->model->getChangedRelationships());
     }
 
     public function test_get_changed_relationships()
