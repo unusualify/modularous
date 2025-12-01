@@ -424,13 +424,27 @@ class MigrationBackup
             }
         }
 
-        $exists = DB::table($table)
-            ->where('id', $record['id'])
+        // if $table has a foreign key, check if the foreign key exists in the related table and if not, create the foreign key
+        $foreignKeys = $this->getForeignKeys($table);
+        $foreignExists = false;
+        $primaryKey = null;
+        foreach ($foreignKeys as $foreignKey) {
+            $foreignTable = $foreignKey['foreign_table'];
+            $foreignColumn = $foreignKey['foreign_column'];
+            $foreignValue = $record[$foreignColumn];
+            $foreignExists = DB::table($foreignTable)->where('id', $foreignValue)->exists();
+            if (! $foreignExists) {
+                $primaryKey = $foreignKey['local_column'];
+            }
+        }
+
+        $exists = !$foreignExists ? false : DB::table($table)
+            ->where($primaryKey, $record[$primaryKey])
             ->exists();
 
         if ($exists) {
             DB::table($table)
-                ->where('id', $record['id'])
+                ->where($primaryKey, $record[$primaryKey])
                 ->update($record);
         } else {
             DB::table($table)->insert($record);
