@@ -7,10 +7,12 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Unusualify\Modularity\Events\Traits\EventChanges;
+use Unusualify\Modularity\Events\Traits\EventUser;
 
 class AssignmentUpdated implements ShouldDispatchAfterCommit
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, EventChanges, EventUser;
 
     /**
      * The name of the queue connection to use when broadcasting the event.
@@ -28,7 +30,8 @@ class AssignmentUpdated implements ShouldDispatchAfterCommit
 
     public function __construct(public \Unusualify\Modularity\Entities\Assignment $model)
     {
-        //
+        $this->setupEventUser();
+        $this->setupEventChanges();
     }
 
     public function broadcastOn(): array
