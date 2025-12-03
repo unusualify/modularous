@@ -59,6 +59,7 @@ trait HasPayment
         $this->append([
             'is_paid',
             'is_partially_paid',
+            'is_provided',
             'is_unpaid',
             'is_refunded',
             'payment_status_formatted',
@@ -110,7 +111,7 @@ trait HasPayment
     {
         return $this->morphOne(Price::class, 'priceable')
             ->where('role', 'payment')
-            ->whereDoesntHave('payments', fn ($q) => $q->where('status', 'COMPLETED'))
+            ->whereDoesntHave('payments', fn ($q) => $q->whereIn('status', [PaymentStatus::COMPLETED, PaymentStatus::PROVISION]))
             ->latest('created_at');
 
         $priceTable = (new Price)->getTable();
@@ -119,7 +120,7 @@ trait HasPayment
         return $this->morphOne(Price::class, 'priceable')
             // ->hasPayment(false)
             ->hasPayment(false)
-            ->orWhereHas('payments', fn ($q) => $q->where('status', '!=', 'COMPLETED'))
+            ->orWhereHas('payments', fn ($q) => $q->where('status', '!=', PaymentStatus::COMPLETED))
             ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
     }
 
@@ -127,7 +128,14 @@ trait HasPayment
     {
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment')
-            ->hasPayment(true, 'COMPLETED');
+            ->hasPayment(true, PaymentStatus::COMPLETED);
+    }
+
+    public function providedPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Price::class, 'priceable')
+            ->where('role', 'payment')
+            ->hasPayment(true, PaymentStatus::PROVISION);
     }
 
     public function payment(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
@@ -262,6 +270,13 @@ trait HasPayment
         );
     }
 
+    protected function isProvided(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->providedPrices()->exists(),
+        );
+    }
+
     protected function isPartiallyPaid(): Attribute
     {
         return Attribute::make(
@@ -272,7 +287,7 @@ trait HasPayment
     protected function isRefunded(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->payment()->where('status', 'REFUNDED')->exists(),
+            get: fn ($value) => $this->payment()->where('status', PaymentStatus::REFUNDED)->exists(),
         );
     }
 
@@ -280,7 +295,8 @@ trait HasPayment
     {
         return Attribute::make(
             get: fn ($value) => match (true) {
-                $this->is_refunded => "<v-chip color='error'>" . __('Refunded') . '</v-chip>',
+                $this->is_refunded => "<v-chip color='error'>" . __(PaymentStatus::REFUNDED->label()) . '</v-chip>',
+                $this->is_provided => "<v-chip color='info'>" . __(PaymentStatus::PROVISION->label()) . '</v-chip>',
                 $this->is_paid => "<v-chip color='success'>" . __('Paid') . '</v-chip>',
                 $this->is_partially_paid => "<v-chip color='warning'>" . __('Partially Paid') . '</v-chip>',
                 $this->is_unpaid => "<v-chip color='error'>" . __('Unpaid') . '</v-chip>',
