@@ -16,18 +16,35 @@
       ]"
       @mouseenter="startReading"
     >
-      <!-- Avatar -->
-      <v-tooltip :text="formatDate(message)" location="top">
-        <template v-slot:activator="{ props }">
-          <v-avatar
-            :size="$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize"
-            :class="[
-              reverse ? 'ml-3' : 'mr-3'
-            ]"
-            :image="message.user_profile.avatar_url" v-bind="props"
-          />
-        </template>
-      </v-tooltip>
+      <!-- Avatar with time below -->
+      <div class="d-flex flex-column align-center" :class="reverse ? 'ml-3' : 'mr-3'">
+        <v-tooltip
+          v-if="$vuetify.display.smAndDown"
+          :text="formatDate(message)"
+          location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-avatar
+              :size="$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize"
+              :image="message.user_profile.avatar_url"
+              v-bind="props"
+            />
+          </template>
+        </v-tooltip>
+        <v-avatar
+          v-else
+          :size="avatarSize"
+          :image="message.user_profile.avatar_url"
+        />
+        <span
+          v-if="$vuetify.display.smAndUp"
+          class="text-caption text-grey-darken-1 mt-1"
+          style="font-size: 10px; white-space: nowrap; text-align: center;"
+        >
+          {{ formatDate(message) }}
+        </span>
+      </div>
+
       <div
         :stylex="{ width: `calc(50% - ${avatarSize}px)` }"
         class="w-100">
@@ -43,9 +60,6 @@
             reverse ? 'text-end' : 'text-start'
           ]"
           >
-            <div v-if="$vuetify.display.smAndDown" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              {{ formatDate(message) }}
-            </div>
             <div>{{ message.user_profile.name }}</div>
           </div>
 
@@ -73,7 +87,7 @@
           ]"
         >
           <!-- Message content -->
-          <div :class="['d-flex mt-2 text-break', reverse ? 'flex-row-reverse' : 'flex-row']">
+          <div :class="['d-flex mt-2 text-break position-relative', reverse ? 'flex-row-reverse' : 'flex-row']">
             <div class="w-100" style="color: #32454A; font-weight: 400; font-size: 12px;">
               <template v-if="message.content && message.content.length > contentTruncateLength">
                 <div v-if="isExpanded" v-html="formattedContent"></div>
@@ -194,19 +208,52 @@
     },
     methods: {
       formatDate(message) {
-        let formattedDate = window.$moment().fromNow();
-
-        if(message.created_at) {
-          let date = new Date(message.created_at);
-
-          if (Date.now() - date.getTime() < 48 * 60 * 60 * 1000) {
-            formattedDate = window.$moment(date).fromNow();
-          } else {
-            formattedDate = this.$d(new Date(message.created_at), 'numeric-full');
-          }
+        if (!message.created_at) {
+          return '';
         }
 
-        return formattedDate;
+        const date = new Date(message.created_at);
+        const elapsedMilliSeconds = this.getElapsedMilliseconds(date);
+        const elapsedDays = this.getElapsedDays(elapsedMilliSeconds);
+
+        // Today
+        if (elapsedDays === 0) {
+          const elapsedHours = this.getElapsedHours(elapsedMilliSeconds);
+          if (elapsedHours === 0) {
+            const elapsedMinutes = this.getElapsedMinutes(elapsedMilliSeconds);
+            if (elapsedMinutes === 0) {
+              return 'just now';
+            }
+            return this.formatMinutes(elapsedMinutes);
+          }
+          return this.formatHours(elapsedHours);
+        }
+
+        // Yesterday
+        if (elapsedDays === 1) {
+          return 'yesterday';
+        }
+
+        // This week
+        if (elapsedDays < 7) {
+          return `${elapsedDays} days ago`;
+        }
+
+        // This month
+        if (elapsedDays < 30) {
+          const weeks = this.getElapsedWeeks(elapsedDays);
+          return this.formatWeeks(weeks);
+        }
+
+        // This year
+        if (elapsedDays < 365) {
+          const months = this.getElapsedMonths(elapsedDays);
+          return this.formatMonths(months);
+        }
+
+        // Older than a year
+        const years = this.getElapsedYears(elapsedDays);
+        return this.formatYears(years);
       },
       updateMessage(field, value) {
         let endpoint = this.updateEndpoint.replace(':id', this.input.id);
@@ -235,7 +282,44 @@
       },
       toggleExpand() {
         this.isExpanded = !this.isExpanded;
-      }
+      },
+      getElapsedMilliseconds(date) {
+        const now = new Date();
+        return now.getTime() - date.getTime();
+      },
+      getElapsedMinutes(milliSeconds) {
+        return Math.floor(milliSeconds / (1000 * 60));
+      },
+      getElapsedHours(milliSeconds) {
+        return Math.floor(milliSeconds / (1000 * 60 * 60));
+      },
+      getElapsedDays(milliSeconds) {
+        return Math.floor(milliSeconds / (1000 * 60 * 60 * 24));
+      },
+      getElapsedWeeks(days) {
+        return Math.floor(days / 7);
+      },
+      getElapsedMonths(days) {
+        return Math.floor(days / 30);
+      },
+      getElapsedYears(days) {
+        return Math.floor(days / 365);
+      },
+      formatMinutes(minutes) {
+        return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+      },
+      formatHours(hours) {
+        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+      },
+      formatWeeks(weeks) {
+        return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+      },
+      formatMonths(months) {
+        return months === 1 ? '1 month ago' : `${months} months ago`;
+      },
+      formatYears(years) {
+        return years === 1 ? '1 year ago' : `${years} years ago`;
+      },
     },
     beforeUnmount() {
       if (this.readingTimer) {
