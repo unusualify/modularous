@@ -79,7 +79,7 @@ class PaymentStatusTest extends TestCase
         $this->assertEquals('mdi-clock-alert-outline', PaymentStatus::PENDING->icon());
         $this->assertEquals('mdi-close-circle-outline', PaymentStatus::FAILED->icon());
         $this->assertEquals('mdi-cart-outline', PaymentStatus::CHECKOUT->icon());
-        $this->assertEquals('mdi-progress-clock-outline', PaymentStatus::PROVISION->icon());
+        $this->assertEquals('mdi-progress-clock', PaymentStatus::PROVISION->icon());
         $this->assertEquals('mdi-check-circle-outline', PaymentStatus::COMPLETED->icon());
         $this->assertEquals('mdi-close-circle-outline', PaymentStatus::CANCELLED->icon());
         $this->assertEquals('mdi-credit-card-refund-outline', PaymentStatus::REFUNDED->icon());
