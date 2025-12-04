@@ -796,7 +796,7 @@ trait FormSchema
                         $inputToFormat = array_shift($args);
                         $targetPropName = array_shift($args) ?? 'inputs';
 
-                        $filterEndpoint ??= null;
+                        $filterEndpoint = $input['filterEndpoint'] ?? null;
 
                         if (! $filterEndpoint && isset($input['schema'])) {
                             $filterEndpoint = Collection::make($input['schema'])->mapWithKeys(function ($r) {
@@ -821,22 +821,6 @@ trait FormSchema
                             }
                         }
                         if ($filterEndpoint) {
-                            // schemaChangers set
-                            // if(isset($input['toChange'])){
-                            //     $changerName = $inputToFormat;
-                            //     $inputToFormatParts = explode('.', $inputToFormat);
-                            //     if(count($inputToFormatParts) > 1 && ctype_digit($inputToFormatParts[0])){
-                            //         $changerName = implode('.', array_slice($inputToFormatParts, 1));
-                            //     }
-                            //     $this->schemaChangers[] = [
-                            //         'changer' => $changerName,
-                            //         'toChange' => $input['toChange'],
-                            //     ];
-                            // }
-                            // dd(
-                            //     get_defined_vars(),
-                            //     $this->schemaChangers
-                            // );
                             if ($data) {
                                 $data['filterEndpoint'] = $filterEndpoint;
                             } else {
