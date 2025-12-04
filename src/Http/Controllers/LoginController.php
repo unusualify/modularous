@@ -438,7 +438,7 @@ class LoginController extends Controller
             }
         } else {
             // If the user doesn't exist, create it
-            $request->merge(['email' => $oauthUser->email]);
+            $request->merge(['email' => $oauthUser->email, 'name' => $oauthUser->name ?? '', 'surname' => $oauthUser->surname ?? $oauthUser->family_name ?? '']);
 
             event(new ModularityUserRegistering($request, isOauth: true));
 
