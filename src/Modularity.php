@@ -7,6 +7,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Modules\SystemPricing\Entities\Currency;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Json;
 use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
@@ -59,6 +60,13 @@ class Modularity extends FileRepository
      * @var \Closure|null
      */
     public static $pageTitleCallback;
+
+    /**
+     * The callback that should be used to disable language based prices.
+     *
+     * @var \Closure|null
+     */
+    public static $disableLanguageBasedPricesCallback;
 
     /**
      * The constructor.
@@ -697,5 +705,37 @@ class Modularity extends FileRepository
     public function getVendorNamespace($append = null)
     {
         return concatenate_namespace(modularityConfig('namespace'), $append);
+    }
+
+    public static function createDisableLanguageBasedPrices($callback)
+    {
+        self::$disableLanguageBasedPricesCallback = $callback;
+    }
+
+    public function shouldUseLanguageBasedPrices()
+    {
+        $result = config('modularity.use_language_based_prices', false);
+
+        if( $result && static::$disableLanguageBasedPricesCallback ){
+            $result = !call_user_func(static::$disableLanguageBasedPricesCallback);
+        }
+
+        return $result;
+    }
+
+    public function getCurrencyForLanguageBasedPrices()
+    {
+        if( $this->shouldUseLanguageBasedPrices() ){
+            $locale = app()->getLocale();
+            $localeCurrencies = config('modularity.language_currencies', []);
+            if( array_key_exists($locale, $localeCurrencies) ){
+                $currency = Currency::where('iso_4217', strtoupper($localeCurrencies[$locale]))->first();
+                if( $currency ){
+                    return $currency;
+                }
+            }
+        }
+
+        return false;
     }
 }

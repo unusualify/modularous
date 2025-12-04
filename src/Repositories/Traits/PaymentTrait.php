@@ -70,9 +70,7 @@ trait PaymentTrait
                     'role',
                     'valid_from',
                     'valid_till',
-
                     'discount_percentage',
-
                     $priceSavingKey,
                 ]));
             } else {
@@ -125,10 +123,7 @@ trait PaymentTrait
                         if ($records instanceof \Illuminate\Database\Eloquent\Collection) {
 
                             foreach ($records as $record) {
-                                $price = $record->basePrice;
-                                // $price = $record->prices->filter(function ($price) use ($currencyId) {
-                                //     return $price->currency_id == $currencyId;
-                                // })->first();
+                                $price = $record->originalBasePrice;
 
                                 if (! is_null($price)) {
                                     $calculated = true;

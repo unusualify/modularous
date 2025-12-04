@@ -2,10 +2,14 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Request;
+use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Traits\HasPriceable as TraitsHasPriceable;
 use Unusualify\Modularity\Entities\Mutators\HasPriceableMutators;
+use Unusualify\Modularity\Facades\CurrencyExchange;
+use Unusualify\Modularity\Facades\Modularity;
 
 trait HasPriceable
 {
@@ -17,10 +21,60 @@ trait HasPriceable
         return $this->morphMany(Price::class, 'priceable');
     }
 
-    public function basePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function originalBasePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
             ->where('currency_id', Request::getUserCurrency()->id);
+    }
+
+    public function basePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        $query = $this->morphOne(Price::class, 'priceable')
+            ->where('currency_id', Request::getUserCurrency()->id);
+
+        $currencyForLanguageBasedPrices = Modularity::getCurrencyForLanguageBasedPrices();
+
+        if ($currencyForLanguageBasedPrices) {
+            $convertedExchangeRate = CurrencyExchange::getExchangeRate($currencyForLanguageBasedPrices->iso_4217);
+            $priceTable = app(Price::class)->getTable();
+
+            $languageBasedPriceFactor = $this->getLanguageBasedPriceFactor();
+            if(method_exists($this, 'getLanguageBasedPriceQuery')){
+                // Get the subquery that checks if language-based pricing conditions are met
+                $conditionSubquery = $this->getLanguageBasedPriceQuery();
+
+                // Use CASE WHEN to conditionally apply the exchange rate conversion
+                $query->selectRaw(
+                    "{$priceTable}.*,
+                    CASE WHEN EXISTS({$conditionSubquery->toSql()})
+                        THEN ROUND(({$priceTable}.raw_amount * ?) / {$languageBasedPriceFactor}, 0) * {$languageBasedPriceFactor}
+                        ELSE {$priceTable}.raw_amount
+                    END as raw_amount,
+                    CASE WHEN EXISTS({$conditionSubquery->toSql()})
+                        THEN ?
+                        ELSE {$priceTable}.currency_id
+                    END as currency_id,
+                    CASE WHEN EXISTS({$conditionSubquery->toSql()})
+                        THEN 1
+                        ELSE 0
+                    END as has_language_based_price",
+                    array_merge(
+                        $conditionSubquery->getBindings(),
+                        [$convertedExchangeRate],
+                        $conditionSubquery->getBindings(),
+                        [$currencyForLanguageBasedPrices->id],
+                        $conditionSubquery->getBindings()
+                    )
+                );
+            } else {
+                $query->selectRaw(
+                    "{$priceTable}.*, ROUND(({$priceTable}.raw_amount * ?) / {$languageBasedPriceFactor}, 0) * {$languageBasedPriceFactor} as raw_amount, ? as currency_id, 1 as has_language_based_price",
+                    [$convertedExchangeRate, $currencyForLanguageBasedPrices->id]
+                );
+            }
+        }
+
+        return $query;
     }
 
     public function scopeHasBasePrice($query)
@@ -56,4 +110,10 @@ trait HasPriceable
     {
         return $query->orderByCurrencyPrice(currencyId: Request::getUserCurrency()->id, direction: $direction, role: $role);
     }
+
+    protected function getLanguageBasedPriceFactor(): int
+    {
+        return 10 ** (isset($this->languageBasedPricePower) ? $this->languageBasedPricePower : 0);
+    }
+
 }
