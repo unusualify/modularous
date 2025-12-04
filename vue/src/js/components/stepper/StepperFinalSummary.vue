@@ -18,12 +18,14 @@
   <v-table class="bg-transparent my-3">
     <tbody>
       <tr class="py-0">
-        <td class="border-0 h-auto py-1 pl-0 text-h5 text-white">
-          {{ $t('Total').toUpperCase() }}
+        <td class="border-0 h-auto py-1 px-0 text-h5 text-white">
+          <slot name="total.label">
+            {{ $t('Total').toUpperCase() }}
+          </slot>
         </td>
         <td class="border-0 h-auto py-1 d-flex justify-end pr-0 font-weight-bold">
           <slot name="total">
-            <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" />
+            <!-- <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" /> -->
           </slot>
         </td>
       </tr>

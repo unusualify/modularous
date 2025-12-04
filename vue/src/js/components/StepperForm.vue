@@ -108,9 +108,14 @@
 
                     </slot>
                   </template>
+                  <template v-slot:total.label>
+                    <slot name='summary.final.total.label'>
+                      {{ $t('Total').toUpperCase() }}
+                    </slot>
+                  </template>
                   <template v-slot:total>
                     <slot name='summary.final.total' v-bind="{payload: this.payload}">
-                      <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" />
+                      <!-- <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" /> -->
                     </slot>
                   </template>
                   <template v-slot:description>
