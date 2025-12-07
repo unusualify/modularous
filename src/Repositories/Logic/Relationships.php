@@ -356,11 +356,6 @@ trait Relationships
             }
 
             if (isset($input['connectedRelationship']) && is_string($input['connectedRelationship'])) {
-                // dd(
-                //     $input['connectedRelationship'],
-                //     $object->{$input['connectedRelationship']}->toArray(),
-                //     $object->packageFeatureTagRows()
-                // );
                 $fields[$input['connectedRelationship']] = $object->{$input['connectedRelationship']};
             }
         }
