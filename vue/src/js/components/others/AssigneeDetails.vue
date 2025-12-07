@@ -6,7 +6,7 @@
 
   const emit = defineEmits(['update:attachments', 'update:attachmentsLoading', 'click:complete', 'click:save'])
 
-   const props = defineProps({
+  const props = defineProps({
     loading: {
       type: Boolean,
       default: false,
