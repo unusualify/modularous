@@ -82,7 +82,7 @@ if (! function_exists('createDefaultTranslationsTableFields')) {
      * @param string|null $tableNamePlural
      * @return void
      */
-    function createDefaultTranslationsTableFields($table, $modelName, $tableName = null)
+    function createDefaultTranslationsTableFields($table, $modelName, $tableName = null, $foreignKey = null)
     {
         $modelSnakeName = Str::snake($modelName);
 
@@ -90,27 +90,29 @@ if (! function_exists('createDefaultTranslationsTableFields')) {
             $tableName = Str::plural(Str::snake($modelName));
         }
 
+        $foreignKey ??= "{$modelSnakeName}_id";
+
         $table->{modularityIncrementsMethod()}('id');
-        $table->{modularityIntegerMethod()}("{$modelSnakeName}_id")->unsigned();
+        $table->{modularityIntegerMethod()}($foreignKey)->unsigned();
 
         $table->softDeletes();
         $table->timestamps();
         $table->string('locale', 7)->index();
         $table->boolean('active')->default(true);
 
-        $foreignIndexName = "fk_{$modelSnakeName}_translations_{$modelSnakeName}_id";
+        $foreignIndexName = "fk_{$modelSnakeName}_translations_{$foreignKey}";
 
         if (mb_strlen($modelName) > 18) {
             $shortcut = abbreviation($modelSnakeName);
             $foreignIndexName = "fk_{$modelSnakeName}_translations_{$shortcut}_id";
         }
 
-        $table->foreign("{$modelSnakeName}_id", $foreignIndexName)
+        $table->foreign($foreignKey, $foreignIndexName)
             ->references('id')
             ->on($tableName)
             ->onDelete('CASCADE');
 
-        $table->unique(["{$modelSnakeName}_id", 'locale'], "{$modelSnakeName}_id_locale_unique");
+        $table->unique([$foreignKey, 'locale'], "{$modelSnakeName}_id_locale_unique");
     }
 }
 
