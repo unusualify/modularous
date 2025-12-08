@@ -96,6 +96,7 @@ class HasPriceableTest extends ModelTestCase
     public function test_appended_attributes()
     {
         $expectedAppends = [
+            'has_language_based_price',
             'base_price_vat_percentage',
             'base_price_has_discount',
             'base_price_subtotal_amount',
@@ -603,6 +604,8 @@ class HasPriceableTest extends ModelTestCase
 class TestPriceableModel extends Model
 {
     use HasPriceable;
+
+    public static $mutateHasPriceable = true;
 
     protected $table = 'test_priceable_models';
 
