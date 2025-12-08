@@ -25,7 +25,85 @@ trait HasTranslation
                 return $model->deleteTranslations();
             });
         }
+    }
 
+    public function initializeHasTranslation()
+    {
+        if($this->useTranslatedAttributeTransformation()) {
+            $this->mergeFillable($this->getTranslatedAttributes());
+        }
+    }
+
+    protected function useTranslatedAttributeTransformation(): bool
+    {
+        return isset($this->transformTranslatedAttributes) ? (bool) $this->transformTranslatedAttributes : false;
+    }
+
+    public function fill(array $attributes)
+    {
+        if($this->useTranslatedAttributeTransformation()) {
+            $locales = getLocales();
+            $newAttributes = array_diff_key($attributes, array_flip($this->getTranslatedAttributes()));
+
+            foreach($attributes as $key => $values) {
+                if($this->isTranslationAttribute($key)) {
+                    foreach($locales as $locale) {
+                        if(is_array($values) && array_key_exists($locale, $values)) {
+                            $newAttributes[$locale] = array_merge(
+                                ['active' => true ],
+                                $attributes[$locale] ?? [],
+                                [ $key => $values[$locale] ?? '' ]
+                            );
+
+                            // unset($newAttributes[$key]);
+                        } else if(is_array($values) && !array_key_exists($locale, $values)) {
+                            $newAttributes[$locale][$key] = '';
+                            // unset($newAttributes[$key]);
+                        } else {
+                            $newAttributes[$locale][$key] ??= $values;
+                        }
+                    }
+                }
+            }
+
+            $attributes = $newAttributes;
+        }
+
+        foreach ($attributes as $key => $values) {
+            if ($this->isWrapperAttribute($key)) {
+                $this->fill($values);
+
+                unset($attributes[$key]);
+
+                continue;
+            }
+
+
+            if (
+                $this->getLocalesHelper()->has($key)
+                && is_array($values)
+            ) {
+                $this->getTranslationOrNew($key)->fill($values);
+
+                unset($attributes[$key]);
+
+                continue;
+            }
+
+            [$attribute, $locale] = $this->getAttributeAndLocale($key);
+
+            if (
+                $this->getLocalesHelper()->has($locale)
+                && $this->isTranslationAttribute($attribute)
+            ) {
+
+                $this->getTranslationOrNew($locale)->fill([$attribute => $values]);
+
+                unset($attributes[$key]);
+            }
+        }
+
+        return parent::fill($attributes);
     }
 
     /**
