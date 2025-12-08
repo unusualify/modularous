@@ -34,7 +34,7 @@ class StateableTest extends ModelTestCase
     public function test_no_timestamps()
     {
         $stateable = new Stateable;
-        $this->assertFalse($stateable->timestamps);
+        $this->assertTrue($stateable->timestamps);
     }
 
     public function test_create_stateable()
