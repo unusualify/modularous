@@ -240,6 +240,15 @@
               />
             </div>
 
+            <slot name="underside"
+              v-bind="{
+                isEditing,
+                item: formItem,
+                schema: inputSchema,
+                chunkedRawSchema: chunkedRawSchema,
+              }"
+            />
+
             <!-- Bottom Form Actions -->
             <FormActions v-if="actionsPosition == 'bottom' && formActionsActive"
               :modelValue="formItem"
