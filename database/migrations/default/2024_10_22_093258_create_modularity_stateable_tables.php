@@ -36,8 +36,7 @@ return new class extends Migration
         if (! Schema::hasTable($stateablesTable)) {
             Schema::create($stateablesTable, function (Blueprint $table) use ($stateablesTable, $stateTable) {
                 createDefaultMorphPivotTableFields($table, modelName: 'State', tableName: $stateablesTable, morphedTableName: $stateTable);
-                $table->timestamp('created_at')->useCurrent();
-                $table->timestamp('updated_at')->useCurrent();
+                $table->timestamps();
             });
         }
 
