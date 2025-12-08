@@ -7,27 +7,74 @@
     >
     <div
       :style="[
-        $vuetify.display.smAndUp ? 'max-width: 60%; min-width: 30%;' : 'max-width: 100%; min-width: 100%;'
+        $vuetify.display.smAndUp ? 'max-width: 80%; min-width: 50%;' : 'max-width: 100%; min-width: 100%;'
       ]"
       :class="[
-        'd-flex bg-grey-lighten-6 elevation-2 px-4 py-3 rounded position-relative',
-        reverse ? 'flex-row-reverse' : 'flex-row',
+        'd-flex elevation-2 px-4 py-3 rounded position-relative',
+        reverse ? 'flex-row-reverse bg-primary-lighten-5' : 'flex-row bg-grey-lighten-6',
         isUnread ? 'v-input-chat__message--unread' : ''
       ]"
       @mouseenter="startReading"
     >
-      <!-- Avatar -->
-      <v-tooltip :text="formatDate(message)" location="top">
+      <!-- Time positioned at bottom corner -->
+      <span
+        v-if="$vuetify.display.smAndUp"
+        class="text-caption text-grey-darken-1"
+        :style="{
+          position: 'absolute',
+          bottom: '8px',
+          fontSize: '10px',
+          whiteSpace: 'nowrap',
+          zIndex: 1,
+          ...(reverse ? { right: '12px', textAlign: 'right' } : { left: '12px', textAlign: 'left' })
+        }"
+      >
+        {{ formatDate(message) }}
+      </span>
+      <v-tooltip
+        v-else
+        :text="formatDate(message)"
+        location="top"
+      >
         <template v-slot:activator="{ props }">
-          <v-avatar
-            :size="$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize"
-            :class="[
-              reverse ? 'ml-3' : 'mr-3'
-            ]"
-            :image="message.user_profile.avatar_url" v-bind="props"
-          />
+          <div
+            v-bind="props"
+            :style="{
+              position: 'absolute',
+              bottom: '8px',
+              ...(reverse ? { right: '8px' } : { left: '8px' })
+            }"
+          >
+          </div>
         </template>
       </v-tooltip>
+
+      <!-- Avatar -->
+      <div
+        class="d-flex flex-column flex-shrink-0"
+        :class="reverse ? 'ml-3 align-end' : 'mr-3 align-start'"
+        :style="{ width: `${$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize}px` }"
+      >
+        <v-tooltip
+          v-if="!$vuetify.display.smAndUp"
+          :text="formatDate(message)"
+          location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-avatar
+              :size="mobileAvatarSize"
+              :image="message.user_profile.avatar_url"
+              v-bind="props"
+            />
+          </template>
+        </v-tooltip>
+        <v-avatar
+          v-else
+          :size="avatarSize"
+          :image="message.user_profile.avatar_url"
+        />
+      </div>
+
       <div
         :stylex="{ width: `calc(50% - ${avatarSize}px)` }"
         class="w-100">
@@ -38,14 +85,13 @@
             reverse ? 'flex-row-reverse' : 'flex-row'
           ]">
 
-          <div :class="[
-            $vuetify.display.smAndUp ? 'w-50' : 'w-75',
-            reverse ? 'text-end' : 'text-start'
-          ]"
+          <div
+            v-if="!reverse"
+            :class="[
+              $vuetify.display.smAndUp ? 'w-50' : 'w-75',
+              'text-start'
+            ]"
           >
-            <div v-if="$vuetify.display.smAndDown" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              {{ formatDate(message) }}
-            </div>
             <div>{{ message.user_profile.name }}</div>
           </div>
 
@@ -71,9 +117,10 @@
             'message-content',
             isUnread ? 'message-content--unread' : ''
           ]"
+          :style="$vuetify.display.smAndUp ? { paddingBottom: '20px' } : {}"
         >
           <!-- Message content -->
-          <div :class="['d-flex mt-2 text-break', reverse ? 'flex-row-reverse' : 'flex-row']">
+          <div :class="['d-flex mt-2 text-break position-relative', reverse ? 'flex-row-reverse' : 'flex-row']">
             <div class="w-100" style="color: #32454A; font-weight: 400; font-size: 12px;">
               <template v-if="message.content && message.content.length > contentTruncateLength">
                 <div v-if="isExpanded" v-html="formattedContent"></div>
@@ -126,11 +173,11 @@
       },
       avatarSize: {
         type: Number,
-        default: 50
+        default: 40
       },
       mobileAvatarSize: {
         type: Number,
-        default: 25
+        default: 20
       },
       reverse: {
         type: Boolean,
@@ -196,18 +243,23 @@
       formatDate(message) {
         let formattedDate = window.$moment().fromNow();
 
-        if(message.created_at) {
+        if (message.created_at) {
           let date = new Date(message.created_at);
 
           if (Date.now() - date.getTime() < 48 * 60 * 60 * 1000) {
-            formattedDate = window.$moment(date).fromNow();
+            formattedDate = window.$moment(date).locale(this.$i18n.locale).fromNow();
+
+          } else if (Date.now() - date.getTime() < 7 * 24 * 60 * 60 * 1000) {
+            formattedDate = window.$moment(date).locale(this.$i18n.locale).format('dddd');
+
           } else {
-            formattedDate = this.$d(new Date(message.created_at), 'numeric-full');
+            formattedDate = window.$moment(message.created_at).locale(this.$i18n.locale).format('MMM Do YY');
           }
         }
 
         return formattedDate;
       },
+
       updateMessage(field, value) {
         let endpoint = this.updateEndpoint.replace(':id', this.input.id);
 
@@ -235,7 +287,7 @@
       },
       toggleExpand() {
         this.isExpanded = !this.isExpanded;
-      }
+      },
     },
     beforeUnmount() {
       if (this.readingTimer) {
