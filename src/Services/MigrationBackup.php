@@ -101,6 +101,7 @@ class MigrationBackup
         $columns = Schema::getColumnListing($table);
         $types = [];
         $driver = DB::connection()->getDriverName();
+        $primaryKey = 'id'; // Default primary key
 
         foreach ($columns as $column) {
             switch ($driver) {
@@ -111,6 +112,10 @@ class MigrationBackup
                         'nullable' => $columnInfo->Null === 'YES',
                         'default' => $columnInfo->Default,
                     ];
+                    // Check if this is the primary key
+                    if ($columnInfo->Key === 'PRI') {
+                        $primaryKey = $column;
+                    }
 
                     break;
 
@@ -136,14 +141,32 @@ class MigrationBackup
                         'nullable' => ! $columnData->notnull,
                         'default' => $columnData->dflt_value,
                     ];
+                    // Check if this is the primary key
+                    if ($columnData->pk == 1) {
+                        $primaryKey = $column;
+                    }
 
                     break;
+            }
+        }
+
+        // For PostgreSQL, get primary key separately
+        if ($driver === 'pgsql') {
+            $pkResult = DB::select("
+                SELECT a.attname
+                FROM pg_index i
+                JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+                WHERE i.indrelid = ?::regclass AND i.indisprimary
+            ", [$table]);
+            if (!empty($pkResult)) {
+                $primaryKey = $pkResult[0]->attname;
             }
         }
 
         return [
             'columns' => $types,
             'foreign_keys' => $this->getForeignKeys($table),
+            'primary_key' => $primaryKey,
         ];
     }
 
@@ -424,29 +447,21 @@ class MigrationBackup
             }
         }
 
-        // if $table has a foreign key, check if the foreign key exists in the related table and if not, create the foreign key
-        $foreignKeys = $this->getForeignKeys($table);
-        $foreignExists = false;
-        $primaryKey = null;
-        foreach ($foreignKeys as $foreignKey) {
-            $foreignTable = $foreignKey['foreign_table'];
-            $foreignColumn = $foreignKey['foreign_column'];
-            $foreignValue = $record[$foreignColumn];
-            $foreignExists = DB::table($foreignTable)->where('id', $foreignValue)->exists();
-            if (! $foreignExists) {
-                $primaryKey = $foreignKey['local_column'];
-            }
-        }
+        // Get the primary key for this table
+        $primaryKey = $currentSchema['primary_key'] ?? 'id';
 
-        $exists = !$foreignExists ? false : DB::table($table)
+        // Check if record exists by primary key
+        $exists = isset($record[$primaryKey]) && DB::table($table)
             ->where($primaryKey, $record[$primaryKey])
             ->exists();
 
         if ($exists) {
+            // Update existing record
             DB::table($table)
                 ->where($primaryKey, $record[$primaryKey])
                 ->update($record);
         } else {
+            // Insert new record
             DB::table($table)->insert($record);
         }
     }
