@@ -344,7 +344,7 @@ class ModelEventTest extends ModelTestCase
 }
 
 // Test model classes
-class TestModel extends Model
+class TestModel extends \Unusualify\Modularity\Entities\Model
 {
     use ChangeRelationships, HasStateable;
 
