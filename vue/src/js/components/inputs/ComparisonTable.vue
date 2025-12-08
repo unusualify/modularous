@@ -8,7 +8,7 @@
     :class="{'v-input-comparison-table--striped': striped, 'v-input-comparison-table--highlighted': highlighted}"
     :rules="$attrs.rules"
     :style="inputAndTableStyle"
-    >
+  >
     <template v-slot:default="defaultSlot">
       <v-data-table
         :class="[
@@ -25,17 +25,21 @@
         :items-per-page="itemsPerPage"
         :mobile-breakpoint="`sm`"
         :fixed-header="!noFixedHeader"
-        >
+      >
+
         <!-- header slots -->
         <template v-for="(header, i) in headers"
           :key="`header-${header.key}`"
           v-slot:[`header.${header.key}`]="headerScope"
           >
-          <span v-if="$isset(header.id) && input == header.id" class="v-input-comparison-table__header--selected">
-            {{ header.title }}
+          <span
+            :class="{
+              'v-input-comparison-table__header--selected': $isset(header.id) && input == header.id,
+            }"
+            v-html="header.title">
           </span>
-          <span v-else v-html="header.title"></span>
         </template>
+
         <!-- item slots -->
         <template v-for="(header, i) in headers"
           :key="`item-${header.key}`"
@@ -44,6 +48,25 @@
           <v-btn class="my-2" v-if="item[header.key] == '__input'" @click="input=header.id" :variant="input == header.id ? 'elevated' : 'outlined'" :readonly="protectInitialValue">
               {{ $t('Select') }}
           </v-btn>
+          <template v-else-if="typeof item[header.key] === 'object' && item[header.key].isTooltip">
+            <component :is="item[header.key].tooltipComponent" v-html="item[header.key].value" style="margin-right: 4px;"></component>
+
+            <v-menu v-if="item[header.key].tooltipType == 'card'" :close-on-content-click="false" location="end" open-on-hover>
+              <template v-slot:activator="{ props }">
+                <v-icon v-bind="props" :class="item[header.key].tooltipIconClasses" size="small" :icon="item[header.key].tooltipIcon"></v-icon>
+              </template>
+              <v-card min-width="100" max-width="500">
+                <v-card-text>
+                  {{ item[header.key].tooltipValue }}
+                </v-card-text>
+              </v-card>
+            </v-menu>
+            <v-tooltip v-else :text="item[header.key].tooltipValue">
+              <template v-slot:activator="{ props }">
+                <v-icon v-bind="props" :class="item[header.key].tooltipIconClasses" size="small" :icon="item[header.key].tooltipIcon"></v-icon>
+              </template>
+            </v-tooltip>
+          </template>
           <span v-else v-html="item[header.key]"></span>
         </template>
 
@@ -56,6 +79,7 @@
   import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
   import Table from '../Table.vue'
   import { find, toUpper, isNumber, isString, get, isNaN } from 'lodash-es';
+  import { RecursiveStuff } from '@/utils/recursiveStuff';
 
   export default {
     name: 'v-input-comparison-table',
@@ -80,6 +104,10 @@
       comparatorValue: {
         type: String,
         default: 'value'
+      },
+      comparatorTooltip: {
+        type: String,
+        default: null
       },
       comparators: {
         type: Object,
@@ -161,18 +189,18 @@
             class: 'py-2',
             style: {minWidth: `${this.minComparatorWidth}px`}}}
           ].concat( this.items.map((item) => {
-          return {
-            title: item.name,
-            key: item.name,
-            align: 'center',
-            id: item.id,
-            width: this.itemWidth,
-            cellProps: {
-              style: {
-                ...(this.$vuetify.display.mobile ? {} : {maxWidth: `${this.maxItemWidth}px`})
+            return {
+              title: item.name,
+              key: item.name,
+              align: 'center',
+              id: item.id,
+              width: this.itemWidth,
+              cellProps: {
+                style: {
+                  ...(this.$vuetify.display.mobile ? {} : {maxWidth: `${this.maxItemWidth}px`})
+                }
               }
             }
-          }
         }))
       },
       inputAndTableStyle() {
@@ -236,14 +264,31 @@
                   acc.push({
                     ...comparisonObject,
                     _comparatorField: comparatorItem?.field ?? 'name',
+                    _isTooltip: comparatorItem?.isTooltip ?? false,
+                    _tooltipValue: comparatorItem?.tooltipValue ?? null,
+                    _tooltipField: comparatorItem?.tooltipField ?? null,
+                    _tooltipComponent: comparatorItem?.tooltipComponent ?? 'span',
+                    _tooltipIcon: comparatorItem?.tooltipIcon ?? 'mdi-information-outline',
+                    _tooltipIconClasses: comparatorItem?.tooltipIconClasses ?? 'text-primary',
                     ...(comparatorItem?.itemClasses ? {_comparatorItemClasses: comparatorItem.itemClasses} : {})
                   })
                 }
               })
             }else {
               let searchKey = __isset(item[`${comparatorKey}_show`]) ? `${comparatorKey}_show` : comparatorKey
-              if( !acc.includes(searchKey) ){
-                acc.push(searchKey)
+
+              if( !find(acc, ['_comparatorField', searchKey]) ){
+                acc.push({
+                  _comparatorField: searchKey,
+                  _comparatorTitle: comparatorItem?.title ?? null,
+                  _isTooltip: comparatorItem?.isTooltip ?? false,
+                  _tooltipValue: comparatorItem?.tooltipValue ?? null,
+                  _tooltipField: comparatorItem?.tooltipField ?? null,
+                  _tooltipComponent: comparatorItem?.tooltipComponent ?? 'span',
+                  _tooltipIcon: comparatorItem?.tooltipIcon ?? 'mdi-information-outline',
+                  _tooltipIconClasses: comparatorItem?.tooltipIconClasses ?? 'text-primary',
+                  ...(comparatorItem?.itemClasses ? {_comparatorItemClasses: comparatorItem.itemClasses} : {})
+                });
               }
             }
           })
@@ -270,6 +315,10 @@
           if(__isObject(comparator)){
             comparisonValue = comparator[comparator._comparatorField]
 
+            if(__isset(comparator._comparatorTitle)){
+              comparisonValue = comparator._comparatorTitle
+            }
+
             if(__isset(comparator._comparatorItemClasses)){
               comparisonValue = `<span class="${comparator._comparatorItemClasses}">${comparisonValue}</span>`
             }
@@ -286,7 +335,6 @@
               }else {
                 comparisonValue = this.$headline(comparator)
               }
-
             }
 
             if( __isset(rec.itemClasses)){
@@ -294,34 +342,68 @@
             }
 
           }
+
           rowData.comparator_name = comparisonValue
 
           this.items.forEach((item) => {
             if(__isObject(comparator)){
               let found = find( item[this.comparatorField], ['id', comparator.id] )
 
+              let value = '';
               if(found){
-                let value = get(found, this.comparatorValue, 'unknown')
+                value = get(found, this.comparatorValue, 'unknown')
+
+                console.log(value, found);
 
                 if(value === 'unknown'){
                   console.error(`${this.comparatorField} not found for ${this.comparatorValue}`)
                   value = ''
                 }
-                rowData[item.name] = value
-
-                // rowData[item.name] = found.pivot.active == '1'
-                //   ? '<span class="mdi mdi-check text-info font-weight-bold"></span>'
-                //   : '<span class="mdi mdi-close text-error font-weight-bold"></span>'
               }else{
-                rowData[item.name] = ''
+                if(comparator._comparatorField){
+                  value = get(item, comparator._comparatorField, '')
+                }
               }
-            }else {
-              let value = item[comparator]
+
+              if(comparator?._comparatorItemClasses){
+                value = `<span class="${comparator?._comparatorItemClasses}"> ${value} </span>`
+              }
+
+              let comparatorTooltipValue = null;
+              let hasComparatorTooltip = this.comparatorTooltip && found && (comparatorTooltipValue = get(found, this.comparatorTooltip, null));
+
+              console.log(
+                this.comparatorTooltip,
+                found,
+                comparatorTooltipValue,
+                hasComparatorTooltip,
+              );
+              if(hasComparatorTooltip){
+                value = {
+                  isTooltip: true,
+                  tooltipType: 'card',
+                  tooltipValue: comparatorTooltipValue,
+                  tooltipComponent: 'span',
+                  tooltipIcon: 'mdi-information-outline',
+                  tooltipIconClasses: 'text-info',
+                  value: value,
+                  itemClasses: comparator?._comparatorItemClasses ?? null,
+                }
+              }else if(this.isTooltipComporator(comparator)){
+                let tooltipValue = this.getTooltipValue(item, comparator);
+
+                value = tooltipValue ? {
+                  isTooltip: true,
+                  tooltipValue: tooltipValue,
+                  tooltipComponent: comparator?._tooltipComponent ?? 'span',
+                  tooltipIcon: comparator?._tooltipIcon,
+                  tooltipIconClasses: comparator?._tooltipIconClasses ?? 'text-info',
+                  value: value,
+                  itemClasses: comparator?._comparatorItemClasses ?? null,
+                } : value;
+              }
+
               rowData[item.name] = value
-              let rec = null
-              if(( rec = find(this.comparators, ['key', comparator]) ) && __isset(rec.itemClasses)){
-                rowData[item.name] = `<span class="${rec.itemClasses}"> ${value} </span>`
-              }
             }
           })
 
@@ -329,14 +411,20 @@
         }).concat(bottomRows)
       }
     },
-    watch: {
-      input(val, old){
 
+    methods: {
+      isTooltipComporator(comparator){
+        return comparator?._isTooltip ?? false;
       },
-      modelValue(val, old){
-
-      }
-    },
+      getTooltipValue(item, comparator){
+        if(comparator?._isTooltip && comparator?._tooltipField){
+          return item[comparator?._tooltipField] ?? null;
+        } else if(comparator?._isTooltip && comparator?._tooltipValue){
+          return comparator?._tooltipValue ?? null;
+        }
+        return null;
+      },
+    }
   }
 </script>
 
