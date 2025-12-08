@@ -237,7 +237,7 @@ class PriceController extends Controller
                 'email' => $user->email,
                 'order_id' => $orderId,
                 'installment' => $params['installment'] ?? 1,
-                'status' => PaymentStatus::COMPLETED,
+                'status' => PaymentStatus::PROVISION,
                 'payment_gateway' => $paymentService->key,
                 'payment_service_id' => $paymentService->id,
                 'parameters' => [
