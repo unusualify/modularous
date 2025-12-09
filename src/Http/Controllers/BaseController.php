@@ -17,12 +17,13 @@ use Unusualify\Modularity\Facades\ModularityLog;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
+use Unusualify\Modularity\Http\Controllers\Traits\ManageTranslations;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
 use Unusualify\Modularity\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
-    use ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia;
+    use ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations;
 
     /**
      * @var string
@@ -222,7 +223,7 @@ abstract class BaseController extends PanelController
         $moduleName = $this->module->getSnakeName();
         $routeName = Str::snake($this->routeName);
 
-        $storeSuccessTranslation = Collection::make([
+        $message = $this->getTranslationFromKeys([
             "$moduleName::messages.$routeName.store-success",
             "$moduleName::messages.$routeName.save-success",
             "modules.$moduleName.$routeName.messages.store-success",
@@ -231,11 +232,7 @@ abstract class BaseController extends PanelController
             "$moduleName::messages.save-success",
             'messages.store-success',
             'messages.save-success',
-        ])->first(function ($notation) {
-            return Lang::has($notation);
-        });
-
-        $message = Lang::get($storeSuccessTranslation);
+        ]);
 
         return $this->request->ajax()
             ? $this->respondWithSuccess($message)
@@ -404,7 +401,7 @@ abstract class BaseController extends PanelController
             $moduleName = $this->module->getSnakeName();
             $routeName = Str::snake($this->routeName);
 
-            $updateSuccessTranslation = Collection::make([
+            $message = $this->getTranslationFromKeys([
                 "$moduleName::messages.$routeName.update-success",
                 "$moduleName::messages.$routeName.save-success",
                 "modules.$moduleName.$routeName.messages.update-success",
@@ -413,11 +410,7 @@ abstract class BaseController extends PanelController
                 "$moduleName::messages.save-success",
                 'messages.update-success',
                 'messages.save-success',
-            ])->first(function ($notation) {
-                return Lang::has($notation);
-            });
-
-            $message = Lang::get($updateSuccessTranslation);
+            ]);
 
             if ($this->routeHasTrait('revisions')) {
                 return Response::json([
@@ -454,31 +447,25 @@ abstract class BaseController extends PanelController
         if ($this->repository->delete($id)) {
             // activity()->performedOn($item)->log('deleted');
 
-            $deleteSuccessTranslation = Collection::make([
+            $message = $this->getTranslationFromKeys([
                 "$moduleName::messages.$routeName.delete-success",
                 "modules.$moduleName.$routeName.messages.delete-success",
                 "$moduleName::messages.delete-success",
                 'listing.delete.success',
-            ])->first(function ($notation) {
-                return Lang::has($notation);
-            });
-
-            $message = Lang::get($deleteSuccessTranslation, ['modelTitle' => $this->modelTitle]);
+            ], ['modelTitle' => $this->modelTitle]);
 
             return $this->respondWithSuccess($message);
             // return $this->respondWithSuccess(___("$this->baseKey::lang.listing.delete.success", ['modelTitle' => $this->modelTitle]));
         }
 
-        $deleteErrorTranslation = Collection::make([
+        $message = $this->getTranslationFromKeys([
             "$moduleName::messages.$routeName.delete-error",
             "modules.$moduleName.$routeName.messages.delete-error",
             "$moduleName::messages.delete-error",
             'listing.delete.error',
-        ])->first(function ($notation) {
-            return Lang::has($notation);
-        });
+        ], ['modelTitle' => $this->modelTitle]);
 
-        return $this->respondWithError(Lang::get($deleteErrorTranslation, ['modelTitle' => $this->modelTitle]));
+        return $this->respondWithError($message);
         // return $this->respondWithError(modularityTrans("$this->baseKey::lang.listing.delete.error", ['modelTitle' => $this->modelTitle]));
     }
 
@@ -493,29 +480,23 @@ abstract class BaseController extends PanelController
         $routeName = Str::snake($this->routeName);
 
         if ($this->repository->forceDelete($this->request->get('id'))) {
-            $forceDeleteSuccessTranslation = Collection::make([
+            $message = $this->getTranslationFromKeys([
                 "$moduleName::messages.$routeName.force-delete-success",
                 "modules.$moduleName.$routeName.messages.force-delete-success",
                 "$moduleName::messages.force-delete-success",
-            ])->first(function ($notation) {
-                return Lang::has($notation);
-            });
-
-            $message = Lang::get($forceDeleteSuccessTranslation, ['modelTitle' => $this->modelTitle]);
+            ], ['modelTitle' => $this->modelTitle]);
 
             return $this->respondWithSuccess($message);
         }
 
-        $forceDeleteErrorTranslation = Collection::make([
+        $message = $this->getTranslationFromKeys([
             "$moduleName::messages.$routeName.force-delete-error",
             "modules.$moduleName.$routeName.messages.force-delete-error",
             "$moduleName::messages.force-delete-error",
             'listing.force-delete.error',
-        ])->first(function ($notation) {
-            return Lang::has($notation);
-        });
+        ], ['modelTitle' => $this->modelTitle]);
 
-        return $this->respondWithError(Lang::get($forceDeleteErrorTranslation, ['modelTitle' => $this->modelTitle]));
+        return $this->respondWithError($message);
     }
 
     /**
@@ -524,10 +505,19 @@ abstract class BaseController extends PanelController
     public function restore()
     {
 
+        $moduleName = $this->module->getSnakeName();
+        $routeName = Str::snake($this->routeName);
+
         if ($this->repository->restore($this->request->get('id'))) {
             activity()->performedOn($this->repository->getById($this->request->get('id')))->log('restored');
 
-            return $this->respondWithSuccess(__('listing.restore.success', ['modelTitle' => $this->modelTitle]), attributes: ['location' => 'top']);
+            $message = $this->getTranslationFromKeys([
+                "modules.$moduleName.$routeName.messages.restore-success",
+                "$moduleName::messages.restore-success",
+                'listing.restore.success',
+            ], ['modelTitle' => $this->modelTitle]);
+
+            return $this->respondWithSuccess($message, attributes: ['location' => 'top']);
         }
 
         return $this->respondWithError(__('listing.restore.error', ['modelTitle' => $this->modelTitle]));
