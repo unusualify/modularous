@@ -1,6 +1,6 @@
 <?php
 
-use Unusualify\Payable\Models\Enums\PaymentStatus;
+use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 
 return [
     'name' => 'SystemPayment',
