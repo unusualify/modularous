@@ -22,8 +22,8 @@ trait PriceMutators
         $this->append(
             'discounted_raw_amount',
             'vat_multiplier',
-            // 'is_paid',
-            // 'is_unpaid',
+            'is_paid',
+            'is_unpaid',
         );
     }
 
@@ -141,17 +141,17 @@ trait PriceMutators
         );
     }
 
-    // protected function isPaid(): Attribute
-    // {
-    //     return new Attribute(
-    //         get: fn ($value) => $this->payment('COMPLETED')->exists(),
-    //     );
-    // }
+    protected function isPaid(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => $this->payment('COMPLETED')->exists(),
+        );
+    }
 
-    // protected function isUnpaid(): Attribute
-    // {
-    //     return new Attribute(
-    //         get: fn ($value) => ! $this->isPaid,
-    //     );
-    // }
+    protected function isUnpaid(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => ! $this->isPaid,
+        );
+    }
 }
