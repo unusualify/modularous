@@ -13,7 +13,8 @@ trait ManageUtilities
     use ManageForm,
         ManageTable,
         Utilities\UrlUtility,
-        Utilities\FormPageUtility;
+        Utilities\FormPageUtility,
+        ManageTranslations;
 
     /**
      * @param array $prependScope
@@ -138,9 +139,22 @@ trait ManageUtilities
         $eventualSchema = $this->filterSchemaByRoles($schema);
         $translate = $this->routeHas('translations') || $this->hasTranslatedInput($eventualSchema);
 
-        $moduleSnakeName = Str::snake($this->moduleName);
+        $moduleSnakeName = $this->module->getSnakeName();
         $snakeRouteName = Str::snake($this->routeName);
         $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}.name";
+
+        $isEditing = (bool) $itemId ? true : false;
+        $title = $isEditing ? $this->getTranslationFromKeys([
+            "$moduleSnakeName::messages.$snakeRouteName.edit-item",
+            "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.edit-item",
+            "$moduleSnakeName::messages.edit-item",
+            "fields.edit-item",
+        ], ['item' => trans_choice($translationRouteKey, 1)]) : $this->getTranslationFromKeys([
+            "$moduleSnakeName::messages.new-item",
+            "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.new-item",
+            "$moduleSnakeName::messages.new-item",
+            "fields.new-item",
+        ], ['item' => trans_choice($translationRouteKey, 1)]);
 
         $data = [
             'model' => $item,
@@ -151,11 +165,8 @@ trait ManageUtilities
                     // $this->repository->getFormFields($item, $this->chunkInputs(all: true, schema: $schema)),
                     $this->repository->getFormFields($item, $schema),
                 ),
-                'title' => __(((bool) $itemId
-                    ? 'fields.edit-item'
-                    : 'fields.new-item'), ['item' => trans_choice($translationRouteKey, 1)]
-                ),
-                'isEditing' => $itemId ? true : false,
+                'title' => $title,
+                'isEditing' => $isEditing,
                 'actions' => $this->getFormActions(),
                 // ...(($formAttributes['async'] ?? true) ? [] : ['actionUrl' => $this->getFormUrl($itemId)]),
                 'actionUrl' => $this->getFormUrl($itemId),
@@ -165,7 +176,7 @@ trait ManageUtilities
                 'languages' => getLanguagesForVueStore($eventualSchema, $translate)['all'] ?? [],
             ], $formAttributes),
             'endpoints' => [
-                ((bool) $itemId ? 'update' : 'store') => $this->getFormUrl($itemId),
+                ($isEditing ? 'update' : 'store') => $this->getFormUrl($itemId),
             ] + $this->getUrls(),
             'formStore' => [
                 // 'inputs' => $this->filterSchemaByRoles($schema),
@@ -218,9 +229,9 @@ trait ManageUtilities
     {
         $currentRoute = Route::current();
         $currentActionMethod = $currentRoute->getActionMethod();
-        $moduleSnakeName = Str::snake($this->moduleName);
+        $moduleSnakeName = $this->module->getSnakeName();
         $snakeRouteName = Str::snake($this->routeName);
-        $translationRouteKey = "modules.{$moduleSnakeName}.{$snakeRouteName}.name";
+        $translationRouteKey = $this->getModuleTranslationKey();
 
         // Check for custom title from configuration first
         $customTitle = $this->tableAttributes['customTitle'] ?? null;
@@ -228,17 +239,32 @@ trait ManageUtilities
         switch ($currentActionMethod) {
             case 'create':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.new-item', ['item' => trans_choice($translationRouteKey, 1)]);
+                $headerTitle = $customTitle ?: $this->getTranslationFromKeys([
+                    "$translationRouteKey::messages.new-item",
+                    "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.new-item",
+                    "$moduleSnakeName::messages.new-item",
+                    "fields.new-item",
+                ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             case 'edit':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.edit-item', ['item' => trans_choice($translationRouteKey, 1)]);
+                $headerTitle = $customTitle ?: $this->getTranslationFromKeys([
+                    "$translationRouteKey::messages.edit-item",
+                    "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.edit-item",
+                    "$moduleSnakeName::messages.edit-item",
+                    "fields.edit-item",
+                ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             case 'show':
                 $pageTitle = trans_choice($translationRouteKey, 1);
-                $headerTitle = $customTitle ?: __('fields.show-item', ['item' => trans_choice($translationRouteKey, 1)]);
+                $headerTitle = $customTitle ?: $this->getTranslationFromKeys([
+                    "$translationRouteKey::messages.show-item",
+                    "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.show-item",
+                    "$moduleSnakeName::messages.show-item",
+                    "fields.show-item",
+                ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
             default:
