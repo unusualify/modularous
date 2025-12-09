@@ -1,10 +1,12 @@
 <script setup>
-  import { ref, watch, computed, onMounted } from 'vue'
+  import { ref, watch, computed, onMounted, nextTick } from 'vue'
   import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
   import { makeSelectProps } from '@/hooks/utils/useSelect'
   import { makePaginationProps, usePagination } from '@/hooks/utils/usePagination'
   import axios from 'axios'
   import { cloneDeep, pick, omit, isEmpty } from 'lodash-es'
+
+  const searchTextFieldRef = ref(null)
 
   defineOptions({
     name: 'v-input-browser',
@@ -274,6 +276,17 @@
   // Open dialog and prepare items
   const openDialog = () => {
     dialog.value = true
+    try {
+      setTimeout(() => {
+        const input = searchTextFieldRef.value.$el.querySelector(
+          "input:not([type=hidden]),textarea:not([type=hidden])"
+        );
+        console.log('input', input.focus(), input)
+        input.focus()
+      }, 100)
+    }catch(error) {
+      console.error('Error focusing search text field:', error)
+    }
 
     // If no items and modelValue exists, fetch initial items
     if (!elements.value.length) {
@@ -414,42 +427,60 @@
     hide-details="auto"
   >
     <template v-slot:default="defaultSlot">
-      <v-combobox
-        v-model="comboboxModel"
-        v-bind="$lodash.pick(boundProps, [
-          'color', 'disabled', 'error', 'errorMessages',
-          'prependIcon', 'appendIcon', 'prependInnerIcon', 'appendInnerIcon',
-          'itemTitle', 'itemValue'
-        ])"
-        :variant="variant"
-        :density="density"
-        :itemValue="itemValue"
-        :itemTitle="itemTitle"
-        :return-object="returnObject"
-        :clearable="false"
-        :label="label"
-        :items="elements"
-        append-inner-icon="mdi-magnify"
-        readonly
-        chips
-        @click:append-inner="performSearch"
-        @click="openDialog"
-        @keyup.enter="performSearch"
+      <slot name="activator"
+        v-bind="{
+          model: comboboxModel,
+          props: {
+            variant: variant,
+            density: density,
+            itemValue: itemValue,
+            itemTitle: itemTitle,
+            returnObject: returnObject,
+            label: label,
+            items: elements,
+            appendInnerIcon: 'mdi-magnify',
+            readonly: true,
+            onClick: openDialog,
+          },
+        }"
       >
-        <template v-slot:selection="{ item, index }">
-          <v-chip v-if="item === Object(item)"
-            :color="isInitialItem(item)
-              ? 'green-lighten-3'
-              : 'blue-lighten-3'"
-            :text="item.title"
-            size="small"
-            variant="flat"
-            label
-          />
-            <!-- closable
-            @click:close="removeSelection(index)" -->
-        </template>
-      </v-combobox>
+        <v-combobox
+          v-model="comboboxModel"
+          v-bind="$lodash.pick(boundProps, [
+            'color', 'disabled', 'error', 'errorMessages',
+            'prependIcon', 'appendIcon', 'prependInnerIcon', 'appendInnerIcon',
+            'itemTitle', 'itemValue'
+          ])"
+          :variant="variant"
+          :density="density"
+          :itemValue="itemValue"
+          :itemTitle="itemTitle"
+          :return-object="returnObject"
+          :clearable="false"
+          :label="label"
+          :items="elements"
+          append-inner-icon="mdi-magnify"
+          readonly
+          chips
+          @click:append-inner="performSearch"
+          @click="openDialog"
+          @keyup.enter="performSearch"
+        >
+          <template v-slot:selection="{ item, index }">
+            <v-chip v-if="item === Object(item)"
+              :color="isInitialItem(item)
+                ? 'green-lighten-3'
+                : 'blue-lighten-3'"
+              :text="item.title"
+              size="small"
+              variant="flat"
+              label
+            />
+              <!-- closable
+              @click:close="removeSelection(index)" -->
+          </template>
+        </v-combobox>
+      </slot>
 
       <ue-modal
         v-model="dialog"
@@ -464,6 +495,7 @@
         <template v-slot:body.description>
           <div style="height: 500px !important;">
             <v-text-field
+              ref="searchTextFieldRef"
               v-model="searchModel"
               v-bind="$lodash.pick(boundProps, ['color'])"
               :variant="variant"
@@ -482,7 +514,6 @@
                 :multiple="multiple"
                 select-strategy="classic"
               >
-                {{ console.log('elements', elements) }}
                 <v-list-item v-for="item in elements"
                   :key="`${item[props.itemValue]}-${itemIsClickable(item)}`"
                   @click="toggleItemSelection(item)"
