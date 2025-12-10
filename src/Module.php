@@ -621,12 +621,8 @@ class Module extends NwidartModule
     }
 
     /**
-     *
-     *
      * @param mixed $routeName
      * @param bool $asClass
-     *
-     * @return \Unusualify\Modularity\Repositories\Repository|string
      */
     public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
     {

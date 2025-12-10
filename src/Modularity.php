@@ -716,8 +716,8 @@ class Modularity extends FileRepository
     {
         $result = config('modularity.use_language_based_prices', false);
 
-        if( $result && static::$disableLanguageBasedPricesCallback ){
-            $result = !call_user_func(static::$disableLanguageBasedPricesCallback);
+        if ($result && static::$disableLanguageBasedPricesCallback) {
+            $result = ! call_user_func(static::$disableLanguageBasedPricesCallback);
         }
 
         return $result;
@@ -725,12 +725,12 @@ class Modularity extends FileRepository
 
     public function getCurrencyForLanguageBasedPrices()
     {
-        if( $this->shouldUseLanguageBasedPrices() ){
+        if ($this->shouldUseLanguageBasedPrices()) {
             $locale = app()->getLocale();
             $localeCurrencies = config('modularity.language_currencies', []);
-            if( array_key_exists($locale, $localeCurrencies) ){
-                $currency = Currency::where('iso_4217', strtoupper($localeCurrencies[$locale]))->first();
-                if( $currency ){
+            if (array_key_exists($locale, $localeCurrencies)) {
+                $currency = Currency::where('iso_4217', mb_strtoupper($localeCurrencies[$locale]))->first();
+                if ($currency) {
                     return $currency;
                 }
             }

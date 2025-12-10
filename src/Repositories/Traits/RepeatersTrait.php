@@ -156,6 +156,7 @@ trait RepeatersTrait
     public function getRepeaterInputs($schema = null)
     {
         $schema = $schema ?? $this->inputs();
+
         return collect($this->inputs())->reduce(function ($acc, $curr) {
             if (isset($curr['name']) && preg_match('/json-repeater/', $curr['type'])) {
                 $acc[] = $curr + ['translated' => $curr['translated'] ?? false];

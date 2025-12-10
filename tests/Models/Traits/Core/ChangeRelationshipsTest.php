@@ -126,7 +126,7 @@ class ChangeRelationshipsTest extends ModelTestCase
 
     public function test_merge_changed_relationships()
     {
-        if(!Schema::hasTable('um_chats')) {
+        if (! Schema::hasTable('um_chats')) {
             Schema::create('um_chats', function (Blueprint $table) {
                 $table->id();
                 $table->string('chatable_type');

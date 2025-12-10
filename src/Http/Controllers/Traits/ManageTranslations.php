@@ -19,7 +19,7 @@ trait ManageTranslations
     {
         $keyNotation = $this->findTranslationNotation($keys);
 
-        if (!$keyNotation) {
+        if (! $keyNotation) {
             return null;
         }
 

@@ -616,7 +616,6 @@ abstract class Repository implements RepositoryContract
                     $regularColumns = [];
                     $translatedColumns = [];
 
-
                     foreach ($columns as $column) {
                         if ($isTranslatable && in_array($column, $translatedAttributes)) {
                             $translatedColumns[] = $column;

@@ -12,15 +12,11 @@ trait HasFileponds
 
     /**
      * The deleted fileponds relationship.
-     *
-     * @var Collection
      */
     protected Collection $deletedFileponds;
 
     /**
      * The new fileponds relationship.
-     *
-     * @var Collection
      */
     protected Collection $newFileponds;
 
@@ -92,12 +88,12 @@ trait HasFileponds
 
     public function hasDeletedFileponds()
     {
-        return !empty($this->deletedFileponds);
+        return ! empty($this->deletedFileponds);
     }
 
     public function hasNewFileponds()
     {
-        return !empty($this->newFileponds);
+        return ! empty($this->newFileponds);
     }
 
     public function getDeletedFileponds()

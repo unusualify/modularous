@@ -22,7 +22,7 @@ trait EventChanges
 
     public function setupEventChanges()
     {
-        if($this->model instanceof \Illuminate\Database\Eloquent\Model) {
+        if ($this->model instanceof \Illuminate\Database\Eloquent\Model) {
             $this->changedAttributes = $this->model->getChanges();
             $this->changedRelationships = method_exists($this->model, 'getChangedRelationships')
                 ? $this->model->getChangedRelationships()

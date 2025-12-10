@@ -6,7 +6,6 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Events\Traits\EventChanges;
 use Unusualify\Modularity\Events\Traits\EventStateable;

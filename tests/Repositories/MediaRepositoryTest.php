@@ -2,10 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Unusualify\Modularity\Entities\Media;
 use Unusualify\Modularity\Repositories\MediaRepository;
@@ -89,5 +87,3 @@ class MediaRepositoryTest extends RepositoryTestCase
         $this->assertFalse(Storage::disk('media')->exists('uuid-123'));
     }
 }
-
-

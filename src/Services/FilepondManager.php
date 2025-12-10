@@ -201,10 +201,10 @@ class FilepondManager
 
         if ($anyDeleted || $anyCreated) {
             $object->addFilepondsAsChanged($fileponds);
-            if($anyDeleted) {
+            if ($anyDeleted) {
                 $object->setDeletedFilepondsAsChanged($deletedFileponds);
             }
-            if($anyCreated) {
+            if ($anyCreated) {
                 $object->setNewFilepondsAsChanged($addedFileponds);
             }
         }

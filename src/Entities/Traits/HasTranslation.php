@@ -29,7 +29,7 @@ trait HasTranslation
 
     public function initializeHasTranslation()
     {
-        if($this->useTranslatedAttributeTransformation()) {
+        if ($this->useTranslatedAttributeTransformation()) {
             $this->mergeFillable($this->getTranslatedAttributes());
         }
     }
@@ -41,22 +41,22 @@ trait HasTranslation
 
     public function fill(array $attributes)
     {
-        if($this->useTranslatedAttributeTransformation()) {
+        if ($this->useTranslatedAttributeTransformation()) {
             $locales = getLocales();
             $newAttributes = array_diff_key($attributes, array_flip($this->getTranslatedAttributes()));
 
-            foreach($attributes as $key => $values) {
-                if($this->isTranslationAttribute($key)) {
-                    foreach($locales as $locale) {
-                        if(is_array($values) && array_key_exists($locale, $values)) {
+            foreach ($attributes as $key => $values) {
+                if ($this->isTranslationAttribute($key)) {
+                    foreach ($locales as $locale) {
+                        if (is_array($values) && array_key_exists($locale, $values)) {
                             $newAttributes[$locale] = array_merge(
-                                ['active' => true ],
+                                ['active' => true],
                                 $attributes[$locale] ?? [],
-                                [ $key => $values[$locale] ?? '' ]
+                                [$key => $values[$locale] ?? '']
                             );
 
                             // unset($newAttributes[$key]);
-                        } else if(is_array($values) && !array_key_exists($locale, $values)) {
+                        } elseif (is_array($values) && ! array_key_exists($locale, $values)) {
                             $newAttributes[$locale][$key] = '';
                             // unset($newAttributes[$key]);
                         } else {
@@ -77,7 +77,6 @@ trait HasTranslation
 
                 continue;
             }
-
 
             if (
                 $this->getLocalesHelper()->has($key)

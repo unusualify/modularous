@@ -120,5 +120,3 @@ final class RepoProcessableTestRepository extends Repository
         $this->model = $model;
     }
 }
-
-

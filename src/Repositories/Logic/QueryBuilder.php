@@ -7,7 +7,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
-use Unusualify\Modularity\Facades\ModularityLog;
 
 trait QueryBuilder
 {
@@ -68,9 +67,9 @@ trait QueryBuilder
 
         $query = $this->filter($query, $scopes);
 
-        if($orders && count($orders) > 0) {
+        if ($orders && count($orders) > 0) {
             $query = $this->order($query, $orders);
-        } else if (! $forcePagination && $this->model instanceof Sortable) {
+        } elseif (! $forcePagination && $this->model instanceof Sortable) {
             $query = $query->ordered();
         }
 
@@ -99,7 +98,7 @@ trait QueryBuilder
                     $page = (int) floor($position / $perPage) + 1;
                 }
             }
-        } else if ($exceptIds) {
+        } elseif ($exceptIds) {
             $query = $query->whereNotIn('id', $exceptIds);
         }
 
@@ -116,8 +115,9 @@ trait QueryBuilder
             ]);
         }
 
-        if($perPage === -1) {
+        if ($perPage === -1) {
             $total = $query->count();
+
             return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
                 'items' => $query->get(),
                 'total' => $total,
@@ -210,9 +210,7 @@ trait QueryBuilder
      * @param bool $isFormatted Deprecated. it's functionless now, be removed on v1.0.0
      * @param array $schema
      * @param array $lazy
-     *
      * @return \Illuminate\Support\Collection
-     *
      */
     public function getByIds(array $ids, $appends = [], $with = [], $scopes = [], $orders = [], $isFormatted = null, $schema = null, $lazy = [])
     {
@@ -368,11 +366,9 @@ trait QueryBuilder
 
         $query = $this->filter($query, $scopes);
 
-
-
         if (! empty($orders)) {
             $query = $this->order($query, $orders);
-        } else if ($this->model instanceof Sortable) {
+        } elseif ($this->model instanceof Sortable) {
             $query = $query->ordered();
         }
 

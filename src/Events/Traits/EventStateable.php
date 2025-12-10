@@ -36,12 +36,11 @@ trait EventStateable
 
     public function setupEventStateable()
     {
-        if($this->model instanceof \Unusualify\Modularity\Entities\Model && classHasTrait($this->model, HasStateable::class)) {
+        if ($this->model instanceof \Unusualify\Modularity\Entities\Model && classHasTrait($this->model, HasStateable::class)) {
             $this->hasStateable = true;
             $this->stateableChanged = $this->model->stateableChanged();
             $this->previousStateableState = $this->model->previousStateableState();
             $this->currentStateableState = $this->model->currentStateableState();
         }
     }
-
 }

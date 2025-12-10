@@ -62,16 +62,8 @@ trait ManageScopes
     //     'created_at' => 'desc',
     // ];
 
-    /**
-     *
-     *
-     */
     protected $defaultTableOrders = [];
 
-    /**
-     *
-     *
-     */
     protected $tableOrders = [];
 
     protected function __afterConstructManageScopes($app, $request)

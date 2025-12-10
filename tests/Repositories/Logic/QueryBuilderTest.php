@@ -2,12 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Logic;
 
-use Mockery;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Tests\Repositories\Owner;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class QueryBuilderTest extends RepositoryTestCase
@@ -25,7 +21,7 @@ class QueryBuilderTest extends RepositoryTestCase
     {
         $this->seedFilterFixtures();
 
-        $emptyPaginator = $this->repository->get(perPage:0, forcePagination: false);
+        $emptyPaginator = $this->repository->get(perPage: 0, forcePagination: false);
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $emptyPaginator);
         $this->assertEquals(5, $emptyPaginator->total());
     }
@@ -33,11 +29,10 @@ class QueryBuilderTest extends RepositoryTestCase
     public function test_get_with_per_page_negative_1(): void
     {
         $this->seedFilterFixtures();
-        $results = $this->repository->get(perPage:-1, forcePagination: false);
+        $results = $this->repository->get(perPage: -1, forcePagination: false);
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $results);
         $this->assertEquals(5, $results->total());
     }
-
 
     public function test_get_with_scopes_and_except_ids(): void
     {
@@ -78,7 +73,7 @@ class QueryBuilderTest extends RepositoryTestCase
         $this->seedFilterFixtures();
         $results = $this->repository->get(scopes: [
             'searches' => [
-                'owner.name'
+                'owner.name',
             ],
             'search' => 'Owner B',
             'owner.name' => 'Owner B',
@@ -91,7 +86,7 @@ class QueryBuilderTest extends RepositoryTestCase
         $results = $this->repository->get(scopes: [
             'searches' => [
                 'name',
-                'owner.name'
+                'owner.name',
             ],
             'search' => 'Alice',
             'name' => 'Alice',
@@ -129,7 +124,7 @@ class QueryBuilderTest extends RepositoryTestCase
         $this->seedFilterFixtures();
         $ids = TestModel::whereIn('name', ['Alice', 'Bob'])->pluck('id')->all();
 
-        $results = $this->repository->getByIds($ids, appends: ['owner_name'], with: ['notes' ], scopes: [], orders: [], lazy: ['owner.posts', 'posts.translations']);
+        $results = $this->repository->getByIds($ids, appends: ['owner_name'], with: ['notes'], scopes: [], orders: [], lazy: ['owner.posts', 'posts.translations']);
         $this->assertCount(2, $results);
         $this->assertTrue($results->first()->relationLoaded('owner'));
         $this->assertTrue($results->first()->relationLoaded('notes'));

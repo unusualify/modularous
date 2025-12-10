@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
-use Mockery;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Mockery;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class AbstractRepositoryTest extends RepositoryTestCase
@@ -324,7 +324,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_create()
     {
-        $owner = Owner::create(['name' => 'Test Owner', ]);
+        $owner = Owner::create(['name' => 'Test Owner']);
         $schema = [
             [
                 'name' => 'name',
@@ -340,7 +340,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             'name' => 'Test',
             'owner_id' => $owner->id,
             'created_at' => 'ss',
-            'updated_at' => ''
+            'updated_at' => '',
         ], $schema);
 
         $this->assertEquals(false, $this->repository->dispatchEvent($object, 'null'));
@@ -682,7 +682,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_get_show_fields(): void
     {
-        $owner = Owner::create(['name' => 'Test Owner', ]);
+        $owner = Owner::create(['name' => 'Test Owner']);
         $schema = [
             [
                 'name' => 'name',
@@ -698,7 +698,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             'name' => 'Test',
             'owner_id' => $owner->id,
             'created_at' => 'ss',
-            'updated_at' => ''
+            'updated_at' => '',
         ], $schema);
 
         $fields = $this->repository->getShowFields($object, $schema);

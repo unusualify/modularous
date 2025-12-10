@@ -355,7 +355,6 @@ class ModularityRoutes
             return $iParent ? 1 : -1;
         });
 
-
         foreach ($routes as $key => $item) {
             // Skip if front routes are required but not enabled
             if ($type === 'front') {

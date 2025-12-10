@@ -54,7 +54,7 @@ trait OauthTrait
     {
         $user = $this->model->firstOrNew([
             'email' => $oauthUser->email,
-        ],[
+        ], [
             'name' => $oauthUser?->user['given_name'] ?? $oauthUser->name,
             'surname' => $oauthUser?->user['family_name'] ?? '',
             'role' => modularityConfig('oauth.default_role'),

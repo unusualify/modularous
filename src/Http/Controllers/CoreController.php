@@ -70,10 +70,7 @@ abstract class CoreController extends LaravelController
      */
     protected $config;
 
-    /**
-     * @var \Unusualify\Modularity\Repositories\Repository
-     */
-    protected \Unusualify\Modularity\Repositories\Repository | null $repository;
+    protected ?\Unusualify\Modularity\Repositories\Repository $repository;
 
     /**
      * @var \Unusualify\Modularity\Module

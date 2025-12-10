@@ -105,10 +105,10 @@ trait ImagesTrait
                     if ($input) {
                         $fields += [
                             $input['name'] => ($input['translated'] ?? false) ? Collection::make(Arr::mapWithKeys(getLocales(), function ($locale) {
-                                    return [$locale => []];
-                                })) : Collection::make([]),
-                            ];
-                        }
+                                return [$locale => []];
+                            })) : Collection::make([]),
+                        ];
+                    }
                 }
             }
         }

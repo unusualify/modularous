@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Unusualify\Modularity\Http\Controllers\ChatController;
 use Unusualify\Modularity\Http\Controllers\ProcessController;
-use Unusualify\Modularity\Http\Controllers\ProfileController;
 use Unusualify\Modularity\Http\Controllers\TagController;
 
 /*

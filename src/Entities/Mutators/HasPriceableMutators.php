@@ -153,7 +153,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_subtotal_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_subtotal_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_subtotal_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -162,7 +162,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_raw_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -171,7 +171,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_discounted_raw_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_discounted_raw_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_discounted_raw_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -180,7 +180,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_vat_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_vat_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_vat_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -189,7 +189,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_discounted_vat_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_discounted_vat_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_discounted_vat_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -198,7 +198,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_raw_discount_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_discount_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_discount_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -207,7 +207,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_vat_discount_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_vat_discount_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_vat_discount_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -216,7 +216,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_total_discount_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_total_discount_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_total_discount_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -225,7 +225,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_total_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_total_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217)))
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_total_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217)))
                 : null,
         );
     }
@@ -234,7 +234,7 @@ trait HasPriceableMutators
     {
         return Attribute::make(
             get: fn ($value) => $this->base_price_raw_amount
-                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_amount, new MoneyCurrency(strtoupper($this->basePrice->currency->iso_4217))) . (config('priceable.prices_are_including_vat')
+                ? \Oobook\Priceable\Facades\PriceService::formatAmount($this->base_price_raw_amount, new MoneyCurrency(mb_strtoupper($this->basePrice->currency->iso_4217))) . (config('priceable.prices_are_including_vat')
                     ? ''
                     : ' +' . __('VAT'))
                 : null,

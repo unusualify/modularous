@@ -152,13 +152,13 @@ class MigrationBackup
 
         // For PostgreSQL, get primary key separately
         if ($driver === 'pgsql') {
-            $pkResult = DB::select("
+            $pkResult = DB::select('
                 SELECT a.attname
                 FROM pg_index i
                 JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
                 WHERE i.indrelid = ?::regclass AND i.indisprimary
-            ", [$table]);
-            if (!empty($pkResult)) {
+            ', [$table]);
+            if (! empty($pkResult)) {
                 $primaryKey = $pkResult[0]->attname;
             }
         }

@@ -2,10 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Unusualify\Modularity\Entities\File;
 use Unusualify\Modularity\Repositories\FileRepository;
@@ -73,5 +71,3 @@ class FileRepositoryTest extends RepositoryTestCase
         $this->assertFalse(Storage::disk('files')->exists('uuid-file'));
     }
 }
-
-

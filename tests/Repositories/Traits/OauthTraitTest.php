@@ -139,5 +139,3 @@ class OauthTestRepository extends \Unusualify\Modularity\Repositories\Repository
         $this->model = $model;
     }
 }
-
-

@@ -148,12 +148,12 @@ trait ManageUtilities
             "$moduleSnakeName::messages.$snakeRouteName.edit-item",
             "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.edit-item",
             "$moduleSnakeName::messages.edit-item",
-            "fields.edit-item",
+            'fields.edit-item',
         ], ['item' => trans_choice($translationRouteKey, 1)]) : $this->getTranslationFromKeys([
             "$moduleSnakeName::messages.new-item",
             "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.new-item",
             "$moduleSnakeName::messages.new-item",
-            "fields.new-item",
+            'fields.new-item',
         ], ['item' => trans_choice($translationRouteKey, 1)]);
 
         $data = [
@@ -243,7 +243,7 @@ trait ManageUtilities
                     "$translationRouteKey::messages.new-item",
                     "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.new-item",
                     "$moduleSnakeName::messages.new-item",
-                    "fields.new-item",
+                    'fields.new-item',
                 ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
@@ -253,7 +253,7 @@ trait ManageUtilities
                     "$translationRouteKey::messages.edit-item",
                     "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.edit-item",
                     "$moduleSnakeName::messages.edit-item",
-                    "fields.edit-item",
+                    'fields.edit-item',
                 ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;
@@ -263,7 +263,7 @@ trait ManageUtilities
                     "$translationRouteKey::messages.show-item",
                     "modules.{$moduleSnakeName}.{$snakeRouteName}.messages.show-item",
                     "$moduleSnakeName::messages.show-item",
-                    "fields.show-item",
+                    'fields.show-item',
                 ], ['item' => trans_choice($translationRouteKey, 1)]);
 
                 break;

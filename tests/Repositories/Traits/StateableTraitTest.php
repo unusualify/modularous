@@ -143,5 +143,3 @@ final class RepoStateableTestRepository extends Repository
         $this->model = $model;
     }
 }
-
-

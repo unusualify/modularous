@@ -2,9 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Request;
-use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Traits\HasPriceable as TraitsHasPriceable;
 use Unusualify\Modularity\Entities\Mutators\HasPriceableMutators;
@@ -39,7 +37,7 @@ trait HasPriceable
             $priceTable = app(Price::class)->getTable();
 
             $languageBasedPriceFactor = $this->getLanguageBasedPriceFactor();
-            if(method_exists($this, 'getLanguageBasedPriceQuery')){
+            if (method_exists($this, 'getLanguageBasedPriceQuery')) {
                 // Get the subquery that checks if language-based pricing conditions are met
                 $conditionSubquery = $this->getLanguageBasedPriceQuery();
 
@@ -115,5 +113,4 @@ trait HasPriceable
     {
         return 10 ** (isset($this->languageBasedPricePower) ? $this->languageBasedPricePower : 0);
     }
-
 }

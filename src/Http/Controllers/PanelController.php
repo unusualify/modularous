@@ -803,6 +803,7 @@ abstract class PanelController extends CoreController
 
         return true;
     }
+
     /**
      * @return Collection|Block[]
      */
