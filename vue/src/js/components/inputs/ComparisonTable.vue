@@ -353,8 +353,6 @@
               if(found){
                 value = get(found, this.comparatorValue, 'unknown')
 
-                console.log(value, found);
-
                 if(value === 'unknown'){
                   console.error(`${this.comparatorField} not found for ${this.comparatorValue}`)
                   value = ''
@@ -372,12 +370,6 @@
               let comparatorTooltipValue = null;
               let hasComparatorTooltip = this.comparatorTooltip && found && (comparatorTooltipValue = get(found, this.comparatorTooltip, null));
 
-              console.log(
-                this.comparatorTooltip,
-                found,
-                comparatorTooltipValue,
-                hasComparatorTooltip,
-              );
               if(hasComparatorTooltip){
                 value = {
                   isTooltip: true,
