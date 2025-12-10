@@ -68,7 +68,7 @@ class PaymentStatusTest extends TestCase
         $this->assertEquals('grey', PaymentStatus::PENDING->color());
         $this->assertEquals('warning', PaymentStatus::FAILED->color());
         $this->assertEquals('primary', PaymentStatus::CHECKOUT->color());
-        $this->assertEquals('secondary', PaymentStatus::PROVISION->color());
+        $this->assertEquals('info', PaymentStatus::PROVISION->color());
         $this->assertEquals('success', PaymentStatus::COMPLETED->color());
         $this->assertEquals('error', PaymentStatus::CANCELLED->color());
         $this->assertEquals('grey', PaymentStatus::REFUNDED->color());
