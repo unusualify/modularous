@@ -1,5 +1,5 @@
-name: "🧪 TEST"
-description: Create a new ticket for a question
+name: "🧪 Test"
+description: Create a new demand for tests
 title: "🧪 [TEST]: "
 labels: [
   "test",
