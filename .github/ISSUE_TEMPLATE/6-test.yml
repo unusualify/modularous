@@ -42,7 +42,7 @@ body:
         - Translation
         - View
 
-  - type: text
+  - type: textarea
     id: 
     attributes:
       label: "A class, method or logic reference"
