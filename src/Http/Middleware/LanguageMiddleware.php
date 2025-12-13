@@ -62,7 +62,9 @@ class LanguageMiddleware
         if ($currency !== mb_strtoupper(config('priceable.currency'))) {
             config(['priceable.currency' => $currency]);
             $currencyModel = Currency::where('iso_4217', config('priceable.currency'))->first();
-            $request->setUserCurrency($currencyModel);
+            if ($currencyModel) {
+                $request->setUserCurrency($currencyModel);
+            }
         }
 
         config(['priceable.currency_locale' => config('app.locale')]);
