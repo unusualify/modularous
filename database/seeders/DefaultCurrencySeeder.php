@@ -10,8 +10,6 @@ class DefaultCurrencySeeder extends Seeder
 {
     public function run()
     {
-        $table = config('priceable.tables.currencies');
-
         $seedArray = [
             [
                 'name' => 'Euro',
@@ -157,7 +155,10 @@ class DefaultCurrencySeeder extends Seeder
         ];
 
         foreach ($seedArray as $currency) {
-            $paymentCurrency = PaymentCurrency::create(Arr::only($currency, ['name', 'symbol', 'iso_4217', 'iso_4217_number']));
+            $paymentCurrency = PaymentCurrency::updateOrCreate(
+                ['iso_4217' => $currency['iso_4217']],
+                Arr::only($currency, ['name', 'symbol', 'iso_4217', 'iso_4217_number'])
+            );
 
             if (isset($currency['default_vat_rates'])) {
                 $paymentCurrency->repeaters()->create([
