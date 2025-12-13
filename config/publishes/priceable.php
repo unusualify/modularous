@@ -15,6 +15,6 @@ return [
         'price_type' => 1,
     ],
     'observers' => [
-        'price' => \Unusualify\Modularity\Observers\PriceableObserver::class,
+        'price' => \Unusualify\Modularity\Entities\Observers\PriceableObserver::class,
     ],
 ];
