@@ -45,7 +45,7 @@ export default function useValidation (props) {
         // Basic format check
         const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!basicEmailRegex.test(v)) {
-            return msg || t('validation.invalid_email_format');
+            return msg || t('validation.email');
         }
 
         // Strict format check
