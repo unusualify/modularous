@@ -376,9 +376,14 @@ class RouteGenerator extends Generator
         $langPath = $this->module->isModularityModule()
             ? Modularity::getVendorPath('lang')
             : base_path('lang');
-        // : $this->app['path.lang'];
 
-        // $this->translation = new \JoeDixon\Translation\Drivers\File(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
+        if (!file_exists($langPath)) {
+            \Illuminate\Support\Facades\Artisan::call('vendor:publish', [
+                '--provider' => \Unusualify\Modularity\LaravelServiceProvider::class,
+                '--tag' => 'lang',
+            ]);
+        }
+
         $this->translation = new \Unusualify\Modularity\Services\FileTranslation(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
     }
 
@@ -966,7 +971,7 @@ class RouteGenerator extends Generator
             $headers = $this->getHeaders();
             $inputs = $this->getInputs();
 
-            $titleColumnKey = count($filtered = array_filter($headers, fn ($i) => $i['key'] === 'name' || $i['key'] === 'title')) > 0
+            $titleColumnKey = count($filtered = array_values(array_filter($headers, fn ($i) => $i['key'] === 'name' || $i['key'] === 'title'))) > 0
                 ? $filtered[0]['key']
                 : $headers[0]['key'];
 
