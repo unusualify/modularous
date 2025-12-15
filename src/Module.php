@@ -393,13 +393,17 @@ class Module extends NwidartModule
      *
      * @param mixed $notation
      */
-    public function getRawConfig($notation = null): mixed
+    public function getRawConfig($notation = null, $default = []): mixed
     {
-        $config_folder = GenerateConfigReader::read('config')->getPath();
+        $configFolder = GenerateConfigReader::read('config')->getPath();
 
-        $rawConfig = include $this->getDirectoryPath("{$config_folder}/config.php");
+        if (file_exists($this->getDirectoryPath("{$configFolder}/config.php"))) {
+            $rawConfig = include $this->getDirectoryPath("{$configFolder}/config.php");
+        } else {
+            $rawConfig = [];
+        }
 
-        return $notation ? data_get($rawConfig, $notation, []) : $rawConfig;
+        return $notation ? data_get($rawConfig, $notation, $default) : $rawConfig;
     }
 
     /**
@@ -512,7 +516,7 @@ class Module extends NwidartModule
      */
     public function hasSystemPrefix(): mixed
     {
-        return $this->getRawConfig('system_prefix') ?? $this->getRawConfig('base_prefix', false);
+        return $this->getRawConfig('system_prefix', false) ?? $this->getRawConfig('base_prefix', false);
     }
 
     /**
