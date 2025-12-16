@@ -709,4 +709,43 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $fields['position']);
         $this->assertEquals(false, $fields['is_active']);
     }
+
+    public function test_defined_relations(): void
+    {
+        $this->assertContains('owner', $this->repository->getDefinedRelations(['BelongsTo']));
+        $this->assertContains('owner', $this->repository->getDefinedRelations('BelongsTo'));
+        $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsToMany']));
+        $this->assertContains('testRoles', $this->repository->getDefinedRelations('BelongsToMany'));
+        $this->assertContains('notes', $this->repository->getDefinedRelations(['HasMany']));
+        $this->assertContains('notes', $this->repository->getDefinedRelations('HasMany'));
+        $this->assertContains('posts', $this->repository->getDefinedRelations(['MorphMany']));
+        $this->assertContains('posts', $this->repository->getDefinedRelations('MorphMany'));
+
+        // multiple relations
+        $this->assertContains('owner', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
+        $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
+        $this->assertContains('notes', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
+        $this->assertContains('posts', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
+        $this->assertContains('translations', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
+
+
+        $this->assertContains('owner', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
+        $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
+        $this->assertContains('notes', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
+        $this->assertContains('posts', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
+        $this->assertContains('translations', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
+    }
+
+    public function test_foreign_key_methods(): void
+    {
+        $model = $this->repository->getModel();
+
+        $this->assertEquals('owner_id', $this->repository->getRelationForeignKey($model->owner()));
+        $this->assertEquals('test_role_id', $this->repository->getRelationForeignKey($model->testRoles()));
+        $this->assertEquals('test_model_id', $this->repository->getRelationForeignKey($model->notes()));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid relation type');
+        $this->repository->getRelationForeignKey($model->posts());
+    }
 }
