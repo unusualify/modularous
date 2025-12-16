@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.issue.labels.*.name, 'planned') &&
-      (contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'bug'))
+      (contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'test'))
     steps:
       - name: Parse Issue
         if: contains(github.event.issue.labels.*.name, 'bug')
@@ -52,6 +52,8 @@ jobs:
             else
               PREFIX="bugfix/"
             fi
+          elif [[ "${{ contains(github.event.issue.labels.*.name, 'test') }}" == "true" ]]; then
+            PREFIX="test/"
           else
             PREFIX=""
           fi
