@@ -415,11 +415,19 @@ trait FormSchema
             case 'polymorphic':
                 $arrayable = true;
 
-                if (! isset($input['model'])) {
+                $connector = $input['newConnector'] ?? null;
+                $model = null;
+                if (isset($connector)) {
+                    $connector = new Connector($connector);
+                    $module = $connector->getModule();
+                    $modelInstance = $connector->getModel(false);
+                }
+
+                if (! $modelInstance && ! isset($input['model'])) {
                     throw new \Exception('Model is required for polymorphic input');
                 }
 
-                $model = $input['model'];
+                $model = $input['model'] ?? $modelInstance;
 
                 if (! class_exists($model)) {
                     throw new \Exception('Model ' . $model . ' does not exist on polymorphic input');
@@ -563,6 +571,7 @@ trait FormSchema
             }
         }
 
+
         $this->hydrateInputExtension($input, $data, $arrayable, $inputs);
 
         if (isset($this->repository) && isset($input['name'])) {
@@ -603,7 +612,15 @@ trait FormSchema
      */
     public function hydrateInputConnector(&$input)
     {
-        if (isset($input['connector'])) {
+        if (isset($input['newConnector'])) {
+            $connector = new Connector($input['newConnector']);
+            $input['_moduleName'] = $connector->getModuleName();
+            $input['_routeName'] = $connector->getRouteName();
+
+            if($connector->isLinkTarget()) {
+                $connector->run($input, 'endpoint');
+            }
+        } else if (isset($input['connector'])) {
             // 'moduleName:routeName|uri:edit'
             $targetType = 'uri';
 
