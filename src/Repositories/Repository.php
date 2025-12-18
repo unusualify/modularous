@@ -22,7 +22,8 @@ abstract class Repository implements RepositoryContract
         Logic\CountBuilders,
         Logic\Dates,
         Logic\Relationships,
-        Logic\DispatchEvents;
+        Logic\DispatchEvents,
+        Logic\Schema;
 
     /**
      * @var \Unusualify\Modularity\Models\Model
@@ -83,6 +84,8 @@ abstract class Repository implements RepositoryContract
      */
     public function create($fields, $schema = null)
     {
+        $this->setSchema($schema);
+
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
         return DB::transaction(function () use ($fields) {
@@ -138,15 +141,15 @@ abstract class Repository implements RepositoryContract
      * @param array $fields
      * @return \Unusualify\Modularity\Models\Model|void
      */
-    public function updateOrCreate($attributes, $fields)
+    public function updateOrCreate($attributes, $fields, $schema = null)
     {
         $object = $this->model->where($attributes)->first();
 
         if (! $object) {
-            return $this->create($fields);
+            return $this->create($fields, $schema);
         }
 
-        $this->update($object->id, $fields);
+        $this->update($object->id, $fields, $schema);
     }
 
     /**
@@ -156,6 +159,8 @@ abstract class Repository implements RepositoryContract
      */
     public function update($id, $fields, $schema = null)
     {
+        $this->setSchema($schema);
+
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
         DB::transaction(function () use ($id, $fields) {
@@ -252,6 +257,8 @@ abstract class Repository implements RepositoryContract
         if (($duplicated = $this->model->find($id)) === null) {
             return false;
         }
+
+        $this->setSchema($schema);
 
         $this->setColumns($this->chunkInputs(all: true));
 
