@@ -263,6 +263,8 @@ trait MethodTransformers
      */
     public function getFormFields($object, $schema = [], $noSerialization = false)
     {
+        $this->setSchema($schema);
+
         $chunkedInputs = $this->chunkInputs(all: true, schema: empty($schema) ? null : $schema);
 
         $this->setColumns($chunkedInputs);
@@ -276,14 +278,13 @@ trait MethodTransformers
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
             $fields = $this->$method($object, $fields, $schema);
         }
+
         if (! empty($fields)) {
-            // dd($schema, $fields);
             $fields = Collection::make($fields)->reduce(function ($acc, $value, $key) {
                 Arr::set($acc, $key, $value);
 
                 return $acc;
             }, []);
-            // dd($fields);
         }
 
         return $fields;
