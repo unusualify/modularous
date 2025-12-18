@@ -60,6 +60,11 @@ class Connector
     private $routeName;
 
     /**
+     * @var string
+     */
+    private $targetTypeKey;
+
+    /**
      * @var Class
      */
     private $target;
@@ -148,16 +153,21 @@ class Connector
         if ($raw !== '') {
             $methodables = explode($this->secondLevelSeparator, $raw); // |
 
-            foreach ($methodables as $methodable) {
+            foreach ($methodables as $index => $methodable) {
 
                 $stop = false;
                 $targets = explode($this->thirdLevelSeparator, $methodable); // ->
                 $targetTypeKey = array_shift($targets);
+                if( $index === 0 ) {
+                    $this->targetTypeKey = $targetTypeKey;
+                }
                 $methodName = '';
                 $args = [$this->routeName];
 
                 switch ($targetTypeKey) {
                     case 'uri':
+                    case 'url':
+                    case 'endpoint':
                         $this->target = $this->module;
 
                         if (count($targets) > 0) {
@@ -165,7 +175,7 @@ class Connector
                         } else {
                             $args[] = 'index';
                         }
-                        $methodName = 'getRouteActionUri';
+                        $methodName = 'getRouteActionUrl';
                         $stop = true;
 
                         $events[] = [
@@ -359,5 +369,80 @@ class Connector
         }
 
         return $target;
+    }
+
+    /**
+     * Get the module
+     *
+     * @return Module
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
+
+    /**
+     * Get the module name
+     *
+     * @return string
+     */
+    public function getModuleName()
+    {
+        return $this->module->getName();
+    }
+
+    /**
+     * Get the route name
+     *
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
+    }
+
+    /**
+     * Get the target
+     *
+     * @return mixed
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Get the target type
+     *
+     * @return string
+     */
+    public function getTargetTypeKey()
+    {
+        return $this->targetTypeKey;
+    }
+
+    public function isLinkTarget()
+    {
+        return $this->targetTypeKey === 'uri' || $this->targetTypeKey === 'url' || $this->targetTypeKey === 'endpoint';
+    }
+
+    /**
+     * Get the repository
+     *
+     * @return Repository
+     */
+    public function getRepository(bool $asClass = true)
+    {
+        return $this->module->getRepository($this->routeName, $asClass);
+    }
+
+    /**
+     * Get the model
+     *
+     * @return Model
+     */
+    public function getModel(bool $asClass = true)
+    {
+        return $this->module->getModel($this->routeName, $asClass);
     }
 }
