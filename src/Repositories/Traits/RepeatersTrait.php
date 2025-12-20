@@ -51,22 +51,19 @@ trait RepeatersTrait
         if ($this->shouldIgnoreFieldBeforeSave('repeaters')) {
             return $object;
         }
-        // $defaultLocale = modularityConfig('locale');
-        $defaultLocale = config('app.locale');
-        // $locales = getLocales();
-        $system_locales = getLocales();
+
+        $systemLocales = getLocales();
         $fallbackLocale = app()->getFallbackLocale();
 
-        $schema = $schema ?? $this->inputs();
+        $schema = $this->getRawInputs();
 
         foreach ($this->getColumns(__TRAIT__) as $name) {
-            $input = $this->inputs()[$name];
+            $input = $schema[$name];
             $isTranslated = $input['translated'] ?? false;
 
             if (isset($fields[$name])) {
                 $unsetColumns = [];
                 Collection::make($this->traitColumns)->each(function ($columns, $traitName) use (&$unsetColumns) {
-
                     $unsetColumns = Collection::make($columns)->reduce(function ($unsetColumns, $column) {
                         if (preg_match('/([A-Za-z-_\.]+)\.\*\.([A-Za-z-_\.]+)/', $column, $matches)) {
                             if (! in_array($matches[2], $unsetColumns)) {
@@ -76,37 +73,33 @@ trait RepeatersTrait
 
                         return $unsetColumns;
                     }, $unsetColumns);
-
                 });
 
-                $intersect_locales = array_intersect(array_keys($fields[$name]), $system_locales);
+                $intersectLocales = array_intersect(array_keys($fields[$name]), $systemLocales);
                 $localized = false;
-                $exist_locale = null;
+                $existLocale = null;
 
                 $existingRepeaters = isset($object->id) ? $object->repeaters()
                     ->where('repeatable_id', $object->id)
                     ->where('role', $name)
                     ->get() : null;
-                // dd($object->id, $existingRepeaters, $existingRepeaters->where('repeatable_id', $object->id));
-                // $repeaterModels = isset($object->id) ? $existingRepeaters->where('repeatable_id', $object->id) : null;
 
-                if (count($intersect_locales) > 1) {
+                if (count($intersectLocales) > 1) {
                     $localized = true;
-                    $exist_locale = $intersect_locales[0];
+                    $existLocale = $intersectLocales[0];
                 }
 
                 if ($isTranslated) {
 
-                    foreach ($system_locales as $system_locale) {
+                    foreach ($systemLocales as $systemLocale) {
                         $content = $fields[$name];
 
                         if ($localized) {
-                            $content = isset($fields[$name][$system_locale]) ? $fields[$name][$system_locale] : $fields[$name][$exist_locale];
+                            $content = isset($fields[$name][$systemLocale]) ? $fields[$name][$systemLocale] : $fields[$name][$existLocale];
                         }
 
                         foreach ($unsetColumns as $unsetColumn) {
                             foreach ($content as &$item) {
-                                // code...
                                 unset($item[$unsetColumn]);
                             }
                         }
@@ -114,10 +107,10 @@ trait RepeatersTrait
                         $data = [
                             'role' => $name,
                             'content' => $content,
-                            'locale' => $system_locale,
+                            'locale' => $systemLocale,
                         ];
 
-                        $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $system_locale)->first() : null;
+                        $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $systemLocale)->first() : null;
 
                         $existingRepeater
                             ? $existingRepeater->update($data)
@@ -129,7 +122,7 @@ trait RepeatersTrait
                     $payload = $fields[$name];
 
                     if ($localized) {
-                        $payload = isset($fields[$name][$fallbackLocale]) ? $fields[$name][$fallbackLocale] : $fields[$name][$exist_locale];
+                        $payload = isset($fields[$name][$fallbackLocale]) ? $fields[$name][$fallbackLocale] : $fields[$name][$existLocale];
                     }
 
                     foreach ($unsetColumns as $unsetColumn) {
@@ -173,9 +166,9 @@ trait RepeatersTrait
     public function getFormFieldsRepeatersTrait($object, $fields, $schema = null)
     {
         // not possess any repeater data
-        if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && $object->repeaters()->exists()) {
-            $schema = $schema ?? $this->inputs();
-            if ($object->repeaters->isEmpty()) {
+        if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && method_exists($object, 'repeaters')) {
+            $schema = $schema ?? $this->getRawInputs();
+            if (!$object->repeaters()->exists()) {
                 $fields += Arr::mapWithKeys($this->getRepeaterInputs($schema), function ($input) {
                     return [
                         $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
