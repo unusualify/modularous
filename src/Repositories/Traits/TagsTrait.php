@@ -30,17 +30,15 @@ trait TagsTrait
      */
     public function afterSaveTagsTrait($object, $fields)
     {
-        $schema = $this->inputs() ?? [];
+        $schema = $this->getRawInputs() ?? [];
 
         if (! isset($fields['bulk_tags']) && ! isset($fields['previous_common_tags'])) {
-            if (! $this->shouldIgnoreFieldBeforeSave('tags')) {
-                $translated = false;
-                if ($schema && isset($schema['tags']['translated']) && $schema['tags']['translated']) {
-                    $translated = true;
-                }
+            $tagsSchema = $schema['tags'] ?? [];
+            $tagsExists = array_key_exists('tags', $fields);
+            if (! $this->shouldIgnoreFieldBeforeSave('tags') && $tagsExists) {
+                $translated = $tagsSchema['translated'] ?? false;
 
                 $values = $fields['tags'] ?? [];
-
                 if ($translated || Arr::isAssoc($values)) {
                     foreach ($values as $locale => $value) {
                         $object->setLocaleTags(tags: $value, locale: $locale);
@@ -68,23 +66,22 @@ trait TagsTrait
     public function getFormFieldsTagsTrait($object, $fields, $schema = null)
     {
         if ($object->has('tags')) {
+            $locales = getLocales();
+
             foreach ($this->getColumns(__TRAIT__) as $column) {
                 $translated = false;
 
-                $tagInput = $schema[$column] ?? null;
+                $tagInput = $schema[$column] ?? [];
 
-                if ($tagInput && isset($tagInput['translated']) && $tagInput['translated']) {
-                    $translated = true;
-                }
+                $translated = $tagInput['translated'] ?? false;
 
                 if ($translated) {
-                    $locales = getLocales();
                     $fields[$column] = $object->tags->groupBy('locale')->map(function ($group) {
                         return $group->map(fn ($tag) => $tag->name);
                     });
 
                     foreach ($locales as $locale) {
-                        $fields[$column][$locale] = $fields[$column][$locale] ?? ($tagInput && $tagInput['default'] ? $tagInput['default'] : ($tagInput && ($tagInput['multiple'] ?? true) ? collect([]) : null));
+                        $fields[$column][$locale] = $fields[$column][$locale] ?? ($tagInput['default'] ?? ($tagInput['multiple'] ?? true) ? collect([]) : null);
                     }
                 } else {
                     $fields[$column] = $object->tags->map(fn ($tag) => $tag->name);
@@ -118,10 +115,9 @@ trait TagsTrait
             $tagQuery->where('slug', 'like', '%' . $query . '%');
         }
 
-        // dd($tagQuery->toRawSql());
         if (! empty($ids)) {
             foreach ($ids as $id) {
-                $tagQuery->whereHas(modularityConfig('tables.tagged', 'tagged'), function ($query) use ($id) {
+                $tagQuery->whereHas('tagged', function ($query) use ($id) {
                     $query->where('taggable_id', $id);
                 });
             }
