@@ -181,7 +181,6 @@ trait RepeatersTrait
                 foreach ($object->repeaters->groupBy('locale') as $repeatersByLocale) {
 
                     foreach ($repeatersByLocale as $repeater) {
-                        // dd($repeater->content);
                         if ($schema[$repeater->role]['translated'] ?? false) {
                             $name = $repeater->role . '.' . $repeater->locale;
 
@@ -196,7 +195,6 @@ trait RepeatersTrait
                             }
                         }
                     }
-                    // $fields[$repeater->role] = $repeater->content;
                 }
             }
         }
