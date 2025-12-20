@@ -559,9 +559,9 @@ return [
                     'itemTitle' => 'name',
                 ],
                 [
+                    'type' => 'json-repeater',
                     'name' => 'default_vat_rates',
                     'label' => __('Default VAT Rates'),
-                    'type' => 'json-repeater',
                     'default' => [],
                     'formRowAttribute' => [
                         'noGutters' => true,
