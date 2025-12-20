@@ -10,7 +10,7 @@ class Post extends Model
 
     protected $table = 'posts';
 
-    protected $fillable = ['postable_id', 'postable_type'];
+    protected $fillable = ['postable_id', 'postable_type', 'position'];
 
     protected $translationModel = PostTranslation::class;
 
