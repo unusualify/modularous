@@ -35,10 +35,10 @@ trait FilesTrait
         }
 
         $filesCollection = Collection::make();
-        $filesFromFields = $this->getFiles($fields);
+        $filesFromFields = $this->getFiles($object, $fields);
 
         $filesFromFields->each(function ($file) use ($object, $filesCollection) {
-            $newFile = File::withTrashed()->find($file['id']);
+            $newFile = File::withTrashed()->find($file['file_id']);
             $pivot = $newFile->newPivot($object, Arr::except($file, ['id']), 'fileables', true);
             $newFile->setRelation('pivot', $pivot);
             $filesCollection->push($newFile);
@@ -60,10 +60,13 @@ trait FilesTrait
             return;
         }
 
-        $object->files()->sync([]);
 
-        $this->getFiles($fields)->each(function ($file) use ($object) {
-            $object->files()->attach($file['id'], Arr::except($file, ['id']));
+        $this->getFiles($object, $fields)->each(function ($file) use ($object) {
+            if(isset($file['id']) && $file['id']) {
+                $object->files()->updateExistingPivot($file['id'], Arr::except($file, ['id', 'file_id']));
+            } else {
+                $object->files()->attach($file['file_id'], Arr::except($file, ['file_id']));
+            }
         });
     }
 
@@ -131,30 +134,43 @@ trait FilesTrait
      * @param array $fields
      * @return \Illuminate\Support\Collection
      */
-    private function getFiles($fields)
+    private function getFiles($object, $fields)
     {
         $files = Collection::make();
-
         $systemLocales = getLocales();
-
         $fileRoles = $this->getColumns(__TRAIT__);
+        $fileablesTable = modularityConfig('tables.fileables', 'um_fileables');
 
         foreach ($fileRoles as $role) {
             if (isset($fields[$role]) && count(array_keys($fields[$role])) > 0) {
                 $default_locale = array_keys($fields[$role])[0];
                 foreach ($systemLocales as $locale) {
                     if (isset($fields[$role][$locale])) {
-                        Collection::make($fields[$role][$locale])->each(function ($file) use (&$files, $role, $locale) {
+                        Collection::make($fields[$role][$locale])->each(function ($file) use ($object, $fileablesTable, &$files, $role, $locale) {
+                            $fileableId = $object->files()
+                                ->select($fileablesTable . '.id as pivot_id')
+                                ->where('file_id', $file['id'])
+                                ->where('role', $role)
+                                ->where('locale', $locale)->value('pivot_id') ?? null;
+
                             $files->push([
-                                'id' => $file['id'],
+                                ...($fileableId ? ['id' => $fileableId] : []),
+                                'file_id' => $file['id'],
                                 'role' => $role,
                                 'locale' => $locale,
                             ]);
                         });
                     } else {
-                        Collection::make($fields[$role])->each(function ($file) use (&$files, $role, $locale) {
+                        Collection::make($fields[$role])->each(function ($file) use ($object, $fileablesTable, &$files, $role, $locale) {
+                            $fileableId = $object->files()
+                                ->select($fileablesTable . '.id as pivot_id')
+                                ->where('file_id', $file['id'])
+                                ->where('role', $role)
+                                ->where('locale', $locale)->value('pivot_id') ?? null;
+
                             $files->push([
-                                'id' => $file['id'],
+                                ...($fileableId ? ['id' => $fileableId] : []),
+                                'file_id' => $file['id'],
                                 'role' => $role,
                                 'locale' => $locale,
                             ]);
