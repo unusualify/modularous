@@ -51,7 +51,6 @@ trait CountBuilders
      */
     public function getCountFor($method, $args = [])
     {
-        // dd($method);
         $query = $this->model->newQuery();
 
         if (method_exists($this->getModel(), 'scope' . ucfirst($method))) {

@@ -1425,4 +1425,26 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->expectExceptionMessage('Invalid relation type');
         $this->repository->getRelationForeignKey($model->posts());
     }
+
+    public function test_get_count_for(): void
+    {
+        // Create a partial mock (spy) of the repository
+        $repository = Mockery::mock(TestRepository::class, [new TestModel()])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        // Mock the filter method to return the query directly (passthrough)
+        $repository->shouldReceive('filter')
+            ->andReturnUsing(function ($query, $scopes = []) {
+                return $query;
+            });
+
+        // Test getCountFor with scopes that exist on the model
+        $this->assertSame(0, $repository->getCountFor('createdAtBetween', [now()->subDay(), now()->addDay()]));
+
+        // Test that exception is thrown for non-existent scope
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Method scopeNonExistent does not exist');
+        $repository->getCountFor('nonExistent');
+    }
 }
