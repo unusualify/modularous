@@ -76,6 +76,13 @@ if (! function_exists('makeForeignKey')) {
     }
 }
 
+if (! function_exists('makeMorphToName')) {
+    function makeMorphToName($string, $suffix = 'able')
+    {
+        return camelCase($string) . $suffix;
+    }
+}
+
 if (! function_exists('makeMorphName')) {
     function makeMorphName($string, $suffix = 'able')
     {
