@@ -44,7 +44,7 @@ trait Schema
             return $this->schema;
         }
 
-        return $this->inputs();
+        return $this->getRawInputs();
     }
 
     /**
@@ -68,6 +68,7 @@ trait Schema
     {
         return $this->chunkInputs($this->getRawInputs(), $all, $noGroupChunk);
     }
+
     /**
      * Set the inputs
      *
