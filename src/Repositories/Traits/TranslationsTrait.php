@@ -116,16 +116,16 @@ trait TranslationsTrait
                     unset($fields[$attribute]);
 
                     if (array_key_exists($attribute, $this->fieldsGroups) && is_array($translation->{$attribute})) {
-                        foreach ($this->fieldsGroups[$attribute] as $field_name) {
-                            if (isset($translation->{$attribute}[$field_name])) {
-                                if ($this->fieldsGroupsFormFieldNamesAutoPrefix) {
-                                    $fields['translations'][$attribute . $this->fieldsGroupsFormFieldNameSeparator . $field_name][$translation->locale] = $translation->{$attribute}[$field_name];
-                                } else {
-                                    $fields['translations'][$field_name][$translation->locale] = $translation->{$attribute}[$field_name];
-                                }
-                            }
-                        }
-                        unset($fields['translations'][$attribute]);
+                        // foreach ($this->fieldsGroups[$attribute] as $field_name) {
+                        //     if (isset($translation->{$attribute}[$field_name])) {
+                        //         if ($this->fieldsGroupsFormFieldNamesAutoPrefix) {
+                        //             $fields['translations'][$attribute . $this->fieldsGroupsFormFieldNameSeparator . $field_name][$translation->locale] = $translation->{$attribute}[$field_name];
+                        //         } else {
+                        //             $fields['translations'][$field_name][$translation->locale] = $translation->{$attribute}[$field_name];
+                        //         }
+                        //     }
+                        // }
+                        // unset($fields['translations'][$attribute]);
                     } else {
                         $fields['translations'][$attribute][$translation->locale] = $translation->{$attribute};
                     }
