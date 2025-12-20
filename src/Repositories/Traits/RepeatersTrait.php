@@ -63,17 +63,17 @@ trait RepeatersTrait
 
             if (isset($fields[$name])) {
                 $unsetColumns = [];
-                Collection::make($this->traitColumns)->each(function ($columns, $traitName) use (&$unsetColumns) {
-                    $unsetColumns = Collection::make($columns)->reduce(function ($unsetColumns, $column) {
-                        if (preg_match('/([A-Za-z-_\.]+)\.\*\.([A-Za-z-_\.]+)/', $column, $matches)) {
-                            if (! in_array($matches[2], $unsetColumns)) {
-                                $unsetColumns[] = $matches[2];
-                            }
-                        }
+                // Collection::make($this->traitColumns)->each(function ($columns, $traitName) use (&$unsetColumns) {
+                //     $unsetColumns = Collection::make($columns)->reduce(function ($unsetColumns, $column) {
+                //         if (preg_match('/([A-Za-z-_\.]+)\.\*\.([A-Za-z-_\.]+)/', $column, $matches)) {
+                //             if (! in_array($matches[2], $unsetColumns)) {
+                //                 $unsetColumns[] = $matches[2];
+                //             }
+                //         }
 
-                        return $unsetColumns;
-                    }, $unsetColumns);
-                });
+                //         return $unsetColumns;
+                //     }, $unsetColumns);
+                // });
 
                 $intersectLocales = array_intersect(array_keys($fields[$name]), $systemLocales);
                 $localized = false;
@@ -98,11 +98,11 @@ trait RepeatersTrait
                             $content = isset($fields[$name][$systemLocale]) ? $fields[$name][$systemLocale] : $fields[$name][$existLocale];
                         }
 
-                        foreach ($unsetColumns as $unsetColumn) {
-                            foreach ($content as &$item) {
-                                unset($item[$unsetColumn]);
-                            }
-                        }
+                        // foreach ($unsetColumns as $unsetColumn) {
+                        //     foreach ($content as &$item) {
+                        //         unset($item[$unsetColumn]);
+                        //     }
+                        // }
 
                         $data = [
                             'role' => $name,
@@ -125,11 +125,11 @@ trait RepeatersTrait
                         $payload = isset($fields[$name][$fallbackLocale]) ? $fields[$name][$fallbackLocale] : $fields[$name][$existLocale];
                     }
 
-                    foreach ($unsetColumns as $unsetColumn) {
-                        foreach ($payload as &$item) {
-                            unset($item[$unsetColumn]);
-                        }
-                    }
+                    // foreach ($unsetColumns as $unsetColumn) {
+                    //     foreach ($payload as &$item) {
+                    //         unset($item[$unsetColumn]);
+                    //     }
+                    // }
 
                     $data = [
                         'role' => $name,
