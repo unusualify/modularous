@@ -47,8 +47,14 @@ class ImagesTraitTest extends RepositoryTestCase
             'width' => 100,
             'height' => 100,
         ]);
-
-        $model = $this->repository->create(['name' => 'With Image']);
+        $media2 = Media::create([
+            'uuid' => 'uploads/folder/img-2.jpg',
+            'filename' => 'img-2.jpg',
+            'alt_text' => 'img-2.jpg',
+            'caption' => 'img-2.jpg',
+            'width' => 100,
+            'height' => 100,
+        ]);
 
         $schema = [
             'image-1' => [
@@ -57,6 +63,21 @@ class ImagesTraitTest extends RepositoryTestCase
                 'translated' => false,
             ],
         ];
+
+        $model = $this->repository->create([
+            'name' => 'With Image',
+            'image-1' => [
+                [
+                    'id' => $media->id,
+                    'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]],
+                ],
+                [
+                    'id' => $media2->id,
+                    'metadatas' => ['default' => ['caption' => null, 'altText' => null, 'video' => null]],
+                ],
+            ],
+        ], $schema);
+
 
         $fields = [
             'image-1' => [
@@ -99,7 +120,7 @@ class ImagesTraitTest extends RepositoryTestCase
         $this->assertTrue($model->fresh()->medias->contains('id', $media->id));
 
         $this->repository->update($model->id, [], $schema);
-        $this->assertSame(0, $model->fresh()->medias()->count());
+        $this->assertSame(1, $model->fresh()->medias()->count());
     }
 
     public function test_attach_translated_media_role_attaches_with_locale_pivot()

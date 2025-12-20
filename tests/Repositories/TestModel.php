@@ -5,12 +5,16 @@ namespace Unusualify\Modularity\Tests\Repositories;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
 use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularity\Entities\Traits\HasFiles;
+use Unusualify\Modularity\Entities\Traits\HasImages;
 use Unusualify\Modularity\Entities\Traits\HasPosition;
+use Unusualify\Modularity\Entities\Traits\HasPriceable;
 use Unusualify\Modularity\Entities\Traits\HasTranslation;
 
 class TestModel extends Model implements Sortable
 {
-    use HasPosition, HasTranslation;
+    use HasPosition, HasTranslation, HasPriceable, HasFiles, HasImages, HasFileponds;
 
     protected $table = 'test_models';
 
@@ -53,5 +57,10 @@ class TestModel extends Model implements Sortable
     public function posts(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Post::class, 'postable');
+    }
+
+    public function testModelable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
     }
 }

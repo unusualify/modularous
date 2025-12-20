@@ -83,7 +83,7 @@ trait HasImages
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function medias()
+    public function medias() : \Illuminate\Database\Eloquent\Relations\MorphToMany
     {
         return $this->morphToMany(
             Media::class,

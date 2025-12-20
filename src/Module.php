@@ -625,15 +625,6 @@ class Module extends NwidartModule
     }
 
     /**
-     * @param mixed $routeName
-     * @param bool $asClass
-     */
-    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
-    {
-        return (new Finder)->getRouteRepository($routeName, $asClass);
-    }
-
-    /**
      * routeHasTable
      *
      * @param mixed $routeName
@@ -825,7 +816,9 @@ class Module extends NwidartModule
                 return url($relativeUrl);
             }
 
-            return str_starts_with($relativeUrl, '/') ? $relativeUrl : '/' . $relativeUrl . '?' . http_build_query($replacements);
+            return (str_starts_with($relativeUrl, '/')
+                ? $relativeUrl
+                : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -858,6 +851,33 @@ class Module extends NwidartModule
     {
         return $this->getDirectoryPath(GenerateConfigReader::read(kebabCase($target))->getPath()) . ($className ? '/' . $className : '');
     }
+
+    /**
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
+    {
+        return (new Finder)->getRouteRepository($routeName, $asClass);
+    }
+
+    /**
+     * getModel
+     *
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getModel($routeName, $asClass = true): \Illuminate\Database\Eloquent\Model|string
+    {
+        $classNamespace = $this->getTargetClassNamespace('model', Str::studly($routeName));
+
+        if (! class_exists($classNamespace)) {
+            throw new \Exception('Model not found for ' . $routeName . ' on module ' . $this->getName());
+        }
+
+        return $asClass ? App::make($classNamespace) : $classNamespace;
+    }
+
 
     /**
      * getInertiaPagesPath

@@ -30,6 +30,9 @@ trait RepositorySources
             // $table->foreignId('owner_id')->constrained('owners');
             $table->unsignedBigInteger('owner_id')->nullable(); // Foreign key column
 
+            $table->unsignedBigInteger('test_modelable_id')->nullable();
+            $table->string('test_modelable_type')->nullable();
+
             $table->string('description')->nullable();
             $table->boolean('is_active');
             $table->integer('position')->unsigned()->nullable();
@@ -40,6 +43,14 @@ trait RepositorySources
         Schema::create('test_model_repo_translations', function (Blueprint $table) {
             createDefaultTranslationsTableFields($table, 'test_model');
             $table->string('context')->nullable();
+        });
+
+        Schema::create('test_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('position')->unsigned()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('test_model_test_role', function (Blueprint $table) {
@@ -56,7 +67,14 @@ trait RepositorySources
             $table->primary(['test_model_id', 'test_role_id']);
         });
 
-        Schema::create('test_roles', function (Blueprint $table) {
+        Schema::create('first_morphs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('second_morphs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -81,6 +99,7 @@ trait RepositorySources
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->uuidMorphs('postable');
+            $table->integer('position')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
