@@ -165,6 +165,7 @@ trait FormSchema
                 if (isset($input['repository'])) {
                     $relation_class = App::make($input['repository']);
                 } elseif (isset($input['model'])) {
+
                     $relation_class = App::make($input['model']);
                 } elseif (isset($input['route'])) {
                     $finder = new Finder;
@@ -340,26 +341,42 @@ trait FormSchema
                     $cascades = collect($reversedParents)->mapWithKeys(fn ($i) => [
                         $i['name'] => [],
                     ])->toArray();
-                    // dd($reversedParents, $foreignKeys);
-                    foreach ($reversedParents as $index => $attachable) {
+
+                    foreach ($reversedParents as $index => $_input) {
                         $isCascadeable = false;
-                        $name = $attachable['name'];
-                        $connector = $attachable['connector'] ?? null;
-                        // dd($foreignKeys, $name, $attachable, $connector);
-                        $attachable = $this->getSchemaInput($attachable + ['noRecords' => true])[$name];
+                        $name = $_input['name'];
+                        $connector = $_input['connector'] ?? null;
+                        $attachable = $this->getSchemaInput($_input + ['noRecords' => true])[$name];
+
+                        if(isset($_input['model'])) {
+                            $attachable['model'] = $_input['model'];
+                        }
+                        if(isset($_input['repository'])) {
+                            $attachable['repository'] = $_input['repository'];
+                        }
+                        if(isset($_input['connector'])) {
+                            $attachable['connector'] = $_input['connector'];
+                        }
+                        if(isset($_input['newConnector'])) {
+                            $attachable['newConnector'] = $_input['newConnector'];
+                        }
 
                         if ((bool) $connector) {
                             $attachable['connector'] = $connector;
                         }
 
                         $modelClass = null;
-
-                        if (isset($attachable['repository'])) {
+                        if (isset($attachable['model'])) {
+                            if (!class_exists($attachable['model'])) {
+                                throw new \Exception('Model ' . $attachable['model'] . ' does not exist on morphTo input: ' . $name);
+                            }
+                            $modelClass = App::make($attachable['model']);
+                        }else if (isset($attachable['repository'])) {
                             $modelClass = App::make($attachable['repository'])->getModel();
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
                             $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
                         } else {
-                            throw new \Exception('Repository or connector not found on morphTo input: ' . $name);
+                            throw new \Exception('Model or repository or connector not found on morphTo input: ' . $name);
                         }
 
                         $columns = $modelClass->getTableColumns();
