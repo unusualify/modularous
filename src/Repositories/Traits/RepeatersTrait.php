@@ -26,8 +26,12 @@ trait RepeatersTrait
     {
         $traitName = get_class_short_name(__TRAIT__);
 
-        $columns[$traitName] = collect($this->inputs())->reduce(function ($acc, $curr) {
-            if (preg_match('/json-repeater/', $curr['type'])) {
+        $columns[$traitName] = collect($this->getRawInputs())->reduce(function ($acc, $curr) {
+            if (isset($curr['name'])
+                && (preg_match('/json-repeater/', $curr['type'] ?? 'default')
+                    || preg_match('/json-repeater/', $curr['root'] ?? 'default')
+                )
+            ) {
                 $acc[] = $curr['name'];
             }
 
@@ -155,10 +159,10 @@ trait RepeatersTrait
      */
     public function getRepeaterInputs($schema = null)
     {
-        $schema = $schema ?? $this->inputs();
+        $schema = $schema ?? $this->getRawInputs();
 
-        return collect($this->inputs())->reduce(function ($acc, $curr) {
-            if (isset($curr['name']) && preg_match('/json-repeater/', $curr['type'])) {
+        return collect($schema)->reduce(function ($acc, $curr) {
+            if (isset($curr['name']) && (preg_match('/json-repeater/', $curr['root'] ?? 'default') || preg_match('/json-repeater/', $curr['type']))) {
                 $acc[] = $curr + ['translated' => $curr['translated'] ?? false];
             }
 
