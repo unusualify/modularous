@@ -73,8 +73,6 @@ trait SpreadableTrait
             }
         }
 
-        // dd($fields, $object);
-
         return $fields;
     }
 
@@ -86,7 +84,6 @@ trait SpreadableTrait
             $columns = $this->getColumns(__TRAIT__);
 
             foreach ($columns as $column) {
-                // $fields[$column] = $object->spreadable->content[$column] ?? null;
                 $fields[$object->getSpreadableSavingKey()] = Arr::except($object->spreadable->content ?? [], $this->getSpreadableInputKeys($schema));
             }
         }
@@ -104,7 +101,7 @@ trait SpreadableTrait
         // Filter and return fields that are marked as spreadable
         return collect($schema)
             ->filter(function ($input) {
-                return isset($input['name']) && isset($input['spreadable']) && $input['spreadable'] === true;
+                return isset($input['name']) && ($input['spreadable'] ?? false);
             })
             ->pluck('name')
             ->toArray();
