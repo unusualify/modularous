@@ -14,11 +14,11 @@ use Unusualify\Modularity\Entities\Traits\HasTranslation;
 
 class TestModel extends Model implements Sortable
 {
-    use HasPosition, HasTranslation, HasPriceable, HasFiles, HasImages, HasFileponds;
+    use HasPosition, HasPriceable, HasFiles, HasImages, HasFileponds;
 
     protected $table = 'test_models';
 
-    protected $fillable = ['name', 'owner_id', 'is_active', 'description'];
+    protected $fillable = ['name', 'owner_id', 'is_active', 'description', 'published', 'public', 'publish_start_date', 'publish_end_date'];
 
     public $checkboxes = ['is_active'];
 
@@ -30,7 +30,7 @@ class TestModel extends Model implements Sortable
 
     public $translationForeignKey = 'test_model_id';
 
-    protected $translatedAttributes = ['context'];
+    protected $translatedAttributes = ['context', 'active'];
 
     protected function ownerName(): Attribute
     {
