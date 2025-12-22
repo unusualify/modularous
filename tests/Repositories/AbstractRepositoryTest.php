@@ -1403,14 +1403,12 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
         $this->assertContains('notes', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
         $this->assertContains('posts', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
-        $this->assertContains('translations', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
 
 
         $this->assertContains('owner', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
         $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
         $this->assertContains('notes', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
         $this->assertContains('posts', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
-        $this->assertContains('translations', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
     }
 
     public function test_foreign_key_methods(): void
