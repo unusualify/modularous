@@ -34,10 +34,18 @@ trait RepositorySources
             $table->string('test_modelable_type')->nullable();
 
             $table->string('description')->nullable();
+            $table->boolean('published')->nullable();
+            $table->boolean('public')->nullable();
+            $table->timestamp('publish_start_date')->nullable();
+            $table->timestamp('publish_end_date')->nullable();
             $table->boolean('is_active');
             $table->integer('position')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('test_model_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'test_model');
         });
 
         Schema::create('test_model_repo_translations', function (Blueprint $table) {
