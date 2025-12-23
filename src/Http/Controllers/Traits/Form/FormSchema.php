@@ -434,6 +434,8 @@ trait FormSchema
 
                 $connector = $input['newConnector'] ?? null;
                 $model = null;
+                $modelInstance = null;
+
                 if (isset($connector)) {
                     $connector = new Connector($connector);
                     $module = $connector->getModule();
