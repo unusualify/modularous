@@ -67,6 +67,9 @@
               </template>
             </v-tooltip>
           </template>
+          <template v-else-if="typeof item[header.key] === 'object'">
+            <component :is="item[header.key].tooltipComponent" v-html="item[header.key].value" style="margin-right: 4px;"></component>
+          </template>
           <span v-else v-html="item[header.key]"></span>
         </template>
 
