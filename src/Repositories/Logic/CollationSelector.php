@@ -39,10 +39,10 @@ trait CollationSelector
     /**
      * Determine if the query is a collation query.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return bool
      */
-    protected function isCollationQuery(\Illuminate\Database\Query\Builder $query)
+    protected function isCollationQuery(\Illuminate\Database\Eloquent\Builder $query)
     {
         return $query->getConnection()->getDriverName() === 'mysql';
     }
@@ -50,10 +50,10 @@ trait CollationSelector
     /**
      * Determine if the query should use collation for search.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return bool
      */
-    public function shouldUseSearchCollation(\Illuminate\Database\Query\Builder $query)
+    public function shouldUseSearchCollation(\Illuminate\Database\Eloquent\Builder $query)
     {
         return (Modularity::shouldUseCollationForSearch() || $this->shouldUseSearchCollation) && $this->isCollationQuery($query);
     }
@@ -71,7 +71,7 @@ trait CollationSelector
      * @param  mixed  $value
      * @return \Illuminate\Database\Query\Builder
      */
-    public function addSearchCollationToQuery(\Illuminate\Database\Query\Builder $query, string $field, $value)
+    public function addSearchCollationToQuery(\Illuminate\Database\Eloquent\Builder $query, string $field, $value)
     {
         $config = $query->getConnection()->getConfig();
         $collation = $config['collation'] ?? 'utf8mb4_unicode_ci';
