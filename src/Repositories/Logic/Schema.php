@@ -40,7 +40,7 @@ trait Schema
      */
     public function getInputs()
     {
-        if(isset($this->schema)){
+        if (isset($this->schema)) {
             return $this->schema;
         }
 

@@ -64,7 +64,7 @@ trait ImagesTrait
         }
 
         $this->getMedias($object, $fields)->each(function ($media) use ($object) {
-            if(isset($media['id']) && $media['id']) {
+            if (isset($media['id']) && $media['id']) {
                 $object->medias()->updateExistingPivot($media['id'], Arr::except($media, ['id', 'media_id']));
             } else {
                 $object->medias()->attach($media['media_id'], Arr::except($media, ['media_id']));

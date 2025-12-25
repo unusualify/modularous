@@ -110,7 +110,7 @@ class SpreadableTraitTest extends RepositoryTestCase
             ['name' => 'title', 'type' => 'text', 'spreadable' => true],
         ];
 
-        $object = new SpreadableTestModel();
+        $object = new SpreadableTestModel;
         $object->name = 'Test';
         $object->is_active = true;
         $object->saveQuietly();

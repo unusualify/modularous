@@ -20,7 +20,7 @@ trait SlugsTrait
                     $currentSlug = [];
                     $currentSlug['slug'] = $isArray ? $slugValue['slug'] : $slugValue;
                     $currentSlug['locale'] = $locale;
-                    $currentSlug['active'] = ($this->model->isTranslatable() && isset($object->translations) && count($object->translations) > 0 && !($isArray && isset($slugValue['active'])))
+                    $currentSlug['active'] = ($this->model->isTranslatable() && isset($object->translations) && count($object->translations) > 0 && ! ($isArray && isset($slugValue['active'])))
                         ? $object->translate($locale)->active
                         : ($isArray && isset($slugValue['active']) ? (bool) $slugValue['active'] : 1);
                     $currentSlug = $this->getSlugParameters($object, $fields, $currentSlug);

@@ -348,16 +348,16 @@ trait FormSchema
                         $connector = $_input['connector'] ?? null;
                         $attachable = $this->getSchemaInput($_input + ['noRecords' => true])[$name];
 
-                        if(isset($_input['model'])) {
+                        if (isset($_input['model'])) {
                             $attachable['model'] = $_input['model'];
                         }
-                        if(isset($_input['repository'])) {
+                        if (isset($_input['repository'])) {
                             $attachable['repository'] = $_input['repository'];
                         }
-                        if(isset($_input['connector'])) {
+                        if (isset($_input['connector'])) {
                             $attachable['connector'] = $_input['connector'];
                         }
-                        if(isset($_input['newConnector'])) {
+                        if (isset($_input['newConnector'])) {
                             $attachable['newConnector'] = $_input['newConnector'];
                         }
 
@@ -367,11 +367,11 @@ trait FormSchema
 
                         $modelClass = null;
                         if (isset($attachable['model'])) {
-                            if (!class_exists($attachable['model'])) {
+                            if (! class_exists($attachable['model'])) {
                                 throw new \Exception('Model ' . $attachable['model'] . ' does not exist on morphTo input: ' . $name);
                             }
                             $modelClass = App::make($attachable['model']);
-                        }else if (isset($attachable['repository'])) {
+                        } elseif (isset($attachable['repository'])) {
                             $modelClass = App::make($attachable['repository'])->getModel();
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
                             $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
@@ -590,7 +590,6 @@ trait FormSchema
             }
         }
 
-
         $this->hydrateInputExtension($input, $data, $arrayable, $inputs);
 
         if (isset($this->repository) && isset($input['name'])) {
@@ -636,10 +635,10 @@ trait FormSchema
             $input['_moduleName'] = $connector->getModuleName();
             $input['_routeName'] = $connector->getRouteName();
 
-            if($connector->isLinkTarget()) {
+            if ($connector->isLinkTarget()) {
                 $connector->run($input, 'endpoint');
             }
-        } else if (isset($input['connector'])) {
+        } elseif (isset($input['connector'])) {
             // 'moduleName:routeName|uri:edit'
             $targetType = 'uri';
 

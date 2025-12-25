@@ -4,7 +4,6 @@ namespace Unusualify\Modularity\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class DefaultVatRateSeeder extends Seeder
 {

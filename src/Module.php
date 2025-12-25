@@ -878,7 +878,6 @@ class Module extends NwidartModule
         return $asClass ? App::make($classNamespace) : $classNamespace;
     }
 
-
     /**
      * getInertiaPagesPath
      *

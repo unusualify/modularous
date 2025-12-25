@@ -377,7 +377,7 @@ class RouteGenerator extends Generator
             ? Modularity::getVendorPath('lang')
             : base_path('lang');
 
-        if (!file_exists($langPath)) {
+        if (! file_exists($langPath)) {
             \Illuminate\Support\Facades\Artisan::call('vendor:publish', [
                 '--provider' => \Unusualify\Modularity\LaravelServiceProvider::class,
                 '--tag' => 'lang',

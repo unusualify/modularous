@@ -367,7 +367,7 @@ class SlugsTraitTest extends RepositoryTestCase
             'active' => [
                 'en' => true,
                 'tr' => true,
-            ]
+            ],
         ]);
 
         $item = $this->repository->existsSlug('scope-for-slug-test');
@@ -638,7 +638,7 @@ class SlugsTestModel extends TestModel
      * @var array<int, string>
      */
     protected $slugAttributes = [
-        'name'
+        'name',
     ];
 
     protected $translationModel = SlugsTestModelTranslation::class;

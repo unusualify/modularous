@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Entities\Traits;
 
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -18,15 +17,15 @@ trait HasTranslation
     public static function bootHasTranslation(): void
     {
         static::saving(function (Model $model) {
-            if($model->bypassTranslationFilling()) {
+            if ($model->bypassTranslationFilling()) {
                 $attributes = $model->getAttributes();
-                if(count($attributes) > 0) {
-                    foreach($attributes as $key => $value) {
+                if (count($attributes) > 0) {
+                    foreach ($attributes as $key => $value) {
                         $model->offsetUnset($key);
                     }
                     $attributes = $model->handleTranslationAttributes($attributes);
 
-                    foreach($attributes as $key => $value) {
+                    foreach ($attributes as $key => $value) {
                         $model->setAttribute($key, $value);
                     }
                 }
@@ -76,14 +75,14 @@ trait HasTranslation
 
     protected function bypassTranslationFilling()
     {
-        return ($this instanceof \Illuminate\Database\Eloquent\Relations\Pivot && !$this->exists);
+        return $this instanceof \Illuminate\Database\Eloquent\Relations\Pivot && ! $this->exists;
     }
 
     public function setAttribute($key, $value)
     {
         [$attribute, $locale] = $this->getAttributeAndLocale($key);
 
-        if (!$this->bypassTranslationFilling() && $this->isTranslationAttribute($attribute)) {
+        if (! $this->bypassTranslationFilling() && $this->isTranslationAttribute($attribute)) {
             $this->getTranslationOrNew($locale)->$attribute = $value;
 
             return $this;
@@ -92,7 +91,7 @@ trait HasTranslation
         return parent::setAttribute($key, $value);
     }
 
-    public function fillingTranslatable(array $attributes) : array
+    public function fillingTranslatable(array $attributes): array
     {
         return $attributes;
     }
@@ -167,8 +166,8 @@ trait HasTranslation
     {
         $attributes = $this->fillingTranslatable($attributes);
 
-        if($this->translationFillingIsActive) {
-            if(!$this->bypassTranslationFilling()) {
+        if ($this->translationFillingIsActive) {
+            if (! $this->bypassTranslationFilling()) {
                 $attributes = $this->handleTranslationAttributes($attributes);
             }
         }

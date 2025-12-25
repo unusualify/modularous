@@ -78,7 +78,6 @@ class ImagesTraitTest extends RepositoryTestCase
             ],
         ], $schema);
 
-
         $fields = [
             'image-1' => [
                 [

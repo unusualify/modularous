@@ -380,7 +380,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             [
                 'type' => 'price',
                 'name' => 'prices',
-            ]
+            ],
         ];
 
         CurrencyExchange::shouldReceive('convertTo')->with('100', 'USD')->andReturn(116);
@@ -408,7 +408,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                     'price_value' => 100,
                     'vat_rate_id' => 1,
                     'price_type_id' => 1,
-                ]
+                ],
             ],
         ], $schema);
         $object->refresh();
@@ -430,7 +430,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'title' => 'Post 1 Updated',
                         'content' => 'Content of Post 1 Updated',
                     ],
-                ]
+                ],
             ],
         ]);
 
@@ -484,7 +484,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             [
                 'name' => 'owner_id',
                 'type' => 'select',
-            ]
+            ],
         ];
 
         $object = $this->repository->create([
@@ -497,7 +497,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 [
                     'content' => 'Note 2',
                 ],
-            ]
+            ],
         ], $schema);
         $object->refresh();
 
@@ -519,7 +519,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 [
                     'content' => 'Note 2',
                 ],
-            ]
+            ],
         ], $schema);
         $object->refresh();
 
@@ -535,7 +535,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 [
                     'id' => $object->notes[0]->id,
                     'content' => 'Note 1 Updated',
-                ]
+                ],
             ],
         ]);
 
@@ -686,13 +686,13 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $errorData = [
             [
                 'deneme' => 'dee',
-            ]
+            ],
         ];
         \Unusualify\Modularity\Facades\ModularityLog::shouldReceive('critical')
             ->with('Error syncing belongsToMany relationship on afterSaveRelationships', [
                 'repository' => \Unusualify\Modularity\Tests\Repositories\TestRepository::class,
                 'relationName' => 'testRoles',
-                'error' => "Undefined array key \"test_role_id\"",
+                'error' => 'Undefined array key "test_role_id"',
                 'data' => $errorData,
             ])
             ->once();
@@ -732,7 +732,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'model' => SecondMorph::class,
                     ],
                 ],
-            ]
+            ],
         ];
 
         $mock = \Mockery::mock(TestRepository::class, [new TestModel])
@@ -785,7 +785,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'model' => TestRole::class,
                     ],
                 ],
-            ]
+            ],
         ]);
         $object->test_role_id = 1;
         $formFields = $mock->getFormFields($object, $schema);
@@ -808,15 +808,15 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'repository' => 'Unusualify\Modularity\Tests\Repositories\NoteRepository',
                     ],
                 ],
-            ]
+            ],
         ]);
         $this->assertEquals([
             'testModelable' => [
                 [
                     'name' => 'second_morph_id',
                     'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
-                ]
-            ]
+                ],
+            ],
         ], $mock->getMorphToRelations());
 
         // with connector
@@ -830,7 +830,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'connector' => 'connectorDefinition',
                     ],
                 ],
-            ]
+            ],
         ]);
         $mock->shouldReceive('findConnectorRepository')->withArgs(['connectorDefinition'])->once()
             ->andReturn(App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class, [new Note]));
@@ -839,8 +839,8 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 [
                     'name' => 'second_morph_id',
                     'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
-                ]
-            ]
+                ],
+            ],
         ], $mock->getMorphToRelations());
 
         // with new connector
@@ -854,7 +854,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'newConnector' => 'connectorDefinition',
                     ],
                 ],
-            ]
+            ],
         ]);
         $mock->shouldReceive('findNewConnectorRepository')->withArgs(['connectorDefinition'])->once()
             ->andReturn(App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class, [new Note]));
@@ -863,8 +863,8 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 [
                     'name' => 'second_morph_id',
                     'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
-                ]
-            ]
+                ],
+            ],
         ], $mock->getMorphToRelations());
     }
 
@@ -886,7 +886,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'model' => 'NotExistingModel',
                     ],
                 ],
-            ]
+            ],
         ]);
         $mock->getMorphToRelations();
     }
@@ -909,7 +909,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'repository' => 'NotExistingRepository',
                     ],
                 ],
-            ]
+            ],
         ]);
         $mock->getMorphToRelations();
     }
@@ -931,7 +931,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'type' => 'select',
                     ],
                 ],
-            ]
+            ],
         ]);
         $mock->getMorphToRelations();
     }
@@ -1002,7 +1002,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $object = $this->repository->create(['name' => 'Test', 'owner_id' => $owner->id, 'notes' => [
             [
                 'content' => 'Test Note',
-            ]
+            ],
         ]]);
 
         ModularityFinder::shouldReceive('getRouteRepository')
@@ -1030,7 +1030,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                         'type' => 'text',
                     ],
                 ],
-            ]
+            ],
         ]);
         $this->assertArrayHasKey('notes', $formFields);
         $this->assertCount(1, $formFields['notes']);
@@ -1404,7 +1404,6 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertContains('notes', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
         $this->assertContains('posts', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany', 'HasMany', 'MorphMany']));
 
-
         $this->assertContains('owner', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
         $this->assertContains('testRoles', $this->repository->getDefinedRelations(['BelongsTo', 'BelongsToMany']));
         $this->assertContains('notes', $this->repository->getDefinedRelations(['HasMany', 'MorphMany']));
@@ -1427,7 +1426,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
     public function test_get_count_for(): void
     {
         // Create a partial mock (spy) of the repository
-        $repository = Mockery::mock(TestRepository::class, [new TestModel()])
+        $repository = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 

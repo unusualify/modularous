@@ -60,9 +60,9 @@ trait RelationshipHelpers
     {
         if ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
             return $this->getForeignKeyBelongsTo($relation);
-        } else if ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsToMany) {
+        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsToMany) {
             return $this->getForeignKeyBelongsToMany($relation);
-        } else if ($relation instanceof \Illuminate\Database\Eloquent\Relations\HasMany) {
+        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\HasMany) {
             return $this->getForeignKeyHasMany($relation);
         } else {
             throw new \InvalidArgumentException('Invalid relation type');
@@ -70,7 +70,6 @@ trait RelationshipHelpers
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
      * @return string
      */
     private function getForeignKeyBelongsTo(\Illuminate\Database\Eloquent\Relations\BelongsTo $relation)
@@ -79,7 +78,6 @@ trait RelationshipHelpers
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
      * @return string
      */
     private function getForeignKeyBelongsToMany(\Illuminate\Database\Eloquent\Relations\BelongsToMany $relation)
@@ -88,7 +86,6 @@ trait RelationshipHelpers
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\HasMany $relation
      * @return string
      */
     private function getForeignKeyHasMany(\Illuminate\Database\Eloquent\Relations\HasMany $relation)

@@ -92,7 +92,6 @@ class TagsTraitTest extends RepositoryTestCase
             ],
         ]);
 
-
         $this->assertSame(['a'], $fields['tags']['en']->toArray());
         $this->assertSame(['b'], $fields['tags']['tr']->toArray());
     }

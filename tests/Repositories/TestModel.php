@@ -10,7 +10,6 @@ use Unusualify\Modularity\Entities\Traits\HasFiles;
 use Unusualify\Modularity\Entities\Traits\HasImages;
 use Unusualify\Modularity\Entities\Traits\HasPosition;
 use Unusualify\Modularity\Entities\Traits\HasPriceable;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
 
 class TestModel extends Model implements Sortable
 {

@@ -47,7 +47,7 @@ trait HasSlug
      */
     public function getSlugModelClass()
     {
-        if(@isset($this->slugModelClass) && @class_exists($this->slugModelClass)) {
+        if (@isset($this->slugModelClass) && @class_exists($this->slugModelClass)) {
             return $this->slugModelClass;
         }
 

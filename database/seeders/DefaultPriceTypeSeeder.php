@@ -2,9 +2,7 @@
 
 namespace Unusualify\Modularity\Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DefaultPriceTypeSeeder extends Seeder
 {

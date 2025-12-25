@@ -158,7 +158,7 @@ class Connector
                 $stop = false;
                 $targets = explode($this->thirdLevelSeparator, $methodable); // ->
                 $targetTypeKey = array_shift($targets);
-                if( $index === 0 ) {
+                if ($index === 0) {
                     $this->targetTypeKey = $targetTypeKey;
                 }
                 $methodName = '';

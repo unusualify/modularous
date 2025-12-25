@@ -36,10 +36,10 @@ trait CollationSelector
 
         return $this;
     }
+
     /**
      * Determine if the query is a collation query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return bool
      */
     protected function isCollationQuery(\Illuminate\Database\Eloquent\Builder $query)
@@ -50,7 +50,6 @@ trait CollationSelector
     /**
      * Determine if the query should use collation for search.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return bool
      */
     public function shouldUseSearchCollation(\Illuminate\Database\Eloquent\Builder $query)
@@ -66,9 +65,8 @@ trait CollationSelector
     /**
      * Add search collation to the query.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $field
-     * @param  mixed  $value
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param mixed $value
      * @return \Illuminate\Database\Query\Builder
      */
     public function addSearchCollationToQuery(\Illuminate\Database\Eloquent\Builder $query, string $field, $value)
@@ -81,10 +79,11 @@ trait CollationSelector
         if (str_contains($field, '->')) {
             // For JSON fields, cast to CHAR first to avoid binary collation issues
             $wrappedField = $query->getGrammar()->wrap($field);
+
             return $query->whereRaw('CAST(' . $wrappedField . ' AS CHAR) COLLATE ' . $collation . ' LIKE ?', ['%' . $value . '%']);
         }
 
-        if(isset($columnTypes[$field]) && in_array($columnTypes[$field], $this->getCollationSelectorColumns())) {
+        if (isset($columnTypes[$field]) && in_array($columnTypes[$field], $this->getCollationSelectorColumns())) {
             $wrappedField = $query->getGrammar()->wrap($field);
 
             return $query->orWhereRaw($wrappedField . ' LIKE ? COLLATE ' . $collation, ['%' . $value . '%']);

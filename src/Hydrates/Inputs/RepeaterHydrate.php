@@ -30,7 +30,7 @@ class RepeaterHydrate extends InputHydrate
         $originalType = $input['type'];
         $input['type'] = 'input-repeater';
 
-        if($originalType === 'repeater') {
+        if ($originalType === 'repeater') {
             $input['root'] = 'default';
         } else {
             $input['root'] = $originalType;

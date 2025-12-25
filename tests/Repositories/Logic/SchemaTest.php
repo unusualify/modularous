@@ -10,6 +10,7 @@ class SchemaTest extends RepositoryTestCase
     {
         parent::setUp();
     }
+
     public function test_schema_get_raw_inputs(): void
     {
         // getFormFieldsRelationships for morphMany relationships
@@ -21,7 +22,7 @@ class SchemaTest extends RepositoryTestCase
             [
                 'name' => 'posts',
                 'type' => 'select',
-            ]
+            ],
         ]);
         $inputs = $mock->getInputs();
         $this->assertCount(1, $inputs);
@@ -38,7 +39,7 @@ class SchemaTest extends RepositoryTestCase
             [
                 'name' => 'posts',
                 'type' => 'select',
-            ]
+            ],
         ]);
         $schema = $mock->getSchema();
         $this->assertCount(1, $schema);
@@ -50,7 +51,6 @@ class SchemaTest extends RepositoryTestCase
         $this->assertEquals('posts', $schema[0]['name']);
         $this->assertEquals('select', $schema[0]['type']);
     }
-
 
     public function test_schema_get_chunked_inputs(): void
     {
@@ -70,8 +70,8 @@ class SchemaTest extends RepositoryTestCase
                     [
                         'name' => 'title',
                         'type' => 'text',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'type' => 'wrap',
@@ -81,8 +81,8 @@ class SchemaTest extends RepositoryTestCase
                         'name' => 'notes',
                         'type' => 'select',
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $inputs = $mock->getChunkedInputs();
@@ -94,7 +94,6 @@ class SchemaTest extends RepositoryTestCase
         $this->assertEquals('content', $inputs['content.title']['parentName']);
         $this->assertEquals('notes', $inputs['notes']['name']);
         $this->assertEquals('select', $inputs['notes']['type']);
-
 
         $inputs = $mock->getChunkedInputs(all: false, noGroupChunk: true);
         $this->assertCount(3, $inputs);
@@ -126,8 +125,8 @@ class SchemaTest extends RepositoryTestCase
                     [
                         'name' => 'title',
                         'type' => 'text',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'type' => 'wrap',
@@ -136,9 +135,9 @@ class SchemaTest extends RepositoryTestCase
                     [
                         'name' => 'notes',
                         'type' => 'select',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
 
         $inputs = $mock->getRawChunkedInputs();

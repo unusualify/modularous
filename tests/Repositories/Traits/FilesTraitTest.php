@@ -113,13 +113,12 @@ class FilesTraitTest extends RepositoryTestCase
             ],
         ], $schema);
 
-
         // Payload mimicking files attach: role points to uploaded file id
         $fields = [
             'custom-files' => [
                 [
                     'id' => $file->id,
-                ]
+                ],
             ],
         ];
 

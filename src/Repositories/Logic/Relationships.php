@@ -41,6 +41,7 @@ trait Relationships
                     $object->{$this->getSnakeCase($relation) . '_id'} = $morphOne->id;
                     $object->{$this->getSnakeCase($relation) . '_type'} = get_class($morphOne);
                     $object->save();
+
                     break;
                 }
             }
@@ -52,7 +53,7 @@ trait Relationships
             if (isset($fields[$relation])) {
                 $payload = $fields[$relation];
                 try {
-                    if (is_a($payload, 'Illuminate\Support\Collection' )
+                    if (is_a($payload, 'Illuminate\Support\Collection')
                         || is_a($payload, 'Illuminate\Database\Eloquent\Collection')) {
                         $payload = $payload->toArray();
                     }
@@ -336,7 +337,7 @@ trait Relationships
 
     public function getMorphToRelations()
     {
-        return collect($this->getRawChunkedInputs(all:false, noGroupChunk: false))->reduce(function ($acc, $curr) {
+        return collect($this->getRawChunkedInputs(all: false, noGroupChunk: false))->reduce(function ($acc, $curr) {
             if (preg_match('/morphTo/', $curr['type'])) {
                 if (isset($curr['schema'])) {
                     $modelName = get_class_short_name($this->getModel());
@@ -347,14 +348,14 @@ trait Relationships
 
                         if (isset($item['model'])) {
                             $model = $item['model'];
-                            if (!class_exists($model)) {
-                                throw new \Exception('Model not found on morphTo input: ' . $item['model' ] . ' on ' . $item['name']);
+                            if (! class_exists($model)) {
+                                throw new \Exception('Model not found on morphTo input: ' . $item['model'] . ' on ' . $item['name']);
                             }
                         } else {
                             if (! isset($item['repository'])) {
                                 if (isset($item['connector'])) {
                                     $repository = $this->findConnectorRepository($item['connector']);
-                                } else if (isset($item['newConnector'])) {
+                                } elseif (isset($item['newConnector'])) {
                                     $repository = $this->findNewConnectorRepository($item['newConnector']);
                                 } else {
                                     throw new \Exception('Repository or connector not found on morphTo input: ' . $item['name']);

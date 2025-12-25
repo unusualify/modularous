@@ -49,7 +49,7 @@ class CollationSelectorTest extends RepositoryTestCase
         $connection->shouldReceive('getDriverName')->andReturn('mysql');
         $connection->shouldReceive('getConfig')->andReturn(['collation' => $collation]);
 
-        $grammar = new MySqlGrammar();
+        $grammar = new MySqlGrammar;
 
         $queryBuilder = Mockery::mock(EloquentBuilder::class)->makePartial();
         $queryBuilder->shouldReceive('getConnection')->andReturn($connection);
@@ -106,7 +106,8 @@ class CollationSelectorTest extends RepositoryTestCase
 
         $mock = $this->createMockRepository();
 
-        $query = $this->createMySqlQueryBuilder();        $shouldUseCollationForSearch = true;
+        $query = $this->createMySqlQueryBuilder();
+        $shouldUseCollationForSearch = true;
 
         $mock->shouldReceive('isCollationQuery')->with($query)->andReturn(true);
 
@@ -332,7 +333,7 @@ class CollationSelectorTest extends RepositoryTestCase
         $connection->shouldReceive('getDriverName')->andReturn('mysql');
         $connection->shouldReceive('getConfig')->andReturn([]); // No collation in config
 
-        $grammar = new MySqlGrammar();
+        $grammar = new MySqlGrammar;
 
         $query = Mockery::mock(EloquentBuilder::class)->makePartial();
         $query->shouldReceive('getConnection')->andReturn($connection);

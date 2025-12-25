@@ -51,6 +51,7 @@ class RepeatersTraitTest extends RepositoryTestCase
             ],
         ];
     }
+
     public function test_set_columns_repeaters_trait()
     {
         $mock = \Mockery::mock(RepeatersTestRepository::class, [new RepeatersTestModel])
@@ -187,7 +188,6 @@ class RepeatersTraitTest extends RepositoryTestCase
         $mock = \Mockery::mock(RepeatersTestRepository::class, [new RepeatersTestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-
 
         $schema = array_merge($this->schema, [
             'custom_repeater' => [
