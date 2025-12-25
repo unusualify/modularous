@@ -23,7 +23,8 @@ abstract class Repository implements RepositoryContract
         Logic\Dates,
         Logic\Relationships,
         Logic\DispatchEvents,
-        Logic\Schema;
+        Logic\Schema,
+        Logic\CollationSelector;
 
     /**
      * @var \Unusualify\Modularity\Models\Model
@@ -571,8 +572,13 @@ abstract class Repository implements RepositoryContract
     {
         if (isset($scopes[$scopeField]) && is_string($scopes[$scopeField])) {
             $query->orWhere(function ($query) use (&$scopes, $scopeField, $orFields) {
+                $shouldUseSearchCollation = $this->shouldUseSearchCollation($query);
                 foreach ($orFields as $field) {
-                    $query->orWhere($field, $this->getLikeOperator(), '%' . $scopes[$scopeField] . '%');
+                    if ($shouldUseSearchCollation) {
+                        $query = $this->addSearchCollationToQuery($query, $field, $scopes[$scopeField]);
+                    } else {
+                        $query->orWhere($field, $this->getLikeOperator(), '%' . $scopes[$scopeField] . '%');
+                    }
                     unset($scopes[$field]);
                 }
             });
