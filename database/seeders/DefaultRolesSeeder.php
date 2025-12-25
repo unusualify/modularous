@@ -15,11 +15,9 @@ class DefaultRolesSeeder extends Seeder
      */
     public function run()
     {
-        $table = config('permission.table_names.roles');
-
-        // DB::table($table)->truncate();
         $modularityAuthGuardName = Modularity::getAuthGuardName();
-        DB::table($table)->insert([
+
+        $roles = [
             [
                 'title' => 'Super Admin',
                 'name' => 'superadmin',
@@ -55,7 +53,12 @@ class DefaultRolesSeeder extends Seeder
                 'name' => 'client-assistant',
                 'guard_name' => $modularityAuthGuardName,
             ],
-        ]);
+        ];
 
+        foreach ($roles as $role) {
+            \Modules\SystemUser\Entities\Role::updateOrCreate([
+                'name' => $role['name'],
+            ], $role);
+        }
     }
 }

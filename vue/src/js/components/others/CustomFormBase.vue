@@ -1099,7 +1099,7 @@ export default {
 
       let key = obj.key
       // when cascade select changed
-      // this.setCascadeSelect(obj)
+      this.setCascadeSelect(obj)
       formEvents.onInputEventFormData(
         obj,
         this.formSchema,

@@ -7,8 +7,8 @@ const state = {
 
   profileMenu: window[import.meta.env.VUE_APP_NAME]?.STORE.config.profileMenu ?? [],
   sidebarStatus: true,
-  sidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.sidebarOptions ?? false,
-  secondarySidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.secondarySidebarOptions ?? false,
+  sidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.sidebarOptions ?? [],
+  secondarySidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.secondarySidebarOptions ?? [],
   isRequestInProgress: false, // New state property to track async requests
   ongoingAxiosRequests: 0, // Counter for ongoing requests
 }

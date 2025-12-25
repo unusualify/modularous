@@ -10,13 +10,18 @@ class DefaultPriceTypeSeeder extends Seeder
 {
     public function run()
     {
-        $table = config('priceable.tables.price_types');
-        DB::table($table)->insert([
+        $priceTypes = [
             [
                 'name' => 'Default Price Type',
                 'slug' => 'default-price-type',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
-        ]);
+        ];
+
+        foreach ($priceTypes as $priceType) {
+            \Modules\SystemPricing\Entities\PriceType::updateOrCreate(
+                ['slug' => $priceType['slug']],
+                $priceType,
+            );
+        }
     }
 }

@@ -62,6 +62,39 @@ class TagsTraitTest extends RepositoryTestCase
 
         $repo->afterSaveTagsTrait($object, ['tags' => ['a', 'b']]);
         $this->assertSame(['a', 'b'], $object->tagsSet);
+
+        // translated tags
+        config(['translatable.locales' => ['en', 'tr']]);
+        $mock = \Mockery::mock(TagsTestRepository::class, [new TestModel])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $object = $mock->create([
+            'name' => 'Test',
+        ]);
+
+        $mock->shouldReceive('getRawInputs')->andReturn([
+            'tags' => [
+                'type' => 'tag',
+                'name' => 'tags',
+                'translated' => true,
+            ],
+        ]);
+
+        $mock->update($object->id, ['tags' => ['en' => ['a'], 'tr' => ['b']]]);
+        $object->refresh();
+
+        $fields = $mock->getFormFields($object, [
+            'tags' => [
+                'type' => 'tagger',
+                'name' => 'tags',
+                'translated' => true,
+            ],
+        ]);
+
+
+        $this->assertSame(['a'], $fields['tags']['en']->toArray());
+        $this->assertSame(['b'], $fields['tags']['tr']->toArray());
     }
 
     public function test_after_save_bulk_tags_updates_and_respects_previous_common_tags(): void
@@ -219,15 +252,15 @@ class TagsTraitTest extends RepositoryTestCase
             'namespace' => get_class($this->repository->getModel()),
         ]);
 
-        $this->repository->create([
+        $object1 = $this->repository->create([
             'name' => 'Test 1',
             'tags' => ['t2', 't3'],
         ]);
-        $this->repository->create([
+        $object2 = $this->repository->create([
             'name' => 'Test 2',
             'tags' => ['t2'],
         ]);
-        $this->repository->create([
+        $object3 = $this->repository->create([
             'name' => 'Test 3',
             'tags' => ['t1'],
         ]);
@@ -236,6 +269,69 @@ class TagsTraitTest extends RepositoryTestCase
 
         $this->assertCount(1, $tags);
         $this->assertEquals('t2', $tags->first()->name);
+
+        $tags = $mock->getTags(ids: [$object1->id]);
+        $this->assertCount(2, $tags);
+        $this->assertEquals('t2', $tags[0]['name']);
+        $this->assertEquals('t3', $tags[1]['name']);
+
+        $tags = $mock->getTags(ids: [$object2->id]);
+        $this->assertCount(1, $tags);
+        $this->assertEquals('t2', $tags[0]['name']);
+
+        $tags = $mock->getTags(ids: [$object3->id]);
+        $this->assertCount(1, $tags);
+        $this->assertEquals('t1', $tags[0]['name']);
+
+        $tags = $mock->getTags(ids: [$object1->id], map: fn ($tag) => $tag['name']);
+        $this->assertCount(2, $tags);
+        $this->assertEquals('t2', $tags[0]);
+        $this->assertEquals('t3', $tags[1]);
+
+        // translated tags
+        config(['translatable.locales' => ['en', 'tr']]);
+        $mock = \Mockery::mock(TagsTestRepository::class, [new TestModel])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $mock->shouldReceive('getRawInputs')->andReturn([
+            'tags' => [
+                'type' => 'tag',
+                'name' => 'tags',
+                'translated' => true,
+            ],
+        ]);
+
+        $object1 = $mock->create([
+            'name' => 'Test 1',
+            'tags' => ['en' => ['t2'], 'tr' => ['t3']],
+        ]);
+        $object2 = $mock->create([
+            'name' => 'Test 2',
+            'tags' => ['en' => ['t2'], 'tr' => ['t3']],
+        ]);
+        $object3 = $mock->create([
+            'name' => 'Test 3',
+            'tags' => ['en' => ['t1'], 'tr' => ['t2']],
+        ]);
+
+        $tags = $mock->getTags(query: 't2', translated: true);
+        $this->assertCount(2, $tags);
+        $this->assertEquals('t2', $tags['en'][0]['name']);
+        $this->assertEquals('t2', $tags['tr'][0]['name']);
+
+        $tags = $mock->getTags(ids: [$object1->id], translated: true);
+        $this->assertCount(1, $tags['en']);
+        $this->assertEquals('t2', $tags['en'][0]['name']);
+        $this->assertCount(1, $tags['tr']);
+        $this->assertEquals('t3', $tags['tr'][0]['name']);
+
+        $tags = $mock->getTags(ids: [$object1->id], translated: true, map: fn ($tag) => $tag['name']);
+        $this->assertCount(1, $tags['en']);
+        $this->assertEquals('t2', $tags['en'][0]);
+        $this->assertCount(1, $tags['tr']);
+        $this->assertEquals('t3', $tags['tr'][0]);
+
     }
 
     public function test_get_tags_list_returns_label_value_pairs(): void

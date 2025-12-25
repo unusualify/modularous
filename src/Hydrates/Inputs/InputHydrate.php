@@ -252,6 +252,9 @@ abstract class InputHydrate
                 $patterns[] = "/{$this->getSnakeCase(
                     $explodes[count($explodes) - 1]
                 )}/";
+                $patterns[] = "/{$this->getCamelCase(
+                    $explodes[count($explodes) - 1]
+                )}/";
             }
             $flat = Arr::dot($items);
             $newArray = [];

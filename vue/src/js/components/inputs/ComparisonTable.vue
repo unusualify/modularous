@@ -67,6 +67,9 @@
               </template>
             </v-tooltip>
           </template>
+          <template v-else-if="typeof item[header.key] === 'object'">
+            <component :is="item[header.key].tooltipComponent" v-html="item[header.key].value" style="margin-right: 4px;"></component>
+          </template>
           <span v-else v-html="item[header.key]"></span>
         </template>
 
@@ -80,6 +83,8 @@
   import Table from '../Table.vue'
   import { find, toUpper, isNumber, isString, get, isNaN } from 'lodash-es';
   import { RecursiveStuff } from '@/utils/recursiveStuff';
+  import { checkItemConditions } from '@/utils/itemConditions';
+
 
   export default {
     name: 'v-input-comparison-table',
@@ -270,6 +275,7 @@
                     _tooltipComponent: comparatorItem?.tooltipComponent ?? 'span',
                     _tooltipIcon: comparatorItem?.tooltipIcon ?? 'mdi-information-outline',
                     _tooltipIconClasses: comparatorItem?.tooltipIconClasses ?? 'text-primary',
+                    _tooltipConditions: comparatorItem?.tooltipConditions ?? null,
                     ...(comparatorItem?.itemClasses ? {_comparatorItemClasses: comparatorItem.itemClasses} : {})
                   })
                 }
@@ -287,6 +293,7 @@
                   _tooltipComponent: comparatorItem?.tooltipComponent ?? 'span',
                   _tooltipIcon: comparatorItem?.tooltipIcon ?? 'mdi-information-outline',
                   _tooltipIconClasses: comparatorItem?.tooltipIconClasses ?? 'text-primary',
+                  _tooltipConditions: comparatorItem?.tooltipConditions ?? null,
                   ...(comparatorItem?.itemClasses ? {_comparatorItemClasses: comparatorItem.itemClasses} : {})
                 });
               }
@@ -385,7 +392,7 @@
                 let tooltipValue = this.getTooltipValue(item, comparator);
 
                 value = tooltipValue ? {
-                  isTooltip: true,
+                  isTooltip: true && (!comparator?._tooltipConditions || checkItemConditions(comparator?._tooltipConditions, item)),
                   tooltipValue: tooltipValue,
                   tooltipComponent: comparator?._tooltipComponent ?? 'span',
                   tooltipIcon: comparator?._tooltipIcon,

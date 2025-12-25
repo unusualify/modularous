@@ -393,13 +393,17 @@ class Module extends NwidartModule
      *
      * @param mixed $notation
      */
-    public function getRawConfig($notation = null): mixed
+    public function getRawConfig($notation = null, $default = []): mixed
     {
-        $config_folder = GenerateConfigReader::read('config')->getPath();
+        $configFolder = GenerateConfigReader::read('config')->getPath();
 
-        $rawConfig = include $this->getDirectoryPath("{$config_folder}/config.php");
+        if (file_exists($this->getDirectoryPath("{$configFolder}/config.php"))) {
+            $rawConfig = include $this->getDirectoryPath("{$configFolder}/config.php");
+        } else {
+            $rawConfig = [];
+        }
 
-        return $notation ? data_get($rawConfig, $notation, []) : $rawConfig;
+        return $notation ? data_get($rawConfig, $notation, $default) : $rawConfig;
     }
 
     /**
@@ -512,7 +516,7 @@ class Module extends NwidartModule
      */
     public function hasSystemPrefix(): mixed
     {
-        return $this->getRawConfig('system_prefix') ?? $this->getRawConfig('base_prefix', false);
+        return $this->getRawConfig('system_prefix', false) ?? $this->getRawConfig('base_prefix', false);
     }
 
     /**
@@ -618,15 +622,6 @@ class Module extends NwidartModule
         $prefixes[] = $this->fullRouteNamePrefix($isParent);
 
         return implode('.', $prefixes);
-    }
-
-    /**
-     * @param mixed $routeName
-     * @param bool $asClass
-     */
-    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
-    {
-        return (new Finder)->getRouteRepository($routeName, $asClass);
     }
 
     /**
@@ -821,7 +816,9 @@ class Module extends NwidartModule
                 return url($relativeUrl);
             }
 
-            return str_starts_with($relativeUrl, '/') ? $relativeUrl : '/' . $relativeUrl . '?' . http_build_query($replacements);
+            return (str_starts_with($relativeUrl, '/')
+                ? $relativeUrl
+                : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -854,6 +851,33 @@ class Module extends NwidartModule
     {
         return $this->getDirectoryPath(GenerateConfigReader::read(kebabCase($target))->getPath()) . ($className ? '/' . $className : '');
     }
+
+    /**
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
+    {
+        return (new Finder)->getRouteRepository($routeName, $asClass);
+    }
+
+    /**
+     * getModel
+     *
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getModel($routeName, $asClass = true): \Illuminate\Database\Eloquent\Model|string
+    {
+        $classNamespace = $this->getTargetClassNamespace('model', Str::studly($routeName));
+
+        if (! class_exists($classNamespace)) {
+            throw new \Exception('Model not found for ' . $routeName . ' on module ' . $this->getName());
+        }
+
+        return $asClass ? App::make($classNamespace) : $classNamespace;
+    }
+
 
     /**
      * getInertiaPagesPath

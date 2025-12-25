@@ -76,29 +76,30 @@ class CreateSuperAdminCommand extends BaseCommand
      */
     public function handle(): int
     {
-
         $email = $this->setEmail($this->argument('email'));
         $password = $this->setPassword($this->argument('password'));
 
         DB::beginTransaction();
 
         try {
-            $user = User::create([
-                'name' => 'Administrator',
+            $user = User::createOrUpdate([
                 'email' => $email,
-                // 'published' => true,
+            ], [
+                'name' => 'Administrator',
+                'password' => Hash::make($password),
             ]);
 
-            $user->roles()->sync(1);
-            $user->password = Hash::make($password);
+            if($user->wasRecentlyCreated) {
+                $user->roles()->sync(1);
+                $user->password = Hash::make($password);
+                $user->save();
 
-            if ($user->save()) {
-                DB::commit();
                 info('Your account has been created');
-
-                return 0;
             }
 
+            DB::commit();
+
+            return 0;
         } catch (\Throwable $th) {
             $this->error($th);
             DB::rollback();

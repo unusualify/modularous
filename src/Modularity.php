@@ -298,6 +298,11 @@ class Modularity extends FileRepository
         return ! $this->isDevelopment();
     }
 
+    final public function shouldUseCollationForSearch()
+    {
+        return $this->config('use_collation_for_search', false);
+    }
+
     /**
      * Check if inertia should be used.
      *
