@@ -3,10 +3,9 @@
 namespace Unusualify\Modularity\Tests\Repositories\Logic;
 
 use Illuminate\Database\Connection;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Mockery;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Tests\Repositories\TestModel;
 use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -52,7 +51,7 @@ class CollationSelectorTest extends RepositoryTestCase
 
         $grammar = new MySqlGrammar();
 
-        $queryBuilder = Mockery::mock(QueryBuilder::class)->makePartial();
+        $queryBuilder = Mockery::mock(EloquentBuilder::class)->makePartial();
         $queryBuilder->shouldReceive('getConnection')->andReturn($connection);
         $queryBuilder->shouldReceive('getGrammar')->andReturn($grammar);
 
@@ -67,7 +66,7 @@ class CollationSelectorTest extends RepositoryTestCase
         $connection = Mockery::mock(Connection::class);
         $connection->shouldReceive('getDriverName')->andReturn('pgsql');
 
-        $queryBuilder = Mockery::mock(QueryBuilder::class)->makePartial();
+        $queryBuilder = Mockery::mock(EloquentBuilder::class)->makePartial();
         $queryBuilder->shouldReceive('getConnection')->andReturn($connection);
 
         return $queryBuilder;
@@ -335,7 +334,7 @@ class CollationSelectorTest extends RepositoryTestCase
 
         $grammar = new MySqlGrammar();
 
-        $query = Mockery::mock(QueryBuilder::class)->makePartial();
+        $query = Mockery::mock(EloquentBuilder::class)->makePartial();
         $query->shouldReceive('getConnection')->andReturn($connection);
         $query->shouldReceive('getGrammar')->andReturn($grammar);
 
