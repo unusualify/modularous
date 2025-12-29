@@ -297,7 +297,11 @@ trait PaymentTrait
                     'persistent' => true,
                 ],
                 'conditions' => array_merge($this->getFormActionsConditionsForPayment(), [
-                    ['payment.status', 'not in', [PaymentStatus::COMPLETED]],
+                    ['payment.status', 'not in', [
+                        PaymentStatus::COMPLETED,
+                        PaymentStatus::PROVISION,
+                        PaymentStatus::REFUNDED
+                    ]],
                 ]),
                 'hideOnCondition' => true,
                 ...$this->getFormActionPropsForPaymentTrait(),
