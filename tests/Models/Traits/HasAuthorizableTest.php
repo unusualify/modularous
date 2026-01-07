@@ -178,6 +178,38 @@ class HasAuthorizableTest extends ModelTestCase
         ]);
     }
 
+    public function test_boot_has_authorizable_saving_event_without_model_authorized_type()
+    {
+        $user = User::create([
+            'name' => 'Authorized User',
+            'email' => 'authorized@example.com',
+            'published' => true,
+        ]);
+
+        $this->model->update([
+            'authorized_id' => $user->id,
+        ]);
+
+        // Now update with a different user
+        $newUser = User::create([
+            'name' => 'New Authorized User',
+            'email' => 'newauthorized@example.com',
+            'published' => true,
+        ]);
+
+        $this->model->update([
+            'authorized_id' => $newUser->id,
+        ]);
+
+        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $this->assertDatabaseHas($authorizationTable, [
+            'authorizable_id' => $this->model->id,
+            'authorizable_type' => get_class($this->model),
+            'authorized_id' => $newUser->id,
+            'authorized_type' => get_class($newUser),
+        ]);
+    }
+
     public function test_boot_has_authorizable_saving_event_removes_fillable_fields()
     {
         $user = User::create([
@@ -186,9 +218,10 @@ class HasAuthorizableTest extends ModelTestCase
             'published' => true,
         ]);
 
-        $this->model->authorized_id = $user->id;
-        $this->model->authorized_type = get_class($user);
-        $this->model->save();
+        $this->model->update([
+            'authorized_id' => $user->id,
+            'authorized_type' => get_class($user),
+        ]);
 
         // Check that the fillable fields are removed from the model attributes
         $this->assertNull($this->model->getAttributeValue('authorized_id'));
@@ -315,6 +348,13 @@ class HasAuthorizableTest extends ModelTestCase
 
         $result = $this->model->getUserForHasAuthorization($user);
         $this->assertSame($user, $result);
+    }
+
+    public function test_scope_has_authorization_returns_query_when_no_user_provided()
+    {
+        $query = $this->model->query();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Builder::class, $this->model->hasAuthorization());
     }
 
     public function test_scope_has_authorization_filters_by_user()
