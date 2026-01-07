@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemPricing\Entities\Price;
+use Oobook\Priceable\Facades\PriceService;
 use Oobook\Priceable\Models\Currency as PriceableCurrency;
 use Oobook\Priceable\Models\PriceType;
 use Oobook\Priceable\Models\VatRate;
@@ -498,6 +499,153 @@ class HasPaymentTest extends ModelTestCase
         $this->assertEquals(3000000, $this->model->total_cost_excluding_vat); // $300.00
         $this->assertEquals(3600000, $this->model->total_cost_including_vat); // $360.00
         $this->assertEquals(1500000, $this->model->initial_price_excluding_vat); // $150.00
+    }
+
+    public function test_initial_price_excluding_vat_formatted_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'price_value' => 150.00,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+
+        $this->model->refresh();
+
+        $expectedFormatted = PriceService::formatAmount(
+            $this->model->initial_price_excluding_vat,
+            new \Money\Currency($this->currency->iso_4217)
+        );
+
+        $initialPriceExcludingVatFormatted = $this->model->initial_price_excluding_vat_formatted;
+        $this->assertEquals($expectedFormatted, $initialPriceExcludingVatFormatted);
+    }
+
+    public function test_payable_price_excluding_vat_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'price_excluding_vat' => 15000,
+        ]);
+
+        $this->model->refresh();
+
+        $payablePriceExcludingVat = $this->model->payable_price_excluding_vat;
+        $this->assertEquals(15000, $payablePriceExcludingVat);
+    }
+
+    public function test_payable_price_excluding_vat_formatted_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'price_including_vat' => 18000,
+            'price_excluding_vat' => 15000,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+
+        $this->model->refresh();
+
+        $expectedFormatted = PriceService::formatAmount(
+            $this->model->payable_price_excluding_vat,
+            new \Money\Currency($this->currency->iso_4217)
+        ) . ' +' . __('VAT');
+
+        $payablePriceExcludingVatFormatted = $this->model->payable_price_excluding_vat_formatted;
+        $this->assertEquals($expectedFormatted, $payablePriceExcludingVatFormatted);
+    }
+
+    public function test_total_cost_excluding_vat_formatted_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'price_value' => 150.00,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+
+        ]);
+
+        $this->model->refresh();
+
+        $expectedFormatted = PriceService::formatAmount(
+            $this->model->total_cost_excluding_vat,
+            new \Money\Currency($this->currency->iso_4217)
+        );
+
+        $totalCostExcludingVatFormatted = $this->model->total_cost_excluding_vat_formatted;
+        $this->assertEquals($expectedFormatted, $totalCostExcludingVatFormatted);
+    }
+
+    public function test_total_cost_including_vat_formatted_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'price_value' => 150.00,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+        $this->model->refresh();
+
+        $expectedFormatted = PriceService::formatAmount(
+            $this->model->total_cost_including_vat,
+            new \Money\Currency($this->currency->iso_4217)
+        );
+        $totalCostIncludingVatFormatted = $this->model->total_cost_including_vat_formatted;
+        $this->assertEquals($expectedFormatted, $totalCostIncludingVatFormatted);
+    }
+    public function test_payable_price_including_vat_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'raw_amount' => 15000,
+            'price_including_vat' => 18000,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+
+        $this->model->refresh();
+        $this->assertEquals(18000, $this->model->payable_price_including_vat);
+    }
+
+    public function test_payable_price_including_vat_formatted_attribute()
+    {
+        $price = Price::create([
+            'priceable_id' => $this->model->id,
+            'priceable_type' => get_class($this->model),
+            'role' => 'payment',
+            'raw_amount' => 15000,
+            'price_including_vat' => 18000,
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+
+        $this->model->refresh();
+
+        $expectedFormatted = PriceService::formatAmount(
+            $this->model->payable_price_including_vat,
+            new \Money\Currency($this->currency->iso_4217)
+        );
+
+        $payablePriceIncludingVatFormatted = $this->model->payable_price_including_vat_formatted;
+        $this->assertEquals($expectedFormatted, $payablePriceIncludingVatFormatted);
     }
 
     public function test_is_paid_attribute()
