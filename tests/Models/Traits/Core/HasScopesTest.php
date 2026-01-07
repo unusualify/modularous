@@ -9,6 +9,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Mockery;
+use PDO;
 use Unusualify\Modularity\Entities\Traits\Core\HasScopes;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -104,6 +106,41 @@ class HasScopesTest extends ModelTestCase
         $this->assertTrue($this->testModel::hasScope('orWhere'));
         $this->assertTrue($this->testModel::hasScope('whereNot'));
         $this->assertTrue($this->testModel::hasScope('orWhereNot'));
+    }
+
+    public function test_has_scope_with_macro()
+    {
+        // Create a test model that overrides query() to return a builder with a local macro
+        $modelWithMacro = new class extends Model
+        {
+            use HasScopes;
+
+            protected $table = 'test_has_scopes_models';
+
+            protected $fillable = ['name'];
+
+            public static function query()
+            {
+                $builder = parent::query();
+
+                $builder->macro('customMacro', function ($queryBuilder, $value) {
+                    return $queryBuilder->where('name', $value);
+                });
+                return $builder;
+            }
+        };
+
+        // Test that hasScope returns true for the registered macro
+        $this->assertTrue($modelWithMacro::hasScope('customMacro'));
+
+        // Test that hasScope returns false for a non-existent macro
+        $this->assertFalse($modelWithMacro::hasScope('nonExistentMacro'));
+
+        // Test that the macro actually works
+        $model = $modelWithMacro::create(['name' => 'Macro Test']);
+        $result = $modelWithMacro::query()->customMacro('Macro Test')->get();
+        $this->assertCount(1, $result);
+        $this->assertEquals($model->id, $result->first()->id);
     }
 
     public function test_scope_published()
@@ -552,6 +589,38 @@ class HasScopesTest extends ModelTestCase
         $this->assertTrue($result->contains('id', $model->id));
     }
 
+    public function test_handle_scopes_uses_ilike_for_postgresql()
+    {
+        // Get the actual connection and PDO
+        $connection = DB::connection();
+        $originalPdo = $connection->getPdo();
+
+        // Create a mock PDO that simulates PostgreSQL driver
+        $pdoMock = Mockery::mock(PDO::class);
+        $pdoMock->shouldReceive('getAttribute')
+            ->with(PDO::ATTR_DRIVER_NAME)
+            ->andReturn('pgsql');
+
+        // Use reflection to temporarily replace PDO
+        $reflection = new \ReflectionClass($connection);
+        $pdoProperty = $reflection->getProperty('pdo');
+        $pdoProperty->setValue($connection, $pdoMock);
+
+        try {
+            $query = $this->testModel::query();
+            $scopes = ['%name' => 'Tech'];
+
+            // Get the SQL query to verify ILIKE is used
+            $result = $this->testModel::handleScopes($query, $scopes);
+            $sql = $result->toSql();
+
+            $this->assertStringContainsString('ILIKE', $sql);
+            $this->assertStringNotContainsString('name LIKE', $sql);
+        } finally {
+            // Restore original PDO
+            $pdoProperty->setValue($connection, $originalPdo);
+        }
+    }
     public function test_scope_chaining()
     {
         // Create test data
