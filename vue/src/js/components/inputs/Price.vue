@@ -32,7 +32,7 @@
         </template>
       </v-input>
       <v-select
-        v-show="vatRates.length > 0"
+        v-show="showVatRate"
         v-bind="{...$lodash.pick($attrs, ['density', 'color', 'clearable', 'variant'])}"
         :label="$t('VAT Rate')"
         :items="vatRates"
@@ -43,14 +43,14 @@
         v-if="hasDiscount"
         v-model="deepModel[i].discount_percentage"
         v-bind="{...$lodash.pick($attrs, ['density', 'color', 'clearable', 'variant'])}"
-        :label="$t('Discount %')"
+        :label="$t('form-labels.Discount %')"
         control-variant="stacked"
         :min="0"
         :max="100"
         :rules="[]"
       />
     </div>
-    <div v-if="vatRates.length > 0" class="w-100 d-flex justify-center">
+    <div v-if="showVatRate" class="w-100 d-flex justify-center">
       <v-card
         class="w-75"
         color="success"
@@ -134,7 +134,11 @@ export default {
     hasDiscount: {
       type: Boolean,
       default: false
-    }
+    },
+    showVatRate: {
+      type: Boolean,
+      default: true
+    },
   },
   setup (props, context) {
     const inputHook = useInput(props, context)
