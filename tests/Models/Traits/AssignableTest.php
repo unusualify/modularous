@@ -243,6 +243,42 @@ class AssignableTest extends ModelTestCase
         ]);
     }
 
+    public function test_assignments_are_deleted_with_force_delete()
+    {
+        // Create a test user for assignee
+        $assignee = User::create([
+            'name' => 'Assignee User',
+            'email' => 'assignee@example.com',
+            'published' => true,
+        ]);
+
+        $assigner = User::create([
+            'name' => 'Assigner User',
+            'email' => 'assigner@example.com',
+            'published' => true,
+        ]);
+
+        // Create assignment with required fields
+        $assignmentData = [
+            'assignee_id' => $assignee->id,
+            'assignee_type' => get_class($assignee),
+            'assigner_id' => $assigner->id,
+            'assigner_type' => get_class($assigner),
+            'description' => 'Test assignment description',
+            'due_at' => now()->addDays(7),
+        ];
+
+        $assignment = $this->softDeletesModel->assignments()->create($assignmentData);
+        $assignmentId = $assignment->id;
+
+        $this->softDeletesModel->forceDelete();
+
+        $assignmentTable = modularityConfig('tables.assignments', 'm_assignments');
+        $this->assertDatabaseMissing($assignmentTable, [
+            'id' => $assignmentId,
+        ]);
+
+    }
     public function test_last_assignment_relationship_exists()
     {
         $this->assertTrue(method_exists($this->model, 'lastAssignment'));
