@@ -173,6 +173,15 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals('warning', $modelState->color); // Should be hydrated
     }
 
+    public function test_get_state_attribute_returns_null_when_no_stateable()
+    {
+        $model = new TestStateableModel;
+
+        $state = $model->getStateAttribute();
+
+        $this->assertNull($state);
+    }
+
     public function test_get_state_attribute_returns_null_when_no_state()
     {
         $model = $this->testModel::create(['name' => 'Test Model']);
@@ -270,6 +279,17 @@ class HasStateableTest extends ModelTestCase
         $this->assertIsArray($initialState);
         $this->assertEquals('draft', $initialState['code']);
         $this->assertEquals('Draft', $initialState['en']['name']);
+    }
+
+    public function test_get_initial_state_with_isset_initial_state()
+    {
+        $testModel = new TestStateableModelWithInitialState;
+
+        $initialState = $testModel::getInitialState();
+
+        $this->assertIsArray($initialState);
+        $this->assertEquals('in-review', $initialState['code']);
+        $this->assertEquals('In Review', $initialState['en']['name']);
     }
 
     public function test_get_default_states()
@@ -657,4 +677,31 @@ class TestStateableModel extends Model
             'color' => 'success',
         ],
     ];
+}
+
+class TestStateableModelWithInitialState extends TestStateableModel
+{
+    use HasStateable;
+
+    protected static $initial_state = 'in-review';
+
+    protected $table = 'test_stateable_models';
+
+    protected $fillable = ['name', 'title', 'initial_stateable', 'stateable_id'];
+
+    protected static $default_states = [
+        [
+            'code' => 'draft',
+            'name' => 'Draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+        ],
+        [
+            'code' => 'published',
+            'name' => 'Published',
+            'icon' => '$publish',
+            'color' => 'success',
+        ],
+    ];
+
 }
