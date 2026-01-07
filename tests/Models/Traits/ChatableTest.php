@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\UnreadChatMessage;
+use Modules\SystemNotification\Notifications\ChatableUnreadNotification;
 use Spatie\Permission\Models\Role;
 use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Entities\ChatMessage;
 use Unusualify\Modularity\Entities\Traits\Chatable;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
 use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -48,6 +51,16 @@ class ChatableTest extends ModelTestCase
         $model = new TestChatableModel;
         $traits = class_uses_recursive($model);
         $this->assertContains('Unusualify\Modularity\Entities\Traits\Chatable', $traits);
+    }
+
+    public function test_model_boot_chatable()
+    {
+        $testModel = new TestChatableModel(['name' => 'Test Model']);
+        $testModel->saveQuietly();
+        $this->assertNull($testModel->getAttribute('_chat_id'));
+
+        $testModel = TestChatableModel::find($testModel->id);
+        $this->assertNotNull($testModel->getAttribute('_chat_id'));
     }
 
     public function test_initialize_chatable_appends_count_attributes()
@@ -689,6 +702,109 @@ class ChatableTest extends ModelTestCase
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
     }
 
+    public function test_handle_chatable_notification_from_chatable_model_with_creator()
+    {
+        $chatableCreator = User::create([
+            'name' => 'Creator User',
+            'email' => 'creator@example.com',
+            'published' => true,
+        ]);
+
+        $messageCreator = User::create([
+            'name' => 'Message Creator',
+            'email' => 'message@example.com',
+            'published' => true,
+        ]);
+
+        $chatableModel = new TestChatableModelWithCreator(['name' => 'Chatable Model']);
+        $chatableModel->save();
+
+        $chatableModel->creatorRecord()->create([
+            'creator_id' => $chatableCreator->id,
+            'creator_type' => User::class,
+            'guard_name' => 'web',
+        ]);
+
+        $chatableModel->refresh();
+
+        $message = $chatableModel->chat->messages()->create([
+            'content' => 'Message from creator',
+            'is_read' => false,
+        ]);
+
+        $message->creatorRecord()->create([
+            'creator_id' => $messageCreator->id,
+            'creator_type' => User::class,
+            'guard_name' => 'web',
+        ]);
+        $message->created_at = now()->subMinutes(65);
+        $message->save();
+
+        $chatableModel->refresh();
+
+        Notification::fake();
+        config([
+            'modularity.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
+        ]);
+        $chatableModel->handleChatableNotification();
+        Notification::assertSentTimes(ChatableUnreadNotification::class, 1);
+        Notification::assertSentTo([$chatableCreator], ChatableUnreadNotification::class);
+    }
+
+    public function test_handle_chatable_notification_from_chatable_model_with_authorizable()
+    {
+        $chatableCreator = User::create([
+            'name' => 'Creator User',
+            'email' => 'creator@example.com',
+            'published' => true,
+        ]);
+
+        $messageCreator = User::create([
+            'name' => 'Message Creator',
+            'email' => 'message@example.com',
+            'published' => true,
+        ]);
+
+        $chatableAuthorizedModel = new TestChatableModel(['name' => 'Chatable Model']);
+        $chatableAuthorizedModel->save();
+
+        $chatableAuthorizedModel->authorizationRecord()->create([
+            'authorized_id' => $chatableCreator->id,
+            'authorized_type' => User::class,
+            'authorizable_type' => TestChatableModel::class,
+            'authorizable_id' => 1,
+            'guard_name' => 'web',
+        ]);
+
+        $chatableAuthorizedModel = TestChatableModel::find($chatableAuthorizedModel->id);
+
+
+        $chatableAuthorizedModel->refresh();
+
+        $message = $chatableAuthorizedModel->chat->messages()->create([
+            'content' => 'Message from creator',
+            'is_read' => false,
+        ]);
+
+        $message->creatorRecord()->create([
+            'creator_id' => $messageCreator->id,
+            'creator_type' => User::class,
+            'guard_name' => 'web',
+        ]);
+        $message->created_at = now()->subMinutes(65);
+        $message->save();
+
+        $chatableAuthorizedModel->refresh();
+
+        Notification::fake();
+        config([
+            'modularity.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
+        ]);
+        $chatableAuthorizedModel->handleChatableNotification();
+        Notification::assertSentTimes(ChatableUnreadNotification::class, 1);
+        Notification::assertSentTo([$chatableCreator], ChatableUnreadNotification::class);
+    }
+
     protected function tearDown(): void
     {
         Schema::dropIfExists('test_chatable_models');
@@ -699,7 +815,7 @@ class ChatableTest extends ModelTestCase
 // Test model that uses the Chatable trait
 class TestChatableModel extends Model
 {
-    use Chatable, ModelHelpers;
+    use Chatable, ModelHelpers, HasAuthorizable;
 
     protected $table = 'test_chatable_models';
 
