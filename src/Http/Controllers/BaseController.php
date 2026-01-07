@@ -63,7 +63,7 @@ abstract class BaseController extends PanelController
 
         $this->addWiths();
 
-        $this->formSchema = $this->getModuleFormSchema();
+        $this->setupFormSchema();
     }
 
     public function index($parentId = null)
