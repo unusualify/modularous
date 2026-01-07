@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Tests\Models\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
@@ -136,6 +137,25 @@ class HasPriceableTest extends ModelTestCase
         $this->assertEquals(Price::class, get_class($relationship->getRelated()));
     }
 
+    public function test_original_base_price_relationship()
+    {
+        $usdPrice = $this->model->prices()->create([
+            'role' => 'base',
+            'raw_amount' => 100000, // $1000.00
+            'price_including_vat' => 120000, // $1200.00
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+        ]);
+
+        $originalBasePrice = $this->model->originalBasePrice();
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $originalBasePrice);
+        $this->assertEquals(1, $originalBasePrice->count());
+        $this->assertEquals($usdPrice->id, $originalBasePrice->first()->id);
+        $this->assertEquals($this->currency->id, $originalBasePrice->first()->currency_id);
+
+    }
+
     public function test_base_price_relationship()
     {
         // Create prices with different currencies
@@ -166,6 +186,77 @@ class HasPriceableTest extends ModelTestCase
 
         // Test that basePrice returns the price for the user's currency (USD)
         $basePrice = $this->model->basePrice;
+        $this->assertNotNull($basePrice);
+        $this->assertEquals($usdPrice->id, $basePrice->id);
+        $this->assertEquals($this->currency->id, $basePrice->currency_id);
+    }
+
+    public function test_base_price_relationship_with_get_language_based_price_query()
+    {
+        // Set language based prices to true
+        Config::set('modularity.use_language_based_prices', true);
+        Config::set('modularity.language_currencies', ['en' => 'USD']);
+
+        Cache::put('exchange_rates', ['USD' => 1.15]);
+
+        Schema::create('test_priceable_package_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        // Create test model instance
+        $this->model = new TestPriceablePackageModel([
+            'name' => 'Test Priceable Package Model',
+        ]);
+
+        $this->model->save();
+
+        $usdPrice = $this->model->prices()->create([
+            'role' => 'base',
+            'price_value' => 100, // $1000.00
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+            'priceable_id' => $this->model->id,
+        ]);
+
+        $this->model->refresh();
+
+        $basePrice = $this->model->basePrice;
+
+        $this->assertNotNull($basePrice);
+        $this->assertEquals($usdPrice->id, $basePrice->id);
+        $this->assertEquals($this->currency->id, $basePrice->currency_id);
+    }
+
+    public function test_base_price_relationship_without_get_language_based_price_query()
+    {
+        // Set language based prices to true
+        Config::set('modularity.use_language_based_prices', true);
+        Config::set('modularity.language_currencies', ['en' => 'USD']);
+
+        Cache::put('exchange_rates', ['USD' => 1.15]);
+
+        $this->model = new TestPriceableModel([
+            'name' => 'Test Priceable Model',
+        ]);
+
+        $this->model->save();
+
+        $usdPrice = $this->model->prices()->create([
+            'role' => 'base',
+            'price_value' => 100, // $1000.00
+            'currency_id' => $this->currency->id,
+            'vat_rate_id' => $this->vatRate->id,
+            'price_type_id' => $this->priceType->id,
+            'priceable_id' => $this->model->id,
+        ]);
+
+        $this->model->refresh();
+
+        $basePrice = $this->model->basePrice;
+
         $this->assertNotNull($basePrice);
         $this->assertEquals($usdPrice->id, $basePrice->id);
         $this->assertEquals($this->currency->id, $basePrice->currency_id);
@@ -612,4 +703,19 @@ class TestPriceableModel extends Model
     protected $fillable = ['name'];
 
     public static $priceSavingKey = 'price_value';
+}
+
+class TestPriceablePackageModel extends TestPriceableModel
+{
+    protected $table = 'test_priceable_package_models';
+
+    public static $mutateHasPriceable = true;
+
+    public static $priceSavingKey = 'price_value';
+
+    public function getLanguageBasedPriceQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return static::query()
+            ->where('name', 'Test Priceable Package Model');
+    }
 }
