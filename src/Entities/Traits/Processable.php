@@ -35,6 +35,10 @@ trait Processable
             if ($model->processable_status) {
                 $model->setProcessStatus($model->processable_status, $model->processable_reason);
                 $model->refresh();
+
+                if(!$model->wasChanged()) {
+                    $model->touch();
+                }
             }
         });
     }
