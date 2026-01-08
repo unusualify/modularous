@@ -11,7 +11,8 @@ trait ManageTable
         Table\TableFilters,
         Table\TableRows,
         Table\TableBulkActions,
-        Table\TableActions;
+        Table\TableActions,
+        Table\TableItem;
 
     /**
      * @param Application $app
@@ -20,33 +21,7 @@ trait ManageTable
      */
     protected function __afterConstructManageTable($app, $request)
     {
-
         $this->getTableDraggableOptions();
-        // /*
-        //  * Available columns of the index view
-        //  */
-        // $this->indexTableColumns = $this->getIndexTableColumns();
-
-        // /*
-        //  * Default filters for the index view
-        //  * By default, the search field will run a like query on the title field
-        //  */
-        // if (! isset($this->defaultFilters)) {
-        //     $this->defaultFilters = [
-        //         'search' => collect($this->indexTableColumns ?? [])->filter(function ($item) {
-        //             return isset($item['searchable']) ? $item['searchable'] : false;
-        //         })->map(function ($item) {
-        //             $this->dehydrateHeaderSuffix($item);
-        //             $searchKey = $item['searchKey'] ?? $item['key'];
-
-        //             return $searchKey;
-        //         })->implode('|'),
-        //     ];
-        // }
-
-        // $this->defaultTableAttributes = (array) Config::get(modularityBaseKey() . '.default_table_attributes');
-
-        // $this->tableAttributes = array_merge_recursive_preserve($this->getTableAttributes(), $this->tableAttributes ?? []);
     }
 
     public function preloadManageTable()
@@ -60,7 +35,17 @@ trait ManageTable
          * Default filters for the index view
          * By default, the search field will run a like query on the title field
          */
-        if (! isset($this->defaultFilters)) {
+        $this->setupDefaultFilters();
+
+        $this->defaultTableAttributes = (array) Config::get(modularityBaseKey() . '.default_table_attributes');
+
+        $this->tableAttributes = array_merge_recursive_preserve($this->getTableAttributes(), $this->tableAttributes ?? []);
+
+    }
+
+    public function setupDefaultFilters()
+    {
+        if (! isset($this->defaultFilters) || empty($this->defaultFilters)) {
             $this->defaultFilters = [
                 'search' => collect($this->indexTableColumns ?? [])->filter(function ($item) {
                     return isset($item['searchable']) ? $item['searchable'] : false;
@@ -72,10 +57,6 @@ trait ManageTable
                 })->implode('|'),
             ];
         }
-
-        $this->defaultTableAttributes = (array) Config::get(modularityBaseKey() . '.default_table_attributes');
-
-        $this->tableAttributes = array_merge_recursive_preserve($this->getTableAttributes(), $this->tableAttributes ?? []);
     }
 
     /**
