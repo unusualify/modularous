@@ -25,6 +25,11 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     /**
      * @var string
      */
+    protected $routeName = 'Media';
+
+    /**
+     * @var string
+     */
     protected $namespace = 'Unusualify\Modularity';
 
     /**
@@ -106,7 +111,6 @@ class MediaLibraryController extends BaseController implements SignUploadListene
      */
     public function getIndexData($prependScope = [])
     {
-
         $scopes = $this->filterScope($prependScope);
         $items = $this->getIndexItems(scopes: $scopes, forcePagination: false);
 
