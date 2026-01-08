@@ -2,19 +2,21 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait FormPageUtility
 {
     /**
      * @param int|null $id
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function getFormItem($id = null)
+    public function getRepositoryItem($id = null, $withoutDefaultScopes = false)
     {
         if ($this->isSingleton) {
             $item = $this->repository->getModel()->single();
         } elseif ($id) {
             // Generate scopes for authorization
-            $scopes = $this->filterScope($this->nestedParentScopes());
+            $scopes = $withoutDefaultScopes ? [] : $this->filterScope($this->nestedParentScopes());
 
             $item = $this->repository->getById(
                 $id,
@@ -30,6 +32,24 @@ trait FormPageUtility
         }
 
         return $item;
+    }
+
+    public function formItem(Model $item,) : Model
+    {
+        return $item;
+    }
+
+    public function getFormItem($id = null, $withoutDefaultScopes = false, $item = null)
+    {
+        return $this->getCacheableFormItem($id, function() use ($id, $withoutDefaultScopes, $item) {
+            $repositoryItem = ($item instanceof \Illuminate\Database\Eloquent\Model ? $item : $this->getRepositoryItem($id, withoutDefaultScopes: $withoutDefaultScopes));
+            $item = $this->formItem($repositoryItem);
+
+            return object_to_array(array_to_object(array_merge(
+                $item->toArray(),
+                $this->repository->getFormFields($repositoryItem, $this->formSchema),
+            )));
+        });
     }
 
     /**
