@@ -62,9 +62,13 @@ trait FilesTrait
 
         $this->getFiles($object, $fields)->each(function ($file) use ($object) {
             if (isset($file['id']) && $file['id']) {
-                $object->files()->updateExistingPivot($file['id'], Arr::except($file, ['id', 'file_id']));
+                $result = $object->files()->updateExistingPivot($file['id'], Arr::except($file, ['id', 'file_id']));
+                if( $result ) {
+                    $this->mustTouchEloquentModel();
+                }
             } else {
                 $object->files()->attach($file['file_id'], Arr::except($file, ['file_id']));
+                $this->mustTouchEloquentModel();
             }
         });
     }
