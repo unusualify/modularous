@@ -42,7 +42,7 @@ trait CollationSelector
      *
      * @return bool
      */
-    protected function isCollationQuery(\Illuminate\Database\Eloquent\Builder $query)
+    protected function isCollationQuery($query)
     {
         return $query->getConnection()->getDriverName() === 'mysql';
     }
@@ -52,7 +52,7 @@ trait CollationSelector
      *
      * @return bool
      */
-    public function shouldUseSearchCollation(\Illuminate\Database\Eloquent\Builder $query)
+    public function shouldUseSearchCollation($query)
     {
         return (Modularity::shouldUseCollationForSearch() || $this->shouldUseSearchCollation) && $this->isCollationQuery($query);
     }
@@ -69,24 +69,33 @@ trait CollationSelector
      * @param mixed $value
      * @return \Illuminate\Database\Query\Builder
      */
-    public function addSearchCollationToQuery(\Illuminate\Database\Eloquent\Builder $query, string $field, $value)
+    public function addSearchCollationToQuery($query, string $field, $value, $model = null)
     {
         $config = $query->getConnection()->getConfig();
         $collation = $config['collation'] ?? 'utf8mb4_unicode_ci';
-        $columnTypes = $this->getModel()->getColumnTypes();
+        $isRelationshipModel = !is_null($model);
+        $model = $model ?? $this->getModel();
+        $columnTypes = method_exists($model, 'getColumnTypes') ? $model->getColumnTypes() : [];
+
+        $fieldParts = explode('.', $field);
+        $fieldName = array_pop($fieldParts);
 
         // Check if this is a JSON field (contains -> or ->>)
-        if (str_contains($field, '->')) {
+        if (str_contains($fieldName, '->')) {
             // For JSON fields, cast to CHAR first to avoid binary collation issues
-            $wrappedField = $query->getGrammar()->wrap($field);
+            $wrappedField = $query->getGrammar()->wrap($fieldName);
 
             return $query->whereRaw('CAST(' . $wrappedField . ' AS CHAR) COLLATE ' . $collation . ' LIKE ?', ['%' . $value . '%']);
         }
 
-        if (isset($columnTypes[$field]) && in_array($columnTypes[$field], $this->getCollationSelectorColumns())) {
-            $wrappedField = $query->getGrammar()->wrap($field);
+        if (isset($columnTypes[$fieldName]) && in_array($columnTypes[$fieldName], $this->getCollationSelectorColumns())) {
+            $wrappedField = $query->getGrammar()->wrap($fieldName);
+            $fieldParts[] = $wrappedField;
 
-            return $query->orWhereRaw($wrappedField . ' LIKE ? COLLATE ' . $collation, ['%' . $value . '%']);
+            return $query->orWhereRaw(
+                implode('.', $fieldParts) . " COLLATE {$collation} LIKE ?",
+                ['%' . $value . '%']
+            );
         }
 
         return $query->orWhere($field, $this->getLikeOperator(), '%' . $value . '%');
