@@ -1,6 +1,7 @@
 // hooks/table/useTableFilters.js
 import { computed, ref } from 'vue'
 import _ from 'lodash-es'
+import { useI18n } from 'vue-i18n'
 import { useTableState } from '@/hooks/table'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 
@@ -44,6 +45,7 @@ export const makeTableFiltersProps = propsFactory({
 })
 
 export default function useTableFilters(props) {
+  const { t } = useI18n()
   const { lastParameters, queryParameters } = useTableState()
 
   // Search
@@ -100,21 +102,36 @@ export default function useTableFilters(props) {
 
   // Advanced Filters
   const advancedFilters = ref(props.filterListAdvanced ?? {})
+  // Enhanced computed property for active filters
   const activeAdvancedFilters = computed(() => {
-    return Object.keys(advancedFilters.value).reduce((collection,key,index) => {
-      advancedFilters.value[key].reduce((acc, filter) => {
-        if(filter.selecteds?.length > 0){
-          if(!acc[key]){
-            acc[key] = {}
-          }
-          acc[key][filter.slug] = filter.selecteds
-        }
-        return acc
-      }, collection)
+    return Object.keys(advancedFilters.value).reduce((collection, category) => {
+      advancedFilters.value[category].forEach(filter => {
+        const hasValue = Array.isArray(filter.selecteds)
+          ? filter.selecteds.length > 0
+          : filter.selecteds !== null &&
+            filter.selecteds !== undefined &&
+            filter.selecteds !== '';
 
-      return collection
-    }, {})
-  })
+        if (hasValue) {
+          if (!collection[category]) {
+            collection[category] = {};
+          }
+          collection[category][filter.slug] = filter.selecteds;
+        }
+      });
+
+      return collection;
+    }, {});
+  });
+  // Computed property for total active filter count
+  const activeFilterCount = computed(() => {
+    return Object.values(activeAdvancedFilters.value).reduce((total, category) => {
+      return total + Object.keys(category).length;
+    }, 0);
+  });
+
+  // Reactive state for expansion panels
+  const expandedPanels = ref(Object.keys(advancedFilters.value));
 
   const clearAdvancedFilter = () => {
     advancedFilters.value = Object.fromEntries(Object.entries(advancedFilters.value).map(([key, val]) => {
@@ -124,11 +141,95 @@ export default function useTableFilters(props) {
     }))
   }
 
+  // Get active filter count for a specific category
+  const getActiveCategoryFilterCount = (category) => {
+    const activeFilters = activeAdvancedFilters.value[category];
+    return activeFilters ? Object.keys(activeFilters).length : 0;
+  };
+
+  // Get human-readable category label
+  const getCategoryLabel = (category) => {
+    const labels = {
+      columns: 'Column Filters',
+      relations: 'Relation Filters',
+      scopes: 'Custom Filters',
+      detail: 'Detail Filters'
+    };
+
+    return t(labels[category] || category.charAt(0).toUpperCase() + category.slice(1));
+  };
+
+  // Close filter menu (you'll need a ref to the menu)
+  const advancedFilterMenuOpen = ref(false);
+  const closeFilterMenu = () => {
+    // This depends on how you're controlling the menu
+    // If using v-model, you'd need to emit or update that value
+    advancedFilterMenuOpen.value = false;
+  };
+
+  // Enhanced method to reset filters
+  const resetAdvancedFilter = () => {
+    Object.keys(advancedFilters.value).forEach(category => {
+      advancedFilters.value[category].forEach(filter => {
+        filter.selecteds = Array.isArray(filter.selecteds) ? [] : null;
+      });
+    });
+
+    // Apply the reset
+    // changeAdvancedFilter();
+
+    // showSnackbar('Filters cleared', 'info');
+  };
+
+  // Optional: Method to reset only a specific category
+  const resetCategoryFilters = (category) => {
+    advancedFilters.value[category]?.forEach(filter => {
+      filter.selecteds = Array.isArray(filter.selecteds) ? [] : null;
+    });
+  };
+
+  // Remove a specific filter
+  const removeAdvancedFilter = (category, slug) => {
+    const filter = advancedFilters.value[category]?.find(f => f.slug === slug);
+    if (filter) {
+      filter.selecteds = Array.isArray(filter.selecteds) ? [] : null;
+      changeAdvancedFilter();
+    }
+  };
+
+  // Get label for a filter
+  const getFilterLabel = (category, slug) => {
+    const filter = advancedFilters.value[category]?.find(f => f.slug === slug);
+    return filter?.componentOptions?.label || slug;
+  };
+
+  // Format filter value for display
+  const formatFilterValue = (category, slug) => {
+    const filter = advancedFilters.value[category]?.find(f => f.slug === slug);
+    const selecteds = filter.selecteds;
+
+    if (filter?.componentOptions?.items) {
+      const itemTitle = filter?.componentOptions?.itemTitle || 'name';
+      const itemValue = filter?.componentOptions?.itemValue || 'id';
+
+      return filter.componentOptions.items.filter(item => selecteds.includes(item[itemValue])).map(item => item[itemTitle]).join(', ');
+    } else {
+      return selecteds;
+    }
+  };
+
+  // Optional: Show snackbar feedback
+  const showFilterSnackbar = (message, color = 'info') => {
+    // Implement based on your snackbar/toast system
+    console.log(message);
+  };
+
   return {
     // Status
     activeFilterSlug,
     activeFilter,
     mainFilters,
+
 
     // Search
     search,
@@ -137,6 +238,9 @@ export default function useTableFilters(props) {
     // Advanced Filters
     activeAdvancedFilters,
     advancedFilters,
+    activeFilterCount,
+    expandedPanels,
+    advancedFilterMenuOpen,
 
     filterBtnTitle,
 
@@ -146,5 +250,15 @@ export default function useTableFilters(props) {
     setMainFilters,
     setAdvancedFilters,
     clearAdvancedFilter,
+
+    getCategoryLabel,
+    getActiveCategoryFilterCount,
+    closeFilterMenu,
+    resetAdvancedFilter,
+    resetCategoryFilters,
+    removeAdvancedFilter,
+    getFilterLabel,
+    formatFilterValue,
+    showFilterSnackbar,
   }
 }
