@@ -666,7 +666,6 @@ class Modularity extends FileRepository
         }
 
         return concatenate_path($this->vendorPath, $dir);
-        // return realpath(concatenate_path($this->vendorPath, $dir));
     }
 
     /**
