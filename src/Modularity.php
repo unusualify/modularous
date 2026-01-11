@@ -256,11 +256,8 @@ class Modularity extends FileRepository
     public function clearCache()
     {
         app('cache')->forget($this->config('cache.key'));
+
         $this->activator->flushCache(); // for modules_statuses.json cache
-        // foreach($this->all() as $module){
-        //     dd($module->clearCache());
-        //     app('cache')->forget($module->getActivator()->getCacheKey());
-        // }
     }
 
     /**
