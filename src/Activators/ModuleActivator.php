@@ -6,7 +6,6 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Nwidart\Modules\Activators\FileActivator;
-// use Nwidart\Modules\Module;
 use Unusualify\Modularity\Module;
 
 class ModuleActivator extends FileActivator
