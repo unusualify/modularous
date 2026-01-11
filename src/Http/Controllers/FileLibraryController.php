@@ -25,6 +25,11 @@ class FileLibraryController extends BaseController implements SignUploadListener
     /**
      * @var string
      */
+    protected $routeName = 'File';
+
+    /**
+     * @var string
+     */
     protected $routePrefix = 'file-library';
 
     /**

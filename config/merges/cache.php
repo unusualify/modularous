@@ -1,0 +1,244 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Enabled
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether the modularity caching system is enabled.
+    | When disabled, all cache operations will be bypassed and data will
+    | be fetched directly from the database.
+    |
+    */
+    'enabled' => env('MODULARITY_RESOURCE_CACHE_ENABLED', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Check Whether to Cache All Modules
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether the modularity caching system is enabled for all modules on default behavior.
+    | When enabled, the modularity caching system will be enabled for all modules on default behavior. You must
+    | use modules key to disable/enable the caching system for specific modules.
+    |
+    */
+    'all_modules' => env('MODULARITY_RESOURCE_CACHE_ALL_MODULES', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Mode
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the mode of the modularity caching system.
+    | The possible values are: local, development, production.
+    | The mode will be used to determine if the modularity caching system is enabled.
+    | If the mode is local, the modularity caching system to log the cache operations to the console.
+    | If the mode is development, the modularity caching system to log the cache operations to the database.
+    | If the mode is production, the modularity caching system to log the cache operations to the file.
+    */
+    'environment_variable' => env('MODULARITY_RESOURCE_CACHE_MODE', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Driver
+    |--------------------------------------------------------------------------
+    |
+    | This option controls which cache driver should be used for storing
+    | modularity cache data. By default, it uses Redis for optimal performance.
+    |
+    */
+    'driver' => env('MODULARITY_RESOURCE_CACHE_DRIVER', 'redis'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Key Prefix
+    |--------------------------------------------------------------------------
+    |
+    | This prefix will be prepended to all cache keys to avoid conflicts
+    | with other cached data in your application.
+    |
+    */
+    'prefix' => env('MODULARITY_RESOURCE_CACHE_PREFIX', 'modularity'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | TTL Settings (in seconds)
+    |--------------------------------------------------------------------------
+    |
+    | Time-to-live settings for different types of cached data.
+    | - counts: Filter count badges (all, published, trash, etc.)
+    | - index: Repository paginated list data (raw Eloquent)
+    | - record: Single record data
+    | - response:json: Controller-level formatted JSON response (fully transformed)
+    | - response:index: Controller-level index page response
+    |
+    */
+    'ttl' => [
+        'counts' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_COUNTS', 300),           // 5 minutes
+        'index' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_INDEX', 600),             // 10 minutes
+        'record' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RECORD', 1800),          // 30 minutes
+        'formattedItem' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_FORMATTED_ITEM', 1800),          // 30 minutes
+        'formItem' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_FORM_ITEM', 1800),          // 30 minutes
+
+        'response:json' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RESPONSE', 300),  // 5 minutes (formatted JSON)
+        'response:index' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RESPONSE', 300), // 5 minutes (index page)
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Tags Support
+    |--------------------------------------------------------------------------
+    |
+    | Enable cache tags for more granular cache invalidation. Note that
+    | cache tags are only supported by certain cache drivers (Redis, Memcached).
+    |
+    */
+    'use_tags' => env('MODULARITY_RESOURCE_CACHE_USE_TAGS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | User-Aware Caching
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, cache keys for index/list queries and count queries will
+    | include the authenticated user's ID. This is essential when repository
+    | traits like CreatorTrait or AssignmentTrait add user-dependent scopes.
+    |
+    | Example scopes that require user-aware caching:
+    | - hasAccessToCreation (CreatorTrait)
+    | - everAssignedToYourRoleOrHasAuthorization (AssignmentTrait)
+    |
+    | Cache key format with user-aware caching:
+    | {prefix}:{module}:{user_id}:{type}:{params_hash}
+    |
+    | Without user-aware caching:
+    | {prefix}:{module}:{type}:{params_hash}
+    |
+    | Disable this only if all queries are truly public and user-independent.
+    |
+    */
+    'user_aware' => env('MODULARITY_RESOURCE_CACHE_USER_AWARE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationship Graph Auto-Discovery
+    |--------------------------------------------------------------------------
+    |
+    | The caching system automatically builds a relationship graph from all
+    | module models that have getEloquentRelationships() method. This graph
+    | is used to automatically invalidate dependent caches when related
+    | models are updated.
+    |
+    | How it works:
+    | 1. On first cache operation, the graph is built by scanning all modules
+    | 2. For each module's main entity, relationships are extracted
+    | 3. When any model is updated, the graph is consulted to find which
+    |    modules display that model's data and need cache invalidation
+    |
+    | Graph supports:
+    | - HasMany, BelongsTo, HasOne, MorphMany, MorphTo
+    | - BelongsToMany (with pivot tables)
+    | - HasOneThrough, HasManyThrough (with middleman tables)
+    |
+    | Commands:
+    | - php artisan modularity:cache:graph show    -- Display the graph
+    | - php artisan modularity:cache:graph rebuild -- Rebuild the graph
+    | - php artisan modularity:cache:graph stats   -- Show statistics
+    |
+    */
+    'graph' => [
+        'enabled' => env('MODULARITY_RESOURCE_CACHE_GRAPH_ENABLED', true),
+        'ttl' => (int) env('MODULARITY_RESOURCE_CACHE_GRAPH_TTL', 86400), // 24 hours
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Per-Module Cache Settings
+    |--------------------------------------------------------------------------
+    |
+    | Override default cache settings for specific modules. Each module can
+    | have its own enabled flag and TTL settings.
+    | Module names should be in StudlyCase (PascalCase).
+    |
+    | Example:
+    | 'modules' => [
+    |     'Package' => [
+    |         'enabled' => true,
+    |         'ttl' => [
+    |             'counts' => 60,  // 1 minute for frequently changing data
+    |         ],
+    |         'routes' => [
+    |             'Package' => [
+    |                 'enabled' => true,
+    |                 'ttl' => [
+    |                     'counts' => 60,  // 1 minute for frequently changing data
+    |                 ],
+    |                 'types' => [
+    |                     'counts' => true,
+    |                     'index' => true,
+    |                     'record' => true,
+    |                     'formattedItem' => true,
+    |                     'formItem' => true,
+    |                 ],
+    |                 'rewarmItem' => false,
+    |             ],
+    |             'PackageContinent' => [
+    |                 'enabled' => true,
+    |                 'ttl' => [
+    |                     'counts' => 900,  // 15 minutes for rarely changing data
+    |                 ],
+    |             ],
+    |         ],
+    |     ],
+    |     'Faq' => [
+    |         'enabled' => true,
+    |         'ttl' => [
+    |             'counts' => 900,  // 15 minutes for rarely changing data
+    |         ],
+    |     ],
+    | ],
+    |
+    */
+    'modules' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Dependencies (Manual Override)
+    |--------------------------------------------------------------------------
+    |
+    | In addition to automatic graph discovery, you can define explicit
+    | dependencies here. These are merged with graph-discovered dependencies.
+    |
+    | Use this when:
+    | - You need to define dependencies for vendor/external models
+    | - The automatic discovery misses a relationship
+    | - You want to add additional invalidation paths
+    |
+    | Format: Use full class names as keys, module names in StudlyCase.
+    |
+    | Example: PressRelease displays Company name via creator.company relationship.
+    | When Company is updated, PressRelease cache should be invalidated.
+    |
+    | 'dependencies' => [
+    |     'Modules\Company\Entities\Company' => [
+    |         [
+    |            'moduleName' => 'PressRelease', // Module name
+    |            'moduleRouteName' => 'PressReleasePayment', // Module Route name
+    |            'types' => [
+    |                'counts' => false,
+    |                'index' => false,
+    |                'record' => true,
+    |                'formattedItem' => true,
+    |                'formItem' => true,
+    |            ],
+    |            'targetRelationshipName' => 'pressReleasePayments', // Target relationship name
+    |            'isSelf' => false, // Whether the target relationship is self
+    |            'selfModelClass' => null, // Self model class name
+    |        ],
+    |     ],
+    ],
+    */
+    'dependencies' => [],
+];
+

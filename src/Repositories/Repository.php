@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
 use Spatie\Activitylog\Facades\LogBatch;
+use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularity\Contracts\Cache\UserAwareCacheInterface;
+use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularity\Traits\ManageNames;
 
-abstract class Repository implements RepositoryContract
+abstract class Repository implements RepositoryContract, UserAwareCacheInterface, CacheableInterface, ModuleableInterface
 {
     use ManageNames,
         Logic\InspectTraits,
@@ -24,7 +27,9 @@ abstract class Repository implements RepositoryContract
         Logic\Relationships,
         Logic\DispatchEvents,
         Logic\Schema,
-        Logic\CollationSelector;
+        Logic\CollationSelector,
+        Logic\CacheableTrait,
+        Logic\TouchableEloquentModel;
 
     /**
      * @var \Unusualify\Modularity\Models\Model
@@ -156,7 +161,7 @@ abstract class Repository implements RepositoryContract
     /**
      * @param mixed $id
      * @param array $fields
-     * @return void
+     * @return bool
      */
     public function update($id, $fields, $schema = null)
     {
@@ -164,7 +169,7 @@ abstract class Repository implements RepositoryContract
 
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        DB::transaction(function () use ($id, $fields) {
+        return DB::transaction(function () use ($id, $fields) {
             LogBatch::startBatch();
 
             if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
@@ -185,7 +190,11 @@ abstract class Repository implements RepositoryContract
 
             LogBatch::endBatch();
 
+            $object = $this->touchEloquentModel($object);
+
             $this->dispatchEvent($object, 'update');
+
+            return $object->wasChanged();
         }, 3);
     }
 

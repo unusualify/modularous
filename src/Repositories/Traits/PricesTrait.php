@@ -64,9 +64,13 @@ trait PricesTrait
                     if ($priceModel) {
                         // Update existing price
                         $priceModel->update($data);
+                        if( $priceModel->wasChanged() ) {
+                            $this->mustTouchEloquentModel();
+                        }
                     } else {
                         // Create a new price
                         $object->prices()->create(Arr::except($data, ['id']));
+                        $this->mustTouchEloquentModel();
                     }
 
                     if ($onlyBaseCurrency) {
@@ -83,8 +87,13 @@ trait PricesTrait
 
                                 if ($existingPrices->where('currency_id', $_currency->id)->count() == 0) {
                                     $object->prices()->create(Arr::except($_data, ['id']));
+                                    $this->mustTouchEloquentModel();
                                 } else {
-                                    $existingPrices->where('currency_id', $_currency->id)->first()->update(Arr::except($_data, ['id']));
+                                    $existingPrice = $existingPrices->where('currency_id', $_currency->id)->first();
+                                    $existingPrice->update(Arr::except($_data, ['id']));
+                                    if( $existingPrice->wasChanged() ) {
+                                        $this->mustTouchEloquentModel();
+                                    }
                                 }
                                 sleep(1);
                             }
@@ -96,6 +105,7 @@ trait PricesTrait
                 if ($existingPrices && ! $onlyBaseCurrency) {
                     $pricesToDelete = $existingPrices->whereNotIn('id', Arr::pluck($fields[$name], 'id'));
                     $pricesToDelete->each->delete();
+                    $this->mustTouchEloquentModel();
                 }
             }
         }

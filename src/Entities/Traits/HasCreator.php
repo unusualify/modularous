@@ -35,7 +35,7 @@ trait HasCreator
     protected static function bootHasCreator()
     {
         static::saving(function ($model) {
-            if ($model->custom_creator_id) {
+            if ($model->custom_creator_id && $model->creator->id != $model->custom_creator_id) {
                 // if model is updating,
                 $model->isCustomCreatorSaving = true;
                 $model->customHasCreatorFields = [
@@ -76,6 +76,10 @@ trait HasCreator
                         'creatable_type' => get_class($model),
                         'creatable_id' => $model->id,
                     ], $model->customHasCreatorFields);
+
+                    if(!$model->isDirty()) {
+                        $model->touch();
+                    }
                 }
 
             }

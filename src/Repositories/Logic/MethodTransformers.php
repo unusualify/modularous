@@ -8,7 +8,7 @@ use Unusualify\Modularity\Traits\ManageTraits;
 
 trait MethodTransformers
 {
-    use ManageTraits;
+    use ManageTraits, CacheableTrait;
 
     /**
      * @var array
@@ -121,26 +121,28 @@ trait MethodTransformers
      */
     public function getCountByStatusSlug($slug, $scope = [])
     {
-        $this->countScope = $scope;
+        return $this->cacheableCount($slug, function() use ($slug, $scope) {
+            $this->countScope = $scope;
 
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            if (($count = $this->$method($slug)) !== false) {
-                return $count;
+            foreach ($this->traitsMethods('getCountByStatusSlug') as $method) {
+                if (($count = $this->$method($slug)) !== false) {
+                    return $count;
+                }
             }
-        }
 
-        switch ($slug) {
-            case 'all':
-                return $this->getCountForAll();
-            case 'published':
-                return $this->getCountForPublished();
-            case 'draft':
-                return $this->getCountForDraft();
-            case 'trash':
-                return $this->getCountForTrash();
-        }
+            switch ($slug) {
+                case 'all':
+                    return $this->getCountForAll();
+                case 'published':
+                    return $this->getCountForPublished();
+                case 'draft':
+                    return $this->getCountForDraft();
+                case 'trash':
+                    return $this->getCountForTrash();
+            }
 
-        return 0;
+            return 0;
+        }, $scope);
     }
 
     /**

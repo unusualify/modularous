@@ -170,6 +170,14 @@ class BaseServiceProvider extends ServiceProvider
             return new \Unusualify\Modularity\Services\CurrencyExchangeService;
         });
 
+        $this->app->singleton('modularity.relationship.graph', function (Application $app) {
+            return new \Unusualify\Modularity\Services\CacheRelationshipGraph;
+        });
+
+        $this->app->singleton('modularity.cache', function (Application $app) {
+            return new \Unusualify\Modularity\Services\ModularityCacheService;
+        });
+
         $this->app->singleton('migration.backup', function (Application $app) {
             return new \Unusualify\Modularity\Services\MigrationBackup;
         });

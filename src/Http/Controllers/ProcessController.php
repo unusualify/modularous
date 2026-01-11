@@ -41,12 +41,11 @@ class ProcessController extends Controller
 
         if (method_exists($processableModel, 'moduleName') && method_exists($processableModel, 'routeName')) {
 
-            $module = Modularity::find($processableModel->moduleName());
-            $repository = App::make($module->getRouteClass($processableModel->routeName(), 'repository'));
+            $module = Modularity::find($processableModel->getModuleName());
+            $repository = App::make($module->getRouteClass($processableModel->getRouteName(), 'repository'));
 
             $processableFields = [];
-            // dd($module->getRouteInput($processableModel->routeName(), 'process', 'type'));
-            $schema = $module->getRouteInputs($processableModel->routeName());
+            $schema = $module->getRouteInputs($processableModel->getRouteName());
 
             $processableFields = [];
 
@@ -77,10 +76,11 @@ class ProcessController extends Controller
 
         if (count($processFields) > 0) {
             $process->processable->setProcessStatus($request->get('status'), $request->get('reason') ?? null);
+            $process->processable->touch();
         } elseif (method_exists($processableModel, 'moduleName') && method_exists($processableModel, 'routeName')) {
-            $module = Modularity::find($processableModel->moduleName());
-            $schema = $module->getRouteInputs($processableModel->routeName());
-            $repository = App::make($module->getRouteClass($processableModel->routeName(), 'repository'));
+            $module = Modularity::find($processableModel->getModuleName());
+            $schema = $module->getRouteInputs($processableModel->getRouteName());
+            $repository = App::make($module->getRouteClass($processableModel->getRouteName(), 'repository'));
 
             foreach ($schema as $input) {
                 if (isset($input['type']) && $input['type'] == 'process' && isset($input['schema'])) {
@@ -93,6 +93,8 @@ class ProcessController extends Controller
             }
 
             $repository->update($process->processable_id, $request->all(), $schema);
+
+            $process->processable->touch();
         }
 
         $process->refresh();

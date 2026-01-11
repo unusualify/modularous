@@ -10,15 +10,17 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
 use Unusualify\Modularity\Entities\Enums\Permission;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Http\Controllers\Traits\CacheableResponse;
 use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageAuthorization;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageScopes;
 
-abstract class PanelController extends CoreController
+abstract class PanelController extends CoreController implements CacheableInterface
 {
-    use MakesResponses, ManageScopes, ManageAuthorization;
+    use MakesResponses, ManageScopes, ManageAuthorization, CacheableResponse;
 
     /**
      * @var Unusualify\Modularity\Entities\Model
@@ -209,7 +211,6 @@ abstract class PanelController extends CoreController
         // if (modularityConfig('bind_exception_handler', true)) {
         //     App::singleton(ExceptionHandler::class, ModularityHandler::class);
         // }
-
         parent::__construct($app, $request);
 
         $this->middleware(function ($request, $next) {
@@ -249,7 +250,6 @@ abstract class PanelController extends CoreController
         // $this->addFormWiths();
 
     }
-
     public function preload()
     {
         $rawRouteConfig = $this->module ? $this->module->getRawRouteConfig($this->routeName) : [];
@@ -337,10 +337,12 @@ abstract class PanelController extends CoreController
         if (count($parentParams)) {
             $nestedParentName = array_key_last($parentParams); // snakecase;
             $nestedParentId = last($parentParams);
-            $nestedParentModel = $this->module->getRouteClass($nestedParentName, 'model');
-            $nestedParentModel = $nestedParentModel::find($nestedParentId);
+            if( $this->module->hasRoute($nestedParentName)) {
+                $nestedParentModel = $this->module->getRouteClass($nestedParentName, 'model');
+                $nestedParentModel = $nestedParentModel::find($nestedParentId);
 
-            return [true, $nestedParentId, $nestedParentName, $nestedParentModel];
+                return [true, $nestedParentId, $nestedParentName, $nestedParentModel];
+            }
         }
 
         return [false, null, null, null];
@@ -481,8 +483,6 @@ abstract class PanelController extends CoreController
             $appends = explode(',', $appends);
         }
 
-        $paginator = $this->getIndexItems(with: $with, scopes: $scopes, appends: $appends);
-
         $noFormatted = $this->request->get('light', false);
 
         if ($noFormatted) {
@@ -498,8 +498,9 @@ abstract class PanelController extends CoreController
             );
         }
 
+        $paginator = $this->getIndexItems(with: $with, scopes: $scopes, appends: $appends);
+
         return $this->getTransformer($this->getFormattedIndexItems($paginator));
-        // return $this->getTransformer( $paginator->toArray() );
     }
 
     /**
@@ -833,7 +834,7 @@ abstract class PanelController extends CoreController
             $exceptIds = explode(',', $exceptIds);
         }
 
-        return $this->transformIndexItems($this->repository->get(
+        return $this->transformIndexItems($this->repository->getPaginator(
             with: ($this->indexWith ?? []) + $with,
             scopes: $scopes,
             orders: $this->orderScope(),
@@ -858,7 +859,7 @@ abstract class PanelController extends CoreController
      * @param array $paginator
      * @return array
      */
-    public function getFormattedIndexItems($paginator) // getIndexTableItems
+    public function getFormattedIndexItems(\Illuminate\Pagination\AbstractPaginator $paginator) // getIndexTableItems
     {
         return $paginator;
     }
