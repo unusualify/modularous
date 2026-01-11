@@ -155,7 +155,6 @@ class Modularity extends FileRepository
             return $this->scan();
         }
 
-        // dd($modules);
         return $modules;
     }
 
