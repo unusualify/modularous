@@ -5,23 +5,18 @@ namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\Allowable;
 
 trait TableFilters
 {
     use Allowable;
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Collection $items
-     * @param array $scopes
-     * @return array
-     */
-    protected function getTableMainFilters($scopes = [])
+    protected function getCountsList($scopes = [])
     {
         $statusFilters = [];
 
         $scope = $this->nestedParentScopes() + $scopes;
-
         $statusFilters[] = [
             // 'name' => modularityTrans("{$this->baseKey}::lang.listing.filter.all-items"),
             'name' => ___('listing.filter.all-items'),
@@ -78,6 +73,7 @@ trait TableFilters
             $this->repository->getTableFilters($scope),
         );
 
+
         $customMainFilters = $this->getConfigFieldsByRoute('table_filters', []);
 
         foreach ($customMainFilters as $filter) {
@@ -91,7 +87,40 @@ trait TableFilters
             ];
         }
 
-        $statusFilters = Collection::make($statusFilters)->reduce(function ($carry, $filter) {
+        return $statusFilters;
+    }
+
+    public function handleFilterCount($filter)
+    {
+        if (! isset($filter['methods'])) {
+            throw new \Exception('Number or methods is required for the filter: ' . $filter['slug']);
+        }
+
+        if (! isset($filter['params'])) {
+            throw new \Exception('Params is required for the filter: ' . $filter['slug']);
+        }
+
+        if (is_string($filter['methods'])) {
+            // Use cached version of the method if available and caching is enabled
+            $method = $filter['methods'];
+            $count = $this->repository->{$method}(...$filter['params']);
+        } else {
+            throw new \Exception('Methods must be a string for the filter: ' . $filter['slug']);
+        }
+
+        return $count;
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Collection $items
+     * @param array $scopes
+     * @return array
+     */
+    protected function getTableMainFilters($scopes = [])
+    {
+        $countsList = $this->getCountsList($scopes);
+
+        $statusFilters = Collection::make($countsList)->reduce(function ($carry, $filter) {
             if (isset($filter['allowedRoles'])) {
                 $isAllowed = $this->isAllowedItem(
                     item: ['allowedRoles' => $filter['allowedRoles']],
@@ -105,19 +134,7 @@ trait TableFilters
             }
 
             if (! isset($filter['number'])) {
-                if (! isset($filter['methods'])) {
-                    throw new \Exception('Number or methods is required for the filter: ' . $filter['slug']);
-                }
-
-                if (! isset($filter['params'])) {
-                    throw new \Exception('Params is required for the filter: ' . $filter['slug']);
-                }
-
-                if (is_string($filter['methods'])) {
-                    $count = $this->repository->{$filter['methods']}(...$filter['params']);
-                } else {
-                    throw new \Exception('Methods must be a string for the filter: ' . $filter['slug']);
-                }
+                $count = $this->handleFilterCount($filter);
 
                 if ($count < 1 && ! ($filter['force'] ?? false)) {
                     return $carry;
@@ -141,6 +158,13 @@ trait TableFilters
         }, []);
 
         return $statusFilters;
+    }
+
+    public function getMainCountsList()
+    {
+        $scopes = $this->filterScope($this->nestedParentScopes());
+
+        return $this->getCountsList($scopes);
     }
 
     /**

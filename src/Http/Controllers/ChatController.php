@@ -63,6 +63,8 @@ class ChatController extends Controller
             Filepond::saveFile($chatMessage, $attachments, 'attachments');
         }
 
+        $chat->chatable->touch();
+
         return response()->json($chatMessage);
     }
 
@@ -77,6 +79,8 @@ class ChatController extends Controller
 
         $message->update($request->all());
 
+        $message->chat->chatable->touch();
+
         return response()->json($message);
     }
 
@@ -90,6 +94,8 @@ class ChatController extends Controller
     public function destroy(Request $request, ChatMessage $message)
     {
         $message->delete();
+
+        $message->chat->chatable->touch();
 
         return response()->json($message);
     }

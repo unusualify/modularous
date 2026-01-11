@@ -218,7 +218,7 @@ class Module extends NwidartModule
      */
     public function hasRoute(string $routeName): bool
     {
-        return in_array($routeName, $this->getRoutes());
+        return in_array($routeName, $this->getRouteNames());
     }
 
     /**
@@ -873,6 +873,23 @@ class Module extends NwidartModule
 
         if (! class_exists($classNamespace)) {
             throw new \Exception('Model not found for ' . $routeName . ' on module ' . $this->getName());
+        }
+
+        return $asClass ? App::make($classNamespace) : $classNamespace;
+    }
+
+    /**
+     * get Main Route Controller
+     *
+     * @param string $routeName
+     * @param bool $asClass
+     */
+    public function getController($routeName, $asClass = true): \Illuminate\Routing\Controller|string
+    {
+        $classNamespace = $this->getTargetClassNamespace('controller', Str::studly($routeName) . 'Controller');
+
+        if (! class_exists($classNamespace)) {
+            throw new \Exception('Controller not found for ' . $routeName . ' on module ' . $this->getName());
         }
 
         return $asClass ? App::make($classNamespace) : $classNamespace;

@@ -148,6 +148,9 @@ trait PaymentTrait
                     $paymentPrice->{$priceSavingKey} = $totalAmount / 100;
                     // $paymentPrice->currency_id = $currencyId;
                     $paymentPrice->save();
+                    if( $paymentPrice->wasChanged() ) {
+                        $this->mustTouchEloquentModel();
+                    }
                 } else {
                     // dd($calculated, $totalAmount, $object->paymentPrice->raw_amount, $object->paymentPrice);
                 }
@@ -166,6 +169,9 @@ trait PaymentTrait
 
             if (! empty($paymentPricePayload)) {
                 $paymentPrice->update($paymentPricePayload);
+                if( $paymentPrice->wasChanged() ) {
+                    $this->mustTouchEloquentModel();
+                }
                 $paymentPrice->refresh();
             }
 
@@ -204,7 +210,10 @@ trait PaymentTrait
                     $paymentPayload['currency_id'] = $fields['payment_currency_id'];
                 }
 
-                $paymentPrice->updateOrNewPayment($paymentPayload, $extraPayload);
+                $payment = $paymentPrice->updateOrNewPayment($paymentPayload, $extraPayload);
+                if( $payment->wasChanged() ) {
+                    $this->mustTouchEloquentModel();
+                }
             }
         }
     }
@@ -297,7 +306,11 @@ trait PaymentTrait
                     'persistent' => true,
                 ],
                 'conditions' => array_merge($this->getFormActionsConditionsForPayment(), [
-                    ['payment.status', 'not in', [PaymentStatus::COMPLETED]],
+                    ['payment.status', 'not in', [
+                        PaymentStatus::COMPLETED,
+                        PaymentStatus::PROVISION,
+                        PaymentStatus::REFUNDED
+                    ]],
                 ]),
                 'hideOnCondition' => true,
                 ...$this->getFormActionPropsForPaymentTrait(),

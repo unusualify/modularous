@@ -25,9 +25,15 @@ trait Relationships
      */
     public function afterSaveRelationships($object, $fields)
     {
+        $mustTouchEloquentModel = false;
+
         foreach ($this->getMorphToManyRelations() as $relationName) {
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
-                $object->{$relationName}()->sync($fields[$relationName]);
+                $result = $object->{$relationName}()->sync($fields[$relationName]);
+
+                if( !$touchedToEloquentModel && !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                    $mustTouchEloquentModel = true;
+                }
             }
         }
 
@@ -70,9 +76,13 @@ trait Relationships
                         });
                     }
 
-                    $object->{$relation}()->sync(
+                    $result = $object->{$relation}()->sync(
                         $payload
                     );
+
+                    if( !$touchedToEloquentModel && !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                        $mustTouchEloquentModel = true;
+                    }
                 } catch (\Throwable $th) {
                     ModularityLog::critical('Error syncing belongsToMany relationship on afterSaveRelationships', [
                         'repository' => get_class($this),
@@ -107,15 +117,22 @@ trait Relationships
                                 if ($hasRepository) {
                                     if (isset($data[$relatedLocalKey])) {
                                         array_splice($idsDeleted, array_search($data[$relatedLocalKey], $idsDeleted), 1);
-                                        $nestedObject = $repository->update($data[$relatedLocalKey], $data + [$foreignKey => $object->id]);
+                                        $result = $repository->update($data[$relatedLocalKey], $data + [$foreignKey => $object->id]);
                                         // TODO: check if this is needed
                                         // if($nestedObject->wasChanged()){
                                         //     $object->addChangedRelationships($relationName, $data);
                                         // }
+                                        if( !$mustTouchEloquentModel && $result) {
+                                            $mustTouchEloquentModel = true;
+                                        }
                                     } else {
                                         $repository->create(array_merge($data, [$foreignKey => $object->id]));
 
+                                        if( !$mustTouchEloquentModel) {
+                                            $mustTouchEloquentModel = true;
+                                        }
                                         $object->addChangedRelationships($relationName, $data);
+
                                     }
                                 } else {
                                     $idsDeleted = [];
@@ -137,6 +154,9 @@ trait Relationships
 
                         if (count($idsDeleted) > 0) {
                             $repository->bulkDelete($idsDeleted);
+                            if( !$mustTouchEloquentModel) {
+                                $mustTouchEloquentModel = true;
+                            }
                             $object->addChangedRelationships($relationName, $idsDeleted);
                         }
                     }
@@ -163,16 +183,29 @@ trait Relationships
                         array_splice($idsDeleted, array_search($morphManyData[$relatedLocalKey], $idsDeleted), 1);
 
                         $record->update($morphManyData);
+
+                        if( !$mustTouchEloquentModel && $record->wasChanged()) {
+                            $mustTouchEloquentModel = true;
+                        }
                     } else {
                         $object->{$relationName}()->create($morphManyData);
+
+                        if( !$mustTouchEloquentModel) {
+                            $mustTouchEloquentModel = true;
+                        }
                     }
                 }
 
                 if (count($idsDeleted)) {
                     $relatedModel->whereIn($relatedLocalKey, $idsDeleted)->delete();
+                    if( !$mustTouchEloquentModel) {
+                        $mustTouchEloquentModel = true;
+                    }
                 }
             }
         }
+
+        $this->letEloquentModelBeTouched($mustTouchEloquentModel);
 
         return $fields;
     }
@@ -251,6 +284,7 @@ trait Relationships
 
         $belongsToManyRelations = $this->getBelongsToManyRelations();
         $morphManyRelations = $this->getMorphManyRelations();
+
         foreach ($inputs as $input) {
             if (isset($input['name'])) {
                 if (in_array($input['name'], $belongsToManyRelations)) {

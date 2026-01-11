@@ -9,6 +9,8 @@ trait AssignmentTrait
 {
     use Allowable;
 
+    protected bool $hasUserAwareCacheAssignmentTrait = true;
+
     /**
      * @param array $columns
      * @param array $inputs

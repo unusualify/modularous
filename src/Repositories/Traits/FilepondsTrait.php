@@ -45,12 +45,14 @@ trait FilepondsTrait
                                 continue;
                             }
                             Filepond::saveFile($object, $nestedFilesByLocale, $nestedRole, $locale);
+                            $this->mustTouchEloquentModel();
                         }
                     } else {
                         if (empty($nestedFiles)) {
                             continue;
                         }
                         Filepond::saveFile($object, $nestedFiles, $nestedRole);
+                        $this->mustTouchEloquentModel();
                     }
                 }
             } else {
@@ -61,9 +63,11 @@ trait FilepondsTrait
                             continue;
                         }
                         Filepond::saveFile($object, $filesByLocale, $role, $locale);
+                        $this->mustTouchEloquentModel();
                     }
                 } else {
                     Filepond::saveFile($object, $files, $role);
+                    $this->mustTouchEloquentModel();
                 }
             }
         }

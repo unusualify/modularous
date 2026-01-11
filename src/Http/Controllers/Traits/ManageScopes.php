@@ -106,7 +106,7 @@ trait ManageScopes
 
         $requestFilters = $this->getRequestFilters();
 
-        $this->filters = array_merge($this->defaultFilters, $this->filters);
+        $this->filters = array_merge($this->defaultFilters ?? [], $this->filters ?? []);
 
         if (array_key_exists('status', $requestFilters)) {
             switch ($requestFilters['status']) {

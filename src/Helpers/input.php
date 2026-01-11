@@ -194,7 +194,7 @@ if (! function_exists('hydrate_input_extension')) {
                                 }
                             }
                         } else {
-                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->routeName());
+                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->getRouteName());
                         }
 
                         break;

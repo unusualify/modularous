@@ -112,9 +112,13 @@ trait RepeatersTrait
 
                         $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $systemLocale)->first() : null;
 
-                        $existingRepeater
+                       $result = $existingRepeater
                             ? $existingRepeater->update($data)
                             : $object->repeaters()->create($data);
+
+                        if( $result ) {
+                            $this->mustTouchEloquentModel();
+                        }
 
                     }
 
@@ -139,9 +143,13 @@ trait RepeatersTrait
 
                     $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $fallbackLocale)->first() : null;
 
-                    $existingRepeater
+                    $result = $existingRepeater
                         ? $existingRepeater->update($data)
                         : $object->repeaters()->create($data);
+
+                    if( $result ) {
+                        $this->mustTouchEloquentModel();
+                    }
                 }
             }
         }

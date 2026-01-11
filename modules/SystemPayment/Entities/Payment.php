@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Entities\Currency;
+use Oobook\Priceable\Models\Currency;
+use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
@@ -14,7 +16,7 @@ use Unusualify\Modularity\Relations\PaymentableRelation;
 
 class Payment extends \Unusualify\Payable\Models\Payment
 {
-    use ModelHelpers, HasFileponds, HasCreator, HasSpreadable;
+    use ModelHelpers, HasFileponds, HasCreator, HasSpreadable, HasCaching;
 
     protected $fillable = [
         'payment_service_id',

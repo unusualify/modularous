@@ -45,6 +45,11 @@ trait FormSchema
         static::$formSchemaCallbacks[static::class] = $callback;
     }
 
+    public function setupFormSchema()
+    {
+        $this->formSchema = $this->getModuleFormSchema();
+    }
+
     protected function getModuleFormSchema()
     {
         $inputs = $this->getConfigFieldsByRoute('inputs');
@@ -780,7 +785,7 @@ trait FormSchema
                                 }
                             }
                         } else {
-                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->routeName());
+                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->getRouteName());
                         }
 
                         break;
