@@ -193,6 +193,7 @@ class ChatMessageTest extends ModelTestCase
             'custom_creator_id' => $user->id,
             'custom_creator_type' => get_class($user),
         ]);
+        $chatMessage->refresh();
 
         $userProfile = $chatMessage->user_profile;
         $this->assertIsArray($userProfile);
@@ -399,6 +400,7 @@ class ChatMessageTest extends ModelTestCase
             'custom_creator_id' => $creator->id,
             'custom_creator_type' => get_class($creator),
         ]);
+        $chatMessage->refresh();
 
         $this->assertEquals($creator->id, $chatMessage->creator->id);
         $this->assertEquals(get_class($creator), $chatMessage->creatorRecord->creator_type);
