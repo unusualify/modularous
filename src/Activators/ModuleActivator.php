@@ -63,19 +63,6 @@ class ModuleActivator extends FileActivator
         $this->routesStatuses = $this->getRoutesStatuses();
     }
 
-    // public function setModule($module, $path)
-    // {
-    //     $this->module = $module;
-
-    //     $this->statusesFile = $path . '/' . $this->config('statuses-file');
-
-    //     $this->setCacheKey($this->generateCacheKey());
-
-    //     $this->routesStatuses = $this->getRoutesStatuses();
-
-    //     return $this;
-    // }
-
     public function generateCacheKey()
     {
         $moduleName = (string) $this->module;
