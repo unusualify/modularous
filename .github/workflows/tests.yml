@@ -111,7 +111,7 @@ jobs:
       - name: Install dependencies
         run: |
             # composer config platform.php ${{ matrix.php }}
-            composer install --ignore-platform-req=php
+            composer install
             composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
             composer update --prefer-dist --no-interaction --ignore-platform-req=php
       - name: Execute Laravel tests
