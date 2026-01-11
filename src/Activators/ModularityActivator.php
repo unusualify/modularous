@@ -141,7 +141,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function delete(Module $module): void
     {
-        // $statuses = $this->modulesStatuses;
         $statuses = $this->getModulesStatuses();
 
         if (! isset($statuses[$module->getName()])) {
