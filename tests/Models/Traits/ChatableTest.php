@@ -34,13 +34,14 @@ class ChatableTest extends ModelTestCase
             $table->timestamps();
         });
 
-        $this->testModel = new TestChatableModel(['name' => 'Test Model']);
-        $this->testModel->save();
-
         Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'modularity']);
         Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'modularity']);
         Role::firstOrCreate(['name' => 'client-manager', 'guard_name' => 'modularity']);
         Role::firstOrCreate(['name' => 'client-assistant', 'guard_name' => 'modularity']);
+
+        $this->testModel = new TestChatableModel(['name' => 'Test Model']);
+        $this->testModel->save();
+
     }
 
     public function test_model_uses_chatable_trait()
