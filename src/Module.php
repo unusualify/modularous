@@ -63,12 +63,6 @@ class Module extends NwidartModule
         parent::__construct($app, $name, $path);
         $this->app = $app;
         $this->moduleActivator = (new ModuleActivator($app, $this));
-        try {
-            // dd($app, $name, $path);
-            // $this->moduleActivator = (new ModuleActivator($app))->setModule($this->getName(), $path);
-        } catch (\Throwable $th) {
-            dd($name, $path, $th);
-        }
 
         $this->setMiddlewares();
         // $this->moduleActivator->setModule($name);
