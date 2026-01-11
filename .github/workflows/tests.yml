@@ -114,11 +114,14 @@ jobs:
             echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       - name: Install dependencies
         run: |
+            # 1. Force Composer to use the matrix PHP version for resolution
             composer config platform.php ${{ matrix.php }}
-            composer install
-            # composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+
+            # 2. Add the specific Laravel version requirement (matrix-driven)
             composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-            composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+            # 3. Perform the update with stability and ignore the platform check
+            composer update --${{ matrix.stability }} --prefer-dist --no-interaction --ignore-platform-req=php
       - name: Execute Laravel tests
         run: composer test
 
