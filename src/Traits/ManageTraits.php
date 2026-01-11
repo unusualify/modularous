@@ -61,11 +61,13 @@ trait ManageTraits
 
         $routeName = $this->getRouteName();
 
-        if ($moduleName && $routeName) {
+        if ($moduleName && $routeName ) {
             $module = $this->getModule();
-            $routeConfig = $module->getRawRouteConfig($routeName);
+            if($module) {
+                $routeConfig = $module->getRawRouteConfig($routeName);
 
-            return $this->chunkInputs($routeConfig['inputs'], noGroupChunk: $noGroupChunk);
+                return $this->chunkInputs($routeConfig['inputs'], noGroupChunk: $noGroupChunk);
+            }
             // return $route_config['inputs'];
         }
 
