@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Entities\Currency;
-use Oobook\Priceable\Models\Currency;
 use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasCreator;
