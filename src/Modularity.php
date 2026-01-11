@@ -169,7 +169,6 @@ class Modularity extends FileRepository
 
         $modules = [];
 
-        // dump($paths);
         foreach ($paths as $key => $path) {
             $manifests = $this->getFiles()->glob("{$path}/module.json");
 
