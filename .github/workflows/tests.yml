@@ -113,7 +113,7 @@ jobs:
             # composer config platform.php ${{ matrix.php }}
             composer install --ignore-platform-reqs
             composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-            composer update --prefer-dist --no-interaction
+            # composer update --prefer-dist --no-interaction
       - name: Execute Laravel tests
         run: composer test
 
