@@ -9,7 +9,6 @@ final class LaravelServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-
         // $this->publishMigrations();
         // $this->mergeMigrations();
         $this->publishConfigs();
