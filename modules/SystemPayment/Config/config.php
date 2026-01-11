@@ -1,5 +1,6 @@
 <?php
 
+use Modules\SystemPricing\Entities\Currency;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 
 return [
@@ -278,6 +279,59 @@ return [
                     'allowedRoles' => ['superadmin', 'admin', 'manager'],
                 ],
             ],
+            'filters' => [
+                'columns' => [
+                    [
+                        'type' => 'select',
+                        'slug' => 'status',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Status',
+                            'itemTitle' => 'name',
+                            'itemValue' => 'value',
+                            'items' => array_map(function ($status) {
+                                return [
+                                    'name' => $status->label(),
+                                    'value' => $status->value,
+                                ];
+                            }, PaymentStatus::cases()),
+                        ],
+                    ],
+                ],
+                'relations' => [
+                    [
+                        'type' => 'select',
+                        'slug' => 'paymentService',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Payment Service',
+                        ],
+                        'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
+                    ],
+                    [
+                        'type' => 'select',
+                        'slug' => 'currency',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Currency',
+                            'itemTitle' => 'name',
+                            'itemValue' => 'id',
+                            'items' => Currency::whereIn('iso_4217', ['USD', 'EUR', 'TRY'])->get()->map(function ($currency) {
+                                return [
+                                    'name' => $currency->iso_4217,
+                                    'id' => $currency->id,
+                                ];
+                            }),
+                        ],
+                    ],
+                ],
+            ],
             'headers' => [
                 [
                     'title' => 'Owner Id',
@@ -307,6 +361,8 @@ return [
                     'key' => 'company',
                     'itemTitle' => 'name',
                     'minWidth' => 150,
+                    'searchable' => true,
+                    'searchKey' => 'creator.company.name',
                 ],
                 [
                     'title' => 'Service',
@@ -335,6 +391,8 @@ return [
                     'title' => 'User Email',
                     'key' => 'creator',
                     'itemTitle' => 'email',
+                    'searchable' => true,
+                    'searchKey' => 'creator.email',
                 ],
                 [
                     'title' => 'Created Time',

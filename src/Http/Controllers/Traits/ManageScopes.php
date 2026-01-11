@@ -230,13 +230,28 @@ trait ManageScopes
 
         $scope = array_merge($this->getExactScope(), $scope);
 
-        if (array_key_exists('relations', $requestFilters)) {
+        // Handle column filters
+        if (array_key_exists('columns', $requestFilters)) {
+            foreach ($requestFilters['columns'] as $column => $value) {
+                if ($value === null || $value === '' || (is_array($value) && empty($value))) {
+                    continue;
+                }
 
+                // Add to scope for standard where clauses
+                $scope[$column] = $value;
+            }
+        }
+
+
+        // Handle relation filters
+        if (array_key_exists('relations', $requestFilters)) {
             foreach ($requestFilters['relations'] as $relationship => $value) {
+                if ($value === null || $value === '' || (is_array($value) && empty($value))) {
+                    continue;
+                }
+
                 $scope['addRelation' . $this->getStudlyName($relationship)] = $value;
             }
-
-            // unset($requestFilters['relations']);
         }
 
         return $prepend + $scope;

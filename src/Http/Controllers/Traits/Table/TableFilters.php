@@ -174,28 +174,63 @@ trait TableFilters
      */
     protected function getTableAdvancedFilters()
     {
+        $advancedFilters = [];
 
-        $filters = Collection::make($this->getConfigFieldsByRoute('filters'))->filter(function ($f, $key) {
-            return in_array($key, ['relations']);
-        });
+        $filterConfig = $this->getConfigFieldsByRoute('filters', []);
 
-        return $filters->mapWithKeys(function ($filter, $key) {
-            if (method_exists(__TRAIT__, $key . 'FilterConfiguration')) {
-                return [$key => array_map([$this, $key . 'FilterConfiguration'], object_to_array($filter))];
+        // Process each filter category
+        foreach ($filterConfig as $category => $filters) {
+            $filters = object_to_array($filters);
+
+            // Apply category-specific configuration
+            if (method_exists(__TRAIT__, $method = $category . 'FilterConfiguration')) {
+                $filters = array_map([$this, $method], $filters);
             }
 
-            return [$key => $filter];
-        })->toArray();
+            $advancedFilters[$category] = $filters;
+        }
+
+
+        return $advancedFilters;
     }
 
     /**
-     * Get the relations filter configuration for the table
+     * Configure column filters
+     *
+     * @param array $filter
+     * @return array
+     */
+    protected function columnsFilterConfiguration($filter)
+    {
+        // Ensure the column exists in the model
+        if (!$this->repository->hasColumn($filter['slug'])) {
+            throw new \Exception("Column '{$filter['slug']}' does not exist in the model.");
+        }
+
+        // Apply type-specific configuration
+        if (method_exists(__TRAIT__, $methodName = 'getTableAdvancedFilters' . $this->getStudlyName($filter['type']))) {
+            $filter = $this->$methodName($filter);
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Configure relation filters
      *
      * @param array $filter
      * @return array
      */
     protected function relationsFilterConfiguration($filter)
     {
+        // Ensure the relation exists in the model
+        $model = $this->repository->getModel();
+        $studlyRelationshipName = $this->getStudlyName($filter['slug']);
+        if (!method_exists($model, $studlyRelationshipName)) {
+            throw new \Exception("Relation '{$filter['slug']}' does not exist in the model.");
+        }
+
+        // Apply type-specific configuration
         if (method_exists(__TRAIT__, $methodName = 'getTableAdvancedFilters' . $this->getStudlyName($filter['type']))) {
             $filter = $this->$methodName($filter);
         }
@@ -203,21 +238,17 @@ trait TableFilters
         return $filter;
     }
 
-    /**
-     * Get the detail filter configuration for the table
-     *
-     * @param array $filter
-     * @return array
-     */
-    protected function detailFilterConfiguration($filter)
+    protected function detailsFilterConfiguration($filter)
     {
-        if (method_exists(__TRAIT__, $methodName = 'getTableAdvancedFilters' . $this->getStudlyName($filter['type']))) {
+        if (isset($filter->type) && method_exists(__TRAIT__, $methodName = 'getTableAdvancedFilters' . $this->getStudlyName($filter->type))) {
             $filter = $this->$methodName($filter);
         }
 
+        // Mark this as a detail filter
+        $filter['_filterType'] = 'detail';
+
         return $filter;
     }
-
     /**
      * Get the select filter configuration for the table
      *
@@ -227,33 +258,37 @@ trait TableFilters
     protected function getTableAdvancedFiltersSelect($filter)
     {
 
-        $repository = App::make($filter['repository']);
-        $items = $repository->list()->map(function ($value, $key) {
-            return $value;
-        });
+        if( isset($filter['repository']) && class_exists($filter['repository'])) {
 
-        $filter['componentOptions']['item-value'] ??= 'id';
-        $filter['componentOptions']['item-title'] ??= 'name';
+            $repository = App::make($filter['repository']);
+            $items = $repository->list()->map(function ($value, $key) {
+                return $value;
+            });
 
-        $model = $this->repository->getModel();
+            $filter['componentOptions']['item-value'] ??= 'id';
+            $filter['componentOptions']['item-title'] ??= 'name';
 
-        $method = $filter['slug'];
-        if (method_exists($model, $method)) {
-            $returnType = (new \ReflectionMethod($model, $method))->getReturnType();
-            if ($returnType == 'Illuminate\Database\Eloquent\Relations\MorphTo') {
-                $filter['componentOptions']['return-object'] = 'true';
+            $model = $this->repository->getModel();
 
-                $class = get_class($repository->getModel());
-                $items = $items->map(function ($item) use ($class) {
-                    // $item->setAttribute('type', $class);
-                    $item['type'] = $class;
+            $method = $filter['slug'];
 
-                    return $item;
-                });
+            if (method_exists($model, $method)) {
+                $returnType = (new \ReflectionMethod($model, $method))->getReturnType();
+                if ($returnType == 'Illuminate\Database\Eloquent\Relations\MorphTo') {
+                    $filter['componentOptions']['return-object'] = 'true';
+
+                    $class = get_class($repository->getModel());
+                    $items = $items->map(function ($item) use ($class) {
+                        // $item->setAttribute('type', $class);
+                        $item['type'] = $class;
+
+                        return $item;
+                    });
+                }
             }
-        }
 
-        $filter['componentOptions']['items'] = $items->toArray();
+            $filter['componentOptions']['items'] = $items->toArray();
+        }
 
         return $filter;
     }

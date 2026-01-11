@@ -5,6 +5,7 @@ namespace Modules\SystemPayment\Entities;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Modules\SystemPricing\Entities\Price;
+use Modules\SystemPricing\Entities\Currency;
 use Oobook\Priceable\Models\Currency;
 use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
@@ -75,6 +76,11 @@ class Payment extends \Unusualify\Payable\Models\Payment
     public function price(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Price::class, 'price_id', 'id');
+    }
+
+    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 
     public function priceCurrency(): HasOneThrough

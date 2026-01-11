@@ -409,12 +409,13 @@ trait MethodTransformers
                 $relationName = $this->getCamelCase($matches[1]);
 
                 if (method_exists($this->getModel(), $relationName)) {
-                    $related = $this->getModel()->{$relationName}();
+                    $relationship = $this->getModel()->{$relationName}();
+                    $related = $relationship->getRelated();
 
-                    if ($related instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
+                    if ($relationship instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
                         // Handle morphTo relationship
-                        $morphType = $related->getMorphType(); // Gets the type column (e.g., 'modelable_type')
-                        $morphId = $related->getForeignKeyName(); // Gets the id column (e.g., 'modelable_id')
+                        $morphType = $relationship->getMorphType(); // Gets the type column (e.g., 'modelable_type')
+                        $morphId = $relationship->getForeignKeyName(); // Gets the id column (e.g., 'modelable_id')
 
                         $morphFilters = array_reduce($value, function ($acc, $item) {
                             if (isset($item['type']) && isset($item['id'])) {
@@ -433,10 +434,20 @@ trait MethodTransformers
                                 ->whereIn($morphId, $values);
                         }
 
+                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOneThrough) {
+                        $query->whereHas($relationName, function ($query) use ($value, $related) {
+                            $table = $related->getTable();
+                            $query->whereIn($table . '.id', $value);
+                        });
+                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
+                        $query->whereHas($relationName, function ($query) use ($value, $related) {
+                            $table = $related->getTable();
+                            $query->whereIn($table . '.id', $value);
+                        });
                     } else {
                         // Handle belongsTo relationship
-                        if (method_exists(__CLASS__, $method = 'getForeignKey' . get_class_short_name($related))) {
-                            $foreignKey = $this->$method($related, $scopes, $value);
+                        if (method_exists(__CLASS__, $method = 'getForeignKey' . get_class_short_name($relationship))) {
+                            $foreignKey = $this->$method($relationship, $scopes, $value);
                         }
                         $scopes[$foreignKey] = $value;
 

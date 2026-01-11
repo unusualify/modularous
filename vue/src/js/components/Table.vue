@@ -200,55 +200,6 @@
                         </v-list>
                       </v-menu>
 
-
-                      <!-- advanced filter menu -->
-                      <v-menu
-                        :close-on-content-click="false"
-                        location="end"
-                      >
-                        <template v-slot:activator="{ props }">
-                          <!-- advanced filter button -->
-                          <v-btn v-if="Object.keys(advancedFilters).length > 0 && !hideAdvancedFilters"
-                            id="advanced-filter-btn"
-                            v-bind="{...filterBtnOptions, ...filterBtnTitle, ...props}"
-                            :icon="$vuetify.display.smAndDown ? filterBtnOptions['prepend-icon'] : null"
-                            :text="$vuetify.display.smAndDown ? null : $t('Filters')"
-                            :prepend-icon="$vuetify.display.smAndDown ? null : filterBtnOptions['prepend-icon']"
-                            :block="$vuetify.display.mdAndUp ? false : (filterBtnOptions['block'] ?? false)"
-                            :density="$vuetify.display.smAndDown ? 'compact' : (filterBtnOptions['density'] ?? 'comfortable')"
-                          />
-                        </template>
-                        <v-card
-                          title="Filters"
-                          min-width="40vw"
-                          max-width="50vw"
-                        >
-                          <v-card-text>
-                            <template v-for="(filters, index) in advancedFilters" :key="index">
-                              <component v-for="(filter, ind) in filters"
-                                :is="`v-${filter.type}`"
-                                v-bind="filter.componentOptions"
-                                v-model="filter['selecteds']"
-                              />
-                            </template>
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              :text="$t('Clear')"
-                              variant="plain"
-                              @click="resetAdvancedFilter"
-                            ></v-btn>
-
-                            <v-btn
-                              color="primary"
-                              :text="$t('Apply')"
-                              variant="tonal"
-                              @click="changeAdvancedFilter"
-                            ></v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-menu>
                     </template>
                     <template #append>
                       <!-- create button -->
@@ -275,8 +226,177 @@
             indeterminate
             reverse
           ></v-progress-linear>
+
           <v-divider v-else-if="controlsPosition === 'top' && $vuetify.display.mdAndUp" class="mb-2 mt-2"></v-divider>
 
+          <div class="d-flex mb-2">
+            <!-- advanced filter menu -->
+            <!-- Active filters chips (place this before or after the filter button) -->
+            <v-menu
+              v-model="advancedFilterMenuOpen"
+              :close-on-content-click="false"
+              location="end"
+            >
+              <template v-slot:activator="{ props }">
+                <!-- advanced filter button -->
+                <v-btn
+                  v-if="Object.keys(advancedFilters).length > 0 && !hideAdvancedFilters"
+                  id="advanced-filter-btn"
+                  v-bind="{...filterBtnOptions, ...filterBtnTitle, ...props}"
+                  :icon="$vuetify.display.smAndDown ? 'mdi-filter-variant' : null"
+                  :text="$vuetify.display.smAndDown ? null : $t('Filters')"
+                  :prepend-icon="$vuetify.display.smAndDown ? null : 'mdi-filter-variant'"
+                  :block="$vuetify.display.mdAndUp ? false : (filterBtnOptions['block'] ?? false)"
+                  :density="$vuetify.display.smAndDown ? 'compact' : (filterBtnOptions['density'] ?? 'comfortable')"
+                >
+                  <!-- Active filter count badge -->
+                  <template v-if="activeFilterCount > 0" v-slot:append>
+                    <v-badge
+                      :content="activeFilterCount"
+                      color="error"
+                      inline
+                    />
+                  </template>
+                </v-btn>
+              </template>
+
+              <v-card
+                min-width="40vw"
+                max-width="50vw"
+                :min-height="$vuetify.display.smAndDown ? '60vh' : undefined"
+              >
+                <!-- Header with close button -->
+                <v-card-title class="d-flex align-center justify-space-between">
+                  <div class="d-flex flex-column">
+                    <span>{{ $t('Filters') }}</span>
+                    <!-- <div v-if="activeFilterCount > 0" class="text-caption text-medium-emphasis flex-grow-1 flex-shrink-0">
+                      {{ $t('{count} active filter(s)', { count: activeFilterCount }) }}
+                    </div> -->
+                  </div>
+                  <v-btn
+                    icon="mdi-close"
+                    variant="text"
+                    size="small"
+                    @click="advancedFilterMenuOpen = false"
+                  />
+                </v-card-title>
+
+                <v-divider />
+
+                <!-- Filter content with categorized sections -->
+                <v-card-text class="pa-0">
+                  <v-expansion-panels
+                    v-model="expandedPanels"
+                    multiple
+                    variant="accordion"
+                  >
+                    <v-expansion-panel
+                      v-for="(filters, category) in advancedFilters"
+                      :key="category"
+                      :value="category"
+                    >
+                      <!-- Category header -->
+                      <v-expansion-panel-title>
+                        <div class="d-flex align-center justify-space-between w-100 pr-4">
+                          <span class="text-subtitle-1 font-weight-medium">
+                            {{ getCategoryLabel(category) }}
+                          </span>
+                          <v-chip
+                            v-if="getActiveCategoryFilterCount(category) > 0"
+                            size="small"
+                            color="primary"
+                            variant="flat"
+                          >
+                            {{ getActiveCategoryFilterCount(category) }}
+                          </v-chip>
+                        </div>
+                      </v-expansion-panel-title>
+
+                      <!-- Category filters -->
+                      <v-expansion-panel-text>
+                        <v-row dense>
+                          <v-col
+                            v-for="(filter, index) in filters"
+                            :key="`${category}-${index}`"
+                            cols="12"
+                            :md="filter.fullWidth ? 12 : 6"
+                          >
+                            <component
+                              :is="`v-${filter.type}`"
+                              v-bind="filter.componentOptions"
+                              v-model="filter.selecteds"
+                              :density="filter.componentOptions?.density ?? 'comfortable'"
+                              hide-details="auto"
+                            />
+                          </v-col>
+                        </v-row>
+                      </v-expansion-panel-text>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+
+                  <!-- Empty state -->
+                  <div
+                    v-if="Object.keys(advancedFilters).length === 0"
+                    class="text-center pa-8 text-medium-emphasis"
+                  >
+                    <v-icon size="64" class="mb-4">mdi-filter-off</v-icon>
+                    <p>{{ $t('No filters available') }}</p>
+                  </div>
+                </v-card-text>
+
+                <v-divider />
+
+                <!-- Footer actions -->
+                <!-- flexcolumn on mobile -->
+                <v-card-actions class="px-4 py-3 d-flex justify-end flex-column flex-sm-row">
+                  <!-- Active filters summary -->
+                  <v-btn
+                    :text="$t('Clear All')"
+                    variant="text"
+                    :disabled="activeFilterCount === 0"
+                    @click="resetAdvancedFilter"
+                  />
+
+                  <v-btn
+                    color="primary"
+                    :text="$t('Apply Filters')"
+                    variant="elevated"
+                    @click="changeAdvancedFilter"
+                  />
+                  <div class="d-flex ga-2 flex-grow-0 flex-shrink-1">
+                  </div>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
+            <div v-if="activeFilterCount > 0" class="d-flex flex-wrap ga-2 mb-2 ml-2">
+              <template v-for="(categoryFilters, category) in activeAdvancedFilters" :key="category">
+                <v-chip
+                  v-for="(value, slug) in categoryFilters"
+                  :key="`${category}-${slug}`"
+                  x-closable
+                  size="small"
+                  color="primary"
+                  variant="tonal"
+                  >
+                  <!-- @click:close="removeFilter(category, slug)" -->
+                  <span class="text-caption">
+                    {{ getFilterLabel(category, slug) }}:
+                    <strong>{{ formatFilterValue(category, slug) }}</strong>
+                  </span>
+                </v-chip>
+              </template>
+
+              <v-btn
+                v-if="activeFilterCount > 1"
+                size="small"
+                variant="text"
+                color="error"
+                @click="resetAdvancedFilter"
+              >
+                {{ $t('Clear All') }}
+              </v-btn>
+            </div>
+          </div>
 
           <!-- form modal -->
           <ue-modal v-if="!embeddedForm"
