@@ -79,7 +79,7 @@ trait Cacheable
      * Get the route name (submodule) for cache keys.
      * Uses ManageModuleRoute trait's getRouteName() if available.
      */
-    public function getCacheModuleRouteName(): string
+    public function getCacheModuleRouteName()
     {
         if ($this->cacheModuleRouteName !== null) {
             return $this->cacheModuleRouteName;
@@ -130,7 +130,6 @@ trait Cacheable
         [$type, $specifierKey, $data] = $this->resolveCacheSpecifiers($type, $data);
         $moduleName = $this->getCacheModuleName();
         $moduleRouteName = $this->getCacheModuleRouteName();
-
 
         return $this->createCacheKey($moduleName, $moduleRouteName, $specifierKey, $data);
     }
