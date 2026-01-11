@@ -784,7 +784,6 @@ class Module extends NwidartModule
         $name = $routes->keys()->first();
 
         if (! $name) {
-            // dd($routeName, $action, $quote, $routes, Collection::make($this->getRouteUrls($routeName)));
             throw new \Exception('Route not found for ' . $routeName . ' with action "' . $action . '" on module ' . $this->getName());
         }
 
