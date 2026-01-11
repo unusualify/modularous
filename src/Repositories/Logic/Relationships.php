@@ -31,7 +31,7 @@ trait Relationships
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
                 $result = $object->{$relationName}()->sync($fields[$relationName]);
 
-                if( !$touchedToEloquentModel && !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                if( !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
                     $mustTouchEloquentModel = true;
                 }
             }
@@ -80,7 +80,7 @@ trait Relationships
                         $payload
                     );
 
-                    if( !$touchedToEloquentModel && !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                    if( !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
                         $mustTouchEloquentModel = true;
                     }
                 } catch (\Throwable $th) {
