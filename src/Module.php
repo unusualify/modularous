@@ -65,7 +65,6 @@ class Module extends NwidartModule
         $this->moduleActivator = (new ModuleActivator($app, $this));
 
         $this->setMiddlewares();
-        // $this->moduleActivator->setModule($name);
     }
 
     /**
