@@ -52,8 +52,6 @@ class ModuleActivator extends FileActivator
 
     public function __construct(Container $app, private Module $module)
     {
-        // parent::__construct($app);
-
         $this->cache = $app['cache'];
         $this->files = $app['files'];
         $this->config = $app['config'];
