@@ -61,12 +61,6 @@ class Module extends NwidartModule
     public function __construct($app, string $name, $path)
     {
         parent::__construct($app, $name, $path);
-        // $this->name = $name;
-        // $this->path = $path;
-        // $this->cache = $app['cache'];
-        // $this->files = $app['files'];
-        // $this->translator = $app['translator'];
-        // $this->activator = $app[ActivatorInterface::class];
         $this->app = $app;
         $this->moduleActivator = (new ModuleActivator($app, $this));
         try {
