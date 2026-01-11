@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Activators;
 
-use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Nwidart\Modules\Activators\FileActivator;
