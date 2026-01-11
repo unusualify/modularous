@@ -99,7 +99,6 @@ class Modularity extends FileRepository
      */
     public function all(): array
     {
-        // dd($this);
         if (! $this->config('cache.enabled')) {
             return $this->scan();
         }
