@@ -398,6 +398,7 @@ trait HasStateable
 
             $this->previousStateableState = $oldState;
             $this->currentStateableState = $newState;
+            $this->stateableChanged = true;
             StateableUpdated::dispatch($cloneModel, $cloneModel->state, $oldState);
 
             $cloneModel->touch();
