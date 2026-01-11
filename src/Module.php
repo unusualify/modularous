@@ -148,12 +148,6 @@ class Module extends NwidartModule
         }
     }
 
-    // public function setModuleActivator($name)
-    // {
-    //     // Directory path fix for System Modules
-    //     $this->moduleActivator->setModule($name, $this->getDirectoryPath());
-    // }
-
     /**
      * Enable the current module route.
      */
