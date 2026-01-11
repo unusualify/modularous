@@ -183,13 +183,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function getModulesStatuses(): array
     {
-        // dd(
-        //     $this->config->get('modules.cache.enabled'),
-        //     $this->cacheKey,
-        //     $this->readJson(),
-        //     $this->cache->store($this->config->get('modules.cache.driver')),
-        //     $this->cache->store($this->config->get('modules.cache.driver'))->get($this->cacheKey),
-        //  );
         if (! $this->config->get('modules.cache.enabled')) {
             return $this->readJson();
         }
