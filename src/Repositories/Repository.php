@@ -604,16 +604,18 @@ abstract class Repository implements RepositoryContract, UserAwareCacheInterface
      */
     public function searchInRelationships($query, &$scopes, $scopeField, $relationshipFields = [])
     {
+        $shouldUseSearchCollation = $this->shouldUseSearchCollation($query);
+
         if (isset($scopes[$scopeField]) && is_string($scopes[$scopeField])) {
             $searchValue = $scopes[$scopeField];
 
             // Group relationship fields by relationship name
             $relationshipGroups = [];
             foreach ($relationshipFields as $field) {
-                $parts = explode('.', $field, 2);
-                if (count($parts) === 2) {
-                    $relationshipName = $parts[0];
-                    $relationshipColumn = $parts[1];
+                $parts = explode('.', $field);
+                if (count($parts) > 1) {
+                    $relationshipColumn = array_pop($parts);
+                    $relationshipName = implode('.', $parts);
 
                     if (! isset($relationshipGroups[$relationshipName])) {
                         $relationshipGroups[$relationshipName] = [];
@@ -627,7 +629,7 @@ abstract class Repository implements RepositoryContract, UserAwareCacheInterface
 
             // Add whereHas for each relationship group
             foreach ($relationshipGroups as $relationshipName => $columns) {
-                $query->orWhereHas($relationshipName, function ($q) use ($columns, $searchValue) {
+                $query->orWhereHas($relationshipName, function ($q) use ($columns, $searchValue, $shouldUseSearchCollation) {
                     $relatedModel = $q->getModel();
 
                     // Check if the related model is translatable
@@ -646,21 +648,31 @@ abstract class Repository implements RepositoryContract, UserAwareCacheInterface
                         }
                     }
 
-                    $q->where(function ($q) use ($regularColumns, $translatedColumns, $searchValue, $relatedModel) {
+
+                    $q->where(function ($q) use ($regularColumns, $translatedColumns, $searchValue, $relatedModel, $shouldUseSearchCollation) {
                         // Search in regular columns
                         if (! empty($regularColumns)) {
                             $tableName = $relatedModel->getTable();
                             foreach ($regularColumns as $column) {
-                                $q->orWhere($tableName . '.' . $column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                if ($shouldUseSearchCollation) {
+                                    $q = $this->addSearchCollationToQuery($q, $tableName . '.' . $column, $searchValue, $relatedModel);
+                                } else {
+                                    $q->orWhere($tableName . '.' . $column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                }
                             }
                         }
 
                         // Search in translated columns
                         if (! empty($translatedColumns)) {
-                            $q->orWhereHas('translations', function ($translationQuery) use ($translatedColumns, $searchValue) {
-                                $translationQuery->where(function ($tq) use ($translatedColumns, $searchValue) {
+                            $q->orWhereHas('translations', function ($translationQuery) use ($translatedColumns, $searchValue, $shouldUseSearchCollation) {
+                                $translationQuery->where(function ($tq) use ($translatedColumns, $searchValue, $shouldUseSearchCollation) {
+                                    $translationModel = $tq->getModel();
                                     foreach ($translatedColumns as $column) {
-                                        $tq->orWhere($column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                        if ($shouldUseSearchCollation) {
+                                            $tq = $this->addSearchCollationToQuery($tq, $column, $searchValue, $translationModel);
+                                        } else {
+                                            $tq->orWhere($column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                        }
                                     }
                                 });
                             });
