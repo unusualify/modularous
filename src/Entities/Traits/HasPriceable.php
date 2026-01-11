@@ -22,13 +22,13 @@ trait HasPriceable
     public function originalBasePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
-            ->where('currency_id', Request::getUserCurrency()->id);
+            ->where('currency_id', Request::getUserCurrency()?->id);
     }
 
     public function basePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         $query = $this->morphOne(Price::class, 'priceable')
-            ->where('currency_id', Request::getUserCurrency()->id);
+            ->where('currency_id', Request::getUserCurrency()?->id);
 
         $currencyForLanguageBasedPrices = Modularity::getCurrencyForLanguageBasedPrices();
 
