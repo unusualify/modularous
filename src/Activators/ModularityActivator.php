@@ -109,7 +109,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function hasStatus(Module $module, bool $status): bool
     {
-        // $statuses = $this->modulesStatuses;
         $statuses = $this->getModulesStatuses();
 
         if (! isset($statuses[$module->getName()])) {
