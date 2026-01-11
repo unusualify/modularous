@@ -149,9 +149,6 @@
         "optimize-autoloader": true,
         "allow-plugins": {
             "wikimedia/composer-merge-plugin": true
-        },
-        "platform": {
-            "php": "8.4.99"
         }
     }
 }
