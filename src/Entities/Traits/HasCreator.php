@@ -77,7 +77,7 @@ trait HasCreator
                         'creatable_id' => $model->id,
                     ], $model->customHasCreatorFields);
 
-                    if(!$model->isDirty()) {
+                    if (! $model->isDirty()) {
                         $model->touch();
                     }
                 }

@@ -143,4 +143,3 @@ trait HasCacheDependents
         return ! empty($this->getCacheDependents());
     }
 }
-

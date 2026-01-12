@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Traits\Cache;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\Moduleable;
@@ -64,9 +63,9 @@ trait Cacheable
         // Use ManageModuleRoute trait method if available
         if ($this instanceof \Unusualify\Modularity\Contracts\ModuleableInterface && ($moduleName = $this->getModuleName())) {
             $this->cacheModuleName = $moduleName;
-        } else if (method_exists($this, 'getModuleName')) {
+        } elseif (method_exists($this, 'getModuleName')) {
             $this->cacheModuleName = $this->getModuleName();
-        } else if ( $this instanceof \Unusualify\Modularity\Entities\Model) {
+        } elseif ($this instanceof \Unusualify\Modularity\Entities\Model) {
             if (preg_match('/Modules\\\\([^\\\\]+)\\\\/', get_class($this), $matches)) {
                 $this->cacheModuleName = $matches[1];
             }
@@ -88,9 +87,9 @@ trait Cacheable
         // Use ManageModuleRoute trait method if available
         if ($this instanceof \Unusualify\Modularity\Contracts\ModuleableInterface && ($routeName = $this->getRouteName())) {
             $this->cacheModuleRouteName = $routeName;
-        } else if (method_exists($this, 'getRouteName')) {
+        } elseif (method_exists($this, 'getRouteName')) {
             $this->cacheModuleRouteName = $this->getRouteName();
-        } else if ( $this instanceof \Unusualify\Modularity\Entities\Model) {
+        } elseif ($this instanceof \Unusualify\Modularity\Entities\Model) {
             $this->cacheModuleRouteName = Str::studly(class_basename($this));
         }
 

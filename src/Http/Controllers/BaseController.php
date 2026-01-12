@@ -3,9 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
@@ -13,7 +11,6 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\ModularityLog;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
@@ -29,7 +26,6 @@ abstract class BaseController extends PanelController
      * @var string
      */
     protected $viewPrefix;
-
 
     /**
      * Attribute to use as title in forms.

@@ -15,7 +15,7 @@ use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularity\Traits\ManageNames;
 
-abstract class Repository implements RepositoryContract, UserAwareCacheInterface, CacheableInterface, ModuleableInterface
+abstract class Repository implements CacheableInterface, ModuleableInterface, RepositoryContract, UserAwareCacheInterface
 {
     use ManageNames,
         Logic\InspectTraits,
@@ -647,7 +647,6 @@ abstract class Repository implements RepositoryContract, UserAwareCacheInterface
                             $regularColumns[] = $column;
                         }
                     }
-
 
                     $q->where(function ($q) use ($regularColumns, $translatedColumns, $searchValue, $relatedModel, $shouldUseSearchCollation) {
                         // Search in regular columns

@@ -24,7 +24,7 @@ trait WarmupCache
 
         $controller->preload();
         $countsList = $controller->getMainCountsList();
-        foreach($countsList as $filter) {
+        foreach ($countsList as $filter) {
             $controller->handleFilterCount($filter, true);
         }
 
@@ -44,10 +44,10 @@ trait WarmupCache
     {
         $controller->preload();
 
-        if( $cacheFormattedItem) {
+        if ($cacheFormattedItem) {
             $controller->getFormattedIndexItem($item);
         }
-        if( $cacheFormItem) {
+        if ($cacheFormItem) {
             $controller->getFormItem($item->id, withoutDefaultScopes: true);
         }
     }
@@ -75,37 +75,36 @@ trait WarmupCache
     /**
      * Warmup the cache for a model.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
      * @return void
      */
     public function warmupByModel(Model $model)
     {
         $moduleName = method_exists($model, 'getCacheModuleName') ? $model->getCacheModuleName() : (method_exists($model, 'getModuleName') ? $model->getModuleName() : null);
 
-        if(!$moduleName) {
+        if (! $moduleName) {
             return;
         }
         $moduleRouteName = method_exists($model, 'getCacheModuleRouteName') ? $model->getCacheModuleRouteName() : (method_exists($model, 'getRouteName') ? $model->getModuleRouteName() : null);
 
         $module = Modularity::find($moduleName);
 
-        if(!$module) {
+        if (! $module) {
             return;
             throw new \Exception("Module not found: {$moduleName}");
         }
 
-        if(!$module->hasRoute($moduleRouteName)) {
+        if (! $module->hasRoute($moduleRouteName)) {
             return;
             throw new \Exception("Route not found: {$moduleRouteName}");
         }
 
         $controller = $module->getController($moduleRouteName);
-        if(!$controller) {
+        if (! $controller) {
             return;
             throw new \Exception("Controller not found: {$moduleRouteName}");
         }
 
-        if(ModularityCache::isEnabled($moduleName, $moduleRouteName, 'counts')) {
+        if (ModularityCache::isEnabled($moduleName, $moduleRouteName, 'counts')) {
             $this->warmupControllerCounts($controller);
         }
 
@@ -126,22 +125,22 @@ trait WarmupCache
     {
         $module = Modularity::find($moduleName);
 
-        if(!$module) {
+        if (! $module) {
             return;
             throw new \Exception("Module not found: {$moduleName}");
         }
         $route = $module->getRoute($routeName);
-        if(!$route) {
+        if (! $route) {
             return;
             throw new \Exception("Route not found: {$routeName}");
         }
         $controller = $module->getController($routeName);
 
-        if(!$controller) {
+        if (! $controller) {
             throw new \Exception("Controller not found: {$routeName}");
         }
 
-        if(!ModularityCache::isEnabled($moduleName, $routeName, 'counts')) {
+        if (! ModularityCache::isEnabled($moduleName, $routeName, 'counts')) {
             return;
         }
 
@@ -159,32 +158,32 @@ trait WarmupCache
     public function warmupModuleRouteCacheItems($moduleName, $routeName, $chunkSize = 100)
     {
         $module = Modularity::find($moduleName);
-        if(!$module) {
+        if (! $module) {
             return;
             throw new \Exception("Module not found: {$moduleName}");
         }
         $route = $module->getRoute($routeName);
-        if(!$route) {
+        if (! $route) {
             return;
             throw new \Exception("Route not found: {$routeName}");
         }
         $controller = $module->getController($routeName);
-        if(!$controller) {
+        if (! $controller) {
             throw new \Exception("Controller not found: {$routeName}");
         }
 
         $cacheFormItem = ModularityCache::isEnabled($moduleName, $routeName, 'formItem');
         $cacheFormattedItem = ModularityCache::isEnabled($moduleName, $routeName, 'formattedItem');
 
-        if(!$cacheFormItem && !$cacheFormattedItem) {
+        if (! $cacheFormItem && ! $cacheFormattedItem) {
             return;
         }
 
         $controller->getModel()->each(function ($item, $key) use ($controller, &$count, $cacheFormItem, $cacheFormattedItem) {
-            if( $cacheFormattedItem) {
+            if ($cacheFormattedItem) {
                 $controller->getFormattedIndexItem($item);
             }
-            if( $cacheFormItem) {
+            if ($cacheFormItem) {
                 $controller->getFormItem($item->id, withoutDefaultScopes: true);
             }
         }, $chunkSize);

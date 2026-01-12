@@ -64,7 +64,7 @@ trait PricesTrait
                     if ($priceModel) {
                         // Update existing price
                         $priceModel->update($data);
-                        if( $priceModel->wasChanged() ) {
+                        if ($priceModel->wasChanged()) {
                             $this->mustTouchEloquentModel();
                         }
                     } else {
@@ -91,7 +91,7 @@ trait PricesTrait
                                 } else {
                                     $existingPrice = $existingPrices->where('currency_id', $_currency->id)->first();
                                     $existingPrice->update(Arr::except($_data, ['id']));
-                                    if( $existingPrice->wasChanged() ) {
+                                    if ($existingPrice->wasChanged()) {
                                         $this->mustTouchEloquentModel();
                                     }
                                 }

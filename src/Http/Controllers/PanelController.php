@@ -250,6 +250,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
         // $this->addFormWiths();
 
     }
+
     public function preload()
     {
         $rawRouteConfig = $this->module ? $this->module->getRawRouteConfig($this->routeName) : [];
@@ -337,7 +338,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
         if (count($parentParams)) {
             $nestedParentName = array_key_last($parentParams); // snakecase;
             $nestedParentId = last($parentParams);
-            if( $this->module->hasRoute($nestedParentName)) {
+            if ($this->module->hasRoute($nestedParentName)) {
                 $nestedParentModel = $this->module->getRouteClass($nestedParentName, 'model');
                 $nestedParentModel = $nestedParentModel::find($nestedParentId);
 

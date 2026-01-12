@@ -25,7 +25,7 @@ class CreatorRecord extends Model
         return $this->morphTo();
     }
 
-    public function creator() : \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function creator(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
     }

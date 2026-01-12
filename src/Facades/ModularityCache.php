@@ -48,4 +48,3 @@ class ModularityCache extends Facade
         return 'modularity.cache';
     }
 }
-

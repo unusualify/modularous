@@ -44,6 +44,7 @@ trait HasUserAwareCache
 
         return 'u' . $user->getAuthIdentifier();
     }
+
     public function addUserContext(array $params): array
     {
         if ($this->shouldUseUserAwareCache()) {
@@ -68,4 +69,3 @@ trait HasUserAwareCache
         return $hasUserAwareCache;
     }
 }
-

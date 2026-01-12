@@ -461,9 +461,9 @@ trait TableItem
     {
         $translated = $this->routeHas('translations');
 
-        $callback = fn() => $this->formatIndexItem($item, $translated, $this->formSchema);
+        $callback = fn () => $this->formatIndexItem($item, $translated, $this->formSchema);
 
-        if(!$this->shouldUseCache('formattedItem')) {
+        if (! $this->shouldUseCache('formattedItem')) {
             return $callback();
         }
 

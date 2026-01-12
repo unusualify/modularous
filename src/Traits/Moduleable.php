@@ -14,9 +14,6 @@ trait Moduleable
      */
     protected $routeName = null;
 
-    /**
-     * @return string|null
-     */
     public function getModuleName(): ?string
     {
         if ($this->moduleName) {
@@ -46,9 +43,6 @@ trait Moduleable
         return $this->moduleName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getRouteName(): ?string
     {
         if ($this->routeName) {
@@ -71,7 +65,6 @@ trait Moduleable
     }
 
     /**
-     * @param string $moduleName
      * @return $this
      */
     public function setModuleName(string $moduleName): static
@@ -82,12 +75,12 @@ trait Moduleable
     }
 
     /**
-     * @param string $routeName
      * @return $this
      */
     public function setRouteName(string $routeName): static
     {
         $this->routeName = $routeName;
+
         return $this;
     }
 }

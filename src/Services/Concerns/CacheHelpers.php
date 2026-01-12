@@ -39,12 +39,12 @@ trait CacheHelpers
     /**
      * Remember a value in cache with relationship tags for granular invalidation.
      *
-     * @param  string  $key  Cache key
-     * @param  int  $ttl  Time to live in seconds
-     * @param  Closure  $callback  Value generator
-     * @param  string|null  $module  Module name
-     * @param  string|null  $routeName  Route name (submodule)
-     * @param  array  $relations  Related models ['ModelClass' => id, ...]
+     * @param string $key Cache key
+     * @param int $ttl Time to live in seconds
+     * @param Closure $callback Value generator
+     * @param string|null $module Module name
+     * @param string|null $routeName Route name (submodule)
+     * @param array $relations Related models ['ModelClass' => id, ...]
      */
     public function rememberWithRelations(string $key, int $ttl, Closure $callback, ?string $moduleName = null, ?string $moduleRouteName = null, array $relations = [])
     {
@@ -164,12 +164,12 @@ trait CacheHelpers
     /**
      * Put a value in cache with relationship tags for granular invalidation.
      *
-     * @param  string  $key  Cache key
-     * @param  mixed  $value  Value to cache
-     * @param  int  $ttl  Time to live in seconds
-     * @param  string|null  $module  Module name
-     * @param  string|null  $routeName  Route name (submodule)
-     * @param  array  $relations  Related models ['ModelClass' => id, ...]
+     * @param string $key Cache key
+     * @param mixed $value Value to cache
+     * @param int $ttl Time to live in seconds
+     * @param string|null $module Module name
+     * @param string|null $routeName Route name (submodule)
+     * @param array $relations Related models ['ModelClass' => id, ...]
      */
     public function putWithRelations(string $key, $value, int $ttl, ?string $moduleName = null, ?string $moduleRouteName = null, array $relations = []): bool
     {

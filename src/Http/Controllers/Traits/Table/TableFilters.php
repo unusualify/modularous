@@ -5,7 +5,6 @@ namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\Allowable;
 
 trait TableFilters
@@ -72,7 +71,6 @@ trait TableFilters
             $statusFilters,
             $this->repository->getTableFilters($scope),
         );
-
 
         $customMainFilters = $this->getConfigFieldsByRoute('table_filters', []);
 
@@ -190,7 +188,6 @@ trait TableFilters
             $advancedFilters[$category] = $filters;
         }
 
-
         return $advancedFilters;
     }
 
@@ -203,7 +200,7 @@ trait TableFilters
     protected function columnsFilterConfiguration($filter)
     {
         // Ensure the column exists in the model
-        if (!$this->repository->hasColumn($filter['slug'])) {
+        if (! $this->repository->hasColumn($filter['slug'])) {
             throw new \Exception("Column '{$filter['slug']}' does not exist in the model.");
         }
 
@@ -226,7 +223,7 @@ trait TableFilters
         // Ensure the relation exists in the model
         $model = $this->repository->getModel();
         $studlyRelationshipName = $this->getStudlyName($filter['slug']);
-        if (!method_exists($model, $studlyRelationshipName)) {
+        if (! method_exists($model, $studlyRelationshipName)) {
             throw new \Exception("Relation '{$filter['slug']}' does not exist in the model.");
         }
 
@@ -249,6 +246,7 @@ trait TableFilters
 
         return $filter;
     }
+
     /**
      * Get the select filter configuration for the table
      *
@@ -258,7 +256,7 @@ trait TableFilters
     protected function getTableAdvancedFiltersSelect($filter)
     {
 
-        if( isset($filter['repository']) && class_exists($filter['repository'])) {
+        if (isset($filter['repository']) && class_exists($filter['repository'])) {
 
             $repository = App::make($filter['repository']);
             $items = $repository->list()->map(function ($value, $key) {

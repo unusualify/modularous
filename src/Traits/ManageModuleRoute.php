@@ -15,6 +15,7 @@ trait ManageModuleRoute
 
     /**
      * @deprecated use Moduleable::getModuleName() instead
+     *
      * @return string|null
      */
     public function moduleName()
@@ -24,6 +25,7 @@ trait ManageModuleRoute
 
     /**
      * @deprecated use Moduleable::getRouteName() instead
+     *
      * @return string|null
      */
     public function routeName()
@@ -46,7 +48,6 @@ trait ManageModuleRoute
     }
 
     /**
-     * @param Module $module
      * @return $this
      */
     public function setModule(Module $module): static
@@ -78,34 +79,22 @@ trait ManageModuleRoute
         return $this->routeConfig;
     }
 
-    /**
-     * @return string
-     */
     public function getRouteTitleColumnKey(): string
     {
         return ! empty($conf = $this->getRouteConfig()) ? ($conf['title_column_key'] ?? 'name') : 'name';
     }
 
-    /**
-     * @return array
-     */
     public function getRouteInputs(): array
     {
         return ! empty($conf = $this->getRouteConfig()) ? ($conf['inputs'] ?? []) : [];
     }
 
-    /**
-     * @return array
-     */
     public function getRouteHeaders(): array
     {
 
         return ! empty($conf = $this->getRouteConfig()) ? ($conf['headers'] ?? []) : [];
     }
 
-    /**
-     * @return array
-     */
     public function getRouteTableOptions(): array
     {
 

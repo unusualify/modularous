@@ -5,10 +5,9 @@ namespace Unusualify\Modularity\Entities\Observers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Predis\Command\Redis\SORT;
-use Unusualify\Modularity\Facades\RelationshipGraph;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityCache;
+use Unusualify\Modularity\Facades\RelationshipGraph;
 use Unusualify\Modularity\Traits\ModularModel;
 
 class CacheObserver
@@ -34,7 +33,7 @@ class CacheObserver
             return;
         }
 
-        if(ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
@@ -55,7 +54,7 @@ class CacheObserver
             return;
         }
 
-        if(ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
 
@@ -78,7 +77,7 @@ class CacheObserver
             return;
         }
 
-        if(ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
@@ -99,7 +98,7 @@ class CacheObserver
             return;
         }
 
-        if(ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
@@ -118,7 +117,7 @@ class CacheObserver
             return;
         }
 
-        if(ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
@@ -167,7 +166,7 @@ class CacheObserver
                     $targetRelationshipName = null;
                     $isSelf = false;
 
-                    if(Arr::isAssoc($moduleData)) {
+                    if (Arr::isAssoc($moduleData)) {
                         $moduleName = $moduleData['moduleName'];
                         $moduleRouteName = $moduleData['moduleRouteName'];
                         $types = array_merge($types, $moduleData['types'] ?? []);
@@ -180,9 +179,9 @@ class CacheObserver
                     }
 
                     $module = null;
-                    if(!$moduleName || !$moduleRouteName) {
+                    if (! $moduleName || ! $moduleRouteName) {
                         continue;
-                    } else if(!Modularity::hasModule($moduleName) || !($module = Modularity::find($moduleName)) || !$module->hasRoute($moduleRouteName) || !$module->isEnabledRoute($moduleRouteName)) {
+                    } elseif (! Modularity::hasModule($moduleName) || ! ($module = Modularity::find($moduleName)) || ! $module->hasRoute($moduleRouteName) || ! $module->isEnabledRoute($moduleRouteName)) {
                         continue;
                     }
 
@@ -194,10 +193,10 @@ class CacheObserver
                         //     ModularityCache::invalidateIndex($moduleName, $moduleRouteName);
                         // }
 
-                        if($targetRelationshipName
+                        if ($targetRelationshipName
                             && $selfModelClass
                             && @class_exists($selfModelClass)
-                            && ($selfModel = new $selfModelClass())
+                            && ($selfModel = new $selfModelClass)
                             && method_exists($selfModel, 'getEloquentRelationships')
                             && ($availableRelationships = $selfModel->getEloquentRelationships())
                             && isset($availableRelationships[$targetRelationshipName])
@@ -210,21 +209,21 @@ class CacheObserver
 
                             $target = $selfModel->{$targetRelationshipName};
 
-                            if($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
+                            if ($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
 
                                 $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types);
-                            } else if( $target instanceof \Illuminate\Database\Eloquent\Collection) {
-                                foreach($target as $item) {
-                                    if($item instanceof Model && get_class($item) === get_class($targetModelInstance)) {
+                            } elseif ($target instanceof \Illuminate\Database\Eloquent\Collection) {
+                                foreach ($target as $item) {
+                                    if ($item instanceof Model && get_class($item) === get_class($targetModelInstance)) {
                                         $this->invalidateItemCache($item, $moduleName, $moduleRouteName, $types);
                                     }
                                 }
                             }
-                        } else if($isSelf) {
+                        } elseif ($isSelf) {
                             $targetModelInstance = $module->getModel($moduleRouteName);
                             $target = $targetModelInstance::find($model->getKey());
 
-                            if($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
+                            if ($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
                                 $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types);
                             }
                         }
@@ -291,7 +290,7 @@ class CacheObserver
         $ownModuleRouteName = $this->getModuleRouteNameFromModel($model);
 
         // $dependents = array_filter($dependents, fn ($moduleData) => !($moduleData[0] == $ownModuleName && $moduleData[1] == $ownModuleRouteName));
-        $dependents = array_filter($dependents, fn ($moduleData) => !($moduleData['moduleName'] == $ownModuleName && $moduleData['moduleRouteName'] == $ownModuleRouteName));
+        $dependents = array_filter($dependents, fn ($moduleData) => ! ($moduleData['moduleName'] == $ownModuleName && $moduleData['moduleRouteName'] == $ownModuleRouteName));
 
         return array_unique($dependents, SORT_REGULAR);
     }
@@ -327,10 +326,10 @@ class CacheObserver
                 'formItem' => true,
                 'formattedItem' => true,
             ];
-            if(Arr::isAssoc($dependent)) {
+            if (Arr::isAssoc($dependent)) {
                 $moduleName = $dependent['moduleName'];
                 $moduleRouteName = $dependent['moduleRouteName'] ?? $dependent['moduleName'];
-                $types = array_merge($types, Arr::only($dependent['types'],[ 'counts', 'index']));
+                $types = array_merge($types, Arr::only($dependent['types'], ['counts', 'index']));
                 $selfModelClass = $dependent['selfModelClass'] ?? $modelClass;
                 $targetRelationshipName = $dependent['targetRelationshipName'] ?? null;
                 $isSelf = (bool) ($dependent['isSelf'] ?? false);
@@ -339,7 +338,7 @@ class CacheObserver
                 $moduleRouteName = $dependent[1] ?? $moduleName ?? null;
             }
 
-            if($moduleName
+            if ($moduleName
                 && $moduleRouteName
                 && ($moduleRouteName = Str::studly($moduleRouteName))
                 && Modularity::hasModule($moduleName)

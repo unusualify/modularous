@@ -121,7 +121,7 @@ trait MethodTransformers
      */
     public function getCountByStatusSlug($slug, $scope = [])
     {
-        return $this->cacheableCount($slug, function() use ($slug, $scope) {
+        return $this->cacheableCount($slug, function () use ($slug, $scope) {
             $this->countScope = $scope;
 
             foreach ($this->traitsMethods('getCountByStatusSlug') as $method) {

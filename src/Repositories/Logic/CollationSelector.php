@@ -73,7 +73,7 @@ trait CollationSelector
     {
         $config = $query->getConnection()->getConfig();
         $collation = $config['collation'] ?? 'utf8mb4_unicode_ci';
-        $isRelationshipModel = !is_null($model);
+        $isRelationshipModel = ! is_null($model);
         $model = $model ?? $this->getModel();
         $columnTypes = method_exists($model, 'getColumnTypes') ? $model->getColumnTypes() : [];
 

@@ -4,7 +4,6 @@ namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\Cache\Cacheable;
 use Unusualify\Modularity\Traits\SerializeModel;
 
@@ -17,9 +16,9 @@ trait CacheableResponse
      */
     protected bool $trackResponseRelations = true;
 
-    protected function getCacheableFormItem($id = null, callable $formItemCallback): array
+    protected function getCacheableFormItem($id, callable $formItemCallback): array
     {
-        if(!$this->shouldUseCache('formItem') || !$id) {
+        if (! $this->shouldUseCache('formItem') || ! $id) {
             return $formItemCallback();
         }
 
@@ -95,4 +94,3 @@ trait CacheableResponse
         return $relations;
     }
 }
-

@@ -242,7 +242,6 @@ trait ManageScopes
             }
         }
 
-
         // Handle relation filters
         if (array_key_exists('relations', $requestFilters)) {
             foreach ($requestFilters['relations'] as $relationship => $value) {

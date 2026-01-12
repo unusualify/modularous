@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console;
 
-use Unusualify\Modularity\Facades\RelationshipGraph;
 use Unusualify\Modularity\Facades\ModularityCache;
+use Unusualify\Modularity\Facades\RelationshipGraph;
 
 class CacheStatsCommand extends BaseCommand
 {
@@ -196,4 +196,3 @@ class CacheStatsCommand extends BaseCommand
         return $grouped;
     }
 }
-

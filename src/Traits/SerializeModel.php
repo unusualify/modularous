@@ -8,9 +8,6 @@ trait SerializeModel
 {
     /**
      * Serialize a model with its relationships for caching.
-     *
-     * @param Model $model
-     * @return array
      */
     public function serializeModel(Model $model): array
     {
@@ -50,9 +47,6 @@ trait SerializeModel
 
     /**
      * Unserialize a model with its relationships from cache.
-     *
-     * @param array $data
-     * @return Model
      */
     public function unserializeModel(array $data): Model
     {

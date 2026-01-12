@@ -14,4 +14,3 @@ interface UserAwareCacheInterface
 
     public function addUserContext(array $params): array;
 }
-

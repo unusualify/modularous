@@ -71,6 +71,7 @@ trait CacheInvalidation
         // Fallback: invalidate by pattern using Redis (only works without tags)
         $moduleName = Str::studly($moduleName);
         $moduleRouteName = Str::studly($moduleRouteName);
+
         return $this->invalidateByPattern("{$this->getPrefix()}:{$moduleName}:{$moduleRouteName}:*") > 0;
     }
 
@@ -80,8 +81,8 @@ trait CacheInvalidation
      *
      * Example: When Company:5 is updated, only invalidate caches tagged with 'rel:Company:5'
      *
-     * @param  string  $modelClass  Full model class or basename (e.g., 'Company')
-     * @param  mixed  $id  The model ID
+     * @param string $modelClass Full model class or basename (e.g., 'Company')
+     * @param mixed $id The model ID
      * @return bool Whether invalidation was successful
      */
     public function invalidateByRelatedModel(string $modelClass, $id): bool
@@ -111,7 +112,7 @@ trait CacheInvalidation
     /**
      * Invalidate caches for multiple related models.
      *
-     * @param  array  $relations  Array of ['ModelClass' => id] or ['ModelClass' => [id1, id2]]
+     * @param array $relations Array of ['ModelClass' => id] or ['ModelClass' => [id1, id2]]
      * @return int Number of tags flushed
      */
     public function invalidateByRelatedModels(array $relations): int
@@ -267,18 +268,18 @@ trait CacheInvalidation
         // $recordKey = $this->generateRecordKey($module, $routeName, $model->getKey());
         // $this->forget($recordKey, $module, $routeName);
 
-        if(( (isset($types['counts']) ? $types['counts'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'counts')) {
+        if (((isset($types['counts']) ? $types['counts'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'counts')) {
             $this->invalidateCountCaches($moduleName, $moduleRouteName, onlyRoute: false);
         }
 
-        if(( (isset($types['index']) ? $types['index'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'index')) {
+        if (((isset($types['index']) ? $types['index'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'index')) {
             $this->invalidateIndexCaches($moduleName, $moduleRouteName, onlyRoute: false);
         }
 
-        if(( (isset($types['formattedItem']) ? $types['formattedItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formattedItem')) {
+        if (((isset($types['formattedItem']) ? $types['formattedItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formattedItem')) {
             $this->invalidateFormattedItemCache($moduleName, $moduleRouteName, $model->getKey());
         }
-        if(( (isset($types['formItem']) ? $types['formItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formItem')) {
+        if (((isset($types['formItem']) ? $types['formItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formItem')) {
             $this->invalidateFormItemCache($moduleName, $moduleRouteName, $model->getKey());
         }
 

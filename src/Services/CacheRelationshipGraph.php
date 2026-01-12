@@ -188,7 +188,7 @@ class CacheRelationshipGraph
 
             $model = new $modelClass;
 
-            if(!method_exists($model, 'getModuleName') || !method_exists($model, 'getRouteName')) {
+            if (! method_exists($model, 'getModuleName') || ! method_exists($model, 'getRouteName')) {
                 return;
             }
 
@@ -206,7 +206,7 @@ class CacheRelationshipGraph
 
             // Initialize submodule relationships array
             if (! isset($graph['module_relationships'][$moduleName][$moduleRouteName])) {
-                if(!isset($graph['module_relationships'][$moduleName])) {
+                if (! isset($graph['module_relationships'][$moduleName])) {
                     $graph['module_relationships'][$moduleName] = [];
                 }
                 $graph['module_relationships'][$moduleName][$moduleRouteName] = [
@@ -414,10 +414,10 @@ class CacheRelationshipGraph
             'total_tables_tracked' => count($graph['table_to_module_routes'] ?? []),
 
             // 'total_submodules' => count($graph['submodule_relationships'] ?? []),
-            'total_module_routes' => array_reduce($graph['module_relationships'] ?? [], fn($carry, $moduleData) => $carry + count($moduleData), 0),
+            'total_module_routes' => array_reduce($graph['module_relationships'] ?? [], fn ($carry, $moduleData) => $carry + count($moduleData), 0),
 
-            'model_to_module_routes' => array_map(fn($modelData) => array_map(fn($item) => $item['moduleName'] . '->' . $item['moduleRouteName'], $modelData), $graph['model_to_module_routes'] ?? []),
-            'table_to_module_routes' => array_map(fn($tableData) => array_map(fn($item) => $item['moduleName'] . '->' . $item['moduleRouteName'], $tableData), $graph['table_to_module_routes'] ?? []),
+            'model_to_module_routes' => array_map(fn ($modelData) => array_map(fn ($item) => $item['moduleName'] . '->' . $item['moduleRouteName'], $modelData), $graph['model_to_module_routes'] ?? []),
+            'table_to_module_routes' => array_map(fn ($tableData) => array_map(fn ($item) => $item['moduleName'] . '->' . $item['moduleRouteName'], $tableData), $graph['table_to_module_routes'] ?? []),
             'submodule_to_module' => $graph['submodule_to_module'] ?? [],
         ];
     }
@@ -488,11 +488,11 @@ class CacheRelationshipGraph
 
         // Group submodules by their parent module for display
         $moduleGroups = [];
-        foreach($graph['module_relationships'] ?? [] as $moduleName => $moduleData) {
+        foreach ($graph['module_relationships'] ?? [] as $moduleName => $moduleData) {
             if (! isset($moduleGroups[$moduleName])) {
                 $moduleGroups[$moduleName] = [];
             }
-            foreach($moduleData as $moduleRouteName => $relationData) {
+            foreach ($moduleData as $moduleRouteName => $relationData) {
                 $moduleGroups[$moduleName][$moduleRouteName] = $relationData;
             }
         }
@@ -541,4 +541,3 @@ class CacheRelationshipGraph
         return $visual;
     }
 }
-

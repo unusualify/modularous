@@ -34,14 +34,14 @@ trait FormPageUtility
         return $item;
     }
 
-    public function formItem(Model $item,) : Model
+    public function formItem(Model $item): Model
     {
         return $item;
     }
 
     public function getFormItem($id = null, $withoutDefaultScopes = false, $item = null)
     {
-        return $this->getCacheableFormItem($id, function() use ($id, $withoutDefaultScopes, $item) {
+        return $this->getCacheableFormItem($id, function () use ($id, $withoutDefaultScopes, $item) {
             $repositoryItem = ($item instanceof \Illuminate\Database\Eloquent\Model ? $item : $this->getRepositoryItem($id, withoutDefaultScopes: $withoutDefaultScopes));
             $item = $this->formItem($repositoryItem);
 

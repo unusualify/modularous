@@ -53,4 +53,3 @@ trait HasCaching
         return $this;
     }
 }
-

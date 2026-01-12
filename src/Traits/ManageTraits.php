@@ -5,7 +5,6 @@ namespace Unusualify\Modularity\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityFinder;
 
 trait ManageTraits
@@ -61,9 +60,9 @@ trait ManageTraits
 
         $routeName = $this->getRouteName();
 
-        if ($moduleName && $routeName ) {
+        if ($moduleName && $routeName) {
             $module = $this->getModule();
-            if($module) {
+            if ($module) {
                 $routeConfig = $module->getRawRouteConfig($routeName);
 
                 return $this->chunkInputs($routeConfig['inputs'], noGroupChunk: $noGroupChunk);

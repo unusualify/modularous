@@ -31,7 +31,7 @@ trait Relationships
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
                 $result = $object->{$relationName}()->sync($fields[$relationName]);
 
-                if( !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                if (! $mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
                     $mustTouchEloquentModel = true;
                 }
             }
@@ -80,7 +80,7 @@ trait Relationships
                         $payload
                     );
 
-                    if( !$mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
+                    if (! $mustTouchEloquentModel && ($result['updated'] > 0 || $result['attached'] > 0 || $result['detached'] > 0)) {
                         $mustTouchEloquentModel = true;
                     }
                 } catch (\Throwable $th) {
@@ -122,13 +122,13 @@ trait Relationships
                                         // if($nestedObject->wasChanged()){
                                         //     $object->addChangedRelationships($relationName, $data);
                                         // }
-                                        if( !$mustTouchEloquentModel && $result) {
+                                        if (! $mustTouchEloquentModel && $result) {
                                             $mustTouchEloquentModel = true;
                                         }
                                     } else {
                                         $repository->create(array_merge($data, [$foreignKey => $object->id]));
 
-                                        if( !$mustTouchEloquentModel) {
+                                        if (! $mustTouchEloquentModel) {
                                             $mustTouchEloquentModel = true;
                                         }
                                         $object->addChangedRelationships($relationName, $data);
@@ -154,7 +154,7 @@ trait Relationships
 
                         if (count($idsDeleted) > 0) {
                             $repository->bulkDelete($idsDeleted);
-                            if( !$mustTouchEloquentModel) {
+                            if (! $mustTouchEloquentModel) {
                                 $mustTouchEloquentModel = true;
                             }
                             $object->addChangedRelationships($relationName, $idsDeleted);
@@ -184,13 +184,13 @@ trait Relationships
 
                         $record->update($morphManyData);
 
-                        if( !$mustTouchEloquentModel && $record->wasChanged()) {
+                        if (! $mustTouchEloquentModel && $record->wasChanged()) {
                             $mustTouchEloquentModel = true;
                         }
                     } else {
                         $object->{$relationName}()->create($morphManyData);
 
-                        if( !$mustTouchEloquentModel) {
+                        if (! $mustTouchEloquentModel) {
                             $mustTouchEloquentModel = true;
                         }
                     }
@@ -198,7 +198,7 @@ trait Relationships
 
                 if (count($idsDeleted)) {
                     $relatedModel->whereIn($relatedLocalKey, $idsDeleted)->delete();
-                    if( !$mustTouchEloquentModel) {
+                    if (! $mustTouchEloquentModel) {
                         $mustTouchEloquentModel = true;
                     }
                 }

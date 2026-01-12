@@ -66,7 +66,7 @@ trait ImagesTrait
         $this->getMedias($object, $fields)->each(function ($media) use ($object) {
             if (isset($media['id']) && $media['id']) {
                 $result = $object->medias()->updateExistingPivot($media['id'], Arr::except($media, ['id', 'media_id']));
-                if( $result ) {
+                if ($result) {
                     $this->mustTouchEloquentModel();
                 }
             } else {

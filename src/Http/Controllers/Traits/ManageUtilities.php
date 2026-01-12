@@ -158,7 +158,6 @@ trait ManageUtilities
             'fields.new-item',
         ], ['item' => trans_choice($translationRouteKey, 1)]);
 
-
         $data = [
             'model' => $item,
             'translate' => $translate,

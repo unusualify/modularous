@@ -4,7 +4,6 @@ namespace Unusualify\Modularity\Repositories\Logic;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\Cache\Cacheable;
@@ -26,7 +25,6 @@ trait CacheableTrait
      * @param string $slug The cache key slug (e.g., 'all', 'published', 'draft')
      * @param callable $callback The callback to execute if cache misses
      * @param array $additionalParams Additional parameters for cache key generation
-     * @return int
      */
     protected function cacheableCount(string $slug, callable $callback, array $additionalParams = []): int
     {

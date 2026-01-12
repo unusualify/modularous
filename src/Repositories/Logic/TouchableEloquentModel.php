@@ -13,14 +13,14 @@ trait TouchableEloquentModel
 
     public function letEloquentModelBeTouched($value)
     {
-        if($this->mustTouchEloquentModel === false && $value === true) {
+        if ($this->mustTouchEloquentModel === false && $value === true) {
             $this->mustTouchEloquentModel();
         }
     }
 
     public function touchEloquentModel(\Illuminate\Database\Eloquent\Model $object)
     {
-        if( $this->mustTouchEloquentModel ) {
+        if ($this->mustTouchEloquentModel) {
             $object->touch();
         }
 

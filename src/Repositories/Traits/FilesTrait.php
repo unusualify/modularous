@@ -63,7 +63,7 @@ trait FilesTrait
         $this->getFiles($object, $fields)->each(function ($file) use ($object) {
             if (isset($file['id']) && $file['id']) {
                 $result = $object->files()->updateExistingPivot($file['id'], Arr::except($file, ['id', 'file_id']));
-                if( $result ) {
+                if ($result) {
                     $this->mustTouchEloquentModel();
                 }
             } else {

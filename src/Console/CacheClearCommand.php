@@ -61,7 +61,7 @@ class CacheClearCommand extends BaseCommand
 
         if ($module && $routeName) {
             $this->clearModuleCache(Str::studly($module), Str::studly($routeName), $clearAll, $countsOnly, $indexOnly, $recordsOnly, $formattedItemsOnly, $formItemsOnly);
-        }elseif ($module) {
+        } elseif ($module) {
             $this->clearModuleCache(Str::studly($module), null, $clearAll, $countsOnly, $indexOnly, $recordsOnly, $formattedItemsOnly, $formItemsOnly);
         } else {
             $this->clearAllModulesCache($clearAll, $countsOnly, $indexOnly, $recordsOnly, $formattedItemsOnly, $formItemsOnly);
@@ -75,7 +75,7 @@ class CacheClearCommand extends BaseCommand
      */
     protected function clearModuleCache(
         string $module,
-        ?string $routeName = null,
+        ?string $routeName,
         bool $clearAll,
         bool $countsOnly,
         bool $indexOnly,
@@ -108,21 +108,21 @@ class CacheClearCommand extends BaseCommand
 
         if ($recordsOnly) {
             $prefix = ModularityCache::getPrefix();
-            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ":record:*";
+            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':record:*';
             $count = ModularityCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} record caches cleared for {$module}");
         }
 
         if ($formattedItemsOnly) {
             $prefix = ModularityCache::getPrefix();
-            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ":formattedItem:*";
+            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':formattedItem:*';
             $count = ModularityCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} formatted item caches cleared for {$module}");
         }
 
         if ($formItemsOnly) {
             $prefix = ModularityCache::getPrefix();
-            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ":formItem:*";
+            $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':formItem:*';
             $count = ModularityCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} form item caches cleared for {$module}");
         }
@@ -197,4 +197,3 @@ class CacheClearCommand extends BaseCommand
         $this->info('Cache clearing completed.');
     }
 }
-

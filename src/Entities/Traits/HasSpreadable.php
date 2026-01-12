@@ -41,7 +41,7 @@ trait HasSpreadable
                     $spreadable->update([
                         'content' => $model->{$model->getSpreadableSavingKey()},
                     ]);
-                    if($spreadable->wasChanged()) {
+                    if ($spreadable->wasChanged()) {
                         $model->spreadableIsUpdated = true;
                     }
                 }
@@ -95,7 +95,7 @@ trait HasSpreadable
         });
 
         self::saved(static function (Model $model) {
-            if($model->spreadableIsUpdated && !$model->wasChanged()) {
+            if ($model->spreadableIsUpdated && ! $model->wasChanged()) {
                 $model->touch();
             }
         });

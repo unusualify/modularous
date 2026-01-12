@@ -2,8 +2,6 @@
 
 namespace Unusualify\Modularity\Services;
 
-use Closure;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
@@ -41,41 +39,44 @@ class ModularityCacheService
 
         $driverName = $this->getDriver();
 
-        if( $driverName === 'redis') {
-            if( !extension_loaded('redis')) {
+        if ($driverName === 'redis') {
+            if (! extension_loaded('redis')) {
                 logger()->error('Redis extension is not installed on php.ini on modularity cache');
                 $this->connected = false;
+
                 return;
             }
 
             try {
                 $redis = Redis::connection('cache');
                 $redis->ping();
-                if( !$redis->ping()) {
+                if (! $redis->ping()) {
                     logger()->error('Redis connection failed on modularity cache');
                 } else {
                     $this->connected = true;
                 }
-            } catch(\Predis\Connection\ConnectionException $e) {
+            } catch (\Predis\Connection\ConnectionException $e) {
                 logger()->error('Redis connection failed with connection exception on modularity cache: ' . $e->getMessage());
             } catch (\Predis\Connection\Resource\Exception\StreamInitException $e) {
                 logger()->error('Redis connection failed with stream init exception on modularity cache: ' . $e->getMessage());
             } catch (\Exception $e) {
                 logger()->error('Redis connection failed with exception on modularity cache: ' . $e->getMessage(), ['exception' => get_class($e), 'trace' => $e->getTraceAsString()]);
             }
-        } else if( $driverName === 'memcached') {
+        } elseif ($driverName === 'memcached') {
 
             try {
                 // check if memcached extension is installed on php.ini
-                if( !extension_loaded('memcached')) {
+                if (! extension_loaded('memcached')) {
                     logger()->error('Memcached extension is not installed on php.ini on modularity cache');
                     $this->connected = false;
+
                     return;
                 }
 
                 $memcached = Cache::store('memcached')->getStore()->getMemcached();
-                if( !$memcached->getStats()) {
+                if (! $memcached->getStats()) {
                     logger()->error('Memcached connection failed on modularity cache');
+
                     return;
                 }
                 $this->connected = true;
@@ -156,7 +157,7 @@ class ModularityCacheService
      */
     public function isEnabled(?string $moduleName = null, ?string $moduleRouteName = null, ?string $type = null): bool
     {
-        if( !$this->connected) {
+        if (! $this->connected) {
             return false;
         }
 
@@ -173,7 +174,7 @@ class ModularityCacheService
 
             $moduleEnabled = $moduleConfig['enabled'] ?? $defaultBehavior;
 
-            if (!$moduleEnabled) {
+            if (! $moduleEnabled) {
                 return false;
             }
 
@@ -181,7 +182,7 @@ class ModularityCacheService
                 $moduleRouteConfig = $moduleConfig['routes'][$moduleRouteName] ?? [];
                 $moduleRouteEnabled = $moduleRouteConfig['enabled'] ?? $defaultBehavior;
 
-                if (!$moduleRouteEnabled) {
+                if (! $moduleRouteEnabled) {
                     return false;
                 }
 
@@ -191,7 +192,7 @@ class ModularityCacheService
 
                 return $moduleRouteEnabled;
 
-            }else if( $moduleRouteName !== null) {
+            } elseif ($moduleRouteName !== null) {
                 return $defaultBehavior;
             }
 

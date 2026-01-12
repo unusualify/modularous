@@ -4,8 +4,8 @@ namespace Modules\SystemPayment\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Entities\Currency;
+use Modules\SystemPricing\Entities\Price;
 use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasCreator;

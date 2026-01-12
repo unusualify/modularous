@@ -18,7 +18,7 @@ use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 
-abstract class Model extends LaravelModel implements TaggableInterface, CacheableInterface, ModuleableInterface
+abstract class Model extends LaravelModel implements CacheableInterface, ModuleableInterface, TaggableInterface
 {
     use HasPresenter,
         IsTranslatable,

@@ -16,9 +16,11 @@ use Illuminate\Support\Str;
 use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
 use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Services\MessageStage;
-use Unusualify\Modularity\Traits\{ManageModuleRoute, Moduleable, ManageNames, ManageTraits};
+use Unusualify\Modularity\Traits\ManageModuleRoute;
+use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularity\Traits\Moduleable;
 
 abstract class CoreController extends LaravelController implements ModuleableInterface
 {
@@ -63,7 +65,6 @@ abstract class CoreController extends LaravelController implements ModuleableInt
     protected $config;
 
     protected ?\Unusualify\Modularity\Repositories\Repository $repository;
-
 
     public function __construct(Application $app, Request $request)
     {
@@ -124,10 +125,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getModuleName() : ?string
+    public function getModuleName(): ?string
     {
         return $this->moduleName ?? curtModuleName(dirname((new \ReflectionClass(get_class($this)))->getFileName()));
     }
@@ -382,7 +380,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
                 'completed_at' => $status === 'completed' ? now() : null,
             ]);
 
-            if($lastAssignment->wasChanged()) {
+            if ($lastAssignment->wasChanged()) {
                 $assignable->touch();
             }
 

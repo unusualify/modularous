@@ -2,13 +2,10 @@
 
 namespace Unusualify\Modularity\Console;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Module;
-
-use function Symfony\Component\Translation\t;
 
 class CacheWarmCommand extends BaseCommand
 {
@@ -28,6 +25,7 @@ class CacheWarmCommand extends BaseCommand
                             {--eager= : eager load items}
                             {--limit= : Limit the number of items to warm up}
                             ';
+
     /**
      * The console command description.
      *
@@ -65,26 +63,28 @@ class CacheWarmCommand extends BaseCommand
 
         if ($moduleName) {
             $module = Modularity::find($moduleName);
-            if( ! $module) {
+            if (! $module) {
                 $this->error("Module '{$moduleName}' not found.");
 
                 return 1;
             }
 
-            if( !ModularityCache::isEnabled($module->getName())) {
+            if (! ModularityCache::isEnabled($module->getName())) {
                 $this->warn("{$module->getName()}: Caching is disabled");
+
                 return 1;
             }
 
-            if( $routeName) {
+            if ($routeName) {
                 $this->warmModuleCache($module, $routeName);
             } else {
                 collect($module->getRouteNames())->each(function ($routeName) use ($module) {
-                    if( !ModularityCache::isEnabled($module->getName(), $routeName)) {
+                    if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
                         $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Caching is disabled", verbosity: 'v');
+
                         return;
                     }
-                    if( ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
+                    if (ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
                         $this->warmModuleCounts($module, $routeName);
                     } else {
                         $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Counts cache is disabled", verbosity: 'v');
@@ -129,13 +129,15 @@ class CacheWarmCommand extends BaseCommand
             return;
         }
 
-        if( !ModularityCache::isEnabled($module->getName())) {
+        if (! ModularityCache::isEnabled($module->getName())) {
             $this->warn("{$moduleName}: Caching is disabled");
+
             return;
         }
 
-        if( !ModularityCache::isEnabled($module->getName(), $routeName)) {
+        if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
             $this->line("  <fg=yellow>⚠</> {$moduleName} -> {$routeName}: Caching is disabled");
+
             return;
         }
 
@@ -146,15 +148,18 @@ class CacheWarmCommand extends BaseCommand
         switch ($type) {
             case 'counts':
                 $this->warmModuleCounts($module, $routeName);
+
                 break;
             case 'items':
             case 'formItems':
             case 'formattedItems':
                 $this->warmModuleItems($module, $routeName);
+
                 break;
             default:
                 $this->warmModuleCounts($module, $routeName);
                 $this->warmModuleItems($module, $routeName);
+
                 // $this->warmModuleAll($module, $routeName);
                 break;
         }
@@ -199,10 +204,10 @@ class CacheWarmCommand extends BaseCommand
 
         } catch (\Exception $e) {
             $this->error("{$module->getName()} -> {$routeName}: Failed to warm caches: " . $e->getMessage(), verbosity: 'vv');
-            $this->error( $e->getTraceAsString(), verbosity: 'vvv');
-            if( ($logChannel = $this->getLogChannel()) ) {
+            $this->error($e->getTraceAsString(), verbosity: 'vvv');
+            if (($logChannel = $this->getLogChannel())) {
                 // if log channel is exists, log the error
-                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm COUNTS error: ' . $e->getMessage(),[
+                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm COUNTS error: ' . $e->getMessage(), [
                     'module' => $module->getName(),
                     'routeName' => $routeName,
                     'exception' => $e->getTraceAsString(),
@@ -222,25 +227,25 @@ class CacheWarmCommand extends BaseCommand
             $cacheFormItem = ModularityCache::isEnabled($module->getName(), $routeName, 'formItem');
             $cacheFormattedItem = ModularityCache::isEnabled($module->getName(), $routeName, 'formattedItem');
 
-            if( $cacheFormItem) {
+            if ($cacheFormItem) {
                 $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Warming form item cache", verbosity: 'vv');
             } else {
                 $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Form item cache is disabled, skipping form item cache warming", verbosity: 'vv');
             }
 
-            if( $cacheFormattedItem) {
+            if ($cacheFormattedItem) {
                 $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Warming formatted item cache", verbosity: 'vv');
             } else {
                 $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Formatted item cache is disabled, skipping formatted item cache warming", verbosity: 'vv');
             }
 
-            if( $type === 'formItems') {
+            if ($type === 'formItems') {
                 $cacheFormattedItem = false;
-            } elseif( $type === 'formattedItems') {
+            } elseif ($type === 'formattedItems') {
                 $cacheFormItem = false;
             }
 
-            if( ! $cacheFormItem && ! $cacheFormattedItem) {
+            if (! $cacheFormItem && ! $cacheFormattedItem) {
                 return;
             }
 
@@ -253,24 +258,24 @@ class CacheWarmCommand extends BaseCommand
             // $query = DB::table($repository->getTable())->select('id', 'created_at', 'updated_at')->orderBy('updated_at', 'desc');
 
             $limit = 200;
-            if( $this->option('limit')) {
+            if ($this->option('limit')) {
                 $limit = intval($this->option('limit')) > 0 ? intval($this->option('limit')) : null;
 
-                if( !($limit && $limit > 0) ) {
+                if (! ($limit && $limit > 0)) {
                     $limit = 200;
                 }
             }
 
-            if( $this->option('eager')) {
+            if ($this->option('eager')) {
                 $query = $query->with($this->option('eager'));
             }
 
             $count = 0;
             $callback = function ($item, $key) use ($controller, &$count, $cacheFormItem, $cacheFormattedItem) {
-                if( $cacheFormItem) {
+                if ($cacheFormItem) {
                     $controller->getFormItem($item->id, withoutDefaultScopes: true, item: $item);
                 }
-                if( $cacheFormattedItem) {
+                if ($cacheFormattedItem) {
                     $controller->getFormattedIndexItem($item);
                 }
                 $count++;
@@ -285,11 +290,11 @@ class CacheWarmCommand extends BaseCommand
             $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Warmed {$count} item caches", verbosity: 'vv');
         } catch (\Exception $e) {
             $this->error("{$module->getName()} -> {$routeName}: Failed to warm caches: '{$e->getMessage()}'", verbosity: 'vv');
-            $this->error( $e->getTraceAsString(), verbosity: 'vvv');
+            $this->error($e->getTraceAsString(), verbosity: 'vvv');
 
-            if( ($logChannel = $this->getLogChannel()) ) {
+            if (($logChannel = $this->getLogChannel())) {
                 // if log channel is exists, log the error
-                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm ITEMS error: ' . $e->getMessage(),[
+                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm ITEMS error: ' . $e->getMessage(), [
                     'module' => $module->getName(),
                     'routeName' => $routeName,
                     'exception' => $e->getTraceAsString(),
@@ -317,21 +322,23 @@ class CacheWarmCommand extends BaseCommand
         foreach ($modules as $module) {
             $moduleName = $module->getStudlyName();
 
-            if( !ModularityCache::isEnabled($module->getName())) {
+            if (! ModularityCache::isEnabled($module->getName())) {
                 $this->line("  <fg=yellow>⚠</> {$module->getName()}: Caching is disabled", verbosity: 'v');
+
                 continue;
             }
             $this->line("  <fg=green>✓</> {$moduleName}: Processing", verbosity: 'v');
 
             foreach ($module->getRouteNames() as $routeName) {
-                if( !ModularityCache::isEnabled($module->getName(), $routeName)) {
+                if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
                     $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Caching is disabled", verbosity: 'v');
+
                     continue;
                 } else {
                     $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Caching is enabled", verbosity: 'v');
                 }
 
-                if( ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
+                if (ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
                     $this->warmModuleCounts($module, $routeName);
                 } else {
                     $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Counts cache is disabled", verbosity: 'v');
@@ -344,4 +351,3 @@ class CacheWarmCommand extends BaseCommand
         $this->info('Cache warming completed for all modules.');
     }
 }
-

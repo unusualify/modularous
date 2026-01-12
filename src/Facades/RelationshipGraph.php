@@ -26,4 +26,3 @@ class RelationshipGraph extends Facade
         return 'modularity.relationship.graph';
     }
 }
-

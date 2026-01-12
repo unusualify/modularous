@@ -103,7 +103,7 @@ class CacheGraphCommand extends Command
                     }
 
                     if (! empty($moduleRouteData['affected_by'])) {
-                        $this->line("    <fg=yellow>Affected by:</> " . implode(', ', array_unique($moduleRouteData['affected_by'])));
+                        $this->line('    <fg=yellow>Affected by:</> ' . implode(', ', array_unique($moduleRouteData['affected_by'])));
                     }
 
                     $this->newLine();
@@ -187,7 +187,7 @@ class CacheGraphCommand extends Command
             );
 
             if (count($rows) > 20) {
-                $this->line("  ... and " . (count($rows) - 20) . " more models");
+                $this->line('  ... and ' . (count($rows) - 20) . ' more models');
             }
         }
 
@@ -214,7 +214,7 @@ class CacheGraphCommand extends Command
             );
 
             if (count($rows) > 20) {
-                $this->line("  ... and " . (count($rows) - 20) . " more tables");
+                $this->line('  ... and ' . (count($rows) - 20) . ' more tables');
             }
         }
 
@@ -234,7 +234,7 @@ class CacheGraphCommand extends Command
             );
 
             if (count($rows) > 30) {
-                $this->line("  ... and " . (count($rows) - 30) . " more submodules");
+                $this->line('  ... and ' . (count($rows) - 30) . ' more submodules');
             }
         }
 
@@ -296,4 +296,3 @@ class CacheGraphCommand extends Command
         return 0;
     }
 }
-

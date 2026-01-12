@@ -148,7 +148,7 @@ trait PaymentTrait
                     $paymentPrice->{$priceSavingKey} = $totalAmount / 100;
                     // $paymentPrice->currency_id = $currencyId;
                     $paymentPrice->save();
-                    if( $paymentPrice->wasChanged() ) {
+                    if ($paymentPrice->wasChanged()) {
                         $this->mustTouchEloquentModel();
                     }
                 } else {
@@ -169,7 +169,7 @@ trait PaymentTrait
 
             if (! empty($paymentPricePayload)) {
                 $paymentPrice->update($paymentPricePayload);
-                if( $paymentPrice->wasChanged() ) {
+                if ($paymentPrice->wasChanged()) {
                     $this->mustTouchEloquentModel();
                 }
                 $paymentPrice->refresh();
@@ -211,7 +211,7 @@ trait PaymentTrait
                 }
 
                 $payment = $paymentPrice->updateOrNewPayment($paymentPayload, $extraPayload);
-                if( $payment->wasChanged() ) {
+                if ($payment->wasChanged()) {
                     $this->mustTouchEloquentModel();
                 }
             }
@@ -309,7 +309,7 @@ trait PaymentTrait
                     ['payment.status', 'not in', [
                         PaymentStatus::COMPLETED,
                         PaymentStatus::PROVISION,
-                        PaymentStatus::REFUNDED
+                        PaymentStatus::REFUNDED,
                     ]],
                 ]),
                 'hideOnCondition' => true,

@@ -8,7 +8,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
-use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Traits\SerializeModel;
 
 trait QueryBuilder
@@ -161,7 +160,7 @@ trait QueryBuilder
      */
     public function getPaginator($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
     {
-        if (!$this->shouldUseCache('index')) {
+        if (! $this->shouldUseCache('index')) {
             return $this->get($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
         }
 
@@ -210,7 +209,7 @@ trait QueryBuilder
 
         // Cache the serializable data instead of the paginator object
         $cachedData = $this->rememberCache(
-            callback: function() use ($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds) {
+            callback: function () use ($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds) {
                 $result = $this->get($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
 
                 // Convert paginator to serializable array

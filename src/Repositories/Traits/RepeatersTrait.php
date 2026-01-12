@@ -112,11 +112,11 @@ trait RepeatersTrait
 
                         $existingRepeater = $existingRepeaters ? $existingRepeaters->where('locale', $systemLocale)->first() : null;
 
-                       $result = $existingRepeater
-                            ? $existingRepeater->update($data)
-                            : $object->repeaters()->create($data);
+                        $result = $existingRepeater
+                             ? $existingRepeater->update($data)
+                             : $object->repeaters()->create($data);
 
-                        if( $result ) {
+                        if ($result) {
                             $this->mustTouchEloquentModel();
                         }
 
@@ -147,7 +147,7 @@ trait RepeatersTrait
                         ? $existingRepeater->update($data)
                         : $object->repeaters()->create($data);
 
-                    if( $result ) {
+                    if ($result) {
                         $this->mustTouchEloquentModel();
                     }
                 }
