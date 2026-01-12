@@ -174,12 +174,10 @@ trait TableFilters
     {
         $advancedFilters = [];
 
-        $filterConfig = $this->getConfigFieldsByRoute('filters', []);
+        $filterConfig = $this->getConfigFieldsByRouteRaw('filters', []);
 
         // Process each filter category
         foreach ($filterConfig as $category => $filters) {
-            $filters = object_to_array($filters);
-
             // Apply category-specific configuration
             if (method_exists(__TRAIT__, $method = $category . 'FilterConfiguration')) {
                 $filters = array_map([$this, $method], $filters);
@@ -209,7 +207,9 @@ trait TableFilters
             $filter = $this->$methodName($filter);
         }
 
-        return $filter;
+
+
+        return $this->calibrateFilter($filter);
     }
 
     /**
@@ -223,6 +223,7 @@ trait TableFilters
         // Ensure the relation exists in the model
         $model = $this->repository->getModel();
         $studlyRelationshipName = $this->getStudlyName($filter['slug']);
+
         if (! method_exists($model, $studlyRelationshipName)) {
             throw new \Exception("Relation '{$filter['slug']}' does not exist in the model.");
         }
@@ -232,7 +233,7 @@ trait TableFilters
             $filter = $this->$methodName($filter);
         }
 
-        return $filter;
+        return $this->calibrateFilter($filter);
     }
 
     protected function detailsFilterConfiguration($filter)
@@ -243,6 +244,21 @@ trait TableFilters
 
         // Mark this as a detail filter
         $filter['_filterType'] = 'detail';
+
+        return $this->calibrateFilter($filter);
+    }
+
+    protected function calibrateFilter($filter)
+    {
+        if (isset($filter['componentOptions']) && isset($filter['componentOptions']['connector'])) {
+            $connector = new \Unusualify\Modularity\Services\Connector($filter['componentOptions']['connector']);
+            $connector->run(item: $filter['componentOptions'], setKey: 'items');
+        }
+
+        if (isset($filter['componentOptions']) && isset($filter['componentOptions']['items']) && is_callable($filter['componentOptions']['items'])) {
+            $filter['componentOptions']['items'] = $filter['componentOptions']['items']();
+        }
+
 
         return $filter;
     }
@@ -299,7 +315,6 @@ trait TableFilters
      */
     protected function getTableAdvancedFiltersDatePicker($filter)
     {
-
         $filter['componentOptions']['title'] ??= $this->getHeadline($filter['slug']);
         $filter['componentOptions']['multiple'] ??= 'range';
 
