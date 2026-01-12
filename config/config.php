@@ -27,6 +27,7 @@ return [
 
     'custom_components_resource_path' => 'vendor/modularity/js/components',
     // 'vendor_components_resource_path' => 'assets/vendor/js/components',
+    'enabled_currencies' => explode(',', env('MODULARITY_ACTIVE_CURRENCIES', 'USD,EUR,TRY')),
 
     'manifest' => 'unusual-manifest.json',
     'js_namespace' => env('VUE_APP_NAME', 'MODULARITY'),

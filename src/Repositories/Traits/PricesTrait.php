@@ -74,7 +74,7 @@ trait PricesTrait
                     }
 
                     if ($onlyBaseCurrency) {
-                        foreach (['EUR', 'USD', 'TRY'] as $key => $iso4217) {
+                        foreach (modularityConfig('enabled_currencies') as $key => $iso4217) {
                             $_currency = Currency::where('iso_4217', $iso4217)->first();
                             if (! $_currency) {
                                 continue;
