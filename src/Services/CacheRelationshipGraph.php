@@ -75,6 +75,8 @@ class CacheRelationshipGraph
             return [];
         }
 
+        $dependents = [];
+
         $graph = $this->getGraph();
 
         $moduleRoutes = $graph['table_to_module_routes'][$tableName] ?? [];
