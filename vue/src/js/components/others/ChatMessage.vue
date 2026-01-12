@@ -123,9 +123,19 @@
           <div :class="['d-flex mt-2 text-break position-relative', reverse ? 'flex-row-reverse' : 'flex-row']">
             <div class="w-100" style="color: #32454A; font-weight: 400; font-size: 12px;">
               <template v-if="message.content && message.content.length > contentTruncateLength">
-                <div v-if="isExpanded" v-html="formattedContent"></div>
+                <ue-well-print
+                  v-if="isExpanded"
+                  :text="message.content"
+                  :no-linkify="$attrs.noLinkify"
+                  class="w-100"
+                />
                 <div v-else>
-                  <span v-html="formattedTruncatedContent"></span>
+                  <ue-well-print
+                    :text="truncatedContent"
+                    :full-text="message.content"
+                    :no-linkify="$attrs.noLinkify"
+                    class="w-100"
+                  />
                   <span class="text-grey-darken-1">...</span>
                 </div>
 
@@ -142,7 +152,11 @@
                 </v-expand-transition>
               </template>
               <template v-else>
-                <div v-html="formattedContent"></div>
+                <ue-well-print
+                  :text="message.content"
+                  :no-linkify="$attrs.noLinkify"
+                  class="w-100"
+                />
               </template>
             </div>
           </div>
@@ -165,7 +179,12 @@
 </template>
 
 <script>
+  import WellPrint from '@/components/WellPrint.vue'
+
   export default {
+    components: {
+      WellPrint
+    },
     props: {
       modelValue: {
         type: Object,
@@ -227,16 +246,6 @@
           return this.message.content.substring(0, this.contentTruncateLength);
         }
         return this.message?.content ?? '';
-      },
-      // FormattedContent and formattedTruncatedContent are used to format the content of the message with the new lines.
-      formattedContent() {
-        return this.message.content ? this.message.content.replace(/\n/g, '<br>') : '';
-      },
-      formattedTruncatedContent() {
-        if (this.message.content.length > this.contentTruncateLength) {
-          return this.message.content.substring(0, this.contentTruncateLength).replace(/\n/g, '<br>');
-        }
-        return this.message?.content?.replace(/\n/g, '<br>') ?? '';
       }
     },
     methods: {
