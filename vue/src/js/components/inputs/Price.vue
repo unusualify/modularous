@@ -48,7 +48,7 @@
         :rules="[]"
       />
     </div>
-    <div v-if="showVatRate" class="w-100 d-flex justify-center">
+    <div v-if="showVatRate && vatRates.length > 0 || hasDiscount" class="w-100 d-flex justify-center">
       <v-card
         class="w-75"
         color="success"
