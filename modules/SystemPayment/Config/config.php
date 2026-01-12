@@ -320,14 +320,9 @@ return [
                             'clearable' => true,
                             'variant' => 'outlined',
                             'label' => 'Currency',
-                            'itemTitle' => 'name',
+                            'itemTitle' => 'iso_4217',
                             'itemValue' => 'id',
-                            'items' => Currency::whereIn('iso_4217', ['USD', 'EUR', 'TRY'])->get()->map(function ($currency) {
-                                return [
-                                    'name' => $currency->iso_4217,
-                                    'id' => $currency->id,
-                                ];
-                            }),
+                            'connector' => 'SystemPricing|Currency^repository->list?column=iso_4217&scopes=[enabled]',
                         ],
                     ],
                 ],
