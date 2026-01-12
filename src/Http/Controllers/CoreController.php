@@ -221,6 +221,11 @@ abstract class CoreController extends LaravelController implements ModuleableInt
         //     : $this->config->sub_routes->{$this->getSnakeCase($this->routeName)}->{$field_name};
     }
 
+    protected function getConfigFieldsByRouteRaw($fieldName, $default = null)
+    {
+        return data_get($this->module ? $this->module->getRawConfig() : [], 'routes.' . $this->getSnakeCase($this->routeName) . '.' . $fieldName) ?? $default;
+    }
+
     /**
      * @return string
      */
