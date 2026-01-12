@@ -52,6 +52,7 @@
                             :height="`calc(${dialogHeight} * 0.80)`"
                             :noStarring="noStarring"
                             :noPinning="noPinning"
+                            v-bind="$attrs"
                           >
                             <template #actions>
                               <v-btn color="grey-darken-1" icon="mdi-close" size="default" variant="plain" density="compact" @click="dialogOpen = false"></v-btn>
@@ -143,11 +144,20 @@
             <template #title="{ title }">
 
               <div v-if="pinnedMessageExpanded || title.length < 20">
-                <span class="text-wrap" v-html="title"></span>
+                <ue-well-print
+                  :text="title"
+                  :no-linkify="$attrs.noLinkify"
+                  class="text-wrap"
+                />
                 <v-btn v-if="title.length >= 20" density="compact" variant="plain" size="x-small" @click="togglePinnedMessageExpand"> {{ $t('Show less') }}</v-btn>
               </div>
               <div v-else>
-                <span class="text-wrap" v-html="title.slice(0, 20)"></span>
+                <ue-well-print
+                  :text="title.slice(0, 20)"
+                  :full-text="title"
+                  :no-linkify="$attrs.noLinkify"
+                  class="text-wrap"
+                />
                 <span class="text-grey-darken-1">...</span>
                 <v-btn variant="plain" size="small" @click="togglePinnedMessageExpand"> {{ $t('Show more') }}</v-btn>
               </div>
@@ -186,6 +196,7 @@
                   :noStarring="noStarring"
                   :noPinning="noPinning"
                   :contentTruncateLength="contentTruncateLength"
+                  v-bind="$attrs"
                 />
               </slot>
             </div>
@@ -337,12 +348,14 @@
   import { useInput, makeInputProps, makeInputEmits, useValidation } from '@/hooks'
   import ChatMessage from '@/components/others/ChatMessage.vue';
   import Emojis from './Emojis.vue';
+  import WellPrint from '@/components/WellPrint.vue';
   export default {
     name: 'v-input-chat',
     emits: [...makeInputEmits],
     components: {
       ChatMessage,
-      Emojis
+      Emojis,
+      WellPrint
     },
     props: {
       ...makeInputProps(),
