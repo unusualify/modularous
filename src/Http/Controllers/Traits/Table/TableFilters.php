@@ -207,8 +207,6 @@ trait TableFilters
             $filter = $this->$methodName($filter);
         }
 
-
-
         return $this->calibrateFilter($filter);
     }
 
@@ -258,7 +256,6 @@ trait TableFilters
         if (isset($filter['componentOptions']) && isset($filter['componentOptions']['items']) && is_callable($filter['componentOptions']['items'])) {
             $filter['componentOptions']['items'] = $filter['componentOptions']['items']();
         }
-
 
         return $filter;
     }

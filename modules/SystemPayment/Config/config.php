@@ -1,6 +1,5 @@
 <?php
 
-use Modules\SystemPricing\Entities\Currency;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 
 return [
