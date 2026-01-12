@@ -2,6 +2,21 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.1 - 2026-01-12
+
+### :rocket: Features
+
+- add WellPrint component for formatted text \n and hypertext links handling by @celikerde in https://github.com/unusualify/modularity/commit/c9d5ec9f54e0d423ed54486737221da74889cb79
+
+### :recycle: Refactors
+
+- replace HTML rendering with WellPrint component for message content display by @celikerde in https://github.com/unusualify/modularity/commit/0a3a7a17afc31022f301e6447063493a21b426f8
+- enhance message title rendering with WellPrint component and propagate additional attributes by @celikerde in https://github.com/unusualify/modularity/commit/858a4dfb919662f1c96531c649e15eeddf774078
+
+### :package: Build
+
+- update build artifacts for v0.55.1 by @OoBook in https://github.com/unusualify/modularity/commit/91bfada34db2f5c47a4327e8168b3ae0e40da92d
+
 ## v0.55.0 - 2026-01-12
 
 ### :rocket: Features
