@@ -2,6 +2,25 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.2 - 2026-01-12
+
+### :rocket: Features
+
+- add enabled currencies configuration and scope method by @OoBook in https://github.com/unusualify/modularity/commit/5b5701ed781e354afe6874367821b28a8767216f
+- add getConfigFieldsByRouteRaw method for retrieving raw configuration fields by @OoBook in https://github.com/unusualify/modularity/commit/8b8661ca81c5970ec89a604e0dba7ed702269324
+
+### :wrench: Bug Fixes
+
+- update currency item title and modify items retrieval to use a connector for better data handling by @OoBook in https://github.com/unusualify/modularity/commit/fc5618fac49095296beef127a90c9776e6956752
+
+### :recycle: Refactors
+
+- replace getConfigFieldsByRoute with getConfigFieldsByRouteRaw and introduce calibrateFilter method for enhanced filter processing by @OoBook in https://github.com/unusualify/modularity/commit/6955053283bf7222cbac50842064243d1acc340e
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.2 by @OoBook in https://github.com/unusualify/modularity/commit/6ec8e44b66b36162fbb15eaf678c28c8f9db3e3e
+
 ## v0.55.1 - 2026-01-12
 
 ### :rocket: Features
