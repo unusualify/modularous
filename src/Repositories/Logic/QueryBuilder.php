@@ -245,7 +245,7 @@ trait QueryBuilder
                 'id' => $id,
                 'exceptIds' => $exceptIds,
                 'page' => request()->get('page', 1),
-                'locale' => app()->getLocale()
+                'locale' => app()->getLocale(),
             ],
 
         );
