@@ -469,6 +469,7 @@ trait TableItem
 
         $params = [
             'id' => $item->id,
+            'locale' => app()->getLocale(),
         ];
 
         return $this->rememberCache(
