@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.3 - 2026-01-13
+
+### :rocket: Features
+
+- include locale in cache parameters for form items and table items to enhance localization support by @OoBook in https://github.com/unusualify/modularity/commit/45032133306b58b7f626295a3608b1802f929359
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.3 by @OoBook in https://github.com/unusualify/modularity/commit/8c3aac40bc6e62da22672b2f79ed2082a9ceebee
+
 ## v0.55.2 - 2026-01-12
 
 ### :rocket: Features
