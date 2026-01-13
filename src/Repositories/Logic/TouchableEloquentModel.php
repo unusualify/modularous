@@ -22,6 +22,8 @@ trait TouchableEloquentModel
     {
         if ($this->mustTouchEloquentModel) {
             $object->touch();
+        }elseif($object->mustTouchable === true) {
+            $object->touch();
         }
 
         return $object;
