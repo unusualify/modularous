@@ -22,7 +22,7 @@ trait TouchableEloquentModel
     {
         if ($this->mustTouchEloquentModel) {
             $object->touch();
-        }elseif($object->mustTouchable === true) {
+        } elseif ($object->mustTouchable === true) {
             $object->touch();
         }
 
