@@ -11,16 +11,42 @@ use Monolog\LogRecord;
 class ModularityLogHandler extends AbstractProcessingHandler
 {
     protected $logPath;
+    protected $maxFiles;
 
-    public function __construct($level = Level::Debug)
+    public function __construct($level = Level::Debug, $maxFiles = 14)
     {
         parent::__construct($level);
-        $this->logPath = storage_path('logs' . '/' . env('MODULARITY_LOG_FILE', 'modularity.log'));
+        $this->maxFiles = $maxFiles;
+        $this->logPath = $this->getDailyLogPath();
+    }
+
+    protected function getDailyLogPath(): string
+    {
+        return storage_path('logs/modularity-' . date('Y-m-d') . '.log');
+    }
+
+    protected function rotateOldFiles(): void
+    {
+        $logDir = storage_path('logs');
+        // Only match files with the exact date pattern: modularity-YYYY-MM-DD.log
+        $files = glob($logDir . '/modularity-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].log');
+
+        if (count($files) > $this->maxFiles) {
+            // Sort files by modification time (oldest first)
+            usort($files, function($a, $b) {
+                return filemtime($a) - filemtime($b);
+            });
+
+            // Delete oldest files
+            $filesToDelete = array_slice($files, 0, count($files) - $this->maxFiles);
+            foreach ($filesToDelete as $file) {
+                @unlink($file);
+            }
+        }
     }
 
     protected function write(LogRecord $record): void
     {
-
         // Handle emergency, alert, and critical levels with email
         if ($record->level->value >= Level::Critical->value) {
             $this->sendEmailNotification($record);
@@ -42,7 +68,7 @@ class ModularityLogHandler extends AbstractProcessingHandler
             $record->message
         );
 
-        if (! empty($record->context)) {
+        if (!empty($record->context)) {
             $formattedMessage .= 'Context: ' . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
         }
 
@@ -51,13 +77,14 @@ class ModularityLogHandler extends AbstractProcessingHandler
             $formattedMessage,
             FILE_APPEND | LOCK_EX
         );
+
+        $this->rotateOldFiles();
+
     }
 
     protected function sendEmailNotification(LogRecord $record): void
     {
-        // You can implement your email notification logic here
-        // For example, using Laravel's Mail facade:
-        Notification::route('mail', 'oguzhan@unusualgrowth.com')
+        Notification::route('mail', 'oguzhan@olmadikprojeler.com')
             ->notify(new \Modules\SystemNotification\Notifications\LogNotification($record));
     }
 }
