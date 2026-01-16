@@ -608,6 +608,12 @@ class PriceController extends Controller
             $paymentPayload['id'] = $price->payment->id;
         }
 
+        if($price->payment && $price->payment->email && $price->payment->email !== $user->email) {
+            $paymentPayload['email'] = $user->email;
+            $paymentPayload['custom_creator_id'] = $user->id;
+        }
+
+
         $resp = $payable->checkout($payload, paymentPayload: $paymentPayload);
 
         if ($request->ajax()) {
