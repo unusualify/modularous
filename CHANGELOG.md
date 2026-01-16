@@ -2,6 +2,21 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.4 - 2026-01-16
+
+### :rocket: Features
+
+- add conditional touch for models with mustTouchable property by @OoBook in https://github.com/unusualify/modularity/commit/c583ef95b47a4b65e129372cfe54056a533d25b3
+
+### :wrench: Bug Fixes
+
+- reset model state update flags after state update to prevent unintended behavior by @OoBook in https://github.com/unusualify/modularity/commit/e133dfa916caa2e0d17647b4992393a46abf900c
+- add email and custom_creator_id to payment payload for user verification by @OoBook in https://github.com/unusualify/modularity/commit/6ca50f0458e87eeaac23a48771a8539c64d42340
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.4 by @OoBook in https://github.com/unusualify/modularity/commit/bfa7c02353624c437f411292e76f038ca3502440
+
 ## v0.55.3 - 2026-01-13
 
 ### :rocket: Features
