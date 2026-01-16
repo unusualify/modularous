@@ -728,4 +728,14 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     {
         $this->outroLines[] = $line;
     }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(?\Throwable $exception): void
+    {
+        \Illuminate\Support\Facades\Log::channel('modularity-notification-failure')->error( static::class . ' failed: ' . $exception->getMessage(), [
+            'exception' => $exception,
+        ]);
+    }
 }
