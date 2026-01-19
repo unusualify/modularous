@@ -187,9 +187,11 @@ trait PaymentTrait
                     $user = Auth::user();
                 }
 
-                if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasCreator')) {
-                    $paymentPayload['custom_creator_id'] = $object->creator->id;
-                    $paymentPayload['email'] = $object->creator->email;
+                if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasCreator')
+                    && ($creator = $object->creator()->first())
+                ) {
+                    $paymentPayload['custom_creator_id'] = $creator->id;
+                    $paymentPayload['email'] = $creator->email;
                 } elseif ($user) {
                     $paymentPayload['email'] = $user->email;
                 }
