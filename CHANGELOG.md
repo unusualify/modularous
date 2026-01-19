@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.5 - 2026-01-19
+
+### :wrench: Bug Fixes
+
+- improve retrieval of creator information for payment payload by @OoBook in https://github.com/unusualify/modularity/commit/c98f9ac638ac7c26b5623f856e1e29eff393e75c
+
 ## v0.55.4 - 2026-01-16
 
 ### :rocket: Features
