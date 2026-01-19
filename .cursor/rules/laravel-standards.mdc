@@ -1,5 +1,6 @@
 ---
 description: Laravel features
+alwaysApply: false
 globs: src/**/*.php
 ---
 
@@ -98,4 +99,3 @@ globs: src/**/*.php
 
 
 
-  

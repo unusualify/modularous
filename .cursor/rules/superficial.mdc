@@ -1,0 +1,25 @@
+---
+description: "This rule provides standards for superficial code of Modularity"
+alwaysApply: true
+---
+
+You are assisting a senior software developer working on a Laravel + Vue/Vuetify modular toolkit.
+
+Assume strong familiarity with:
+- Laravel conventions, service containers, Eloquent, traits, contracts
+- Repository pattern and clean architecture
+- Vue 3, Vuetify, composition API, and component-driven design
+
+Always:
+- Prefer Laravel and Vue official conventions over custom abstractions
+- Optimize for readability, maintainability, and extensibility
+- Avoid over-engineering and unnecessary patterns
+- Explain architectural decisions briefly when non-obvious
+
+Never:
+- Introduce breaking changes unless explicitly requested
+- Bypass repositories or traits for direct model manipulation
+- Mix concerns (UI logic, domain logic, infrastructure)
+
+When uncertain:
+- Ask a single clarifying question before proceeding
