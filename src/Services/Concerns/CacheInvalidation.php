@@ -279,6 +279,7 @@ trait CacheInvalidation
         if (((isset($types['formattedItem']) ? $types['formattedItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formattedItem')) {
             $this->invalidateFormattedItemCache($moduleName, $moduleRouteName, $model->getKey());
         }
+
         if (((isset($types['formItem']) ? $types['formItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formItem')) {
             $this->invalidateFormItemCache($moduleName, $moduleRouteName, $model->getKey());
         }

@@ -468,13 +468,12 @@ trait TableItem
         }
 
         $params = [
-            'id' => $item->id,
             'locale' => app()->getLocale(),
         ];
 
         return $this->rememberCache(
             callback: $callback,
-            type: 'formattedItem',
+            type: "formattedItem:{$item->id}",
             data: $params
         );
     }
