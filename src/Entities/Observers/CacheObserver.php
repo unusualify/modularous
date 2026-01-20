@@ -55,7 +55,9 @@ class CacheObserver
         }
 
         if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model);
+            $clone = clone $model;
+            $clone->refresh();
+            ModularityCache::invalidateForModel($clone);
         }
 
         // Invalidate caches of modules that depend on this model
