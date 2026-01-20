@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.55.6 - 2026-01-20
+
+### :wrench: Bug Fixes
+
+- refresh model before invalidating cache to ensure accurate cache state by @OoBook in https://github.com/unusualify/modularity/commit/2a90e55d3b16eecf59f046dcaa99c3018958b7a1
+
 ## v0.55.5 - 2026-01-19
 
 ### :wrench: Bug Fixes
