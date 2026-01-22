@@ -3,6 +3,13 @@ name: Create Issue Branch
 on:
   issues:
     types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      dev_branch:
+        description: 'Development branch name'
+        required: false
+        default: 'dev'
+        type: string
 
 permissions:
   contents: write
@@ -15,6 +22,70 @@ jobs:
       contains(github.event.issue.labels.*.name, 'planned') &&
       (contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'test'))
     steps:
+      - name: Detect Version Label
+        id: version_detection
+        run: |
+          # Get all label names from the issue
+          LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
+          echo "All labels: $LABELS"
+
+          # Extract version label matching pattern [digit].x (e.g., 0.x, 1.x, 2.x)
+          VERSION_LABEL=$(echo "$LABELS" | jq -r '.[] | select(test("^[0-9]+\\.x$"))' | head -n 1)
+
+          if [ -n "$VERSION_LABEL" ]; then
+            echo "Found version label: $VERSION_LABEL"
+            echo "version_label=$VERSION_LABEL" >> $GITHUB_OUTPUT
+            echo "has_version=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version label found"
+            echo "version_label=" >> $GITHUB_OUTPUT
+            echo "has_version=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Install GitHub CLI'
+        run: |
+          if ! command -v gh &> /dev/null; then
+            echo "GitHub CLI not found. Installing..."
+            (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+              && sudo mkdir -p -m 755 /etc/apt/keyrings \
+              && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+              && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+              && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+              && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+              && sudo apt update \
+              && sudo apt install gh -y
+          else
+            echo "GitHub CLI is already installed."
+          fi
+      - name: Get Repository Default Branch
+        id: default_branch
+        run: |
+          DEFAULT_BRANCH=$(gh api repos/${{ github.repository }} --jq '.default_branch')
+          echo "default_branch=$DEFAULT_BRANCH" >> $GITHUB_OUTPUT
+          echo "Default branch: $DEFAULT_BRANCH"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Version Branch Existence
+        id: version_branch
+        if: steps.version_detection.outputs.has_version == 'true'
+        run: |
+          VERSION_LABEL="${{ steps.version_detection.outputs.version_label }}"
+
+          # Check if the branch exists
+          if git ls-remote --heads origin "$VERSION_LABEL" | grep -q "$VERSION_LABEL"; then
+            echo "Branch $VERSION_LABEL exists"
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "branch=$VERSION_LABEL" >> $GITHUB_OUTPUT
+          else
+            echo "Branch $VERSION_LABEL does NOT exist"
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "branch=" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Parse Issue
         if: contains(github.event.issue.labels.*.name, 'bug')
         uses: stefanbuck/github-issue-parser@v3
@@ -41,14 +112,32 @@ jobs:
       - name: Determine Branch Type
         id: prefix
         run: |
-          SOURCE="dev"
+          # Use workflow input for dev branch if available, otherwise default to 'dev'
+          DEV_BRANCH="${{ inputs.dev_branch || 'dev' }}"
+
+          # Determine source branch based on version label
+          if [[ "${{ steps.version_detection.outputs.has_version }}" == "true" ]] && [[ "${{ steps.version_branch.outputs.exists }}" == "true" ]]; then
+            # Use the version branch if it exists
+            SOURCE="${{ steps.version_branch.outputs.branch }}"
+            echo "Using version branch: $SOURCE"
+          else
+            # Default to dev branch
+            SOURCE="$DEV_BRANCH"
+            echo "Using dev branch: $SOURCE"
+          fi
+
           if [[ "${{ contains(github.event.issue.labels.*.name, 'enhancement') }}" == "true" ]]; then
             PREFIX="feature/"
           elif [[ "${{ contains(github.event.issue.labels.*.name, 'bug') }}" == "true" ]]; then
             SEVERITY=${{ steps.extract.outputs.severity }}
             if [ "$SEVERITY" == "Critical" ]; then
               PREFIX="hotfix/"
-              SOURCE="main"
+              # For critical bugs, use version branch if available, otherwise default branch
+              if [[ "${{ steps.version_detection.outputs.has_version }}" == "true" ]] && [[ "${{ steps.version_branch.outputs.exists }}" == "true" ]]; then
+                SOURCE="${{ steps.version_branch.outputs.branch }}"
+              else
+                SOURCE="${{ steps.default_branch.outputs.default_branch }}"
+              fi
             else
               PREFIX="bugfix/"
             fi
@@ -136,9 +225,7 @@ jobs:
           git checkout "$BRANCH_NAME"
 
           # Create comment on issue linking the branch
-          gh issue comment "${{ github.event.issue.number }}" --body "Created branch [\`$BRANCH_NAME\`](https://github.com/${{ github.repository }}/tree/$BRANCH_NAME) for this issue."
+          gh issue comment "${{ github.event.issue.number }}" --body "Created branch [\`$BRANCH_NAME\`](https://github.com/${{ github.repository }}/tree/$BRANCH_NAME) from \`${{ steps.prefix.outputs.source }}\` for this issue."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
