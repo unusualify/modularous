@@ -1,0 +1,56 @@
+{
+    "trigger": "issues",
+    "scenarios": [
+      {
+        "name": "Your custom test",
+        "description": "Test description here",
+        "event": {
+          "action": "labeled",
+          "issue": {
+            "number": 999,
+            "title": "[Bug]: Your test case",
+            "labels": [
+              {"name": "bug"},
+              {"name": "planned"},
+              {"name": "2.x"}
+            ]
+          },
+          "severity": "High"
+        }
+      },
+      {
+        "name": "Sample bug report",
+        "description": "Test sample bug with version label",
+        "event": {
+          "action": "labeled",
+          "issue": {
+            "number": 1000,
+            "title": "[Bug]: Memory leak in authentication",
+            "labels": [
+              {"name": "bug"},
+              {"name": "planned"},
+              {"name": "2.x"}
+            ]
+          },
+          "severity": "High"
+        }
+      },
+      {
+        "name": "Real test issue",
+        "description": "🧪 [TEST]: complete QueryBuilder missing parts",
+        "event": {
+          "action": "labeled",
+          "issue": {
+            "number": 308,
+            "title": "🧪 [TEST]: complete QueryBuilder missing parts",
+            "labels": [
+              {"name": "test"},
+              {"name": "planned"},
+              {"name": "0.x"}
+            ]
+          },
+          "severity": "Low"
+        }
+      }
+    ]
+}
