@@ -33,3 +33,6 @@ vue/src/sass/themes/customs/**
 /coverage-xml/
 coverage.txt
 coverage-clover.xml
+
+# AI
+.taker/
