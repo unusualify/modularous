@@ -35,4 +35,4 @@ coverage.txt
 coverage-clover.xml
 
 # AI
-.taker/
+.modulai/
