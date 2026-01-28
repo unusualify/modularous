@@ -28,8 +28,8 @@ Route::get('/email/verification-notification', 'VerificationController@send')
     ->name('verification.send');
 
 Route::prefix('register')->as('register.')
-    ->withoutMiddleware(['modularity.panel', 'web.auth', 'modularity.core'])
     ->middleware(['web', 'modularity.core'])
+    ->withoutMiddleware(['modularity.panel', 'web.auth'])
     ->group(function () {
 
         Route::get('/password/generate/{token}', 'PasswordController@showForm')
