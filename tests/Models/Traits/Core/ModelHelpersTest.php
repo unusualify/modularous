@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\State;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
@@ -494,6 +495,119 @@ class ModelHelpersTest extends ModelTestCase
 
         // Verify the model was updated
         $this->assertEquals(['theme' => 'light', 'notifications' => false], $model->fresh()->preferences);
+    }
+    public function test_translatable_model_updates_existing_batch_activity()
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->app['config']->set('activitylog.enabled', true);
+        Auth::login($this->user);
+
+        Schema::create('translatable_models', function (Blueprint $table) {
+            createDefaultTableFields($table);
+            $table->string('title');
+            $table->timestamps();
+        });
+
+        Schema::create('translatable_model_translations', function (Blueprint $table) {
+            createDefaultTranslationsTableFields($table, 'translatable_model');
+            $table->string('name');
+            $table->string('description');
+        });
+
+        $model = TranslatableModel::create([
+            'title' => 'Translatable Model Title',
+            'en' => [
+                'name' => 'Original Name',
+                'description' => 'Original Description',
+                'active' => 1,
+            ],
+        ]);
+
+        LogBatch::startBatch();
+        $batchUuid = LogBatch::getUuid();
+        $this->assertNotNull($batchUuid);
+
+        Activity::create([
+            'log_name' => 'default',
+            'description' => 'created',
+            'subject_type' => TranslatableModel::class,
+            'subject_id' => $model->id,
+            'causer_type' => User::class,
+            'causer_id' => $this->user->id,
+            'batch_uuid' => $batchUuid,
+            'properties' => [
+                'attributes' => ['en' => ['name' => 'Original Name']],
+                'old' => [],
+            ],
+        ]);
+
+        $model->translate('en')->name = 'Updated Name';
+        $model->translate('en')->description = 'Updated Description';
+        $model->save(); // TypeError thrown here
+    }
+    public function test_translatable_model_creates_new_activity_when_no_batch_activity_exists()
+    {
+        $this->app['config']->set('activitylog.enabled', true);
+        Auth::login($this->user);
+
+        Schema::create('translatable_models', function (Blueprint $table) {
+            createDefaultTableFields($table);
+            $table->string('title');
+            $table->timestamps();
+        });
+
+        Schema::create('translatable_model_translations', function (Blueprint $table) {
+            createDefaultTranslationsTableFields($table, 'translatable_model');
+            $table->string('name');
+            $table->string('description');
+        });
+
+        $model = TranslatableModel::create([
+            'title' => 'Translatable Model Title',
+            'en' => [
+                'name' => 'Original Name',
+                'description' => 'Original Description',
+                'active' => 1,
+            ],
+        ]);
+
+        LogBatch::startBatch();
+        $batchUuid = LogBatch::getUuid();
+        $this->assertNotNull($batchUuid);
+
+        $existingBatchActivity = Activity::forBatch($batchUuid)
+            ->where('subject_type', TranslatableModel::class)
+            ->where('subject_id', $model->id)
+            ->first();
+
+        $this->assertNull($existingBatchActivity);
+
+        $activitiesBefore = Activity::forSubject($model)->count();
+
+        $model->translate('en')->name = 'Updated Name';
+        $model->translate('en')->description = 'Updated Description';
+        $model->save();
+
+        $activitiesAfter = Activity::forSubject($model)->count();
+        $this->assertGreaterThan($activitiesBefore, $activitiesAfter);
+
+        $newActivity = Activity::forSubject($model)
+            ->where('description', 'updated')
+            ->where('event', 'saved')
+            ->where('batch_uuid', $batchUuid)
+            ->latest()
+            ->first();
+
+        $this->assertNotNull($newActivity);
+        $this->assertEquals('saved', $newActivity->event);
+        $this->assertEquals('updated', $newActivity->description);
+        $this->assertEquals($batchUuid, $newActivity->batch_uuid);
+        $this->assertArrayHasKey('attributes', $newActivity->properties);
+        $this->assertArrayHasKey('old', $newActivity->properties);
+        $this->assertArrayHasKey('en', $newActivity->properties['attributes']);
+
+        LogBatch::endBatch();
     }
 }
 
