@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.56.7 - 2026-01-28
+
+### :wrench: Bug Fixes
+
+- adjust middleware for registration route and enhance session check in ImpersonateMiddleware by @OoBook in https://github.com/unusualify/modularity/commit/eadb70d3cec065a293bc7ab5b7d1e700aaa2b645
+
 ## v0.55.6 - 2026-01-20
 
 ### :wrench: Bug Fixes

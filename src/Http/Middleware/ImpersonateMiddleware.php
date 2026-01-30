@@ -26,7 +26,7 @@ class ImpersonateMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->has('impersonate')) {
+        if ($request->hasSession() && $request->session()->has('impersonate')) {
             $this->authFactory->guard(Modularity::getAuthGuardName())->onceUsingId($request->session()->get('impersonate'));
         }
 

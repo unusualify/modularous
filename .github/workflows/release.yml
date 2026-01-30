@@ -78,13 +78,13 @@ jobs:
           # branch: ${{ github.event.inputs.major_version }}
           branch: '0.x'
           force: true
-      - uses: oobook/automated-tag@v1
+      - uses: oobook/autonomous-tag@v1
         id: tag-generation
         with:
           gh_token: ${{ github.token }}
 
       - name: Create Release
-        uses: oobook/automated-release@v1
+        uses: oobook/autonomous-release@v1
         id: release-generation
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
