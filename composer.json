@@ -108,7 +108,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --stop-on-defect --no-coverage",
+        "test": "vendor/bin/phpunit  --stop-on-defect --no-coverage",
         "test:brokers": "vendor/bin/phpunit --stop-on-defect --no-coverage tests/Brokers",
         "test:events": "vendor/bin/phpunit --stop-on-defect --no-coverage tests/Events",
         "test:helpers": "vendor/bin/phpunit --stop-on-defect --no-coverage tests/Helpers",
@@ -117,7 +117,11 @@
         "test:repositories": "vendor/bin/phpunit --stop-on-defect --no-coverage tests/Repositories",
         "test:services": "vendor/bin/phpunit --stop-on-defect --no-coverage tests/Services",
         "test:stop:defect": "vendor/bin/phpunit --stop-on-defect --no-coverage",
-        "test:coverage": "vendor/bin/phpunit",
+        "test:coverage": "vendor/bin/phpunit --stop-on-defect",
+        "test:generated": "vendor/bin/phpunit -c phpunit.generated.xml --stop-on-defect --no-coverage --testsuite Generated",
+        "test:coverage:generated": "vendor/bin/phpunit -c phpunit.generated.xml --stop-on-defect --testsuite Generated",
+        "test:all": "vendor/bin/phpunit -c phpunit.all.xml --stop-on-defect --no-coverage --testsuite All",
+        "test:coverage:all": "vendor/bin/phpunit -c phpunit.all.xml --stop-on-defect --testsuite All",
         "pint": "vendor/bin/pint",
         "pint:test": "vendor/bin/pint --test",
         "pint:bail": "vendor/bin/pint --bail",

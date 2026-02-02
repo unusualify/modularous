@@ -34,5 +34,15 @@ vue/src/sass/themes/customs/**
 coverage.txt
 coverage-clover.xml
 
+/generated-coverage-html/
+/generated-coverage-xml/
+generated-coverage.txt
+generated-coverage-clover.xml
+
+/all-coverage-html/
+/all-coverage-xml/
+all-coverage.txt
+all-coverage-clover.xml
+
 # AI
 .modulai/
