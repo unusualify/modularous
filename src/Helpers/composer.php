@@ -65,6 +65,13 @@ if (! function_exists('get_modularity_src_path')) {
     }
 }
 
+if (! function_exists('modularity_path')) {
+    function modularity_path($path = null)
+    {
+        return Modularity::getVendorPath($path);
+    }
+}
+
 if (! function_exists('get_package_version')) {
     function get_package_version($package = null)
     {
