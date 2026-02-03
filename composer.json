@@ -31,7 +31,7 @@
         {
             "name": "Erdem Çelik",
             "email": "celikerde@itu.edu.tr"
-        },
+        }
     ],
     "require": {
         "php": ">=8.1",
