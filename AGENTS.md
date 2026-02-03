@@ -23,7 +23,7 @@ vue/src/                 # Frontend source
 ## PATTERNS TO ALWAYS USE
 2. **Use Traits**: ManageMedias, HasMedias, MediasTrait etc.
 3. **Register in ServiceProvider**: Every new feature if necessary
-4. **Write Tests**: test/$FOLDERNAME
+4. **Write Tests**: tests/$FOLDERNAME
 5. **Type Hints**: Always use PHP 8.1+ type hints
 6. **Config-Driven**: Use config('modularity.xxx') (under merges folder)
 
