@@ -88,7 +88,8 @@ export default {
     const instance = getCurrentInstance()
 
     const FuncPattern = /^\{(.*)\}$/
-    const CastPattern = /\$([\w|.|\_|\-]+)/
+    // const CastPattern = /\$([\w|.|\_|\-]+)/
+    const CastPattern = /^\$((?=[A-Za-z0-9._-]*[A-Za-z])[A-Za-z0-9._-]+)$/
 
     const slots = computed(() => {
       if(props.configuration.hasOwnProperty('slots'))
