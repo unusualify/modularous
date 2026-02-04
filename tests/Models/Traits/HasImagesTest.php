@@ -69,6 +69,45 @@ class HasImagesTest extends ModelTestCase
         ]);
     }
 
+    public function test_model_updated_event_is_triggered_with_empty_inputs()
+    {
+        $this->model->update(['name' => 'Updated Test Model']);
+        $this->model->refresh();
+        $this->assertEquals('Updated Test Model', $this->model->name);
+    }
+
+    public function test_model_updated_event_is_triggered_with_inputs()
+    {
+        $testModelWithIcon = new class extends Model
+        {
+            use HasImages;
+
+            protected $table = 'test_mediable_models';
+
+            protected $fillable = ['name'];
+
+            // Mock getRouteInputs to simulate icon input
+            public function getRouteInputs()
+            {
+                return [
+                    [
+                        'type' => 'image',
+                        'isIcon' => true,
+                        'name' => 'icon',
+                    ],
+                ];
+            }
+        };
+
+        $iconModel = new $testModelWithIcon(['name' => 'Icon Model']);
+        $iconModel->save();
+
+        $iconModel->update(['name' => 'Updated Icon Model']);
+        $iconModel->refresh();
+        $this->assertEquals('Updated Icon Model', $iconModel->name);
+    }
+
+
     public function test_trait_initialization()
     {
         // Test that the trait is properly used
@@ -389,6 +428,12 @@ class HasImagesTest extends ModelTestCase
         $this->assertArrayHasKey('thumb', $imagesArraysWithCrops[$this->media1->id]);
     }
 
+    public function test_image_as_array_not_found()
+    {
+        $imageArray = $this->model->imageAsArray('nonexistent');
+        $this->assertEmpty($imageArray);
+    }
+
     public function test_image_alt_text()
     {
         // Test with pivot metadata
@@ -430,6 +475,12 @@ class HasImagesTest extends ModelTestCase
         $this->assertEquals('Custom alt text', $altText);
     }
 
+    public function test_image_alt_text_not_found()
+    {
+        $altText = $this->model->imageAltText('nonexistent');
+        $this->assertEquals('', $altText);
+    }
+
     public function test_image_caption()
     {
         // Test with pivot metadata
@@ -469,6 +520,12 @@ class HasImagesTest extends ModelTestCase
         $this->assertEquals('News caption', $caption);
     }
 
+    public function test_image_caption_not_found()
+    {
+        $caption = $this->model->imageCaption('nonexistent');
+        $this->assertEquals('', $caption);
+    }
+
     public function test_image_video()
     {
         // Test with video metadata
@@ -506,6 +563,12 @@ class HasImagesTest extends ModelTestCase
 
         $video = $this->model->imageVideo('legacy');
         $this->assertEquals('https://example.com/legacy-video.mp4', $video);
+    }
+
+    public function test_image_video_not_found()
+    {
+        $video = $this->model->imageVideo('nonexistent');
+        $this->assertEquals('', $video);
     }
 
     public function test_image_object()

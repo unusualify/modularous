@@ -285,6 +285,60 @@ class HasFilepondsTest extends ModelTestCase
         $this->model->fileponds()->save($filepond2);
     }
 
+    public function test_add_fileponds_as_changed()
+    {
+        $this->model->addFilepondsAsChanged([$this->model]);
+        $this->assertTrue($this->model->wasChangedRelationships('fileponds'));
+    }
+
+    public function test_set_deleted_fileponds_as_changed()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->setDeletedFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->getDeletedFileponds()->contains($this->model));
+    }
+
+    public function test_merge_deleted_fileponds_as_changed()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->mergeDeletedFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->getDeletedFileponds()->contains($this->model));
+    }
+
+    public function test_set_new_fileponds_as_changed()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->setNewFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->getNewFileponds()->contains($this->model));
+    }
+
+    public function test_has_deleted_fileponds()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->setDeletedFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->hasDeletedFileponds());
+    }
+
+    public function test_has_new_fileponds()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->setNewFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->hasNewFileponds());
+    }
+
+    public function test_get_new_fileponds()
+    {
+        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $this->model->setNewFilepondsAsChanged($fileponds);
+
+        $this->assertTrue($this->model->getNewFileponds()->contains($this->model));
+    }
+
     protected function tearDown(): void
     {
         Schema::dropIfExists('test_fileponds_models');

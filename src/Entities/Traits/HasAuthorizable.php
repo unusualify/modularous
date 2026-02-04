@@ -37,17 +37,6 @@ trait HasAuthorizable
             }
         });
 
-        // static::updated(function (Model $model) {
-        //     if ($model->modelIsAuthorizing) {
-        //         $model->authorizationRecord()->updateOrCreate(
-        //             [], // Empty array as we want to update/create based on the relationship
-        //             $model->hasAuthorizableFields
-        //         );
-        //         $model->modelIsAuthorizing = false;
-        //         $model->hasAuthorizableFields = [];
-        //     }
-        // });
-
         static::saving(function (Model $model) {
             if ($model->authorized_id) {
                 $authorizedType = $model->authorized_type
@@ -166,17 +155,7 @@ trait HasAuthorizable
 
     public function getUserForHasAuthorization($user = null)
     {
-        if (! Auth::check() && ! $user) {
-            return null;
-        }
-
-        $user = $user ?? Auth::user();
-
-        if (! $user) {
-            return null;
-        }
-
-        return $user;
+        return $user ?? Auth::user();
     }
 
     /**

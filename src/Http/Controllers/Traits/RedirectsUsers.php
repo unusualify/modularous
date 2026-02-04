@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Auth;
+namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 trait RedirectsUsers
 {

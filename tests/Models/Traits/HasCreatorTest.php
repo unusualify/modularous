@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class HasCreatorTest extends ModelTestCase
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Create test model instance
@@ -162,6 +164,21 @@ class HasCreatorTest extends ModelTestCase
         $this->assertNull($modelWithCustomCreator->custom_creator_id);
         $this->assertNull($modelWithCustomCreator->custom_creator_type);
         $this->assertNull($modelWithCustomCreator->custom_guard_name);
+
+        $modelWithCustomCreator = TestCreatorModel::find($modelWithCustomCreator->id);
+
+        $customCreator2 = User::create(['name' => 'Custom Creator 2', 'email' => 'custom2@example.com', 'published' => true]);
+        $modelWithCustomCreator->update([
+            'custom_creator_id' => $customCreator2->id,
+        ]);
+
+        $this->assertDatabaseHas(modularityConfig('tables.creator_records', 'um_creator_records'), [
+            'creatable_id' => $modelWithCustomCreator->id,
+            'creatable_type' => get_class($modelWithCustomCreator),
+            'creator_id' => $customCreator2->id,
+            'creator_type' => get_class($customCreator2),
+            'guard_name' => 'modularity',
+        ]);
     }
 
     public function test_creator_record_deletion_on_model_deletion()
@@ -181,6 +198,35 @@ class HasCreatorTest extends ModelTestCase
         $this->model->delete();
 
         // Check that creator record was also deleted
+        $deletedModel = TestCreatorModel::withTrashed()->find($this->model->id);
+        $this->assertNotNull($deletedModel);
+        $this->assertEquals($this->model->id, $deletedModel->id);
+        $this->assertNotNull($deletedModel->deleted_at);
+        $this->assertNotNull($deletedModel->creatorRecord);
+
+        $deletedModel->forceDelete();
+
+        $forceDeletedModel = TestCreatorModel::withTrashed()->find($this->model->id);
+        $this->assertNull($forceDeletedModel);
+    }
+
+    public function test_creator_record_deletion_on_model_deletion_without_soft_deletes()
+    {
+        $user = User::create(['name' => 'User to Delete', 'email' => 'delete@example.com', 'published' => true]);
+        $model = new TestCreatorModelWithoutSoftDeletes(['name' => 'Test Model Without Soft Deletes']);
+        $model->save();
+        $model->creatorRecord()->create([
+            'creator_id' => $user->id,
+            'creator_type' => get_class($user),
+            'guard_name' => 'modularity',
+        ]);
+
+        $creatorRecordId = $model->creatorRecord->id;
+
+        $model->delete();
+
+        $deletedModel = TestCreatorModelWithoutSoftDeletes::find($model->id);
+        $this->assertNull($deletedModel);
         $this->assertDatabaseMissing(modularityConfig('tables.creator_records', 'um_creator_records'), [
             'id' => $creatorRecordId,
         ]);
@@ -538,7 +584,7 @@ class HasCreatorTest extends ModelTestCase
 }
 
 // Basic test model
-class TestCreatorModel extends Model
+class TestCreatorModelWithoutSoftDeletes extends Model
 {
     use HasCreator;
 
@@ -547,4 +593,9 @@ class TestCreatorModel extends Model
     protected $fillable = ['name', 'description'];
 
     public static $defaultHasCreatorModel = User::class;
+}
+
+class TestCreatorModel extends TestCreatorModelWithoutSoftDeletes
+{
+    use SoftDeletes;
 }

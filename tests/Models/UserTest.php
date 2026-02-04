@@ -539,4 +539,31 @@ class UserTest extends ModelTestCase
             return $notification->token === $token;
         });
     }
+
+    public function test_get_email_for_register()
+    {
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        $this->assertEquals('test@example.com', $user->getEmailForRegister());
+    }
+
+    public function test_send_register_notification()
+    {
+        Notification::fake();
+        $user = User::factory()->create();
+        $token = Str::uuid();
+        $user->sendRegisterNotification($token);
+        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\EmailVerification::class, 1);
+        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\EmailVerification::class, function ($notification, $channels, $notifiable) use ($token) {
+            return $notification->token === $token;
+        });
+
+        $emailVerificationConfigClass = config('modularity.verification_email_class');
+        $user->sendRegisterNotification($token);
+        Notification::assertSentTo($user, $emailVerificationConfigClass, function ($notification, $channels, $notifiable) use ($token) {
+            return $notification->token === $token;
+        });
+    }
 }

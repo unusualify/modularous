@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Tests\Models\Traits;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\StateableUpdated;
 use Unusualify\Modularity\Entities\Model;
@@ -149,6 +150,56 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals('warning', $hydratedState->color); // Should be updated from config
     }
 
+    public function test_hydrate_state_uses_localization()
+    {
+        $localizationKey = 'stateable.test_stateable_model.draft';
+        $localizedName = 'Localized Draft Name';
+
+        Lang::addLines([$localizationKey => $localizedName], app()->getLocale());
+
+        $state = State::create([
+            'code' => 'draft',
+            'icon' => '$info',
+            'color' => 'info',
+            'en' => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $model = $this->testModel::create(['name' => 'Test Model']);
+
+        $hydratedState = $model->hydrateState($state);
+
+        $this->assertInstanceOf(State::class, $hydratedState);
+        $this->assertEquals($localizedName, $hydratedState->name);
+        $this->assertEquals('$edit', $hydratedState->icon);
+        $this->assertEquals('warning', $hydratedState->color);
+    }
+
+    public function test_hydrate_state_uses_fallback_locale_name()
+    {
+        $originalLocale = app()->getLocale();
+        $fallbackLocale = config('app.fallback_locale', 'en');
+
+        $testLocale = $fallbackLocale === 'en' ? 'fr' : 'en';
+        app()->setLocale($testLocale);
+
+        $state = State::create([
+            'code' => 'draft',
+            'icon' => '$info',
+            'color' => 'info',
+            $testLocale => ['active' => true],
+            $fallbackLocale => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $model = TestStateableModelWithFallbackLocale::create(['name' => 'Test Model']);
+
+        $hydratedState = $model->hydrateState($state);
+
+        $this->assertInstanceOf(State::class, $hydratedState);
+        $this->assertEquals('Fallback Draft Name', $hydratedState->name); // Should use fallback locale name from config
+
+        app()->setLocale($originalLocale);
+    }
+
     public function test_get_state_attribute()
     {
         $state = State::create([
@@ -171,6 +222,15 @@ class HasStateableTest extends ModelTestCase
         $this->assertInstanceOf(State::class, $modelState);
         $this->assertEquals('$edit', $modelState->icon); // Should be hydrated
         $this->assertEquals('warning', $modelState->color); // Should be hydrated
+    }
+
+    public function test_get_state_attribute_returns_null_when_no_stateable()
+    {
+        $model = new TestStateableModel;
+
+        $state = $model->getStateAttribute();
+
+        $this->assertNull($state);
     }
 
     public function test_get_state_attribute_returns_null_when_no_state()
@@ -205,6 +265,57 @@ class HasStateableTest extends ModelTestCase
 
         $this->assertStringContainsString("color='success'", $formatted);
         $this->assertStringContainsString("prepend-icon='\$publish'", $formatted);
+        $this->assertStringContainsString('Published', $formatted);
+    }
+
+    public function test_state_formatted_attribute_without_set_state_formatted_method()
+    {
+        // Create a model that uses HasStateable but NOT ModelHelpers to cover the false branch
+        $testModel = new class extends \Illuminate\Database\Eloquent\Model
+        {
+            use HasStateable;
+
+            protected $table = 'test_stateable_models';
+
+            protected $fillable = ['name', 'title', 'initial_stateable', 'stateable_id'];
+
+            protected static $default_states = [
+                [
+                    'code' => 'draft',
+                    'name' => 'Draft',
+                    'icon' => '$edit',
+                    'color' => 'warning',
+                ],
+                [
+                    'code' => 'published',
+                    'name' => 'Published',
+                    'icon' => '$publish',
+                    'color' => 'success',
+                ],
+            ];
+        };
+
+        $draftState = State::create([
+            'code' => 'draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+            'en' => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $publishedState = State::create([
+            'code' => 'published',
+            'icon' => '$publish',
+            'color' => 'success',
+            'en' => ['name' => 'Published', 'active' => true],
+        ]);
+
+        $model = $testModel::create(['name' => 'Test Model', 'initial_stateable' => 'published']);
+        $this->assertFalse(method_exists($model, 'setStateFormatted'));
+
+        $formatted = $model->state_formatted;
+
+        $this->assertStringContainsString("class='text-success", $formatted);
+        $this->assertStringContainsString("mdi-\$publish", $formatted);
         $this->assertStringContainsString('Published', $formatted);
     }
 
@@ -254,6 +365,49 @@ class HasStateableTest extends ModelTestCase
         $this->testModel::formatStateableState(['name' => 'Test']);
     }
 
+    public function test_format_stateable_state_with_array_name_attribute_with_lang_key()
+    {
+        $stateData = [
+            'code' => 'published',
+            'name' => [
+                'en' => 'Published Article',
+            ],
+            'icon' => '$publish',
+            'color' => 'success',
+        ];
+
+        $formatted = $this->testModel::formatStateableState($stateData);
+
+        $this->assertIsArray($formatted);
+        $this->assertEquals('published', $formatted['code']);
+        $this->assertEquals('Published Article', $formatted['en']['name']);
+        $this->assertTrue($formatted['en']['active']);
+        $this->assertEquals('$publish', $formatted['icon']);
+        $this->assertEquals('success', $formatted['color']);
+    }
+
+    public function test_format_stateable_state_with_array_name_attribute_without_lang_key()
+    {
+        $stateData = [
+            'code' => 'published',
+            'name' => [
+                'fr' => 'Article Public', // French, but current locale is 'en'
+            ],
+            'icon' => '$publish',
+            'color' => 'success',
+        ];
+
+        $formatted = $this->testModel::formatStateableState($stateData);
+
+        $this->assertIsArray($formatted);
+        $this->assertEquals('published', $formatted['code']);
+        // Should fall back to defaultName (Str::headline($code) = 'Published')
+        $this->assertEquals('Published', $formatted['en']['name']);
+        $this->assertFalse(isset($formatted['fr']['name']));
+        $this->assertTrue($formatted['en']['active']);
+        $this->assertEquals('$publish', $formatted['icon']);
+        $this->assertEquals('success', $formatted['color']);
+    }
     public function test_get_default_state()
     {
         $defaultState = $this->testModel::getDefaultState();
@@ -270,6 +424,17 @@ class HasStateableTest extends ModelTestCase
         $this->assertIsArray($initialState);
         $this->assertEquals('draft', $initialState['code']);
         $this->assertEquals('Draft', $initialState['en']['name']);
+    }
+
+    public function test_get_initial_state_with_isset_initial_state()
+    {
+        $testModel = new TestStateableModelWithInitialState;
+
+        $initialState = $testModel::getInitialState();
+
+        $this->assertIsArray($initialState);
+        $this->assertEquals('in-review', $initialState['code']);
+        $this->assertEquals('In Review', $initialState['en']['name']);
     }
 
     public function test_get_default_states()
@@ -291,6 +456,36 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals('draft', $config['code']);
         $this->assertEquals('$edit', $config['icon']);
         $this->assertEquals('warning', $config['color']);
+    }
+
+    public function test_get_raw_state_configuration_with_string_states()
+    {
+
+        $testModel = new class extends Model
+        {
+            use HasStateable;
+
+            protected $table = 'test_stateable_models';
+
+            protected $fillable = ['name', 'title', 'initial_stateable', 'stateable_id'];
+
+            protected static $default_states = [
+                'draft',
+                'published',
+            ];
+
+            // Override getDefaultStates to return strings directly (bypassing formatStateableState)
+            public static function getDefaultStates()
+            {
+                return static::$default_states ?? [];
+            }
+        };
+
+        $config = $testModel::getRawStateConfiguration('draft');
+        $this->assertEquals('draft', $config);
+
+        $config = $testModel::getRawStateConfiguration('published');
+        $this->assertEquals('published', $config);
     }
 
     public function test_get_state_configuration()
@@ -376,6 +571,36 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals($publishedState->id, $model->currentStateableState()->id);
 
         $this->assertEquals($publishedState->id, $model->stateable->state_id);
+    }
+
+    public function test_stateable_updating_check_with_new_state_is_null()
+    {
+        Event::fake([StateableUpdated::class]);
+
+        $draftState = State::create([
+            'code' => 'draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+            'en' => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $model = $this->testModel::create(['name' => 'Test Model']);
+
+        Stateable::create([
+            'stateable_id' => $model->id,
+            'stateable_type' => get_class($model),
+            'state_id' => $draftState->id,
+        ]);
+
+        $model->stateable_id = -999999; // Non-existent state ID
+        $model->save();
+
+        $model->refresh();
+
+        $newState = State::find(-999999);
+
+        $this->assertNull($newState);
+        Event::assertNotDispatched(StateableUpdated::class);
     }
 
     public function test_stateable_updated_event_is_dispatched()
@@ -657,4 +882,59 @@ class TestStateableModel extends Model
             'color' => 'success',
         ],
     ];
+}
+
+class TestStateableModelWithInitialState extends TestStateableModel
+{
+    use HasStateable;
+
+    protected static $initial_state = 'in-review';
+
+    protected $table = 'test_stateable_models';
+
+    protected $fillable = ['name', 'title', 'initial_stateable', 'stateable_id'];
+
+    protected static $default_states = [
+        [
+            'code' => 'draft',
+            'name' => 'Draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+        ],
+        [
+            'code' => 'published',
+            'name' => 'Published',
+            'icon' => '$publish',
+            'color' => 'success',
+        ],
+    ];
+
+}
+
+class TestStateableModelWithFallbackLocale extends TestStateableModel
+{
+    // Override getRawStateConfiguration to return a manually constructed state config
+    // where current locale has no 'name' but fallback locale has 'name'
+    public static function getRawStateConfiguration($code)
+    {
+        if ($code === 'draft') {
+            $fallbackLocale = config('app.fallback_locale', 'en');
+            $currentLocale = app()->getLocale();
+
+            return [
+                'code' => 'draft',
+                'icon' => '$edit',
+                'color' => 'warning',
+                $currentLocale => [
+                    'active' => true,
+                ],
+                $fallbackLocale => [
+                    'name' => 'Fallback Draft Name',
+                    'active' => true,
+                ],
+            ];
+        }
+
+        return parent::getRawStateConfiguration($code);
+    }
 }
