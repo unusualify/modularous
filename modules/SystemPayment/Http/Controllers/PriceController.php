@@ -186,9 +186,12 @@ class PriceController extends Controller
             'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
+            'original_amount' => $price->raw_amount,
             'original_raw_amount' => $price->discounted_raw_amount,
-            'original_total_amount' => $price->total_amount,
             'discount_percentage' => $price->discount_percentage,
+            'discount_amount' => $price->raw_amount - $price->discounted_raw_amount,
+            'subtotal' => $price->discounted_raw_amount,
+            'original_total_amount' => $price->total_amount,
 
             'vat_rate_id' => $price->vat_rate_id,
             'vat_rate_name' => $price->vatRate->name,
@@ -505,9 +508,12 @@ class PriceController extends Controller
             'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
+            'original_amount' => $price->raw_amount,
             'original_raw_amount' => $price->discounted_raw_amount,
-            'original_total_amount' => $price->total_amount,
             'discount_percentage' => $price->discount_percentage,
+            'discount_amount' => $price->raw_amount - $price->discounted_raw_amount,
+            'subtotal' => $price->discounted_raw_amount,
+            'original_total_amount' => $price->total_amount,
 
             'vat_rate_id' => $price->vat_rate_id,
             'vat_rate_name' => $price->vatRate->name,
@@ -655,7 +661,10 @@ class PriceController extends Controller
                 $payment->update([
                     'status' => PaymentStatus::COMPLETED,
                 ]);
+            } else {
+                $payment->touch();
             }
+            $payment->refresh();
 
             if ($payment) {
                 PaymentCompleted::dispatch($payment);
@@ -669,6 +678,9 @@ class PriceController extends Controller
                 // ]);
             }
         } else {
+            $payment->touch();
+            $payment->refresh();
+
             if ($payment) {
                 PaymentFailed::dispatch($payment);
             }
