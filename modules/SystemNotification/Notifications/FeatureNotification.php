@@ -544,8 +544,8 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
             $model = $this->redirectorModel($model);
         }
 
-        $moduleName = method_exists($model, 'moduleName') ? $model->moduleName() : null;
-        $routeName = method_exists($model, 'routeName') ? $model->routeName() : null;
+        $moduleName = method_exists($model, 'getModuleName') ? $model->getModuleName() : null;
+        $routeName = method_exists($model, 'getRouteName') ? $model->getRouteName() : null;
 
         if ($moduleName && $routeName) {
             $module = Modularity::find($moduleName);
@@ -727,5 +727,15 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     public function addOutroLine(string $line): void
     {
         $this->outroLines[] = $line;
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(?\Throwable $exception): void
+    {
+        \Illuminate\Support\Facades\Log::channel('modularity-notification-failure')->error( static::class . ' failed: ' . $exception->getMessage(), [
+            'exception' => $exception,
+        ]);
     }
 }

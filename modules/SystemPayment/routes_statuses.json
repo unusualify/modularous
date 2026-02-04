@@ -1,7 +1,7 @@
 {
     "PaymentService": true,
-    "Payments": true,
-    "Currency": true,
+    "Payment": true,
+    "PaymentCurrency": true,
     "CardType": true,
     "MyPayment": true,
     "PaymentCountry": true

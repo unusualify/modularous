@@ -391,13 +391,21 @@ trait HasStateable
 
         $this->stateable()->update(['state_id' => $newState->id]);
 
+        // If the state has changed, dispatch the event
         if ($oldState && $oldState->code !== $newState->code) {
             $cloneModel = clone $this;
             $cloneModel->refresh();
-            $this->stateableChanged = true;
+
+            $this->modelStateableIsUpdating = false;
+            $this->modelStateableIsUpdatingId = null;
+
             $this->previousStateableState = $oldState;
             $this->currentStateableState = $newState;
+            $this->stateableChanged = true;
+
             StateableUpdated::dispatch($cloneModel, $cloneModel->state, $oldState);
+
+            $cloneModel->touch();
         }
     }
 

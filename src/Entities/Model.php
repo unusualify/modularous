@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 // use Modules\Notification\Events\ModelCreated;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularity\Contracts\ModuleableInterface;
+use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 
-abstract class Model extends LaravelModel implements TaggableInterface
+abstract class Model extends LaravelModel implements CacheableInterface, ModuleableInterface, TaggableInterface
 {
     use HasPresenter,
         IsTranslatable,
@@ -23,7 +26,8 @@ abstract class Model extends LaravelModel implements TaggableInterface
         SoftDeletes,
         TaggableTrait,
         LocaleTags,
-        Notifiable;
+        Notifiable,
+        HasCaching;
 
     public $timestamps = true;
 

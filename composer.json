@@ -1,19 +1,20 @@
 {
-    "name": "unusualify/modularity",
+    "name": "unusualify/modularous",
     "type": "library",
     "license": "MIT",
-    "description": "Modularity infrastructure for module development",
+    "description": "Modularous infrastructure for module development",
     "keywords": [
         "unusual",
         "unusualify",
         "modularity",
+        "modularous",
         "laravel",
         "vuetify"
     ],
     "authors": [
         {
             "name": "Oğuzhan Bükçüoğlu",
-            "email": "oguzhan@unusualgrowth.com"
+            "email": "oguz.bukcuoglu@gmail.com"
         },
         {
             "name": "Güneş Bizim",
@@ -26,6 +27,10 @@
         {
             "name": "İlker Ciblak",
             "email": "ilker@unusualgrowth.com"
+        },
+        {
+            "name": "Erdem Çelik",
+            "email": "celikerde@itu.edu.tr"
         }
     ],
     "require": {

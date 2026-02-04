@@ -3,72 +3,101 @@
 namespace Unusualify\Modularity\Traits;
 
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Module;
 
 trait ManageModuleRoute
 {
+    use Moduleable;
+
+    protected ?Module $module = null;
+
+    protected ?array $routeConfig = [];
+
+    /**
+     * @deprecated use Moduleable::getModuleName() instead
+     *
+     * @return string|null
+     */
     public function moduleName()
     {
-
-        if (preg_match('/[M|m]{1}odules[\/\\\]([A-Za-z]+)[\/\\\]/', get_class($this), $matches)) {
-            return $matches[1];
-        }
-
-        return null;
+        return $this->getModuleName();
     }
 
+    /**
+     * @deprecated use Moduleable::getRouteName() instead
+     *
+     * @return string|null
+     */
     public function routeName()
     {
-        $moduleName = $this->moduleName();
-
-        $routeName = null;
-
-        if (! $moduleName) {
-            return $routeName;
-        }
-        if (preg_match('/(\w+)(?=(Request|Repository|Controller))/', get_class_short_name($this), $matches)) {
-            $routeName = studlyName($matches[1]);
-        } elseif (preg_match('/(\w+)\Entities/', get_class($this), $matches)) {
-            $routeName = studlyName(get_class_short_name($this));
-        }
-
-        return $routeName;
+        return $this->getRouteName();
     }
 
-    public function routeConfig()
+    /**
+     * @return Module|null
+     */
+    public function getModule()
     {
-        $moduleName = $this->moduleName();
-
-        $routeName = $this->routeName();
-
-        if ($moduleName && $routeName) {
-            $module = Modularity::find($moduleName);
-
-            return $module->getRawRouteConfig($routeName);
+        if ($this->module) {
+            return $this->module;
         }
 
-        return [];
+        $this->module = Modularity::find($this->getModuleName());
+
+        return $this->module;
     }
 
-    public function getRouteTitleColumnKey()
+    /**
+     * @return $this
+     */
+    public function setModule(Module $module): static
     {
+        $this->module = $module;
 
-        return ! empty($conf = $this->routeConfig()) ? ($conf['title_column_key'] ?? 'name') : 'name';
+        return $this;
     }
 
-    public function getRouteInputs()
+    /**
+     * @return array
+     */
+    public function getRouteConfig()
     {
-        return ! empty($conf = $this->routeConfig()) ? ($conf['inputs'] ?? []) : [];
+        if ($this->routeConfig && ! empty($this->routeConfig)) {
+            return $this->routeConfig;
+        }
+
+        $moduleName = $this->getModuleName();
+
+        $routeName = $this->getRouteName();
+
+        $module = $this->getModule();
+
+        if ($module) {
+            $this->routeConfig = $module->getRawRouteConfig($routeName);
+        }
+
+        return $this->routeConfig;
     }
 
-    public function getRouteHeaders()
+    public function getRouteTitleColumnKey(): string
     {
-
-        return ! empty($conf = $this->routeConfig()) ? ($conf['headers'] ?? []) : [];
+        return ! empty($conf = $this->getRouteConfig()) ? ($conf['title_column_key'] ?? 'name') : 'name';
     }
 
-    public function getRouteTableOptions()
+    public function getRouteInputs(): array
+    {
+        return ! empty($conf = $this->getRouteConfig()) ? ($conf['inputs'] ?? []) : [];
+    }
+
+    public function getRouteHeaders(): array
     {
 
-        return ! empty($conf = $this->routeConfig()) ? ($conf['table_options'] ?? []) : [];
+        return ! empty($conf = $this->getRouteConfig()) ? ($conf['headers'] ?? []) : [];
+    }
+
+    public function getRouteTableOptions(): array
+    {
+
+        return ! empty($conf = $this->getRouteConfig()) ? ($conf['table_options'] ?? []) : [];
     }
 }

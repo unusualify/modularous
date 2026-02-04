@@ -30,16 +30,35 @@ trait RepositorySources
             // $table->foreignId('owner_id')->constrained('owners');
             $table->unsignedBigInteger('owner_id')->nullable(); // Foreign key column
 
+            $table->unsignedBigInteger('test_modelable_id')->nullable();
+            $table->string('test_modelable_type')->nullable();
+
             $table->string('description')->nullable();
+            $table->boolean('published')->nullable();
+            $table->boolean('public')->nullable();
+            $table->timestamp('publish_start_date')->nullable();
+            $table->timestamp('publish_end_date')->nullable();
             $table->boolean('is_active');
             $table->integer('position')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
+        Schema::create('test_model_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'test_model');
+        });
+
         Schema::create('test_model_repo_translations', function (Blueprint $table) {
             createDefaultTranslationsTableFields($table, 'test_model');
             $table->string('context')->nullable();
+        });
+
+        Schema::create('test_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('position')->unsigned()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('test_model_test_role', function (Blueprint $table) {
@@ -56,7 +75,14 @@ trait RepositorySources
             $table->primary(['test_model_id', 'test_role_id']);
         });
 
-        Schema::create('test_roles', function (Blueprint $table) {
+        Schema::create('first_morphs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('second_morphs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -81,6 +107,7 @@ trait RepositorySources
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->uuidMorphs('postable');
+            $table->integer('position')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -159,36 +186,36 @@ trait RepositorySources
             'owner_id' => $o1->id,
             'is_active' => false,
             'description' => 'world',
-            'en' => [
-                'context' => 'Alice B Context',
-            ],
+            // 'en' => [
+            //     'context' => 'Alice B Context',
+            // ],
         ]);
         $tm3 = TestModel::create([
             'name' => 'Bob',
             'owner_id' => $o2->id,
             'is_active' => true,
             'description' => 'hello',
-            'en' => [
-                'context' => 'Bob Context',
-            ],
+            // 'en' => [
+            //     'context' => 'Bob Context',
+            // ],
         ]);
         $tm4 = TestModel::create([
             'name' => 'Carla',
             'owner_id' => $o2->id,
             'is_active' => true,
             'description' => 'abc',
-            'en' => [
-                'context' => 'Carla Context',
-            ],
+            // 'en' => [
+            //     'context' => 'Carla Context',
+            // ],
         ]);
         $tm5 = TestModel::create([
             'name' => 'John',
             'owner_id' => $o1->id,
             'is_active' => false,
             'description' => null,
-            'en' => [
-                'context' => 'John Context',
-            ],
+            // 'en' => [
+            //     'context' => 'John Context',
+            // ],
         ]);
 
         $tm1->notes()->create([

@@ -89,7 +89,7 @@ class CreateSuperAdminCommand extends BaseCommand
                 'password' => Hash::make($password),
             ]);
 
-            if($user->wasRecentlyCreated) {
+            if ($user->wasRecentlyCreated) {
                 $user->roles()->sync(1);
                 $user->password = Hash::make($password);
                 $user->save();

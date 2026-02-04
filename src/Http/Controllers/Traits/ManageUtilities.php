@@ -123,9 +123,11 @@ trait ManageUtilities
      */
     protected function getFormData($id = null)
     {
-        $item = $this->getFormItem($id);
-        $customFormData = $this->formData($this->request, $item);
         $schema = $this->formSchema;
+        $item = $this->getRepositoryItem($id);
+        $formItem = $this->getFormItem($id);
+
+        $customFormData = $this->formData($this->request, $item);
 
         $fullRoutePrefix = 'admin.' . ($this->routePrefix ? $this->routePrefix . '.' : '') . $this->moduleName . '.';
         $previewRouteName = $fullRoutePrefix . 'preview';
@@ -160,19 +162,13 @@ trait ManageUtilities
             'model' => $item,
             'translate' => $translate,
             'formAttributes' => array_merge([
-                'modelValue' => array_merge(
-                    $item->toArray(),
-                    // $this->repository->getFormFields($item, $this->chunkInputs(all: true, schema: $schema)),
-                    $this->repository->getFormFields($item, $schema),
-                ),
+                'modelValue' => $formItem,
                 'title' => $title,
                 'isEditing' => $isEditing,
                 'actions' => $this->getFormActions(),
                 // ...(($formAttributes['async'] ?? true) ? [] : ['actionUrl' => $this->getFormUrl($itemId)]),
                 'actionUrl' => $this->getFormUrl($itemId),
-
                 'schema' => $eventualSchema,
-
                 'languages' => getLanguagesForVueStore($eventualSchema, $translate)['all'] ?? [],
             ], $formAttributes),
             'endpoints' => [
@@ -280,7 +276,6 @@ trait ManageUtilities
 
     public function getNestedData()
     {
-
         $result = Collection::make($this->getConfigFieldsByRoute('modules', []))->map(function ($context, $key) {
 
             $context->title = isset($context->title) ? ___($context->title) : headline($context->title);

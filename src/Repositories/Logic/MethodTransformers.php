@@ -8,7 +8,7 @@ use Unusualify\Modularity\Traits\ManageTraits;
 
 trait MethodTransformers
 {
-    use ManageTraits;
+    use ManageTraits, CacheableTrait;
 
     /**
      * @var array
@@ -121,26 +121,28 @@ trait MethodTransformers
      */
     public function getCountByStatusSlug($slug, $scope = [])
     {
-        $this->countScope = $scope;
+        return $this->cacheableCount($slug, function () use ($slug, $scope) {
+            $this->countScope = $scope;
 
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
-            if (($count = $this->$method($slug)) !== false) {
-                return $count;
+            foreach ($this->traitsMethods('getCountByStatusSlug') as $method) {
+                if (($count = $this->$method($slug)) !== false) {
+                    return $count;
+                }
             }
-        }
 
-        switch ($slug) {
-            case 'all':
-                return $this->getCountForAll();
-            case 'published':
-                return $this->getCountForPublished();
-            case 'draft':
-                return $this->getCountForDraft();
-            case 'trash':
-                return $this->getCountForTrash();
-        }
+            switch ($slug) {
+                case 'all':
+                    return $this->getCountForAll();
+                case 'published':
+                    return $this->getCountForPublished();
+                case 'draft':
+                    return $this->getCountForDraft();
+                case 'trash':
+                    return $this->getCountForTrash();
+            }
 
-        return 0;
+            return 0;
+        }, $scope);
     }
 
     /**
@@ -263,6 +265,8 @@ trait MethodTransformers
      */
     public function getFormFields($object, $schema = [], $noSerialization = false)
     {
+        $this->setSchema($schema);
+
         $chunkedInputs = $this->chunkInputs(all: true, schema: empty($schema) ? null : $schema);
 
         $this->setColumns($chunkedInputs);
@@ -276,14 +280,13 @@ trait MethodTransformers
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
             $fields = $this->$method($object, $fields, $schema);
         }
+
         if (! empty($fields)) {
-            // dd($schema, $fields);
             $fields = Collection::make($fields)->reduce(function ($acc, $value, $key) {
                 Arr::set($acc, $key, $value);
 
                 return $acc;
             }, []);
-            // dd($fields);
         }
 
         return $fields;
@@ -406,12 +409,13 @@ trait MethodTransformers
                 $relationName = $this->getCamelCase($matches[1]);
 
                 if (method_exists($this->getModel(), $relationName)) {
-                    $related = $this->getModel()->{$relationName}();
+                    $relationship = $this->getModel()->{$relationName}();
+                    $related = $relationship->getRelated();
 
-                    if ($related instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
+                    if ($relationship instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
                         // Handle morphTo relationship
-                        $morphType = $related->getMorphType(); // Gets the type column (e.g., 'modelable_type')
-                        $morphId = $related->getForeignKeyName(); // Gets the id column (e.g., 'modelable_id')
+                        $morphType = $relationship->getMorphType(); // Gets the type column (e.g., 'modelable_type')
+                        $morphId = $relationship->getForeignKeyName(); // Gets the id column (e.g., 'modelable_id')
 
                         $morphFilters = array_reduce($value, function ($acc, $item) {
                             if (isset($item['type']) && isset($item['id'])) {
@@ -430,10 +434,20 @@ trait MethodTransformers
                                 ->whereIn($morphId, $values);
                         }
 
+                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOneThrough) {
+                        $query->whereHas($relationName, function ($query) use ($value, $related) {
+                            $table = $related->getTable();
+                            $query->whereIn($table . '.id', $value);
+                        });
+                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
+                        $query->whereHas($relationName, function ($query) use ($value, $related) {
+                            $table = $related->getTable();
+                            $query->whereIn($table . '.id', $value);
+                        });
                     } else {
                         // Handle belongsTo relationship
-                        if (method_exists(__CLASS__, $method = 'getForeignKey' . get_class_short_name($related))) {
-                            $foreignKey = $this->$method($related, $scopes, $value);
+                        if (method_exists(__CLASS__, $method = 'getForeignKey' . get_class_short_name($relationship))) {
+                            $foreignKey = $this->$method($relationship, $scopes, $value);
                         }
                         $scopes[$foreignKey] = $value;
 

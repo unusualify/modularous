@@ -99,7 +99,6 @@ class Modularity extends FileRepository
      */
     public function all(): array
     {
-        // dd($this);
         if (! $this->config('cache.enabled')) {
             return $this->scan();
         }
@@ -153,12 +152,9 @@ class Modularity extends FileRepository
         }
 
         if ($resetCache) {
-            // dd($modules);
-
             return $this->scan();
         }
 
-        // dd($modules);
         return $modules;
     }
 
@@ -173,7 +169,6 @@ class Modularity extends FileRepository
 
         $modules = [];
 
-        // dump($paths);
         foreach ($paths as $key => $path) {
             $manifests = $this->getFiles()->glob("{$path}/module.json");
 
@@ -261,11 +256,8 @@ class Modularity extends FileRepository
     public function clearCache()
     {
         app('cache')->forget($this->config('cache.key'));
+
         $this->activator->flushCache(); // for modules_statuses.json cache
-        // foreach($this->all() as $module){
-        //     dd($module->clearCache());
-        //     app('cache')->forget($module->getActivator()->getCacheKey());
-        // }
     }
 
     /**
@@ -296,6 +288,11 @@ class Modularity extends FileRepository
     final public function isProduction()
     {
         return ! $this->isDevelopment();
+    }
+
+    final public function shouldUseCollationForSearch()
+    {
+        return $this->config('use_collation_for_search', false);
     }
 
     /**
@@ -666,7 +663,6 @@ class Modularity extends FileRepository
         }
 
         return concatenate_path($this->vendorPath, $dir);
-        // return realpath(concatenate_path($this->vendorPath, $dir));
     }
 
     /**

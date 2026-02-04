@@ -19,6 +19,8 @@ trait HasSpreadable
 
     protected $spreadableKeys = [];
 
+    protected $spreadableIsUpdated = false;
+
     public static function bootHasSpreadable()
     {
         // TODO: Keep the old spreadable data from model and remove attributes based on that don't remove all column fields
@@ -32,12 +34,16 @@ trait HasSpreadable
                     $model->spreadable()->create([
                         'content' => $model->{$model->getSpreadableSavingKey()},
                     ]);
+                    $model->spreadableIsUpdated = true;
                 } else {
                     // Handle existing spread updates
-                    $model->spreadable()->update([
+                    $spreadable = $model->spreadable;
+                    $spreadable->update([
                         'content' => $model->{$model->getSpreadableSavingKey()},
-                        'updated_at' => now(),
                     ]);
+                    if ($spreadable->wasChanged()) {
+                        $model->spreadableIsUpdated = true;
+                    }
                 }
             }
 
@@ -85,6 +91,12 @@ trait HasSpreadable
             } else {
                 // Initialize empty _spread if no spreadable exists
                 // $model->setAttribute($model->getSpreadableSavingKey(), []);
+            }
+        });
+
+        self::saved(static function (Model $model) {
+            if ($model->spreadableIsUpdated && ! $model->wasChanged()) {
+                $model->touch();
             }
         });
 

@@ -98,6 +98,37 @@ class SpreadableTraitTest extends RepositoryTestCase
         $this->assertSame('Hello', $formFields['spread_payload']['headline']);
         $this->assertSame('Short', $formFields['spread_payload']['summary']);
     }
+
+    public function test_before_save_spreadable_trait_creates_spreadable_model_if_not_exists()
+    {
+        $mock = \Mockery::mock(SpreadableTestRepository::class, [new SpreadableTestModel])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $schema = [
+            ['name' => 'name', 'type' => 'text'],
+            ['name' => 'title', 'type' => 'text', 'spreadable' => true],
+        ];
+
+        $object = new SpreadableTestModel;
+        $object->name = 'Test';
+        $object->is_active = true;
+        $object->saveQuietly();
+        $object->refresh();
+
+        $mock->shouldReceive('inputs')->andReturn($schema);
+
+        $fields = [
+            'name' => 'Test',
+            'title' => 'Hello',
+        ];
+
+        $mock->update($object->id, $fields, $schema);
+        $object->refresh();
+
+        $this->assertNotNull($object->spreadable);
+        $this->assertSame('Hello', $object->spreadable->content['title']);
+    }
 }
 
 class SpreadableTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel

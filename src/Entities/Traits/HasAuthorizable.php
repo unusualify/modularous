@@ -71,6 +71,9 @@ trait HasAuthorizable
                 );
                 $model->modelIsAuthorizing = false;
                 $model->hasAuthorizableFields = [];
+                if (! $model->wasRecentlyCreated && ! $model->isDirty()) {
+                    $model->touch();
+                }
             }
         });
 

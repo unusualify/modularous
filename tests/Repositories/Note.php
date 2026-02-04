@@ -2,7 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
-class Note extends \Illuminate\Database\Eloquent\Model
+class Note extends \Unusualify\Modularity\Entities\Model
 {
     protected $table = 'notes';
 

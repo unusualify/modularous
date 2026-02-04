@@ -278,6 +278,54 @@ return [
                     'allowedRoles' => ['superadmin', 'admin', 'manager'],
                 ],
             ],
+            'filters' => [
+                'columns' => [
+                    [
+                        'type' => 'select',
+                        'slug' => 'status',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Status',
+                            'itemTitle' => 'name',
+                            'itemValue' => 'value',
+                            'items' => array_map(function ($status) {
+                                return [
+                                    'name' => $status->label(),
+                                    'value' => $status->value,
+                                ];
+                            }, PaymentStatus::cases()),
+                        ],
+                    ],
+                ],
+                'relations' => [
+                    [
+                        'type' => 'select',
+                        'slug' => 'paymentService',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Payment Service',
+                        ],
+                        'repository' => 'Modules\\SystemPayment\\Repositories\\PaymentServiceRepository',
+                    ],
+                    [
+                        'type' => 'select',
+                        'slug' => 'currency',
+                        'componentOptions' => [
+                            'multiple' => true,
+                            'clearable' => true,
+                            'variant' => 'outlined',
+                            'label' => 'Currency',
+                            'itemTitle' => 'iso_4217',
+                            'itemValue' => 'id',
+                            'connector' => 'SystemPricing|Currency^repository->list?column=iso_4217&scopes=[enabled]',
+                        ],
+                    ],
+                ],
+            ],
             'headers' => [
                 [
                     'title' => 'Owner Id',
@@ -307,6 +355,8 @@ return [
                     'key' => 'company',
                     'itemTitle' => 'name',
                     'minWidth' => 150,
+                    'searchable' => true,
+                    'searchKey' => 'creator.company.name',
                 ],
                 [
                     'title' => 'Service',
@@ -335,6 +385,8 @@ return [
                     'title' => 'User Email',
                     'key' => 'creator',
                     'itemTitle' => 'email',
+                    'searchable' => true,
+                    'searchKey' => 'creator.email',
                 ],
                 [
                     'title' => 'Created Time',
@@ -559,9 +611,9 @@ return [
                     'itemTitle' => 'name',
                 ],
                 [
+                    'type' => 'json-repeater',
                     'name' => 'default_vat_rates',
                     'label' => __('Default VAT Rates'),
-                    'type' => 'json-repeater',
                     'default' => [],
                     'formRowAttribute' => [
                         'noGutters' => true,

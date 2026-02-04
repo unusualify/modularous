@@ -14,4 +14,9 @@ class Currency extends \Oobook\Priceable\Models\Currency
         'iso_4217',
         'iso_4217_number',
     ];
+
+    public function scopeEnabled($query)
+    {
+        return $query->whereIn('iso_4217', modularityConfig('enabled_currencies'));
+    }
 }

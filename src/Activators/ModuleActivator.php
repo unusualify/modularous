@@ -2,11 +2,9 @@
 
 namespace Unusualify\Modularity\Activators;
 
-use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Nwidart\Modules\Activators\FileActivator;
-// use Nwidart\Modules\Module;
 use Unusualify\Modularity\Module;
 
 class ModuleActivator extends FileActivator
@@ -52,8 +50,6 @@ class ModuleActivator extends FileActivator
 
     public function __construct(Container $app, private Module $module)
     {
-        // parent::__construct($app);
-
         $this->cache = $app['cache'];
         $this->files = $app['files'];
         $this->config = $app['config'];
@@ -64,19 +60,6 @@ class ModuleActivator extends FileActivator
 
         $this->routesStatuses = $this->getRoutesStatuses();
     }
-
-    // public function setModule($module, $path)
-    // {
-    //     $this->module = $module;
-
-    //     $this->statusesFile = $path . '/' . $this->config('statuses-file');
-
-    //     $this->setCacheKey($this->generateCacheKey());
-
-    //     $this->routesStatuses = $this->getRoutesStatuses();
-
-    //     return $this;
-    // }
 
     public function generateCacheKey()
     {

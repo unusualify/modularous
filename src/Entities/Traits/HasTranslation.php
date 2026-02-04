@@ -12,8 +12,26 @@ trait HasTranslation
 {
     use Translatable;
 
+    private $translationFillingIsActive = true;
+
     public static function bootHasTranslation(): void
     {
+        static::saving(function (Model $model) {
+            if ($model->bypassTranslationFilling()) {
+                $attributes = $model->getAttributes();
+                if (count($attributes) > 0) {
+                    foreach ($attributes as $key => $value) {
+                        $model->offsetUnset($key);
+                    }
+                    $attributes = $model->handleTranslationAttributes($attributes);
+
+                    foreach ($attributes as $key => $value) {
+                        $model->setAttribute($key, $value);
+                    }
+                }
+            }
+        });
+
         if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses_recursive(static::class))) {
             static::forceDeleting(function (Model $model) {
                 /* @var Translatable $model */
@@ -34,12 +52,51 @@ trait HasTranslation
         }
     }
 
+    /**
+     * Disable translation filling for the model.
+     */
+    public function disableTranslationFilling()
+    {
+        $this->translationFillingIsActive = false;
+    }
+
+    /**
+     * Enable translation filling for the model.
+     */
+    public function enableTranslationFilling()
+    {
+        $this->translationFillingIsActive = true;
+    }
+
     protected function useTranslatedAttributeTransformation(): bool
     {
         return isset($this->transformTranslatedAttributes) ? (bool) $this->transformTranslatedAttributes : false;
     }
 
-    public function fill(array $attributes)
+    protected function bypassTranslationFilling()
+    {
+        return $this instanceof \Illuminate\Database\Eloquent\Relations\Pivot && ! $this->exists;
+    }
+
+    public function setAttribute($key, $value)
+    {
+        [$attribute, $locale] = $this->getAttributeAndLocale($key);
+
+        if (! $this->bypassTranslationFilling() && $this->isTranslationAttribute($attribute)) {
+            $this->getTranslationOrNew($locale)->$attribute = $value;
+
+            return $this;
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    public function fillingTranslatable(array $attributes): array
+    {
+        return $attributes;
+    }
+
+    protected function handleTranslationAttributes(array $attributes)
     {
         if ($this->useTranslatedAttributeTransformation()) {
             $locales = getLocales();
@@ -99,6 +156,19 @@ trait HasTranslation
                 $this->getTranslationOrNew($locale)->fill([$attribute => $values]);
 
                 unset($attributes[$key]);
+            }
+        }
+
+        return $attributes;
+    }
+
+    public function fill(array $attributes)
+    {
+        $attributes = $this->fillingTranslatable($attributes);
+
+        if ($this->translationFillingIsActive) {
+            if (! $this->bypassTranslationFilling()) {
+                $attributes = $this->handleTranslationAttributes($attributes);
             }
         }
 
@@ -293,6 +363,7 @@ trait HasTranslation
 
         return $this->translate($locale)->$key;
     }
+
     // /**
     //  * Scope a query to find models by a translated attribute value for a specific locale.
     //  *

@@ -38,10 +38,10 @@ trait ImagesTrait
 
         $mediasCollection = Collection::make();
 
-        $mediasFromFields = $this->getMedias($fields);
+        $mediasFromFields = $this->getMedias($object, $fields);
 
         $mediasFromFields->each(function ($media) use ($object, $mediasCollection) {
-            $newMedia = Media::withTrashed()->find(is_array($media['id']) ? Arr::first($media['id']) : $media['id']);
+            $newMedia = Media::withTrashed()->find(is_array($media['media_id']) ? Arr::first($media['media_id']) : $media['media_id']);
             $pivot = $newMedia->newPivot($object, Arr::except($media, ['id']), modularityConfig('tables.mediables', 'umod_mediables'), true);
             $newMedia->setRelation('pivot', $pivot);
             $mediasCollection->push($newMedia);
@@ -63,10 +63,16 @@ trait ImagesTrait
             return;
         }
 
-        $object->medias()->sync([]);
-
-        $this->getMedias($fields)->each(function ($media) use ($object) {
-            $object->medias()->attach($media['id'], Arr::except($media, ['id']));
+        $this->getMedias($object, $fields)->each(function ($media) use ($object) {
+            if (isset($media['id']) && $media['id']) {
+                $result = $object->medias()->updateExistingPivot($media['id'], Arr::except($media, ['id', 'media_id']));
+                if ($result) {
+                    $this->mustTouchEloquentModel();
+                }
+            } else {
+                $object->medias()->attach($media['media_id'], Arr::except($media, ['media_id']));
+                $this->mustTouchEloquentModel();
+            }
         });
     }
 
@@ -120,7 +126,7 @@ trait ImagesTrait
      * @param array $fields
      * @return \Illuminate\Support\Collection
      */
-    private function getMedias($fields)
+    private function getMedias($object, $fields)
     {
         $images = Collection::make();
 
@@ -132,9 +138,9 @@ trait ImagesTrait
             if (isset($fields[$role])) {
                 foreach ($systemLocales as $locale) {
                     if (isset($fields[$role][$locale])) {
-                        $images = $this->pushImage($images, $fields[$role][$locale], $role, $locale);
+                        $images = $this->pushImage($object, $images, $fields[$role][$locale], $role, $locale);
                     } else {
-                        $images = $this->pushImage($images, $fields[$role], $role, $locale);
+                        $images = $this->pushImage($object, $images, $fields[$role], $role, $locale);
 
                     }
                 }
@@ -144,15 +150,22 @@ trait ImagesTrait
         return $images;
     }
 
-    public function pushImage($images, $imagesData, $role, $locale, $index = null)
+    public function pushImage($object, $images, $imagesData, $role, $locale, $index = null)
     {
-
-        Collection::make($imagesData)->each(function ($image) use (&$images, $role, $locale, $index) {
+        $mediablesTable = modularityConfig('tables.mediables', 'um_mediables');
+        Collection::make($imagesData)->each(function ($image) use ($object, $mediablesTable, &$images, $role, $locale, $index) {
             $replacePattern = '/([A-Za-z-_]+)(\.)(\*)(\.)([A-Za-z-_\.]+)/';
+            $role = preg_replace($replacePattern, '${1}${2}' . $index . '${4}${5}', $role);
+            $mediableId = $object->medias()
+                ->select($mediablesTable . '.id as pivot_id')
+                ->where('media_id', $image['id'])
+                ->where('role', $role)
+                ->where('locale', $locale)->value('pivot_id') ?? null;
+
             $images->push([
-                'id' => $image['id'],
-                // 'role' => $role,
-                'role' => preg_replace($replacePattern, '${1}${2}' . $index . '${4}${5}', $role),
+                ...($mediableId ? ['id' => $mediableId] : []),
+                'media_id' => $image['id'],
+                'role' => $role,
                 'metadatas' => json_encode($image['metadatas']),
                 'crop' => 'default',
                 'locale' => $locale,

@@ -85,22 +85,37 @@ class FilesTraitTest extends RepositoryTestCase
             'filename' => 'file-1.pdf',
             'size' => 100,
         ]);
-
-        // Arrange: create a model to attach files to
-        $model = $this->repository->create(['name' => 'With File']);
+        $file2 = LibraryFile::create([
+            'uuid' => 'uploads/folder/file-2.pdf',
+            'filename' => 'file-2.pdf',
+            'size' => 100,
+        ]);
 
         // Schema defines a non-translated file role 'file-1'
         $schema = [
-            'file-1' => [
+            'custom-files' => [
                 'type' => 'input-file',
-                'name' => 'file-1',
+                'name' => 'custom-files',
                 'translated' => false,
             ],
         ];
 
+        // Arrange: create a model to attach files to
+        $model = $this->repository->create([
+            'name' => 'With File',
+            'custom-files' => [
+                [
+                    'id' => $file->id,
+                ],
+                [
+                    'id' => $file2->id,
+                ],
+            ],
+        ], $schema);
+
         // Payload mimicking files attach: role points to uploaded file id
         $fields = [
-            'file-1' => [
+            'custom-files' => [
                 [
                     'id' => $file->id,
                 ],
@@ -143,7 +158,7 @@ class FilesTraitTest extends RepositoryTestCase
         $this->repository->update($model->id, [], $schema);
 
         // Assert: no files attached
-        $this->assertSame(0, $model->fresh()->files()->count());
+        $this->assertSame(1, $model->fresh()->files()->count());
     }
 
     public function test_attach_translated_file_role_attaches_with_locale_pivot()

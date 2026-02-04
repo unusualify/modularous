@@ -27,7 +27,14 @@ class RepeaterHydrate extends InputHydrate
     {
         $input = $this->input;
 
+        $originalType = $input['type'];
         $input['type'] = 'input-repeater';
+
+        if ($originalType === 'repeater') {
+            $input['root'] = 'default';
+        } else {
+            $input['root'] = $originalType;
+        }
 
         if ($input['draggable'] ?? false) {
             $input['orderKey'] ??= 'position';

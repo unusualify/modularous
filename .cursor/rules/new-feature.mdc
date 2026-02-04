@@ -1,0 +1,50 @@
+---
+alwaysApply: false
+description: "This rule provides standards for new features of Modularity"
+globs: src/**/*.php, vue/src/**/*.vue, vue/src/**/*.js ,vue/src/**/*.scss, vue/src/**/*.css
+---
+
+This project is a feature-based modular Laravel package using:
+- Repository pattern as the primary data access layer
+- Trait-driven behavior composition
+- Method Transformers for lifecycle interception
+
+Core rules:
+
+1. Repositories
+- Repositories are the single source of truth for data mutations
+- All create/update/delete logic must pass through repository methods
+- Never access Eloquent models directly outside repositories
+
+2. Method Transformers
+- Repository methods must respect transformer lifecycle hooks:
+  - beforeSave
+  - afterSave
+  - beforeCreate / afterCreate
+  - beforeUpdate / afterUpdate
+- Transformers must remain side-effect aware and predictable
+- Do not embed business logic directly in transformers
+
+3. Traits
+- Traits are used for reusable, cross-cutting behavior only
+- Trait methods must be conventionally named and discoverable
+- Trait execution must be inferred via repository or model lifecycle
+- Avoid stateful traits unless explicitly required
+
+4. Modularity
+- Code must remain module-isolated and feature-scoped
+- No cross-module coupling without explicit contracts
+- Shared logic must live in base repositories or shared traits
+
+5. Laravel Conventions
+- Respect Laravel naming, directory structure, and contracts
+- Use service container binding instead of manual instantiation
+- Prefer collections, value objects, and DTO-like arrays over primitives
+
+6. Vue / Vuetify
+- Vue components must be presentational by default
+- Business logic belongs in composables or backend repositories
+- Follow Vuetify component and slot conventions strictly
+
+General Principle:
+Favor convention over configuration. Extend existing patterns—do not invent new ones unless unavoidable.

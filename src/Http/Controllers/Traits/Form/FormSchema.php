@@ -45,6 +45,11 @@ trait FormSchema
         static::$formSchemaCallbacks[static::class] = $callback;
     }
 
+    public function setupFormSchema()
+    {
+        $this->formSchema = $this->getModuleFormSchema();
+    }
+
     protected function getModuleFormSchema()
     {
         $inputs = $this->getConfigFieldsByRoute('inputs');
@@ -165,6 +170,7 @@ trait FormSchema
                 if (isset($input['repository'])) {
                     $relation_class = App::make($input['repository']);
                 } elseif (isset($input['model'])) {
+
                     $relation_class = App::make($input['model']);
                 } elseif (isset($input['route'])) {
                     $finder = new Finder;
@@ -340,26 +346,42 @@ trait FormSchema
                     $cascades = collect($reversedParents)->mapWithKeys(fn ($i) => [
                         $i['name'] => [],
                     ])->toArray();
-                    // dd($reversedParents, $foreignKeys);
-                    foreach ($reversedParents as $index => $attachable) {
+
+                    foreach ($reversedParents as $index => $_input) {
                         $isCascadeable = false;
-                        $name = $attachable['name'];
-                        $connector = $attachable['connector'] ?? null;
-                        // dd($foreignKeys, $name, $attachable, $connector);
-                        $attachable = $this->getSchemaInput($attachable + ['noRecords' => true])[$name];
+                        $name = $_input['name'];
+                        $connector = $_input['connector'] ?? null;
+                        $attachable = $this->getSchemaInput($_input + ['noRecords' => true])[$name];
+
+                        if (isset($_input['model'])) {
+                            $attachable['model'] = $_input['model'];
+                        }
+                        if (isset($_input['repository'])) {
+                            $attachable['repository'] = $_input['repository'];
+                        }
+                        if (isset($_input['connector'])) {
+                            $attachable['connector'] = $_input['connector'];
+                        }
+                        if (isset($_input['newConnector'])) {
+                            $attachable['newConnector'] = $_input['newConnector'];
+                        }
 
                         if ((bool) $connector) {
                             $attachable['connector'] = $connector;
                         }
 
                         $modelClass = null;
-
-                        if (isset($attachable['repository'])) {
+                        if (isset($attachable['model'])) {
+                            if (! class_exists($attachable['model'])) {
+                                throw new \Exception('Model ' . $attachable['model'] . ' does not exist on morphTo input: ' . $name);
+                            }
+                            $modelClass = App::make($attachable['model']);
+                        } elseif (isset($attachable['repository'])) {
                             $modelClass = App::make($attachable['repository'])->getModel();
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
                             $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
                         } else {
-                            throw new \Exception('Repository or connector not found on morphTo input: ' . $name);
+                            throw new \Exception('Model or repository or connector not found on morphTo input: ' . $name);
                         }
 
                         $columns = $modelClass->getTableColumns();
@@ -415,11 +437,21 @@ trait FormSchema
             case 'polymorphic':
                 $arrayable = true;
 
-                if (! isset($input['model'])) {
+                $connector = $input['newConnector'] ?? null;
+                $model = null;
+                $modelInstance = null;
+
+                if (isset($connector)) {
+                    $connector = new Connector($connector);
+                    $module = $connector->getModule();
+                    $modelInstance = $connector->getModel(false);
+                }
+
+                if (! $modelInstance && ! isset($input['model'])) {
                     throw new \Exception('Model is required for polymorphic input');
                 }
 
-                $model = $input['model'];
+                $model = $input['model'] ?? $modelInstance;
 
                 if (! class_exists($model)) {
                     throw new \Exception('Model ' . $model . ' does not exist on polymorphic input');
@@ -603,7 +635,15 @@ trait FormSchema
      */
     public function hydrateInputConnector(&$input)
     {
-        if (isset($input['connector'])) {
+        if (isset($input['newConnector'])) {
+            $connector = new Connector($input['newConnector']);
+            $input['_moduleName'] = $connector->getModuleName();
+            $input['_routeName'] = $connector->getRouteName();
+
+            if ($connector->isLinkTarget()) {
+                $connector->run($input, 'endpoint');
+            }
+        } elseif (isset($input['connector'])) {
             // 'moduleName:routeName|uri:edit'
             $targetType = 'uri';
 
@@ -745,7 +785,7 @@ trait FormSchema
                                 }
                             }
                         } else {
-                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->routeName());
+                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->getRouteName());
                         }
 
                         break;

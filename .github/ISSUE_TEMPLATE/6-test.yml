@@ -1,0 +1,50 @@
+name: "🧪 Test"
+description: Create a new demand for tests
+title: "🧪 [TEST]: "
+labels: [
+  "test",
+  "experiment"
+]
+body:
+  - type: dropdown
+    id: type 
+    attributes:
+      label: "Type"
+      description: Select whether new or missing test
+      options:
+        - missing
+        - new
+  - type: dropdown
+    id: unit
+    attributes:
+      label: "Which Structure"
+      description: Select the structure to be tested
+      options:
+        - Activators
+        - Brokers
+        - Console
+        - Entities
+        - Events
+        - Generators
+        - Helpers
+        - Http
+        - Hydrates
+        - Listeners
+        - Logging
+        - Notifications
+        - Providers
+        - Repositories
+        - Schedulers
+        - Services
+        - Support
+        - Traits
+        - Transformers
+        - Translation
+        - View
+
+  - type: textarea
+    id: 
+    attributes:
+      label: "A class, method or logic reference"
+    validations:
+      required: true

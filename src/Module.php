@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use Nwidart\Modules\Contracts\ActivatorInterface;
 use Nwidart\Modules\Laravel\Module as NwidartModule;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Unusualify\Modularity\Activators\ModuleActivator;
@@ -61,23 +60,10 @@ class Module extends NwidartModule
     public function __construct($app, string $name, $path)
     {
         parent::__construct($app, $name, $path);
-        // $this->name = $name;
-        // $this->path = $path;
-        // $this->cache = $app['cache'];
-        // $this->files = $app['files'];
-        // $this->translator = $app['translator'];
-        // $this->activator = $app[ActivatorInterface::class];
         $this->app = $app;
         $this->moduleActivator = (new ModuleActivator($app, $this));
-        try {
-            // dd($app, $name, $path);
-            // $this->moduleActivator = (new ModuleActivator($app))->setModule($this->getName(), $path);
-        } catch (\Throwable $th) {
-            dd($name, $path, $th);
-        }
 
         $this->setMiddlewares();
-        // $this->moduleActivator->setModule($name);
     }
 
     /**
@@ -161,12 +147,6 @@ class Module extends NwidartModule
         }
     }
 
-    // public function setModuleActivator($name)
-    // {
-    //     // Directory path fix for System Modules
-    //     $this->moduleActivator->setModule($name, $this->getDirectoryPath());
-    // }
-
     /**
      * Enable the current module route.
      */
@@ -218,7 +198,7 @@ class Module extends NwidartModule
      */
     public function hasRoute(string $routeName): bool
     {
-        return in_array($routeName, $this->getRoutes());
+        return in_array($routeName, $this->getRouteNames());
     }
 
     /**
@@ -625,15 +605,6 @@ class Module extends NwidartModule
     }
 
     /**
-     * @param mixed $routeName
-     * @param bool $asClass
-     */
-    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
-    {
-        return (new Finder)->getRouteRepository($routeName, $asClass);
-    }
-
-    /**
      * routeHasTable
      *
      * @param mixed $routeName
@@ -812,7 +783,6 @@ class Module extends NwidartModule
         $name = $routes->keys()->first();
 
         if (! $name) {
-            // dd($routeName, $action, $quote, $routes, Collection::make($this->getRouteUrls($routeName)));
             throw new \Exception('Route not found for ' . $routeName . ' with action "' . $action . '" on module ' . $this->getName());
         }
 
@@ -825,7 +795,9 @@ class Module extends NwidartModule
                 return url($relativeUrl);
             }
 
-            return str_starts_with($relativeUrl, '/') ? $relativeUrl : '/' . $relativeUrl . '?' . http_build_query($replacements);
+            return (str_starts_with($relativeUrl, '/')
+                ? $relativeUrl
+                : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -857,6 +829,49 @@ class Module extends NwidartModule
     public function getTargetClassPath(string $target, $className = null): string
     {
         return $this->getDirectoryPath(GenerateConfigReader::read(kebabCase($target))->getPath()) . ($className ? '/' . $className : '');
+    }
+
+    /**
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
+    {
+        return (new Finder)->getRouteRepository($routeName, $asClass);
+    }
+
+    /**
+     * getModel
+     *
+     * @param mixed $routeName
+     * @param bool $asClass
+     */
+    public function getModel($routeName, $asClass = true): \Illuminate\Database\Eloquent\Model|string
+    {
+        $classNamespace = $this->getTargetClassNamespace('model', Str::studly($routeName));
+
+        if (! class_exists($classNamespace)) {
+            throw new \Exception('Model not found for ' . $routeName . ' on module ' . $this->getName());
+        }
+
+        return $asClass ? App::make($classNamespace) : $classNamespace;
+    }
+
+    /**
+     * get Main Route Controller
+     *
+     * @param string $routeName
+     * @param bool $asClass
+     */
+    public function getController($routeName, $asClass = true): \Illuminate\Routing\Controller|string
+    {
+        $classNamespace = $this->getTargetClassNamespace('controller', Str::studly($routeName) . 'Controller');
+
+        if (! class_exists($classNamespace)) {
+            throw new \Exception('Controller not found for ' . $routeName . ' on module ' . $this->getName());
+        }
+
+        return $asClass ? App::make($classNamespace) : $classNamespace;
     }
 
     /**

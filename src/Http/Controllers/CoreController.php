@@ -13,19 +13,23 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
 use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularity\Traits\ManageModuleRoute;
 use Unusualify\Modularity\Traits\ManageNames;
 use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularity\Traits\Moduleable;
 
-abstract class CoreController extends LaravelController
+abstract class CoreController extends LaravelController implements ModuleableInterface
 {
     use AuthorizesRequests,
         DispatchesJobs,
         ValidatesRequests,
         ManageNames,
+        Moduleable,
+        ManageModuleRoute,
         ManageTraits;
 
     /**
@@ -53,16 +57,6 @@ abstract class CoreController extends LaravelController
     /**
      * @var string
      */
-    protected $moduleName;
-
-    /**
-     * @var string
-     */
-    protected $routeName;
-
-    /**
-     * @var string
-     */
     protected $modelName;
 
     /**
@@ -72,11 +66,6 @@ abstract class CoreController extends LaravelController
 
     protected ?\Unusualify\Modularity\Repositories\Repository $repository;
 
-    /**
-     * @var \Unusualify\Modularity\Module
-     */
-    protected $module;
-
     public function __construct(Application $app, Request $request)
     {
         $this->app = $app;
@@ -85,11 +74,11 @@ abstract class CoreController extends LaravelController
         $this->request = $request;
 
         $this->moduleName = $this->getModuleName();
-        $this->module = Modularity::find($this->moduleName);
+        $this->module = $this->getModule();
         // $this->config = $this->getModuleConfig();
 
         $this->namespace = $this->getNamespace();
-        $this->routeName = $this->getRouteName();
+        $this->routeName = $this->setupRouteName();
 
         $this->modelName = $this->getModelName();
         $this->repository = $this->getRepository();
@@ -136,10 +125,7 @@ abstract class CoreController extends LaravelController
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function getModuleName()
+    public function getModuleName(): ?string
     {
         return $this->moduleName ?? curtModuleName(dirname((new \ReflectionClass(get_class($this)))->getFileName()));
     }
@@ -147,9 +133,9 @@ abstract class CoreController extends LaravelController
     /**
      * @return string
      */
-    protected function getRouteName()
+    protected function setupRouteName()
     {
-        return $this->routeName ?? $this->routeName() ?? $this->moduleName;
+        return $this->routeName ?? $this->getRouteName() ?? $this->moduleName;
     }
 
     /**
@@ -171,7 +157,7 @@ abstract class CoreController extends LaravelController
     /**
      * @return \Unusualify\Modularity\Repositories\Repository | null
      */
-    protected function getRepository()
+    public function getRepository()
     {
         return $this->getRepositoryClass($this->modelName) ? App::make($this->getRepositoryClass($this->modelName)) : null;
         try {
@@ -216,12 +202,10 @@ abstract class CoreController extends LaravelController
         // return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
     }
 
-    protected function getConfigFieldsByRoute($field_name, $default = null)
+    protected function getConfigFieldsByRoute($fieldName, $default = null)
     {
         try {
-            return data_get($this->config->routes->{$this->getSnakeCase($this->routeName)}, $field_name) ?? $default;
-
-            return $this->config->routes->{$this->getSnakeCase($this->routeName)}->{$field_name};
+            return data_get($this->config->routes->{$this->getSnakeCase($this->routeName)}, $fieldName) ?? $default;
         } catch (\Throwable $th) {
             return $default;
             dd(
@@ -235,6 +219,11 @@ abstract class CoreController extends LaravelController
         // return $this->isParentRoute()
         //     ? $this->config->parent_route->{$field_name}
         //     : $this->config->sub_routes->{$this->getSnakeCase($this->routeName)}->{$field_name};
+    }
+
+    protected function getConfigFieldsByRouteRaw($fieldName, $default = null)
+    {
+        return data_get($this->module ? $this->module->getRawConfig() : [], 'routes.' . $this->getSnakeCase($this->routeName) . '.' . $fieldName) ?? $default;
     }
 
     /**
@@ -390,10 +379,15 @@ abstract class CoreController extends LaravelController
         if (($status = $this->request->get('status'))) {
             $assignable = $this->repository->getById($id);
 
-            $assignable->lastAssignment->update([
+            $lastAssignment = $assignable->lastAssignment;
+            $lastAssignment->update([
                 'status' => $status,
                 'completed_at' => $status === 'completed' ? now() : null,
             ]);
+
+            if ($lastAssignment->wasChanged()) {
+                $assignable->touch();
+            }
 
             return Response::json([
                 'location' => 'top',
@@ -410,7 +404,7 @@ abstract class CoreController extends LaravelController
 
             if ($attachments) {
                 Filepond::saveFile($lastAssignment, $attachments, 'attachments');
-                $lastAssignment->touch();
+                $assignable->touch();
             }
 
             return Response::json([
@@ -451,6 +445,8 @@ abstract class CoreController extends LaravelController
         if ($preliminaries = $this->request->get('preliminaries')) {
             Filepond::saveFile($assignment, $preliminaries, 'preliminaries');
         }
+
+        $assignable->touch();
 
         $assignment->refresh();
 

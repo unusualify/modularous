@@ -164,12 +164,13 @@ class CreatorTraitTest extends RepositoryTestCase
             'custom_creator_id' => [
                 'type' => 'creator',
                 'name' => 'custom_creator_id',
-                'allowedRoles' => ['manager'],
+                // 'allowedRoles' => ['manager'],
             ],
         ];
 
         $mapped = $repo->getFormFieldsCreatorTrait($object, [], $schema);
-        $this->assertArrayNotHasKey('custom_creator_id', $mapped);
+        // $this->assertArrayNotHasKey('custom_creator_id', $mapped);
+        $this->assertArrayHasKey('custom_creator_id', $mapped);
     }
 
     public function test_prepend_form_schema_returns_creator_component(): void

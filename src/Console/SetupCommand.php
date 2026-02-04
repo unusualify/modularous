@@ -98,8 +98,6 @@ class SetupCommand extends BaseCommand
 
     /**
      * Creates the database by connecting without a database name first.
-     *
-     * @return void
      */
     private function createDatabase(): void
     {
@@ -127,7 +125,7 @@ class SetupCommand extends BaseCommand
             $pdo->exec("SELECT 'CREATE DATABASE {$databaseName}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '{$databaseName}')");
         } elseif ($driver === 'sqlite') {
             // For SQLite, just touching the file creates the database
-            if (!file_exists($databaseName)) {
+            if (! file_exists($databaseName)) {
                 touch($databaseName);
             }
         } elseif ($driver === 'sqlsrv') {

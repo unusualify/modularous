@@ -2,6 +2,311 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.56.7 - 2026-01-28
+
+### :wrench: Bug Fixes
+
+- adjust middleware for registration route and enhance session check in ImpersonateMiddleware by @OoBook in https://github.com/unusualify/modularity/commit/eadb70d3cec065a293bc7ab5b7d1e700aaa2b645
+
+## v0.55.6 - 2026-01-20
+
+### :wrench: Bug Fixes
+
+- refresh model before invalidating cache to ensure accurate cache state by @OoBook in https://github.com/unusualify/modularity/commit/2a90e55d3b16eecf59f046dcaa99c3018958b7a1
+
+## v0.55.5 - 2026-01-19
+
+### :wrench: Bug Fixes
+
+- improve retrieval of creator information for payment payload by @OoBook in https://github.com/unusualify/modularity/commit/c98f9ac638ac7c26b5623f856e1e29eff393e75c
+
+## v0.55.4 - 2026-01-16
+
+### :rocket: Features
+
+- add conditional touch for models with mustTouchable property by @OoBook in https://github.com/unusualify/modularity/commit/c583ef95b47a4b65e129372cfe54056a533d25b3
+
+### :wrench: Bug Fixes
+
+- reset model state update flags after state update to prevent unintended behavior by @OoBook in https://github.com/unusualify/modularity/commit/e133dfa916caa2e0d17647b4992393a46abf900c
+- add email and custom_creator_id to payment payload for user verification by @OoBook in https://github.com/unusualify/modularity/commit/6ca50f0458e87eeaac23a48771a8539c64d42340
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.4 by @OoBook in https://github.com/unusualify/modularity/commit/bfa7c02353624c437f411292e76f038ca3502440
+
+## v0.55.3 - 2026-01-13
+
+### :rocket: Features
+
+- include locale in cache parameters for form items and table items to enhance localization support by @OoBook in https://github.com/unusualify/modularity/commit/45032133306b58b7f626295a3608b1802f929359
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.3 by @OoBook in https://github.com/unusualify/modularity/commit/8c3aac40bc6e62da22672b2f79ed2082a9ceebee
+
+## v0.55.2 - 2026-01-12
+
+### :rocket: Features
+
+- add enabled currencies configuration and scope method by @OoBook in https://github.com/unusualify/modularity/commit/5b5701ed781e354afe6874367821b28a8767216f
+- add getConfigFieldsByRouteRaw method for retrieving raw configuration fields by @OoBook in https://github.com/unusualify/modularity/commit/8b8661ca81c5970ec89a604e0dba7ed702269324
+
+### :wrench: Bug Fixes
+
+- update currency item title and modify items retrieval to use a connector for better data handling by @OoBook in https://github.com/unusualify/modularity/commit/fc5618fac49095296beef127a90c9776e6956752
+
+### :recycle: Refactors
+
+- replace getConfigFieldsByRoute with getConfigFieldsByRouteRaw and introduce calibrateFilter method for enhanced filter processing by @OoBook in https://github.com/unusualify/modularity/commit/6955053283bf7222cbac50842064243d1acc340e
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.2 by @OoBook in https://github.com/unusualify/modularity/commit/6ec8e44b66b36162fbb15eaf678c28c8f9db3e3e
+
+## v0.55.1 - 2026-01-12
+
+### :rocket: Features
+
+- add WellPrint component for formatted text \n and hypertext links handling by @celikerde in https://github.com/unusualify/modularity/commit/c9d5ec9f54e0d423ed54486737221da74889cb79
+
+### :recycle: Refactors
+
+- replace HTML rendering with WellPrint component for message content display by @celikerde in https://github.com/unusualify/modularity/commit/0a3a7a17afc31022f301e6447063493a21b426f8
+- enhance message title rendering with WellPrint component and propagate additional attributes by @celikerde in https://github.com/unusualify/modularity/commit/858a4dfb919662f1c96531c649e15eeddf774078
+
+### :package: Build
+
+- update build artifacts for v0.55.1 by @OoBook in https://github.com/unusualify/modularity/commit/91bfada34db2f5c47a4327e8168b3ae0e40da92d
+
+## v0.55.0 - 2026-01-12
+
+### :rocket: Features
+
+- add getController method to retrieve main route controller and improve route handling by @OoBook in https://github.com/unusualify/modularity/commit/efed0a17c7a4d0b15cf25a9b9d26822f130beec6
+- introduce ModuleableInterface and Moduleable trait for module management by @OoBook in https://github.com/unusualify/modularity/commit/05c941f4309e52c88ac417e5d3afe37506cd1910
+- add SerializeModel trait for serializing and unserializing Eloquent models with relationships by @OoBook in https://github.com/unusualify/modularity/commit/9fc8aac1ee393d1d4230a21ad6a1d743234d9633
+- introduce ModularModel trait for extracting module names and route identifiers from Eloquent models by @OoBook in https://github.com/unusualify/modularity/commit/a5e98856bac65fb039c99d1595ad28ca2414a4ff
+- replace vatRates condition with showVatRate and update discount label for clarity by @celikerde in https://github.com/unusualify/modularity/commit/a97719b0d448e0a0174942058193430f64d49524
+- add CacheGraphCommand and CacheRelationshipGraph service for managing modularity cache relationship graphs by @OoBook in https://github.com/unusualify/modularity/commit/63385a465461c14585ed9368bc865d2bed82c740
+- implement ModularityCache facade and service for enhanced caching capabilities, including support for tags and granular invalidation by @OoBook in https://github.com/unusualify/modularity/commit/2142de0cf15d0a869395d89dc4a7dd558da66a29
+- add console command for clearing modularity caches with granular options for modules and routes by @OoBook in https://github.com/unusualify/modularity/commit/b50a6b5236ea5b3f5ec41451ebf939d8f4fc41a1
+- add console command to display modularity cache statistics, including options for keys, dependencies, and relationship graph summary by @OoBook in https://github.com/unusualify/modularity/commit/cd0b5e9f3ad5e6445ecbeaa205ba51de67144e61
+- introduce CacheableInterface, UserAwareCacheInterface, and related traits for enhanced caching functionality by @OoBook in https://github.com/unusualify/modularity/commit/483cc6d91496cfebe698ca2ac8068bb9e4cdd202
+- implement caching functionality with CacheObserver and related traits for automatic cache invalidation in models by @OoBook in https://github.com/unusualify/modularity/commit/0415ca79a520130ce7191a02068720f7073e4f54
+- add trait to manage touch behavior for Eloquent models, allowing conditional updates based on internal state by @OoBook in https://github.com/unusualify/modularity/commit/929efbc3d6e6e5bbb6468a57caf0358249967447
+- introduce CacheableTrait for enhanced caching with relationship tracking, including methods for granular cache invalidation and data retrieval by @OoBook in https://github.com/unusualify/modularity/commit/02a88a4cfd0a872779ab292c66fe71357393d4d5
+- extend Repository class to implement CacheableInterface, UserAwareCacheInterface, and ModuleableInterface; enhance update method to return boolean indicating change status by @OoBook in https://github.com/unusualify/modularity/commit/62361ba58ae2dad8f842869a94673de6f25c676d
+- implement caching for count methods to improve performance and reduce database queries by @OoBook in https://github.com/unusualify/modularity/commit/aaa81dfbad1a8448f7abc7cdf9230c452a1d7107
+- add caching support for paginated results with new getPaginator and getCached methods, enhancing performance and serialization of results by @OoBook in https://github.com/unusualify/modularity/commit/13bbd47692eecd4dba86eaf3c8380ecf65b62c4d
+- enhance afterSaveRelationships method to conditionally touch Eloquent models based on relationship sync results, improving update logic and performance by @OoBook in https://github.com/unusualify/modularity/commit/f8cf520cd7aa8fb91e57ae924d22c6b5b02b8256
+- add user-aware cache support to AssignmentTrait and CreatorTrait with new boolean properties by @OoBook in https://github.com/unusualify/modularity/commit/b08188dc3bd265a6977582ddedb3a891252a9715
+- implement mustTouchEloquentModel method across various traits to ensure Eloquent models are updated conditionally based on changes by @OoBook in https://github.com/unusualify/modularity/commit/70860cee7e71c6746b5f47fae4c4a798cff7ae79
+- refactor filter handling by introducing handleFilterCount method and restructuring getTableMainFilters for improved clarity and functionality by @OoBook in https://github.com/unusualify/modularity/commit/14e4679f3e3bf14a939981558f24dc2d7796aee9
+- refactor getFormItem method to support optional default scopes and introduce formItem method for item processing by @OoBook in https://github.com/unusualify/modularity/commit/a626831aff0a3d4c6f765dbec3cbb1563d56512a
+- introduce CacheableResponse trait for enhanced caching and relationship ID extraction in response handling by @OoBook in https://github.com/unusualify/modularity/commit/4f658bdd52778d3518d8838bcc9a758132fa6938
+- implement CacheableInterface and enhance response handling with CacheableResponse trait; improve nested attribute retrieval logic and refactor JSON data handling for better clarity by @OoBook in https://github.com/unusualify/modularity/commit/765283c64dfa3480b5d6b3691ecdfb84ea694dc2
+- implement ModuleableInterface, refactor module handling methods, and enhance assignment update logic for improved clarity and functionality by @OoBook in https://github.com/unusualify/modularity/commit/705b9a718843f7d35fbbab1549d4252bf341bb9b
+- add routeName property to enhance routing clarity and consistency by @OoBook in https://github.com/unusualify/modularity/commit/df21103b986ae06311c5e6076fa78a2c64f402f6
+- update related chatable and processable models on store, update, and destroy actions for improved data integrity by @OoBook in https://github.com/unusualify/modularity/commit/a5e6ef1097d0ddf38f0b051cc8e8ee85f4f4b564
+- add CacheWarmCommand for warming modularity caches with options for specific modules and routes by @OoBook in https://github.com/unusualify/modularity/commit/ab16056e8189cbab64d03231f18ceacf3818f54e
+- add HasCaching trait to Payment entity for improved caching capabilities by @OoBook in https://github.com/unusualify/modularity/commit/a3f8aca575f8a735197be98e8aaf108034f12aba
+- add command to check database and connection collations by @OoBook in https://github.com/unusualify/modularity/commit/e7933e8586d14005f02e266043d360071cdd4332
+- enhance searchInRelationships method to support search collation based on query conditions by @OoBook in https://github.com/unusualify/modularity/commit/64d797779f37234117b3b75d18e6c695fea6c1a7
+- enhance advanced filter functionality with categorized sections and active filter management by @OoBook in https://github.com/unusualify/modularity/commit/12dfdb4dcd1633fe79c22f68f3d003a3c6a7581f
+- add currency relationship to Payment entity by @OoBook in https://github.com/unusualify/modularity/commit/0b84623f1020f693efe5502e63495c9448f8fce7
+- add advanced filtering options for payment status, service, and currency in configuration by @OoBook in https://github.com/unusualify/modularity/commit/dd0a95c707332a73f80d1b1ce674f14e2aa95f48
+
+### :wrench: Bug Fixes
+
+- update payment status conditions to include PROVISION and REFUNDED by @OoBook in https://github.com/unusualify/modularity/commit/3e2a9485e1248e30de53166ec558b5421e43e044
+- rename payment-related keys in routes_statuses.json for consistency by @OoBook in https://github.com/unusualify/modularity/commit/6adc7193f5851e195a5b50b7299e33f294c20876
+- ensure filters are merged safely by handling potential null values for defaultFilters and filters by @OoBook in https://github.com/unusualify/modularity/commit/7b9e576421eae68ccb3799f608ef8fcd9b71716f
+- ensure payment is updated with the current timestamp if receipts are saved and payment was not previously changed by @OoBook in https://github.com/unusualify/modularity/commit/0b54f35882007433069cf69b28bd2e32e88aada6
+- add return type hint to creator method for improved type safety by @OoBook in https://github.com/unusualify/modularity/commit/4b5bdefac722071c7589ca4d95122ed7d4becded
+- remove oobook currency model from payment by @web-flow in https://github.com/unusualify/modularity/commit/64745c8c9b7543657ab94e31042d04a2a4f3c9fb
+- enhance custom creator validation to handle null creator cases by @OoBook in https://github.com/unusualify/modularity/commit/fe5b93a885b57b1ac2a46da37825c8ee2ad42d8f
+- set stateableChanged to true when state is updated by @OoBook in https://github.com/unusualify/modularity/commit/255e2666a99b6c10030f718dfabb6799df2b3899
+- simplify condition for touching Eloquent model in afterSaveRelationships method by @OoBook in https://github.com/unusualify/modularity/commit/5dd717619f13b9c0b10b276a937dc2c4e4f7c7be
+- change return type declaration for getCacheModuleRouteName method by @OoBook in https://github.com/unusualify/modularity/commit/4e7e252d9111b417894623715c9e455db778fda3
+- improve route configuration retrieval by adding null check for module by @OoBook in https://github.com/unusualify/modularity/commit/d33bf5b118109ab1d0d5182d5a79105b63cdc4bd
+- add null safe operator for user currency retrieval in price methods by @OoBook in https://github.com/unusualify/modularity/commit/d87b30a8468dd71adbb2e862ecafc98d366a9035
+- initialize dependents array for route dependency tracking by @OoBook in https://github.com/unusualify/modularity/commit/f8fca28079b4369df3a3dcdec4c9908ba895969e
+
+### :zap: Performance
+
+- ensure form actions are only merged for non-AJAX requests or Inertia AJAX requests by @OoBook in https://github.com/unusualify/modularity/commit/b4ddcc9ed3dd601205899ff61f673660bcc31f4c
+
+### :recycle: Refactors
+
+- streamline form schema setup and improve route name handling by @OoBook in https://github.com/unusualify/modularity/commit/b98d0e480a94efd5c80805645eb8e36cd9da1bfd
+- enhance module and route handling by deprecating old methods and introducing new accessors by @OoBook in https://github.com/unusualify/modularity/commit/6c536dd930bca560689bec41791dcf87f4fb89cf
+- replace deprecated UFinder with ModularityFinder and add traitProperties method for improved property handling by @OoBook in https://github.com/unusualify/modularity/commit/1d322ee70ad0164414e45a3975bff7bccd64b269
+- streamline model update logic across HasAuthorizable, HasCreator, HasSpreadable, HasStateable, and Processable traits to ensure proper touch behavior on non-dirty models by @OoBook in https://github.com/unusualify/modularity/commit/55ccb065c1a4485b2f7b065b031dfecff4e0ad10
+- streamline code by removing unused properties and methods, and introduce TableItem trait for improved item handling and formatting by @OoBook in https://github.com/unusualify/modularity/commit/24c453bf16de613d02a4cc3f7298ab3108037941
+- update getFormData method to improve item retrieval and streamline form data processing by @OoBook in https://github.com/unusualify/modularity/commit/fa39140ee63a9a4f94b6979d8b6487e4063721c4
+- update method calls to use getModuleName and getRouteName for improved consistency and clarity by @OoBook in https://github.com/unusualify/modularity/commit/8a442e1508f57e33f62aed37c4f2aff3ade54292
+- remove type hints for query parameters and enhance JSON field handling in addSearchCollationToQuery method by @OoBook in https://github.com/unusualify/modularity/commit/3008a52f1a90dcdf7970dec2a277f6aa1823a36b
+- improve relationship handling in filter method for better query support by @OoBook in https://github.com/unusualify/modularity/commit/9db1c96dfe1f136ca6d2f6faa0e6f4a65f214b2b
+- update VAT rate visibility condition and streamline discount input rendering by @OoBook in https://github.com/unusualify/modularity/commit/74de7e89dda7036cce5deebe0a5f27f804dd7df9
+- enhance VAT rate visibility condition to include discount check by @OoBook in https://github.com/unusualify/modularity/commit/2c1d1ca8b8b6f8fec656bfa852073bcceb221722
+
+### :lipstick: Styling
+
+- lint coding styles for v0.55.0 by @OoBook in https://github.com/unusualify/modularity/commit/54b5439ef9402e19b5bcd1ea4231d64a1036a237
+
+### :white_check_mark: Testing
+
+- refresh chat message instance after accessing user profile and creator by @OoBook in https://github.com/unusualify/modularity/commit/0cae3bffbb424ecf14385e9794a636d12e46b488
+- update assertions for custom_creator_id to ensure it is present in the mapped fields by @OoBook in https://github.com/unusualify/modularity/commit/0879a9c56879142c94c23ffee809e38aa3785aed
+- reorder test model initialization to improve setup clarity by @OoBook in https://github.com/unusualify/modularity/commit/790ecb60b4225ade78ba303da7f3fa13b44c582c
+
+### :package: Build
+
+- update build artifacts for v0.55.0 by @OoBook in https://github.com/unusualify/modularity/commit/99a4274d2737c2cd95759317fab3a0f2d368f9a3
+
+### :green_heart: Workflow
+
+- update composer install command to ignore platform requirements by @web-flow in https://github.com/unusualify/modularity/commit/5fd3198e14cc01a89a7fcdd5b2326c3ed8469d06
+- update composer install command to ignore specific PHP platform requirements by @OoBook in https://github.com/unusualify/modularity/commit/0e4644f824ee4ac370e585bc072cf7d155d83aac
+- set PHP platform version to 8.4.0 in composer configuration by @OoBook in https://github.com/unusualify/modularity/commit/ebdf5009f3eec6141336520f382b18255fb0f8b3
+- update PHP platform version in composer configuration from 8.4.0 to 8.1.0 by @OoBook in https://github.com/unusualify/modularity/commit/8585a44f916d4d95c48275742c77cdc63e832910
+- update PHP platform version in composer configuration from 8.1.0 to 8.2.0 by @OoBook in https://github.com/unusualify/modularity/commit/f1d96cfdf91aaca88d9e1e6d16d99b447ecaec32
+- update composer update command to ignore PHP platform requirements by @OoBook in https://github.com/unusualify/modularity/commit/9ccb3be7f58124c6a5d68493f5304cc8fc5414bd
+- update PHP platform version in composer configuration to 8.4.99 by @OoBook in https://github.com/unusualify/modularity/commit/eb9e80a5ee145cf26deb45f20544404833b4e74f
+- modify composer install and update commands to remove PHP platform requirement ignore by @OoBook in https://github.com/unusualify/modularity/commit/72a23d584e292e98f6c24292bf45478871f2eaa8
+- set PHP platform version in composer configuration dynamically based on matrix by @OoBook in https://github.com/unusualify/modularity/commit/97feab0391186e5b38b9af052c48d9359e1b43f4
+- remove PHP platform version specification from composer configuration by @OoBook in https://github.com/unusualify/modularity/commit/335e8779cee8202d1c5708318693e9c6eab460f9
+- enhance composer commands in CI workflow to dynamically handle PHP version and Laravel dependencies by @OoBook in https://github.com/unusualify/modularity/commit/0cbbee895fdf227cc05d52047fc6ce48b10a45a9
+- set PHP platform version to 8.2.0 in composer configuration by @OoBook in https://github.com/unusualify/modularity/commit/87835fa9a69ae874a182f85a5411f81189f332b2
+- update GitHub Actions workflow to improve dependency handling and naming conventions by @OoBook in https://github.com/unusualify/modularity/commit/92f82a15d9e8fe54af44097fc91eda9ef5e2629b
+- remove PHP platform version specification from composer configuration by @OoBook in https://github.com/unusualify/modularity/commit/30780877cf6ef183b6ee7bfe772c4baf2e3becd7
+- modify composer install command in CI workflow to ignore platform requirements by @OoBook in https://github.com/unusualify/modularity/commit/fcb87e64feb6274baa926ea33e7f1531ccd5abf1
+- comment out PHP platform version configuration in CI workflow for clarity by @OoBook in https://github.com/unusualify/modularity/commit/51e5348495de26a37cef386f00dd93a3416f9a81
+- update composer install command in CI workflow to remove platform requirement ignoring by @OoBook in https://github.com/unusualify/modularity/commit/bb01872e1ff15bcb9c5b2dd557404232bec76349
+- update composer commands in CI workflow to ignore platform requirements during installation by @OoBook in https://github.com/unusualify/modularity/commit/9ef2386c4a3266ba3a2eae172ae71aefaadbed45
+- comment out composer update command in CI workflow for clarity by @OoBook in https://github.com/unusualify/modularity/commit/908dd9e2568e5c88a9d4282b93b3b6ce35a4987d
+
+### :beers: Other Stuff
+
+- update composer.lock entry to be commented out by @OoBook in https://github.com/unusualify/modularity/commit/0d8de3e8e74323c5990e6a5d339371dd07d5b8f4
+- add composer.lock file to lock project dependencies by @OoBook in https://github.com/unusualify/modularity/commit/405c1f4c84e5058c51283be23387c622f3978e4f
+- remove commented-out migration methods for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/3681bc7517180521d13817569bb6e227ed489f2f
+- remove commented-out asset publishing code for improved clarity by @OoBook in https://github.com/unusualify/modularity/commit/7c26e0494e19a670266cc7b4d0ba21617a7a0380
+- remove commented-out properties in constructor for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/31434e6a44df4812cb11ed5c60ab6a0df46c3c29
+- remove commented-out code in constructor for improved readability by @OoBook in https://github.com/unusualify/modularity/commit/896a1fbe1fe034a1e71ed8cd0c943698a33234e2
+- remove commented-out module activation line in constructor for improved readability by @OoBook in https://github.com/unusualify/modularity/commit/004432346cfc3a2021c1cc5fc9ac8a6ad9ea90da
+- include composer.lock to ensure consistent dependency management by @OoBook in https://github.com/unusualify/modularity/commit/9068ddbd2ca5d29c3c43d4b55bb15e9a959f23fb
+- remove composer.lock file to prevent dependency locking issues by @OoBook in https://github.com/unusualify/modularity/commit/237a9e23f6e458d1b418bdd0cc1fc63f0e5da882
+- remove additional commented-out code for improved readability by @OoBook in https://github.com/unusualify/modularity/commit/376be7ea833a2fe5be44f80c51799de8bef09dcf
+- remove commented-out debug statement for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/d956d0d48d1bf569937e66bb4783616c4c531eed
+- remove commented-out debug statement in formatCached method for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/a86235b2e8b49c0d8668f6dd363a90b1c121c638
+- remove commented-out debug statement in formatCached method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/5be715d6991a79e10c3d3182f5a85bf956788753
+- remove commented-out debug statement in getRouteActionUrl method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/7a5f2939802350e5e8c046dc5fcf7f0f2bb6e73e
+- remove commented-out debug statement in scan method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/3e6bfaf4f835d90f7ebc3a619822edb964421c93
+- remove commented-out return statement in getVendorPath method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/6c9b581b1e72b9027bf35756169334ac67f31a9b
+- remove commented-out code in clearCache method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/932c5e61a277f76945c8806adb1fc38b442bdc3c
+- remove commented-out code in hasStatus method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/1d62c6fd3b89c4e3a9cee014d7677f181ded7b18
+- update .gitignore to comment out composer.lock for clarity by @OoBook in https://github.com/unusualify/modularity/commit/16841b8803caf72bcb9500ebd8ce521986de871d
+- add composer.lock file to lock project dependencies and ensure consistent installations by @OoBook in https://github.com/unusualify/modularity/commit/1e69c8a309bc0ba62649ab46cfebf17a8835a5a2
+- remove commented-out code in delete method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/8c42d52d8f47f1e1cd14a805766283ee2f540b61
+- remove commented-out code in getModulesStatuses method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/d236b3d23e1a6730cbb4cc7dae84b5c4c01e97ac
+- remove commented-out constructor call for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/6799e8c80e583ed6ea33287b936c1caa3b21576d
+- remove commented-out setModule method for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/d873275a9f73561dc1fcc45676b8a89fe5b5bb5b
+- remove commented-out use statement for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/d4dcc0164993dc4dbf903e7788222b0b58eb165e
+- remove unused use statement for improved code clarity by @OoBook in https://github.com/unusualify/modularity/commit/e617462510f2500c04933075a18863dbf2f6b4c6
+
+## v0.54.0 - 2025-12-25
+
+### :rocket: Features
+
+- add database creation prompt and implement database creation logic for multiple drivers by @OoBook in https://github.com/unusualify/modularity/commit/c04b87e4e6f0e2731c7df2ea25b239a03ae62b71
+- add new email validation messages for improved user feedback by @OoBook in https://github.com/unusualify/modularity/commit/953e2fd7d78c39d377da11ce46a10e65b3b6ba26
+- introduce schema management in Repository class and add Schema trait for enhanced input handling by @OoBook in https://github.com/unusualify/modularity/commit/78fb96a2c1910ff6c5466b86334718b4d1d4d6e0
+- add targetTypeKey property and enhance event handling with new getter methods by @OoBook in https://github.com/unusualify/modularity/commit/7bd47deb04dc3b3252ee1c06e087265f5f6d6d94
+- enhance polymorphic input handling by introducing newConnector support and improving model retrieval logic by @OoBook in https://github.com/unusualify/modularity/commit/0994d8bd3ad5a1204a81e919f1824e3cff0378c8
+- add schema setting in getFormFields method to improve input handling by @OoBook in https://github.com/unusualify/modularity/commit/8bbe7114b39a53c8ec20f2da096a8211de5b1375
+- introduce ResolveConnector trait for improved connector repository resolution by @OoBook in https://github.com/unusualify/modularity/commit/912448c7578a0ab78299fbafcf7651a6e6951f47
+- add CheckSnapshot trait for managing snapshot relations and foreign key retrieval by @OoBook in https://github.com/unusualify/modularity/commit/c7538f8dbf7c80a7e062b9788c7d44ba23d56484
+- add makeMorphToName function for generating morph names with suffix by @OoBook in https://github.com/unusualify/modularity/commit/8ef6a732d2b38850d648fee21e22ba57c09e5610
+- enhance translation handling with bypass and activation methods by @OoBook in https://github.com/unusualify/modularity/commit/9e86cc69791e87adabd0f35292029cbfa239ae6a
+- add tooltip conditions handling for comparator items by @OoBook in https://github.com/unusualify/modularity/commit/e77b1e6dce2c1e28779650e2ccd2a7e900572bc9
+- implement search collation feature with configuration option by @OoBook in https://github.com/unusualify/modularity/commit/a53097adc352b70c0c721f71a2ea63c3c0c915e5
+
+### :wrench: Bug Fixes
+
+- update PriceableObserver namespace for correct path reference by @OoBook in https://github.com/unusualify/modularity/commit/daf2ea7fd446bb04efa4e17ab0edb5c0d81f6261
+- ensure user currency is set only if currency model exists by @OoBook in https://github.com/unusualify/modularity/commit/caaf19a04357d09769ac0606c7edba4dba65a1d7
+- add language publishing logic if language path does not exist and improve header filtering in config update by @OoBook in https://github.com/unusualify/modularity/commit/4ae5ad13f2a1bce618f3a1592147868fe74e2b80
+- enhance getRawConfig method to handle missing config files and provide default values by @OoBook in https://github.com/unusualify/modularity/commit/ac5dea66b4fb2090e8b977f0605f5254ba1bbb6d
+- update sidebarOptions and secondarySidebarOptions to use empty array as default values by @OoBook in https://github.com/unusualify/modularity/commit/8a70b6f42cd68a3cecc888d22beb1e0775e480c2
+- correct variable name in slugify function to ensure proper string handling by @OoBook in https://github.com/unusualify/modularity/commit/3009ca61c490d1196f0e54fbdc2684865ae2fcaf
+- correct comment syntax for setCascadeSelect method call by @OoBook in https://github.com/unusualify/modularity/commit/1a56a73512deceee89ec43f85abe8374e6ff1eab
+- add camelCase pattern matching to hydrateSelectableInput method for improved input handling by @OoBook in https://github.com/unusualify/modularity/commit/0df7185f90650b657482d841d08cb65c9a304a72
+- add return type declaration for medias method to improve type safety by @OoBook in https://github.com/unusualify/modularity/commit/37a0fadb8e3dae01b20114e980ff55784e1d60c8
+- enhance error handling in hydrateInput method by validating model existence and improving exception messages for morphTo input by @OoBook in https://github.com/unusualify/modularity/commit/2d325000697876aa7b0c4e2323eaa3099b61de46
+- initialize modelInstance variable for input hydration process by @OoBook in https://github.com/unusualify/modularity/commit/ad4c95dcffb8a65bf10f68f4e2839324df085931
+- print object values not being a tooltip by @OoBook in https://github.com/unusualify/modularity/commit/f3302541a2306827b31be33cef09c6e3189789c1
+
+### :recycle: Refactors
+
+- simplify dashboard UI settings by removing unused block configurations by @OoBook in https://github.com/unusualify/modularity/commit/3575687cd505c1f2fcbac3644f7293fc30eed107
+- replace insert with updateOrCreate for currencies, price types, roles, and VAT rates by @OoBook in https://github.com/unusualify/modularity/commit/07ca41b8b87ddcbbb96bf6b7cd345610f30b9ad2
+- replace user creation with createOrUpdate method and streamline role assignment by @OoBook in https://github.com/unusualify/modularity/commit/c01a873a495b40784bb696ca8b2fabc5f2940a7d
+- streamline language publishing logic by consolidating path determination for ignored languages by @OoBook in https://github.com/unusualify/modularity/commit/26cc94a0a426b15d41bf262be758da8c477fb902
+- rename and enhance relation handling methods for clarity and consistency by @OoBook in https://github.com/unusualify/modularity/commit/8549bc32522477c6fa2c5861cd66e1a2f63c226d
+- reorganize repository methods and introduce getModel method for improved model retrieval by @OoBook in https://github.com/unusualify/modularity/commit/cc34718a4e6470fc966c902e895b2db183659453
+- update file and media handling methods to accept object parameter for improved context and consistency by @OoBook in https://github.com/unusualify/modularity/commit/fe5d2bcad38f1d9ee99e8b124c63d50a7135f47a
+- rename inputs method to getRawInputs for clarity and consistency in input retrieval by @OoBook in https://github.com/unusualify/modularity/commit/f95cac214347aba7575606b3eb7dd66503952dbc
+- streamline relationship handling by replacing repository calls with model lookups and enhancing error logging by @OoBook in https://github.com/unusualify/modularity/commit/18360c337cc066ab6129fe1f6205153a009adedc
+- update hydrate method to handle input type and root assignment based on original type by @OoBook in https://github.com/unusualify/modularity/commit/18412ba40d9b63a3b89b01f43684e0293084fe98
+- streamline locale handling and input retrieval in afterSaveRepeatersTrait method by @OoBook in https://github.com/unusualify/modularity/commit/cc66d8d893d35db616d3e6900909b6266957edf7
+- comment out unused unsetColumns logic in afterSaveRepeatersTrait method for clarity by @OoBook in https://github.com/unusualify/modularity/commit/9ae05049d1ff89877009e3a2e9a6fe9cb823f825
+- remove commented-out code and simplify spreadable input key check for clarity by @OoBook in https://github.com/unusualify/modularity/commit/a6175abd9aad4fb5abbd0442533feab90f93e419
+- improve input handling and simplify tag processing logic in afterSaveTagsTrait and getFormFieldsTagsTrait methods by @OoBook in https://github.com/unusualify/modularity/commit/f8c8505a50e4ddf5b5886bd395ae7307cac0c331
+- unify slug handling methods and improve slug attribute retrieval by @OoBook in https://github.com/unusualify/modularity/commit/ded28efa03b6a7cfb09d94671ef0abc87a0b63b0
+- update query type hints from Query\Builder to Eloquent\Builder for improved clarity by @OoBook in https://github.com/unusualify/modularity/commit/fe52b4acb7c4796c9dd714fa3b70a86951b99675
+
+### :lipstick: Styling
+
+- lint coding styles for v0.54.0 by @OoBook in https://github.com/unusualify/modularity/commit/878cf7fab27443c58a3dc91e1ead289968ca9dff
+
+### :white_check_mark: Testing
+
+- add tests for defined relations and foreign key methods by @OoBook in https://github.com/unusualify/modularity/commit/2a4cb3d1ab993f2ff65bc6e17ef0c5946dbdbc84
+- enhance file and media attachment tests to support multiple files and improve assertions by @OoBook in https://github.com/unusualify/modularity/commit/a7db278738ffd15dfb3015ab5fb027dd6097693a
+- add comprehensive tests for schema input retrieval and chunking methods by @OoBook in https://github.com/unusualify/modularity/commit/c5f57ab53f1d1bb9d5221b8da0a8b154548a6ae8
+- implement comprehensive tests for various relationship types including morphMany, hasMany, and belongsToMany, enhancing repository functionality and error handling by @OoBook in https://github.com/unusualify/modularity/commit/28dfbef3f16ac3ca539febe675e97bbabfa0ae55
+- add unit test for getCountFor method, including validation for existing and non-existent scopes by @OoBook in https://github.com/unusualify/modularity/commit/b119406159f5ab63b59fc537fbc18e6d942f2235
+- add comprehensive unit tests for RepeatersTrait functionality, including handling of translated and non-translated inputs by @OoBook in https://github.com/unusualify/modularity/commit/70a365a4067bcf32860aabb3ac87dac168f4bb3f
+- add unit test for before_save method to ensure spreadable model creation when not existing by @OoBook in https://github.com/unusualify/modularity/commit/3de3ac4a39392b86f98bc800c68ecfca69d5e7e9
+- add unit tests for handling translated tags in create and getTags methods by @OoBook in https://github.com/unusualify/modularity/commit/18f2c5bfec6120b7cc5c5a661a96f355e1930688
+- add new fields for publishing and create slugs table; update TestModel fillable attributes by @OoBook in https://github.com/unusualify/modularity/commit/80e87298a49e64e5db5ce71aa010b6980915f045
+- add 'published', 'public', and date fields; create TestModelSlug class for slugs management by @OoBook in https://github.com/unusualify/modularity/commit/cddb301102814efa128d118f9d8eceacd8189b87
+- remove 'translations' from defined relations assertions for clarity by @OoBook in https://github.com/unusualify/modularity/commit/30eb9907ebb2d6f0d2e1dcfd492b622e124b984d
+- add comprehensive unit tests for slug generation, updates, and retrieval across multiple locales by @OoBook in https://github.com/unusualify/modularity/commit/289caa0755b67aa596c182a4e154dd236304e81f
+- add unit tests for collation selection logic and query handling by @OoBook in https://github.com/unusualify/modularity/commit/2ccdefef0c2d4b3ab781448e2ba270d3c3e928c3
+- replace Query\Builder with Eloquent\Builder in mock setups for consistency by @OoBook in https://github.com/unusualify/modularity/commit/88d5ff78e08b5eaa050b214928386b8e89f28cf2
+
+### :package: Build
+
+- update build artifacts for v0.54.0 by @OoBook in https://github.com/unusualify/modularity/commit/29a9b5a15ea9801f4f73e3a6506f5a49897e9007
+
+### :green_heart: Workflow
+
+- add 'test' label condition to issue branch creation logic by @OoBook in https://github.com/unusualify/modularity/commit/db10065f93364dd7f2c48b65b9ff3b4d8663def9
+
+### :beers: Other Stuff
+
+- add new test issue template by @web-flow in https://github.com/unusualify/modularity/commit/3e51c1f00ad97cf6835e8c0767b1268247669183
+- fix text field as textarea by @web-flow in https://github.com/unusualify/modularity/commit/e2c94b97254c46c06cd34bb0168e54a20cb72ca6
+- add test tube icon by @web-flow in https://github.com/unusualify/modularity/commit/7e7a12406ad6349a37f4ee180592b0f76670fd46
+- change description for test issue template by @web-flow in https://github.com/unusualify/modularity/commit/03025734baa07572397e6cf4e1b9be4cd02dbd4d
+- remove commented debug statement from getCountFor method for cleaner code by @OoBook in https://github.com/unusualify/modularity/commit/d658322406c1a3c812a2c51ef5d4cdb968eb7d45
+- move type definition of payment currency's default_vat_rates input to uppermost by @OoBook in https://github.com/unusualify/modularity/commit/f234aed89ddfcf439cecdcc138e1e75323afbc4b
+- comment out unused code for improved readability in getFormFieldsRepeatersTrait method by @OoBook in https://github.com/unusualify/modularity/commit/211157bd20da432fc0aca69766b98f06b3268023
+- comment out unused translation handling logic for improved readability in getFormFieldsTranslationsTrait method by @OoBook in https://github.com/unusualify/modularity/commit/2b025bdaa27f3e5fe7662427beb36306fab9b40f
+
 ## v0.53.0 - 2025-12-10
 
 ### :rocket: Features

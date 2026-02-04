@@ -170,6 +170,14 @@ class BaseServiceProvider extends ServiceProvider
             return new \Unusualify\Modularity\Services\CurrencyExchangeService;
         });
 
+        $this->app->singleton('modularity.relationship.graph', function (Application $app) {
+            return new \Unusualify\Modularity\Services\CacheRelationshipGraph;
+        });
+
+        $this->app->singleton('modularity.cache', function (Application $app) {
+            return new \Unusualify\Modularity\Services\ModularityCacheService;
+        });
+
         $this->app->singleton('migration.backup', function (Application $app) {
             return new \Unusualify\Modularity\Services\MigrationBackup;
         });
@@ -542,15 +550,28 @@ class BaseServiceProvider extends ServiceProvider
 
     private function bootModularityLogChannel()
     {
-        $this->app['config']->set('logging.channels.modularity', [
-            'driver' => 'monolog',
-            'handler' => \Unusualify\Modularity\Logging\ModularityLogHandler::class,
-            'level' => env('MODULARITY_LOG_LEVEL', 'debug'),
-            // 'bubble' => true,
-        ]);
+        $this->addModularityLogChannels();
 
         $this->app->singleton('modularity.log', function () {
             return Log::channel('modularity');
         });
+    }
+
+    private function addModularityLogChannels()
+    {
+        $this->app['config']->set('logging.channels.modularity', [
+            'driver' => 'monolog',
+            'handler' => \Unusualify\Modularity\Logging\ModularityLogHandler::class,
+            'handler_with' => [
+                'level' => env('MODULARITY_LOG_LEVEL', 'debug'),
+                'maxFiles' => 14, // Keep 14 days of logs
+            ],
+        ]);
+        $this->app['config']->set('logging.channels.modularity-notification-failure', [
+            'driver' => 'daily',
+            'path' => storage_path('logs/modularity-notification-failure.log'),
+            'level' => env('MODULARITY_NOTIFICATION_FAILURE_LOG_LEVEL', 'error'),
+            'days' => 14,
+        ]);
     }
 }

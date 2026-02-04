@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
 use Spatie\Activitylog\Facades\LogBatch;
+use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularity\Contracts\Cache\UserAwareCacheInterface;
+use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularity\Traits\ManageNames;
 
-abstract class Repository implements RepositoryContract
+abstract class Repository implements CacheableInterface, ModuleableInterface, RepositoryContract, UserAwareCacheInterface
 {
     use ManageNames,
         Logic\InspectTraits,
@@ -22,7 +25,11 @@ abstract class Repository implements RepositoryContract
         Logic\CountBuilders,
         Logic\Dates,
         Logic\Relationships,
-        Logic\DispatchEvents;
+        Logic\DispatchEvents,
+        Logic\Schema,
+        Logic\CollationSelector,
+        Logic\CacheableTrait,
+        Logic\TouchableEloquentModel;
 
     /**
      * @var \Unusualify\Modularity\Models\Model
@@ -83,6 +90,8 @@ abstract class Repository implements RepositoryContract
      */
     public function create($fields, $schema = null)
     {
+        $this->setSchema($schema);
+
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
         return DB::transaction(function () use ($fields) {
@@ -138,27 +147,29 @@ abstract class Repository implements RepositoryContract
      * @param array $fields
      * @return \Unusualify\Modularity\Models\Model|void
      */
-    public function updateOrCreate($attributes, $fields)
+    public function updateOrCreate($attributes, $fields, $schema = null)
     {
         $object = $this->model->where($attributes)->first();
 
         if (! $object) {
-            return $this->create($fields);
+            return $this->create($fields, $schema);
         }
 
-        $this->update($object->id, $fields);
+        $this->update($object->id, $fields, $schema);
     }
 
     /**
      * @param mixed $id
      * @param array $fields
-     * @return void
+     * @return bool
      */
     public function update($id, $fields, $schema = null)
     {
+        $this->setSchema($schema);
+
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        DB::transaction(function () use ($id, $fields) {
+        return DB::transaction(function () use ($id, $fields) {
             LogBatch::startBatch();
 
             if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
@@ -179,7 +190,11 @@ abstract class Repository implements RepositoryContract
 
             LogBatch::endBatch();
 
+            $object = $this->touchEloquentModel($object);
+
             $this->dispatchEvent($object, 'update');
+
+            return $object->wasChanged();
         }, 3);
     }
 
@@ -252,6 +267,8 @@ abstract class Repository implements RepositoryContract
         if (($duplicated = $this->model->find($id)) === null) {
             return false;
         }
+
+        $this->setSchema($schema);
 
         $this->setColumns($this->chunkInputs(all: true));
 
@@ -564,8 +581,13 @@ abstract class Repository implements RepositoryContract
     {
         if (isset($scopes[$scopeField]) && is_string($scopes[$scopeField])) {
             $query->orWhere(function ($query) use (&$scopes, $scopeField, $orFields) {
+                $shouldUseSearchCollation = $this->shouldUseSearchCollation($query);
                 foreach ($orFields as $field) {
-                    $query->orWhere($field, $this->getLikeOperator(), '%' . $scopes[$scopeField] . '%');
+                    if ($shouldUseSearchCollation) {
+                        $query = $this->addSearchCollationToQuery($query, $field, $scopes[$scopeField]);
+                    } else {
+                        $query->orWhere($field, $this->getLikeOperator(), '%' . $scopes[$scopeField] . '%');
+                    }
                     unset($scopes[$field]);
                 }
             });
@@ -582,16 +604,18 @@ abstract class Repository implements RepositoryContract
      */
     public function searchInRelationships($query, &$scopes, $scopeField, $relationshipFields = [])
     {
+        $shouldUseSearchCollation = $this->shouldUseSearchCollation($query);
+
         if (isset($scopes[$scopeField]) && is_string($scopes[$scopeField])) {
             $searchValue = $scopes[$scopeField];
 
             // Group relationship fields by relationship name
             $relationshipGroups = [];
             foreach ($relationshipFields as $field) {
-                $parts = explode('.', $field, 2);
-                if (count($parts) === 2) {
-                    $relationshipName = $parts[0];
-                    $relationshipColumn = $parts[1];
+                $parts = explode('.', $field);
+                if (count($parts) > 1) {
+                    $relationshipColumn = array_pop($parts);
+                    $relationshipName = implode('.', $parts);
 
                     if (! isset($relationshipGroups[$relationshipName])) {
                         $relationshipGroups[$relationshipName] = [];
@@ -605,7 +629,7 @@ abstract class Repository implements RepositoryContract
 
             // Add whereHas for each relationship group
             foreach ($relationshipGroups as $relationshipName => $columns) {
-                $query->orWhereHas($relationshipName, function ($q) use ($columns, $searchValue) {
+                $query->orWhereHas($relationshipName, function ($q) use ($columns, $searchValue, $shouldUseSearchCollation) {
                     $relatedModel = $q->getModel();
 
                     // Check if the related model is translatable
@@ -624,21 +648,30 @@ abstract class Repository implements RepositoryContract
                         }
                     }
 
-                    $q->where(function ($q) use ($regularColumns, $translatedColumns, $searchValue, $relatedModel) {
+                    $q->where(function ($q) use ($regularColumns, $translatedColumns, $searchValue, $relatedModel, $shouldUseSearchCollation) {
                         // Search in regular columns
                         if (! empty($regularColumns)) {
                             $tableName = $relatedModel->getTable();
                             foreach ($regularColumns as $column) {
-                                $q->orWhere($tableName . '.' . $column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                if ($shouldUseSearchCollation) {
+                                    $q = $this->addSearchCollationToQuery($q, $tableName . '.' . $column, $searchValue, $relatedModel);
+                                } else {
+                                    $q->orWhere($tableName . '.' . $column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                }
                             }
                         }
 
                         // Search in translated columns
                         if (! empty($translatedColumns)) {
-                            $q->orWhereHas('translations', function ($translationQuery) use ($translatedColumns, $searchValue) {
-                                $translationQuery->where(function ($tq) use ($translatedColumns, $searchValue) {
+                            $q->orWhereHas('translations', function ($translationQuery) use ($translatedColumns, $searchValue, $shouldUseSearchCollation) {
+                                $translationQuery->where(function ($tq) use ($translatedColumns, $searchValue, $shouldUseSearchCollation) {
+                                    $translationModel = $tq->getModel();
                                     foreach ($translatedColumns as $column) {
-                                        $tq->orWhere($column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                        if ($shouldUseSearchCollation) {
+                                            $tq = $this->addSearchCollationToQuery($tq, $column, $searchValue, $translationModel);
+                                        } else {
+                                            $tq->orWhere($column, $this->getLikeOperator(), '%' . $searchValue . '%');
+                                        }
                                     }
                                 });
                             });

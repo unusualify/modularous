@@ -5,8 +5,7 @@ namespace Unusualify\Modularity\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularity\Facades\ModularityFinder;
 
 trait ManageTraits
 {
@@ -32,23 +31,46 @@ trait ManageTraits
         });
     }
 
+    /**
+     * Get the inputs for the current route.
+     *
+     * @param bool $noGroupChunk
+     * @return array
+     */
+    protected function traitProperties(?string $property = null)
+    {
+        $property = $property ?? debug_backtrace()[1]['function'];
+
+        $traits = array_values(class_uses_recursive(get_called_class()));
+
+        $uniqueTraits = array_unique(array_map('class_basename', $traits));
+
+        $properties = array_map(function (string $trait) use ($property) {
+            return $property . $trait;
+        }, $uniqueTraits);
+
+        return array_filter($properties, function (string $property) {
+            return property_exists(get_called_class(), $property);
+        });
+    }
+
     public function inputs($noGroupChunk = false)
     {
-        $moduleName = $this->moduleName();
+        $moduleName = $this->getModuleName();
 
-        $routeName = $this->routeName();
+        $routeName = $this->getRouteName();
 
         if ($moduleName && $routeName) {
-            $module = Modularity::find($moduleName);
-            $route_config = $module->getRawRouteConfig($routeName);
+            $module = $this->getModule();
+            if ($module) {
+                $routeConfig = $module->getRawRouteConfig($routeName);
 
-            return $this->chunkInputs($route_config['inputs'], noGroupChunk: $noGroupChunk);
+                return $this->chunkInputs($routeConfig['inputs'], noGroupChunk: $noGroupChunk);
+            }
             // return $route_config['inputs'];
         }
 
         return [];
-
-        return ! empty($conf = $this->routeConfig()) ? $conf['inputs'] : [];
     }
 
     public function hasTranslatedInput($schema = [])
@@ -142,9 +164,9 @@ trait ManageTraits
 
     public function model()
     {
-        $routeName = $this->routeName();
+        $routeName = $this->getRouteName();
 
-        return ($routeName && $repositoryClass = UFinder::getRouteRepository($routeName)) ? App::make($repositoryClass)?->getModel() : null;
+        return ($routeName && $repositoryClass = ModularityFinder::getRouteRepository($routeName)) ? App::make($repositoryClass)?->getModel() : null;
     }
 
     public function prepareFieldsBeforeSaveManageTraits($object, $fields)

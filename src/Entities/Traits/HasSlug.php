@@ -11,11 +11,7 @@ trait HasSlug
 
     protected static function bootHasSlug()
     {
-        static::created(function ($model) {
-            $model->setSlugs();
-        });
-
-        static::updated(function ($model) {
+        static::saved(function ($model) {
             $model->setSlugs();
         });
 
@@ -51,6 +47,10 @@ trait HasSlug
      */
     public function getSlugModelClass()
     {
+        if (@isset($this->slugModelClass) && @class_exists($this->slugModelClass)) {
+            return $this->slugModelClass;
+        }
+
         $slug = $this->getNamespace() . "\Slugs\\" . $this->getSlugClassName();
 
         if (@class_exists($slug)) {
@@ -70,7 +70,7 @@ trait HasSlug
      * @param string $slug
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForSlug($query, $slug)
+    public function scopeExistsSlug($query, $slug)
     {
         return $query->whereHas('slugs', function ($query) use ($slug) {
             $query->whereSlug($slug);
@@ -84,7 +84,7 @@ trait HasSlug
      * @param string $slug
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForInactiveSlug($query, $slug)
+    public function scopeExistsInactiveSlug($query, $slug)
     {
         return $query->whereHas('slugs', function ($query) use ($slug) {
             $query->whereSlug($slug);
@@ -97,7 +97,7 @@ trait HasSlug
      * @param string $slug
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForFallbackLocaleSlug($query, $slug)
+    public function scopeExistsFallbackLocaleSlug($query, $slug)
     {
         return $query->whereHas('slugs', function ($query) use ($slug) {
             $query->whereSlug($slug);
@@ -284,7 +284,7 @@ trait HasSlug
      */
     public function getSlugParams($locale = null)
     {
-        if (count(getLocales()) === 1 || ! isset($this->translations)) {
+        if (count(getLocales()) === 1 || ! (isset($this->translations) && count($this->translations) > 0)) {
             $slugParams = $this->getSingleSlugParams($locale);
             if ($slugParams != null && ! empty($slugParams)) {
                 return $slugParams;
@@ -292,6 +292,7 @@ trait HasSlug
         }
 
         $slugParams = [];
+
         foreach ($this->translations as $translation) {
             if ($translation->locale == $locale || $locale == null) {
                 $attributes = $this->slugAttributes;
@@ -328,6 +329,11 @@ trait HasSlug
         return $locale == null ? $slugParams : null;
     }
 
+    public function getSlugAttributes()
+    {
+        return $this->slugAttributes ?? [];
+    }
+
     /**
      * @param string|null $locale
      * @return array|null
@@ -337,9 +343,10 @@ trait HasSlug
         $slugParams = [];
         foreach (getLocales() as $appLocale) {
             if ($appLocale == $locale || $locale == null) {
-                $attributes = $this->slugAttributes;
+                $attributes = $this->getSlugAttributes();
                 $slugAttribute = array_shift($attributes);
                 $slugDependenciesAttributes = [];
+
                 foreach ($attributes as $attribute) {
                     if (! isset($this->$attribute)) {
                         throw new \Exception("You must define the field {$attribute} in your model");
@@ -386,7 +393,7 @@ trait HasSlug
      */
     public function getForeignKey()
     {
-        return Str::snake(class_basename(get_class($this))) . '_id';
+        return $this->slugForeignKey ?? Str::snake(class_basename(get_class($this))) . '_id';
     }
 
     protected function getSuffixSlug()
@@ -551,7 +558,7 @@ trait HasSlug
      */
     public function resolveRouteBinding($value, $field = null)
     {
-        $query = $this->scopes(['published', 'visible'])->forSlug($value);
+        $query = $this->scopes(['published', 'visible'])->existsSlug($value);
 
         return $query->firstOrFail();
     }

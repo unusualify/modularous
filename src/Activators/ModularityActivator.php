@@ -109,7 +109,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function hasStatus(Module $module, bool $status): bool
     {
-        // $statuses = $this->modulesStatuses;
         $statuses = $this->getModulesStatuses();
 
         if (! isset($statuses[$module->getName()])) {
@@ -142,7 +141,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function delete(Module $module): void
     {
-        // $statuses = $this->modulesStatuses;
         $statuses = $this->getModulesStatuses();
 
         if (! isset($statuses[$module->getName()])) {
@@ -185,13 +183,6 @@ class ModularityActivator implements ActivatorInterface
      */
     public function getModulesStatuses(): array
     {
-        // dd(
-        //     $this->config->get('modules.cache.enabled'),
-        //     $this->cacheKey,
-        //     $this->readJson(),
-        //     $this->cache->store($this->config->get('modules.cache.driver')),
-        //     $this->cache->store($this->config->get('modules.cache.driver'))->get($this->cacheKey),
-        //  );
         if (! $this->config->get('modules.cache.enabled')) {
             return $this->readJson();
         }

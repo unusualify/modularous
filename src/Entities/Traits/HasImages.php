@@ -80,10 +80,8 @@ trait HasImages
 
     /**
      * Defines the many-to-many relationship for media objects.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function medias()
+    public function medias(): \Illuminate\Database\Eloquent\Relations\MorphToMany
     {
         return $this->morphToMany(
             Media::class,

@@ -9,25 +9,20 @@ trait RelationshipHelpers
     /**
      * @param array|string|null $relations
      */
-    public function definedRelations($relations = null): array
+    public function getDefinedRelations($relations = null): array
     {
-        if (method_exists($this->model, 'definedRelations')) {
-            return $this->model->definedRelations($relations);
-        }
-
         $relationNamespace = "Illuminate\Database\Eloquent\Relations";
 
-        $relationClassesPattern = '|' . preg_quote($relationNamespace, '|') . '|';
+        $relationClassesPattern = '~' . preg_quote($relationNamespace, '~') . '~';
 
         if ($relations) {
             if (is_array($relations)) {
                 $relationNamespaces = implode('|', Arr::map($relations, function ($relationName) use ($relationNamespace) {
-                    return $relationNamespace . '\\' . $relationName;
+                    return preg_quote($relationNamespace . '\\' . $relationName, '~');
                 }));
-                $relationClassesPattern = '|' . preg_quote($relationNamespaces, '|') . '|';
-
+                $relationClassesPattern = '~^(' . $relationNamespaces . ')$~';
             } elseif (is_string($relations)) {
-                $relationClassesPattern = '|' . preg_quote($relationNamespace . '\\' . $relations, '|') . '|';
+                $relationClassesPattern = '~^' . preg_quote($relationNamespace . '\\' . $relations, '~') . '$~';
             }
         }
 
@@ -47,45 +42,54 @@ trait RelationshipHelpers
 
             return $carry;
         }, []);
-
-        return collect($reflector->getMethods(\ReflectionMethod::IS_PUBLIC))
-            ->filter(fn (\ReflectionMethod $method) => $method->hasReturnType() && preg_match("{$relationClassesPattern}", $method->getReturnType()))
-            ->pluck('name')
-            ->all();
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $related
-     * @return string
+     * @param array|string|null $relations
      */
-    private function getForeignKeyBelongsToMany($related)
+    public function definedRelations($relations = null): array
     {
-        if (method_exists($related, 'getRelatedPivotKeyName')) {
-            $foreignKey = $related->getRelatedPivotKeyName();
+        if (method_exists($this->model, 'definedRelations')) {
+            return $this->model->definedRelations($relations);
         }
 
-        return $foreignKey;
+        return $this->getDefinedRelations($relations);
+    }
+
+    public function getRelationForeignKey($relation)
+    {
+        if ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
+            return $this->getForeignKeyBelongsTo($relation);
+        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsToMany) {
+            return $this->getForeignKeyBelongsToMany($relation);
+        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\HasMany) {
+            return $this->getForeignKeyHasMany($relation);
+        } else {
+            throw new \InvalidArgumentException('Invalid relation type');
+        }
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $related
      * @return string
      */
-    private function getForeignKeyBelongsTo($related)
+    private function getForeignKeyBelongsTo(\Illuminate\Database\Eloquent\Relations\BelongsTo $relation)
     {
-        $foreignKey = $related->getForeignKeyName();
-
-        return $foreignKey;
+        return $relation->getForeignKeyName();
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $related
      * @return string
      */
-    private function getForeignKeyHasManyThrough($related)
+    private function getForeignKeyBelongsToMany(\Illuminate\Database\Eloquent\Relations\BelongsToMany $relation)
     {
-        $foreignKey = $related->getSecondLocalKeyName();
+        return $relation->getRelatedPivotKeyName();
+    }
 
-        return $foreignKey;
+    /**
+     * @return string
+     */
+    private function getForeignKeyHasMany(\Illuminate\Database\Eloquent\Relations\HasMany $relation)
+    {
+        return $relation->getForeignKeyName();
     }
 }

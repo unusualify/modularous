@@ -206,6 +206,9 @@ class Price extends \Oobook\Priceable\Models\Price
         // if it is a transfer payment, we need to save the receipts
         if (isset($extraPayload['receipts'])) {
             Filepond::saveFile($payment, $extraPayload['receipts'], 'receipts');
+            if (! $payment->wasChanged()) {
+                $payment->touch();
+            }
         }
 
         return $payment;

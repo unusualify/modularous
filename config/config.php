@@ -27,11 +27,13 @@ return [
 
     'custom_components_resource_path' => 'vendor/modularity/js/components',
     // 'vendor_components_resource_path' => 'assets/vendor/js/components',
+    'enabled_currencies' => explode(',', env('MODULARITY_ACTIVE_CURRENCIES', 'USD,EUR,TRY')),
 
     'manifest' => 'unusual-manifest.json',
     'js_namespace' => env('VUE_APP_NAME', 'MODULARITY'),
     'build_timeout' => 300,
     'use_big_integers_on_migrations' => true,
+    'use_collation_for_search' => env('MODULARITY_USE_COLLATION_FOR_SEARCH', false),
 
     'use_inertia' => env('MODULARITY_USE_INERTIA', false),
     'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),

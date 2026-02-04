@@ -1,0 +1,866 @@
+---
+alwaysApply: false
+description: "This rule provides standards for models of Modularity"
+globs: src/Entities/**/*.php
+---
+
+# Model Rules - Unusualify Modularity
+
+## Base Structure
+
+```php
+namespace Modules\{ModuleName}\Entities;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Unusualify\Modularity\Entities\Traits\HasMedias;
+use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+
+class {ModelName} extends Model
+{
+    use SoftDeletes, HasMedias, IsTranslatable;
+
+    protected $table = 'table_name';
+
+    protected $fillable = [];
+
+    protected $casts = [];
+
+    public $timestamps = true;
+
+    // Modularity-specific properties
+    public $checkboxes = [];
+    public $nullable = [];
+    public $translatedAttributes = [];
+}
+```
+
+## Essential Properties
+
+### Fillable & Guarded
+
+```php
+// Explicit fillable (recommended)
+protected $fillable = [
+    'name',
+    'email',
+    'status',
+    'metadata',
+];
+
+// Or use guarded (less safe)
+protected $guarded = ['id'];
+
+// Mass assignment protection off (not recommended)
+protected $guarded = [];
+```
+
+### Casts (Type Conversion)
+
+```php
+protected $casts = [
+    // Boolean
+    'is_active' => 'boolean',
+    'published' => 'boolean',
+
+    // Integer
+    'views_count' => 'integer',
+    'priority' => 'integer',
+
+    // Float/Decimal
+    'price' => 'decimal:2',
+    'rating' => 'float',
+
+    // DateTime
+    'published_at' => 'datetime',
+    'expires_at' => 'datetime:Y-m-d H:i:s',
+
+    // Date
+    'birth_date' => 'date',
+
+    // JSON (arrays/objects)
+    'settings' => 'array',
+    'metadata' => 'object',
+    'tags' => 'collection',
+
+    // Encrypted
+    'secret' => 'encrypted',
+    'api_key' => 'encrypted:array',
+];
+```
+
+### Modularity-Specific Properties
+
+```php
+// Fields that should default to false if not present
+public $checkboxes = [
+    'is_featured',
+    'is_public',
+    'send_notifications',
+];
+
+// Fields that should default to null if not present
+public $nullable = [
+    'deleted_by',
+    'approved_at',
+    'notes',
+];
+
+// Translatable attributes (requires IsTranslatable trait)
+public $translatedAttributes = [
+    'title',
+    'description',
+    'content',
+];
+```
+
+## Relationships
+
+### Basic Relationships
+
+- Use \Illuminate\Database\Eloquent\Relations\* on return type of relationships
+
+```php
+// One to One
+public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+{
+    return $this->hasOne(Profile::class);
+}
+
+public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+{
+    return $this->belongsTo(User::class);
+}
+
+// One to Many
+public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+{
+    return $this->hasMany(Post::class);
+}
+
+public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+{
+    return $this->belongsTo(Category::class);
+}
+
+// Many to Many
+public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+{
+    return $this->belongsToMany(Tag::class)
+        ->withTimestamps()
+        ->withPivot('order', 'metadata');
+}
+
+// Has Many Through
+public function comments(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+{
+    return $this->hasManyThrough(
+        Comment::class,
+        Post::class,
+        'author_id',    // Foreign key on posts
+        'post_id',      // Foreign key on comments
+        'id',           // Local key on users
+        'id'            // Local key on posts
+    );
+}
+
+// Has One Through
+public function latestPost(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+{
+    return $this->hasOneThrough(Post::class, Author::class)
+        ->latest();
+}
+```
+
+### Polymorphic Relationships
+
+```php
+// Polymorphic One to Many
+public function comments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+{
+    return $this->morphMany(Comment::class, 'commentable');
+}
+
+public function commentable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+{
+    return $this->morphTo();
+}
+
+// Polymorphic Many to Many
+public function tags(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+{
+    return $this->morphToMany(Tag::class, 'taggable');
+}
+
+// Inverse
+public function posts(): \Illuminate\Database\Eloquent\Relations\MorphedByMany
+{
+    return $this->morphedByMany(Post::class, 'taggable');
+}
+```
+
+### Relationship Methods for Modularity
+
+```php
+/**
+ * Get defined relationship names
+ * @return array
+ */
+public function definedRelations(): array
+{
+    return [
+        'user',
+        'category',
+        'tags',
+        'comments',
+    ];
+}
+
+/**
+ * Get relationship types
+ * @return array
+ */
+public function definedRelationsTypes(): array
+{
+    return [
+        'user' => 'BelongsTo',
+        'category' => 'BelongsTo',
+        'tags' => 'BelongsToMany',
+        'comments' => 'HasMany',
+        'profile' => 'HasOne',
+        'image' => 'MorphOne',
+    ];
+}
+
+/**
+ * Get Eloquent relationship types
+ * @return array
+ */
+public function getEloquentRelationships(): array
+{
+    return [
+        'user' => [
+            'relationship_class' => \Illuminate\Database\Eloquent\Relations\BelongsTo::class,
+            'short_relationship_class' => 'BelongsTo',
+            'relationship_model' => User::class,
+            'relationship_table' => 'users',
+            'is_many_to_many' => false,
+            'has_middleman' => false,
+            'middleman_model' => null,
+            'middleman_table' => null,
+        ],
+        'category' => [
+            'relationship_class' => \Illuminate\Database\Eloquent\Relations\BelongsTo::class,
+            'short_relationship_class' => 'BelongsTo',
+            'relationship_model' => Category::class,
+            'relationship_table' => 'categories',
+            'is_many_to_many' => false,
+            'has_middleman' => false,
+            'middleman_model' => null,
+            'middleman_table' => null,
+        ],
+        'tags' => [
+            'relationship_class' => \Illuminate\Database\Eloquent\Relations\BelongsToMany::class,
+            'short_relationship_class' => 'BelongsToMany',
+            'relationship_model' => Tag::class,
+            'relationship_table' => 'tags',
+            'is_many_to_many' => true,
+            'has_middleman' => false,
+            'middleman_model' => null,
+            'middleman_table' => null,
+        ],
+        'comments' => [
+            'relationship_class' => \Illuminate\Database\Eloquent\Relations\HasMany::class,
+            'short_relationship_class' => 'HasMany',
+            'relationship_model' => Comment::class,
+            'relationship_table' => 'comments',
+            'is_many_to_many' => false,
+            'has_middleman' => false,
+            'middleman_model' => null,
+            'middleman_table' => null,
+        ],
+    ];
+}
+
+
+
+/**
+ * Get relationship type for a given relation
+ * @param string $relationName
+ * @return string|null
+ */
+public function getRelationType(string $relationName): ?string
+{
+    if (!method_exists($this, $relationName)) {
+        return null;
+    }
+
+    $relation = $this->$relationName();
+    return class_basename($relation);
+}
+```
+
+## Accessors & Mutators
+
+### Accessors (Get Values)
+
+```php
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+// Modern approach (Laravel 9+)
+protected function firstName(): Attribute
+{
+    return Attribute::make(
+        get: fn (string $value) => ucfirst($value),
+    );
+}
+
+protected function fullName(): Attribute
+{
+    return Attribute::make(
+        get: fn () => "{$this->first_name} {$this->last_name}",
+    );
+}
+
+protected function price(): Attribute
+{
+    return Attribute::make(
+        get: fn (int $value) => $value / 100, // Cents to dollars
+    );
+}
+
+// Legacy approach (Laravel 8 and below)
+public function getFullNameAttribute()
+{
+    return "{$this->first_name} {$this->last_name}";
+}
+```
+
+### Mutators (Set Values)
+
+```php
+protected function firstName(): Attribute
+{
+    return Attribute::make(
+        get: fn (string $value) => ucfirst($value),
+        set: fn (string $value) => strtolower($value),
+    );
+}
+
+protected function price(): Attribute
+{
+    return Attribute::make(
+        get: fn (int $value) => $value / 100,
+        set: fn (float $value) => (int) ($value * 100), // Dollars to cents
+    );
+}
+
+// Legacy approach
+public function setFirstNameAttribute($value)
+{
+    $this->attributes['first_name'] = strtolower($value);
+}
+```
+
+## Scopes
+
+### Local Scopes
+
+```php
+/**
+ * Scope for active records
+ * @param \Illuminate\Database\Eloquent\Builder $query
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+public function scopeActive($query)
+{
+    return $query->where('status', 'active');
+}
+
+/**
+ * Scope with parameter
+ * @param \Illuminate\Database\Eloquent\Builder $query
+ * @param string $status
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+public function scopeStatus($query, $status)
+{
+    return $query->where('status', $status);
+}
+
+/**
+ * Scope for date range
+ * @param \Illuminate\Database\Eloquent\Builder $query
+ * @param string $startDate
+ * @param string $endDate
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+public function scopeDateRange($query, $startDate, $endDate)
+{
+    return $query->whereBetween('created_at', [$startDate, $endDate]);
+}
+
+/**
+ * Scope for search
+ * @param \Illuminate\Database\Eloquent\Builder $query
+ * @param string $search
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+public function scopeSearch($query, $search)
+{
+    return $query->where(function ($q) use ($search) {
+        $q->where('name', 'LIKE', "%{$search}%")
+          ->orWhere('email', 'LIKE', "%{$search}%");
+    });
+}
+
+// Usage in Repository filter()
+// $query->active(); // No parameters
+// $query->status('published'); // With parameter
+// $query->dateRange('2024-01-01', '2024-12-31');
+```
+
+### Global Scopes
+
+```php
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Scope;
+
+// Create a scope class
+class ActiveScope implements Scope
+{
+    public function apply(Builder $builder, Model $model)
+    {
+        $builder->where('is_active', true);
+    }
+}
+
+// Apply in model
+protected static function booted()
+{
+    static::addGlobalScope(new ActiveScope);
+
+    // Or anonymous scope
+    static::addGlobalScope('active', function (Builder $builder) {
+        $builder->where('is_active', true);
+    });
+}
+
+// Remove global scope when needed
+Model::withoutGlobalScope(ActiveScope::class)->get();
+Model::withoutGlobalScope('active')->get();
+```
+
+## Events & Observers
+
+### Model Events
+
+```php
+protected static function booted()
+{
+    // Creating event (before save, before created)
+    static::creating(function ($model) {
+        $model->uuid = Str::uuid();
+        $model->slug = Str::slug($model->name);
+    });
+
+    // Created event (after save)
+    static::created(function ($model) {
+        // Send notification
+        // Create default relations
+    });
+
+    // Updating event (before save, before updated)
+    static::updating(function ($model) {
+        if ($model->isDirty('status')) {
+            $model->status_changed_at = now();
+        }
+    });
+
+    // Updated event (after save)
+    static::updated(function ($model) {
+        // Clear cache
+    });
+
+    // Saving event (before create/update)
+    static::saving(function ($model) {
+        // Common validation
+    });
+
+    // Saved event (after create/update)
+    static::saved(function ($model) {
+        // Common post-save actions
+    });
+
+    // Deleting event
+    static::deleting(function ($model) {
+        // Delete related records
+        $model->comments()->delete();
+    });
+
+    // Deleted event
+    static::deleted(function ($model) {
+        // Log deletion
+    });
+
+    // Restoring event (soft delete)
+    static::restoring(function ($model) {
+        // Validate restoration
+    });
+
+    // Restored event
+    static::restored(function ($model) {
+        // Restore related records
+    });
+}
+```
+
+### Observers (Recommended for Complex Logic)
+
+```php
+// app/Observers/PostObserver.php
+class PostObserver
+{
+    public function creating(Post $post)
+    {
+        $post->slug = Str::slug($post->title);
+    }
+
+    public function created(Post $post)
+    {
+        // Send notification
+    }
+
+    public function updating(Post $post)
+    {
+        if ($post->isDirty('title')) {
+            $post->slug = Str::slug($post->title);
+        }
+    }
+
+    public function deleted(Post $post)
+    {
+        // Cleanup
+    }
+}
+
+// Register in AppServiceProvider
+use App\Models\Post;
+use App\Observers\PostObserver;
+
+public function boot()
+{
+    Post::observe(PostObserver::class);
+}
+```
+
+## Custom Methods
+
+### Query Helpers
+
+```php
+/**
+ * Get active records
+ * @return \Illuminate\Database\Eloquent\Collection
+ */
+public static function getActive()
+{
+    return static::where('is_active', true)->get();
+}
+
+/**
+ * Find by slug
+ * @param string $slug
+ * @return static|null
+ */
+public static function findBySlug(string $slug)
+{
+    return static::where('slug', $slug)->first();
+}
+
+/**
+ * Get or create by attributes
+ * @param array $attributes
+ * @return static
+ */
+public static function firstOrNew(array $attributes)
+{
+    return static::firstOrCreate($attributes);
+}
+```
+
+### Business Logic
+
+```php
+/**
+ * Publish the model
+ * @return bool
+ */
+public function publish()
+{
+    $this->status = 'published';
+    $this->published_at = now();
+    return $this->save();
+}
+
+/**
+ * Check if model can be deleted
+ * @return bool
+ */
+public function canDeleteSafely()
+{
+    // Check if has dependent records
+    return $this->comments()->count() === 0;
+}
+
+/**
+ * Calculate something
+ * @return float
+ */
+public function calculateTotal()
+{
+    return $this->items->sum('price');
+}
+
+/**
+ * Get status label
+ * @return string
+ */
+public function getStatusLabel()
+{
+    return match($this->status) {
+        'draft' => 'Draft',
+        'published' => 'Published',
+        'archived' => 'Archived',
+        default => 'Unknown',
+    };
+}
+```
+
+## Modularity Traits
+
+### IsTranslatable
+
+```php
+use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+
+class Post extends Model
+{
+    use IsTranslatable;
+
+    public $translatedAttributes = [
+        'title',
+        'description',
+        'content',
+    ];
+
+    // Access translated attributes
+    // $post->title // Current locale
+    // $post->translate('title', 'en') // Specific locale
+}
+```
+
+### HasMedias
+
+```php
+use Unusualify\Modularity\Entities\Traits\HasMedias;
+
+class Post extends Model
+{
+    use HasMedias;
+
+    public $mediasParams = [
+        'cover' => [
+            'default' => [
+                [
+                    'name' => 'default',
+                    'ratio' => 16 / 9,
+                ],
+            ],
+        ],
+    ];
+
+    // Access media
+    // $post->cmsImage('cover', 'default')
+    // $post->getMedia('cover')
+}
+```
+
+### HasRevisions
+
+```php
+use Unusualify\Modularity\Entities\Traits\HasRevisions;
+
+class Post extends Model
+{
+    use HasRevisions;
+
+    // Automatically tracks changes
+    // $post->revisions
+    // $post->revisionsArray()
+}
+```
+
+## Table Schema Methods
+
+```php
+/**
+ * Get table columns
+ * @return array
+ */
+public function getTableColumns(): array
+{
+    return Schema::getColumnListing($this->getTable());
+}
+
+/**
+ * Check if column exists
+ * @param string $column
+ * @return bool
+ */
+public function hasColumn(string $column): bool
+{
+    return in_array($column, $this->getTableColumns());
+}
+
+/**
+ * Get fillable columns
+ * @return array
+ */
+public function getFillableColumns(): array
+{
+    return $this->getFillable();
+}
+
+/**
+ * Check if attribute is translatable
+ * @param string $attribute
+ * @return bool
+ */
+public function isTranslationAttribute(string $attribute): bool
+{
+    return in_array($attribute, $this->translatedAttributes ?? []);
+}
+```
+
+## Best Practices
+
+### ✅ DO
+
+```php
+// Use casts for type conversion
+protected $casts = [
+    'is_active' => 'boolean',
+    'metadata' => 'array',
+];
+
+// Define relationships clearly
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+// Use accessors for computed properties
+protected function fullName(): Attribute
+{
+    return Attribute::make(
+        get: fn () => "{$this->first_name} {$this->last_name}",
+    );
+}
+
+// Use scopes for reusable queries
+public function scopeActive($query)
+{
+    return $query->where('is_active', true);
+}
+
+// Specify fillable or guarded
+protected $fillable = ['name', 'email'];
+```
+
+### ❌ DON'T
+
+```php
+// Don't put business logic in accessors
+protected function total(): Attribute
+{
+    return Attribute::make(
+        get: fn () => $this->calculateComplexTotal(), // ❌ Use method instead
+    );
+}
+
+// Don't query in accessors
+protected function userName(): Attribute
+{
+    return Attribute::make(
+        get: fn () => User::find($this->user_id)->name, // ❌ Use relationship
+    );
+}
+
+// Don't disable mass assignment protection without reason
+protected $guarded = []; // ❌ Too permissive
+
+// Don't use both fillable and guarded
+protected $fillable = ['name'];
+protected $guarded = ['id']; // ❌ Use one or the other
+
+// Don't put too much logic in events
+static::created(function ($model) {
+    // 100 lines of code // ❌ Use observer instead
+});
+```
+
+## Common Patterns
+
+### Soft Deletes
+
+```php
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Post extends Model
+{
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+}
+
+// Usage
+$post->delete(); // Soft delete
+$post->forceDelete(); // Permanent delete
+$post->restore(); // Restore
+Post::withTrashed()->get(); // Include soft deleted
+Post::onlyTrashed()->get(); // Only soft deleted
+```
+
+### UUID Primary Key
+
+```php
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+
+class Post extends Model
+{
+    use HasUuids;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+}
+```
+
+### Slug Generation
+
+```php
+protected static function booted()
+{
+    static::creating(function ($model) {
+        if (empty($model->slug)) {
+            $model->slug = Str::slug($model->name);
+        }
+    });
+
+    static::updating(function ($model) {
+        if ($model->isDirty('name') && empty($model->slug)) {
+            $model->slug = Str::slug($model->name);
+        }
+    });
+}
+```

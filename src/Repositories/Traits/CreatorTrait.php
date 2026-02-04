@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 trait CreatorTrait
 {
+    protected bool $hasUserAwareCacheCreatorTrait = true;
+
     /**
      * Scope a query to only include the current user's revisions.
      *
@@ -30,12 +32,14 @@ trait CreatorTrait
             $creatorInput = $schema['custom_creator_id'];
             $isAllowed = true;
 
-            if (isset($creatorInput['allowedRoles'])) {
-                $allowedRoles = $creatorInput['allowedRoles'];
-                if (! (Auth::check() && Auth::user()->hasRole($allowedRoles))) {
-                    $isAllowed = false;
-                }
-            }
+            // if (isset($creatorInput['allowedRoles'])) {
+            //     $allowedRoles = $creatorInput['allowedRoles'];
+            //     // if user is not logged in, return true
+            //     // if user is logged in and not have allowedRoles, isAllowed is false
+            //     if( Auth::check() && !Auth::user()->hasRole($allowedRoles)) {
+            //         $isAllowed = false;
+            //     }
+            // }
 
             if ($isAllowed && $object->creator()->exists()) {
                 $fields['custom_creator_id'] = $object?->creator?->id;

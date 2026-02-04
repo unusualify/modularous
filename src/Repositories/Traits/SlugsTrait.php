@@ -13,13 +13,18 @@ trait SlugsTrait
     {
         if (property_exists($this->model, 'slugAttributes')) {
             foreach (getLocales() as $locale) {
-                if (isset($fields['slug']) && isset($fields['slug'][$locale]) && ! empty($fields['slug'][$locale])) {
+                if (isset($fields['slugs']) && isset($fields['slugs'][$locale]) && ! empty($fields['slugs'][$locale])) {
+                    $slugValue = $fields['slugs'][$locale];
+                    $isArray = is_array($slugValue);
                     $object->disableLocaleSlugs($locale);
                     $currentSlug = [];
-                    $currentSlug['slug'] = $fields['slug'][$locale];
+                    $currentSlug['slug'] = $isArray ? $slugValue['slug'] : $slugValue;
                     $currentSlug['locale'] = $locale;
-                    $currentSlug['active'] = $this->model->isTranslatable() ? $object->translate($locale)->active : 1;
+                    $currentSlug['active'] = ($this->model->isTranslatable() && isset($object->translations) && count($object->translations) > 0 && ! ($isArray && isset($slugValue['active'])))
+                        ? $object->translate($locale)->active
+                        : ($isArray && isset($slugValue['active']) ? (bool) $slugValue['active'] : 1);
                     $currentSlug = $this->getSlugParameters($object, $fields, $currentSlug);
+
                     $object->updateOrNewSlug($currentSlug);
                 }
             }
@@ -72,9 +77,9 @@ trait SlugsTrait
      */
     public function getSlugParameters($object, $fields, $slug)
     {
-        $slugParams = $object->getSlugParams($slug['locale']);
+        $slugParams = $this->getSlugParams($object, $slug['locale']);
 
-        foreach ($object->slugAttributes as $param) {
+        foreach ($object->getSlugAttributes() as $param) {
             if (isset($slugParams[$param]) && isset($fields[$param])) {
                 $slug[$param] = $fields[$param];
             } elseif (isset($slugParams[$param])) {
@@ -92,7 +97,7 @@ trait SlugsTrait
      * @param array $scopes
      * @return \Unusualify\Modularity\Entities\Model|null
      */
-    public function forSlug($slug, $with = [], $withCount = [], $scopes = [])
+    public function existsSlug($slug, $with = [], $withCount = [], $scopes = [])
     {
         $query = $this->model->where($scopes)->scopes(['published', 'visible']);
 
@@ -102,9 +107,11 @@ trait SlugsTrait
             }
         }
 
-        $item = (clone $query)->forSlug($slug)->with($with)->withCount($withCount)->first();
+        $item = (clone $query)->existsSlug($slug)->with($with)->withCount($withCount)->first();
 
-        if (! $item && $item = (clone $query)->forInactiveSlug($slug)->first()) {
+        if (! $item && $item = (clone $query)->orWhere(function ($query) use ($slug) {
+            return $query->existsInactiveSlug($slug);
+        })->first()) {
             $item->redirect = true;
         }
 
@@ -112,7 +119,7 @@ trait SlugsTrait
         && config('translatable.fallback_locale') != config('app.locale')) {
             $item = (clone $query)->orWhere(function ($query) {
                 return $query->withActiveTranslations(config('translatable.fallback_locale'));
-            })->forFallbackLocaleSlug($slug)->first();
+            })->existsFallbackLocaleSlug($slug)->first();
 
             if ($item) {
                 $item->redirect = true;
@@ -128,8 +135,13 @@ trait SlugsTrait
      * @param array $withCount
      * @return \Unusualify\Modularity\Entities\Model
      */
-    public function forSlugPreview($slug, $with = [], $withCount = [])
+    public function existsSlugPreview($slug, $with = [], $withCount = [])
     {
-        return $this->model->forInactiveSlug($slug)->with($with)->withCount($withCount)->first();
+        return $this->model->existsInactiveSlug($slug)->with($with)->withCount($withCount)->first();
+    }
+
+    protected function getSlugParams($object, $locale)
+    {
+        return $object->getSlugParams($locale);
     }
 }

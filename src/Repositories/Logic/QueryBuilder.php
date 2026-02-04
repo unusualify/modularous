@@ -3,14 +3,16 @@
 namespace Unusualify\Modularity\Repositories\Logic;
 
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
+use Unusualify\Modularity\Traits\SerializeModel;
 
 trait QueryBuilder
 {
-    use MethodTransformers;
+    use MethodTransformers, SerializeModel;
 
     /**
      * @param array $with
@@ -26,10 +28,6 @@ trait QueryBuilder
         $query = $this->model->query();
 
         $query = $this->model->with($this->formatWiths($query, $with));
-
-        // if ($perPage === 0) {
-        //     return $query->simplePaginate($perPage);
-        // }
 
         if (isset($scopes['searches']) && isset($scopes['search']) && is_array($scopes['searches'])) {
             $translatedAttributes = $this->model->translatedAttributes ?? [];
@@ -76,12 +74,9 @@ trait QueryBuilder
         $page = request()->get('page') ?? null;
 
         if ($id) {
-            $totalRows = $query->count();
-            // $totalPages = ceil($totalRows / $perPage);
 
             // Create a clone of the query to find the position of the record
             $cloneQuery = clone $query;
-            // $orderColumns = $query->getQuery()->orders ?? [];
 
             // Get the position of the record
             if ($cloneQuery->where('id', $id)->exists()) {
@@ -147,6 +142,133 @@ trait QueryBuilder
         }
 
         return $results;
+    }
+
+    /**
+     * Get paginated results with optional caching (main entry point).
+     * Automatically uses cached version if caching is enabled.
+     *
+     * @param array $with
+     * @param array $scopes
+     * @param array $orders
+     * @param int $perPage
+     * @param array $appends
+     * @param bool $forcePagination
+     * @param int|string|null $id
+     * @param array $exceptIds
+     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPaginator($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
+    {
+        if (! $this->shouldUseCache('index')) {
+            return $this->get($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
+        }
+
+        return $this->getCached($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
+    }
+
+    /**
+     * Get paginated results with caching.
+     * Automatically includes user context if user-aware traits are detected.
+     * With relationship tracking enabled, caches are tagged with related model IDs
+     * for granular invalidation.
+     *
+     * NOTE: This method caches using getCached() as the main entry point.
+     * The get() method itself should NOT be wrapped in cacheable() to avoid
+     * serialization issues with Laravel's paginator closures.
+     *
+     * @param array $with
+     * @param array $scopes
+     * @param array $orders
+     * @param int $perPage
+     * @param array $appends
+     * @param bool $forcePagination
+     * @param int|string|null $id
+     * @param array $exceptIds
+     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getCached($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
+    {
+        // $moduleName = $this->getCacheModuleName();
+        // $routeName = $this->getCacheModuleRouteName();
+
+        // $params = $this->addUserContext([
+        //     'with' => $with,
+        //     'scopes' => $scopes,
+        //     'orders' => $orders,
+        //     'perPage' => $perPage,
+        //     'appends' => $appends,
+        //     'forcePagination' => $forcePagination,
+        //     'id' => $id,
+        //     'exceptIds' => $exceptIds,
+        //     'page' => request()->get('page', 1),
+        // ]);
+
+        // $cacheKey = $this->generateIndexCacheKey($params);
+        // $ttl = $this->getCacheTtl('index');
+
+        // Cache the serializable data instead of the paginator object
+        $cachedData = $this->rememberCache(
+            callback: function () use ($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds) {
+                $result = $this->get($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
+
+                // Convert paginator to serializable array
+                if ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
+                    return [
+                        'type' => 'paginator',
+                        'items' => $result->getCollection()->transform(function ($item) {
+                            return $this->serializeModel($item);
+                        }),
+                        'total' => $result->total(),
+                        'perPage' => $result->perPage(),
+                        'currentPage' => $result->currentPage(),
+                        'lastPage' => $result->lastPage(),
+                    ];
+                }
+
+                // Return collection as-is (serializable)
+                return [
+                    'type' => 'collection',
+                    'items' => $result->map(function ($item) {
+                        return $this->serializeModel($item);
+                    }),
+                ];
+            },
+            type: 'index',
+            data: [
+                'with' => $with,
+                'scopes' => $scopes,
+                'orders' => $orders,
+                'perPage' => $perPage,
+                'appends' => $appends,
+                'forcePagination' => $forcePagination,
+                'id' => $id,
+                'exceptIds' => $exceptIds,
+                'page' => request()->get('page', 1),
+                'locale' => app()->getLocale(),
+            ],
+
+        );
+
+        // Reconstruct the paginator from cached data
+        if ($cachedData['type'] === 'paginator') {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                collect($cachedData['items'])->map(function ($item) {
+                    return $this->unserializeModel($item);
+                }),
+                $cachedData['total'],
+                $cachedData['perPage'],
+                $cachedData['currentPage'],
+                [
+                    'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+                    'pageName' => 'page',
+                ]
+            );
+        }
+
+        return collect($cachedData['items'])->map(function ($item) {
+            return $this->unserializeModel($item);
+        });
     }
 
     /**
