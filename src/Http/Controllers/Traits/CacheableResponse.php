@@ -22,7 +22,7 @@ trait CacheableResponse
             return $formItemCallback();
         }
 
-        return $this->rememberCache($formItemCallback, "formItem:{$id}", ['locale' => app()->getLocale()]);
+        return $this->rememberCache($formItemCallback, "formItem", ['id' => $id, 'locale' => app()->getLocale()]);
     }
 
     /**
