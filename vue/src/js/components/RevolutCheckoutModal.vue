@@ -19,7 +19,9 @@ export default {
     completeUrl: String,
   },
 
-  setup(props) {
+  emits: ['cancel', 'error', 'success'],
+
+  setup(props, { emit }) {
     const DynamicModal = useDynamicModal()
 
     let payWithPopup = null;
@@ -32,6 +34,7 @@ export default {
       payWithPopup({
         email: 'test@test.com',
         onSuccess(...args) {
+          emit('success', args);
           DynamicModal.open('ue-recursive-stuff', {
             'props': {
               'configuration': {
@@ -76,6 +79,7 @@ export default {
           });
         },
         onError(...args) {
+          emit('error', args);
           axios.post(props.completeUrl + '?id=' + props.paymentId + '&status=error', {
             id: props.paymentId,
             status: 'error',
@@ -84,10 +88,8 @@ export default {
           });
           console.log('error', args);
         },
-        onClose() {
-          console.log('close');
-        },
         onCancel() {
+          emit('cancel');
           console.log('cancel');
         },
       });
