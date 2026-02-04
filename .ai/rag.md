@@ -1,0 +1,10 @@
+- Modules live in `modules/` and are self-bootstrapped via their ServiceProvider.
+- Autoload PSR-4 maps `Modules\\` to `modules/`.
+- Use contracts/interfaces to decouple modules; avoid direct class coupling.
+- Vite assets are exposed through `ModularityVite` helper and registered entries.
+- Inertia + Vue pages/components live under module Resources/js folders following composition API.
+- Providers must register routes, views, translations and migrations via load helpers.
+- Coverage tooling: commands under `src/Console/Coverage` generate and analyze module coverage.
+- Tests run via composer scripts; use Orchestra Testbench for integration.
+- CI must run pint, phpstan (if enabled), unit tests, and coverage checks; use CoveragePRCheckCommand.
+- Never change host app core or composer autoload mappings without approval.

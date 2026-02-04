@@ -1,0 +1,95 @@
+{
+    "trigger": "push",
+    "scenarios": [
+      {
+        "name": "Push to main (security fix)",
+        "description": "Push event to main branch with generated test file update",
+        "event": {
+          "ref": "refs/heads/main",
+          "commits": [
+            {
+              "message": "Fix: resolve security issue",
+              "author": { "name": "Test User" },
+              "files": [
+                {
+                  "path": "tests/Generated/Entities/Observers/CacheObserverTest.php",
+                  "content": "<?php\n\nnamespace Tests\\Generated\\Entities\\Observers;\n\nuse PHPUnit\\Framework\\TestCase;\n\nclass CacheObserverTest extends TestCase\n{\n    public function testCacheObserver()\n    {\n        $this->assertTrue(true);\n    }\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Push to feature branch (new service)",
+        "description": "Feature branch push adding a new service class",
+        "event": {
+          "ref": "refs/heads/feature/cache-layer",
+          "commits": [
+            {
+              "message": "Feat: add CacheLayerService",
+              "author": { "name": "Dev Contributor" },
+              "files": [
+                {
+                  "path": "src/Services/CacheLayerService.php",
+                  "content": "<?php\n\nnamespace App\\Services;\n\nclass CacheLayerService\n{\n    public function warmUp(): bool\n    {\n        return true;\n    }\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Push to develop (multiple commits)",
+        "description": "Push event with multiple commits and mixed file updates",
+        "event": {
+          "ref": "refs/heads/develop",
+          "commits": [
+            {
+              "message": "Refactor: cleanup observer logic",
+              "author": { "name": "Refactor Bot" },
+              "files": [
+                {
+                  "path": "src/Entities/Observers/CacheObserver.php",
+                  "content": "<?php\n\nnamespace App\\Entities\\Observers;\n\nclass CacheObserver\n{\n    public function handle(): void\n    {\n        // refactored observer\n    }\n}\n"
+                }
+              ]
+            },
+            {
+              "message": "Test: add coverage for CacheObserver",
+              "author": { "name": "Refactor Bot" },
+              "files": [
+                {
+                  "path": "tests/Unit/CacheObserverUnitTest.php",
+                  "content": "<?php\n\nnamespace Tests\\Unit;\n\nuse PHPUnit\\Framework\\TestCase;\n\nclass CacheObserverUnitTest extends TestCase\n{\n    public function testObserverRuns()\n    {\n        $this->assertTrue(true);\n    }\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Push with docs + config change",
+        "description": "Push event updating documentation and CI config",
+        "event": {
+          "ref": "refs/heads/main",
+          "commits": [
+            {
+              "message": "Docs: update README and workflow config",
+              "author": { "name": "Docs Maintainer" },
+              "files": [
+                {
+                  "path": "README.md",
+                  "content": "# Modularity AI\n\nUpdated documentation for local workflow testing.\n"
+                },
+                {
+                  "path": ".github/workflows/tests.yml",
+                  "content": "name: Tests\n\non: [push]\n\njobs:\n  phpunit:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: echo \"Running tests...\"\n"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+}

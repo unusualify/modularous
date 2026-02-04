@@ -1,9 +1,6 @@
 ---
+name: superficial
 description: "This rule provides standards for superficial code of Modularity"
-alwaysApply: false
-applyToSpecificFiles: true
-globs: ./modularity/src/**/*.php, modularity/vue/src/**/*.vue, modularity/vue/src/**/*.js , modularity/vue/src/**/*.scss, modularity/vue/src/**/*.css
-
 ---
 
 You are assisting a senior software developer working on a Laravel + Vue/Vuetify modular toolkit.

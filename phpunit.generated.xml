@@ -5,17 +5,8 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
 >
   <testsuites>
-    <testsuite name="Main">
-        <directory>tests</directory>
-        <exclude>tests/Generated</exclude>
-    </testsuite>
-
     <testsuite name="Generated">
         <directory>tests/Generated</directory>
-    </testsuite>
-
-    <testsuite name="All">
-        <directory>tests</directory>
     </testsuite>
   </testsuites>
   <php>
@@ -39,10 +30,10 @@
   </source>
   <coverage>
     <report>
-      <html outputDirectory="coverage-html" lowUpperBound="50" highLowerBound="80"/>
-      <text outputFile="coverage.txt" showUncoveredFiles="true" showOnlySummary="false"/>
-      <xml outputDirectory="coverage-xml"/>
-      <clover outputFile="coverage-clover.xml"/>
+      <html outputDirectory="generated-coverage-html" lowUpperBound="50" highLowerBound="80"/>
+      <xml outputDirectory="generated-coverage-xml"/>
+      <text outputFile="generated-coverage.txt" showUncoveredFiles="true" showOnlySummary="false"/>
+      <clover outputFile="generated-coverage-clover.xml"/>
     </report>
   </coverage>
 </phpunit>

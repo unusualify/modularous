@@ -1,0 +1,67 @@
+{
+  "module_structure": {
+    "layout": [
+      "modules/<ModuleName>/",
+      "modules/<ModuleName>/Providers/<ModuleName>ServiceProvider.php",
+      "modules/<ModuleName>/Config/config.php",
+      "modules/<ModuleName>/Routes/web.php",
+      "modules/<ModuleName>/Resources/views/",
+      "modules/<ModuleName>/Database/Migrations/",
+      "modules/<ModuleName>/Assets/ (vite entrypoints)",
+      "modules/<ModuleName>/Tests/"
+    ],
+    "principles": [
+      "Modules are self-contained and register via their ServiceProvider.",
+      "Config keys are namespaced under the module name to avoid collisions.",
+      "Public assets are exposed via the package Vite bridge (ModularityVite)."
+    ]
+  },
+  "service_provider_patterns": {
+    "register": [
+      "Bind interfaces to implementations in the register() method.",
+      "Merge package/module config using $this->mergeConfigFrom when needed.",
+      "Register commands, routes and event listeners via the provider."
+    ],
+    "boot": [
+      "Load routes/views/translations/migrations conditionally using $this->load* helpers.",
+      "Publishable resources must be registered with tags.",
+      "Defer heavy work to booted() callbacks when console environment requires it."
+    ]
+  },
+  "frontend_vue_vuetify_patterns": {
+    "structure": [
+      "Use Inertia pages under Resources/js/Pages or modules/<Name>/Resources/js/Pages",
+      "Components under Resources/js/Components",
+      "Vuetify components follow composition API and are small, single-responsibility"
+    ],
+    "build": [
+      "Expose module entrypoints to host Vite build via ModularityVite helper.",
+      "Keep CSS scoped at component level and use Vuetify theme tokens."
+    ],
+    "naming": [
+      "PascalCase for component filenames and default export names.",
+      "Pages as Index.vue or <Resource>.vue inside Pages/ folders."
+    ]
+  },
+  "test_patterns": {
+    "unit": [
+      "Tests under tests/Unit or modules/<Name>/Tests/Unit.",
+      "Prefer mocking external services; test providers by registering them in a Testbench app."
+    ],
+    "integration": [
+      "Use Orchestra Testbench to bootstrap package service providers.",
+      "Include database migrations/seeders in workbench/ for integration tests."
+    ],
+    "coverage": [
+      "Coverage commands generate module-specific coverage reports found in coverage-xml/.",
+      "CI should fail PR checks if coverage thresholds are not met (use existing CoveragePRCheckCommand)."
+    ]
+  },
+  "ci_cd_patterns": {
+    "workflows": [
+      "Separate jobs for lint (pint/phpstan), test, and coverage.",
+      "Run package tests with composer scripts defined in composer.json.",
+      "Upload coverage artifacts and run CoveragePRCheckCommand to enforce thresholds."
+    ]
+  }
+}

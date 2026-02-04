@@ -1,0 +1,24 @@
+{
+  "hard_rules": [
+    "AI must only operate on files within packages/modularity and its tests/coverage artifacts.",
+    "Never modify host application files outside packages/modularity.",
+    "Never introduce breaking changes to public APIs without an explicit upgrade note in composer.json and changelog.",
+    "Preserve module boundaries: do not create direct runtime dependencies between modules; use interfaces/contracts.",
+    "All PHP code must target >= PHP 8.1 and follow existing package composer constraints.",
+    "Do not change composer autoload psr-4 mappings without maintainer approval."
+  ],
+  "soft_rules": [
+    "Prefer small, well-tested changes over large refactors.",
+    "Follow PSR-12 and existing project coding style (use typed properties, return types where appropriate).",
+    "Favor dependency injection over facades in new code unless pattern consistency dictates otherwise.",
+    "Add or update tests for any behavior-changing code (unit or integration).",
+    "Use existing helper classes (ModularityVite, CoverageService) instead of adding duplicate utilities.",
+    "Document new features in package README or docs under packages/modularity/docs when added."
+  ],
+  "legacy_constraints": [
+    "Compatibility with nwidart/laravel-modules and existing modules/ layout must be preserved.",
+    "Existing service providers listed in Extra -> laravel -> providers must remain available.",
+    "Coverage tooling conventions and command names must be preserved unless adding backward-compatible aliases.",
+    "Existing configuration keys (config/*.php) must keep their shape; add new keys under the package namespace."
+  ]
+}
