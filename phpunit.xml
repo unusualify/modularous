@@ -9,14 +9,6 @@
         <directory>tests</directory>
         <exclude>tests/Generated</exclude>
     </testsuite>
-
-    <testsuite name="Generated">
-        <directory>tests/Generated</directory>
-    </testsuite>
-
-    <testsuite name="All">
-        <directory>tests</directory>
-    </testsuite>
   </testsuites>
   <php>
     <env name="CACHE_DRIVER" value="array"/>
