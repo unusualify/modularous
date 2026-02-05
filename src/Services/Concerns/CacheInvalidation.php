@@ -285,7 +285,10 @@ trait CacheInvalidation
         }
 
         try {
-            $this->warmupByModel($model);
+            // if laravel model is not new created, warmUp cache
+            if (! $model->wasRecentlyCreated) {
+                $this->warmupByModel($model);
+            }
         } catch (\Exception $e) {
             logger()->error("Failed to warm up caches for model {$model->getKey()}: " . $e->getMessage(), ['exception' => $e->getTraceAsString()]);
         }
