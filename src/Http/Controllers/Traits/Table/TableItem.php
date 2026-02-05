@@ -351,14 +351,8 @@ trait TableItem
         $customRowFillable = [];
 
         foreach ($customRows as $customRow) {
-            if (isset($customRow['allowedRoles']) && isset($this->user) && $this->user->hasRole($customRow['allowedRoles'])) {
-                if ($customRow['itemAttributes'] && is_array($customRow['itemAttributes'])) {
-                    $customRowFillable = $customRow['itemAttributes'];
-                } else {
-                    $customRowFillable = [];
-                }
-
-                break;
+            if ($customRow['itemAttributes'] && is_array($customRow['itemAttributes'])) {
+                $customRowFillable = array_unique(array_merge($customRowFillable, $customRow['itemAttributes']));
             }
         }
 
