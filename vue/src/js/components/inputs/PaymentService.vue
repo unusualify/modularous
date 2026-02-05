@@ -18,6 +18,7 @@
             item-value="id"
             @update:model-value="handleCurrencyChange"
             class="mx-6"
+            :disabled="builtInFormLoading"
           />
 
           <!-- Payment Methods -->
