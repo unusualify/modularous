@@ -97,6 +97,7 @@
               v-bind="builtInFormAttributes"
             /> -->
             <ue-revolut-checkout-modal v-else
+              @cancel="runBuiltInForm"
               v-bind="builtInFormAttributes"
               :complete-url="completeUrl"
             >
@@ -448,6 +449,7 @@ export default {
     }
 
     const runBuiltInForm = () => {
+      builtInFormLoading.value = true;
       axios.post(props.checkoutUrl, {
         price_id: props.price_object.id,
         payment_service: {
