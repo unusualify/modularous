@@ -33,9 +33,9 @@ class CacheObserver
             return;
         }
 
-        // if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-        //     ModularityCache::invalidateForModel($model);
-        // }
+        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            ModularityCache::invalidateForModel($model);
+        }
 
         $this->invalidateDependentModules($model);
     }
