@@ -34,6 +34,7 @@ class CacheObserver
         }
 
         if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            dump('created', $model->wasRecentlyCreated);
             ModularityCache::invalidateForModel($model);
         }
 
@@ -83,6 +84,7 @@ class CacheObserver
         if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             ModularityCache::invalidateForModel($model);
         }
+
         $this->invalidateDependentModules($model);
     }
 
@@ -142,6 +144,8 @@ class CacheObserver
         }
 
         static::$invalidating[$modelKey] = true;
+
+        dump('invalidateDependentModules', get_class($model));
 
         try {
             // Use granular invalidation by relationship tag

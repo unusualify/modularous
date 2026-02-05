@@ -264,6 +264,8 @@ trait CacheInvalidation
             return;
         }
 
+        $newlyCreated = $model->wasRecentlyCreated;
+
         // // Without tags, invalidate specific patterns
         // $recordKey = $this->generateRecordKey($module, $routeName, $model->getKey());
         // $this->forget($recordKey, $module, $routeName);
@@ -277,16 +279,20 @@ trait CacheInvalidation
         }
 
         if (((isset($types['formattedItem']) ? $types['formattedItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formattedItem')) {
-            $this->invalidateFormattedItemCache($moduleName, $moduleRouteName, $model->getKey());
+            if (! $newlyCreated) {
+                $this->invalidateFormattedItemCache($moduleName, $moduleRouteName, $model->getKey());
+            }
         }
 
         if (((isset($types['formItem']) ? $types['formItem'] : true)) && $this->isEnabled($moduleName, $moduleRouteName, 'formItem')) {
-            $this->invalidateFormItemCache($moduleName, $moduleRouteName, $model->getKey());
+            if (! $newlyCreated) {
+                $this->invalidateFormItemCache($moduleName, $moduleRouteName, $model->getKey());
+            }
         }
 
         try {
             // if laravel model is not new created, warmUp cache
-            if (! $model->wasRecentlyCreated) {
+            if (! $newlyCreated) {
                 $this->warmupByModel($model);
             }
         } catch (\Exception $e) {
