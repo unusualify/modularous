@@ -237,6 +237,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
                 $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
 
                 return [
+                    'paid_at' => $this->updated_at,
                     'original_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
                         $t->original_amount ?? $this->price->raw_amount,
                         new \Money\Currency(strtoupper($t->original_currency))
