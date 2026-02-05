@@ -61,8 +61,15 @@
                       :class="[colClasses[j] ?? '']"
                       :style="getColumnStyle(j)"
                     >
-                      <slot :name="`field.${j}`" v-bind="{ value: get(item, field), item, index: i }">
-                        {{ get(item, field, '') }}
+                      <slot :name="`field.${j}`" v-bind="{ value: get(item, field, ''), item, index: i }">
+                        <template v-if="item.formatters && window.__isObject(item.formatters) && item.formatters[field] && Array.isArray(item.formatters[field]) && item.formatters[field].length > 1">
+                          <ue-recursive-stuff
+                            v-bind="handleFormatter(item.formatters[field], get(item, field, ''))"
+                          />
+                        </template>
+                        <template v-else>
+                          {{ get(item, field, '') }}
+                        </template>
                       </slot>
                     </div>
                   </template>
@@ -94,7 +101,14 @@
                           :style="getColumnStyle(j)"
                         >
                           <slot :name="`field.${j}`" v-bind="{ value: get(item, field), item, index: i + shrinkAfter }">
-                            {{ get(item, field, '') }}
+                            <template v-if="item.formatters && window.__isObject(item.formatters) && item.formatters[field] && Array.isArray(item.formatters[field]) && item.formatters[field].length > 1">
+                              <ue-recursive-stuff
+                                v-bind="handleFormatter(item.formatters[field], get(item, field, ''))"
+                              />
+                            </template>
+                            <template v-else>
+                              {{ get(item, field, '') }}
+                            </template>
                           </slot>
                         </div>
                       </template>
@@ -187,8 +201,15 @@
               :class="[colClasses[j] ?? '']"
               :style="getColumnStyle(j)"
             >
-              <slot :name="`field.${j}`" v-bind="{ value: get(item, field), item, index: i }">
-                {{ get(item, field, '') }}
+              <slot :name="`field.${j}`" v-bind="{ value: get(item, field), item, index: i + shrinkAfter }">
+                <template v-if="item.formatters && window.__isObject(item.formatters) && item.formatters[field] && Array.isArray(item.formatters[field]) && item.formatters[field].length > 1">
+                  <ue-recursive-stuff
+                    v-bind="handleFormatter(item.formatters[field], get(item, field, ''))"
+                  />
+                </template>
+                <template v-else>
+                  {{ get(item, field, '') }}
+                </template>
               </slot>
             </div>
           </template>
@@ -220,7 +241,14 @@
                   :style="getColumnStyle(j)"
                 >
                   <slot :name="`field.${j}`" v-bind="{ value: get(item, field), item, index: i + shrinkAfter }">
-                    {{ get(item, field, '') }}
+                    <template v-if="item.formatters && window.__isObject(item.formatters) && item.formatters[field] && Array.isArray(item.formatters[field]) && item.formatters[field].length > 1">
+                      <ue-recursive-stuff
+                        v-bind="handleFormatter(item.formatters[field], get(item, field, ''))"
+                      />
+                    </template>
+                    <template v-else>
+                      {{ get(item, field, '') }}
+                    </template>
                   </slot>
                 </div>
               </template>
@@ -263,6 +291,8 @@
 <script setup>
 import { computed, useSlots, ref } from 'vue'
 import { get } from 'lodash-es'
+
+import { useFormatter } from '@/hooks'
 
 const props = defineProps({
   title: {
@@ -379,6 +409,8 @@ const emit = defineEmits(['update:modelValue'])
 
 const slots = useSlots()
 
+const { handleFormatter } = useFormatter()
+
 const internalPanelState = ref(undefined)
 const isExpanded = ref(false)
 
@@ -392,7 +424,6 @@ const panelState = computed({
 
 // Determines if the entire section should be wrapped in an expansion panel
 const shouldWrapInPanel = computed(() => {
-  console.log('shouldWrapInPanel', props.collapsible, props.collapseLimit, props.items.length)
   if (props.collapsible) return true
   if (props.collapseLimit !== null && props.items.length > props.collapseLimit) return true
   return false
@@ -522,120 +553,120 @@ const toggleExpand = () => {
 </script>
 
 <style scoped lang="scss">
-.ue-list-section {
-  width: 100%;
+  .ue-list-section {
+    width: 100%;
 
-  :deep(.ue-list-section__expansion-panels) {
-    background-color: transparent;
-
-    .v-expansion-panel {
+    :deep(.ue-list-section__expansion-panels) {
       background-color: transparent;
 
-      &::before {
-        display: none;
+      .v-expansion-panel {
+        background-color: transparent;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      .v-expansion-panel-title {
+        padding: 0;
+        min-height: unset;
+
+        &:hover > .v-expansion-panel-title__overlay {
+          opacity: 0;
+        }
+
+        .v-expansion-panel-title__icon {
+          margin-inline-start: 8px;
+        }
+      }
+
+      .v-expansion-panel-text__wrapper {
+        padding: 0;
       }
     }
 
-    .v-expansion-panel-title {
-      padding: 0;
-      min-height: unset;
-
-      &:hover > .v-expansion-panel-title__overlay {
-        opacity: 0;
-      }
-
-      .v-expansion-panel-title__icon {
-        margin-inline-start: 8px;
-      }
+    .ue-list-section__container {
+      width: 100%;
     }
 
-    .v-expansion-panel-text__wrapper {
-      padding: 0;
+    .ue-list-section__row {
+      display: flex;
+      width: 100%;
+      min-height: 25px;
+      padding: 6px 0;
+      align-items: center;
     }
-  }
 
-  .ue-list-section__container {
-    width: 100%;
-  }
+    .ue-list-section__row--header {
+      font-weight: bold;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      padding-bottom: 2px;
+      min-height: 35px;
+    }
 
-  .ue-list-section__row {
-    display: flex;
-    width: 100%;
-    min-height: 25px;
-    padding: 6px 0;
-    align-items: center;
-  }
+    .ue-list-section__row--title {
+      min-height: 35px;
+    }
 
-  .ue-list-section__row--header {
-    font-weight: bold;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    padding-bottom: 2px;
-    min-height: 35px;
-  }
+    .ue-list-section__cell--title {
+      flex: 1;
+      padding: 6px 0;
+    }
 
-  .ue-list-section__row--title {
-    min-height: 35px;
-  }
-
-  .ue-list-section__cell--title {
-    flex: 1;
-    padding: 6px 0;
-  }
-
-  .ue-list-section__row--data.has-bottom-border {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  .ue-list-section__cell {
-    padding-right: 16px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0; /* Important for text truncation in flex items */
-  }
-
-  .ue-list-section__cell:last-child {
-    padding-right: 0;
-  }
-
-  /* Apply vertical-align: top when the prop is set */
-  .ue-list-section__container.align-top .ue-list-section__row {
-    align-items: flex-start;
-  }
-
-  .ue-list-section__container.align-top .ue-list-section__cell {
-    padding-top: 8px;
-  }
-
-  .ue-list-section__cell--actions {
-    width: 40px;
-    flex: 0 0 40px;
-    text-align: right;
-  }
-
-  .ue-list-section__row--empty {
-    justify-content: center;
-  }
-
-  .ue-list-section__row--empty .ue-list-section__cell {
-    text-align: center;
-    padding: 16px 0;
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 14px;
-  }
-
-  .ue-list-section__row--hoverable:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-
-  .ue-list-section__row--toggle {
-    justify-content: flex-start;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    .ue-list-section__row--data.has-bottom-border {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
 
     .ue-list-section__cell {
-      padding: 0;
+      padding-right: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0; /* Important for text truncation in flex items */
+    }
+
+    .ue-list-section__cell:last-child {
+      padding-right: 0;
+    }
+
+    /* Apply vertical-align: top when the prop is set */
+    .ue-list-section__container.align-top .ue-list-section__row {
+      align-items: flex-start;
+    }
+
+    .ue-list-section__container.align-top .ue-list-section__cell {
+      padding-top: 8px;
+    }
+
+    .ue-list-section__cell--actions {
+      width: 40px;
+      flex: 0 0 40px;
+      text-align: right;
+    }
+
+    .ue-list-section__row--empty {
+      justify-content: center;
+    }
+
+    .ue-list-section__row--empty .ue-list-section__cell {
+      text-align: center;
+      padding: 16px 0;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+    }
+
+    .ue-list-section__row--hoverable:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .ue-list-section__row--toggle {
+      justify-content: flex-start;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      .ue-list-section__cell {
+        padding: 0;
+      }
     }
   }
-}
 </style>
