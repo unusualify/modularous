@@ -31,6 +31,7 @@ return [
     'total-paid' => 'Total Paid',
     'transaction-fee-percentage' => 'Transaction Fee Percentage',
     'transaction-fee-amount' => 'Transaction Fee Amount',
+    'transaction-summary' => 'Transaction Summary',
     'transfer-description' => 'Thank you for your payment. When your transfer is completed, you will be informed.',
 
     'vat-rate-from' => 'VAT Rate From',

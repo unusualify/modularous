@@ -43,6 +43,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'status_icon',
         'status_vuetify_icon',
         'status_vuetify_chip',
+        'transaction_snapshot',
     ];
 
     protected static function booted(): void
@@ -224,6 +225,78 @@ class Payment extends \Unusualify\Payable\Models\Payment
             get: fn ($value) => $this->status
                 ? "<v-chip variant='text' color='{$this->status_color}' prepend-icon='{$this->status_icon}'>{$this->status_label}</v-chip>"
                 : null
+        );
+    }
+
+    protected function transactionSnapshot(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $t = $this->parameters->modularity ?? [];
+
+                $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
+
+                return [
+                    'original_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->original_amount ?? $this->price->raw_amount,
+                        new \Money\Currency(strtoupper($t->original_currency))
+                    ),
+
+                    'discount_percentage' => ($t->discount_percentage > 0 ? '%' . $t->discount_percentage : '%0'),
+                    'discount_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->discount_amount ?? $this->price->raw_amount - $this->price->discounted_raw_amount,
+                        new \Money\Currency(strtoupper($t->original_currency))
+                    ),
+
+                    'subtotal' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->subtotal ?? $t->original_raw_amount ?? $this->price->discounted_raw_amount,
+                        new \Money\Currency(strtoupper($t->original_currency))
+                    ),
+                    'original_total_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->original_total_amount,
+                        new \Money\Currency(strtoupper($t->original_currency))
+                    ),
+
+                    'using_country_based_vat_rates' => ($usingCountryBasedVatRates) ? __('Yes') : __('No'),
+                    'vat_rate_from' => $t->vat_rate_from ?? null,
+
+                    'is_company_based_vat_rate' => ($t->is_company_based_vat_rate ?? false) ? __('Yes') : __('No'),
+                    'company_type' => $t->company_type ?? null,
+                    'company_based_vat_rate_name' => $t->company_based_vat_rate_name ?? null,
+                    'company_based_vat_percentage' => isset($t->company_based_vat_percentage) ? ($t->company_based_vat_percentage > 0 ? '%' . $t->company_based_vat_percentage : null) : null,
+                    'company_based_vat_multiplier' => $t->company_based_vat_multiplier ?? 0,
+                    'company_based_total_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->company_based_total_amount ?? $t->original_total_amount,
+                        new \Money\Currency(strtoupper($t->converted_currency ?? $t->original_currency))
+                    ),
+
+                    'final_vat_percentage' => '%' . ($usingCountryBasedVatRates ? ($t->company_based_vat_percentage ?? $t->vat_percentage) : $t->vat_percentage),
+
+                    'is_converted' => ($t->converted ?? false) ? __('Yes') : __('No'),
+                    'converted_currency' => $t->converted_currency ?? $t->original_currency,
+                    'exchange_rate' => $t->exchange_rate ?? 1,
+                    'converted_raw_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->converted_raw_amount ?? $t->subtotal ?? $t->original_raw_amount ?? $this->price->discounted_raw_amount,
+                        new \Money\Currency(strtoupper($t->converted_currency ?? $t->original_currency))
+                    ),
+                    'converted_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->converted_total_amount,
+                        new \Money\Currency(strtoupper($t->converted_currency ?? $t->original_currency))
+                    ),
+                    'converted_currency' => $t->converted_currency,
+
+                    'transaction_fee_exists' => ($t->transaction_fee_exists ?? false) ? __('Yes') : __('No'),
+                    'transaction_fee_percentage' => isset($t->transaction_fee_percentage) ? ($t->transaction_fee_percentage > 0 ? '%' . $t->transaction_fee_percentage : '%0') : '%0',
+                    'transaction_fee_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->transaction_fee_amount ?? 0,
+                        new \Money\Currency(strtoupper($t->converted_currency ?? $t->original_currency))
+                    ),
+                    'paid_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                        $t->total_amount_with_transaction_fee ?? $t->converted_amount ?? $this->amount,
+                        new \Money\Currency(strtoupper($t->converted_currency ?? $t->original_currency))
+                    ),
+                ];
+            }
         );
     }
 }

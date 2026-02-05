@@ -31,6 +31,7 @@ return [
     'total-paid' => 'Toplam Ödenen',
     'transaction-fee-percentage' => 'İşlem Ücreti Yüzdesi',
     'transaction-fee-amount' => 'İşlem Ücreti Tutarı',
+    'transaction-summary' => 'İşlem Özeti',
     'transfer-description' => 'Ödemeniz için teşekkürler. Transferiniz tamamlandığında bilgilendirileceksiniz.',
 
     'vat-rate-from' => 'KDV Kaynağı',
