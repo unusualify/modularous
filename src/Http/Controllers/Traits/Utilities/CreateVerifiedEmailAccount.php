@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Http\Controllers\Traits\RedirectsUsers;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Events\ModularityUserRegistered;
 use Unusualify\Modularity\Events\ModularityUserRegistering;
 use Unusualify\Modularity\Events\VerifiedEmailRegister;
 use Unusualify\Modularity\Facades\Register;
+use Unusualify\Modularity\Http\Controllers\Traits\RedirectsUsers;
 
 trait CreateVerifiedEmailAccount
 {

@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Services;
 
-use Unusualify\Modularity\Support\CoverageAnalyzer;
 use InvalidArgumentException;
+use Unusualify\Modularity\Support\CoverageAnalyzer;
 
 /**
  * Coverage Service
@@ -14,8 +14,11 @@ use InvalidArgumentException;
 class CoverageService
 {
     private CoverageAnalyzer $analyzer;
+
     private string $cloverDir;
+
     private string $cloverName;
+
     private static ?self $instance = null;
 
     public function __construct(?string $cloverDir = null, ?string $cloverName = null)
@@ -61,6 +64,7 @@ class CoverageService
     {
         $this->cloverDir = $path;
         $this->initializeAnalyzer();
+
         return $this;
     }
 
@@ -71,6 +75,7 @@ class CoverageService
     {
         $this->cloverName = $name;
         $this->initializeAnalyzer();
+
         return $this;
     }
 
@@ -80,6 +85,7 @@ class CoverageService
     public function filterByFiles(array $files): self
     {
         $this->analyzer->filterByFiles($files);
+
         return $this;
     }
 
@@ -89,6 +95,7 @@ class CoverageService
     public function setCoverageThreshold(float $threshold): self
     {
         $this->analyzer->setCoverageThreshold($threshold);
+
         return $this;
     }
 
@@ -98,6 +105,7 @@ class CoverageService
     public function skipMagicMethods(bool $skip = true): self
     {
         $this->analyzer->skipMagicMethods($skip);
+
         return $this;
     }
 
@@ -107,6 +115,7 @@ class CoverageService
     public function skipPrivateMethods(bool $skip = true): self
     {
         $this->analyzer->skipPrivateMethods($skip);
+
         return $this;
     }
 
@@ -116,6 +125,7 @@ class CoverageService
     public function skipProtectedMethods(bool $skip = true): self
     {
         $this->analyzer->skipProtectedMethods($skip);
+
         return $this;
     }
 
@@ -173,6 +183,7 @@ class CoverageService
         }
 
         dd($this->filterByFiles($changedFiles), $changedFiles, $this->filterByFiles($changedFiles)->analyze());
+
         return $this->filterByFiles($changedFiles)->analyze();
     }
 
@@ -183,7 +194,7 @@ class CoverageService
     {
         $this->setCoverageThreshold(0.0);
 
-        if (!empty($files)) {
+        if (! empty($files)) {
             $this->filterByFiles($files);
         }
 
@@ -197,7 +208,7 @@ class CoverageService
     {
         $this->setCoverageThreshold($threshold);
 
-        if (!empty($files)) {
+        if (! empty($files)) {
             $this->filterByFiles($files);
         }
 
@@ -232,17 +243,16 @@ class CoverageService
      */
     public function save(string $outputPath, ?array $files = null, string $format = 'json'): bool
     {
-        $content = match($format) {
+        $content = match ($format) {
             'json' => $this->json($files),
             'markdown' => $this->markdown($files),
             'html' => $this->html($files),
             default => throw new InvalidArgumentException("Unsupported format: {$format}")
         };
 
-
         // Ensure directory exists
         $dir = dirname($outputPath);
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
@@ -262,7 +272,7 @@ class CoverageService
         $stats = $this->calculateStatistics($results);
 
         $md = "# Coverage Analysis Report\n\n";
-        $md .= "**Generated:** " . now()->toDateTimeString() . "\n\n";
+        $md .= '**Generated:** ' . now()->toDateTimeString() . "\n\n";
         $md .= "## Summary\n\n";
         $md .= "- **Total Uncovered Methods:** {$stats['total_methods']}\n";
         $md .= "- **Total Files:** {$stats['total_files']}\n";
@@ -270,6 +280,7 @@ class CoverageService
 
         if (empty($results)) {
             $md .= "✅ **All methods are covered!**\n";
+
             return $md;
         }
 
@@ -374,11 +385,11 @@ HTML;
 METHOD;
                 }
 
-                $html .= "</div>";
+                $html .= '</div>';
             }
         }
 
-        $html .= <<<HTML
+        $html .= <<<'HTML'
     </div>
 </body>
 </html>
@@ -438,22 +449,22 @@ HTML;
     private function getGitChangedFiles(string $baseBranch): array
     {
         $branchSegments = [
-            'origin'
+            'origin',
         ];
 
-        if(preg_match('/^refs\/tags\//', $baseBranch)) {
+        if (preg_match('/^refs\/tags\//', $baseBranch)) {
             $branchSegments = [
                 'refs',
                 'tags',
             ];
             $branchSegments[] = preg_replace('/^refs\/tags\//', '', $baseBranch);
-        }else if(preg_match('/^refs\/heads\//', $baseBranch)) {
+        } elseif (preg_match('/^refs\/heads\//', $baseBranch)) {
             $branchSegments[] = 'heads';
             $branchSegments[] = preg_replace('/^refs\/heads\//', '', $baseBranch);
-        }else if(preg_match('/^refs\/remotes\//', $baseBranch)) {
+        } elseif (preg_match('/^refs\/remotes\//', $baseBranch)) {
             $branchSegments[] = 'remotes';
             $baseBranch = preg_replace('/^refs\/remotes\//', '', $baseBranch);
-        }else if(preg_match('/^origin\//', $baseBranch)) {
+        } elseif (preg_match('/^origin\//', $baseBranch)) {
 
             $branchSegments[] = preg_replace('/^origin\//', '', $baseBranch);
         }
@@ -461,7 +472,7 @@ HTML;
         $baseRef = implode('/', $branchSegments);
         $commands = [];
 
-        if($this->cloverDir !== getcwd()) {
+        if ($this->cloverDir !== getcwd()) {
             $commands[] = "cd {$this->cloverDir}";
         }
 
@@ -475,7 +486,7 @@ HTML;
 
         $files = array_filter(
             explode("\n", trim($output)),
-            fn($file) => str_ends_with($file, '.php') && !empty($file)
+            fn ($file) => str_ends_with($file, '.php') && ! empty($file)
         );
 
         return array_values($files);
@@ -510,7 +521,7 @@ HTML;
 
         foreach ($results as $result) {
             $file = $result['file'];
-            if (!isset($grouped[$file])) {
+            if (! isset($grouped[$file])) {
                 $grouped[$file] = [];
             }
             $grouped[$file][] = $result;

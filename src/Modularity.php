@@ -80,9 +80,9 @@ class Modularity extends FileRepository
         $this->appPath = realpath(get_installed_composer()['root']['install_path']);
         $versions = get_installed_composer()['versions'];
 
-        if(isset($versions['unusualify/modularous'])) {
+        if (isset($versions['unusualify/modularous'])) {
             $this->vendorPath = realpath($versions['unusualify/modularous']['install_path']);
-        } else if(isset($versions['unusualify/modularity'])) {
+        } elseif (isset($versions['unusualify/modularity'])) {
             $this->vendorPath = realpath($versions['unusualify/modularity']['install_path']);
         } else {
             throw new \Exception('Modularity or Modularous not found in composer.json');

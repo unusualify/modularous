@@ -279,6 +279,7 @@ class AssignableTest extends ModelTestCase
         ]);
 
     }
+
     public function test_last_assignment_relationship_exists()
     {
         $this->assertTrue(method_exists($this->model, 'lastAssignment'));

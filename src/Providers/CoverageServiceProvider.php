@@ -10,8 +10,6 @@ class CoverageServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -37,8 +35,6 @@ class CoverageServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -73,15 +69,13 @@ class CoverageServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
     public function provides(): array
     {
         return [
             'coverage.analyzer',
             'coverage.service',
-            CoverageService::class
+            CoverageService::class,
         ];
     }
 }

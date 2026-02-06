@@ -315,7 +315,7 @@ class HasStateableTest extends ModelTestCase
         $formatted = $model->state_formatted;
 
         $this->assertStringContainsString("class='text-success", $formatted);
-        $this->assertStringContainsString("mdi-\$publish", $formatted);
+        $this->assertStringContainsString('mdi-$publish', $formatted);
         $this->assertStringContainsString('Published', $formatted);
     }
 
@@ -408,6 +408,7 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals('$publish', $formatted['icon']);
         $this->assertEquals('success', $formatted['color']);
     }
+
     public function test_get_default_state()
     {
         $defaultState = $this->testModel::getDefaultState();
@@ -477,7 +478,7 @@ class HasStateableTest extends ModelTestCase
             // Override getDefaultStates to return strings directly (bypassing formatStateableState)
             public static function getDefaultStates()
             {
-                return static::$default_states ?? [];
+                return self::$default_states ?? [];
             }
         };
 
@@ -908,7 +909,6 @@ class TestStateableModelWithInitialState extends TestStateableModel
             'color' => 'success',
         ],
     ];
-
 }
 
 class TestStateableModelWithFallbackLocale extends TestStateableModel

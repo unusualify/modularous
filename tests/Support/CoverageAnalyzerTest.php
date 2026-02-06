@@ -2,17 +2,20 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
-use Unusualify\Modularity\Support\CoverageAnalyzer;
 use InvalidArgumentException;
 use RuntimeException;
+use Unusualify\Modularity\Support\CoverageAnalyzer;
 
 class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
 {
     private string $testCloverPath;
+
     private string $testCloverDir;
+
     private string $testCloverName;
 
     private string $invalidXmlName;
+
     private string $invalidXmlPath;
 
     protected function setUp(): void
@@ -105,7 +108,7 @@ class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
         $uncovered = $analyzer->analyze();
 
         // Find the deleteUser method (which has 0% coverage)
-        $deleteUserMethod = array_filter($uncovered, function($method) {
+        $deleteUserMethod = array_filter($uncovered, function ($method) {
             return $method['method'] === 'deleteUser';
         });
 
@@ -176,7 +179,7 @@ class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
         $analyzer = new CoverageAnalyzer($this->testCloverDir, $this->testCloverName);
         $uncovered = $analyzer->analyze();
 
-        $hasMagicMethod = array_filter($uncovered, function($method) {
+        $hasMagicMethod = array_filter($uncovered, function ($method) {
             return str_starts_with($method['method'], '__');
         });
 
@@ -282,7 +285,7 @@ class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
     public function it_calculates_overall_statistics_and_percentages()
     {
         $metricsClover = concatenate_path($this->testCloverDir, 'metrics-clover.xml');
-        $xml = <<<XML
+        $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage>
   <project>
@@ -315,7 +318,7 @@ XML;
     public function it_handles_methods_with_no_statements_but_executed_as_full_coverage()
     {
         $noStmts = concatenate_path($this->testCloverDir, 'no-stmts-clover.xml');
-        $xml = <<<XML
+        $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage>
   <project>
@@ -344,7 +347,7 @@ XML;
     public function it_skips_private_and_protected_methods_when_configured()
     {
         $visClover = concatenate_path($this->testCloverDir, 'visibility-clover.xml');
-        $xml = <<<XML
+        $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage>
   <project>

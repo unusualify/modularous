@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Logging;
 
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
@@ -11,6 +10,7 @@ use Monolog\LogRecord;
 class ModularityLogHandler extends AbstractProcessingHandler
 {
     protected $logPath;
+
     protected $maxFiles;
 
     public function __construct($level = Level::Debug, $maxFiles = 14)
@@ -33,7 +33,7 @@ class ModularityLogHandler extends AbstractProcessingHandler
 
         if (count($files) > $this->maxFiles) {
             // Sort files by modification time (oldest first)
-            usort($files, function($a, $b) {
+            usort($files, function ($a, $b) {
                 return filemtime($a) - filemtime($b);
             });
 
@@ -68,7 +68,7 @@ class ModularityLogHandler extends AbstractProcessingHandler
             $record->message
         );
 
-        if (!empty($record->context)) {
+        if (! empty($record->context)) {
             $formattedMessage .= 'Context: ' . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
         }
 

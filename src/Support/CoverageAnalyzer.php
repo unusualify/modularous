@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Support;
 
-use SimpleXMLElement;
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
+use SimpleXMLElement;
 
 /**
  * Standalone Coverage Analyzer
@@ -21,31 +21,39 @@ use InvalidArgumentException;
 class CoverageAnalyzer
 {
     private string $cloverDir;
+
     private string $cloverPath;
+
     private ?SimpleXMLElement $xml = null;
+
     private array $fileFilters = [];
+
     private array $errors = [];
 
     // Configuration
     private bool $skipMagicMethods = true;
+
     private bool $skipPrivateMethods = false;
+
     private bool $skipProtectedMethods = false;
+
     private float $coverageThreshold = 0.0;
 
     /**
      * @param string $cloverDir Path to clover directory
      * @param string $cloverName Name of clover file
+     *
      * @throws InvalidArgumentException if file doesn't exist
      */
     public function __construct(string $cloverDir, string $cloverName)
     {
         $cloverPath = concatenate_path($cloverDir, $cloverName);
 
-        if (!file_exists($cloverPath)) {
+        if (! file_exists($cloverPath)) {
             throw new InvalidArgumentException("Coverage file not found: {$cloverPath}");
         }
 
-        if (!is_readable($cloverPath)) {
+        if (! is_readable($cloverPath)) {
             throw new InvalidArgumentException("Coverage file is not readable: {$cloverPath}");
         }
 
@@ -58,11 +66,10 @@ class CoverageAnalyzer
      * Set files to analyze (optional filter)
      *
      * @param array $files List of file paths to analyze
-     * @return self
      */
     public function filterByFiles(array $files): self
     {
-        $this->fileFilters = array_map(function($file) {
+        $this->fileFilters = array_map(function ($file) {
             return str_replace('\\', '/', $file);
         }, $files);
 
@@ -73,12 +80,11 @@ class CoverageAnalyzer
      * Set coverage threshold (only report methods below this percentage)
      *
      * @param float $threshold Coverage percentage (0.0 - 100.0)
-     * @return self
      */
     public function setCoverageThreshold(float $threshold): self
     {
         if ($threshold < 0.0 || $threshold > 100.0) {
-            throw new InvalidArgumentException("Threshold must be between 0.0 and 100.0");
+            throw new InvalidArgumentException('Threshold must be between 0.0 and 100.0');
         }
 
         $this->coverageThreshold = $threshold;
@@ -88,37 +94,31 @@ class CoverageAnalyzer
 
     /**
      * Configure whether to skip magic methods (__construct, __toString, etc.)
-     *
-     * @param bool $skip
-     * @return self
      */
     public function skipMagicMethods(bool $skip = true): self
     {
         $this->skipMagicMethods = $skip;
+
         return $this;
     }
 
     /**
      * Configure whether to skip private methods
-     *
-     * @param bool $skip
-     * @return self
      */
     public function skipPrivateMethods(bool $skip = true): self
     {
         $this->skipPrivateMethods = $skip;
+
         return $this;
     }
 
     /**
      * Configure whether to skip protected methods
-     *
-     * @param bool $skip
-     * @return self
      */
     public function skipProtectedMethods(bool $skip = true): self
     {
         $this->skipProtectedMethods = $skip;
+
         return $this;
     }
 
@@ -126,6 +126,7 @@ class CoverageAnalyzer
      * Analyze coverage and return methods below threshold
      *
      * @return array Array of methods with details
+     *
      * @throws RuntimeException if XML parsing fails
      */
     public function analyze(): array
@@ -139,7 +140,7 @@ class CoverageAnalyzer
             $filePath = $this->normalizeFilePath((string) $file['name']);
 
             // Skip if file filter is set and this file isn't included
-            if (!$this->shouldAnalyzeFile($filePath)) {
+            if (! $this->shouldAnalyzeFile($filePath)) {
                 continue;
             }
 
@@ -179,12 +180,12 @@ class CoverageAnalyzer
         $normalizedPath = $this->normalizeFilePath($filePath);
         $results = [];
 
-        $files = $this->xml->xpath("//file");
+        $files = $this->xml->xpath('//file');
 
         foreach ($files as $file) {
             $currentPath = $this->normalizeFilePath((string) $file['name']);
 
-            if (!$this->pathsMatch($currentPath, $normalizedPath)) {
+            if (! $this->pathsMatch($currentPath, $normalizedPath)) {
                 continue;
             }
 
@@ -219,18 +220,18 @@ class CoverageAnalyzer
         $this->loadXML();
 
         $normalizedPath = $this->normalizeFilePath($filePath);
-        $files = $this->xml->xpath("//file");
+        $files = $this->xml->xpath('//file');
 
         foreach ($files as $file) {
             $currentPath = $this->normalizeFilePath((string) $file['name']);
 
-            if (!$this->pathsMatch($currentPath, $normalizedPath)) {
+            if (! $this->pathsMatch($currentPath, $normalizedPath)) {
                 continue;
             }
 
             $methodLines = $file->xpath("./line[@type='method' and @name='{$methodName}']");
 
-            if (!empty($methodLines)) {
+            if (! empty($methodLines)) {
                 $methodLine = $methodLines[0];
                 $lineInfo = $this->getMethodLineDetails($methodLine, $file);
 
@@ -293,8 +294,6 @@ class CoverageAnalyzer
 
     /**
      * Get all errors encountered during analysis
-     *
-     * @return array
      */
     public function getErrors(): array
     {
@@ -303,12 +302,10 @@ class CoverageAnalyzer
 
     /**
      * Check if analyzer has any errors
-     *
-     * @return bool
      */
     public function hasErrors(): bool
     {
-        return !empty($this->errors);
+        return ! empty($this->errors);
     }
 
     // ==================== PRIVATE METHODS ====================
@@ -332,15 +329,15 @@ class CoverageAnalyzer
                 $errors = libxml_get_errors();
                 libxml_clear_errors();
 
-                $errorMessages = array_map(fn($error) => trim($error->message), $errors);
+                $errorMessages = array_map(fn ($error) => trim($error->message), $errors);
 
                 throw new RuntimeException(
-                    "Failed to parse coverage XML: " . implode(', ', $errorMessages)
+                    'Failed to parse coverage XML: ' . implode(', ', $errorMessages)
                 );
             }
             $this->xml = $xml;
         } catch (\Exception $e) {
-            throw new RuntimeException("Failed to parse coverage XML: " . $e->getMessage());
+            throw new RuntimeException('Failed to parse coverage XML: ' . $e->getMessage());
         }
     }
 
@@ -352,7 +349,8 @@ class CoverageAnalyzer
         $files = $this->xml->xpath('//file');
 
         if ($files === false || empty($files)) {
-            $this->errors[] = "No files found in coverage report";
+            $this->errors[] = 'No files found in coverage report';
+
             return [];
         }
 
@@ -477,6 +475,7 @@ class CoverageAnalyzer
             // Start collecting when we hit our method
             if ($lineType === 'method' && $lineNum === $methodLineNum) {
                 $collectStatements = true;
+
                 continue;
             }
 
@@ -496,7 +495,7 @@ class CoverageAnalyzer
             'total' => count($methodStatements),
             'covered' => 0,
             'uncovered' => 0,
-            'details' => []
+            'details' => [],
         ];
 
         foreach ($methodStatements as $stmt) {
@@ -513,7 +512,7 @@ class CoverageAnalyzer
             $lineInfo['details'][] = [
                 'number' => $lineNum,
                 'executed' => $count,
-                'covered' => $isCovered
+                'covered' => $isCovered,
             ];
         }
 
@@ -529,7 +528,7 @@ class CoverageAnalyzer
 
         return [
             'coverage' => $coverage,
-            'lines' => $lineInfo
+            'lines' => $lineInfo,
         ];
     }
 

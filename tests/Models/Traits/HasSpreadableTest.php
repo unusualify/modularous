@@ -34,7 +34,7 @@ class HasSpreadableTest extends ModelTestCase
                 'iban' => 'NL66 ABNA 0127 4897 70',
                 'swift_code' => 'ABNANL2AXXX',
                 'description' => '[Company name] - Payment for PR Distribution',
-                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands'
+                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands',
             ],
         ];
 
@@ -78,7 +78,7 @@ class HasSpreadableTest extends ModelTestCase
                 'iban' => 'NL91 ABNA 0417 1643 00',
                 'swift_code' => 'ABNANL2AXXX',
                 'description' => 'New Payment Description',
-                'address' => 'New Address'
+                'address' => 'New Address',
             ],
         ];
 
@@ -107,7 +107,7 @@ class HasSpreadableTest extends ModelTestCase
                     'iban' => 'NL66 ABNA 0127 4897 70',
                     'swift_code' => 'ABNANL2AXXX',
                     'description' => '[Company name] - Payment for PR Distribution',
-                    'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands'
+                    'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands',
                 ],
             ],
         ]);
@@ -122,7 +122,7 @@ class HasSpreadableTest extends ModelTestCase
                 'iban' => 'NL66 ABNA 0127 4897 70',
                 'swift_code' => 'ABNANL2AXXX',
                 'description' => '[Company name] - Payment for PR Distribution',
-                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands'
+                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands',
             ],
         ], $this->model->spreadable->content);
     }
@@ -138,7 +138,7 @@ class HasSpreadableTest extends ModelTestCase
                     'iban' => 'NL66 ABNA 0127 4897 70',
                     'swift_code' => 'ABNANL2AXXX',
                     'description' => '[Company name] - Payment for PR Distribution',
-                    'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands'
+                    'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands',
                 ],
             ],
         ]);
@@ -159,7 +159,7 @@ class HasSpreadableTest extends ModelTestCase
                 'iban' => 'NL66 ABNA 0127 4897 7022',
                 'swift_code' => 'ABNANL2AXXX',
                 'description' => '[Company name] - Payment for PR Distribution',
-                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands'
+                'address' => 'ABN AMRO B.V. Gustav Mahlerlaan 10 - 1082 PP Amsterdam - The Netherlands',
             ],
         ];
 
@@ -176,7 +176,6 @@ class HasSpreadableTest extends ModelTestCase
         $this->assertEquals($content, $model->spreadable->content);
 
     }
-
 }
 
 class TestSpreadableModel extends Model

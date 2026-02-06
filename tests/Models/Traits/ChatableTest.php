@@ -779,7 +779,6 @@ class ChatableTest extends ModelTestCase
 
         $chatableAuthorizedModel = TestChatableModel::find($chatableAuthorizedModel->id);
 
-
         $chatableAuthorizedModel->refresh();
 
         $message = $chatableAuthorizedModel->chat->messages()->create([

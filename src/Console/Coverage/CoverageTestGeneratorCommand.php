@@ -3,9 +3,9 @@
 namespace Unusualify\Modularity\Console\Coverage;
 
 use Illuminate\Console\Command;
-use Unusualify\Modularity\Facades\Coverage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Unusualify\Modularity\Facades\Coverage;
 
 /**
  * Generate test files for uncovered methods using AI or templates
@@ -30,7 +30,9 @@ class CoverageTestGeneratorCommand extends Command
     protected $description = 'Generate test files for uncovered methods';
 
     private array $generatedTests = [];
+
     private int $successCount = 0;
+
     private int $failureCount = 0;
 
     private const AI_PROVIDERS = [
@@ -93,7 +95,9 @@ class CoverageTestGeneratorCommand extends Command
     ];
 
     private ?string $selectedProvider = null;
+
     private ?string $selectedModel = null;
+
     private ?string $apiKey = null;
 
     public function handle(): int
@@ -107,10 +111,11 @@ class CoverageTestGeneratorCommand extends Command
 
             if (empty($uncovered)) {
                 $this->info('✅ All methods are covered! No tests to generate.');
+
                 return self::SUCCESS;
             }
 
-            $this->warn("Found " . count($uncovered) . " uncovered methods");
+            $this->warn('Found ' . count($uncovered) . ' uncovered methods');
             $this->newLine();
 
             // Setup AI if requested
@@ -152,6 +157,7 @@ class CoverageTestGeneratorCommand extends Command
             if ($this->option('verbose')) {
                 $this->error($e->getTraceAsString());
             }
+
             return self::FAILURE;
         }
     }
@@ -187,7 +193,7 @@ class CoverageTestGeneratorCommand extends Command
         if (str_contains($modelOption, '/')) {
             [$provider, $model] = explode('/', $modelOption, 2);
 
-            if (!isset(self::AI_PROVIDERS[$provider])) {
+            if (! isset(self::AI_PROVIDERS[$provider])) {
                 throw new \InvalidArgumentException("Unknown AI provider: {$provider}");
             }
 
@@ -195,7 +201,7 @@ class CoverageTestGeneratorCommand extends Command
             $this->selectedModel = $model;
 
             // Validate model exists for provider
-            if (!isset(self::AI_PROVIDERS[$provider]['models'][$model])) {
+            if (! isset(self::AI_PROVIDERS[$provider]['models'][$model])) {
                 $this->warn("Model {$model} not in predefined list, but will attempt to use it.");
             }
         } else {
@@ -204,6 +210,7 @@ class CoverageTestGeneratorCommand extends Command
                 if (isset($config['models'][$modelOption])) {
                     $this->selectedProvider = $provider;
                     $this->selectedModel = $modelOption;
+
                     return;
                 }
             }
@@ -234,7 +241,7 @@ class CoverageTestGeneratorCommand extends Command
         $selection = $this->ask('Select AI provider', '2');
         $selection = (int) $selection;
 
-        if (!isset($choices[$selection])) {
+        if (! isset($choices[$selection])) {
             throw new \InvalidArgumentException('Invalid provider selection');
         }
 
@@ -264,7 +271,7 @@ class CoverageTestGeneratorCommand extends Command
         $selection = $this->ask('Select model', '1');
         $selection = (int) $selection;
 
-        if (!isset($choices[$selection])) {
+        if (! isset($choices[$selection])) {
             throw new \InvalidArgumentException('Invalid model selection');
         }
 
@@ -278,6 +285,7 @@ class CoverageTestGeneratorCommand extends Command
         // Check if API key provided via option
         if ($apiKey = $this->option('api-key')) {
             $this->apiKey = $apiKey;
+
             return;
         }
 
@@ -286,6 +294,7 @@ class CoverageTestGeneratorCommand extends Command
         if ($apiKey = config($configKey)) {
             $this->apiKey = $apiKey;
             $this->line("Using API key from config: {$configKey}");
+
             return;
         }
 
@@ -293,28 +302,30 @@ class CoverageTestGeneratorCommand extends Command
         if ($apiKey = env($provider['env_key'])) {
             $this->apiKey = $apiKey;
             $this->line("Using API key from environment: {$provider['env_key']}");
+
             return;
         }
 
         // Ollama doesn't require API key
         if ($this->selectedProvider === 'ollama') {
             $this->apiKey = 'local';
+
             return;
         }
 
         // Prompt user for API key
         $this->newLine();
-        $this->warn("API key not found in config or environment.");
+        $this->warn('API key not found in config or environment.');
 
         if ($provider['free_tier']) {
-            $this->info("💡 Get a free API key at:");
+            $this->info('💡 Get a free API key at:');
             $this->line($this->getAPIKeyURL($this->selectedProvider));
         }
 
         $this->newLine();
         $apiKey = $this->secret("Enter your {$provider['name']} API key");
 
-        if (!$apiKey) {
+        if (! $apiKey) {
             throw new \RuntimeException(
                 "API key required for {$provider['name']}. " .
                 "Set {$provider['env_key']} in .env or configure {$configKey}"
@@ -326,7 +337,7 @@ class CoverageTestGeneratorCommand extends Command
 
     private function getAPIKeyURL(string $provider): string
     {
-        return match($provider) {
+        return match ($provider) {
             'gemini' => 'https://makersuite.google.com/app/apikey',
             'anthropic' => 'https://console.anthropic.com/settings/keys',
             'openai' => 'https://platform.openai.com/api-keys',
@@ -344,11 +355,13 @@ class CoverageTestGeneratorCommand extends Command
 
         if ($git = $this->option('git')) {
             $this->line("Analyzing changes vs <fg=cyan>{$git}</>");
+
             return $coverageService->git($git);
         }
 
         if ($files = $this->option('files')) {
-            $this->line("Analyzing files: <fg=cyan>" . implode(', ', $files) . "</>");
+            $this->line('Analyzing files: <fg=cyan>' . implode(', ', $files) . '</>');
+
             return $coverageService->filterByFiles($files)->analyze();
         }
 
@@ -364,9 +377,10 @@ class CoverageTestGeneratorCommand extends Command
                 'file' => $file,
                 'test_path' => $testPath,
                 'methods' => count($methods),
-                'status' => 'dry-run'
+                'status' => 'dry-run',
             ];
             $bar->advance(count($methods));
+
             return;
         }
 
@@ -377,9 +391,10 @@ class CoverageTestGeneratorCommand extends Command
                 $content = $this->generateTestWithTemplate($file, $methods);
             }
 
-            if ($this->option('interactive') && !$this->confirmTest($file, $content)) {
+            if ($this->option('interactive') && ! $this->confirmTest($file, $content)) {
                 $this->failureCount += count($methods);
                 $bar->advance(count($methods));
+
                 return;
             }
 
@@ -390,7 +405,7 @@ class CoverageTestGeneratorCommand extends Command
                 'file' => $file,
                 'test_path' => $testPath,
                 'methods' => count($methods),
-                'status' => 'success'
+                'status' => 'success',
             ];
 
             $this->successCount += count($methods);
@@ -400,9 +415,9 @@ class CoverageTestGeneratorCommand extends Command
 
             // Provide helpful error messages for common issues
             if (str_contains($errorMsg, 'quota') || str_contains($errorMsg, '429')) {
-                $errorMsg = "Rate limit exceeded. Try again later or switch to a different model.";
+                $errorMsg = 'Rate limit exceeded. Try again later or switch to a different model.';
             } elseif (str_contains($errorMsg, 'timeout')) {
-                $errorMsg = "Request timeout. The file might be too large or API is slow.";
+                $errorMsg = 'Request timeout. The file might be too large or API is slow.';
             }
 
             $this->generatedTests[] = [
@@ -410,7 +425,7 @@ class CoverageTestGeneratorCommand extends Command
                 'test_path' => $testPath,
                 'methods' => count($methods),
                 'status' => 'failed',
-                'error' => $errorMsg
+                'error' => $errorMsg,
             ];
 
             $this->failureCount += count($methods);
@@ -433,14 +448,13 @@ class CoverageTestGeneratorCommand extends Command
         $sourceCode = File::get($file);
 
         // Build prompt
-        $methodList = collect($methods)->map(fn($m) =>
-            "- {$m['class']}::{$m['method']}() (visibility: {$m['visibility']}, complexity: {$m['complexity']})"
+        $methodList = collect($methods)->map(fn ($m) => "- {$m['class']}::{$m['method']}() (visibility: {$m['visibility']}, complexity: {$m['complexity']})"
         )->join("\n");
 
         $prompt = $this->buildAIPrompt($file, $sourceCode, $methodList, $methods);
 
         // Call appropriate AI API
-        $response = match($this->selectedProvider) {
+        $response = match ($this->selectedProvider) {
             'anthropic' => $this->callAnthropicAPI($prompt),
             'gemini' => $this->callGeminiAPI($prompt),
             'openai' => $this->callOpenAIAPI($prompt),
@@ -467,12 +481,13 @@ class CoverageTestGeneratorCommand extends Command
                     'model' => $this->selectedModel,
                     'max_tokens' => 4000,
                     'messages' => [
-                        ['role' => 'user', 'content' => $prompt]
-                    ]
+                        ['role' => 'user', 'content' => $prompt],
+                    ],
                 ]);
 
                 if ($response->successful()) {
                     $data = $response->json();
+
                     return collect($data['content'])
                         ->where('type', 'text')
                         ->pluck('text')
@@ -488,6 +503,7 @@ class CoverageTestGeneratorCommand extends Command
                     if ($attempt < $maxRetries) {
                         $this->warn("\n⏳ Rate limit hit. Waiting {$retryAfter} seconds before retry {$attempt}/{$maxRetries}...");
                         sleep((int) $retryAfter);
+
                         continue;
                     }
                 }
@@ -504,6 +520,7 @@ class CoverageTestGeneratorCommand extends Command
                     $waitTime = min(pow(2, $attempt) * 5, 30);
                     $this->warn("\n⏳ Request timeout. Retrying in {$waitTime} seconds... ({$attempt}/{$maxRetries})");
                     sleep($waitTime);
+
                     continue;
                 }
 
@@ -532,21 +549,21 @@ class CoverageTestGeneratorCommand extends Command
                     'contents' => [
                         [
                             'parts' => [
-                                ['text' => $prompt]
-                            ]
-                        ]
+                                ['text' => $prompt],
+                            ],
+                        ],
                     ],
                     'generationConfig' => [
                         'temperature' => 0.7,
                         'maxOutputTokens' => 4000,
-                    ]
+                    ],
                 ]);
 
                 if ($response->successful()) {
                     $data = $response->json();
 
-                    if (!isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-                        throw new \RuntimeException("Unexpected Gemini API response format");
+                    if (! isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                        throw new \RuntimeException('Unexpected Gemini API response format');
                     }
 
                     return $data['candidates'][0]['content']['parts'][0]['text'];
@@ -563,6 +580,7 @@ class CoverageTestGeneratorCommand extends Command
                     if ($attempt < $maxRetries) {
                         $this->warn("\n⏳ Rate limit hit. Waiting {$retryAfter} seconds before retry {$attempt}/{$maxRetries}...");
                         sleep($retryAfter);
+
                         continue;
                     }
                 }
@@ -579,6 +597,7 @@ class CoverageTestGeneratorCommand extends Command
                     $waitTime = min(pow(2, $attempt) * 5, 30);
                     $this->warn("\n⏳ Request timeout. Retrying in {$waitTime} seconds... ({$attempt}/{$maxRetries})");
                     sleep($waitTime);
+
                     continue;
                 }
 
@@ -627,12 +646,12 @@ class CoverageTestGeneratorCommand extends Command
                     'messages' => [
                         [
                             'role' => 'system',
-                            'content' => 'You are an expert PHP test writer. Generate comprehensive, working test code.'
+                            'content' => 'You are an expert PHP test writer. Generate comprehensive, working test code.',
                         ],
                         [
                             'role' => 'user',
-                            'content' => $prompt
-                        ]
+                            'content' => $prompt,
+                        ],
                     ],
                     'max_tokens' => 4000,
                     'temperature' => 0.7,
@@ -640,6 +659,7 @@ class CoverageTestGeneratorCommand extends Command
 
                 if ($response->successful()) {
                     $data = $response->json();
+
                     return $data['choices'][0]['message']['content'];
                 }
 
@@ -652,6 +672,7 @@ class CoverageTestGeneratorCommand extends Command
                     if ($attempt < $maxRetries) {
                         $this->warn("\n⏳ Rate limit hit. Waiting {$retryAfter} seconds before retry {$attempt}/{$maxRetries}...");
                         sleep((int) $retryAfter);
+
                         continue;
                     }
                 }
@@ -668,6 +689,7 @@ class CoverageTestGeneratorCommand extends Command
                     $waitTime = min(pow(2, $attempt) * 5, 30);
                     $this->warn("\n⏳ Request timeout. Retrying in {$waitTime} seconds... ({$attempt}/{$maxRetries})");
                     sleep($waitTime);
+
                     continue;
                 }
 
@@ -690,16 +712,17 @@ class CoverageTestGeneratorCommand extends Command
             'options' => [
                 'temperature' => 0.7,
                 'num_predict' => 4000,
-            ]
+            ],
         ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new \RuntimeException(
-                "Ollama API request failed. Make sure Ollama is running locally. " . $response->body()
+                'Ollama API request failed. Make sure Ollama is running locally. ' . $response->body()
             );
         }
 
         $data = $response->json();
+
         return $data['response'] ?? '';
     }
 
@@ -717,7 +740,7 @@ class CoverageTestGeneratorCommand extends Command
     {
         $template = $this->option('template');
 
-        return match($template) {
+        return match ($template) {
             'pest' => $this->generatePestTest($file, $methods),
             default => $this->generatePHPUnitTest($file, $methods),
         };
@@ -745,6 +768,7 @@ class CoverageTestGeneratorCommand extends Command
     private function getTestFileName(string $sourceFile): string
     {
         $basename = basename($sourceFile, '.php');
+
         return $basename . 'Test.php';
     }
 
@@ -787,7 +811,7 @@ class CoverageTestGeneratorCommand extends Command
         $path = concatenate_path($coverageService->getBaseDirectory(), $path);
         $dir = dirname($path);
 
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
@@ -810,7 +834,7 @@ class CoverageTestGeneratorCommand extends Command
 
         foreach ($methods as $method) {
             $file = $method['file'];
-            if (!isset($grouped[$file])) {
+            if (! isset($grouped[$file])) {
                 $grouped[$file] = [];
             }
             $grouped[$file][] = $method;
@@ -831,11 +855,11 @@ class CoverageTestGeneratorCommand extends Command
 
         $this->table(
             ['Source File', 'Test File', 'Methods', 'Status'],
-            collect($this->generatedTests)->map(fn($t) => [
+            collect($this->generatedTests)->map(fn ($t) => [
                 $this->truncate($t['file'], 40),
                 $this->truncate($t['test_path'], 40),
                 $t['methods'],
-                $this->formatStatus($t['status'])
+                $this->formatStatus($t['status']),
             ])->toArray()
         );
 
@@ -847,19 +871,19 @@ class CoverageTestGeneratorCommand extends Command
 
             // Show error details
             $errors = collect($this->generatedTests)
-                ->filter(fn($t) => $t['status'] === 'failed' && isset($t['error']))
+                ->filter(fn ($t) => $t['status'] === 'failed' && isset($t['error']))
                 ->values();
 
             if ($errors->isNotEmpty()) {
                 $this->newLine();
                 $this->warn('Error Details:');
                 foreach ($errors as $error) {
-                    $this->line("  • " . basename($error['file']) . ": " . $error['error']);
+                    $this->line('  • ' . basename($error['file']) . ': ' . $error['error']);
                 }
             }
         }
 
-        if (!$this->option('dry-run')) {
+        if (! $this->option('dry-run')) {
             $this->newLine();
             $this->comment('💡 Next steps:');
             $this->line('  1. Review generated tests in: ' . $this->option('output'));
@@ -879,7 +903,7 @@ class CoverageTestGeneratorCommand extends Command
 
     private function formatStatus(string $status): string
     {
-        return match($status) {
+        return match ($status) {
             'success' => '<fg=green>✓ Generated</>',
             'failed' => '<fg=red>✗ Failed</>',
             'dry-run' => '<fg=yellow>⊘ Dry Run</>',
@@ -889,14 +913,14 @@ class CoverageTestGeneratorCommand extends Command
 
     private function truncate(string $text, int $length): string
     {
-        return strlen($text) > $length
-            ? '...' . substr($text, -($length - 3))
+        return mb_strlen($text) > $length
+            ? '...' . mb_substr($text, -($length - 3))
             : $text;
     }
 
     private function camelToSnake(string $input): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+        return mb_strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
 
     private function buildAIPrompt(string $file, string $sourceCode, string $methodList, array $methods): string
@@ -942,7 +966,7 @@ PROMPT;
         $testClassName = $className . 'Test';
         $testNamespace = $this->getTestNamespace($namespace);
 
-        $methodTests = collect($methods)->map(function($method) use ($className) {
+        $methodTests = collect($methods)->map(function ($method) use ($className) {
             $methodName = $method['method'];
             $testName = 'test_' . $this->camelToSnake($methodName);
 
@@ -993,7 +1017,7 @@ PHP;
         $className = $this->extractClassName($file);
         $namespace = $this->extractNamespace($file);
 
-        $methodTests = collect($methods)->map(function($method) use ($className, $namespace) {
+        $methodTests = collect($methods)->map(function ($method) use ($className, $namespace) {
             $methodName = $method['method'];
             $description = str_replace('_', ' ', $this->camelToSnake($methodName));
 

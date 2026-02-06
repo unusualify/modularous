@@ -129,5 +129,4 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
 
         return $instance;
     }
-
 }

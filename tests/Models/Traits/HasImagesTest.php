@@ -107,7 +107,6 @@ class HasImagesTest extends ModelTestCase
         $this->assertEquals('Updated Icon Model', $iconModel->name);
     }
 
-
     public function test_trait_initialization()
     {
         // Test that the trait is properly used

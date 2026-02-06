@@ -39,7 +39,7 @@ class CoveragePRCheckCommand extends Command
             $this->error('❌ Coverage check failed');
             $this->newLine();
 
-            $this->warn("Found " . count($results) . " methods below {$threshold}% coverage:");
+            $this->warn('Found ' . count($results) . " methods below {$threshold}% coverage:");
 
             foreach (array_slice($results, 0, 10) as $method) {
                 $this->line("  • {$method['class']}::{$method['method']}() - {$method['coverage']}%");
@@ -62,6 +62,7 @@ class CoveragePRCheckCommand extends Command
 
         } catch (\Exception $e) {
             $this->error('❌ Check failed: ' . $e->getMessage());
+
             return self::FAILURE;
         }
     }

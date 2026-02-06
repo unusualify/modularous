@@ -9,7 +9,6 @@ trait Traitify
      *
      * {methodName}{traitName}
      *
-     * @param string|null $method
      * @return string[]
      */
     protected function traitsMethods(?string $method = null)
@@ -34,7 +33,6 @@ trait Traitify
      *
      * {propertyName}{traitName}
      *
-     * @param string|null $property
      * @return array
      */
     protected function traitProperties(?string $property = null)

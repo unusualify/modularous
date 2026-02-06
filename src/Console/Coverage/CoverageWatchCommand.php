@@ -33,9 +33,10 @@ class CoverageWatchCommand extends Command
         while (true) {
             clearstatcache();
 
-            if (!file_exists($cloverPath)) {
+            if (! file_exists($cloverPath)) {
                 $this->warn('⏳ Waiting for coverage file...');
                 sleep($interval);
+
                 continue;
             }
 
@@ -84,6 +85,6 @@ class CoverageWatchCommand extends Command
         $symbol = $diff > 0 ? '↑' : ($diff < 0 ? '↓' : '→');
         $color = $diff > 0 ? 'red' : ($diff < 0 ? 'green' : 'yellow');
 
-        return "  {$label}: {$old} <fg={$color}>{$symbol} {$new}</> (" . abs($diff) . ")";
+        return "  {$label}: {$old} <fg={$color}>{$symbol} {$new}</> (" . abs($diff) . ')';
     }
 }

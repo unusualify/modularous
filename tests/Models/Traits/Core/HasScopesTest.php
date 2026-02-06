@@ -126,6 +126,7 @@ class HasScopesTest extends ModelTestCase
                 $builder->macro('customMacro', function ($queryBuilder, $value) {
                     return $queryBuilder->where('name', $value);
                 });
+
                 return $builder;
             }
         };
@@ -621,6 +622,7 @@ class HasScopesTest extends ModelTestCase
             $pdoProperty->setValue($connection, $originalPdo);
         }
     }
+
     public function test_scope_chaining()
     {
         // Create test data

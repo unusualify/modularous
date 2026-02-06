@@ -468,7 +468,7 @@ trait TableItem
 
         return $this->rememberCache(
             callback: $callback,
-            type: "formattedItem",
+            type: 'formattedItem',
             data: $params
         );
     }

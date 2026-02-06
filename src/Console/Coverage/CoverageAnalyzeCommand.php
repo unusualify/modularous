@@ -42,7 +42,7 @@ class CoverageAnalyzeCommand extends Command
             $this->line("Comparing against branch: <fg=cyan>{$git}</>");
             $results = Coverage::git($git);
         } elseif ($files = $this->option('files')) {
-            $this->line("Analyzing files: <fg=cyan>" . implode(', ', $files) . "</>");
+            $this->line('Analyzing files: <fg=cyan>' . implode(', ', $files) . '</>');
             $coverageService->filterByFiles($files);
             $results = $coverageService->analyze();
         } else {
@@ -52,13 +52,14 @@ class CoverageAnalyzeCommand extends Command
         // Display results
         if (empty($results)) {
             $this->info('✅ All methods meet coverage requirements!');
+
             return self::SUCCESS;
         }
 
-        $this->warn("⚠️  Found " . count($results) . " methods below threshold");
+        $this->warn('⚠️  Found ' . count($results) . ' methods below threshold');
         $this->newLine();
 
-        match($this->option('format')) {
+        match ($this->option('format')) {
             'json' => $this->displayJson($results),
             'list' => $this->displayList($results),
             default => $this->displayTable($results),
@@ -69,6 +70,7 @@ class CoverageAnalyzeCommand extends Command
 
         } catch (\Exception $e) {
             $this->error('❌ Analysis failed: ' . $e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -78,11 +80,11 @@ class CoverageAnalyzeCommand extends Command
         // dd($results[0]);
         $this->table(
             ['Class', 'Method', 'Coverage', 'Uncovered Lines'],
-            array_map(fn($m) => [
+            array_map(fn ($m) => [
                 $this->truncate($m['class'], 40),
                 $m['method'],
                 $this->formatCoverage($m['coverage']),
-                "{$m['lines']['uncovered']}/{$m['lines']['total']}"
+                "{$m['lines']['uncovered']}/{$m['lines']['total']}",
             ], $results)
         );
     }
@@ -105,13 +107,14 @@ class CoverageAnalyzeCommand extends Command
     private function formatCoverage(float $coverage): string
     {
         $color = $coverage === 0 ? 'red' : ($coverage < 50 ? 'yellow' : 'green');
+
         return "<fg={$color}>{$coverage}%</>";
     }
 
     private function truncate(string $text, int $length): string
     {
-        return strlen($text) > $length
-            ? substr($text, 0, $length - 3) . '...'
+        return mb_strlen($text) > $length
+            ? mb_substr($text, 0, $length - 3) . '...'
             : $text;
     }
 }

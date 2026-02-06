@@ -2,14 +2,16 @@
 
 namespace Unusualify\Modularity\Tests\Services;
 
-use Unusualify\Modularity\Services\CoverageService;
 use InvalidArgumentException;
 use RuntimeException;
+use Unusualify\Modularity\Services\CoverageService;
 
 class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
 {
     private string $cloverDir;
+
     private string $cloverName;
+
     private string $cloverPath;
 
     protected function setUp(): void
@@ -45,7 +47,7 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
     }
 
     /** @test */
-    public function instance_and_clearInstance_use_container_binding()
+    public function instance_and_clear_instance_use_container_binding()
     {
         // Ensure we start clean
         CoverageService::clearInstance();
@@ -129,7 +131,7 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
     }
 
     /** @test */
-    public function analyze_analyzeFile_and_getMethodCoverage_forward_to_analyzer()
+    public function analyze_analyze_file_and_get_method_coverage_forward_to_analyzer()
     {
         $service = new CoverageService($this->cloverDir, $this->cloverName);
 
@@ -179,7 +181,7 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
         $uncovered = $service->uncovered();
         $this->assertIsArray($uncovered);
         // Should include deleteUser which has 0% coverage
-        $found = array_filter($uncovered, fn($m) => $m['method'] === 'deleteUser');
+        $found = array_filter($uncovered, fn ($m) => $m['method'] === 'deleteUser');
         $this->assertNotEmpty($found);
 
         $partial = $service->partial(50.0);
@@ -190,14 +192,15 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
     }
 
     /** @test */
-    public function checkPR_throws_when_git_reports_uncovered_and_throw_flag_set()
+    public function check_p_r_throws_when_git_reports_uncovered_and_throw_flag_set()
     {
         // Create a small subclass to force git() to return non-empty array
-        $mock = new class($this->cloverDir, $this->cloverName) extends CoverageService {
+        $mock = new class($this->cloverDir, $this->cloverName) extends CoverageService
+        {
             public function git(string $baseBranch = 'main'): array
             {
                 return [
-                    ['method' => 'foo', 'file' => 'src/Foo.php']
+                    ['method' => 'foo', 'file' => 'src/Foo.php'],
                 ];
             }
         };
@@ -207,7 +210,7 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
     }
 
     /** @test */
-    public function getRelativePath_and_getBaseDirectory_work()
+    public function get_relative_path_and_get_base_directory_work()
     {
         $service = new CoverageService($this->cloverDir, $this->cloverName);
         $relative = $service->getRelativePath($this->cloverDir . '/src/Services/UserService.php');
@@ -240,4 +243,3 @@ XML;
         file_put_contents($this->cloverPath, $xml);
     }
 }
-

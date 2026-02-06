@@ -7,9 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Activitylog\Facades\LogBatch;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\State;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
@@ -496,6 +496,7 @@ class ModelHelpersTest extends ModelTestCase
         // Verify the model was updated
         $this->assertEquals(['theme' => 'light', 'notifications' => false], $model->fresh()->preferences);
     }
+
     public function test_translatable_model_updates_existing_batch_activity()
     {
         $this->expectException(\TypeError::class);
@@ -546,6 +547,7 @@ class ModelHelpersTest extends ModelTestCase
         $model->translate('en')->description = 'Updated Description';
         $model->save(); // TypeError thrown here
     }
+
     public function test_translatable_model_creates_new_activity_when_no_batch_activity_exists()
     {
         $this->app['config']->set('activitylog.enabled', true);

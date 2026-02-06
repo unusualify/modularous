@@ -62,7 +62,7 @@ trait Cacheable
 
     public function preventDependentWarming(bool $prevent = true): static
     {
-        $this->dependentWarmingEnabled = !$prevent;
+        $this->dependentWarmingEnabled = ! $prevent;
 
         return $this;
     }

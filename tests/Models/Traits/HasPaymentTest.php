@@ -607,6 +607,7 @@ class HasPaymentTest extends ModelTestCase
         $totalCostIncludingVatFormatted = $this->model->total_cost_including_vat_formatted;
         $this->assertEquals($expectedFormatted, $totalCostIncludingVatFormatted);
     }
+
     public function test_payable_price_including_vat_attribute()
     {
         $price = Price::create([

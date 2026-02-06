@@ -30,7 +30,7 @@ class CoverageReportCommand extends Command
         $outputDir = $this->option('output');
 
         // Create output directory
-        if (!is_dir($outputDir)) {
+        if (! is_dir($outputDir)) {
             mkdir($outputDir, 0755, true);
         }
 
@@ -46,7 +46,7 @@ class CoverageReportCommand extends Command
         if ($git) {
             $this->line("Analyzing changes vs <fg=cyan>{$git}</>");
         } elseif ($files) {
-            $this->line("Analyzing files: <fg=cyan>" . implode(', ', $files) . "</>");
+            $this->line('Analyzing files: <fg=cyan>' . implode(', ', $files) . '</>');
         }
 
         $bar = $this->output->createProgressBar(count($formats));
@@ -96,6 +96,7 @@ class CoverageReportCommand extends Command
 
         } catch (\Exception $e) {
             $this->error('❌ Report generation failed: ' . $e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -118,7 +119,7 @@ class CoverageReportCommand extends Command
 
     private function openInBrowser(string $path): void
     {
-        $command = match(PHP_OS_FAMILY) {
+        $command = match (PHP_OS_FAMILY) {
             'Darwin' => 'open',
             'Windows' => 'start',
             'Linux' => 'xdg-open',
@@ -127,7 +128,7 @@ class CoverageReportCommand extends Command
 
         if ($command) {
             shell_exec("{$command} " . escapeshellarg($path));
-            $this->info("🌐 Opened in browser");
+            $this->info('🌐 Opened in browser');
         }
     }
 }

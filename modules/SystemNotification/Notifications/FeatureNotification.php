@@ -734,7 +734,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      */
     public function failed(?\Throwable $exception): void
     {
-        \Illuminate\Support\Facades\Log::channel('modularity-notification-failure')->error( static::class . ' failed: ' . $exception->getMessage(), [
+        \Illuminate\Support\Facades\Log::channel('modularity-notification-failure')->error(static::class . ' failed: ' . $exception->getMessage(), [
             'exception' => $exception,
         ]);
     }
