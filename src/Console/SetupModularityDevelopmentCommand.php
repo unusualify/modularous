@@ -54,7 +54,7 @@ class SetupModularityDevelopmentCommand extends BaseCommand
             );
         }
 
-        $composer['name'] = 'unusualify/modularity-dev';
+        $composer['name'] = 'unusualify/modularous-dev';
         $composer['description'] = 'The Laravel Framework powered with Modularity.';
         $composer['minimum-stability'] = 'dev';
         $composer['repositories'] = [
