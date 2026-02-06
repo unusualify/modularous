@@ -42,7 +42,7 @@ class CacheVersionsCommand extends BaseCommand
         // handle command
 
         set_env_file('APP_VERSION', get_package_version());
-        set_env_file('MODULARITY_VERSION', get_package_version('unusualify/modularity'));
+        set_env_file('MODULARITY_VERSION', get_package_version('unusualify/modularous'));
         set_env_file('PAYABLE_VERSION', get_package_version('unusualify/payable'));
         set_env_file('SNAPSHOT_VERSION', get_package_version('oobook/snapshot'));
         set_env_file('COMPOSER', get_installed_composer()['root']['name']);

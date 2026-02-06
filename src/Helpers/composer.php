@@ -78,7 +78,7 @@ if (! function_exists('get_package_version')) {
         $tag = trim(shell_exec('cd ' . base_path() . ' && git describe --tags --abbrev=0'));
 
         if ($package) {
-            if ($package === 'unusualify/modularity' && Modularity::isDevelopment()) {
+            if ($package === 'unusualify/modularous' && Modularity::isDevelopment()) {
                 return 'development';
             }
 
