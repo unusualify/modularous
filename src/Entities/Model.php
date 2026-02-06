@@ -17,6 +17,7 @@ use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularity\Traits\Traitify;
 
 abstract class Model extends LaravelModel implements CacheableInterface, ModuleableInterface, TaggableInterface
 {
@@ -27,7 +28,8 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
         TaggableTrait,
         LocaleTags,
         Notifiable,
-        HasCaching;
+        HasCaching,
+        Traitify;
 
     public $timestamps = true;
 
