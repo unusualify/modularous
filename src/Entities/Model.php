@@ -106,4 +106,28 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
             'tag_id'
         );
     }
+
+    /**
+     * Override newInstance to propagate dependentWarmingEnabled to new instances.
+     *
+     * Laravel's Builder::create() calls $this->model->newInstance($attributes)
+     * to build a fresh model before saving. By overriding this, the flag set via
+     * preventDependentWarming() on the parent naturally flows to the child,
+     * ensuring the observer sees the correct value on the actual persisted instance.
+     *
+     * @param array $attributes
+     * @param bool $exists
+     * @return static
+     */
+    public function newInstance($attributes = [], $exists = false)
+    {
+        $instance = parent::newInstance($attributes, $exists);
+
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $instance = $this->$method($instance, $attributes, $exists);
+        }
+
+        return $instance;
+    }
+
 }
