@@ -117,7 +117,7 @@ trait Relationships
                                 if ($hasRepository) {
                                     if (isset($data[$relatedLocalKey])) {
                                         array_splice($idsDeleted, array_search($data[$relatedLocalKey], $idsDeleted), 1);
-                                        $result = $repository->update($data[$relatedLocalKey], $data + [$foreignKey => $object->id]);
+                                        $result = $repository->update($data[$relatedLocalKey], $data + [$foreignKey => $object->id], options: ['preventDependentWarming' => true]);
                                         // TODO: check if this is needed
                                         // if($nestedObject->wasChanged()){
                                         //     $object->addChangedRelationships($relationName, $data);
@@ -126,7 +126,7 @@ trait Relationships
                                             $mustTouchEloquentModel = true;
                                         }
                                     } else {
-                                        $repository->create(array_merge($data, [$foreignKey => $object->id]));
+                                        $repository->create(array_merge($data, [$foreignKey => $object->id]), options: ['preventDependentWarming' => true]);
 
                                         if (! $mustTouchEloquentModel) {
                                             $mustTouchEloquentModel = true;

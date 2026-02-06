@@ -88,20 +88,22 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      * @param string[] $fields
      * @return \Unusualify\Modularity\Models\Model
      */
-    public function create($fields, $schema = null)
+    public function create($fields, $schema = null, $options = [])
     {
         $this->setSchema($schema);
 
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        return DB::transaction(function () use ($fields) {
+        return DB::transaction(function () use ($fields, $options) {
             LogBatch::startBatch();
 
             $original_fields = $fields;
 
             $fields = $this->prepareFieldsBeforeCreate($fields);
 
-            $object = $this->model->create(Arr::except($fields, $this->getReservedFields()));
+            $object = $this->model
+                ->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming'])
+                ->create(Arr::except($fields, $this->getReservedFields()));
 
             $this->beforeSave($object, $original_fields);
 
@@ -163,13 +165,13 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      * @param array $fields
      * @return bool
      */
-    public function update($id, $fields, $schema = null)
+    public function update($id, $fields, $schema = null, $options = [])
     {
         $this->setSchema($schema);
 
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        return DB::transaction(function () use ($id, $fields) {
+        return DB::transaction(function () use ($id, $fields, $options) {
             LogBatch::startBatch();
 
             if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
@@ -184,7 +186,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
             $object->fill(Arr::except($fields, $this->getReservedFields()));
 
-            $object->save();
+            $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming'])
+                ->save();
 
             $this->afterSave($object, $fields);
 

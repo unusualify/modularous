@@ -26,6 +26,11 @@ trait Cacheable
     protected ?string $cacheModuleRouteName = null;
 
     /**
+     * Whether to prevent dependent warming.
+     */
+    public bool $dependentWarmingEnabled = true;
+
+    /**
      * Check if caching should be used.
      */
     public function shouldUseCache(?string $type = null): bool
@@ -48,6 +53,23 @@ trait Cacheable
     public function getSelfCacheEnabled(): bool
     {
         return $this->cacheEnabled ?? true;
+    }
+
+    public function shouldWarmDependentModules(): bool
+    {
+        return $this->dependentWarmingEnabled;
+    }
+
+    public function preventDependentWarming(bool $prevent = true): static
+    {
+        $this->dependentWarmingEnabled = !$prevent;
+
+        return $this;
+    }
+
+    public function enableDependentWarming(): static
+    {
+        return $this->preventDependentWarming(false);
     }
 
     /**

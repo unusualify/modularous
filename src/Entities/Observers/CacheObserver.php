@@ -34,7 +34,7 @@ class CacheObserver
         }
 
         if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model);
+            ModularityCache::invalidateForModel($model, options: ['warmup' => false]);
         }
 
         $this->invalidateDependentModules($model);
@@ -152,6 +152,8 @@ class CacheObserver
                 $model->getKey()
             );
 
+            $shouldWarmDependentModules = method_exists($model, 'shouldWarmDependentModules') ? $model->shouldWarmDependentModules() : true;
+
             // If granular invalidation failed (tags not supported), fall back to full invalidation
             if (! $invalidated) {
                 $dependents = $this->getCacheDependents($model);
@@ -215,11 +217,11 @@ class CacheObserver
 
                             if ($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
 
-                                $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types);
+                                $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);
                             } elseif ($target instanceof \Illuminate\Database\Eloquent\Collection) {
                                 foreach ($target as $item) {
                                     if ($item instanceof Model && get_class($item) === get_class($targetModelInstance)) {
-                                        $this->invalidateItemCache($item, $moduleName, $moduleRouteName, $types);
+                                        $this->invalidateItemCache($item, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);
                                     }
                                 }
                             }
@@ -228,7 +230,7 @@ class CacheObserver
                             $target = $targetModelInstance::find($model->getKey());
 
                             if ($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
-                                $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types);
+                                $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);
                             }
                         }
                         // ModularityCache::invalidateModuleRoute($moduleName, $moduleRouteName);
@@ -240,18 +242,9 @@ class CacheObserver
         }
     }
 
-    protected function invalidateItemCache(Model $item, string $moduleName, string $moduleRouteName, array $types): void
+    protected function invalidateItemCache(Model $item, string $moduleName, string $moduleRouteName, array $types, bool $warmup = true): void
     {
-        ModularityCache::invalidateForModel($item, $types);
-        // if($types['record']) {
-        //     ModularityCache::invalidateRecord($moduleName, $moduleRouteName);
-        // }
-        // if($types['formItem']) {
-        //     ModularityCache::invalidateFormItemCache($moduleName, $moduleRouteName, $item->getKey());
-        // }
-        // if($types['formattedItem']) {
-        //     ModularityCache::invalidateFormattedItemCache($moduleName, $moduleRouteName, $item->getKey());
-        // }
+        ModularityCache::invalidateForModel($item, $types, options: ['warmup' => $warmup]);
     }
 
     /**

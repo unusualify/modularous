@@ -248,8 +248,10 @@ trait CacheInvalidation
     /**
      * Invalidate all caches related to a model.
      */
-    public function invalidateForModel(Model $model, $types = []): void
+    public function invalidateForModel(Model $model, $types = [], $options = []): void
     {
+        $warmup = isset($options['warmup']) ? $options['warmup'] : true;
+
         $moduleName = $this->getModuleNameFromModel($model);
         $moduleRouteName = $this->getModuleRouteNameFromModel($model);
 
@@ -292,7 +294,7 @@ trait CacheInvalidation
 
         try {
             // if laravel model is not new created, warmUp cache
-            if (! $newlyCreated) {
+            if (! $newlyCreated && $warmup) {
                 $this->warmupByModel($model);
             }
         } catch (\Exception $e) {

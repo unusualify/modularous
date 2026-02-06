@@ -52,4 +52,11 @@ trait HasCaching
 
         return $this;
     }
+
+    protected function newInstanceHasCaching($instance, $attributes, $exists): static
+    {
+        $instance->dependentWarmingEnabled = $this->dependentWarmingEnabled;
+
+        return $instance;
+    }
 }
