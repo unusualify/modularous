@@ -78,7 +78,15 @@ class Modularity extends FileRepository
         parent::__construct($app, $path);
 
         $this->appPath = realpath(get_installed_composer()['root']['install_path']);
-        $this->vendorPath = realpath(get_installed_composer()['versions']['unusualify/modularity']['install_path']);
+        $versions = get_installed_composer()['versions'];
+
+        if(isset($versions['unusualify/modularous'])) {
+            $this->vendorPath = realpath($versions['unusualify/modularous']['install_path']);
+        } else if(isset($versions['unusualify/modularity'])) {
+            $this->vendorPath = realpath($versions['unusualify/modularity']['install_path']);
+        } else {
+            throw new \Exception('Modularity or Modularous not found in composer.json');
+        }
         $this->vendorDir = trim(Str::replaceFirst($this->appPath, '', $this->vendorPath), DIRECTORY_SEPARATOR);
         $this->activator = $app[\Nwidart\Modules\Contracts\ActivatorInterface::class];
 
@@ -282,7 +290,8 @@ class Modularity extends FileRepository
 
     final public function isDevelopment()
     {
-        return get_installed_composer()['root']['name'] === 'unusualify/modularity-dev';
+        return get_installed_composer()['root']['name'] === 'unusualify/modularity-dev'
+            || get_installed_composer()['root']['name'] === 'unusualify/modularous-dev';
     }
 
     final public function isProduction()
