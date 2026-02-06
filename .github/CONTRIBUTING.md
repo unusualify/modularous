@@ -1,7 +1,7 @@
 # Contributing
 
 ## Request for changes/ Pull Requests
-You first need to create a fork of the [modularity](https://github.com/unusualify/modularity/) repository to commit your changes to it. Methods to fork a repository can be found in the [GitHub Documentation](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
+You first need to create a fork of the [modularity](https://github.com/unusualify/modularous/) repository to commit your changes to it. Methods to fork a repository can be found in the [GitHub Documentation](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
 Then add your fork as a local project:
 
@@ -69,4 +69,4 @@ git pull
 git switch --create patch/1234-name-issue
 ```
 
-Commit your changes, then push the branch to your fork with `git push -u fork` and open a pull request on [the modularity repository](https://github.com/unusualify/modularity/) following the template provided.
+Commit your changes, then push the branch to your fork with `git push -u fork` and open a pull request on [the modularity repository](https://github.com/unusualify/modularous/) following the template provided.

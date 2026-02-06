@@ -13,7 +13,7 @@
     "Favor dependency injection over facades in new code unless pattern consistency dictates otherwise.",
     "Add or update tests for any behavior-changing code (unit or integration).",
     "Use existing helper classes (ModularityVite, CoverageService) instead of adding duplicate utilities.",
-    "Document new features in package README or docs under packages/modularity/docs when added."
+    "Document new features in package README or docs under packages/modularous/docs when added."
   ],
   "legacy_constraints": [
     "Compatibility with nwidart/laravel-modules and existing modules/ layout must be preserved.",

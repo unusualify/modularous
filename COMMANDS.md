@@ -65,7 +65,7 @@
 
 ### ERROR FIX COMMANDS
 IF #locale column not found on imageables table
-    php artisan migrate:refresh --path=vendor/unusualify/modularity/src/Database/Migrations/default/2023_05_09_000003_create_unusual_default_medias_tables.php
+    php artisan migrate:refresh --path=vendor/unusualify/modularous/src/Database/Migrations/default/2023_05_09_000003_create_unusual_default_medias_tables.php
 
 ### REGEX FILTERS
 

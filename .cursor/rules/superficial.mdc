@@ -2,7 +2,7 @@
 description: "This rule provides standards for superficial code of Modularity"
 alwaysApply: false
 applyToSpecificFiles: true
-globs: ./modularity/src/**/*.php, modularity/vue/src/**/*.vue, modularity/vue/src/**/*.js , modularity/vue/src/**/*.scss, modularity/vue/src/**/*.css
+globs: ./modularous/src/**/*.php, modularous/vue/src/**/*.vue, modularous/vue/src/**/*.js , modularous/vue/src/**/*.scss, modularous/vue/src/**/*.css
 
 ---
 

@@ -26,13 +26,13 @@ Modularity is a Laravel and Vuetify powered, developer toolkit that aims to impr
 
 <!-- Modularity takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://unusualify.com/modularity/docs/routing).
-- [Powerful dependency injection container](https://unusualify.com/modularity/docs/container).
-- Multiple back-ends for [session](https://unusualify.com/modularity/docs/session) and [cache](https://unusualify.com/modularity/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://unusualify.com/modularity/docs/eloquent).
-- Database agnostic [schema migrations](https://unusualify.com/modularity/docs/migrations).
-- [Robust background job processing](https://unusualify.com/modularity/docs/queues).
-- [Real-time event broadcasting](https://unusualify.com/modularity/docs/broadcasting). -->
+- [Simple, fast routing engine](https://unusualify.com/modularous/docs/routing).
+- [Powerful dependency injection container](https://unusualify.com/modularous/docs/container).
+- Multiple back-ends for [session](https://unusualify.com/modularous/docs/session) and [cache](https://unusualify.com/modularous/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://unusualify.com/modularous/docs/eloquent).
+- Database agnostic [schema migrations](https://unusualify.com/modularous/docs/migrations).
+- [Robust background job processing](https://unusualify.com/modularous/docs/queues).
+- [Real-time event broadcasting](https://unusualify.com/modularous/docs/broadcasting). -->
 
 ## Learning Modularity
 

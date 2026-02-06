@@ -165,7 +165,7 @@ return [
         'enabled' => true,
         'paths' => [
             base_path('vendor/*/*'),
-            base_path('vendor/unusualify/modularity/modules'),
+            base_path('vendor/unusualify/modularous/modules'),
         ],
     ],
     /*
