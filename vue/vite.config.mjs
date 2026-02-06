@@ -248,7 +248,6 @@ export default defineConfig(({ command, mode }) => {
               extType = 'fonts'
             }
 
-            // return `modularity/${extType}/[name].asset[extname]`;
             return `${extType}/[name].[hash][extname]`
           },
 
