@@ -84,7 +84,7 @@ class BaseServiceProvider extends ServiceProvider
                 'Url' => $this->app['modularity']->getAppUrl(),
                 'Url (Admin)' => $this->app['modularity']->getAdminAppUrl(),
                 'Vendor' => $this->app['modularity']->getVendorDir(),
-                'Version' => get_package_version('unusualify/modularity'),
+                'Version' => get_package_version('unusualify/modularous'),
             ];
         });
 

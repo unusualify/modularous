@@ -140,14 +140,14 @@ export default function modularity (config) {
     transform: (code, id) => {
       let transformedCode
 
-      if (/modularity\/vue\/src\/js\/config\/themes\/index.js$/g.test(id)) {
+      if (/modularous\/vue\/src\/js\/config\/themes\/index.js$/g.test(id)) {
         transformedCode = code
         getCustomThemes().forEach(function(themeName){
           transformedCode += `\r\nexport {default as ${themeName}} from './customs/${themeName}'`
         })
       }
 
-      if (/modularity\/vue\/src\/js\/plugins\/vuetify.js$/g.test(id)) {
+      if (/modularous\/vue\/src\/js\/plugins\/vuetify.js$/g.test(id)) {
         const appThemeFolder = isCustomTheme(pluginConfig.theme) ? `customs/${pluginConfig.theme}` : `${pluginConfig.theme}`
         const importThemeStatement = `import 'styles/themes/${appThemeFolder}/main.scss'`
 

@@ -70,7 +70,7 @@ export default defineConfig(({ command, mode }) => {
 
   const compressMode = ['production', 'staging', 'modularity'].includes(mode) ? 'compressed' : 'expanded'
 
-  const vendorDir = ENV.VENDOR_DIR || 'vendor/unusualify/modularity'
+  const vendorDir = ENV.VENDOR_DIR || 'vendor/unusualify/modularous'
   const APP_THEME = ENV.VUE_APP_THEME || 'unusualify'
   const VUE_DEV_PORT = ENV.VUE_DEV_PORT || 5173
   const VUE_DEV_HOST = ENV.VUE_DEV_HOST || 'localhost' // jakomeet.test
