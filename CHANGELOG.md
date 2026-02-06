@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.57.1 - 2026-02-06
+
+### :wrench: Bug Fixes
+
+- update package name from 'modularity' to 'modularous' for correct version retrieval by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/4c3b2fafdce971e3e8f06ed7a76a5f64db5be8ba
+
 ## v0.57.0 - 2026-02-06
 
 ### :rocket: Features
