@@ -101,9 +101,13 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
             $fields = $this->prepareFieldsBeforeCreate($fields);
 
-            $object = $this->model
-                ->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming'])
-                ->create(Arr::except($fields, $this->getReservedFields()));
+            $model = $this->model;
+
+            if(method_exists($model, 'preventDependentWarming')) {
+                $model = $model->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
+            }
+
+            $object = $model->create(Arr::except($fields, $this->getReservedFields()));
 
             $this->beforeSave($object, $original_fields);
 
@@ -186,8 +190,11 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
             $object->fill(Arr::except($fields, $this->getReservedFields()));
 
-            $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming'])
-                ->save();
+            if(method_exists($object, 'preventDependentWarming')) {
+                $object = $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
+            }
+
+            $object->save();
 
             $this->afterSave($object, $fields);
 
