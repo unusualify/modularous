@@ -7,11 +7,17 @@ use Unusualify\Modularity\Tests\TestCase;
 
 class PriceHydrateTest extends TestCase
 {
-    public function test_price_hydrate_test_incomplete()
+    public function test_price_hydrate_can_be_instantiated()
     {
-        // PriceHydrate requires mocking static Request::getUserCurrency(),
-        // Currency model queries, and external SystemPricing module.
-        // This test is marked incomplete until proper integration test setup is available.
-        $this->markTestIncomplete('PriceHydrateTest requires Request facade and external modules mocking');
+        $input = [
+            'type' => 'price',
+            'name' => 'prices',
+            'default' => 10.0
+        ];
+
+        $h = new PriceHydrate($input, null, null, true);
+
+        // Just verify the object was created
+        $this->assertInstanceOf(PriceHydrate::class, $h);
     }
 }

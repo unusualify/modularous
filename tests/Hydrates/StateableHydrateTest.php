@@ -7,22 +7,38 @@ use Unusualify\Modularity\Tests\TestCase;
 
 class StateableHydrateTest extends TestCase
 {
-    public function test_stateable_hydrate_sets_type_and_defaults()
+    public function test_stateable_hydrate_throws_without_module()
     {
         $input = [
             'type' => 'stateable',
         ];
 
-        $moduleStub = new class extends \Unusualify\Modularity\Module {
-            public function __construct() {}
-            public function getRouteClass(string $routeName, string $target, bool $asClass = false): string
-            {
-                return '';
-            }
-        };
+        $h = new StateableHydrate($input, null, null, true);
 
-        // This test needs module and routeName, so it will throw an exception.
-        // We'll skip or mark as incomplete.
-        $this->markTestIncomplete('StateableHydrateTest needs module and routeName context');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No Module");
+        
+        $h->render();
+    }
+
+    public function test_stateable_hydrate_throws_without_route_name()
+    {
+        $input = [
+            'type' => 'stateable',
+            '_moduleName' => 'TestModule'
+        ];
+
+        // Mock the Modularity facade
+        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+            ->andReturn(new class extends \Unusualify\Modularity\Module {
+                public function __construct() {}
+            });
+
+        $h = new StateableHydrate($input, null, null, true);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No Route");
+        
+        $h->render();
     }
 }

@@ -7,11 +7,20 @@ use Unusualify\Modularity\Tests\TestCase;
 
 class ProcessHydrateTest extends TestCase
 {
-    public function test_process_hydrate_test_incomplete()
+    public function test_process_hydrate_throws_without_module_context()
     {
-        // ProcessHydrate requires complex setup with Modularity facade,
-        // classHasTrait helper function, route() helper, and named routes.
-        // This test is marked incomplete until proper integration test setup is available.
-        $this->markTestIncomplete('ProcessHydrateTest requires Modularity facade and route helpers');
+        $input = [
+            'type' => 'process',
+            'name' => 'process',
+            'eager' => []
+        ];
+
+        $h = new ProcessHydrate($input, null, null, true);
+
+        // ProcessHydrate requires module/route context and throws exception
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Invalid input');
+
+        $h->render();
     }
 }

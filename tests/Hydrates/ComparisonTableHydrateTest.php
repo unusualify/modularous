@@ -2,14 +2,26 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
+use Unusualify\Modularity\Hydrates\Inputs\ComparisonTableHydrate;
 use Unusualify\Modularity\Tests\TestCase;
 
-// ComparisonTableHydrate is very similar to other complex hydrates
-// Let's just stub it for now since it requires complex module/route context
 class ComparisonTableHydrateTest extends TestCase
 {
-    public function test_comparison_table_hydrate_test_incomplete()
+    public function test_comparison_table_hydrate_sets_defaults()
     {
-        $this->markTestIncomplete('ComparisonTableHydrateTest needs module context');
+        $input = [
+            'type' => 'comparison-table',
+            'name' => 'comparison',
+            'comparators' => []
+        ];
+
+        $h = new ComparisonTableHydrate($input, null, null, true);
+
+        $result = $h->render();
+
+        // ComparisonTableHydrate just passes through with afterHydrateRecords hook
+        // Verify input structure is preserved
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('comparators', $result);
     }
 }

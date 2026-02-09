@@ -7,11 +7,16 @@ use Unusualify\Modularity\Tests\TestCase;
 
 class PaymentServiceHydrateTest extends TestCase
 {
-    public function test_payment_service_hydrate_test_incomplete()
+    public function test_payment_service_hydrate_can_be_instantiated()
     {
-        // PaymentServiceHydrate requires complex mocking of Modularity facade,
-        // Auth, Route, and database queries from external modules.
-        // This test is marked incomplete until proper integration test setup is available.
-        $this->markTestIncomplete('PaymentServiceHydrateTest requires Modularity facade and external modules mocking');
+        $input = [
+            'type' => 'payment-service',
+            'name' => 'payment_method'
+        ];
+
+        $h = new PaymentServiceHydrate($input, null, null, true);
+
+        // Just verify the object was created
+        $this->assertInstanceOf(PaymentServiceHydrate::class, $h);
     }
 }
