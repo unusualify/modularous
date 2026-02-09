@@ -4,10 +4,11 @@ namespace Unusualify\Modularity\Tests\Hydrates;
 
 use Unusualify\Modularity\Hydrates\Inputs\SpreadHydrate;
 use Unusualify\Modularity\Tests\TestCase;
+use Mockery as m;
 
 class SpreadHydrateTest extends TestCase
 {
-    public function test_spread_hydrate_sets_type_and_col()
+    public function test_spread_hydrate_sets_type_and_reserved_keys()
     {
         $input = [
             'type' => 'spread',
@@ -16,32 +17,33 @@ class SpreadHydrateTest extends TestCase
             '_routeName' => 'testRoute'
         ];
 
-        // Create a mock model with required methods
-        $modelStub = new class {
-            public function getReservedKeys() { return ['id', 'created_at']; }
-            public function getRouteInputs() { return []; }
-            public function getSpreadableSavingKey() { return 'spread'; }
-        };
+        // Mock model with all required methods
+        $modelMock = m::mock();
+        $modelMock->shouldReceive('getReservedKeys')->andReturn(['id', 'created_at', 'updated_at']);
+        $modelMock->shouldReceive('getRouteInputs')->andReturn([
+            ['name' => 'title', 'spreadable' => true],
+            ['name' => 'slug', 'spreadable' => false]
+        ]);
+        $modelMock->shouldReceive('getSpreadableSavingKey')->andReturn('spread_data');
 
-        $moduleStub = new class extends \Unusualify\Modularity\Module {
-            public function __construct() {}
-            public function getRouteClass(string $routeName, string $target, bool $asClass = false): string {
-                return '';
-            }
-        };
+        $moduleMock = m::mock();
+        $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'model')->andReturn(get_class($modelMock));
 
         \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
-            ->andReturn($moduleStub);
+            ->with('TestModule')
+            ->andReturn($moduleMock);
 
         \Illuminate\Support\Facades\App::shouldReceive('make')
-            ->andReturn($modelStub);
+            ->with(get_class($modelMock))
+            ->andReturn($modelMock);
 
         $h = new SpreadHydrate($input, null, null, true);
-
         $result = $h->render();
 
         $this->assertEquals('input-spread', $result['type']);
+        $this->assertEquals('spread_data', $result['name']);
         $this->assertArrayHasKey('col', $result);
         $this->assertEquals(12, $result['col']['cols']);
+        $this->assertArrayHasKey('reservedKeys', $result);
     }
 }

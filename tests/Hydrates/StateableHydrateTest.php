@@ -4,41 +4,43 @@ namespace Unusualify\Modularity\Tests\Hydrates;
 
 use Unusualify\Modularity\Hydrates\Inputs\StateableHydrate;
 use Unusualify\Modularity\Tests\TestCase;
+use Mockery as m;
 
 class StateableHydrateTest extends TestCase
 {
-    public function test_stateable_hydrate_throws_without_module()
+    public function test_stateable_hydrate_sets_type_and_defaults()
     {
         $input = [
             'type' => 'stateable',
+            '_moduleName' => 'TestModule',
+            '_routeName' => 'testRoute'
         ];
 
-        $h = new StateableHydrate($input, null, null, true);
+        // Mock repository with getStateableList method
+        $repositoryMock = m::mock();
+        $repositoryMock->shouldReceive('getStateableList')->withAnyArgs()->andReturn([
+            ['name' => 'active', 'id' => 1],
+            ['name' => 'inactive', 'id' => 0]
+        ]);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("No Module");
-        
-        $h->render();
-    }
+        // Mock module
+        $moduleMock = m::mock();
+        $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'repository')->andReturn(get_class($repositoryMock));
 
-    public function test_stateable_hydrate_throws_without_route_name()
-    {
-        $input = [
-            'type' => 'stateable',
-            '_moduleName' => 'TestModule'
-        ];
-
-        // Mock the Modularity facade
         \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
-            ->andReturn(new class extends \Unusualify\Modularity\Module {
-                public function __construct() {}
-            });
+            ->with('TestModule')
+            ->andReturn($moduleMock);
 
-        $h = new StateableHydrate($input, null, null, true);
+        \Illuminate\Support\Facades\App::shouldReceive('make')
+            ->with(get_class($repositoryMock))
+            ->andReturn($repositoryMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("No Route");
-        
-        $h->render();
+        $h = new StateableHydrate($input, null, null, false);
+        $result = $h->render();
+
+        $this->assertEquals('select', $result['type']);
+        $this->assertEquals('stateable_id', $result['name']);
+        $this->assertEquals('Status', $result['label']);
+        $this->assertIsArray($result['items']);
     }
 }
