@@ -164,27 +164,75 @@ class RegexReplacement
 
     public function run()
     {
+        if (empty($this->path) || $this->path === '/') {
+            throw new \Exception("Dangerous path for regex replacement: '{$this->path}'");
+        }
+
         $directory = new \RecursiveDirectoryIterator($this->path);
         $iterator = new \RecursiveIteratorIterator($directory);
         $files = [];
 
-        // Convert glob pattern to regex pattern
-        $regex = '#' . str_replace(
-            ['*', '?'],
-            ['[^/]*', '.'],
-            $this->directory_pattern
-        ) . '#';
+        // Improved glob to regex conversion
+        $pattern = $this->directory_pattern;
+        $pattern = str_replace('\\', '/', $pattern); // Normalize slashes
+        
+        // Escape regex special characters except those we use for glob
+        $pattern = preg_quote($pattern, '#');
+        $pattern = str_replace(
+            ['\#', '\?', '\*\*/', '\*\*', '\*'],
+            ['#', '.', '(.+/)?', '.*', '[^/]*'],
+            $pattern
+        );
+        $regex = '#' . $pattern . '$#';
 
         foreach ($iterator as $file) {
-            if ($file->isFile() && preg_match($regex, $file->getPathname())) {
+            $pathname = str_replace('\\', '/', $file->getPathname());
+            
+            // Normalize both base path and pathname to handle symlinks (common on macOS)
+            if ($realPath = realpath($this->path)) {
+                $basePath = str_replace('\\', '/', $realPath);
+            } else {
+                $basePath = str_replace('\\', '/', $this->path);
+            }
+
+            if ($realPathname = realpath($file->getPathname())) {
+                $normalizedPathname = str_replace('\\', '/', $realPathname);
+            } else {
+                $normalizedPathname = $pathname;
+            }
+            
+            // Ensure the file is actually within the base path
+            if (!str_starts_with($normalizedPathname, $basePath)) {
+                continue;
+            }
+
+            // Get relative path
+            $relativePath = substr($normalizedPathname, strlen($basePath));
+            $relativePath = ltrim($relativePath, '/');
+
+            // Hard safety: Never modify anything in vendor or node_modules unless the base path IS in there
+            if (str_contains($normalizedPathname, '/vendor/') || str_contains($normalizedPathname, '/node_modules/')) {
+                if (!str_contains($basePath, '/vendor/') && !str_contains($basePath, '/node_modules/')) {
+                    continue;
+                }
+            }
+
+            if ($file->isFile() && preg_match($regex, $relativePath)) {
                 $files[] = $file->getPathname();
             }
         }
 
         foreach ($files as $file) {
-            if ($this->pretending) {
+            if ($this->pretending()) {
                 $this->displayPatternMatches($file);
             } else {
+                // Double check before writing
+                $normalizedFile = str_replace('\\', '/', realpath($file) ?: $file);
+                if (str_contains($normalizedFile, '/vendor/') || str_contains($normalizedFile, '/node_modules/')) {
+                    if (!str_contains(str_replace('\\', '/', realpath($this->path) ?: $this->path), '/vendor/')) {
+                         continue;
+                    }
+                }
                 $this->replacePatternFile($file);
             }
         }
