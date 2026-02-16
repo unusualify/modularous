@@ -48,19 +48,19 @@ class FormTabsHydrate extends InputHydrate
                 } else {
                     $eagers[] = isset($_input['eager'])
                         ? (is_array($_input['eager']) ? $_input['eager'] : explode(',', $_input['eager']))
-                        : $input['name'] . '.' . $_input['name'];
+                        : [$input['name'] . '.' . $_input['name']];
                 }
             }
         }
 
         $input['eagers'] = array_reduce($eagers, function ($acc, $item) {
-            $acc = array_merge($acc, $item);
+            $acc = array_merge($acc, is_array($item) ? $item : [$item]);
 
             return $acc;
         }, []);
 
         $input['lazy'] = array_reduce($lazy, function ($acc, $item) {
-            $acc = array_merge($acc, $item);
+            $acc = array_merge($acc, is_array($item) ? $item : [$item]);
 
             return $acc;
         }, []);
