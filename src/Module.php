@@ -20,14 +20,10 @@ use Unusualify\Modularity\Support\Finder;
 
 class Module extends NwidartModule
 {
-    private $activator;
-
     /**
      * @var ModuleActivatorInterface
      */
     private $moduleActivator;
-
-    private $config;
 
     /**
      * @var array
@@ -61,7 +57,11 @@ class Module extends NwidartModule
     {
         parent::__construct($app, $name, $path);
         $this->app = $app;
-        $this->moduleActivator = (new ModuleActivator($app, $this));
+        $this->moduleActivator = App::make(ModuleActivator::class, [
+            'app' => $app,
+            'cacheKey' => 'module-activator.installed.' . kebabCase($this->getName()),
+            'statusesFile' => $this->getDirectoryPath('routes_statuses.json'),
+        ]);
 
         $this->setMiddlewares();
     }
@@ -74,10 +74,24 @@ class Module extends NwidartModule
         // This checks if we are running on a Laravel Vapor managed instance
         // and sets the path to a writable one (services path is not on a writable storage in Vapor).
         if (! is_null(env('VAPOR_MAINTENANCE_MODE', null))) {
-            return Str::replaceLast('config.php', $this->getSnakeName() . '_module.php', $this->app->getCachedConfigPath());
+            $basePath = $this->app->getCachedConfigPath();
+            $target = 'config.php';
+        } else {
+            $basePath = $this->app->getCachedServicesPath();
+            $target = 'services.php';
         }
 
-        return Str::replaceLast('services.php', $this->getSnakeName() . '_module.php', $this->app->getCachedServicesPath());
+        $filename = $this->getSnakeName() . '_module.php';
+
+        // Add process isolation for tests to prevent race conditions in parallel
+        if (app()->environment() === 'testing') {
+            $token = getenv('TEST_TOKEN') ?: (function_exists('getmypid') ? getmypid() : null);
+            if ($token) {
+                $filename = $this->getSnakeName() . '_module_' . $token . '.php';
+            }
+        }
+
+        return dirname($basePath) . '/' . $filename;
     }
 
     /**
@@ -105,21 +119,21 @@ class Module extends NwidartModule
      */
     public function isStatus(bool $status): bool
     {
-        return $this->activator->hasStatus($this, $status);
         try {
+            return $this->moduleActivator->hasStatus($this, $status);
         } catch (\Throwable $th) {
-            dd($this, $status, $this->activator, $th, debug_backtrace());
+            dd($this, $status, $this->moduleActivator, $th, debug_backtrace());
         }
     }
 
     public function getActivator()
     {
-        return $this->activator;
+        return $this->moduleActivator;
     }
 
     public function clearCache()
     {
-        $this->activator->reset();
+        $this->moduleActivator->reset();
     }
 
     public function setMiddlewares()
@@ -612,9 +626,15 @@ class Module extends NwidartModule
      */
     public function routeHasTable($routeName = null, $notation = null): bool
     {
-        $tableName = $this->getRepository($routeName ?? $this->getStudlyName(), false)
-            ? $this->getRepository($routeName ?? $this->getStudlyName())->getModel()->getTable()
-            : $this->getRepository($notation)->getModel()->getTable();
+        $repository = $this->getRepository($routeName ?? $this->getStudlyName(), true);
+        if (! $repository && $notation !== null) {
+            $repository = $this->getRepository($notation, true);
+        }
+        if (! $repository) {
+            return false;
+        }
+        $model = $repository->getModel();
+        $tableName = is_string($model) ? (new $model)->getTable() : $model->getTable();
 
         return Schema::hasTable($tableName);
     }

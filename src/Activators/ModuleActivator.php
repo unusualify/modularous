@@ -48,24 +48,17 @@ class ModuleActivator extends FileActivator
      */
     private $routesStatuses;
 
-    public function __construct(Container $app, private Module $module)
+    public function __construct(Container $app, string $cacheKey, string $statusesFile)
     {
         $this->cache = $app['cache'];
         $this->files = $app['files'];
         $this->config = $app['config'];
 
-        $this->cacheKey = $this->generateCacheKey();
+        $this->cacheKey = $cacheKey;
         $this->cacheLifetime = 604800;
-        $this->statusesFile = $this->module->getDirectoryPath('routes_statuses.json');
+        $this->statusesFile = $statusesFile;
 
         $this->routesStatuses = $this->getRoutesStatuses();
-    }
-
-    public function generateCacheKey()
-    {
-        $moduleName = (string) $this->module;
-
-        return 'module-activator.installed.' . kebabCase($moduleName);
     }
 
     public function getCacheKey()
@@ -73,15 +66,15 @@ class ModuleActivator extends FileActivator
         return $this->cacheKey;
     }
 
-    /**
-     * Reads a config parameter under the 'activators.file' key
-     *
-     * @return mixed
-     */
-    private function config(string $key, $default = null)
-    {
-        return $this->config->get(modularityBaseKey() . '.activators.file.' . $key, $default);
-    }
+    // /**
+    //  * Reads a config parameter under the 'activators.file' key
+    //  *
+    //  * @return mixed
+    //  */
+    // private function config(string $key, $default = null)
+    // {
+    //     return $this->config->get(modularityBaseKey() . '.activators.file.' . $key, $default);
+    // }
 
     /**
      * Get modules statuses, either from the cache or from
@@ -156,6 +149,18 @@ class ModuleActivator extends FileActivator
         }
         unset($this->routesStatuses[$route]);
         $this->writeJson();
+        $this->flushCache();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reset(): void
+    {
+        if ($this->files->exists($this->statusesFile)) {
+            $this->files->delete($this->statusesFile);
+        }
+        $this->routesStatuses = [];
         $this->flushCache();
     }
 
