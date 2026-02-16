@@ -95,6 +95,26 @@ class Modularity extends FileRepository
     }
 
     /**
+     * Get the authentication guard name used by Modularity
+     *
+     * @return string The configured auth guard name
+     */
+    public static function getAuthGuardName()
+    {
+        return self::$authGuardName;
+    }
+
+    /**
+     * Get the authentication provider name used by Modularity
+     *
+     * @return string The configured auth provider name
+     */
+    public static function getAuthProviderName()
+    {
+        return self::$authProviderName;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function createModule(...$args)
@@ -103,35 +123,66 @@ class Modularity extends FileRepository
     }
 
     /**
-     * Get all modules.
+     * Get scanned modules paths.
      */
-    public function all(): array
+    public function getScanPaths(): array
     {
-        if (! $this->config('cache.enabled')) {
-            return $this->scan();
+        $paths = $this->paths;
+
+        $paths[] = $this->getPath();
+
+        if ($this->config('scan.enabled')) {
+            $paths = array_merge($this->config('scan.paths'), $paths);
         }
 
-        return $this->formatCached($this->getCached());
+        $paths = array_map(function ($path) {
+            return Str::endsWith($path, '/*') ? $path : Str::finish($path, '/*');
+        }, $paths);
+
+        return $paths;
     }
 
     /**
-     * Get modules by status.
+     * Get & scan all modules.
+     *
+     * @return array
      */
-    public function getByStatus($status): array
+    public function scan()
     {
+        $paths = $this->getScanPaths();
+
         $modules = [];
 
-        /** @var Module $module */
-        foreach ($this->all() as $name => $module) {
-            if ($this->activator->hasStatus($module, $status)) {
-                $modules[$name] = $module;
+        foreach ($paths as $key => $path) {
+            $manifests = $this->getFiles()->glob("{$path}/module.json");
+
+            is_array($manifests) || $manifests = [];
+            foreach ($manifests as $manifest) {
+                $name = Json::make($manifest)->get('name');
+
+                $modules[$name] = $this->createModule($this->app, $name, dirname($manifest));
             }
-            // if ($module->isStatus($status)) {
-            //     $modules[$name] = $module;
-            // }
         }
 
         return $modules;
+    }
+    
+    /**
+     * Get cached modules.
+     *
+     * @return array
+     */
+    public function getCached()
+    {
+        $store = $this->app['cache']->store($this->app['config']->get('modules.cache.driver'));
+
+        if ($store->has($this->config('cache.key'))) {
+            return $store->get($this->config('cache.key'));
+        } else {
+            $store->set($this->config('cache.key'), $this->toCollection()->toArray(), $this->config('cache.lifetime'));
+
+            return $this->toCollection()->toArray();
+        }
     }
 
     /**
@@ -167,98 +218,6 @@ class Modularity extends FileRepository
     }
 
     /**
-     * Get & scan all modules.
-     *
-     * @return array
-     */
-    public function scan()
-    {
-        $paths = $this->getScanPaths();
-
-        $modules = [];
-
-        foreach ($paths as $key => $path) {
-            $manifests = $this->getFiles()->glob("{$path}/module.json");
-
-            is_array($manifests) || $manifests = [];
-            foreach ($manifests as $manifest) {
-                $name = Json::make($manifest)->get('name');
-
-                $modules[$name] = $this->createModule($this->app, $name, dirname($manifest));
-
-            }
-        }
-
-        return $modules;
-    }
-
-    /**
-     * Check if a module exists.
-     */
-    public function hasModule(string $moduleName): bool
-    {
-        return $this->has($moduleName);
-    }
-
-    /**
-     * Get scanned modules paths.
-     */
-    public function getScanPaths(): array
-    {
-        $paths = $this->paths;
-
-        $paths[] = $this->getPath();
-
-        if ($this->config('scan.enabled')) {
-            $paths = array_merge($this->config('scan.paths'), $paths);
-        }
-
-        $paths = array_map(function ($path) {
-            return Str::endsWith($path, '/*') ? $path : Str::finish($path, '/*');
-        }, $paths);
-
-        return $paths;
-    }
-
-    /**
-     * Get the authentication guard name used by Modularity
-     *
-     * @return string The configured auth guard name
-     */
-    public static function getAuthGuardName()
-    {
-        return self::$authGuardName;
-    }
-
-    /**
-     * Get the authentication provider name used by Modularity
-     *
-     * @return string The configured auth provider name
-     */
-    public static function getAuthProviderName()
-    {
-        return self::$authProviderName;
-    }
-
-    /**
-     * Get cached modules.
-     *
-     * @return array
-     */
-    public function getCached()
-    {
-        $store = $this->app['cache']->store($this->app['config']->get('modules.cache.driver'));
-
-        if ($store->has($this->config('cache.key'))) {
-            return $store->get($this->config('cache.key'));
-        } else {
-            $store->set($this->config('cache.key'), $this->toCollection()->toArray(), $this->config('cache.lifetime'));
-
-            return $this->toCollection()->toArray();
-        }
-    }
-
-    /**
      * Clear the modules cache if it is enabled
      */
     public function clearCache()
@@ -276,6 +235,43 @@ class Modularity extends FileRepository
         return config([
             'modules.cache.enabled' => false,
         ]);
+    }
+
+    /**
+     * Get all modules.
+     */
+    public function all(): array
+    {
+        if (! $this->config('cache.enabled')) {
+            return $this->scan();
+        }
+
+        return $this->formatCached($this->getCached());
+    }
+
+    /**
+     * Get modules by status.
+     */
+    public function getByStatus($status): array
+    {
+        $modules = [];
+
+        /** @var Module $module */
+        foreach ($this->all() as $name => $module) {
+            if ($this->activator->hasStatus($module, $status)) {
+                $modules[$name] = $module;
+            }
+        }
+
+        return $modules;
+    }
+
+    /**
+     * Check if a module exists.
+     */
+    public function hasModule(string $moduleName): bool
+    {
+        return $this->has($moduleName);
     }
 
     /**

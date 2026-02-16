@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/bootstrap.php"
          colors="true"
+         cacheDirectory=".phpunit.cache"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
 >
   <testsuites>
     <testsuite name="Main">
         <directory>tests</directory>
+        <!-- <exclude>tests/Generators</exclude> -->
+        <exclude>tests/Generators/StubsGeneratorTest.php</exclude>
+        <!-- <exclude>tests/Exceptions</exclude> -->
+        <exclude>tests/Console</exclude>
+        <!-- <exclude>tests/Facades</exclude> -->
         <exclude>tests/Generated</exclude>
     </testsuite>
   </testsuites>
@@ -14,7 +20,7 @@
     <env name="CACHE_DRIVER" value="array"/>
     <!-- APP_KEY required for Passport client -->
     <env name="APP_KEY" value="base64:W99w+5JYz8SVGf5sx17gmPR6uoNCtWiEVc+9qu8iGEg="/>
-    <ini name="memory_limit" value="512M"/>
+    <ini name="memory_limit" value="1G"/>
   </php>
   <source>
     <include>

@@ -52,6 +52,10 @@ class MigrateRollbackCommand extends Command
         $batches = [];
 
         $this->migrator->usingConnection(null, function () use (&$batches, $migrationFiles) {
+            if (! $this->migrator->repositoryExists()) {
+                return;
+            }
+
             $batches = collect($this->migrator->getRepository()->getMigrationBatches())->reduce(function (array $acc, int $batch, string $migrationName) use ($migrationFiles) {
                 foreach ($migrationFiles as $migrationFilePath) {
                     if ($migrationName == basename($migrationFilePath, '.php') && ! in_array($batch, $acc)) {

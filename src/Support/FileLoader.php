@@ -27,10 +27,13 @@ class FileLoader extends LaravelFileLoader
         $groups = [];
 
         foreach ($this->getPaths() as $dir) {
-            foreach (glob($dir . '/**/*.php') as $path) {
-                $group = basename($path, '.php');
-                if (! in_array($group, $groups)) {
-                    $groups[] = $group;
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+            foreach ($iterator as $file) {
+                if ($file->isFile() && $file->getExtension() === 'php') {
+                    $group = basename($file->getFilename(), '.php');
+                    if (! in_array($group, $groups)) {
+                        $groups[] = $group;
+                    }
                 }
             }
         }

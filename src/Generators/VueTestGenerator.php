@@ -73,6 +73,8 @@ class VueTestGenerator extends Generator
      */
     public $subTargetDir;
 
+    protected $targetPath;
+
     /**
      * The constructor.
      *
@@ -88,6 +90,8 @@ class VueTestGenerator extends Generator
 
         parent::__construct($name, $config, $filesystem, $console, $module);
 
+        $this->targetPath = get_modularity_vendor_path('vue/test');
+        
     }
 
     /**
@@ -155,7 +159,7 @@ class VueTestGenerator extends Generator
         $sub = $this->subImportDir;
         $conventionMethod = 'get' . $type['file_convention'] ?? 'CamelCase';
 
-        return $type['import_dir'] . ($sub ? $sub . '/' : '') . $this->{$conventionMethod}($this->name);
+        return $type['import_dir'] . ($sub ? $sub . '/' : '') . $this->{$conventionMethod}($this->getName());
     }
 
     public function getTypeTargetDir()
@@ -170,57 +174,35 @@ class VueTestGenerator extends Generator
         return $this->getType()['stub'];
     }
 
-    /**
-     * Get Stub File
-     */
-    public function getStubFile(string $name): string
+    // /**
+    //  * Get Stub File
+    //  */
+    // public function getStubFile(string $name): string
+    // {
+    //     return $this->getFiles()[$name];
+    // }
+
+    public function getTargetPath(): string
     {
-        return $this->getFiles()[$name];
+        return $this->targetPath;
     }
 
-    public function getTargetPath()
+    public function setTargetPath(string $targetPath)
     {
-        return get_modularity_vendor_path('vue/test');
-    }
+        $this->targetPath = $targetPath;
+
+        return $this;
+    }   
 
     public function getTestFileName()
     {
-        // $file = $this->getStubFile($this->stub);
         $file = '$TEST_NAME$.test.js';
 
         $patterns = [
-            '/\$TEST_NAME\$/' => $this->getKebabCase($this->name),
+            '/\$TEST_NAME\$/' => $this->getKebabCase($this->getName()),
         ];
 
         return preg_replace(array_keys($patterns), array_values($patterns), $file);
-    }
-
-    /**
-     * Generate the module.
-     */
-    public function generate(): int
-    {
-        $path = "{$this->getTargetPath()}/{$this->getTypeTargetDir()}/{$this->getTestFileName()}";
-
-        // $content = (new Stub("/{$this->getTypeStubFile()}.stub",$this->getReplacement($this->stub)))->render();
-        $content = (new Stub("/{$this->getTypeStubFile()}.stub", $this->makeReplaces([
-            'STUDLY_NAME',
-            'CAMEL_CASE',
-            'NAMESPACE',
-            'IMPORT',
-        ])))->render();
-
-        if (! $this->filesystem->isDirectory($dir = dirname($path))) {
-            $this->filesystem->makeDirectory($dir, 0775, true);
-        }
-
-        if (! file_exists($path)) {
-            $this->filesystem->put($path, $content);
-
-            $this->console->info("Created : {$path} test file");
-        }
-
-        return 0;
     }
 
     public function getNamespaceReplacement()
@@ -243,6 +225,37 @@ class VueTestGenerator extends Generator
 
         $extension = isset($type['extension']) ? $type['extension'] : 'js';
 
-        return $type['import_dir'] . ($sub ? $sub . '/' : '') . $this->{$conventionMethod}($this->name) . '.' . $extension;
+        return $type['import_dir'] . ($sub ? $sub . '/' : '') . $this->{$conventionMethod}($this->getName()) . '.' . $extension;
+    }
+
+    public function getFilePath(): string
+    {
+        return "{$this->getTargetPath()}/{$this->getTypeTargetDir()}/{$this->getTestFileName()}";
+    }
+    /**
+     * Generate the module.
+     */
+    public function generate(): int
+    {
+        $path = $this->getFilePath();
+        
+        $content = (new Stub("/{$this->getTypeStubFile()}.stub", $this->makeReplaces([
+            'STUDLY_NAME',
+            'CAMEL_CASE',
+            'NAMESPACE',
+            'IMPORT',
+        ])))->render();
+
+        if (! $this->filesystem->isDirectory($dir = dirname($path))) {
+            $this->filesystem->makeDirectory($dir, 0775, true);
+        }
+
+        if (! file_exists($path)) {
+            $this->filesystem->put($path, $content);
+
+            $this->console->info("Created : {$path} test file");
+        }
+
+        return 0;   
     }
 }

@@ -119,6 +119,28 @@ abstract class Generator extends NwidartGenerator
     }
 
     /**
+     * 
+     * @param string $name
+     * @return static
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name of generator will created. By default in studly case.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set the laravel config instance.
      *
      * @param Config $config
@@ -297,16 +319,6 @@ abstract class Generator extends NwidartGenerator
     }
 
     /**
-     * Get the name of module will created. By default in studly case.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return Str::studly($this->name);
-    }
-
-    /**
      * Get Path to be written
      *
      * @return void
@@ -318,7 +330,12 @@ abstract class Generator extends NwidartGenerator
 
     public function generatorConfig($generator)
     {
-        return new GeneratorPath($this->config->get(modularityBaseKey() . '.paths.generator.' . $generator));
+        return new GeneratorPath($this->getModularityGeneratorConfig($generator));
+    }
+
+    public function getModularityGeneratorConfig($generator)
+    {
+        return $this->config->get(modularityBaseKey() . '.paths.generator.' . $generator);
     }
 
     /**

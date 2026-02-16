@@ -10,7 +10,13 @@ if (! function_exists('get_installed_composer')) {
         if (isset($GLOBALS['_composer_bin_dir'])) {
             $installedPath = realpath(concatenate_path($GLOBALS['_composer_bin_dir'], '../composer/installed.php'));
         } else {
-            $installedPath = base_path('vendor/composer/installed.php');
+            // If we are in Testbench, base_path() points to the skeleton app
+            // We want to find the vendor directory of the package/project
+            $vendorPath = base_path('vendor');
+            if (!file_exists($vendorPath)) {
+                $vendorPath = realpath(__DIR__ . '/../../vendor');
+            }
+            $installedPath = $vendorPath . '/composer/installed.php';
         }
 
         $installed = require $installedPath;

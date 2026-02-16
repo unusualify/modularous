@@ -46,3 +46,4 @@ all-coverage-clover.xml
 
 # AI
 .modulai/
+/tmp-modules/

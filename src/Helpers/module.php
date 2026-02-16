@@ -272,22 +272,12 @@ if (! function_exists('getModularityTraits')) {
     function getModularityTraits()
     {
         return array_keys(Config::get(modularityBaseKey() . '.traits'));
-        // return [
-        //     // 'hasBlocks',
-        //     'translationTrait',
-        //     // 'hasSlug',
-        //     'mediaTrait',
-        //     'fileTrait',
-        //     'positionTrait',
-        //     // 'hasRevisions',
-        //     // 'hasNesting',
-        // ];
     }
 }
 
 if (! function_exists('activeModularityTraits')) {
     /**
-     * @return array
+     * @return Collection
      */
     function activeModularityTraits($traitOptions)
     {

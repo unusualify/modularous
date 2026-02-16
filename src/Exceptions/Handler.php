@@ -17,14 +17,16 @@ class Handler extends ExceptionHandler
     /**
      * Get the view used to render HTTP exceptions.
      */
-    protected function getHttpExceptionView(HttpExceptionInterface $e): string
+    protected function getHttpExceptionView(HttpExceptionInterface $e): ?string
     {
         $statusCode = $e->getStatusCode();
 
-        // For 404 errors, manually attempt authentication since middleware didn't run
-        // $isAuthenticated = $this->attemptModularityAuthentication();
-
         $isAuthenticated = Auth::guard(Modularity::getAuthGuardName())->check();
+
+        // For 404 errors, manually attempt authentication since middleware didn't run
+        if (!$isAuthenticated && $statusCode === 404) {
+            $isAuthenticated = $this->attemptModularityAuthentication();
+        }
 
         if (in_array($statusCode, [404, 403, 500]) && $isAuthenticated) {
             // Return custom error view for modularity authenticated users
@@ -42,7 +44,7 @@ class Handler extends ExceptionHandler
     /**
      * Manually attempt modularity authentication by checking cookies
      */
-    private function attemptModularityAuthentication(): bool
+    protected function attemptModularityAuthentication(): bool
     {
         try {
             // Check if user is already authenticated (for 403/500 cases where middleware ran)
@@ -104,7 +106,7 @@ class Handler extends ExceptionHandler
     /**
      * Run the actual modularity middleware pipeline
      */
-    private function runModularityMiddleware(): void
+    protected function runModularityMiddleware(): void
     {
         try {
             $middleware = [
@@ -132,7 +134,7 @@ class Handler extends ExceptionHandler
     /**
      * Get user data from session file if it contains valid authentication data
      */
-    private function getUserDataFromSession(string $sessionId): ?\Unusualify\Modularity\Entities\User
+    protected function getUserDataFromSession(string $sessionId): ?\Unusualify\Modularity\Entities\User
     {
         try {
             // Try to read the session file directly

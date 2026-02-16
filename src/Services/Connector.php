@@ -362,9 +362,7 @@ class Connector
 
         if (is_array($item)) {
             $item[$setKey] = $target;
-        } elseif (is_object($item)) {
-            $item->{$setKey} = $target;
-        } elseif ($item instanceof Collection) {
+        } elseif (is_object($item) || $item instanceof Collection) {
             $item->{$setKey} = $target;
         }
 

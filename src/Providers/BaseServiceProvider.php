@@ -74,8 +74,7 @@ class BaseServiceProvider extends ServiceProvider
             ], false));
         });
 
-        AboutCommand::add('Modularity', function () {
-
+        AboutCommand::add('Modularous', function () {
             return [
                 // 'Mode' => $this->app['modularity']->isDevelopment() ? 'development' : 'production',
                 'Cache' => $this->app['modularity']->config('cache.enabled') ? 'enabled' : 'disabled',

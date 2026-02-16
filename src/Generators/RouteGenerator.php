@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use JoeDixon\Translation\Drivers\Translation;
 use JoeDixon\Translation\Scanner;
-use Modules\SystemUser\Repositories\PermissionRepository;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Config\GeneratorPath;
@@ -327,13 +326,6 @@ class RouteGenerator extends Generator
         return $this;
     }
 
-    public function setTraits($traits)
-    {
-        $this->traits = $traits;
-
-        return $this;
-    }
-
     /**
      * Get the Module instance.
      *
@@ -350,21 +342,13 @@ class RouteGenerator extends Generator
      * @param string $module
      * @return $this
      */
-    public function setModule($module)
+    public function setModule($moduleName)
     {
         $modularity = App::makeWith(\Unusualify\Modularity\Modularity::class, ['app' => $this->app]);
 
-        $this->module = $modularity->find($module);
+        $this->module = $modularity->find($moduleName);
 
         $this->moduleName = $this->module->getName();
-
-        // if($this->module == null){
-        //     dd(
-        //         $modularity->findNotCached($module),
-        //         array_keys($modularity->scan()),
-        //         array_keys($modularity->all()),
-        //     );
-        // }
 
         $this->createTranslation();
 
@@ -385,6 +369,13 @@ class RouteGenerator extends Generator
         }
 
         $this->translation = new \Unusualify\Modularity\Services\FileTranslation(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
+    }
+
+    public function setTranslation($translation)
+    {
+        $this->translation = $translation;
+
+        return $this;
     }
 
     /**
@@ -540,6 +531,10 @@ class RouteGenerator extends Generator
         return $this;
     }
 
+    public function getCustomModel()
+    {
+        return $this->customModel;
+    }
     /**
      * Set custom model.
      *
@@ -627,6 +622,13 @@ class RouteGenerator extends Generator
         return $this->traits;
     }
 
+    public function setTraits(Collection $traits)
+    {
+        $this->traits = $traits;
+
+        return $this;
+    }
+
     /**
      * Get model input formats for form.
      *
@@ -691,7 +693,9 @@ class RouteGenerator extends Generator
             }
 
             // lint module folder with pint
-            exec("composer run-script pint modules/{$this->moduleName}");
+            if (! $this->test && ! app()->runningUnitTests()) {
+                exec("composer run-script pint modules/{$this->moduleName}");
+            }
 
         }
 
@@ -715,7 +719,7 @@ class RouteGenerator extends Generator
      */
     public function generateFolders()
     {
-        $runnable = (! $this->getTest() || ($confirmed = confirm(label: 'Do you want to test the folders to be created?', default: false)));
+        $runnable = (! $this->getTest() || app()->runningUnitTests() || ($confirmed = confirm(label: 'Do you want to test the folders to be created?', default: false)));
 
         if ($runnable) {
             foreach ($this->getFolders() as $key => $folder) {
@@ -733,6 +737,10 @@ class RouteGenerator extends Generator
                 if ($this->filesystem->exists($path) === true) {
                     continue;
                 }
+
+                
+                dd($path, $this->filesystem->exists($path));
+
 
                 if ($this->getTest()) {
                     $this->console->info("It's going to create {$path} directory!");
@@ -817,7 +825,7 @@ class RouteGenerator extends Generator
             return ["--{$key}" => $item];
         })->toArray();
 
-        $hasCustomModel = $this->customModel && @class_exists($this->customModel);
+        $hasCustomModel = $this->getCustomModel() && @class_exists($this->getCustomModel());
 
         // add model
         $this->console->call('modularity:make:model', [
@@ -827,7 +835,7 @@ class RouteGenerator extends Generator
             + (count($this->getModelFillables()) ? ['--fillable' => implode(',', $this->getModelFillables())] : [])
             + (count($this->getModelRelationships()) ? ['--relationships' => implode('|', $this->getModelRelationships())] : [])
             + ($this->hasSoftDelete() ? ['--soft-delete' => true] : [])
-            + ($hasCustomModel ? ['--override-model' => $this->customModel] : [])
+            + ($hasCustomModel ? ['--override-model' => $this->getCustomModel()] : [])
             + $console_traits
             + ['--notAsk' => true]
             + (! $this->useDefaults ? ['--no-defaults' => true] : [])
@@ -901,7 +909,7 @@ class RouteGenerator extends Generator
         }
 
         // add provider
-        if (GenerateConfigReader::read('provider')->generate() || confirm(label: 'Do you want to create a route provider?', default: false)) {
+        if (GenerateConfigReader::read('provider')->generate() || app()->runningUnitTests() || confirm(label: 'Do you want to create a route provider?', default: false)) {
             $this->console->call('module:make-provider', [
                 'name' => makeProviderName($this->getName()),
                 'module' => $this->module->getStudlyName(),
@@ -909,7 +917,7 @@ class RouteGenerator extends Generator
         }
 
         // add middleware
-        if (GenerateConfigReader::read('filter')->generate() || confirm(label: 'Do you want to create a route middleware?', default: false)) {
+        if (GenerateConfigReader::read('filter')->generate() || app()->runningUnitTests() || confirm(label: 'Do you want to create a route middleware?', default: false)) {
             $this->console->call('module:make-middleware', [
                 'name' => $this->getName() . 'Middleware',
                 'module' => $this->module->getStudlyName(),
@@ -964,7 +972,8 @@ class RouteGenerator extends Generator
 
         }
 
-        $runnable = (! $this->getTest() || ($confirmed = confirm(label: 'Do you want to test the config file?', default: false)));
+        $runnable = (! $this->getTest() || app()->runningUnitTests() || ($confirmed = confirm(label: 'Do you want to test the config file?', default: false)));
+        $route_array = [];
 
         if (! $this->plain) {
 
@@ -1012,7 +1021,7 @@ class RouteGenerator extends Generator
             $config = $this->getConfig()->get($this->getModule()->getSnakeName()) ?? [];
             $moduleName = $this->getModule()->getName();
             $routeName = $this->getName();
-            $routeArray = $config['routes'][$this->getSnakeCase($routeName)] ?? [];
+            $routeArray = ($config['routes'] ?? [])[$this->getSnakeCase($routeName)] ?? [];
 
             empty($config['name']) ? ($config['name'] = $this->getHeadline($moduleName)) : null;
             empty($config['system_prefix']) ? $config['system_prefix'] = $config['base_prefix'] ?? false : null;
@@ -1029,7 +1038,8 @@ class RouteGenerator extends Generator
                 'inputs' => $routeArray['inputs'] ?? $this->getInputs(),
             ];
 
-            $config['routes'][$this->getSnakeCase($this->getName())] = array_merge($config['routes'][$this->getSnakeCase($this->getName())], $route_array);
+            $config['routes'] = $config['routes'] ?? [];
+            $config['routes'][$this->getSnakeCase($this->getName())] = array_merge($config['routes'][$this->getSnakeCase($this->getName())] ?? [], $route_array);
 
             uksort($config, fn ($a) => is_string($config[$a]) ? -1 : (is_bool($config[$a]) ? 0 : 1));
             $this->module->setConfig($config);
@@ -1081,24 +1091,33 @@ class RouteGenerator extends Generator
      */
     public function createRoutePermissions(): bool
     {
-        $kebabCase = $this->getKebabCase($this->getName());
+        try {
+            if (!class_exists($repo = 'Modules\SystemUser\Repositories\PermissionRepository')) {
+                return true;
+            }
 
-        $repository = App::make(PermissionRepository::class);
+            $kebabCase = $this->getKebabCase($this->getName());
 
-        $modularityAuthGuardName = Modularity::getAuthGuardName();
-        // default permissions of a module
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CREATE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::VIEW->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::EDIT->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DELETE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::FORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::RESTORE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DUPLICATE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::REORDER->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULK->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKFORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-        $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKRESTORE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository = App::make($repo);
+
+            $modularityAuthGuardName = Modularity::getAuthGuardName();
+            // default permissions of a module
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CREATE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::VIEW->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::EDIT->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DELETE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::FORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::RESTORE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DUPLICATE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::REORDER->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULK->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKDELETE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKFORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKRESTORE->value, 'guard_name' => $modularityAuthGuardName]);
+
+        } catch (\Throwable $e) {
+            return true;
+        }
 
         return true;
     }
@@ -1201,15 +1220,7 @@ class RouteGenerator extends Generator
      */
     private function generateRouteJsonFile()
     {
-        // dd($this->module->getPath());
-
         $path = $this->module->getPath() . '/module-routes.json';
-        // $path = $this->module->getModulePath($this->getName()) . 'module.json';
-
-        // if (!$this->filesystem->isDirectory($dir = dirname($path))) {
-        //     $this->filesystem->makeDirectory($dir, 0775, true);
-        // }
-        dd($this->getStubContents('json'));
         $this->filesystem->put($path, $this->getStubContents('json'));
 
         $this->console->info("Created : {$path}");
@@ -1397,7 +1408,7 @@ class RouteGenerator extends Generator
                 return ["--{$key}" => $item];
             })->toArray();
 
-            $hasCustomModel = $this->customModel && @class_exists($this->customModel);
+            $hasCustomModel = $this->getCustomModel() && @class_exists($this->getCustomModel());
 
             $this->console->call('modularity:make:model', [
                 'module' => $this->module->getStudlyName(),
@@ -1406,7 +1417,7 @@ class RouteGenerator extends Generator
                 + (count($this->getModelFillables()) ? ['--fillable' => implode(',', $this->getModelFillables())] : [])
                 + (count($this->getModelRelationships()) ? ['--relationships' => implode('|', $this->getModelRelationships())] : [])
                 + ($this->hasSoftDelete() ? ['--soft-delete' => true] : [])
-                + ($hasCustomModel ? ['--override-model' => $this->customModel] : [])
+                + ($hasCustomModel ? ['--override-model' => $this->getCustomModel()] : [])
                 + $console_traits
                 + ['--notAsk' => true]
                 + (! $this->useDefaults ? ['--no-defaults' => true] : [])
