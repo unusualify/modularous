@@ -41,7 +41,6 @@ class CreateVueTestCommand extends BaseCommand
         $success = true;
 
         $test_name = $this->argument('name') ? $this->getStudlyName($this->argument('name')) : '';
-
         $test_type = $this->argument('type') ? $this->getSnakeCase($this->argument('type')) : '';
 
         if (! $test_name) {
