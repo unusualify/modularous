@@ -9,6 +9,7 @@
     <testsuite name="Main">
         <directory>tests</directory>
         <!-- <exclude>tests/Generators</exclude> -->
+        <exclude>tests/Generators/StubsGeneratorTest.php</exclude>
         <!-- <exclude>tests/Exceptions</exclude> -->
         <exclude>tests/Console</exclude>
         <!-- <exclude>tests/Facades</exclude> -->

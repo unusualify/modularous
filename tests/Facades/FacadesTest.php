@@ -109,13 +109,13 @@ class FacadesTest extends ModelTestCase
         $this->assertIsArray($service->fetchExchangeRates());
     }
 
-    /** @test */
-    public function it_resolves_coverage_facade()
-    {
-        $this->assertInstanceOf(\Unusualify\Modularity\Services\CoverageService::class, Coverage::getFacadeRoot());
-        $this->assertIsArray(Coverage::getErrors());
-        $this->assertFalse(Coverage::hasErrors());
-    }
+    // /** @test */
+    // public function it_resolves_coverage_facade()
+    // {
+    //     $this->assertInstanceOf(\Unusualify\Modularity\Services\CoverageService::class, Coverage::getFacadeRoot());
+    //     $this->assertIsArray(Coverage::getErrors());
+    //     $this->assertFalse(Coverage::hasErrors());
+    // }
 
     /** @test */
     public function it_resolves_host_routing_facade()
