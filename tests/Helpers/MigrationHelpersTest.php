@@ -376,4 +376,185 @@ class MigrationHelpersTest extends TestCase
         $this->assertFalse($productIdColumn['nullable']);
         $this->assertFalse($categoryIdColumn['nullable']);
     }
+
+    /**
+     * @test
+     */
+    public function it_creates_default_slugs_table_fields()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        Schema::create('product_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'product');
+        });
+
+        $this->assertTrue(Schema::hasColumns('product_slugs', [
+            'id',
+            'product_id',
+            'slug',
+            'locale',
+            'active',
+            'deleted_at',
+            'created_at',
+            'updated_at',
+        ]));
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_slugs_table_with_plural_table_name()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        Schema::create('product_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'product', 'products');
+        });
+
+        $this->assertTrue(Schema::hasColumn('product_slugs', 'product_id'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_slugs_table_with_foreign_key_constraint()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        Schema::create('product_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'product', 'products');
+        });
+
+        $foreignKeys = Schema::getConnection()
+            ->getDoctrineSchemaManager()
+            ->listTableForeignKeys('product_slugs');
+
+        $this->assertCount(1, $foreignKeys);
+        $this->assertEquals('product_id', $foreignKeys[0]->getLocalColumns()[0]);
+        $this->assertEquals('products', $foreignKeys[0]->getForeignTableName());
+        $this->assertEquals('id', $foreignKeys[0]->getForeignColumns()[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_default_revisions_table_fields()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        // Create users table (required for foreign key)
+        if (!Schema::hasTable('um_users')) {
+            Schema::create('um_users', function (Blueprint $table) {
+                $table->id();
+            });
+        }
+
+        Schema::create('product_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'product');
+        });
+
+        $this->assertTrue(Schema::hasColumns('product_revisions', [
+            'id',
+            'product_id',
+            'user_id',
+            'payload',
+            'created_at',
+            'updated_at',
+        ]));
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_revisions_table_with_plural_table_name()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        if (!Schema::hasTable('um_users')) {
+            Schema::create('um_users', function (Blueprint $table) {
+                $table->id();
+            });
+        }
+
+        Schema::create('product_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'product', 'products');
+        });
+
+        $this->assertTrue(Schema::hasColumn('product_revisions', 'product_id'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_revisions_table_with_foreign_keys()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        if (!Schema::hasTable('um_users')) {
+            Schema::create('um_users', function (Blueprint $table) {
+                $table->id();
+            });
+        }
+
+        Schema::create('product_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'product', 'products');
+        });
+
+        $foreignKeys = Schema::getConnection()
+            ->getDoctrineSchemaManager()
+            ->listTableForeignKeys('product_revisions');
+
+        $this->assertCount(2, $foreignKeys);
+
+        // Sort for consistent testing
+        usort($foreignKeys, function ($a, $b) {
+            return strcmp($a->getLocalColumns()[0], $b->getLocalColumns()[0]);
+        });
+
+        // Check product_id foreign key
+        $this->assertEquals('product_id', $foreignKeys[0]->getLocalColumns()[0]);
+        $this->assertEquals('products', $foreignKeys[0]->getForeignTableName());
+
+        // Check user_id foreign key
+        $this->assertEquals('user_id', $foreignKeys[1]->getLocalColumns()[0]);
+        $this->assertEquals('um_users', $foreignKeys[1]->getForeignTableName());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_revisions_table_with_json_payload_column()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+        });
+
+        if (!Schema::hasTable('um_users')) {
+            Schema::create('um_users', function (Blueprint $table) {
+                $table->id();
+            });
+        }
+
+        Schema::create('product_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'product');
+        });
+
+        $columns = Schema::getColumns('product_revisions');
+        $payloadColumn = collect($columns)->firstWhere('name', 'payload');
+
+        // SQLiteuses text to store JSON
+        $this->assertContains($payloadColumn['type'], ['json', 'text']);
+    }
 }
