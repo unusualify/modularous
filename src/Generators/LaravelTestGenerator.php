@@ -27,7 +27,7 @@ class LaravelTestGenerator extends Generator
         'unit' => [
             'import_dir' => 'Unit/',
             'target_dir' => 'Unit',
-            'file_contenction' => 'PascalCase',
+            'file_convention' => 'PascalCase',
             'stub' => 'tests/laravel-unit',
         ],
         'feature' => [
@@ -92,7 +92,7 @@ class LaravelTestGenerator extends Generator
     /**
      * Get type of test
      *
-     * @return bool|int
+     * @return array
      */
     public function getType()
     {
@@ -156,15 +156,19 @@ class LaravelTestGenerator extends Generator
         return $this->getType()['stub'];
     }
 
-    /**
-     * Get Stub File
-     */
-    public function getStubFile(string $name): string
-    {
-        return $this->getFiles()[$name];
-    }
+    // /**
+    //  * Get Stub File
+    //  */
+    // public function getStubFile(string $name): string
+    // {
+    //     dd(
+    //         $this->getFiles(),
+    //         $name
+    //     );
+    //     return $this->getFiles()[$name];
+    // }
 
-    public function getTargetPath()
+    public function getTargetPath(): string
     {
         return get_modularity_vendor_path('src/Tests');
     }
@@ -195,7 +199,6 @@ class LaravelTestGenerator extends Generator
             'NAMESPACE',
             'IMPORT',
         ])))->render();
-        dd($content, $path);
         if (! $this->filesystem->isDirectory($dir = dirname($path))) {
             $this->filesystem->makeDirectory($dir, 0775, true);
         }
@@ -209,19 +212,19 @@ class LaravelTestGenerator extends Generator
         return 0;
     }
 
-    public function getNamespaceReplacement()
+    public function getNamespaceReplacement(): string
     {
         $type = $this->getType();
 
         return "test/{$type['target_dir']}/{$this->getTestFileName()}";
     }
 
-    public function getCamelCaseReplacement()
+    public function getCamelCaseReplacement(): string
     {
         return $this->getCamelCase($this->getName());
     }
 
-    public function getImportReplacement()
+    public function getImportReplacement(): string
     {
         $type = $this->getType();
         $sub = $this->subImportDir;
