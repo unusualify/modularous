@@ -58,9 +58,7 @@ abstract class BaseCommand extends Command implements PromptsForMissingInput
         parent::__construct();
 
         $this->configBaseKey = \Illuminate\Support\Str::snake(env('MODULARITY_BASE_NAME', 'Modularity'));
-        $this->configBaseKey = \Illuminate\Support\Str::snake(env('MODULARITY_BASE_NAME', 'Modularity'));
-
-        Stub::setBasePath($this->baseConfig('stubs.path', dirname(__FILE__) . '/stubs'));
+        Stub::setBasePath(rtrim($this->baseConfig('stubs.path', dirname(__FILE__) . '/stubs'), '/'));
     }
 
     public function baseConfig($string, $default = null)
