@@ -32,7 +32,8 @@ class ModuleMakeCommand extends BaseCommand
         {--all : Add all traits}
         {--just-stubs : Only stubs fix}
         {--stubs-only= : Get only stubs}
-        {--stubs-except= : Get except stubs}';
+        {--stubs-except= : Get except stubs}
+        {--test : Test mode}';
 
     /**
      * The console command description.
@@ -126,7 +127,7 @@ class ModuleMakeCommand extends BaseCommand
             + (['-p' => $this->getPlainOption()])
             + $console_traits
             + ['--notAsk' => true]
-            + ['--test' => false]
+            + ['--test' => $this->option('test')]
         );
 
         Modularity::clearCache();
