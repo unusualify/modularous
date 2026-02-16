@@ -72,7 +72,9 @@ class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
         // create an unreadable file
         $unreadableXmlName = 'unreadable.xml';
         $unreadableXmlPath = concatenate_path($this->testCloverDir, $unreadableXmlName);
-        unlink($unreadableXmlPath);
+        if (file_exists($unreadableXmlPath)) {
+            unlink($unreadableXmlPath);
+        }
 
         file_put_contents($unreadableXmlPath, '<?xml version="1.0"?><invalid>');
         chmod($unreadableXmlPath, 0000);
