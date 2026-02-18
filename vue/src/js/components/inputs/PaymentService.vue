@@ -153,7 +153,7 @@
               @submitted="handleTransferSubmit"
             >
               <template #submit="{ validForm, loading, saveForm }">
-                <v-btn color="success" block :disabled="!validForm" :loading="loading" @click="saveForm">
+                <v-btn color="success" block :disabled="!validForm || transferFormCompleted" :loading="loading"  @click="saveForm">
                   {{ $t('I Have Completed The Transfer') }}
                 </v-btn>
               </template>
@@ -282,6 +282,7 @@ export default {
     const localPaymentMethod = ref('');
     const localDefaultPaymentMethod = ref(-1);
     const currencyModel = ref(props.price_object.currency_id || props.supportedCurrencies[0]?.id);
+    const transferFormCompleted = ref(false);
 
     const selectedCurrency = computed(() =>
       props.supportedCurrencies.find(curr => curr.id === currencyModel.value)
@@ -442,7 +443,9 @@ export default {
     }
 
     const handleTransferSubmit = (data) => {
-      console.log('transfer submitted', data);
+      if(data.status === 'success'){
+        transferFormCompleted.value = true;
+      }
     }
 
     const setBuiltInFormAttributes = (attributes) => {
@@ -561,6 +564,7 @@ export default {
       filteredServiceItems,
       currencyHasExternalService,
 
+      transferFormCompleted,
       transferSchema,
       transferFormModel,
       createTransferModel,

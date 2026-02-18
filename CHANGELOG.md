@@ -2,6 +2,16 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.57.3 - 2026-02-18
+
+### :wrench: Bug Fixes
+
+- ensure default value for dependentWarmingEnabled is true when not set; refactor Repository methods to check for preventDependentWarming method before calling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e17dbffe963d66fbfbcf5fe771b5cbcaa82d1f5f
+- enhance transfer button logic and track transfer completion state by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/4783d918cec686b96024dc6f8f3c6797dbf2e62b
+- set default company type to 'system' if not provided by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/34d888d8ad56af7ee9c3032e4b850c7de745176a
+- ensure Eloquent model is touched after saving payment by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/1a443d93c5c1e0e0bf1d88b1286a2adc8f3f9ecb
+- update payment conversion logic to handle modularity payload and currency conversion more accurately by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5cb297408e9c5d45eb20a6d8efbfe79a08240a58
+
 ## v0.57.2 - 2026-02-07
 
 ### :wrench: Bug Fixes
