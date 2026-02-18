@@ -90,6 +90,8 @@ trait PaymentTrait
 
                 $newPrice->save();
             }
+
+            $this->mustTouchEloquentModel();
         } elseif (! $paymentPrice || $forcePaymentUpdate) {
             $session_currency = request()->getUserCurrency()->id;
             // dd($fields);
