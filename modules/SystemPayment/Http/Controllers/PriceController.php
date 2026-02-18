@@ -119,7 +119,7 @@ class PriceController extends Controller
 
         $vatRateFrom = 'default';
         $isCompanyBasedVatRate = false;
-        $companyType = $company->company_type;
+        $companyType = $company->company_type ?? 'system';
         $companyBasedTotalAmount = $totalAmount;
         $companyBasedVatRateId = null;
         $companyBasedVatRateName = null;
