@@ -134,7 +134,8 @@ class Price extends \Oobook\Priceable\Models\Price
             'vat_percentage' => $this->vat_percentage,
             'vat_multiplier' => $this->vat_multiplier,
             'discount_percentage' => $this->discount_percentage,
-            'converted' => $this->discounted_raw_amount,
+            'converted_raw_amount' => $this->discounted_raw_amount,
+            'converted_total_amount' => $this->total_amount,
             'original_currency' => $this->currency->iso_4217,
             'original_currency_id' => $this->currency_id,
             'converted_currency' => $defaultCurrency->iso_4217,
@@ -143,10 +144,11 @@ class Price extends \Oobook\Priceable\Models\Price
         ], $payload['parameters']['modularity'] ?? []);
 
         $rawAmount = $this->discounted_raw_amount;
-        $totalAmount = $this->total_amount;
+        $totalAmount = $modularityPayload['converted_total_amount'] ?? $this->total_amount;
 
+        $alreadyConverted = $modularityPayload['converted'] ?? false;
         $currency = $defaultCurrency;
-        if (isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
+        if (!$alreadyConverted && isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
             $currency = Currency::find($payload['currency_id']);
             $rawAmount = CurrencyExchange::convertTo(
                 $rawAmount,
@@ -160,6 +162,8 @@ class Price extends \Oobook\Priceable\Models\Price
             $modularityPayload['converted_total_amount'] = $totalAmount;
             $modularityPayload['converted_currency'] = $currency->iso_4217;
             $modularityPayload['converted_currency_id'] = $payload['currency_id'];
+        } else if($modularityPayload['converted_currency_id'] != $defaultCurrency->id) {
+            $currency = Currency::find($modularityPayload['converted_currency_id']);
         }
 
         // $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
