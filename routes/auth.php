@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-// dd(
-//     modularityConfig('enabled.users-management')
-// );
-// Auth::routes();
 
 if (modularityConfig('enabled.users-management')) {
 
@@ -35,7 +31,6 @@ if (modularityConfig('enabled.users-management')) {
     // #TODO add complete registration after email confirmatiosent
     // Route::get('/completeRegistration', 'LoginController@completeRegisterForm')->name('completeRegistration.form');
     // Route::post('/completeRegistration', 'LoginController@completeRegister')->name('completeRegistration');
-
     // Route::get('/withoutLogin', 'LoginController@completeRegisterForm');
 
     Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.reset.link');
