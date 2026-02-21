@@ -74,6 +74,10 @@ final class LaravelServiceProvider extends ServiceProvider
             __DIR__ . '/../vue/dist/modularity/assets/icons' => resource_path('views/vendor/modularity/partials/icons'),
         ], 'views');
 
+        $this->publishes([
+            __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/modularity/auth'),
+        ], 'modularity-auth-views');
+
     }
 
     private function publishResources(): void
