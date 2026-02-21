@@ -22,6 +22,9 @@ if (modularityConfig('enabled.users-management')) {
     Route::post('login', 'LoginController@login')->name('login');
     Route::post('logout', 'LoginController@logout')->name('logout');
 
+    Route::get('login/2fa', 'LoginController@showLogin2FaForm')->name('login-2fa.form');
+    Route::post('login/2fa', 'LoginController@login2Fa')->name('login-2fa');
+
     Route::get('login/oauth', 'LoginController@showPasswordForm')->name('login.oauth.showPasswordForm');
     Route::post('login/oauth', 'LoginController@linkProvider')->name('login.oauth.linkProvider');
 
