@@ -22,7 +22,7 @@ return [
 
     'login' => 'Giriş Yap',
     'login-success-message' => 'Giriş Başarılı. Hoşgeldiniz!',
-    'login-title' => 'Hedef Kitlenize Ulaşın',
+    'login-title' => 'Başlamak için giriş yapınız',
     'logout' => 'Çıkış Yap',
     'logout-cancel' => 'İptal',
     'logout-confirm' => 'Onayla',
