@@ -323,8 +323,10 @@ export default function useForm(props, context) {
     showAdditionalSectionDialog: false,
 
     hasSchemaInputSourceLoading: computed(() => {
-      return Object.values(rawSchema.value).some(schema => Object.prototype.hasOwnProperty.call(schema, 'sourceLoading') && schema.sourceLoading === true
-        || (Object.prototype.hasOwnProperty.call(schema, 'type') && (schema.type === 'wrap' || schema.type === 'group') && Object.values(schema.schema).some(schema => Object.prototype.hasOwnProperty.call(schema, 'sourceLoading') && schema.sourceLoading === true)))
+      const schema = rawSchema.value
+      if (!schema || typeof schema !== 'object') return false
+      return Object.values(schema).some(s => Object.prototype.hasOwnProperty.call(s, 'sourceLoading') && s.sourceLoading === true
+        || (Object.prototype.hasOwnProperty.call(s, 'type') && (s.type === 'wrap' || s.type === 'group') && s.schema && Object.values(s.schema).some(nested => Object.prototype.hasOwnProperty.call(nested, 'sourceLoading') && nested.sourceLoading === true)))
     })
   })
   // Methods
