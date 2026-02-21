@@ -348,7 +348,7 @@
       <v-spacer v-if="pushButtonToBottom"></v-spacer>
 
       <!-- Bottom Section -->
-      <div :class="['px-1',scrollable ? 'flex-grow-0' : '']" v-if="(hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
+      <div :class="['px-1', scrollable ? 'flex-grow-0' : '']" v-if="(hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
         <v-divider v-if="hasSubmit && !stickyButton && hasDivider" class=""></v-divider>
         <div class="d-flex flex-wrap justify-center justify-md-start pt-6 w-100 ga-4 flex-md-row" v-if="hasSubmit && !stickyButton">
           <template v-if="$store.getters.isSuperAdmin">
@@ -378,7 +378,7 @@
             <v-btn v-if="isSubmittable"
               type="submit"
               :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
-              class="ml-auto flex-1-1-100 flex-md-1-1-0 flex-lg-0-1-0 order-md-last order-first"
+              class="ml-auto flex-1-1-100 flex-md-1-1-0 flex-lg-0-1-1 order-md-last order-first"
               :block="$vuetify.display.smAndDown"
               :loading="loading"
               :color="!isSubmittable ? 'warning' : 'primary'"
