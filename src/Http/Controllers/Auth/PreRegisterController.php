@@ -25,22 +25,6 @@ class PreRegisterController extends Controller
 
     public function showEmailForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', [
-            'attributes' => $this->authBannerAttributes(),
-            'formAttributes' => array_merge(
-                ['title' => $this->authFormTitle(__('authentication.create-an-account'), ['transform' => ''])],
-                $this->authFormBaseAttributes(
-                    'pre_register_form',
-                    route(Route::hasAdmin('register.verification')),
-                    'authentication.register'
-                )
-            ),
-            'formSlots' => $this->haveAccountOptionSlot(),
-            'slots' => [
-                'bottom' => $this->authBottomSlots([
-                    $this->oauthGoogleButtonSlot('sign-up'),
-                ]),
-            ],
-        ]);
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', $this->buildAuthViewData('pre_register'));
     }
 }

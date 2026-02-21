@@ -120,8 +120,7 @@ trait HandlesOAuth
             ],
         ];
 
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', [
-            'attributes' => ['noDivider' => true],
+        $viewData = $this->buildAuthViewData('oauth_password', [
             'formAttributes' => array_merge(
                 [
                     'title' => $this->authFormTitle(
@@ -136,20 +135,9 @@ trait HandlesOAuth
                     __('authentication.sign-in')
                 )
             ),
-            'formSlots' => $this->authFormBottomSlots([
-                [
-                    'tag' => 'v-btn',
-                    'elements' => __('authentication.sign-in'),
-                    'attributes' => [
-                        'variant' => 'elevated',
-                        'class' => 'v-col-5 mx-auto',
-                        'type' => 'submit',
-                        'density' => 'default',
-                        'block' => true,
-                    ],
-                ],
-            ]),
         ]);
+
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $viewData);
     }
 
     /**

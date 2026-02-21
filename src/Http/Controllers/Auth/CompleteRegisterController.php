@@ -41,19 +41,19 @@ class CompleteRegisterController extends Controller
             $defaultValues = $request->only(array_diff($keys, ['password', 'password_confirmation']));
             $defaultValues['token'] = $token;
 
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.register')->with([
-                'attributes' => ['noSecondSection' => true],
-                'formAttributes' => array_merge(
-                    ['title' => $this->authFormTitle(__('authentication.complete-registration'))],
-                    ['modelValue' => $defaultValues],
-                    $this->authFormBaseAttributes(
-                        'complete_register_form',
-                        route(Route::hasAdmin('complete.register')),
-                        'Complete'
-                    )
-                ),
+            $actionUrl = Route::has('admin.complete.register') ? route('admin.complete.register') : '';
+            $viewData = $this->buildAuthViewData('complete_register', [
+                'formAttributes' => [
+                    'schema' => $this->createFormSchema($rawSchema),
+                    'modelValue' => $defaultValues,
+                    'actionUrl' => $actionUrl,
+                    'buttonText' => __('Complete'),
+                    'hasSubmit' => true,
+                ],
                 'formSlots' => $this->restartOptionSlot(),
             ]);
+
+            return $this->viewFactory->make(modularityBaseKey() . '::auth.register')->with($viewData);
         }
 
         return $this->redirector->to(route(Route::hasAdmin('register.email_form')))->withErrors([

@@ -7,24 +7,18 @@
 @endpush
 
 @php
-    // $logoSymbol = modularityConfig('ui_settings.auth.logoSymbol');
-    // $locale = app()->getLocale();
-
-    // $logoSymbol = get_modularity_locale_symbol($logoSymbol, 'main-logo');
-
-    $attributes['logoSymbol'] = 'main-logo-dark';
-    $attributes['logoLightSymbol'] = 'main-logo-light';
-    $attributes['logoClass'] = modularityConfig('ui_settings.auth.logoClass', '');
-    $attributes['logoStyle'] = modularityConfig('ui_settings.auth.logoStyle', '');
+    $attributes = $attributes ?? [];
+    $formAttributes = $formAttributes ?? [];
+    $formSlots = $formSlots ?? [];
+    $slots = $slots ?? [];
+    $authComponentName = modularityConfig('auth_pages.component_name', 'ue-auth');
 @endphp
 
-{{-- @dd(get_defined_vars()) --}}
 @section('body')
     <div id="auth">
-
-        <ue-auth
-            title="'{{ __('authentication.create-an-account') ?? 'CREATE AN ACCOUNT' }}'"
-            v-bind='@json($attributes ?? [])'
+        {{-- All $attributes are passed to the auth component. Custom auth components can declare any props (e.g. bannerDescription, redirectButtonText) and receive them from auth_pages.attributes. --}}
+        <{{ $authComponentName }}
+            v-bind='@json($attributes)'
             @if(isset($taskState))
                 no-divider
             @endif
@@ -66,15 +60,15 @@
                 @endforeach
             @stop
             @yield('content')
-        </ue-auth>
+        </{{ $authComponentName }}>
     </div>
 @endsection
 
 @push('STORE')
-    window['{{ modularityConfig('js_namespace') }}'].STORE.config = {
-        test: false,
-    };
-    window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
-    window['{{ modularityConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new StdClass()) !!}
+    window['{{ modularityConfig('js_namespace') }}'].STORE.config = { test: false };
+    window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new stdClass()) !!};
+    window['{{ modularityConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new stdClass()) !!};
+    window['{{ modularityConfig('js_namespace') }}'].AUTH_COMPONENT = {!! json_encode(modularityConfig('auth_component', [])) !!};
+    window.__MODULARITY_AUTH_CONFIG__ = {!! json_encode(modularityConfig('auth_component', [])) !!};
 @endpush
 

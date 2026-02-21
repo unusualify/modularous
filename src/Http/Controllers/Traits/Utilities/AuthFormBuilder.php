@@ -4,32 +4,17 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
 /**
  * Provides reusable methods for building auth form view data.
  * Reduces duplication across Login, Register, ForgotPassword, and ResetPassword controllers.
+ *
+ * View data structure is config-driven via config('modularity.auth_pages').
+ * Override auth_pages in your app config to customize UI without touching controllers.
  */
 trait AuthFormBuilder
 {
-    /**
-     * Returns common banner attributes for auth pages.
-     */
-    protected function authBannerAttributes(): array
-    {
-        return [
-            'bannerDescription' => ___('authentication.banner-description'),
-            'bannerSubDescription' => Lang::has('authentication.banner-sub-description')
-                ? ___('authentication.banner-sub-description')
-                : null,
-            'redirectButtonText' => ___('authentication.redirect-button-text'),
-            'redirectUrl' => Route::has(modularityConfig('auth_guest_route'))
-                ? route(modularityConfig('auth_guest_route'))
-                : null,
-        ];
-    }
-
     /**
      * Returns form title structure for auth pages.
      *
@@ -246,5 +231,177 @@ trait AuthFormBuilder
                 ],
             ],
         ];
+    }
+
+    /**
+     * Build auth view data from config-driven page definition.
+     *
+     * @param  string  $pageKey  Key from auth_pages.pages (login, register, forgot_password, etc.)
+     * @param  array<string, mixed>  $overrides  Override attributes, formAttributes, formSlots, slots, modelValue
+     * @return array{attributes: array, formAttributes: array, formSlots: array, slots: array, pageTitle: string}
+     */
+    protected function buildAuthViewData(string $pageKey, array $overrides = []): array
+    {
+        $config = modularityConfig('auth_pages', []);
+        $pageConfig = $config['pages'][$pageKey] ?? [];
+        $layoutConfig = $config['layout'] ?? [];
+        $layoutPresets = $config['layoutPresets'] ?? [];
+
+        $layoutPresetName = $pageConfig['layoutPreset'] ?? 'minimal';
+        $layoutPreset = $layoutPresets[$layoutPresetName] ?? [];
+
+        $attributes = array_merge(
+            $layoutConfig,
+            $layoutPreset,
+            modularityConfig('auth_pages.attributes', []),
+            $pageConfig['attributes'] ?? [],
+            $overrides['attributes'] ?? []
+        );
+
+        $attributes['logoSymbol'] ??= $layoutConfig['logoSymbol'] ?? 'main-logo-dark';
+        $attributes['logoLightSymbol'] ??= $layoutConfig['logoLightSymbol'] ?? 'main-logo-light';
+
+        if (! isset($attributes['redirectUrl']) && Route::has(modularityConfig('auth_guest_route'))) {
+            $attributes['redirectUrl'] = route(modularityConfig('auth_guest_route'));
+        }
+
+        $formDraft = $pageConfig['formDraft'] ?? null;
+        $actionRoute = $pageConfig['actionRoute'] ?? '';
+        $formTitle = $pageConfig['formTitle'] ?? '';
+        $buttonText = $pageConfig['buttonText'] ?? '';
+
+        $formAttributes = $overrides['formAttributes'] ?? [];
+
+        if ($formDraft !== null) {
+            $actionUrl = Route::has($actionRoute) ? route($actionRoute) : $actionRoute;
+            $buttonTextResolved = is_string($buttonText) && str_starts_with($buttonText, 'authentication.')
+                ? $buttonText
+                : __($buttonText);
+
+            $baseForm = $this->authFormBaseAttributes($formDraft, $actionUrl, $buttonTextResolved);
+            $formOverrides = $pageConfig['formOverrides'] ?? [];
+            $formAttributes = array_merge($baseForm, $formOverrides, $formAttributes);
+        }
+
+        if ($formTitle && ! isset($formAttributes['title'])) {
+            $formTitleOverrides = $pageKey === 'register' ? ['transform' => ''] : [];
+            $formAttributes['title'] = $this->authFormTitle(
+                is_string($formTitle) ? __($formTitle) : $formTitle,
+                $formTitleOverrides
+            );
+        }
+
+        $formSlots = $this->resolveFormSlotsPreset($pageConfig['formSlotsPreset'] ?? null);
+        $formSlots = array_merge($formSlots, $overrides['formSlots'] ?? []);
+
+        $slots = $this->resolveSlotsPreset($pageConfig['slotsPreset'] ?? null);
+        $slots = array_merge($slots, $overrides['slots'] ?? []);
+
+        $pageTitle = ___($pageConfig['pageTitle'] ?? 'authentication.login');
+
+        return array_merge([
+            'attributes' => $attributes,
+            'formAttributes' => $formAttributes,
+            'formSlots' => $formSlots,
+            'slots' => $slots,
+            'pageTitle' => $pageTitle,
+            'endpoints' => $overrides['endpoints'] ?? new \stdClass,
+            'formStore' => $overrides['formStore'] ?? new \stdClass,
+        ], $overrides);
+    }
+
+    /**
+     * Resolve formSlots from preset name.
+     *
+     * @return array<string, mixed>
+     */
+    protected function resolveFormSlotsPreset(?string $preset): array
+    {
+        return match ($preset) {
+            'login_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('authentication.forgot-password'),
+                    route('admin.password.reset.link')
+                ),
+            ],
+            'have_account' => $this->haveAccountOptionSlot(),
+            'restart' => $this->restartOptionSlot(),
+            'resend' => $this->resendOptionSlot(),
+            'oauth_submit' => $this->authFormBottomSlots([
+                [
+                    'tag' => 'v-btn',
+                    'elements' => __('authentication.sign-in'),
+                    'attributes' => [
+                        'variant' => 'elevated',
+                        'class' => 'v-col-5 mx-auto',
+                        'type' => 'submit',
+                        'density' => 'default',
+                        'block' => true,
+                    ],
+                ],
+            ]),
+            'forgot_password_form' => [
+                'bottom' => [
+                    'tag' => 'v-sheet',
+                    'attributes' => [
+                        'class' => 'd-flex pb-5 justify-space-between w-100 text-black my-5',
+                    ],
+                    'elements' => [
+                        [
+                            'tag' => 'v-btn',
+                            'elements' => __('authentication.sign-in'),
+                            'attributes' => [
+                                'variant' => 'elevated',
+                                'href' => route(Route::hasAdmin('login.form')),
+                                'class' => '',
+                                'color' => 'success',
+                                'density' => 'default',
+                            ],
+                        ],
+                        [
+                            'tag' => 'v-btn',
+                            'elements' => __('authentication.reset-password'),
+                            'attributes' => [
+                                'variant' => 'elevated',
+                                'href' => '',
+                                'class' => '',
+                                'type' => 'submit',
+                                'density' => 'default',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * Resolve slots (bottom) from preset name.
+     *
+     * @return array<string, mixed>
+     */
+    protected function resolveSlotsPreset(?string $preset): array
+    {
+        return match ($preset) {
+            'login_bottom' => [
+                'bottom' => $this->authBottomSlots([
+                    $this->oauthGoogleButtonSlot('sign-in'),
+                    $this->createAccountButtonSlot(),
+                ]),
+            ],
+            'register_bottom' => [
+                'bottom' => $this->authBottomSlots([
+                    $this->oauthGoogleButtonSlot('sign-up'),
+                ]),
+            ],
+            'forgot_password_bottom' => [
+                'bottom' => $this->authBottomSlots([
+                    $this->oauthGoogleButtonSlot('sign-in'),
+                    $this->createAccountButtonSlot(),
+                ]),
+            ],
+            default => [],
+        };
     }
 }

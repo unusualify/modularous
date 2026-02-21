@@ -53,28 +53,18 @@ class ResetPasswordController extends Controller
         $user = $this->getUserFromToken($token);
 
         if ($user && Password::broker('users')->getRepository()->exists($user, $token)) {
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.reset')->with([
-                'attributes' => ['noSecondSection' => true],
-                'formAttributes' => array_merge(
-                    $this->authFormBaseAttributes(
-                        'reset_password_form',
-                        route(Route::hasAdmin('password.reset.update')),
-                        'authentication.reset-password',
-                        [
-                            'hasSubmit' => true,
-                            'color' => 'primary',
-                            'formClass' => 'px-5',
-                            'modelValue' => [
-                                'email' => $user->email,
-                                'token' => $token,
-                                'password' => '',
-                                'password_confirmation' => '',
-                            ],
-                        ]
-                    )
-                ),
-                'formSlots' => $this->resendOptionSlot(),
+            $viewData = $this->buildAuthViewData('reset_password', [
+                'formAttributes' => [
+                    'modelValue' => [
+                        'email' => $user->email,
+                        'token' => $token,
+                        'password' => '',
+                        'password_confirmation' => '',
+                    ],
+                ],
             ]);
+
+            return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.reset')->with($viewData);
         }
 
         return $this->redirector->to(route('admin.password.reset.link'))->withErrors([
@@ -99,7 +89,7 @@ class ResetPasswordController extends Controller
             ]);
         }
 
-        return $this->redirector->to(route('admin.password.reset'))->withErrors([
+        return $this->redirector->to(route('admin.password.reset.link'))->withErrors([
             'token' => 'Your password reset token has expired or could not be found, please retry.',
         ]);
     }
@@ -113,7 +103,7 @@ class ResetPasswordController extends Controller
      * @param string $token
      * @return \Unusualify\Modularity\Models\User|null
      */
-    private function getUserFromToken($token)
+    protected function getUserFromToken($token)
     {
         $clearToken = DB::table($this->config->get('auth.passwords.' . Modularity::getAuthProviderName() . '.table', 'password_resets'))->where('token', $token)->first();
 

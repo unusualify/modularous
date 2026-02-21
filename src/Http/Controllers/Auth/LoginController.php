@@ -62,29 +62,7 @@ class LoginController extends Controller
 
     public function showForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', [
-            'attributes' => $this->authBannerAttributes(),
-            'formAttributes' => array_merge(
-                ['title' => $this->authFormTitle(__('authentication.login-title'))],
-                $this->authFormBaseAttributes(
-                    'login_form',
-                    route(Route::hasAdmin('login')),
-                    __('authentication.sign-in')
-                )
-            ),
-            'formSlots' => [
-                'options' => $this->authFormOptionSlot(
-                    __('authentication.forgot-password'),
-                    route('admin.password.reset.link')
-                ),
-            ],
-            'slots' => [
-                'bottom' => $this->authBottomSlots([
-                    $this->oauthGoogleButtonSlot('sign-in'),
-                    $this->createAccountButtonSlot(),
-                ]),
-            ],
-        ]);
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData('login'));
     }
 
     /**

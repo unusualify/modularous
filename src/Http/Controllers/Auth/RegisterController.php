@@ -23,23 +23,7 @@ class RegisterController extends Controller
             return redirect()->route(Route::hasAdmin('register.email_form'));
         }
 
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', [
-            'attributes' => $this->authBannerAttributes(),
-            'formAttributes' => array_merge(
-                ['title' => $this->authFormTitle(__('authentication.create-an-account'), ['transform' => ''])],
-                $this->authFormBaseAttributes(
-                    'register_form',
-                    route(Route::hasAdmin('register')),
-                    'authentication.register'
-                )
-            ),
-            'formSlots' => $this->haveAccountOptionSlot(),
-            'slots' => [
-                'bottom' => $this->authBottomSlots([
-                    $this->oauthGoogleButtonSlot('sign-up'),
-                ]),
-            ],
-        ]);
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', $this->buildAuthViewData('register'));
     }
 
     /**

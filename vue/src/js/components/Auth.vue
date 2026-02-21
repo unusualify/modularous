@@ -1,337 +1,172 @@
 <template>
   <v-app>
-    <v-layout class="rounded rounded-md bg-tertiary h-100">
-      <v-main class="d-flex align-center justify-center" >
-        <v-row class="h-100 mw-100">
-          <v-col
-            v-bind="{
-              cols: '12',
-              ...(noSecondSection ? {} : {
-                md: '6',
-                lg: '6',
-              })
-            }"
-            class="py-12 d-flex flex-column align-center justify-center bg-white">
-            <!-- <v-card class="mx-auto"> -->
-              <v-row width="85%" class="d-flex flex-column justify-center align-center">
-                <!-- <h1 class="text-primary">{{ title }}</h1> -->
+    <v-main class="auth-main">
+      <div class="auth-scrim" />
+      <v-container fluid class="auth-container fill-height">
+        <div class="auth-card" :style="formSheetStyle">
+          <!-- Logo (light variant for light card background) -->
+          <ue-svg-icon
+            :symbol="logoLightSymbol"
+            class="auth-logo"
+          />
 
-                <span v-if="noSecondSection" v-svg :symbol="lightSymbol"></span>
+          <!-- Description slot (custom auth components use this for banner content) -->
+          <div v-if="hasBannerContent" class="auth-header">
+            <slot name="description" />
+          </div>
 
-                <slot name="cardTop"></slot>
+          <!-- cardTop slot -->
+          <slot name="cardTop" />
 
-                <v-sheet
-                  class=""
-                  :style="{ width: width }"
-                >
-                  <slot v-bind="{}">
-                    <ue-form
-                      :model="model"
-                      :schema="schema"
-                      action-url="/login"
-                      :async="true"
-                      :hasSubmit="true"
-                      buttonText="auth.login"
-                      class="auth-form"
-                    >
-                      <template #submit="submitScope">
-                        <v-btn block dense type="submit" :disabled="!submitScope.validForm" :loading="submitScope.loading">
-                          {{ submitScope.buttonDefaultText.toUpperCase() }}
-                        </v-btn>
-                      </template>
-                    </ue-form>
-                  </slot>
-                </v-sheet>
+          <!-- Form slot (ue-form) -->
+          <v-sheet class="auth-form-sheet" elevation="0">
+            <slot v-bind="{}" />
+          </v-sheet>
 
-                <div v-if="!noDivider && $isset($slots.bottom)"
-                  class="d-flex w-100 align-center justify-center"
-                >
-                  <v-divider />
-                  <div class="text-no-wrap px-3">{{ $t('or') }}</div>
-                  <v-divider />
-                </div>
-
-                <slot name="bottom" v-bind="{}"></slot>
-              </v-row>
-
-            <!-- </v-card> -->
-          </v-col>
-          <v-col v-if="!noSecondSection"
-            cols="12"
-            md="6"
-            lg="6"
-            class="px-xs-12 py-xs-3 px-sm-12 py-sm-3 pa-12 pa-md-0 d-flex flex-column align-center justify-center col-right bg-primary"
-          >
-            <div class="mw-420">
-              <ue-svg-icon
-                :symbol="darkSymbol"
-                class="mx-0"
-                :class="logoClass"
-                :style="logoStyle"
-              />
-
-              <slot name="description">
-                <h2 class="text-white mt-5 text-h4 custom-mb-8rem fs-2rem">
-                  {{ bannerDescription }}
-                </h2>
-              </slot>
-              <span class="text-white">
-                <v-img :href="adImg"></v-img>
-                {{ bannerSubDescription }}
-              </span>
-              <v-btn
-                v-if="redirectUrl"
-                variant="outlined"
-                class="text-white custom-right-auth-button my-5"
-                density="default"
-                :href="redirectUrl"
-                >
-                {{ redirectButtonText }}
-              </v-btn>
-            </div>
-          </v-col>
-        </v-row>
-
-      </v-main>
-    </v-layout>
-    <ue-alert ref='alert'></ue-alert>
+          <!-- Divider + bottom slot -->
+          <div v-if="showDivider" class="auth-divider">
+            <v-divider />
+            <span class="auth-divider-text">{{ dividerText }}</span>
+            <v-divider />
+          </div>
+          <slot name="bottom" v-bind="{}" />
+        </div>
+      </v-container>
+    </v-main>
+    <ue-alert ref="alert" />
+    <ue-dynamic-modal />
   </v-app>
-
-  <ue-dynamic-modal></ue-dynamic-modal>
 </template>
+
 <script>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useSlots } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useSvg } from '@/hooks'
 
 export default {
+  name: 'UeAuth',
+  inheritAttrs: false,
   props: {
-    slots: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    title: {
-      type: String,
-    },
-    bannerDescription: {
-      type: String,
-      default: ''
-    },
-    bannerSubDescription: {
-      type: String,
-      default: ''
-    },
-    adImg: {
-      type: String,
-      default: '',
-    },
-    redirectUrl: {
-      type: String,
-      default: null,
-    },
-    redirectButtonText: {
-      type: String,
-      default: ''
-    },
-    noDivider: {
-      type: [Boolean, Number],
-      default: false
-    },
-    noSecondSection: {
-      type: [Boolean, Number],
-      default: false
-    },
-    logoLightSymbol: {
-      type: String,
-      default: 'main-logo-light'
-    },
-    logoSymbol: {
-      type: String,
-      default: 'main-logo-dark'
-    },
-    logoClass: {
-      type: String,
-      default: ''
-    },
-    logoStyle: {
-      type: Object,
-      default: () => ({})
-    }
+    slots: { type: Object, default: () => ({}) },
+    noDivider: { type: [Boolean, Number], default: false },
+    noSecondSection: { type: [Boolean, Number], default: false },
+    logoLightSymbol: { type: String, default: 'main-logo-light' },
+    logoSymbol: { type: String, default: 'main-logo-dark' },
   },
-  data: () => ({
-    schema: {
-      email: {
-        type: 'text',
-        label: 'E-mail',
-        col: {
-          cols: 12
-        },
-        variant: 'outlined',
-        rules: [['email']]
-      },
-      password: {
-        type: 'password',
-        label: 'Password',
-        col: {
-          cols: 12
-        },
-        variant: 'outlined',
-        rules: []
-      }
-    },
-    model: {
-      email: '',
-      password: ''
-    }
-
-  }),
   setup (props) {
+    const { t, te } = useI18n()
+    const slots = useSlots()
     const { name } = useDisplay()
     const { getLocaleSymbol } = useSvg()
 
-    const lightSymbol = computed(() => {
-      return getLocaleSymbol(props.logoLightSymbol, 'main-logo-light')
+    const hasBannerContent = computed(() => !props.noSecondSection)
+    const showDivider = computed(() => !props.noDivider && !!slots.bottom)
+
+    const logoLightSymbol = computed(() =>
+      getLocaleSymbol(props.logoLightSymbol, 'main-logo-light')
+    )
+
+    const formSheetStyle = computed(() => {
+      const config = window.__MODULARITY_AUTH_CONFIG__ || window.MODULARITY?.AUTH_COMPONENT
+      const widths = config?.formWidth ?? {}
+      const bp = name.value
+      const val = widths[bp] ?? { xs: '85vw', sm: '450px', md: '450px', lg: '500px', xl: '600px', xxl: 700 }[bp] ?? '100%'
+      return { width: typeof val === 'number' ? `${val}px` : val }
     })
 
-    const darkSymbol = computed(() => {
-      return getLocaleSymbol(props.logoSymbol, 'main-logo-dark')
+    const dividerText = computed(() => {
+      const config = window.__MODULARITY_AUTH_CONFIG__ || window.MODULARITY?.AUTH_COMPONENT
+      const key = config?.dividerText ?? 'or'
+      return te(key) ? t(key) : key
     })
-
-    const width = computed(() => {
-      // name is reactive and
-      // must use .value
-
-      switch (name.value) {
-        case 'xs': return '85vw'
-        case 'sm': return '450px'
-        case 'md': return '450px'
-        case 'lg': return '500px'
-        case 'xl': return '600px'
-        case 'xxl': return 700
-        default: return 300
-      }
-    })
-
-    const title = computed(() => {
-      // Use the title prop if it's provided
-      if (props.title) {
-        return props.title
-      }
-    })
-
-    const description = computed(() => {
-      // Use the description prop if it's provided
-      if (props.description) {
-        return props.description
-      }
-    })
-
-    const ad = computed(() => {
-      // Use the ad prop if it's provided
-      if (props.ad) {
-        return props.ad
-      }
-    })
-
-    const rightBtnText = computed(() => {
-      // Use the ad rightBtnText if it's provided
-      if (props.rightBtnText) {
-        return props.rightBtnText
-      }
-    })
-    // Fix for showDivider logic
 
     return {
-      lightSymbol,
-      darkSymbol,
-      width,
-      title,
-      description,
-      ad,
-      rightBtnText
+      hasBannerContent,
+      showDivider,
+      logoLightSymbol,
+      formSheetStyle,
+      dividerText,
     }
   },
-  methods: {
-
-  }
 }
 </script>
 
-<style lang="scss">
-@media screen and (min-width: 960px) {
-
-  .mw-420 {
-    max-width: 420px;
-  }
+<style lang="scss" scoped>
+.auth-main {
+  min-height: 100vh;
+  background: rgb(var(--v-theme-surface));
+  position: relative;
 }
 
-.custom-mb-8rem{
-  margin-bottom: 8.25rem !important;
-}
-.text-h4{
-  &.fs-2rem{
-    font-size: 2rem !important;
-  }
-}
-
-
-.custom-auth-button {
-  width: 100%;
-  min-width: 100% !important;
-  position: relative !important;
-  display: flex !important;
-  background: transparent !important;
-  --v-theme-overlay-multiplier: var(--v-hover-opacity);
-
-  &:hover{
-    background: transparent !important;
-  }
-
-  .v-btn__prepend {
-    position: absolute !important;
-    left: 16px !important;
-    margin-right: 0 !important;
-
-  }
-    svg {
-      width: 16px;
-      height: 16px;
-    }
+.auth-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--v-theme-primary)) 0%,
+    rgb(var(--v-theme-primary)) 15%,
+    transparent 50%,
+    rgb(var(--v-theme-surface)) 100%
+  );
+  opacity: 0.08;
+  pointer-events: none;
 }
 
-
-.mx-0 {
-  svg {
-    margin: {
-      right: 0 !important;
-      left: 0 !important;
-    }
-  }
-}
-
-.custom-right-auth-button {
-  &.text-white {
-    color: #fff !important;
-  }
-}
-
-.col-right {
-  span.text-white {
-    display: block;
-  }
-  .icon--main-logo{
-    svg{
-      max-width: 180px;
-    }
-  }
-}
-.justify-content-start{
-  justify-content: flex-start;
-}
-.mw-100{
+.auth-container {
   max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 1;
 }
 
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgb(var(--v-theme-surface));
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
+.auth-logo {
+  margin-bottom: 1.5rem;
+
+  :deep(svg) {
+    max-width: 140px;
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-form-sheet {
+  width: 100%;
+  background: transparent;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 1.25rem 0;
+}
+
+.auth-divider-text {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(var(--v-theme-on-surface-variant));
+  padding: 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 </style>

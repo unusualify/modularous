@@ -23,56 +23,7 @@ class ForgotPasswordController extends Controller
 
     public function showLinkRequestForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.email', [
-            'attributes' => ['noSecondSection' => true],
-            'formAttributes' => array_merge(
-                ['title' => $this->authFormTitle(__('authentication.forgot-password'))],
-                $this->authFormBaseAttributes(
-                    'forgot_password_form',
-                    route(Route::hasAdmin('password.reset.email')),
-                    'authentication.reset-send',
-                    ['hasSubmit' => false]
-                )
-            ),
-            'formSlots' => [
-                'bottom' => [
-                    'tag' => 'v-sheet',
-                    'attributes' => [
-                        'class' => 'd-flex pb-5 justify-space-between w-100 text-black my-5',
-                    ],
-                    'elements' => [
-                        [
-                            'tag' => 'v-btn',
-                            'elements' => __('authentication.sign-in'),
-                            'attributes' => [
-                                'variant' => 'elevated',
-                                'href' => route(Route::hasAdmin('login.form')),
-                                'class' => '',
-                                'color' => 'success',
-                                'density' => 'default',
-                            ],
-                        ],
-                        [
-                            'tag' => 'v-btn',
-                            'elements' => __('authentication.reset-password'),
-                            'attributes' => [
-                                'variant' => 'elevated',
-                                'href' => '',
-                                'class' => '',
-                                'type' => 'submit',
-                                'density' => 'default',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'slots' => [
-                'bottom' => $this->authBottomSlots([
-                    $this->oauthGoogleButtonSlot('sign-in'),
-                    $this->createAccountButtonSlot(),
-                ]),
-            ],
-        ]);
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.email', $this->buildAuthViewData('forgot_password'));
     }
 
     protected function sendResetLinkResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
