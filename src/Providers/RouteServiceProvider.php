@@ -74,6 +74,7 @@ class RouteServiceProvider extends ServiceProvider
                                     ...ModularityRoutes::defaultMiddlewares(),
                                     ...($supportSubdomainRouting ? ['supportSubdomainRouting'] : []),
                                 ],
+                                'namespace' => 'Auth',
                             ],
                             function ($router) {
                                 require __DIR__ . '/../../routes/auth.php';
