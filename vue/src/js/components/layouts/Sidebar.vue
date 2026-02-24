@@ -1,271 +1,179 @@
 <template>
-  <!-- <v-navigation-drawer
-    @update:rail="methods.handleExpanding($event)"
-    :location="mainLocation"
-  > -->
-  <v-navigation-drawer
-    ref="navigationDrawer"
-    id="navigation-drawer"
-    v-model="status"
-    :rail="rail"
-    :expand-on-hover="isHoverable"
-    :location="options.location"
-    :railWidth="options.railWidth"
-    :persistent="options.persistent ?? false"
-    :width="width"
+  <div
+    v-if="fullyHidden"
+    class="ue-sidebar-wrapper ue-sidebar--fully-hidden"
+    :style="wrapperStyle"
+    @mouseleave="handleSidebarLeave"
   >
-    <!-- <v-avatar class="d-block text-center mx-auto mt-2">
-      <v-icon color="green darken-2" large icon="fa:fab fa-atlassian"/>
-    </v-avatar> -->
-
-    <template v-slot:prepend>
-
-      <v-list class="ue-sidebar__info">
-
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-          :subtitle="$store.getters.appEmail"
-          :title="$store.getters.appName"
-          class="ue-sidebar__info-item"
-        >
-          <template v-slot:prepend>
-            <v-avatar class="ue-sidebar__avatar" color="primary">
-              <ue-svg-icon class="ue-sidebar__logo" :symbol="miniSymbol"/>
-            </v-avatar>
-          </template>
-        </v-list-item>
-
-      </v-list>
-
-      <div class="d-flex align-center position-relatie" style="">
-        <v-divider class="flex-grow-1"></v-divider>
-        <v-btn
-          v-if="!hasRail && $vuetify.display.lgAndUp"
-          icon
-          color="orange"
-          @click="railManual = !railManual"
-          class="sidebar-toggle-btn"
-          size="small"
-          style="position: absolute; right: -20px; z-index: 9999;"
-        >
-          <v-icon>{{ rail ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
-        </v-btn>
-      </div>
-    </template>
-
-    <ue-navigation-group :items="items" :hideIcons="hideIcons" :showTooltip="rail && !isHoverable" id="ue-sidebar__menu">
-    </ue-navigation-group>
-
-    <template v-slot:append>
-      <template v-if="!$store.getters.isGuest">
-        <v-divider></v-divider>
-        <v-list class="">
-          <v-list-item
-            prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-            :title="$store.getters.userProfile.name"
-            :subtitle="$store.getters.userProfile.email"
-            class="ue-sidebar__info-item"
-          >
-            <template v-slot:prepend="prependScope">
-              <v-avatar :image="$store.getters.userProfile.avatar_url"
-                @click="$openProfileDialog"
-              />
-            </template>
-            <template v-slot:subtitle>
-              <v-tooltip :text="$store.getters.userProfile.email" location="top">
-                <template v-slot:activator="tooltipActivator">
-                  <div class="v-list-item-subtitle" v-bind="tooltipActivator.props">
-                    {{ $store.getters.userProfile.email }}
-                  </div>
-                </template>
-              </v-tooltip>
-            </template>
-            <template v-slot:append>
-              <v-btn
-                @click="profileMenuOpen = !profileMenuOpen"
-                :icon="profileMenuOpen ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                size="small"
-                variant="text"
-              ></v-btn>
-            </template>
-          </v-list-item>
-
-          <v-expand-transition>
-            <ue-navigation-group v-if="profileMenuOpen"
-              :items="profileMenu"
-              :profileMenu="true"
-              @activateMenu="handleMenu($event)"
-            >
-            </ue-navigation-group>
-          </v-expand-transition>
-
-          <ue-logout-modal :csrf="$csrf()">
-            <template v-slot:activator="{ props }">
-              <v-tooltip text="Logout" location="top" :disabled="!(rail && !isHoverable)">
-                <template v-slot:activator="tooltipActivator">
-                  <div v-bind="tooltipActivator.props">
-                    <v-list-item prepend-icon="mdi-logout" v-bind="props" :disabled="$store.getters.isGuest">
-                      {{ $t("authentication.logout") }}
-                    </v-list-item>
-                  </div>
-                </template>
-
-              </v-tooltip>
-            </template>
-          </ue-logout-modal>
-
-          <!-- About Dialog -->
-          <v-dialog ref="aboutDialog" max-width="500" v-if="$store.getters.versions && !$store.getters.isGuest && !$store.getters.isClient">
-            <template v-slot:activator="{ props: activatorProps }">
-              <v-list-item prepend-icon="mdi-information" v-bind="activatorProps">
-                {{ $t("About") }}
-              </v-list-item>
-            </template>
-
-            <template v-slot:default="{ isActive }">
-              <v-card :title="$t('About')">
-                <v-card-text>
-                  <div v-for="(version, key) in $store.getters.versions" :key="key" class="d-flex align-center my-1">
-                    {{ $headline(key) }}:
-                    <v-chip variant="outlined" color="primary" class="ml-2">
-                      {{ version }}
-                    </v-chip>
-                  </div>
-                  <div v-if="$store.getters.isSuperAdmin" v-for="key in ['appName', 'appEnv', 'appDebug']" :key="key" class="d-flex align-center my-1">
-                    {{ key === 'appDebug' ? 'Debug Mode' : $headline(key) }}:
-                    <v-chip variant="outlined" :color="key === 'appDebug' ? $store.getters[key] ? 'success' : 'error' : 'primary'" class="ml-2">
-                      {{ key === 'appDebug' ? $store.getters[key] ? 'Active' : 'Inactive' : $store.getters[key] }}
-                    </v-chip>
-                  </div>
-                  <!-- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. -->
-                </v-card-text>
-
-                <v-divider></v-divider>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    variant="outlined"
-                    :text="$t('Close')"
-                    @click="isActive.value = false"
-                  ></v-btn>
-                </v-card-actions>
-              </v-card>
-            </template>
-          </v-dialog>
-
-          <!-- Bottom Slot -->
-        </v-list>
+    <div v-if="$vuetify.display.lgAndUp"
+      class="ue-sidebar-hover-zone"
+      :style="{ width: `${hoverZoneWidth}px` }"
+      @mouseenter="handleHoverZoneEnter"
+    />
+    <ue-sidebar-content
+      v-model:status="status"
+      v-model:profile-menu-open="profileMenuOpen"
+      :items="items"
+      :profile-menu="profileMenu"
+      :mini-symbol="miniSymbol"
+      :rail="rail"
+      :is-hoverable="isHoverable"
+      :hide-icons="hideIcons"
+      :options="options"
+      :width="width"
+      :effective-persistent="effectivePersistent"
+      :effective-permanent="effectivePermanent"
+      :effective-temporary="effectiveTemporary"
+      :rail-manual="railManual"
+      :secondary-options="secondaryOptions"
+      :is-resizing="isResizing"
+      :sidebar-location="sidebarLocation"
+      @rail-toggle="handleRailToggle"
+      @activate-menu="handleMenu"
+      @resize-start="handleResizeStart"
+    >
+      <template v-slot:bottom>
+        <slot name="bottom" />
       </template>
-      <slot name="bottom">
-
-      </slot>
+    </ue-sidebar-content>
+  </div>
+  <ue-sidebar-content
+    v-else
+    v-model:status="status"
+    v-model:profile-menu-open="profileMenuOpen"
+    :items="items"
+    :profile-menu="profileMenu"
+    :mini-symbol="miniSymbol"
+    :rail="rail"
+    :is-hoverable="isHoverable"
+    :hide-icons="hideIcons"
+    :options="options"
+    :width="width"
+    :effective-persistent="effectivePersistent"
+    :effective-permanent="effectivePermanent"
+    :rail-manual="railManual"
+    :secondary-options="secondaryOptions"
+    :is-resizing="isResizing"
+    :sidebar-location="sidebarLocation"
+    @rail-toggle="handleRailToggle"
+    @activate-menu="handleMenu"
+    @resize-start="handleResizeStart"
+  >
+    <template v-slot:bottom>
+      <slot name="bottom" />
     </template>
-
-    <!-- <template v-slot:append>
-
-    </template> -->
-  </v-navigation-drawer>
-  <v-navigation-drawer
-    v-if="options.contentDrawer.exists"
-    :width="width"
-    :location="options.location"
-    style="max-width: 15%"
-  />
-  <v-navigation-drawer
-    v-if="secondaryOptions.exists"
-    :location="secondaryOptions.location"
-    :width="width"
-  />
+  </ue-sidebar-content>
 </template>
 
-<script>
-  import { computed } from 'vue';
-  import { useGoTo } from 'vuetify'
-  import { useSidebar, useSvg } from '@/hooks';
-  import { USER } from '@/store/mutations';
+<script setup>
+import { computed, ref, onMounted, provide } from 'vue'
+import { useGoTo, useDisplay } from 'vuetify'
+import { useStore } from 'vuex'
+import { useSidebar, useSvg } from '@/hooks'
+import { USER, CONFIG } from '@/store/mutations'
+import SidebarContent from './SidebarContent.vue'
 
-  export default {
-    provide() {
-      return {
-        activeMenu: computed(() => this.activeMenu)
-      }
-    },
-    setup() {
-      const goTo = useGoTo()
-      const { getLocaleSymbol } = useSvg()
+const props = defineProps({
+  items: { type: Array, required: true },
+  profileMenu: { type: Array, default: () => [] },
+  rating: { type: Number, default: 0 },
+  logoSymbol: { type: String, default: 'main-logo-dark' },
+})
 
-      const miniSymbol = computed(() => {
-        return getLocaleSymbol('mini-logo-dark', 'main-logo-dark')
+const store = useStore()
+const goTo = useGoTo()
+const { getLocaleSymbol } = useSvg()
+const sidebar = useSidebar()
+const display = useDisplay()
+
+const {
+  fullyHidden,
+  hoverZoneWidth,
+  status,
+  rail,
+  isHoverable,
+  hideIcons,
+  options,
+  width,
+  effectivePersistent,
+  effectivePermanent,
+  effectiveTemporary,
+  railManual,
+  secondaryOptions,
+  isResizing,
+  sidebarLocation,
+  handleRailToggle,
+  handleMenu,
+  handleResizeStart,
+  handleSidebarLeave,
+} = sidebar
+
+const profileMenuOpen = ref(false)
+
+const miniSymbol = computed(() => getLocaleSymbol('mini-logo-dark', 'main-logo-dark'))
+// Hidden mode: when open, wrapper = width + hoverZone. width is config default when overlay (effectiveTemporary), store width when pinned.
+const wrapperStyle = computed(() =>
+  status.value && !railManual.value && display.lgAndUp.value
+    ? { width: `calc(${width.value}px + ${hoverZoneWidth.value}px)` }
+    : { width: `${hoverZoneWidth.value}px` }
+)
+
+provide('activeMenu', sidebar.activeMenu)
+
+const handleHoverZoneEnter = () => {
+  if (fullyHidden.value) {
+    store.commit(CONFIG.SET_SIDEBAR, true)
+  }
+}
+
+onMounted(() => {
+  try {
+    const activeItems = window.$('.sidebar-item-active')
+    const el = activeItems[activeItems.length - 1]
+    goTo(el, {
+      container: '.v-navigation-drawer__content',
+      duration: 200,
+      offset: -200,
+      easing: 'easeInOutQuad',
+    })
+  } catch (e) {
+    console.log(e)
+  }
+  if (props.profileMenu.length > 0) {
+    profileMenuOpen.value = props.profileMenu.some((item) => item.is_active == 1)
+  }
+})
+
+defineExpose({
+  profileFormSubmitted(res) {
+    if (typeof URLS !== 'undefined' && URLS) {
+      axios.get(URLS.profileShow).then((res) => {
+        store.commit(USER.SET_PROFILE_DATA, res.data)
       })
-
-      return {
-        ...useSidebar(),
-        goTo,
-        miniSymbol
-      }
-    },
-    props: {
-      items: {
-        type: Array,
-        required: true,
-      },
-      profileMenu: {
-        type: Array,
-        required: false,
-        default: () => [],
-      },
-      rating: {
-        type: Number,
-        default: 0,
-      },
-      logoSymbol: {
-        type: String,
-        default: 'main-logo-dark',
-      },
-    },
-    data() {
-      return {
-        dialog: false,
-        logo: "@/sass/themes/template/main-logo.svg",
-        // isExpanded: true,
-        profileMenuOpen: false,
-      };
-    },
-    mounted() {
-      try {
-        const activeItems = window.$('.sidebar-item-active')
-        const el = activeItems[activeItems.length - 1]
-        this.goTo(el, {
-          container: '.v-navigation-drawer__content',
-          duration: 200,
-          offset: -200,
-          easing: 'easeInOutQuad',
-        })
-      } catch (e) {
-        console.log(e)
-      }
-
-      if(this.profileMenu.length > 0) {
-        this.profileMenuOpen = this.profileMenu.some(item => item.is_active == 1);
-      }
-    },
-    methods: {
-      profileFormSubmitted(res) {
-
-        if (typeof URLS !== 'undefined' && URLS) {
-          axios.get(URLS.profileShow).then(res => {
-            this.$store.commit(USER.SET_PROFILE_DATA, res.data)
-          })
-        }
-      }
     }
-  };
+  },
+})
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+.ue-sidebar-wrapper.ue-sidebar--fully-hidden
+  position: fixed
+  left: 0
+  top: 0
+  bottom: 0
+  z-index: 1100
+  transition: width 0.2s ease
 
-</style>
+.ue-sidebar-hover-zone
+  position: absolute
+  left: 0
+  top: 0
+  bottom: 0
+  z-index: 1101
+  cursor: pointer
+  background: transparent
+  transition: background 0.15s ease
 
-<style>
-
+  &:hover
+    background: rgba(var(--v-theme-primary), 0.08)
 </style>

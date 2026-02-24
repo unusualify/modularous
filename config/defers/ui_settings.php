@@ -6,9 +6,10 @@ return [
     ],
     'sidebar' => [
         'width' => 264,
+        'expandHover' => 'hidden', // 'mini' | 'hidden'
         'expandOnHover' => true,
         'rail' => false,
-        'location' => 'left',
+        'location' => 'left', // 'left' | 'right'
         'persistent' => false,
         'hideIcons' => false,
         'railWidth' => 130,
@@ -28,6 +29,26 @@ return [
         'rail' => false,
         'permanent' => true,
         'max-width' => '10em',
+    ],
+    /**
+     * Top bar (v-app-bar) configuration.
+     * User preferences override these defaults and are persisted in DB.
+     */
+    'topbar' => [
+        'enabled' => true,
+        'fixed' => false,
+        'order' => 0, // Vuetify layout order (0 = above drawer)
+        'showOnMobile' => true,
+        'showOnDesktop' => false,
+    ],
+    /**
+     * Bottom navigation (v-bottom-navigation) configuration.
+     * Useful for mobile-first layouts.
+     */
+    'bottomNavigation' => [
+        'enabled' => false,
+        'showOnMobile' => true,
+        'showOnDesktop' => false,
     ],
     'dashboard' => [
         'blocks' => [

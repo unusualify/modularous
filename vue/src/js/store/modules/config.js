@@ -6,9 +6,26 @@ const state = {
   useCountryBasedVatRates: window[import.meta.env.VUE_APP_NAME]?.STORE.config.useCountryBasedVatRates ?? false,
 
   profileMenu: window[import.meta.env.VUE_APP_NAME]?.STORE.config.profileMenu ?? [],
-  sidebarStatus: true,
+  sidebarStatus: (() => {
+    const prefs = window[import.meta.env.VUE_APP_NAME]?.STORE.config.uiPreferences?.sidebar
+    const sidebarOpts = window[import.meta.env.VUE_APP_NAME]?.STORE.config.sidebarOptions ?? {}
+    const expandHover = sidebarOpts.expandHover ?? prefs?.expandHover ?? (sidebarOpts.fullyHidden ? 'hidden' : 'mini')
+
+    if (prefs?.status !== undefined) {
+      // In mini mode, ignore persisted status: false from hidden mode – sidebar should be visible
+      if (expandHover === 'mini' && prefs.status === false) return true
+      // In hidden mode, only respect status: true when pinned – otherwise start closed
+      if (expandHover === 'hidden' && !(prefs.pinned ?? false) && prefs.status === true) return false
+      return prefs.status
+    }
+    return expandHover === 'hidden' ? false : true
+  })(),
   sidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.sidebarOptions ?? [],
   secondarySidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.secondarySidebarOptions ?? [],
+  topbarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.topbarOptions ?? { enabled: true, fixed: false, order: 0, showOnMobile: true, showOnDesktop: true },
+  bottomNavigationOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.bottomNavigationOptions ?? { enabled: false, showOnMobile: true, showOnDesktop: false },
+  uiPreferences: window[import.meta.env.VUE_APP_NAME]?.STORE.config.uiPreferences ?? {},
+  uiPreferencesEndpoint: window[import.meta.env.VUE_APP_NAME]?.STORE.config.uiPreferencesEndpoint ?? '',
   isRequestInProgress: false, // New state property to track async requests
   ongoingAxiosRequests: 0, // Counter for ongoing requests
 }
@@ -24,6 +41,10 @@ const getters = {
   secondarySidebarOptions: state => {
     return state.secondarySidebarOptions
   },
+  topbarOptions: state => state.topbarOptions,
+  bottomNavigationOptions: state => state.bottomNavigationOptions,
+  uiPreferences: state => state.uiPreferences,
+  uiPreferencesEndpoint: state => state.uiPreferencesEndpoint,
   // profileMenu: state => {
   //   return state.profileMenu
   // },
@@ -37,6 +58,15 @@ const mutations = {
   },
   [CONFIG.SET_SIDEBAR] (state, status = true) {
     state.sidebarStatus = status; // Mutation to toggle sidebar
+  },
+  [CONFIG.SET_UI_PREFERENCES] (state, preferences = {}) {
+    const merged = { ...state.uiPreferences }
+    for (const key of ['sidebar', 'topbar', 'bottomNavigation']) {
+      if (preferences[key] && typeof preferences[key] === 'object') {
+        merged[key] = { ...(merged[key] || {}), ...preferences[key] }
+      }
+    }
+    state.uiPreferences = merged
   },
   [CONFIG.SET_REQUEST_IN_PROGRESS] (state, isInProgress = true) {
     state.isRequestInProgress = isInProgress; // Mutation to set request state

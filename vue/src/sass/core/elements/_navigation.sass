@@ -1,5 +1,43 @@
 @use '../abstract' as *
 
+// Mobile: sidebar is always overlay, v-main stays full width
+@media (max-width: 1279px)
+  .v-app
+    .v-main
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+    .v-main__wrap
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+
+// Desktop (lg+): layout classes for sidebar modes
+@media (min-width: 1280px)
+  .ue-sidebar-expanded
+    --v-layout-left: var(--ue-sidebar-width, 264px) !important
+    .v-main
+      margin-inline-start: var(--ue-sidebar-width, 264px) !important
+      padding-inline-start: 0 !important
+    .v-main__wrap
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+
+  .ue-sidebar-rail-only
+    --v-layout-left: var(--ue-sidebar-rail-width, 56px) !important
+    .v-main
+      margin-inline-start: var(--ue-sidebar-rail-width, 56px) !important
+      padding-inline-start: 0 !important
+    .v-main__wrap
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+
+  .ue-sidebar-fully-hidden
+    .v-main
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+    .v-main__wrap
+      margin-inline-start: 0 !important
+      padding-inline-start: 0 !important
+
 .v-navigation-drawer
   // &--rail:not(.v-navigation-drawer--is-hovering):not(.v-navigation-mobile)
   //   width: 130px !important
@@ -9,8 +47,8 @@
     &.ue-sidebar__menu
       margin-top: calc($spacer * 15)
     &.ue-sidebar__info
-      padding-top: calc($spacer * 6)
-      padding-bottom: calc($spacer * 6)
+      padding-top: calc($spacer * 3)
+      // padding-bottom: calc($spacer * 6)
       margin-right: unset
 
       .v-card-item

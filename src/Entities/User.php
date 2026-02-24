@@ -47,6 +47,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         'email',
         'language',
         'timezone',
+        'ui_preferences',
         'phone',
         'country_id',
         'password',
@@ -71,6 +72,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'ui_preferences' => 'array',
     ];
 
     protected static function boot()

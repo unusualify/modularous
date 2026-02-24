@@ -89,6 +89,10 @@ class HandleInertiaRequests extends Middleware
                 'profileMenu' => [],
                 'sidebarOptions' => modularityConfig('ui_settings.sidebar'),
                 'secondarySidebarOptions' => modularityConfig('ui_settings.secondarySidebar'),
+                'topbarOptions' => modularityConfig('ui_settings.topbar'),
+                'bottomNavigationOptions' => modularityConfig('ui_settings.bottomNavigation'),
+                'uiPreferences' => $user ? get_modularity_ui_preferences() : [],
+                'uiPreferencesEndpoint' => \Illuminate\Support\Facades\Route::has('admin.profile.ui-preferences') ? route('admin.profile.ui-preferences') : '',
             ],
             'user' => [
                 'isGuest' => ! $user,

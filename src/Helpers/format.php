@@ -536,12 +536,18 @@ if (! function_exists('get_user_profile')) {
      */
     function get_user_profile($user)
     {
-        return $user->only(['id', 'name', 'email', 'company_name', 'valid_company', 'name_with_company', 'show_billing_banner']) + [
+        $data = $user->only(['id', 'name', 'email', 'company_name', 'valid_company', 'name_with_company', 'show_billing_banner']) + [
             'avatar_url' => $user->fileponds()
                 ->where('role', 'avatar')
                 ->first()
                 ?->mediableFormat()['source'] ?? '/vendor/modularity/jpg/anonymous.jpg',
         ];
+
+        if (isset($user->ui_preferences)) {
+            $data['ui_preferences'] = $user->ui_preferences;
+        }
+
+        return $data;
     }
 }
 
