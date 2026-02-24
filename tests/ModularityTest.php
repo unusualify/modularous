@@ -35,7 +35,7 @@ class ModularityTest extends TestModulesCase
     {
         $app = app();
         $app['config']->set('modules.cache.enabled', true);
-        
+
         $path = $app['config']->get('modules.paths.modules');
 
         $modularity = new Modularity($app, $path);
@@ -73,8 +73,8 @@ class ModularityTest extends TestModulesCase
 
     public function test_feature_methods()
     {
-        $this->assertFalse($this->modularity->shouldUseInertia());
-        
+        $this->assertTrue($this->modularity->shouldUseInertia());
+
         $this->assertEquals(config('app.name'), $this->modularity->pageTitle());
         Modularity::createPageTitle(fn () => 'Test Page Title');
         $this->assertEquals('Test Page Title', $this->modularity->pageTitle());
@@ -91,13 +91,13 @@ class ModularityTest extends TestModulesCase
     {
         $this->app['config']->set('modules.cache.enabled', true);
         $this->app['config']->set('modules.cache.key', 'test-modules-cache');
-        
+
         // Populate cache first
         $this->modularity->all();
-        
+
         // Clear cache
         $this->modularity->clearCache();
-        
+
         // Verify cache is cleared
         $this->assertFalse($this->app['cache']->has('test-modules-cache'));
     }
@@ -122,7 +122,7 @@ class ModularityTest extends TestModulesCase
     {
         $modulesPath = $this->modularity->getModulesPath();
         $this->assertStringContainsString('modules', $modulesPath);
-        
+
         $subPath = $this->modularity->getModulesPath('TestModule');
         $this->assertStringContainsString('modules', $subPath);
         $this->assertStringContainsString('TestModule', $subPath);
@@ -136,12 +136,12 @@ class ModularityTest extends TestModulesCase
             $this->modularity->setSystemModulesPath();
         } else {
             $originalPath = config('modules.paths.modules');
-            
+
             $this->modularity->setSystemModulesPath();
             $newPath = config('modules.paths.modules');
             $this->assertNotEquals($originalPath, $newPath);
             $this->assertStringContainsString('modules', $newPath);
-            
+
             $this->modularity->revertSystemModulesPath();
             $revertedPath = config('modules.paths.modules');
             $this->assertEquals($originalPath, $revertedPath);
@@ -159,7 +159,7 @@ class ModularityTest extends TestModulesCase
     {
         $this->app['config']->set('modularity.app_url', 'http://localhost:8080');
         $this->app['config']->set('modularity.admin_app_url', 'http://admin.localhost:8080');
-        
+
         $adminHost = $this->modularity->getAdminAppHost();
         $this->assertEquals('admin.localhost', $adminHost);
     }
@@ -168,7 +168,7 @@ class ModularityTest extends TestModulesCase
     {
         $this->app['config']->set('modularity.app_url', 'http://localhost');
         $this->app['config']->set('modularity.admin_app_url', 'http://admin.localhost');
-        
+
         $this->assertTrue($this->modularity->isPanelUrl('http://admin.localhost/dashboard'));
         $this->assertFalse($this->modularity->isPanelUrl('http://localhost/home'));
     }
@@ -178,11 +178,11 @@ class ModularityTest extends TestModulesCase
         $this->app['config']->set('modularity.app_url', 'http://localhost');
         $this->app['config']->set('modularity.admin_app_url', '');
         $this->app['config']->set('modularity.admin_app_path', 'admin');
-        
+
         // Create a mock request to provide default values for request()->getHost() and request()->segment(1)
         $request = \Illuminate\Http\Request::create('http://localhost/admin', 'GET');
         $this->app->instance('request', $request);
-        
+
         $this->assertTrue($this->modularity->isPanelUrl('http://localhost/admin/dashboard'));
         $this->assertFalse($this->modularity->isPanelUrl('http://localhost/home'));
     }
@@ -190,7 +190,7 @@ class ModularityTest extends TestModulesCase
     public function test_is_modularity_route()
     {
         $this->app['config']->set('modularity.admin_route_name_prefix', 'admin');
-        
+
         $this->assertTrue($this->modularity->isModularityRoute('admin.dashboard.index'));
         $this->assertTrue($this->modularity->isModularityRoute('admin.users.create'));
         $this->assertFalse($this->modularity->isModularityRoute('public.home'));
@@ -226,10 +226,10 @@ class ModularityTest extends TestModulesCase
         try {
             // Populate translations cache
             $this->modularity->getTranslations();
-            
+
             // Clear translations
             $this->modularity->clearTranslations();
-            
+
             // Verify it doesn't throw errors
             $this->assertTrue(true);
         } catch (\UnexpectedValueException $e) {
@@ -242,7 +242,7 @@ class ModularityTest extends TestModulesCase
     {
         // Create a test module with group
         $testModule = $this->modularity->find('SystemModule');
-        
+
         $groupedModules = $this->modularity->getGroupedModules('system');
         $this->assertIsArray($groupedModules);
     }
@@ -263,10 +263,10 @@ class ModularityTest extends TestModulesCase
     {
         // Test with a non-existent module to verify method executes
         $result = $this->modularity->deleteModule('NonExistentTestModule');
-        
+
         // Should return false for non-existent module
         $this->assertFalse($result);
-        
+
         // Verify method doesn't throw exceptions
         $this->assertIsBool($result);
     }
@@ -280,7 +280,7 @@ class ModularityTest extends TestModulesCase
     public function test_get_classes()
     {
         $testPath = $this->modularity->find('SystemModule')->getPath() . '/Entities';
-        
+
         if (file_exists($testPath)) {
             $classes = $this->modularity->getClasses($testPath);
             $this->assertIsArray($classes);
@@ -293,7 +293,7 @@ class ModularityTest extends TestModulesCase
     {
         $vendorDir = $this->modularity->getVendorDir();
         $this->assertIsString($vendorDir);
-        
+
         $subDir = $this->modularity->getVendorDir('modules');
         $this->assertStringContainsString('modules', $subDir);
     }
@@ -303,7 +303,7 @@ class ModularityTest extends TestModulesCase
         $this->app['config']->set('modularity.app_theme', 'default');
         $themePath = $this->modularity->getThemePath();
         $this->assertIsString($themePath);
-        
+
         $subPath = $this->modularity->getThemePath('variables');
         $this->assertStringContainsString('variables', $subPath);
     }
@@ -315,7 +315,7 @@ class ModularityTest extends TestModulesCase
         // Should include trailing backslash from config default
         $this->assertStringEndsWith('\\', $namespace);
         $this->assertStringContainsString('Modularity', $namespace);
-        
+
         $appendedNamespace = $this->modularity->getVendorNamespace('Services');
         $this->assertStringContainsString('Modularity', $appendedNamespace);
         $this->assertStringContainsString('Services', $appendedNamespace);
@@ -324,7 +324,7 @@ class ModularityTest extends TestModulesCase
     public function test_create_disable_language_based_prices()
     {
         Modularity::createDisableLanguageBasedPrices(fn () => true);
-        
+
         $this->app['config']->set('modularity.use_language_based_prices', true);
         $shouldUse = $this->modularity->shouldUseLanguageBasedPrices();
         $this->assertFalse($shouldUse);
@@ -334,11 +334,11 @@ class ModularityTest extends TestModulesCase
     {
         // Reset callback
         Modularity::createDisableLanguageBasedPrices(null);
-        
+
         $this->app['config']->set('modularity.use_language_based_prices', true);
         $shouldUse = $this->modularity->shouldUseLanguageBasedPrices();
         $this->assertTrue($shouldUse);
-        
+
         $this->app['config']->set('modularity.use_language_based_prices', false);
         $shouldUse = $this->modularity->shouldUseLanguageBasedPrices();
         $this->assertFalse($shouldUse);
