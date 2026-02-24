@@ -287,6 +287,34 @@ if (! function_exists('get_modularity_head_layout_config')) {
     }
 }
 
+if (! function_exists('get_modularity_ui_preferences')) {
+    /**
+     * Get merged UI preferences: PHP config defaults + user DB preferences.
+     *
+     * @return array<string, mixed>
+     */
+    function get_modularity_ui_preferences(): array
+    {
+        $defaults = [
+            'sidebar' => modularityConfig('ui_settings.sidebar', []),
+            'topbar' => modularityConfig('ui_settings.topbar', []),
+            'bottomNavigation' => modularityConfig('ui_settings.bottomNavigation', []),
+        ];
+
+        if (Auth::guest()) {
+            return $defaults;
+        }
+
+        $userPrefs = Auth::user()->ui_preferences ?? [];
+
+        return [
+            'sidebar' => array_replace_recursive($defaults['sidebar'] ?? [], $userPrefs['sidebar'] ?? []),
+            'topbar' => array_replace_recursive($defaults['topbar'] ?? [], $userPrefs['topbar'] ?? []),
+            'bottomNavigation' => array_replace_recursive($defaults['bottomNavigation'] ?? [], $userPrefs['bottomNavigation'] ?? []),
+        ];
+    }
+}
+
 if (! function_exists('get_modularity_inertia_main_configuration')) {
     function get_modularity_inertia_main_configuration(array $data)
     {

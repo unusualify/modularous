@@ -35,7 +35,7 @@ return [
     'use_big_integers_on_migrations' => true,
     'use_collation_for_search' => env('MODULARITY_USE_COLLATION_FOR_SEARCH', false),
 
-    'use_inertia' => env('MODULARITY_USE_INERTIA', false),
+    'use_inertia' => env('MODULARITY_USE_INERTIA', true),
     'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),
     'use_country_based_vat_rates' => env('MODULARITY_USE_COUNTRY_BASED_VAT_RATES', false),
     'use_language_based_prices' => env('MODULARITY_USE_LANGUAGE_BASED_PRICES', false),

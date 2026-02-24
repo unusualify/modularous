@@ -32,7 +32,7 @@ export default {
     // accent: '#8c9eff',
 
     //vuetify colors
-    primary: '#27A0B4',            // R:39  G:160 B:180
+    primary: '#dd60B4',            // R:39  G:160 B:180
     'primary-lighten-1': '#4DBBC6', // R:77  G:187 B:198
     'primary-lighten-2': '#74CED7', // R:116 G:206 B:215
     'primary-lighten-3': '#AFE2E7', // R:175 G:226 B:231

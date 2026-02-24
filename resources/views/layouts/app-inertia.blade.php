@@ -72,6 +72,10 @@
                 profileMenu: {!! json_encode($navigation['profileMenu'] ?? []) !!},
                 sidebarOptions: {!! json_encode(modularityConfig('ui_settings.sidebar')) !!},
                 secondarySidebarOptions : {!! json_encode(modularityConfig('ui_settings.secondarySidebar')) !!},
+                topbarOptions: {!! json_encode(modularityConfig('ui_settings.topbar')) !!},
+                bottomNavigationOptions: {!! json_encode(modularityConfig('ui_settings.bottomNavigation')) !!},
+                uiPreferences: {!! json_encode(get_modularity_ui_preferences()) !!},
+                uiPreferencesEndpoint: '{{ \Illuminate\Support\Facades\Route::hasAdmin("profile.ui-preferences") ? route(\Illuminate\Support\Facades\Route::hasAdmin("profile.ui-preferences")) : "" }}',
             },
             window['{{ modularityConfig('js_namespace') }}'].STORE.user = {
                 isGuest: {{ json_encode(auth()->guest()) }},

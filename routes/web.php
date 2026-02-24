@@ -40,6 +40,7 @@ Route::prefix('register')->as('register.')
 
 Route::singleton('profile', 'ProfileController', ['names' => ['edit' => 'profile']]);
 Route::put('profile/company', 'ProfileController@updateCompany')->name('profile.company');
+Route::put('profile/ui-preferences', 'UIPreferencesController@update')->name('profile.ui-preferences');
 
 Route::resource('', 'DashboardController', ['as' => 'dashboard', 'names' => ['index' => 'dashboard']])->only(['index']);
 
