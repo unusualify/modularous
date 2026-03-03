@@ -37,7 +37,7 @@ export default function useValidation (props) {
             allowedDomains = [], // Specific allowed domains
             blockedDomains = [], // Specific blocked domains
             allowSubdomains = true, // Allow email addresses with subdomains
-            minLength = 3, // Minimum length before @
+            minLength = 1, // Minimum length before @
             maxLength = 254, // Maximum total length (RFC 5321)
             strict = false // Stricter validation
         } = options;
