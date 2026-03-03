@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.57.4 - 2026-03-03
+
+### :wrench: Bug Fixes
+
+- change minimum length requirement for email validation from 3 to 1 by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/54c35f9937faa7bc01049f17cc87cb2b3152bb22
+
 ## v0.57.3 - 2026-02-18
 
 ### :wrench: Bug Fixes
