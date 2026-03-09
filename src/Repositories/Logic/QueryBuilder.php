@@ -552,8 +552,12 @@ trait QueryBuilder
             $with = array_values(array_unique(array_merge($this->getModel()->getWith(), $with)));
         }
 
-        if ($hasTableColumnCheck) {
+        if ($hasTableColumnCheck && count($tableColumns) > 0) {
             $columns = array_values(array_unique(array_intersect($columns, $tableColumns)));
+        }
+
+        if (empty($columns)) {
+            $columns = ['*']; 
         }
 
         if ($forcePagination) {
