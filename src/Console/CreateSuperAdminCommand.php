@@ -82,7 +82,7 @@ class CreateSuperAdminCommand extends BaseCommand
         DB::beginTransaction();
 
         try {
-            $user = User::createOrUpdate([
+            $user = User::updateOrCreate([
                 'email' => $email,
             ], [
                 'name' => 'Administrator',
