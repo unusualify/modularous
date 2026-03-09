@@ -31,7 +31,7 @@ return new class extends Migration
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
 
-                $table->text('content');
+                $table->text('content')->nullable();
                 $table->boolean('is_read')->default(false);
                 $table->boolean('is_starred')->default(false);
                 $table->boolean('is_pinned')->default(false);
