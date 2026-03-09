@@ -232,6 +232,8 @@ class BuildCommand extends BaseCommand
      */
     private function runVueProcess(array $command, $disableTimeout = false, $env = [])
     {
+        $hasZiggy = file_exists(base_path('vendor/tightenco/ziggy/dist/index.esm.js')) || file_exists(base_path('vendor/tightenco/ziggy/dist/vue.m.js'));
+
         $process = new Process($command, get_modularity_vendor_path('vue'), [
             ...$env,
         ]);
@@ -241,6 +243,7 @@ class BuildCommand extends BaseCommand
         $process->setEnv([
             'BASE_PATH' => base_path(),
             'VENDOR_DIR' => Modularity::getVendorDir(),
+            'VUE_HAS_ZIGGY' => $hasZiggy ? 'true' : 'false',
             ...$env,
         ]);
 

@@ -125,19 +125,21 @@ export default defineConfig(({ command, mode }) => {
   }
 
   let hasAppDir = fs.existsSync(appDir)
-  let ziggyPath = path.resolve(appDir, 'vendor/tightenco/ziggy')
+  let ziggyPath = path.resolve(appDir, 'vendor/tightenco/ziggy/dist/index.esm.js')
 
   if ( !fs.existsSync(ziggyPath) ) {
-    ziggyPath = path.resolve(__dirname, '../vendor/tightenco/ziggy')
-    appDir = path.resolve(__dirname, '..')
+    ziggyPath = path.resolve(__dirname, '../../../vendor/tightenco/ziggy/dist/index.esm.js')
   }
-  const hasZiggy = fs.existsSync(ziggyPath)
+  
+  const hasZiggy = process.env.VUE_HAS_ZIGGY !== undefined 
+      ? process.env.VUE_HAS_ZIGGY === 'true' 
+      : fs.existsSync(ziggyPath)
 
   return {
     // envDir: path.resolve(__dirname, '../../../.env'),
-    // define: {
-    //   __HAS_ZIGGY__: JSON.stringify(hasZiggy),
-    // },
+    define: {
+      __HAS_ZIGGY__: JSON.stringify(hasZiggy),
+    },
     envPrefix,
     base,
     publicDir,

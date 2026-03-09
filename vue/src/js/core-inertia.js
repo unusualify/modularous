@@ -1,8 +1,21 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
-// import * as ZiggyModule from '#/vendor/tightenco/ziggy'
-import { ZiggyVue } from '#/vendor/tightenco/ziggy'
 
+let ZiggyVue = null
+
+if (__HAS_ZIGGY__) {
+  const ziggyFiles = import.meta.glob([
+    '../../../../vendor/tightenco/ziggy/dist/index.esm.js',
+    '../../../../../vendor/tightenco/ziggy/dist/index.esm.js'
+  ], { eager: true })
+
+  for (const path in ziggyFiles) {
+    if (ziggyFiles[path].ZiggyVue) {
+      ZiggyVue = ziggyFiles[path].ZiggyVue
+      break
+    }
+  }
+}
 
 // Plugins
 import UEConfig from '@/plugins/UEConfig'
@@ -81,10 +94,9 @@ createInertiaApp({
 
       console.debug('[modularity]: inertia setup')
 
-      // if(__HAS_ZIGGY__){
-      if(true){
+      if(__HAS_ZIGGY__){
         console.debug('[modularity]: found on vendor/tightenco/ziggy')
-        app.use(Ziggy.ZiggyVue)
+        app.use(ZiggyVue)
       } else {
         console.debug('[modularity]: no found on vendor/tightenco/ziggy')
       }
