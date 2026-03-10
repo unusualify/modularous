@@ -1,0 +1,86 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Unusualify\Modularity\Tests\Support;
+
+use Unusualify\Modularity\Support\CommandDiscovery;
+use Unusualify\Modularity\Tests\TestCase;
+
+class CommandDiscoveryTest extends TestCase
+{
+    /** @test */
+    public function it_discovers_commands_from_given_paths(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [$basePath . '/Coverage/*.php'];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertNotEmpty($commands);
+        $this->assertContains('Unusualify\Modularity\Console\Coverage\CoverageWatchCommand', $commands);
+        $this->assertContains('Unusualify\Modularity\Console\Coverage\CoverageReportCommand', $commands);
+    }
+
+    /** @test */
+    public function it_excludes_abstract_classes(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [$basePath . '/*.php'];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertNotContains('Unusualify\Modularity\Console\BaseCommand', $commands);
+    }
+
+    /** @test */
+    public function it_handles_missing_directory(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [$basePath . '/NonExistentFolder/*.php'];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertEmpty($commands);
+    }
+
+    /** @test */
+    public function it_returns_unique_commands_when_paths_overlap(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [
+            $basePath . '/Coverage/*.php',
+            $basePath . '/Coverage/*.php',
+        ];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertCount(count(array_unique($commands)), $commands);
+    }
+
+    /** @test */
+    public function it_discovers_commands_from_make_folder(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [$basePath . '/Make/*.php'];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertNotEmpty($commands);
+        $this->assertContains('Unusualify\Modularity\Console\Make\MakeModuleCommand', $commands);
+        $this->assertContains('Unusualify\Modularity\Console\Make\MakeRouteCommand', $commands);
+    }
+
+    /** @test */
+    public function it_discovers_root_level_commands(): void
+    {
+        $basePath = realpath(__DIR__ . '/../../src/Console');
+        $paths = [$basePath . '/*.php'];
+
+        $commands = CommandDiscovery::discover($paths);
+
+        $this->assertNotEmpty($commands);
+        $this->assertContains('Unusualify\Modularity\Console\PintCommand', $commands);
+        $this->assertContains('Unusualify\Modularity\Console\BuildCommand', $commands);
+    }
+}
