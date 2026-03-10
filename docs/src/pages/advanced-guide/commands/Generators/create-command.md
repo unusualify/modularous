@@ -1,10 +1,11 @@
-# `Create Command`
+# `Make Command`
 
 > Create a new console command
 
 ## Command Information
 
-- **Signature:** `modularity:create:command [-d|--description [DESCRIPTION]] [--] <name> <signature>`
+- **Signature:** `modularity:make:command [-d|--description [DESCRIPTION]] [--] <name> <signature>`
+- **Alias:** `modularity:create:command` (deprecated, use `make:command`)
 - **Category:** Generators
 
 
@@ -13,33 +14,33 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:command NAME SIGNATURE
+php artisan modularity:make:command NAME SIGNATURE
 ```
 
 ### With Options
 
 ```bash
 # Using shortcut
-php artisan modularity:create:command -d DESCRIPTION
+php artisan modularity:make:command -d DESCRIPTION
 
 # Using full option name
-php artisan modularity:create:command --description=DESCRIPTION
+php artisan modularity:make:command --description=DESCRIPTION
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:command NAME
+php artisan modularity:make:command NAME
 ```
 
-`modularity:create:command`
+`modularity:make:command`
 ---------------------------
 
 Create a new console command
 
 ### Usage
 
-* `modularity:create:command [-d|--description [DESCRIPTION]] [--] <name> <signature>`
+* `modularity:make:command [-d|--description [DESCRIPTION]] [--] <name> <signature>`
 * `mod:c:cmd`
 
 Create a new console command

@@ -412,15 +412,6 @@ class BuildCommand extends BaseCommand
 
     private function copyFile($file, $target, $clean = false)
     {
-        // if (!$this->filesystem->exists($target)) {
-        //     $this->filesystem->makeDirectory($target, 0755, true);
-        // }
-
-        // if($clean){
-        //     $this->filesystem->cleanDirectory($target);
-        //     $this->filesystem->put($target . '/.keep', '');
-        // }
-
         if ($this->filesystem->exists($file)) {
             $this->filesystem->copy($file, $target);
         }

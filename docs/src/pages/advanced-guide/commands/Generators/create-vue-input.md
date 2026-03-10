@@ -1,10 +1,11 @@
-# `Create Vue Input`
+# `Make Vue Input`
 
 > Create Vue Input Component.
 
 ## Command Information
 
-- **Signature:** `modularity:create:vue:input <name>`
+- **Signature:** `modularity:make:vue:input <name>`
+- **Alias:** `modularity:make:vue:input` (deprecated, use `make:vue:input`)
 - **Category:** Generators
 
 
@@ -13,18 +14,18 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:vue:input NAME
+php artisan modularity:make:vue:input NAME
 ```
 
 
-`modularity:create:vue:input`
+`modularity:make:vue:input`
 -----------------------------
 
 Create Vue Input Component.
 
 ### Usage
 
-* `modularity:create:vue:input <name>`
+* `modularity:make:vue:input <name>`
 * `mod:c:vue:input`
 
 Create Vue Input Component.

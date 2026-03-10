@@ -1,10 +1,11 @@
-# `Create Vue Test`
+# `Make Vue Test`
 
 > Create a test file for vue features or components
 
 ## Command Information
 
-- **Signature:** `modularity:create:vue:test [--importDir] [-F|--force] [--] [<name> [<type>]]`
+- **Signature:** `modularity:make:vue:test [--importDir] [-F|--force] [--] [<name> [<type>]]`
+- **Alias:** `modularity:make:vue:test` (deprecated, use `make:vue:test`)
 - **Category:** Generators
 
 
@@ -13,37 +14,37 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:vue:test NAME TYPE
+php artisan modularity:make:vue:test NAME TYPE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:create:vue:test --importDir
+php artisan modularity:make:vue:test --importDir
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:vue:test -F
+php artisan modularity:make:vue:test -F
 
 # Using full option name
-php artisan modularity:create:vue:test --force
+php artisan modularity:make:vue:test --force
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:vue:test NAME
+php artisan modularity:make:vue:test NAME
 ```
 
-`modularity:create:vue:test`
+`modularity:make:vue:test`
 ----------------------------
 
 Create a test file for vue features or components
 
 ### Usage
 
-* `modularity:create:vue:test [--importDir] [-F|--force] [--] [<name> [<type>]]`
+* `modularity:make:vue:test [--importDir] [-F|--force] [--] [<name> [<type>]]`
 * `mod:c:vue:test`
 
 Create a test file for vue features or components

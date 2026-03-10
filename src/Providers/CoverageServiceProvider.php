@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Unusualify\Modularity\Services\CoverageService;
+use Unusualify\Modularity\Support\CommandDiscovery;
 use Unusualify\Modularity\Support\CoverageAnalyzer;
 
 class CoverageServiceProvider extends ServiceProvider
@@ -51,19 +52,9 @@ class CoverageServiceProvider extends ServiceProvider
 
         // Register commands if running in console
         if ($this->app->runningInConsole()) {
-            $coverageCommands = [];
-            foreach (glob(modularity_path('src/Console/Coverage/*.php')) as $filePath) {
-                $filePath = realpath($filePath);
-                $fileContents = file_get_contents($filePath);
-
-                // Extract namespace using regex
-                if (preg_match('/namespace\s+([^;]+);/', $fileContents, $matches)) {
-                    $namespace = $matches[1];
-                    $className = basename($filePath, '.php');
-                    $coverageCommands[] = $namespace . '\\' . $className;
-                }
-            }
-            $this->commands($coverageCommands);
+            $this->commands(CommandDiscovery::discover([
+                __DIR__ . '/../Console/Coverage/*.php',
+            ]));
         }
     }
 
