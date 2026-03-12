@@ -66,23 +66,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { LANGUAGE } from '@/store/mutations'
-import {  LocaleMixin } from '@/mixins'
-import { useInput, makeInputProps, makeInputEmits, useCastAttributes } from '@/hooks'
+import { useInput, makeInputProps, makeInputEmits, useCastAttributes, useLocale } from '@/hooks'
 
 import { cloneDeep, omit, isObject } from 'lodash-es'
 
 export default {
   name: 'v-input-locale',
   emits: [...makeInputEmits],
-  mixins: [LocaleMixin],
   setup (props, context) {
     const { castObjectAttributes } = useCastAttributes()
+    const locale = useLocale(props)
 
     return {
       ...useInput(props, context),
-      castObjectAttributes
+      castObjectAttributes,
+      ...locale
     }
   },
   props: {
@@ -131,10 +130,6 @@ export default {
         // context.emit('update:modelValue', val)
       }
     },
-    ...mapState({
-      currentLocale: state => state.language.active,
-      languages: state => state.language.all
-    }),
     attributesPerLang: function () {
       // const language = this.languages.find(l => l.value === lang)
 
@@ -229,20 +224,6 @@ export default {
       // for textfields set initial values using the initialValue prop
       if (this.initialValue) attributes.initialValue = this.initialValue
       return attributes
-    },
-    updateLocale: function (oldValue) {
-      this.$store.commit(LANGUAGE.SWITCH_LANG, { oldValue })
-      // auto focus new field
-      this.$nextTick(function () {
-        // const currentLanguageItem = this.$el.querySelector('[data-lang="' + this.currentLocale.value + '"]')
-
-        // if (currentLanguageItem) {
-        //   const field = currentLanguageItem.querySelector('input:not([disabled]), textarea:not([disabled]), select:not([disabled])')
-        //   if (field) field.focus()
-        // }
-      })
-
-      // this.$emit('localize', this.currentLocale)
     },
     updateValue: function (locale, newValue) {
       // if (locale) {
