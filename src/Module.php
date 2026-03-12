@@ -122,7 +122,18 @@ class Module extends NwidartModule
         try {
             return $this->moduleActivator->hasStatus($this, $status);
         } catch (\Throwable $th) {
-            dd($this, $status, $this->moduleActivator, $th, debug_backtrace());
+            \Illuminate\Support\Facades\Log::error('Modularity module status check failed', [
+                'module' => $this->getName(),
+                'status' => $status,
+                'exception' => $th->getMessage(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                "Failed to check module status for {$this->getName()}: {$th->getMessage()}",
+                (int) $th->getCode(),
+                $th
+            );
         }
     }
 
@@ -819,7 +830,18 @@ class Module extends NwidartModule
                 ? $relativeUrl
                 : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
-            dd($th);
+            \Illuminate\Support\Facades\Log::error('Modularity route generation failed', [
+                'module' => $this->getName(),
+                'routeName' => $name ?? null,
+                'exception' => $th->getMessage(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                "Failed to generate route: {$th->getMessage()}",
+                (int) $th->getCode(),
+                $th
+            );
         }
     }
 
