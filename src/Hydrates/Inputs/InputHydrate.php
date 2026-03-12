@@ -9,6 +9,17 @@ use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Traits\ManageNames;
 
+/**
+ * Base class for input schema hydration.
+ *
+ * Hydrates transform module config (type: 'checklist') into frontend schema (type: 'input-checklist').
+ * Vue components (VInputChecklist, etc.) consume the hydrated schema. See AGENTS.md § HYDRATE ↔ INPUT ADAPTER.
+ *
+ * Output types: input-assignment, input-browser, input-chat, input-checklist, input-checklist-group,
+ * input-comparison-table, input-date, input-file, input-filepond, input-filepond-avatar, input-form-tabs,
+ * input-image, input-payment-service, input-price, input-process, input-radio-group, input-repeater,
+ * input-select-scroll, input-spread, input-tag, input-tagger. Also: select, group (JsonHydrate).
+ */
 abstract class InputHydrate
 {
     use ManageNames;
