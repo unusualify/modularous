@@ -15,7 +15,7 @@ trait ResolveConnector
     {
         $parsedConnector = find_module_and_route($connector);
 
-        return Modularity::find($parsedConnector['module'])->getRepository($parsedConnector['route']);
+        return $parsedConnector['module']->getRepository($parsedConnector['route']);
     }
 
     /**
