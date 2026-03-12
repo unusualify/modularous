@@ -13,6 +13,7 @@ return [
     'auth_middlewares' => [
         'auth:sanctum',
     ],
+    'routes' => [], // Additional API resource routes to merge with default (index, store, show, update, destroy)
     'versioning' => [
         'enabled' => true,
         'default_version' => 'v1',
