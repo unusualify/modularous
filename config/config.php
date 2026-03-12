@@ -29,6 +29,12 @@ return [
     // 'vendor_components_resource_path' => 'assets/vendor/js/components',
     'enabled_currencies' => explode(',', env('MODULARITY_ACTIVE_CURRENCIES', 'USD,EUR,TRY')),
 
+    /**
+     * Optional custom currency provider class implementing CurrencyProviderInterface.
+     * When null, SystemPricingCurrencyProvider is used if available, else NullCurrencyProvider.
+     */
+    'currency_provider' => env('MODULARITY_CURRENCY_PROVIDER', null),
+
     'manifest' => 'unusual-manifest.json',
     'js_namespace' => env('VUE_APP_NAME', 'MODULARITY'),
     'build_timeout' => 300,
