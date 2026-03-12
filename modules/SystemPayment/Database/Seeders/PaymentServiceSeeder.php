@@ -18,9 +18,9 @@ class PaymentServiceSeeder extends Seeder
 {
     protected $mediaLibraryController;
 
-    public function __construct(MediaLibraryController $mediaLibraryController)
+    public function __construct()
     {
-        $this->mediaLibraryController = $mediaLibraryController;
+        $this->mediaLibraryController = app(MediaLibraryController::class);
     }
 
     /**
