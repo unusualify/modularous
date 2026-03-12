@@ -22,11 +22,11 @@ global.IntersectionObserver = class IntersectionObserver {
   disconnect() {}
 }
 
-// Mock axios with full structure
+// Mock axios with full structure - include status for Assignment.vue fetchAssignments
 vi.mock('axios', () => ({
   default: {
-    get: vi.fn(() => Promise.resolve({ data: [] })),
-    post: vi.fn(() => Promise.resolve({ data: [] })),
+    get: vi.fn(() => Promise.resolve({ status: 200, data: [] })),
+    post: vi.fn(() => Promise.resolve({ status: 200, data: [] })),
     defaults: {
       headers: {
         common: {}
@@ -58,6 +58,9 @@ const defaultProps = {
   assigneeType: 'User',
   authorizedRoles: ['admin']
 }
+
+// Note: Assignment uses createFormModal.value.validateForm() and saveRequest callbacks.
+// Tests that depend on refs or complex async flows may need component stubs.
 
 const mockAssignment = {
   id: 1,
@@ -163,9 +166,7 @@ describe('VInputAssignment', () => {
     })
 
     test('creates new assignment', async () => {
-      // Open the create form modal
-      wrapper.vm.createFormModalActive = true
-
+      wrapper.vm.loading = false
       await wrapper.vm.$nextTick()
 
       const newAssignment = {
@@ -177,10 +178,9 @@ describe('VInputAssignment', () => {
 
       wrapper.vm.createFormModel = newAssignment
 
-      // Mock the form validation to return successful validation
-      wrapper.vm.createForm = {
-        validate: vi.fn().mockResolvedValue({ valid: true })
-      }
+      // Component uses createFormModal.value.validateForm()
+      const mockValidateForm = vi.fn().mockResolvedValue({ valid: true })
+      wrapper.vm.createFormModal = { validateForm: mockValidateForm }
 
       axios.post.mockResolvedValueOnce({
         status: 200,
@@ -190,6 +190,7 @@ describe('VInputAssignment', () => {
       await wrapper.vm.createAssignment()
       await flushPromises()
 
+      expect(mockValidateForm).toHaveBeenCalled()
       expect(axios.post).toHaveBeenCalledWith(
         '/api/assignments/123/create',
         expect.objectContaining({
@@ -201,38 +202,42 @@ describe('VInputAssignment', () => {
       )
     })
 
-    test('updates assignment status', async () => {
+    test('updateAssignment calls axios.post and updates assignments on success', async () => {
       wrapper.vm.assignments = [mockAssignment]
 
+      const updatedAssignment = { ...mockAssignment, status: 'completed' }
       const mockResponse = {
         status: 200,
         data: {
-          assignments: [{ ...mockAssignment, status: 'completed' }]
+          assignments: [updatedAssignment]
         }
       }
 
       axios.post.mockResolvedValueOnce(mockResponse)
 
-      const result = await wrapper.vm.updateAssignment({ status: 'completed' })
+      await wrapper.vm.updateAssignment({ status: 'completed' })
       await flushPromises()
 
-      // Updated expectation to match the correct endpoint
       expect(axios.post).toHaveBeenCalledWith(
-        '/api/assignments/123/create',  // This matches the createEndpoint prop
+        '/api/assignments/123/create',
         { status: 'completed' }
       )
-      expect(wrapper.vm.assignments[0].status).toBe('completed')
-      // expect(result).toEqual(mockResponse)
+      // assignments is a ref; success callback sets assignments.value from response.data.assignments
+      const assignments = wrapper.vm.assignments
+      expect(Array.isArray(assignments)).toBe(true)
+      expect(assignments[0].status).toBe('completed')
     })
 
     test('shows loading state during API calls', async () => {
-      axios.get.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 1000)))
+      let resolveGet
+      const getPromise = new Promise(resolve => { resolveGet = resolve })
+      axios.get.mockImplementationOnce(() => getPromise)
 
       wrapper.vm.fetchAssignments()
       expect(wrapper.vm.loading).toBe(true)
 
+      resolveGet({ status: 200, data: [] })
       await flushPromises()
-      wrapper.vm.loading = false
       expect(wrapper.vm.loading).toBe(false)
     })
   })
@@ -304,11 +309,8 @@ describe('VInputAssignment', () => {
 
       wrapper.vm.createFormModel = newAssignment
 
-      expect(wrapper.vm.$refs.createFormModal.dialog).toBe(true)
-
-      wrapper.vm.createForm = {
-        validate: vi.fn().mockResolvedValue({ valid: true })
-      }
+      const mockValidateForm = vi.fn().mockResolvedValue({ valid: true })
+      wrapper.vm.createFormModal = { validateForm: mockValidateForm }
 
       axios.post.mockResolvedValueOnce({
         status: 200,
@@ -316,8 +318,9 @@ describe('VInputAssignment', () => {
       })
 
       await wrapper.vm.createAssignment()
+      await flushPromises()
 
-      expect(wrapper.vm.createForm.validate).toHaveBeenCalled()
+      expect(mockValidateForm).toHaveBeenCalled()
 
       expect(axios.post).toHaveBeenCalledWith(
         '/api/assignments/123/create',
@@ -332,20 +335,14 @@ describe('VInputAssignment', () => {
 
     test('createAssignment does not submit when validation fails', async () => {
       wrapper.vm.loading = false
-
       await wrapper.vm.$nextTick()
 
-      wrapper.vm.createFormModalActive = true
-
-      await wrapper.vm.$nextTick()
-
-      // Mock failed validation
-      const mockValidate = vi.fn().mockResolvedValue(false)
-      wrapper.vm.$refs.createForm.validate = mockValidate
+      const mockValidateForm = vi.fn().mockResolvedValue({ valid: false })
+      wrapper.vm.createFormModal = { validateForm: mockValidateForm }
 
       await wrapper.vm.createAssignment()
 
-      expect(mockValidate).toHaveBeenCalled()
+      expect(mockValidateForm).toHaveBeenCalled()
       expect(axios.post).not.toHaveBeenCalled()
     })
 

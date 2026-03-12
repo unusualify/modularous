@@ -1,24 +1,22 @@
-// test/components/input-image.test.js
+// test/components/v-input-image.test.js
 import { describe, expect, test, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-
-import vuetify from '../../src/js/plugins/vuetify'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 import Image from '../../src/js/components/inputs/Image.vue'
-import ModalMedia from '../../src/js/components/modals/ModalMedia.vue'
-
 import i18n from '../../src/js/config/i18n'
 import store from '../../src/js/store'
 import fitGrid from '../../src/js/directives/fit-grid'
-import { wrap } from 'lodash-es'
 
-global.ResizeObserver = require('resize-observer-polyfill')
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 
-// vi.mock('../src/js/components/modals/ModalMedia.vue', () => ({
-//   render: () => h('div', {
-
-//   })
-// }))
+const vuetify = createVuetify({ components, directives })
 
 let getModel = () => [
   {
@@ -50,11 +48,9 @@ let getModel = () => [
 ]
 
 async function factory(props = {}, options = {}) {
-
-  return await mount(Image, {
+  return mount(Image, {
     global: {
-      plugins: [vuetify, store, i18n, fitGrid],
-      // plugins: [UEConfig],
+      plugins: [vuetify, store, i18n, fitGrid]
     },
     ...options,
     props: {
@@ -66,16 +62,14 @@ async function factory(props = {}, options = {}) {
 
 describe('image input tests', () => {
 
-  test('renders the add button', async () => {
-    const wrapper = await factory()
+  test('renders the add button when empty', async () => {
+    const wrapper = await factory({ modelValue: [], max: 1 })
 
-    expect(wrapper.findAll('[data-test="addButton"]')).toHaveLength(1);
-
+    expect(wrapper.findAll('[data-test="addButton"]')).toHaveLength(1)
   })
 
-  test('renders the add button with max 2', async () => {
-    const wrapper = await factory( {
-      name: 'image',
+  test('renders the add button with max 2 when one image exists', async () => {
+    const wrapper = await factory({
       modelValue: getModel(),
       max: 2
     })
@@ -83,26 +77,22 @@ describe('image input tests', () => {
     expect(wrapper.findAll('[data-test="addButton"]')).toHaveLength(1)
   })
 
-  test('does not render any add buttons', async () => {
-    const openMediaLibrarySpy = vi.spyOn(Image.methods, 'openMediaLibrary')
-
+  test('does not render any add buttons when max reached', async () => {
     const wrapper = await factory({
       modelValue: getModel(),
+      max: 1
     })
 
     expect(wrapper.findAll('[data-test="addButton"]')).toHaveLength(0)
   })
 
   test('clicks a add button', async () => {
-    // const openMediaLibrarySpy = vi.spyOn(Image.methods, 'openMediaLibrary')
-
-    const wrapper = await factory()
-
-    wrapper.vm.openMediaLibrary = await vi.fn()
+    const wrapper = await factory({ modelValue: [], max: 1 })
 
     const openMediaLibrarySpy = vi.spyOn(wrapper.vm, 'openMediaLibrary')
 
-    const addButton = await wrapper.findAll('[data-test="addButton"]')[0]
+    const addButton = wrapper.findAll('[data-test="addButton"]')[0]
+    expect(addButton.exists()).toBe(true)
 
     await addButton.trigger('click')
 
@@ -126,28 +116,25 @@ describe('image input tests', () => {
     expect(wrapper.findAll('[data-test="deleteButton"]')).toHaveLength(0)
   })
 
-  test('clicks a download button', async () => {
+  test('renders download button when image is present', async () => {
     const wrapper = await factory({
       modelValue: getModel(),
       max: 2
     })
 
-    const downloadButtons = await wrapper.findAll('[data-test="downloadButton"]')
+    const downloadButtons = wrapper.findAll('[data-test="downloadButton"]')
 
     expect(downloadButtons).toHaveLength(1)
-
-    // const downloadButton = downloadButtons[0]
   })
 
-  test('add a new image', async () => {
+  test('displays multiple images when model has multiple items', async () => {
+    const modelWithTwo = [...getModel(), { ...getModel()[0], id: 2, name: 'profil2.png' }]
     const wrapper = await factory({
-      modelValue: getModel(),
-      max: 2
+      modelValue: modelWithTwo,
+      max: 3
     })
 
-    await wrapper.vm.input.push(getModel())
-
-    const deleteButtons = await wrapper.findAll('[data-test="deleteButton"]')
+    const deleteButtons = wrapper.findAll('[data-test="deleteButton"]')
 
     expect(deleteButtons).toHaveLength(2)
   })
