@@ -8,6 +8,7 @@ import moment from 'moment/dist/moment'
 import core from '@/core'
 // import VFormBase from 'vuetify-form-base';
 import VCustomFormBase from '__components/others/CustomFormBase.vue'
+import VFormBase from '__components/others/FormBase.vue'
 
 // Template Components
 import UEModal from '__components/modals/Modal.vue'
@@ -45,6 +46,7 @@ const includeGlobalComponents = import.meta.glob('__components/*.vue', {eager: t
 const includeIteratorComponents = import.meta.glob('__components/data_iterators/*.vue', {eager: true})
 const includeLayouts = import.meta.glob('__components/layouts/*.vue', {eager:true})
 const includeFormInputs = import.meta.glob('__components/inputs/*.vue', {eager: true})
+const includeSchemaTypes = import.meta.glob('__components/inputs/schema-types/*.vue', {eager: true})
 
 const includeCustomComponents = import.meta.glob('__components/customs/*.vue', {eager: true})
 const includeCustomFormInputs = import.meta.glob('__components/customs/inputs/*.vue', {eager: true})
@@ -160,6 +162,7 @@ export default {
     })
     // all components
     app.component('VCustomFormBase', VCustomFormBase)
+    app.component('VFormBase', VFormBase)
     app.component('UeDynamicModal', DynamicModal)
     app.component('UeModal', UEModal)
     app.component('UeModalMedia', UEModalMedia)
@@ -170,6 +173,7 @@ export default {
     // app.config.globalProperties.registerComponents(includeLabComponents, 'labs')
     app.config.globalProperties.registerComponents(includeLayouts, 'layouts')
     app.config.globalProperties.registerComponents(includeFormInputs, 'inputs', 'VInput')
+    app.config.globalProperties.registerComponents(includeSchemaTypes, 'inputs/schema-types', '')
 
     if ( import.meta.env.VUE_IS_CUSTOM_BUILD || false ) {
       app.config.globalProperties.registerComponents(includeCustomComponents, 'customs', 'UeCustom')

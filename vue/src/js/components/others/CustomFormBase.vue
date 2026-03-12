@@ -57,27 +57,27 @@
                   :subject="obj.schema.subject"
                 />
 
-                <!-- TITLE -->
-                <ue-title v-else-if="obj.schema.type === 'title'"
-                  :text="obj.schema.title ?? obj.schema.text ?? obj.schema.label ?? obj.schema.name"
+                <!-- TITLE (via registry -> InputTitle) -->
+                <component v-else-if="obj.schema.type === 'title'"
+                  :is="mapTypeToComponent(obj.schema.type)"
                   v-bind="bindSchema(obj)"
                 />
 
-                <!-- RADIO -->
-                <v-radio-group v-else-if="obj.schema.type === 'radio'"
+                <!-- RADIO (via registry -> InputRadio) -->
+                <component v-else-if="obj.schema.type === 'radio'"
+                  :is="mapTypeToComponent(obj.schema.type)"
                   v-bind="bindSchema(obj)"
                   :modelValue="setValue(obj)"
-                  @change="onInput($event, obj)"
+                  @update:modelValue="onInput($event, obj)"
+                  :options="obj.schema.options"
+                  :obj="obj"
+                  :id="id"
+                  :index="index"
                 >
-                  <v-radio
-                    v-for="(option, idx) in obj.schema.options"
-                    :key="idx"
-                    v-bind="bindOptions(option)"
-                  >
-                    <!-- component doesn't work with #[s]="slotData" " -->
-                    <template v-for="s in getInjectedScopedSlots(id, obj)" #[s]><slot :name= "getKeyInjectSlot(obj, s)" v-bind= "{ id, obj, index, idx, option }"/></template>
-                  </v-radio>
-                </v-radio-group>
+                  <template v-for="s in getInjectedScopedSlots(id, obj)" #[s]="slotData">
+                    <slot :name="getKeyInjectSlot(obj, s)" v-bind="{ id, obj, index, ...slotData }" />
+                  </template>
+                </component>
                 <!-- END RADIO -->
 
                 <!-- DATE, TIME, COLOR TEXT-MENU -->
@@ -439,78 +439,8 @@ import formEvents from '@/utils/formEvents'
 //   }
 // })
 //
-// Declaration
-const typeToComponent = {
-  // maps schema.type to prop 'type' in v-text-field  - https://www.wufoo.com/html5/
-  text: 'v-text-field',
-  password: 'v-text-field',
-  email: 'v-text-field',
-  tel: 'v-text-field',
-  url: 'v-text-field',
-  search: 'v-text-field',
-  number: 'v-text-field',
-  /*
-    { type:'text, ext:'typeOfTextField', ...}
-    For native <INPUT> type use alternative schema prop ext  -> schema:{ type:'text, ext:'date', ...}
-    correspond to <input type="number" >
-    number: 'v-text-field',   //  { type:'text, ext:'number', ...}
-    range: 'v-text-field',   //  { type:'text, ext:'range', ...}
-    date: 'v-text-field',    //  { type:'text, ext:'date', ...}
-    time: 'v-text-field',    //  { type:'text, ext:'time', ...}
-    color: 'v-text-field',   //  { type:'text, ext:'color', ...}
-  */
-
-  date: 'v-date-picker',
-  time: 'v-time-picker',
-  color: 'v-color-picker',
-  /*
-    INFO: 3 Types of PICKER DATE / TIME / COLOR
-    Date-Native Input    - schema:{ type:'text, ext:'date', ...}
-    Date-Picker          - schema:{ type:'date', ...}
-    Date-Picker-Textmenu     - schema:{ type:'date', ext:'text'...}
-  */
-
-  // map schema.type to vuetify-control (vuetify 2.0)
-  img: 'v-img',
-  textarea: 'v-textarea',
-  range: 'v-slider',
-  file: 'v-file-input',
-  switch: 'v-switch',
-  checkbox: 'v-checkbox',
-  card: 'v-card',
-  hidden: 'input'
-  /*
-    HOW TO USE CUSTOM Components
-    1)
-      Name and Register your Custom-Control Component globally in 'main.js'
-      but avoid collision with registered names of Vuetify - Controls
-      See: https://vuejs.org/v2/guide/components-registration.html
-
-      Vue.component('custom-component', () => import('@/components/custom-component.vue') )
-
-    2)
-      use it in Schema
-
-      mySchema: { myCustom: { type: 'custom-component' }
-
-    3) // custom-component.vue
-      <template>
-        <v-text-field v-model="inp"  label="Basic"></v-text-field>
-      </template>
-      <script>
-        export default {
-          props: ['type','value', 'obj'],
-          computed:{
-            inp:{
-              get(){  return this.value},
-              set(v){ this.$emit('input', v)}
-            }
-          }
-        }
-      < /script>
-  */
-
-}
+// Import from registry for extensibility (registerInputType, mapTypeToComponent)
+import { mapTypeToComponent as registryMapTypeToComponent } from '@/components/inputs/registry'
 const orderDirection = 'ASC'
 const pathDelimiter = '.'
 const classKeyDelimiter = '-'
@@ -746,13 +676,9 @@ export default {
     // }
   },
   methods: {
-    // MAP TYPE
+    // MAP TYPE - uses registry for extensibility
     mapTypeToComponent (type) {
-      // merge global registered components into typeToComponent Object
-      const allTypeComponents = { ...typeToComponent, ...this.vueInstance.components }
-      // const typeToComponent -> maps type to according v-component
-      // ie. schema:{ type:'password', ... } to specific vuetify-control or default to v-text-field'
-      return allTypeComponents[type] ? allTypeComponents[type] : `v-${type}`
+      return registryMapTypeToComponent(type, this.vueInstance?.components ?? {})
     },
     // CHECK FOR TYPE: DATE, TIME OR COLOR and EXT: TEXT
     isDateTimeColorTypeAndExtensionText (obj) {

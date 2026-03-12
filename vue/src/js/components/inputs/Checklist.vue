@@ -645,6 +645,10 @@
       groupedItems () {
         const groups = {}
 
+        if (!this.items || !Array.isArray(this.items) || this.items.length === 0) {
+          return []
+        }
+
         for (const i in this.items) {
 
           if(this.chunkField){
@@ -727,7 +731,7 @@
 
         if(this.closeAllGroups){
           this.openedGroups = []
-        } else {
+        } else if (array.length > 0) {
           this.openedGroups = !this.openAllGroups ? [array[0].name] : array.map((group) => group.name)
         }
 
