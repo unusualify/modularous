@@ -32,3 +32,7 @@ It needs a schema attribute like standard-schema pattern. Types must be checklis
 
 > [!IMPORTANT]
 > This component was introduced in [v0.9.2]
+
+## See also
+
+- [Module Features Overview](/guide/module-features/) — Config types and output types (checklist)

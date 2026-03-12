@@ -13,6 +13,12 @@ The data table component is used for displaying registered data in your index pa
 Table functionalities and user-interface is highly customizable. In order to customize default-set, module config file will be used
 
 :::
+
+::: tip See Also
+
+For the table flow (useTable, store/api/datatable), see [Frontend — Table Flow](/system-reference/frontend#table-flow).
+
+:::
 ## Table Component Defaults
 
 In default, Modularity package automatically generates an default table user-interface with default table functionalities like `create new button`, `filtering`, `pagination` and `an embeded create-edit form` based on served functionalities of route itself and `user's permission`. Furthermore, based on registered data properties and user's permissions, item actions like `delete`, `restore` will be placed. 

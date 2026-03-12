@@ -29,5 +29,6 @@ or
 > [!IMPORTANT]
 > This component was introduced in [v0.9.1]
 
+## See also
 
-### 
+- [Module Features Overview](/guide/module-features/) — Features that use select output (Authorizable, Stateable)

@@ -4,7 +4,7 @@ export const navConfig = defineConfig({
     nav: [
         { text: 'Home', link: '/' },
         { text: 'Get Started', link: 'get-started/what-is-modularity' },
-        { text: 'Custom Auth Pages', link: 'custom-auth-pages/overview' },
+        { text: 'Custom Auth Pages', link: 'guide/custom-auth-pages' },
         {
           text : 'Version' ,
           items : [

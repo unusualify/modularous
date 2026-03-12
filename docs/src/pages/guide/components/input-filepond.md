@@ -27,7 +27,7 @@ In order to effectively use the FilePond component and its functionalities on th
 
 ::: info
 
-Modularity serves most of the functionalities over traits. In order to get clear information about mechanism, please see [FilePond Related Traits Page](https://i.kym-cdn.com/entries/icons/original/000/011/976/That_Would_Be_Great_meme.jpg)
+Modularity serves most of the functionalities over traits. See [File Storage with Filepond](/guide/generics/file-storage-with-filepond) for the full implementation guide.
 
 :::
 
