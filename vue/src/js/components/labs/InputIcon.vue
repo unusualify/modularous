@@ -59,12 +59,11 @@
 </template>
 
 <script>
-import { InputMixin } from '@/mixins'
-import { useInput, makeInputProps } from '@/hooks'
+import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
 
 export default {
-  mixins: [InputMixin],
   name: 'v-input-icon',
+  emits: [...makeInputEmits],
   props: {
     ...makeInputProps(),
     label: {

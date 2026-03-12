@@ -7,18 +7,13 @@
 </template>
 
 <script>
-import { InputMixin } from '@/mixins'
-import { useInput } from '@/hooks'
+import { useInput, makeInputEmits } from '@/hooks'
 
 export default {
-  mixins: [InputMixin],
   name: 'v-input-range',
-
-  created () {
-
-  },
-  computed: {
-
+  emits: [...makeInputEmits],
+  setup (props, context) {
+    return { ...useInput(props, context) }
   }
 }
 </script>

@@ -29,12 +29,10 @@
 </template>
 
 <script>
-// import { AlertMixin } from '@/mixins'
 import { ALERT } from '@/store/mutations/index'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-  // mixins: [AlertMixin],
   data: () => ({
     timeout: 3000
   }),

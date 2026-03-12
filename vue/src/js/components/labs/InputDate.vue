@@ -13,12 +13,11 @@
 </template>
 
 <script>
-import { InputMixin } from '@/mixins' // for props
-import { useInput } from '@/hooks'
+import { useInput, makeInputEmits } from '@/hooks'
 
 export default {
-  mixins: [InputMixin],
   name: 'v-input-date',
+  emits: [...makeInputEmits],
   setup (props, context) {
     return {
       ...useInput(props, context)

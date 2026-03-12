@@ -50,17 +50,23 @@
 
 <script>
 import a17VueFilters from '@/utils/filters.js'
-import mediaItemsMixin from '@/mixins/mediaLibrary/mediaItems'
+import { useMediaItems } from '@/hooks'
 
 export default {
   name: 'A17Itemlist',
   props: {
+    items: { type: Array, default: () => [] },
+    selectedItems: { type: Array, default: () => [] },
+    usedItems: { type: Array, default: () => [] },
     keysToCheck: {
       type: Array,
       default: () => ['id']
     }
   },
-  mixins: [mediaItemsMixin],
+  emits: ['change', 'shiftChange'],
+  setup (props, { emit }) {
+    return { ...useMediaItems(props, emit) }
+  },
   filters: a17VueFilters,
   computed: {
     allItems: function () {

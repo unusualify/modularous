@@ -59,15 +59,10 @@
   </v-input>
 </template>
 <script>
-import { MEDIA_LIBRARY } from '@/store/mutations'
+import { nextTick } from 'vue'
 import draggable from 'vuedraggable'
-import { makeFileProps, useFile } from '@/hooks'
+import { makeFileProps, useFile, useMediaLibrary } from '@/hooks'
 import { makeInputEmits } from '@/hooks'
-
-import localeMixin from '@/mixins/locale'
-// import draggableMixin from '@/mixins/draggable'
-// import mediaLibraryMixin from '@/mixins/mediaLibrary/mediaLibrary'
-// import inputframeMixin from '@/mixins/inputFrame'
 
 import FileItem from '@/components/files/FileItem.vue'
 
@@ -79,48 +74,22 @@ export default {
     FileItem,
     draggable
   },
-  mixins: [
-    localeMixin
-    // mediaLibraryMixin,
-    // draggableMixin,
-    // inputframeMixin
-  ],
   props: {
     ...makeFileProps()
   },
   setup (props, context) {
-    return {
-      ...useFile(props, context)
+    const fileApi = useFile(props, context)
+    const { openMediaLibrary: baseOpen } = useMediaLibrary(props)
+    const openMediaLibrary = (max, name, index) => {
+      const n = name ?? props.name
+      const i = typeof index === 'number' ? index : -1
+      const inputVal = fileApi.input?.value ?? fileApi.input ?? []
+      baseOpen(max, n, i, Array.isArray(inputVal) ? inputVal : [])
+      nextTick(() => { fileApi.mediableActive = true })
     }
-  },
-  created () {
-
-  },
-  methods: {
-    openMediaLibrary: function (max = 1, name = this.name, index = -1) {
-      // if (__isset(this.$store.state.mediaLibrary.selected[name])) {
-      //   this.$store.state.mediaLibrary.selected[name] = []
-      //   this.$store.state.mediaLibrary.selected[name] = this.input
-      // }
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_CONNECTOR, name)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_TYPE, this.mediaType)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_REPLACE_INDEX, index)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MAX, max)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MODE, true)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_FILESIZE_MAX, this.filesizeMax || 0)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_WIDTH_MIN, this.widthMin || 0)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_HEIGHT_MIN, this.heightMin || 0)
-
-      if (this.$store.getters.mediaLibraryAccessible) {
-        if (__isset(this.$store.state.mediaLibrary.selected[name])) {
-          this.$store.state.mediaLibrary.selected[name] = []
-        }
-        this.$store.state.mediaLibrary.selected[name] = this.input
-
-        // this.mediableActive = true
-        this.$store.commit(MEDIA_LIBRARY.OPEN_MODAL)
-        this.$nextTick(() => { this.mediableActive = true })
-      }
+    return {
+      ...fileApi,
+      openMediaLibrary
     }
   }
 }

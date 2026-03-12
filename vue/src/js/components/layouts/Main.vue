@@ -74,6 +74,7 @@
 
     <!-- Modals -->
     <ue-modal-media
+      ref="mediaLibrary"
       v-if="store.getters.mediaLibraryAccessible"
       v-model="store.state.mediaLibrary.showModal"
     />

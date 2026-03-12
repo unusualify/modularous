@@ -17,23 +17,13 @@
 </template>
 
 <script>
-import { InputMixin } from '@/mixins'
-import { useInput } from '@/hooks'
-
-// import { VTreeview } from 'vuetify/lib/components/VTreeview'
+import { useInput, makeInputEmits } from '@/hooks'
 
 export default {
-  components: {
-    // VTreeview
-  },
-  mixins: [InputMixin],
-  name: 'v-input-range',
-
-  created () {
-
-  },
-  computed: {
-
+  name: 'v-input-treeview',
+  emits: [...makeInputEmits],
+  setup (props, context) {
+    return { ...useInput(props, context) }
   }
 }
 </script>

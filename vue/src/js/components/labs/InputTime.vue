@@ -32,12 +32,14 @@
 
 <script>
 
-import { InputMixin } from '@/mixins'
-import { useInput } from '@/hooks'
+import { useInput, makeInputEmits } from '@/hooks'
 
 export default {
-  mixins: [InputMixin],
-  name: 'v-input-color',
+  name: 'v-input-time',
+  emits: [...makeInputEmits],
+  setup (props, context) {
+    return { ...useInput(props, context) }
+  },
   data () {
     return {
       menuActive: false

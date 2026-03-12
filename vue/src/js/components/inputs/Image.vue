@@ -200,13 +200,9 @@ import {
 } from 'vuex'
 
 import { MEDIA_LIBRARY } from '@/store/mutations'
-import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
+import { nextTick } from 'vue'
+import { useInput, makeInputProps, makeInputEmits, useMediaLibrary } from '@/hooks'
 import { makeImageProps, useImage } from '@/hooks'
-
-// import a17Cropper from '@/components/Cropper.vue'
-// import a17MediaMetadata from '@/components/MediaMetadata.vue'
-import mediaLibrayMixin from '@/mixins/mediaLibrary/mediaLibrary.js'
-import mediaFieldMixin from '@/mixins/mediaField.js'
 
 import a17VueFilters from '@/utils/filters.js'
 import {
@@ -225,9 +221,15 @@ export default {
     // 'a17-cropper': a17Cropper,
     // 'a17-mediametadata': a17MediaMetadata
   },
-  mixins: [mediaLibrayMixin, mediaFieldMixin],
   props: {
     ...makeImageProps(),
+    withAddInfo: { type: Boolean, default: true },
+    withVideoUrl: { type: Boolean, default: true },
+    withCaption: { type: Boolean, default: true },
+    altTextMaxLength: { type: Number, default: 0 },
+    captionMaxLength: { type: Number, default: 0 },
+    cropContext: { type: String, default: '' },
+    extraMetadatas: { type: Array, default: () => [] },
     imageCol: {
       type: Object,
       default: () => ({
@@ -238,8 +240,18 @@ export default {
     }
   },
   setup (props, context) {
+    const imageApi = useImage(props, context)
+    const { openMediaLibrary: baseOpen } = useMediaLibrary(props)
+    const openMediaLibrary = (max, name, index) => {
+      const n = name ?? props.name
+      const i = typeof index === 'number' ? index : -1
+      const inputVal = imageApi.input?.value ?? imageApi.input ?? []
+      baseOpen(max, n, i, Array.isArray(inputVal) ? inputVal : [])
+      nextTick(() => { imageApi.mediableActive = true })
+    }
     return {
-      ...useImage(props, context)
+      ...imageApi,
+      openMediaLibrary
     }
   },
   data: function () {
@@ -353,31 +365,6 @@ export default {
     }
   },
   methods: {
-    openMediaLibrary: function (max = 1, name = this.name, index = -1) {
-      // if (__isset(this.$store.state.mediaLibrary.selected[name])) {
-      //   this.$store.state.mediaLibrary.selected[name] = []
-      //   this.$store.state.mediaLibrary.selected[name] = this.input
-      // }
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_CONNECTOR, name)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_TYPE, this.mediaType)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_REPLACE_INDEX, index)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MAX, max)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MODE, true)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_FILESIZE_MAX, this.filesizeMax || 0)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_WIDTH_MIN, this.widthMin || 0)
-      this.$store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_HEIGHT_MIN, this.heightMin || 0)
-
-      if (this.$store.getters.mediaLibraryAccessible) {
-        if (__isset(this.$store.state.mediaLibrary.selected[name])) {
-          this.$store.state.mediaLibrary.selected[name] = []
-        }
-        this.$store.state.mediaLibrary.selected[name] = this.input
-
-        // this.mediableActive = true
-        this.$store.commit(MEDIA_LIBRARY.OPEN_MODAL)
-        this.$nextTick(() => { this.mediableActive = true })
-      }
-    },
     // crop
     canvasCrop () {
       const data = this.media.crops[Object.keys(this.media.crops)[0]]
