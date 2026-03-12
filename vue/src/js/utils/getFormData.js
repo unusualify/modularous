@@ -207,7 +207,6 @@ export const getModel = (inputs, item = null, rootState = null) => {
     }
 
     if(numberable.includes(input.type) && __isset(value) && __isString(value)){
-      console.log(name, value)
       fields[name] = _.toNumber(value)
     }
 

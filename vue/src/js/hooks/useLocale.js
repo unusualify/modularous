@@ -2,14 +2,14 @@
  * useLocale - Composable replacement for LocaleMixin.
  * Provides locale state and helpers from Vuex language store.
  */
-import { computed, ref } from 'vue'
+import { computed, ref, } from 'vue'
 import { useStore } from 'vuex'
+import store from '@/store'
 import { LANGUAGE } from '@/store/mutations'
 
 const RTL_LOCALES = ['ar', 'arc', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ku', 'ps', 'ur', 'yi']
 
 export default function useLocale (props = {}) {
-  const store = useStore()
   const _locale = ref(props.locale ?? null)
 
   const currentLocale = computed(() => store.state.language?.active ?? null)
@@ -25,8 +25,8 @@ export default function useLocale (props = {}) {
   const dirLocale = computed(() => (isLocaleRTL.value ? 'rtl' : 'auto'))
   const displayedLocale = computed(() => currentLocale.value?.shortlabel ?? '')
 
-  const updateLocale = (oldValue) => {
-    store.commit(LANGUAGE.SWITCH_LANG, { oldValue })
+  const updateLocale = (value) => {
+    store.commit(LANGUAGE.UPDATE_LANG, value)
   }
 
   return {
