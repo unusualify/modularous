@@ -303,13 +303,6 @@ class MakeModelCommand extends BaseCommand
     {
         $defaultFillableSchema = implode(',', $this->baseConfig('schemas.fillables'));
 
-        dd(
-            $defaultFillableSchema,
-            $this->defaultFillable,
-            $this->option('fillable'),
-            (new SchemaParser($defaultFillableSchema))->getCasts()
-        );
-
         $fields = (new SchemaParser($defaultFillableSchema))->getColumns();
 
         if (! $this->getTraitResponse('addTranslation')) {
