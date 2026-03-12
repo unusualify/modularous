@@ -170,6 +170,19 @@ class BaseServiceProvider extends ServiceProvider
             return new \Unusualify\Modularity\Services\CurrencyExchangeService;
         });
 
+        $this->app->singleton(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class, function (Application $app) {
+            $providerClass = config('modularity.currency_provider', null);
+            if ($providerClass && class_exists($providerClass)) {
+                return $app->make($providerClass);
+            }
+            $systemPricing = new \Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
+            if ($systemPricing->isAvailable()) {
+                return $systemPricing;
+            }
+
+            return new \Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
+        });
+
         $this->app->singleton('modularity.relationship.graph', function (Application $app) {
             return new \Unusualify\Modularity\Services\CacheRelationshipGraph;
         });

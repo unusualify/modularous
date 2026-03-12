@@ -7,7 +7,6 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Modules\SystemPricing\Entities\Currency;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Json;
 use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
@@ -166,7 +165,7 @@ class Modularity extends FileRepository
 
         return $modules;
     }
-    
+
     /**
      * Get cached modules.
      *
@@ -726,15 +725,21 @@ class Modularity extends FileRepository
 
     public function getCurrencyForLanguageBasedPrices()
     {
-        if ($this->shouldUseLanguageBasedPrices()) {
-            $locale = app()->getLocale();
-            $localeCurrencies = config('modularity.language_currencies', []);
-            if (array_key_exists($locale, $localeCurrencies)) {
-                $currency = Currency::where('iso_4217', mb_strtoupper($localeCurrencies[$locale]))->first();
-                if ($currency) {
-                    return $currency;
-                }
-            }
+        if (! $this->shouldUseLanguageBasedPrices()) {
+            return false;
+        }
+
+        $provider = $this->app->make(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class);
+        if (! $provider->isAvailable()) {
+            return false;
+        }
+
+        $locale = app()->getLocale();
+        $localeCurrencies = config('modularity.language_currencies', []);
+        if (array_key_exists($locale, $localeCurrencies)) {
+            $currency = $provider->findByIso4217($localeCurrencies[$locale]);
+
+            return $currency ?: false;
         }
 
         return false;
