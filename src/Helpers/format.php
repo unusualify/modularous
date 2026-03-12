@@ -206,7 +206,13 @@ if (! function_exists('fileTrace')) {
             }
         }
         if (! $dir) {
-            dd($regex, debug_backtrace());
+            \Illuminate\Support\Facades\Log::error('fileTrace: Could not find matching trace', [
+                'regex' => $regex,
+            ]);
+
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                'Could not find file or class matching pattern in debug backtrace.'
+            );
         }
 
         return $dir;
