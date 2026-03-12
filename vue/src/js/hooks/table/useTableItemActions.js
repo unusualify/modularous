@@ -2,6 +2,7 @@
 import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex'
 import { useDisplay } from 'vuetify'
+import { router } from '@inertiajs/vue3'
 import _ from 'lodash-es'
 
 import formApi from '@/store/api/form'
@@ -10,7 +11,7 @@ import datatableApi from '@/store/api/datatable'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import { headline } from '@/utils/helpers'
 
-import { useAuthorization, useDynamicModal, useCastAttributes } from '@/hooks'
+import { useAuthorization, useDynamicModal, useCastAttributes, useConfig } from '@/hooks'
 import { useTableItem, useTableNames } from '@/hooks/table'
 
 import { checkItemConditions } from '@/utils/itemConditions';
@@ -45,6 +46,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
   const { can } = useAuthorization()
   const DynamicModal = useDynamicModal()
   const { castObjectAttributes } = useCastAttributes()
+  const { shouldUseInertia } = useConfig()
   const { generateButtonProps } = useGenerate()
   const { xs, smAndDown, mdAndDown, lgAndDown, xlAndDown } = useDisplay()
 
@@ -113,7 +115,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
     }
   }
 
-  const handleEditAction = (item) => {
+  const handleEditAction = (item, action) => {
     if (props.editOnModal || props.embeddedForm) {
       TableItem.setEditedItem(item)
       TableForms.openForm()
@@ -121,7 +123,11 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
 
       if(_.isObject(props.endpoints) && props.endpoints.edit) {
         const route = props.endpoints.edit.replace(':id', item.id)
-        window.open(route, '_self')
+        if(shouldUseInertia.value && action.target === '_self') {
+          router.visit(route)
+        } else {
+          window.open(route, action.target ?? '_blank')
+        }
       } else {
         console.error(`No edit endpoint found in endpoints of props`)
       }
@@ -129,7 +135,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
     }
   }
 
-  const handleRestoreAction = (item) => {
+  const handleRestoreAction = (item, action) => {
     TableItem.setEditedItem(item)
 
     const type = 'restore'
@@ -142,7 +148,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
 
   }
 
-  const handleDuplicateAction = (item) => {
+  const handleDuplicateAction = (item, action) => {
     TableItem.setEditedItem(_.omit(item, 'id'))
     TableForms.openForm()
   }
@@ -165,7 +171,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
     actionEvents.payload = { type, item, callback }
   }
 
-  const handleDeleteAction = (item) => {
+  const handleDeleteAction = (item, action) => {
     TableItem.setEditedItem(item)
 
     let id = TableItem.editedItem.value.id
@@ -346,17 +352,17 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
 
     switch (_action.name) {
       case 'edit':
-        handleEditAction(item)
+        handleEditAction(item, _action)
         break
       case 'delete':
       case 'forceDelete':
-        handleDeleteAction(item)
+        handleDeleteAction(item, _action)
         break
       case 'restore':
-        handleRestoreAction(item)
+        handleRestoreAction(item, _action)
         break
       case 'duplicate':
-        handleDuplicateAction(item)
+        handleDuplicateAction(item, _action)
         break
       case 'link':
         let target = item.target ?? _action.target ?? '_blank'

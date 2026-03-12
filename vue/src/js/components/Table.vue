@@ -863,7 +863,7 @@
                     :key="i"
                     v-bind="props"
                     class="justify-start text-none text-wrap text-primary darken-1 cursor-pointer text-truncate"
-                    @click="itemAction(item, col.formatterName)"
+                    @click="itemAction(item, { name: col.formatterName, target: col.target ?? '_blank' })"
                   >
                     <template v-if="col.isFormatting">
                       <ue-recursive-stuff
