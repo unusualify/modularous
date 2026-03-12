@@ -367,10 +367,12 @@ export default function useTable (props, context) {
   })
   const TableFilters = useTableFilters(props)
   const TableHeaders = useTableHeaders(props)
+  const state = reactive({ id: Math.ceil(Math.random() * 1000000) + '-table' })
   const TableForms = useTableForms(props, {
     ...context,
     ...TableNames,
     TableItem,
+    state,
     ...{
       loadItems
     }
@@ -393,8 +395,7 @@ export default function useTable (props, context) {
     }
   }
 
-  const state = reactive({
-    id: Math.ceil(Math.random() * 1000000) + '-table',
+  Object.assign(state, {
     isStoreTable,
     hideTable: false,
     searchPlaceholder: t("Type to Search"),

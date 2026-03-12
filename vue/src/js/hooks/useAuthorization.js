@@ -1,5 +1,6 @@
 // useAuthorization.js
 import { useStore } from 'vuex'
+import { isString } from '@/utils/helpers'
 
 export default function useAuthorization() {
   const store = useStore()
@@ -15,7 +16,7 @@ export default function useAuthorization() {
   }
 
   const hasRoles = (roles) => {
-    if(window.__isString(roles)){
+    if(isString(roles)){
       roles = roles.split(',').map(role => role.trim())
     }
 

@@ -1,17 +1,18 @@
 // hooks/utils/useBadge.js
 import { computed } from 'vue'
 import { toNumber, isNumber } from 'lodash'
+import { isset, isString } from '@/utils/helpers'
 
 export default function useBadge(props, context) {
 
   const isBadge = (action) => {
-    if(!window.__isset(action.badge)){
+    if(!isset(action.badge)){
       return false
     }
 
     let badge = action.badge
 
-    if(window.__isString(badge)){
+    if(isString(badge)){
       let badgeNumber = toNumber(badge)
 
       if(!isNaN(badgeNumber))

@@ -13,6 +13,7 @@ import {
   useInput
 } from '@/hooks'
 
+import { isset } from '@/utils/helpers'
 import { ALERT } from '@/store/mutations'
 
 export const makeRepeaterProps = propsFactory({
@@ -150,14 +151,14 @@ export default function useRepeater (props, context) {
   const uniqueValue = props.uniqueValue
   const uniqueFilledValues = ref([])
   const uniqueField = computed(() => {
-    if (isUnique && window.__isset(rawSchema.value) && Object.keys(rawSchema.value).length > 0) {
+    if (isUnique && isset(rawSchema.value) && Object.keys(rawSchema.value).length > 0) {
       return props.uniqueField ?? Object.values(rawSchema.value)[0].name
     }
     return null
   })
 
   const uniqueInput = computed(() => {
-    if (isUnique && window.__isset(rawSchema.value) && Object.keys(rawSchema.value).length > 0) {
+    if (isUnique && isset(rawSchema.value) && Object.keys(rawSchema.value).length > 0) {
       return rawSchema.value[uniqueField.value]
     }
     return null

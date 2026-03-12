@@ -82,7 +82,7 @@ export default function useTableForms(props, context) {
   // const inputs = computed(() => props.inputFields ?? store.state.datatable.inputs ?? [])
 
   const formRef = computed(() =>
-    state.id + '-form'
+    (context.state?.id ?? context.id ?? 'form') + '-form'
   )
 
   const formStyles = computed(() => ({

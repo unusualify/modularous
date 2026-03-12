@@ -4,6 +4,7 @@ import { ref, reactive, toRefs, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import _ from 'lodash-es'
 import { propsFactory } from 'vuetify/lib/util/propsFactory.mjs'
+import { shorten } from '@/utils/helpers'
 
 export const makeFormatterProps = propsFactory({
   ignoreFormatters: {
@@ -110,7 +111,7 @@ export default function useFormatter (props, context, headers = null) {
     shortenFormatter: function (value, max = 10) {
       return {
         configuration: {
-          elements: window.__shorten(value, max)
+          elements: shorten(value, max)
         }
       }
     },

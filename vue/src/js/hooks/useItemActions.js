@@ -10,7 +10,8 @@ import { ALERT } from '@/store/mutations/index'
 import api from '@/store/api/form'
 
 import { useConfig, useCastAttributes, useDynamicModal } from '@/hooks'
-import { checkItemConditions } from '@/utils/itemConditions';
+import { checkItemConditions } from '@/utils/itemConditions'
+import { isset, isObject } from '@/utils/helpers'
 
 export const makeItemActionsProps = propsFactory({
   isEditing: {
@@ -96,7 +97,7 @@ export default function useItemActions(props, context) {
             }
           }
 
-          if(window.__isset(actionResponseMessage[variant])) {
+          if(isset(actionResponseMessage[variant])) {
             message = actionResponseMessage[variant];
           }
 
@@ -209,7 +210,7 @@ export default function useItemActions(props, context) {
     })
   }
 
-  const flattenedActions = ref(window.__isObject(Actions)
+  const flattenedActions = ref(isObject(Actions)
       ? Object.values(Actions)
       : Actions
   )
@@ -224,7 +225,7 @@ export default function useItemActions(props, context) {
   }))
 
   const allActions = computed(() => formatActions(filteredActions.value))
-  const visibleActions = computed(() => allActions.value.filter(action => !(window.__isset(action.disabled) && action.disabled)))
+  const visibleActions = computed(() => allActions.value.filter(action => !(isset(action.disabled) && action.disabled)))
 
   const states = reactive({
     hasActions: computed(() => allActions.value.length > 0),
@@ -245,7 +246,7 @@ export default function useItemActions(props, context) {
         return;
       }
 
-      if(window.__isset(action.hasConfirmation) && action.hasConfirmation === true) {
+      if(isset(action.hasConfirmation) && action.hasConfirmation === true) {
         needToConfirm = true;
       }
 

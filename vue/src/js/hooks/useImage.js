@@ -4,6 +4,7 @@
 import { reactive, toRefs, computed, watch } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import { useStore } from 'vuex'
+import { isset } from '@/utils/helpers'
 import { mapGetters } from '@/utils/mapStore'
 
 import { MEDIA_LIBRARY } from '@/store/mutations/index'
@@ -178,7 +179,7 @@ export default function useImage (props, context) {
     }
   })
   watch(() => store.state.mediaLibrary.selected[props.name], (newValue, oldValue) => {
-    if (window.__isset(store.state.mediaLibrary.selected[props.name]) && store.state.mediaLibrary.isInserted && states.mediableActive) {
+    if (isset(store.state.mediaLibrary.selected[props.name]) && store.state.mediaLibrary.isInserted && states.mediableActive) {
       states.mediableActive = false
       store.commit(MEDIA_LIBRARY.UPDATE_IS_INSERTED, false)
       states.input = newValue

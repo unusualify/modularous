@@ -6,6 +6,7 @@ import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import { omit } from 'lodash-es'
 
 import { useValidation } from '@/hooks'
+import { dataGet } from '@/utils/helpers'
 
 export const makeFilepondProps = propsFactory({
   hint: {
@@ -132,7 +133,7 @@ export const makeFilepondProps = propsFactory({
 export default function useFilepond(props, context) {
   const { requiredRule } = useValidation(props)
 
-  const rawRules = window.__data_get(props.obj, 'schema.rawRules', '') || '';
+  const rawRules = dataGet(props.obj, 'schema.rawRules', '') || '';
   const filepondRules = ref(props.rules ?? [])
   const max = ref(props.maxFiles)
   const min = ref(props.min)

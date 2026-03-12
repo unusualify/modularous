@@ -1,32 +1,43 @@
-// hooks/useLocale.js
-import { reactive, computed, onMounted, toRefs, getCurrentInstance } from 'vue'
-import store from '@/store'
+/**
+ * useLocale - Composable replacement for LocaleMixin.
+ * Provides locale state and helpers from Vuex language store.
+ */
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import { LANGUAGE } from '@/store/mutations'
-export default function useLocale () {
 
-  const state = reactive({
-    currentLocale: computed(() => store.state.language.active),
-    languages: computed(() => store.state.language.all),
-    locales: computed(() => store.state.language.all),
-    displayedLocale: computed(() => store.state.language.active.shortlabel),
+const RTL_LOCALES = ['ar', 'arc', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ku', 'ps', 'ur', 'yi']
 
-    // hasLocale
-    // isLocaleRTL: computed(() => {
-    //   const rtlLocales = ['ar', 'arc', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ku', 'ps', 'ur', 'yi']
-    //   if (this.hasLocale) return rtlLocales.includes(this.locale.shortlabel.toLowerCase())
-    //   else return false
-    // }),
-    // dirLocale: computed(() => store.state.language.active.rtl ? 'rtl' : 'auto')
+export default function useLocale (props = {}) {
+  const store = useStore()
+  const _locale = ref(props.locale ?? null)
+
+  const currentLocale = computed(() => store.state.language?.active ?? null)
+  const languages = computed(() => store.state.language?.all ?? [])
+
+  const hasLocale = computed(() => _locale.value != null)
+  const hasCurrentLocale = computed(() => currentLocale.value != null)
+  const isLocaleRTL = computed(() => {
+    if (!hasLocale.value) return false
+    const shortlabel = props.locale?.shortlabel ?? _locale.value?.shortlabel ?? ''
+    return RTL_LOCALES.includes(shortlabel.toLowerCase())
   })
+  const dirLocale = computed(() => (isLocaleRTL.value ? 'rtl' : 'auto'))
+  const displayedLocale = computed(() => currentLocale.value?.shortlabel ?? '')
 
-  const methods = reactive({
-    updateLocale: function (value) {
-      store.commit(LANGUAGE.UPDATE_LANG, value)
-    }
-  })
+  const updateLocale = (oldValue) => {
+    store.commit(LANGUAGE.SWITCH_LANG, { oldValue })
+  }
 
   return {
-    ...toRefs(state),
-    ...toRefs(methods)
+    _locale,
+    currentLocale,
+    languages,
+    hasLocale,
+    hasCurrentLocale,
+    isLocaleRTL,
+    dirLocale,
+    displayedLocale,
+    updateLocale
   }
 }

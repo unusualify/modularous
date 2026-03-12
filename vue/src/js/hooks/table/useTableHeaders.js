@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import _ from 'lodash-es'
 
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
+import { isset } from '@/utils/helpers'
 
 export const makeTableHeadersProps = propsFactory({
   columns: {
@@ -56,7 +57,7 @@ export default function useTableHeaders(props) {
   const headers = ref(rawHeaders.filter(h => !unvisibleHeaders.includes(h.key)))
   const headersModel = ref(_.cloneDeep(rawHeaders.map(h => ({...h, visible: !unvisibleHeaders.includes(h.key) ? true : false}))))
 
-  const hasSearchableHeader = ref(!!_.find(headers.value, header => window.__isset(header.searchable) && header.searchable === true))
+  const hasSearchableHeader = ref(!!_.find(headers.value, header => isset(header.searchable) && header.searchable === true))
 
   // Computed properties
   const selectedHeaders = computed(() =>

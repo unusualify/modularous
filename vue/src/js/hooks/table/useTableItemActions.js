@@ -8,6 +8,7 @@ import formApi from '@/store/api/form'
 import datatableApi from '@/store/api/datatable'
 
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
+import { headline } from '@/utils/helpers'
 
 import { useAuthorization, useDynamicModal, useCastAttributes } from '@/hooks'
 import { useTableItem, useTableNames } from '@/hooks/table'
@@ -120,7 +121,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
 
       if(_.isObject(props.endpoints) && props.endpoints.edit) {
         const route = props.endpoints.edit.replace(':id', item.id)
-        window.open(route)
+        window.open(route, '_self')
       } else {
         console.error(`No edit endpoint found in endpoints of props`)
       }
@@ -241,6 +242,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
           let value = __data_get(data, key, null)
           newData[key] = value
         })
+        data = _.cloneDeep(newData)
       } else if (__isObject(only)) {
         let newData = {}
         Object.keys(only).forEach((key) => {
@@ -472,7 +474,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
         }
 
         action.componentProps = componentProps
-        action.label = action.label ?? window.__headline(action.name)
+        action.label = action.label ?? headline(action.name)
 
         acc.push({
           ...action,

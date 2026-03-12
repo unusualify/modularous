@@ -4,6 +4,7 @@
 import { useI18n } from 'vue-i18n'
 import _, { cloneDeep } from 'lodash-es'
 import { reactive, toRefs, toRef, watch } from 'vue'
+import { isset, isString, isObject } from '@/utils/helpers'
 
 // by convention, composable function names start with "use"
 export default function useValidation (props) {
@@ -128,7 +129,7 @@ export default function useValidation (props) {
           if(Array.isArray(v)) {
             return v.length >= minOrExact && ( max < 0 || v.length <= max) || msg || $msg;
           }
-          else if(__isObject(v)) {
+          else if(isObject(v)) {
             return  Object.keys(v).length >= minOrExact &&  (max < 0 || Object.keys(v).length <= max) || msg || $msg;
           }
 
@@ -367,14 +368,14 @@ export default function useValidation (props) {
       let rules = input.rawRules ?? input.rules
 
       let arrayRules
-      if (window.__isString(rules)) {
+      if (isString(rules)) {
         arrayRules = rules.split('|')
       } else {
         arrayRules = rules
       }
 
       arrayRules.forEach((rule, index) => {
-        if (window.__isString(rule)) {
+        if (isString(rule)) {
           rule = rule.split(':')
         }
         const method = rule[0] + 'Rule'
@@ -408,18 +409,18 @@ export default function useValidation (props) {
     let _input = cloneDeep(input)
 
     if (Object.prototype.hasOwnProperty.call(_input, 'rules')) {
-      Input.rawRules = !__isset(Input.rawRules)
+      Input.rawRules = !isset(Input.rawRules)
         ? _input.rules
         : Input.rawRules
 
-      if (window.__isString(Input.rawRules)) {
+      if (isString(Input.rawRules)) {
         _input.rules = Input.rawRules.split('|')
       } else {
         _input.rules = Input.rawRules
       }
       Input.rules = []
       _input.rules.forEach((rule, index) => {
-        if (window.__isString(rule)) {
+        if (isString(rule)) {
           rule = rule.split(':')
         }
         const method = rule[0] + 'Rule'
@@ -429,11 +430,11 @@ export default function useValidation (props) {
       })
     }
 
-    if(__isset(Input.schema)){
+    if(isset(Input.schema)){
       Input.schema = invokeRuleGenerator(Input.schema)
     }
 
-    if(!__isset(input.rawRules)){
+    if(!isset(input.rawRules)){
       Input.rules = []
       Input.rawRules = ''
     }
@@ -444,21 +445,21 @@ export default function useValidation (props) {
   function invokeRuleGenerator (inputs) {
     const _inputs = cloneDeep(inputs)
 
-    if (__isObject(_inputs)) {
+    if (isObject(_inputs)) {
       Object.keys(_inputs).forEach((name) => {
         if (Object.prototype.hasOwnProperty.call(_inputs[name], 'rules')) {
-          inputs[name].rawRules = !__isset(inputs[name].rawRules)
+          inputs[name].rawRules = !isset(inputs[name].rawRules)
             ? _inputs[name].rules
             : inputs[name].rawRules
 
-          if (window.__isString(inputs[name].rawRules)) {
+          if (isString(inputs[name].rawRules)) {
             _inputs[name].rules = inputs[name].rawRules.split('|')
           } else {
             _inputs[name].rules = inputs[name].rawRules
           }
           inputs[name].rules = []
           _inputs[name].rules.forEach((rule, index) => {
-            if (window.__isString(rule)) {
+            if (isString(rule)) {
               rule = rule.split(':')
             }
             const method = rule[0] + 'Rule'
@@ -472,7 +473,7 @@ export default function useValidation (props) {
             }
           })
         }
-        if(__isset(inputs[name].schema)){
+        if(isset(inputs[name].schema)){
           inputs[name].schema = invokeRuleGenerator(inputs[name].schema)
         }
       })

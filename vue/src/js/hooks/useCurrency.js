@@ -1,5 +1,6 @@
 import { computed, reactive, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { formatCurrencyPrice } from '@/utils/helpers'
 
 // export const useCurrencyProps = {
 //   amount: {
@@ -19,7 +20,7 @@ export default function useCurrency(props) {
 
   const methods = {
     formatPrice: (amount, symbol) => {
-      return window.__formatCurrencyPrice(amount, symbol, locale.value ?? locale)
+      return formatCurrencyPrice(amount, symbol, locale.value ?? locale)
     }
   }
 
