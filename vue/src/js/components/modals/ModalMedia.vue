@@ -2,7 +2,7 @@
   <ue-modal
     ref="modalMedia"
     id="modalMedia"
-    v-model="show"
+    v-model="dialog"
     fullscreen
     content-class=""
     width=""
@@ -147,8 +147,6 @@ import { getCurrentInstance } from 'vue'
 import { mapState } from 'vuex'
 import { MEDIA_LIBRARY } from '@/store/mutations'
 
-import { ModalMixin } from '@/mixins'
-
 import api from '@/store/api/media-library'
 
 import scrollToY from '@/utils/scrollToY.js'
@@ -158,14 +156,13 @@ import FormDataAsObj from '@/utils/formDataAsObj.js'
 import MediaGrid from './media-library/MediaGrid.vue'
 import ItemList from './media-library/ItemList.vue'
 import MediaSidebar from './media-library/MediaSidebar.vue'
-import { makeModalMediaProps } from '@/hooks/useModal'
+import useModal, { makeModalProps, makeModalMediaProps } from '@/hooks/useModal'
 
 import { useUser } from '@/hooks'
 // import a17Checkbox from '@/components/Checkbox.vue'
 
 // TEST END
 export default {
-  mixins: [ModalMixin],
   components: {
     MediaGrid,
     ItemList,
@@ -173,14 +170,17 @@ export default {
     // 'a17-spinner': a17Spinner
     // 'a17-checkbox': a17Checkbox
   },
-  setup (props, { attrs, slots, emit }) {
+  setup (props, context) {
     const { isGuest } = useUser()
+    const modal = useModal(props, context)
 
     return {
-      isGuest
+      isGuest,
+      ...modal
     }
   },
   props: {
+    ...makeModalProps(),
     ...makeModalMediaProps(),
     initialPage: {
       type: Number,
