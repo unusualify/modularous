@@ -176,9 +176,5 @@ class HostRouting
         }
 
         return $isHostable;
-
-        return Collection::make($this->hostableClasses)->reduce(function ($carry, $item) {
-            dd($item);
-        }, Collection::make());
     }
 }
