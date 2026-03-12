@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Repositories\Logic;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
@@ -165,6 +166,44 @@ trait QueryBuilder
         }
 
         return $this->getCached($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
+    }
+
+    /**
+     * Paginate using request parameters (itemsPerPage, page, scopes, orders, etc.).
+     *
+     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function paginate(?Request $request = null)
+    {
+        $request = $request ?? request();
+
+        $perPage = (int) ($request->get('itemsPerPage') ?? $request->get('per_page', 10));
+        $scopes = $request->get('scopes', []);
+        $orders = $request->get('orders', []);
+        $with = $request->get('eager', $request->get('with', []));
+        $appends = $request->get('appends', []);
+        $exceptIds = $request->get('exceptIds', []);
+
+        if (is_string($with)) {
+            $with = explode(',', $with);
+        }
+        if (is_string($appends)) {
+            $appends = explode(',', $appends);
+        }
+        if (is_string($exceptIds)) {
+            $exceptIds = explode(',', $exceptIds);
+        }
+
+        return $this->getPaginator(
+            with: $with,
+            scopes: $scopes,
+            orders: $orders,
+            perPage: $perPage,
+            appends: $appends,
+            forcePagination: true,
+            id: $request->get('id'),
+            exceptIds: $exceptIds
+        );
     }
 
     /**
@@ -557,7 +596,7 @@ trait QueryBuilder
         }
 
         if (empty($columns)) {
-            $columns = ['*']; 
+            $columns = ['*'];
         }
 
         if ($forcePagination) {
