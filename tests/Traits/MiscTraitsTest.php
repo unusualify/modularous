@@ -9,6 +9,7 @@ use Unusualify\Modularity\Traits\Traitify;
 use Unusualify\Modularity\Traits\ReplacementTrait;
 use Unusualify\Modularity\Traits\ResolveConnector;
 use Unusualify\Modularity\Traits\SerializeModel;
+use Unusualify\Modularity\Traits\CheckSnapshot;
 use Symfony\Component\Console\Output\OutputInterface;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
@@ -30,23 +31,67 @@ class MiscTraitsTest extends TestCase
     public function it_can_use_verbosity_trait()
     {
         $tester = new class { use Verbosity; };
-        
+
         $this->assertEquals(OutputInterface::VERBOSITY_NORMAL, $tester->getVerbosity());
-        
+
         $tester->setVerbosity('vv');
         $this->assertEquals(OutputInterface::VERBOSITY_VERY_VERBOSE, $tester->getVerbosity());
         $this->assertTrue($tester->isVeryVerbose());
         $this->assertFalse($tester->isDebug());
-        
+
         $tester->setVerbosity('quiet');
         $this->assertTrue($tester->isQuiet());
+    }
+
+    /** @test */
+    public function it_can_set_verbosity_via_string_map()
+    {
+        $tester = new class { use Verbosity; };
+
+        $tester->setVerbosity('v');
+        $this->assertEquals(OutputInterface::VERBOSITY_VERBOSE, $tester->getVerbosity());
+        $this->assertTrue($tester->isVerbose());
+
+        $tester->setVerbosity('vvv');
+        $this->assertEquals(OutputInterface::VERBOSITY_DEBUG, $tester->getVerbosity());
+        $this->assertTrue($tester->isDebug());
+
+        $tester->setVerbosity('normal');
+        $this->assertEquals(OutputInterface::VERBOSITY_NORMAL, $tester->getVerbosity());
+    }
+
+    /** @test */
+    public function it_can_set_verbosity_via_integer()
+    {
+        $tester = new class { use Verbosity; };
+
+        $tester->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+        $this->assertEquals(OutputInterface::VERBOSITY_DEBUG, $tester->getVerbosity());
+    }
+
+    /** @test */
+    public function it_keeps_current_verbosity_when_set_with_invalid_string()
+    {
+        $tester = new class { use Verbosity; };
+        $tester->setVerbosity('vv');
+
+        $tester->setVerbosity('invalid');
+        $this->assertEquals(OutputInterface::VERBOSITY_VERY_VERBOSE, $tester->getVerbosity());
+    }
+
+    /** @test */
+    public function it_returns_fluent_from_set_verbosity()
+    {
+        $tester = new class { use Verbosity; };
+        $result = $tester->setVerbosity('quiet');
+        $this->assertSame($tester, $result);
     }
 
     /** @test */
     public function it_can_use_traitify_trait()
     {
         // Using a named class to have a predictable class_basename
-        $tester = new class extends \stdClass { 
+        $tester = new class extends \stdClass {
             use Traitify;
             public function testMethodTraitify() { return 'success'; }
             public function run() { return $this->traitsMethods('testMethod'); }
@@ -54,6 +99,19 @@ class MiscTraitsTest extends TestCase
 
         $methods = $tester->run();
         $this->assertContains('testMethodTraitify', $methods);
+    }
+
+    /** @test */
+    public function it_can_use_traitify_trait_properties()
+    {
+        $tester = new class extends \stdClass {
+            use Traitify;
+            public $testPropTraitify = 'value';
+            public function run() { return $this->traitProperties('testProp'); }
+        };
+
+        $properties = $tester->run();
+        $this->assertContains('testPropTraitify', $properties);
     }
 
     /** @test */
@@ -101,5 +159,106 @@ class MiscTraitsTest extends TestCase
         $this->assertInstanceOf(get_class($model), $unserialized);
         $this->assertEquals('Original', $unserialized->name);
         $this->assertTrue($unserialized->exists);
+    }
+
+    /** @test */
+    public function it_can_serialize_model_with_single_relation()
+    {
+        $tester = new class { use SerializeModel; };
+
+        $related = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 1, 'title' => 'Related'];
+        };
+
+        $model = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 1, 'name' => 'Parent'];
+        };
+        $model->setRelation('related', $related);
+
+        $serialized = $tester->serializeModel($model);
+        $this->assertArrayHasKey('relations', $serialized);
+        $this->assertArrayHasKey('related', $serialized['relations']);
+        $this->assertEquals('model', $serialized['relations']['related']['type']);
+        $this->assertEquals('Related', $serialized['relations']['related']['data']['attributes']['title']);
+
+        $unserialized = $tester->unserializeModel($serialized);
+        $this->assertTrue($unserialized->relationLoaded('related'));
+        $this->assertEquals('Related', $unserialized->related->title);
+    }
+
+    /** @test */
+    public function it_can_serialize_model_with_collection_relation()
+    {
+        $tester = new class { use SerializeModel; };
+
+        $item1 = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 1, 'name' => 'Item1'];
+        };
+        $item2 = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 2, 'name' => 'Item2'];
+        };
+
+        $model = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 1];
+        };
+        $model->setRelation('items', collect([$item1, $item2]));
+
+        $serialized = $tester->serializeModel($model);
+        $this->assertEquals('collection', $serialized['relations']['items']['type']);
+        $this->assertCount(2, $serialized['relations']['items']['data']);
+
+        $unserialized = $tester->unserializeModel($serialized);
+        $items = $unserialized->getRelation('items');
+        $this->assertInstanceOf(Collection::class, $items);
+        $this->assertCount(2, $items);
+        $this->assertEquals('Item1', $items->first()->name);
+        $this->assertEquals('Item2', $items->last()->name);
+    }
+
+    /** @test */
+    public function it_can_serialize_model_with_other_type_relation()
+    {
+        $tester = new class { use SerializeModel; };
+
+        $model = new class extends Model {
+            protected $guarded = [];
+            protected $attributes = ['id' => 1];
+        };
+        $model->setRelation('count', 42);
+        $model->setRelation('nullable', null);
+
+        $serialized = $tester->serializeModel($model);
+        $this->assertEquals('other', $serialized['relations']['count']['type']);
+        $this->assertEquals(42, $serialized['relations']['count']['data']);
+        $this->assertEquals('other', $serialized['relations']['nullable']['type']);
+        $this->assertNull($serialized['relations']['nullable']['data']);
+
+        $unserialized = $tester->unserializeModel($serialized);
+        $this->assertEquals(42, $unserialized->getRelation('count'));
+        $this->assertNull($unserialized->getRelation('nullable'));
+    }
+
+    /** @test */
+    public function it_can_use_check_snapshot_trait()
+    {
+        $tester = new class {
+            use CheckSnapshot;
+            public function runIsSnapshot($m) { return $this->isSnapshotRelation($m); }
+            public function runGetFk($m) { return $this->getSnapshotSourceForeignKey($m); }
+        };
+
+        $modelWithoutSnapshot = new class extends Model { protected $guarded = []; };
+        $this->assertFalse($tester->runIsSnapshot($modelWithoutSnapshot));
+
+        $modelWithSnapshotFk = new class extends Model {
+            protected $guarded = [];
+            public function getSnapshotSourceForeignKey() { return 'source_id'; }
+        };
+        $this->assertEquals('source_id', $tester->runGetFk($modelWithSnapshotFk));
     }
 }

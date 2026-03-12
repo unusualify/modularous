@@ -33,7 +33,7 @@ abstract class TestModulesCase extends TestCase
             realpath(__DIR__ . '/../test-modules'),
         ]);
 
-        $app['config']->set('modules.paths.modules', realpath(__DIR__ . '/../../test-modules') ?: __DIR__ . '/../../test-modules');
+        $app['config']->set('modules.paths.modules', realpath(__DIR__ . '/../test-modules') ?: __DIR__ . '/../test-modules');
 
         $generatorPaths = [
             'config' => ['path' => 'Config', 'generate' => true],
