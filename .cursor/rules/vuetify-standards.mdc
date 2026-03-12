@@ -24,7 +24,7 @@ globs: vue/src/js/**/*.js, vue/src/js/**/*.vue
   - Implement Vue.js composition API for state management and component logic.
   - Use Vite for asset bundling and development server.
   - Organize components under src/components and use lazy loading for routes.
-  - Validate forms using Vuelidate and enhance UI with Vuetify components.
+  - Validate forms using useValidation (vue/src/js/hooks/useValidation.js) and enhance UI with Vuetify components.
 
   Key points
   - Follow Vue.js's component-driven design for clear separation of business logic, data, and presentation layers.
@@ -33,11 +33,11 @@ globs: vue/src/js/**/*.js, vue/src/js/**/*.vue
   - Use Vite for asset bundling and development server.
   - Organize components under vue/src/components
   - Organize composables under vue/src/hooks
-  - Organize behaviors under vue/src/behaviors
+  - Organize composables under vue/src/js/hooks (behaviors folder is deprecated)
   - Organize directives under vue/src/directives
   - Organize utilities under vue/src/utils
   - Organize stores under vue/src/stores
-  - Validate forms using Vuelidate and use vue/src/hooks/useValidation.js
+  - Validate forms using vue/src/js/hooks/useValidation.js (useValidation composable)
   - Use vue/src/hooks/useInput hook on input components under vue/src/components/inputs
 
 

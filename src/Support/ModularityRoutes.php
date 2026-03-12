@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Support;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Http\Middleware\AuthenticateMiddleware;
 use Unusualify\Modularity\Http\Middleware\AuthorizationMiddleware;
 use Unusualify\Modularity\Http\Middleware\CompanyRegistrationMiddleware;
@@ -19,9 +20,7 @@ use Unusualify\Modularity\Http\Middleware\UtmMiddleware;
 
 class ModularityRoutes
 {
-    public $counter = 1;
-
-    private $defaultMiddlewares = [
+    private array $defaultMiddlewares = [
         'modularity.log',
         'modularity.core',
     ];
@@ -79,6 +78,7 @@ class ModularityRoutes
         return [
             ...['api.auth'],
             ...$this->defaultMiddlewares,
+            ...['modularity.panel'],
         ];
     }
 
@@ -94,7 +94,7 @@ class ModularityRoutes
         ];
     }
 
-    public function generateRouteMiddlewares()
+    public function generateRouteMiddlewares(): void
     {
 
         Route::aliasMiddleware('modularity.auth', AuthenticateMiddleware::class);
@@ -205,7 +205,6 @@ class ModularityRoutes
             'as' => 'api.',
             'prefix' => $this->getApiPrefix(),
             'domain' => $this->getApiDomain(),
-            // 'middleware' => $this->getApiMiddlewares(),
         ];
     }
 
@@ -239,32 +238,35 @@ class ModularityRoutes
 
     public function getApiRoutes(): array
     {
-        return array_merge([
-            'index',
-            'store',
-            'show',
-            'update',
-            'destroy',
-        ]);
+        return array_values(array_unique(array_merge(
+            [
+                'index',
+                'store',
+                'show',
+                'update',
+                'destroy',
+            ],
+            modularityConfig('api.routes', [])
+        )));
     }
 
     /**
-     * Register routes
+     * Register routes from a file within a group.
      *
-     * @param mixed $router
-     * @param array $groupOptions
-     * @param array $middlewares
-     * @param string $namespace
-     * @param string $routesFile
-     * @param bool $instant
+     * @param  \Illuminate\Routing\Router  $router
+     * @param  array  $groupOptions
+     * @param  array  $middlewares
+     * @param  string  $namespace
+     * @param  string  $routesFile
+     * @param  bool  $instant
      */
     public function registerRoutes(
         $router,
-        $groupOptions,
-        $middlewares,
-        $namespace,
-        $routesFile,
-        $instant = false
+        array $groupOptions,
+        array $middlewares,
+        string $namespace,
+        string $routesFile,
+        bool $instant = false
     ): void {
         $callback = function () use ($router, $groupOptions, $middlewares, $namespace, $routesFile) {
             if (file_exists($routesFile)) {
@@ -292,7 +294,7 @@ class ModularityRoutes
                 );
 
             } else {
-
+                // Routes file not found - skip registration
             }
         };
 
@@ -309,12 +311,13 @@ class ModularityRoutes
     }
 
     /**
-     * Register module routes with shared logic for admin and front routes.
+     * Register module routes with shared logic for admin, front and api routes.
      *
-     * @param mixed $module
-     * @param string $type 'admin' or 'front'
+     * @param  \Unusualify\Modularity\Module  $module
+     * @param  array  $options
+     * @param  string  $type  'admin', 'front' or 'api'
      */
-    public function registerModuleRoutes($module, array $options, string $type): void
+    public function registerModuleRoutes(Module $module, array $options, string $type): void
     {
         // $config = $module->getConfig();
         $config = $module->getRawConfig();
@@ -330,8 +333,6 @@ class ModularityRoutes
         $system_prefix = $has_system_prefix ? systemUrlPrefix() . '/' : '';
         $system_route_name = $has_system_prefix ? systemRouteNamePrefix() : '';
 
-        $parentStudlyName = studlyName($moduleName);
-        $parentCamelName = camelCase($moduleName);
         $parentKebabName = kebabCase($moduleName);
         $parentSnakeName = snakeCase($moduleName);
 
@@ -464,11 +465,9 @@ class ModularityRoutes
 
     /**
      * Register belongs relationships for admin routes.
-     *
-     * @param mixed $module
      */
     private function registerBelongsRelationships(
-        $module,
+        Module $module,
         array $item,
         string $parentUrlSegment,
         string $parentSnakeName,

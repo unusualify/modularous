@@ -738,9 +738,6 @@ class RouteGenerator extends Generator
                     continue;
                 }
 
-                
-                dd($path, $this->filesystem->exists($path));
-
 
                 if ($this->getTest()) {
                     $this->console->info("It's going to create {$path} directory!");
@@ -928,7 +925,7 @@ class RouteGenerator extends Generator
     /**
      * updateRoutesStatuses
      *
-     * @return bool
+     * @return void
      */
     public function updateRoutesStatuses()
     {

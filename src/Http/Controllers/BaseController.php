@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Http\Controllers\Traits\ManageIndexAjax;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
@@ -20,7 +21,7 @@ use Unusualify\Modularity\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
-    use ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations;
+    use ManageIndexAjax, ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations;
 
     /**
      * @var string
@@ -80,65 +81,11 @@ abstract class BaseController extends PanelController
     public function index($parentId = null)
     {
         $this->addWiths();
-
         $this->addIndexWiths();
 
-        if ($this->request->ajax() && (method_exists($this, 'isInertiaRequest') ? ! $this->isInertiaRequest() : true)) {
-
-            if ($this->request->has('ids')) {
-                $ids = $this->request->get('ids');
-
-                if (is_string($ids)) {
-                    $ids = explode(',', $ids);
-                }
-
-                $eagers = $this->request->get('eagers') ?? [];
-                if (is_string($eagers)) {
-                    $eagers = explode(',', $eagers);
-                }
-
-                $scopes = $this->request->get('scopes') ?? [];
-                if (is_string($scopes)) {
-                    $scopes = explode(',', $scopes);
-                }
-
-                $orders = $this->request->get('orders') ?? [];
-                if (is_string($orders)) {
-                    $orders = explode(',', $orders);
-                }
-
-                $appends = $this->request->get('appends') ?? [];
-                if (is_string($appends)) {
-                    $appends = explode(',', $appends);
-                }
-
-                return Response::json(
-                    $this->repository->getByIds(
-                        ids: $ids,
-                        appends: $appends,
-                        with: $eagers,
-                        scopes: $scopes,
-                        orders: $orders,
-                    )
-                );
-            }
-
-            $with = $this->request->get('eager', $this->request->get('with', []));
-
-            if (is_string($with)) {
-                $with = explode(',', $with);
-            }
-
-            if (! is_array($with)) {
-                $with = [];
-            }
-
-            return Response::json([
-                'resource' => $this->getJSONData(with: $with),
-                'mainFilters' => $this->getTableMainFilters($this->getExactScope()),
-                // 'mainFilters' => $this->getTableMainFilters(),
-                'replaceUrl' => $this->getReplaceUrl(),
-            ]);
+        $ajaxResponse = $this->respondToIndexAjax();
+        if ($ajaxResponse !== null) {
+            return $ajaxResponse;
         }
 
         $indexData = $this->getIndexData($this->nestedParentScopes());

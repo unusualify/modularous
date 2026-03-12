@@ -17,6 +17,7 @@ use Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig;
 use Unusualify\Modularity\Http\ViewComposers\Urls;
 use Unusualify\Modularity\Modularity;
 use Unusualify\Modularity\Services\View\ModularityNavigation;
+use Unusualify\Modularity\Support\CommandDiscovery;
 use Unusualify\Modularity\Support\FileLoader;
 use Unusualify\Modularity\Translation\Translator;
 
@@ -167,6 +168,19 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->app->singleton('currency.exchange', function (Application $app) {
             return new \Unusualify\Modularity\Services\CurrencyExchangeService;
+        });
+
+        $this->app->singleton(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class, function (Application $app) {
+            $providerClass = config('modularity.currency_provider', null);
+            if ($providerClass && class_exists($providerClass)) {
+                return $app->make($providerClass);
+            }
+            $systemPricing = new \Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
+            if ($systemPricing->isAvailable()) {
+                return $systemPricing;
+            }
+
+            return new \Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
         });
 
         $this->app->singleton('modularity.relationship.graph', function (Application $app) {
@@ -499,31 +513,22 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function resolveCommands(): array
     {
-        $cmds = [];
+        $paths = [
+            __DIR__ . '/../Console/*.php',
+            __DIR__ . '/../Console/Make/*.php',
+            __DIR__ . '/../Console/Cache/*.php',
+            __DIR__ . '/../Console/Migration/*.php',
+            __DIR__ . '/../Console/Module/*.php',
+            __DIR__ . '/../Console/Setup/*.php',
+            __DIR__ . '/../Console/Sync/*.php',
+            __DIR__ . '/../Console/Operations/*.php',
+            __DIR__ . '/../Console/Flush/*.php',
+            __DIR__ . '/../Console/Update/*.php',
+            __DIR__ . '/../Console/Docs/*.php',
+            __DIR__ . '/../Schedulers/*.php',
+        ];
 
-        foreach (glob(__DIR__ . '/../Console/*.php') as $cmd) {
-            preg_match("/[^\/]+(?=\.[^\/.]*$)/", $cmd, $match);
-
-            if (count($match) == 1 && ! preg_match('#(.*?)(BaseCommand)(.*?)#', $cmd)) {
-                $cmds[] = preg_match('|' . preg_quote($this->terminalNamespace, '|') . '|', $match[0])
-                            ? $cmd
-                            : "{$this->terminalNamespace}\\{$match[0]}";
-            }
-        }
-
-        foreach (glob(__DIR__ . '/../Schedulers/*.php') as $filePath) {
-            $filePath = realpath($filePath);
-            $fileContents = file_get_contents($filePath);
-
-            // Extract namespace using regex
-            if (preg_match('/namespace\s+([^;]+);/', $fileContents, $matches)) {
-                $namespace = $matches[1];
-                $className = basename($filePath, '.php');
-                $cmds[] = $namespace . '\\' . $className;
-            }
-        }
-
-        return $cmds;
+        return CommandDiscovery::discover($paths);
     }
 
     private function setLocalDiskUrl($type): void

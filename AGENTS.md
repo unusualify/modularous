@@ -10,6 +10,8 @@ You are an expert in Modularity package development. This is the unusualify/modu
 
 src/                      # Package source code (work here)
 ├── Console               # Artisan commands
+├── Hydrates/             # Schema hydrators (InputHydrator → *Hydrate)
+│   └── Inputs/           # Input-specific hydrates (type → schema)
 ├── Http/Controllers/     # Controllers
 ├── Providers/           # Service providers
 ├── Repositories/        # Repository pattern
@@ -18,7 +20,9 @@ src/                      # Package source code (work here)
 └── Entities/            # Models
 vue/src/                 # Frontend source
 ├── js/components/       # Vuetify components
-└── js/composables/      # Vue composables
+├── js/hooks/            # Vue composables
+├── js/utils/            # Utilities (helpers, schema, etc.)
+└── js/store/            # Vuex store
 
 ## PATTERNS TO ALWAYS USE
 2. **Use Traits**: ManageMedias, HasMedias, MediasTrait etc.
@@ -52,5 +56,63 @@ vue/src/                 # Frontend source
 - ❌ Hard-coded paths (use config)
 - ❌ Options API in Vue (use Composition API)
 - ❌ Plain HTML (use Vuetify components)
+- ❌ window.__* helpers in new code (use import from @/utils/helpers)
+
+## HELPERS
+- Prefer `import { isObject, dataGet } from '@/utils/helpers'` over `window.__isObject`, `window.__data_get`
+- window.__* is deprecated; kept for backward compatibility during migration
+
+---
+
+## HYDRATE ↔ INPUT ADAPTER
+
+The backend (PHP Hydrates) and frontend (Vue Inputs) communicate via a **schema contract**. Hydrates produce schema; Input components consume it.
+
+### Data Flow
+
+```
+Module config (type: 'checklist') → InputHydrator → ChecklistHydrate → schema { type: 'input-checklist', ... }
+                                                                              ↓
+FormBase/FormBaseField → mapTypeToComponent('input-checklist') → VInputChecklist (Checklist.vue)
+```
+
+### Naming Convention
+
+| Hydrate class      | Config type | Output type (schema) | Vue component   | File              |
+|--------------------|-------------|----------------------|-----------------|-------------------|
+| ChecklistHydrate  | checklist   | input-checklist      | VInputChecklist | Checklist.vue     |
+| TaggerHydrate      | tagger      | input-tagger         | VInputTagger    | Tagger.vue        |
+| SelectHydrate      | select      | select (or input-select-scroll) | v-select | (Vuetify) |
+| FileHydrate        | file        | input-file           | VInputFile      | File.vue          |
+| ImageHydrate       | image       | input-image          | VInputImage     | Image.vue         |
+| ...                | ...         | input-{kebab}        | VInput{Studly}  | {Studly}.vue      |
+
+- **Hydrate**: `studlyName($input['type']) . 'Hydrate'` → e.g. `checklist` → `ChecklistHydrate`
+- **Output type**: Hydrate sets `$input['type'] = 'input-{kebab}'` (e.g. `input-checklist`)
+- **Vue component**: `registerComponents(..., 'inputs', 'VInput')` → `Checklist.vue` → `VInputChecklist`
+- **Resolution**: `mapTypeToComponent('input-checklist')` → `v-input-checklist` (kebab of VInputChecklist)
+
+### When Adding a New Input
+
+1. **PHP**: Create `src/Hydrates/Inputs/{Studly}Hydrate.php` extending `InputHydrate`
+   - Set `$input['type'] = 'input-{kebab}'` in `hydrate()`
+   - Define `$requirements` for default schema keys
+2. **Vue**: Create `vue/src/js/components/inputs/{Studly}.vue`
+   - Use `useInput`, `makeInputProps`, `makeInputEmits` from `@/hooks`
+   - Component registers as `VInput{Studly}` via `includeFormInputs` glob
+3. **Registry** (optional): Add to `hydrateTypeMap` in `registry.js` for explicit mapping
+
+### Schema Contract
+
+Vue inputs expect schema props via `obj.schema` or `boundProps`:
+
+- **Common**: `name`, `label`, `default`, `rules`, `items`, `itemValue`, `itemTitle`
+- **Selectable**: `cascadeKey`, `cascades`, `repository`, `endpoint`
+- **Files**: `accept`, `maxFileSize`, `translated`, `max`
+- **Hydrate-only** (stripped before frontend): `route`, `model`, `repository`, `cascades`, `connector`
+
+### Hydrate Types → Vue Components
+
+See `vue/src/js/components/inputs/registry.js` → `hydrateTypeMap` for the full mapping.
 
 Always ask for clarification if the request is ambiguous.

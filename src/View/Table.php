@@ -39,6 +39,8 @@ class Table extends Component
      */
     public function render()
     {
-        return view("{$this->baseKey}::components.table");
+        $baseKey = $this->baseKey ?? modularityBaseKey();
+
+        return view("{$baseKey}::components.table");
     }
 }

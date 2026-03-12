@@ -106,6 +106,53 @@ class StateableTraitTest extends RepositoryTestCase
         $listAlt = $this->repository->getStateableList('title');
         $this->assertArrayHasKey('title', $listAlt[0]);
     }
+
+    public function test_scope_is_stateable_filters_by_code(): void
+    {
+        State::truncate();
+        $this->repository->create(['name' => 'Drafty']);
+        $this->repository->create(['name' => 'Pub', 'initial_stateable' => 'published']);
+
+        $draftCount = RepoStateableModel::isStateable('draft')->count();
+        $publishedCount = RepoStateableModel::isStateable('published')->count();
+
+        $this->assertSame(1, $draftCount);
+        $this->assertSame(1, $publishedCount);
+    }
+
+    public function test_scope_is_stateables_filters_by_multiple_codes(): void
+    {
+        State::truncate();
+        $this->repository->create(['name' => 'D1']);
+        $this->repository->create(['name' => 'D2']);
+        $this->repository->create(['name' => 'P1', 'initial_stateable' => 'published']);
+
+        $count = RepoStateableModel::isStateables(['draft', 'published'])->count();
+        $this->assertSame(3, $count);
+
+        $count = RepoStateableModel::isStateables('draft,published')->count();
+        $this->assertSame(3, $count);
+    }
+
+    public function test_scope_is_stateable_count_returns_count(): void
+    {
+        State::truncate();
+        $this->repository->create(['name' => 'D1']);
+        $this->repository->create(['name' => 'D2']);
+
+        $count = RepoStateableModel::isStateableCount('draft');
+        $this->assertSame(2, $count);
+    }
+
+    public function test_scope_is_stateables_count_returns_count(): void
+    {
+        State::truncate();
+        $this->repository->create(['name' => 'D1']);
+        $this->repository->create(['name' => 'P1', 'initial_stateable' => 'published']);
+
+        $count = RepoStateableModel::isStateablesCount(['draft', 'published']);
+        $this->assertSame(2, $count);
+    }
 }
 
 class RepoStateableModel extends \Illuminate\Database\Eloquent\Model

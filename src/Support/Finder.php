@@ -136,7 +136,7 @@ class Finder
             foreach ($this->getClasses(app_path('Repositories')) as $_class) {
                 if (method_exists($_class, 'getTable')) {
                     if (with(new $_class)->getTable() == $table) {
-                        $class = $class;
+                        $class = $_class;
 
                         break;
                     }

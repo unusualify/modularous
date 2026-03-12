@@ -21,6 +21,8 @@ class HostRouteRegistrar
 
     private $router;
 
+    private array $hostableClasses = [];
+
     private $callables = [
         'host',
         'group',
@@ -70,7 +72,7 @@ class HostRouteRegistrar
             $groupOptions['domain'] = $this->getBaseHostName();
             $prefixes = array_map(function ($class) {
                 return $class::hostableRouteBindingParameter();
-            }, $this->hostableClasses, );
+            }, $this->hostableClasses);
         }
         $groupOptions['prefix'] = implode('/', $prefixes);
         $groupOptions['middleware'] = ['hostable'];
@@ -174,7 +176,7 @@ class HostRouteRegistrar
             return $this->attributes($method, $arguments);
         }
         if (in_array($method, $this->callables)) {
-            return $this->{$method}($arguments);
+            return $this->{$method}(...$arguments);
         }
         throw new BadMethodCallException(
             sprintf('Method %s::%s does not exists in callable methods or allowed attributes list', static::class, $method)

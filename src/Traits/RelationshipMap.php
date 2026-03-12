@@ -70,7 +70,15 @@ trait RelationshipMap
                     : null;
 
             } elseif ($parameter->required) {
-                dd($n, $parameter, $name, $relationshipName, $parameters);
+                \Illuminate\Support\Facades\Log::error('RelationshipMap: Missing required relationship argument', [
+                    'parameter' => $n,
+                    'name' => $name,
+                    'relationshipName' => $relationshipName,
+                ]);
+
+                throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                    "Missing required argument '{$n}' for relationship '{$relationshipName}' on '{$name}'."
+                );
             } else {
                 break;
             }
@@ -187,16 +195,20 @@ trait RelationshipMap
                     $reverseRelationshipName = $this->reverseMapping[$relationshipName];
                     if ($relationshipName == 'belongsTo') {
                         $modelName = studlyName($this->getRelatedMethodName($relationshipName, $schema));
-                        $reverseRelationshipName = select(
-                            label: "Select reverse relationship of belongsTo on '{$modelName}' model?",
-                            options: ['hasMany', 'hasOne']
-                        );
+                        $reverseRelationshipName = $test
+                            ? 'hasMany'
+                            : select(
+                                label: "Select reverse relationship of belongsTo on '{$modelName}' model?",
+                                options: ['hasMany', 'hasOne']
+                            );
                     } elseif ($relationshipName == 'morphTo') {
                         $modelName = studlyName($this->getRelatedMethodName($relationshipName, $schema));
-                        $reverseRelationshipName = select(
-                            label: "Select reverse relationship of morphTo on '{$modelName}' model?",
-                            options: ['morphMany', 'morphOne']
-                        );
+                        $reverseRelationshipName = $test
+                            ? 'morphMany'
+                            : select(
+                                label: "Select reverse relationship of morphTo on '{$modelName}' model?",
+                                options: ['morphMany', 'morphOne']
+                            );
                     }
 
                     switch ($reverseRelationshipName) {

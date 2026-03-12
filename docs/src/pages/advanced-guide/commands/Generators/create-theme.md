@@ -1,10 +1,11 @@
-# `Create Theme`
+# `Make Theme Folder`
 
 > Create custom theme folder.
 
 ## Command Information
 
-- **Signature:** `modularity:create:theme [--extend [EXTEND]] [-f|--force] [--] <name>`
+- **Signature:** `modularity:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
+- **Alias:** `modularity:create:theme` (deprecated, use `make:theme:folder`)
 - **Category:** Generators
 
 
@@ -13,37 +14,37 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:theme NAME
+php artisan modularity:make:theme:folder NAME
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:create:theme --extend=EXTEND
+php artisan modularity:make:theme:folder --extend=EXTEND
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:theme -f
+php artisan modularity:make:theme:folder -f
 
 # Using full option name
-php artisan modularity:create:theme --force
+php artisan modularity:make:theme:folder --force
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:theme NAME
+php artisan modularity:make:theme:folder NAME
 ```
 
-`modularity:create:theme`
+`modularity:make:theme:folder`
 -------------------------
 
 Create custom theme folder.
 
 ### Usage
 
-* `modularity:create:theme [--extend [EXTEND]] [-f|--force] [--] <name>`
+* `modularity:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
 
 Create custom theme folder.
 

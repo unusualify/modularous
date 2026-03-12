@@ -3,9 +3,9 @@
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Repositories\VatRateRepository;
+use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 use Unusualify\Modularity\Http\Requests\Request;
 
 class PriceHydrate extends InputHydrate
@@ -49,13 +49,10 @@ class PriceHydrate extends InputHydrate
             $input['default'][$key][Price::$priceSavingKey] = $defaultValue;
         }
 
-        $query = Currency::query()->select(['id', 'symbol as name', 'iso_4217 as iso']);
-        $onlyBaseCurrency = modularityConfig('services.currency_exchange.active');
-
-        if ($onlyBaseCurrency) {
-            $baseCurrency = modularityConfig('services.currency_exchange.base_currency');
-            $query = $query->where('iso_4217', mb_strtoupper($baseCurrency));
-        }
+        $provider = App::make(CurrencyProviderInterface::class);
+        $input['items'] = (! $this->skipQueries && $provider->isAvailable())
+            ? $provider->getCurrenciesForSelect()
+            : [];
 
         if (isset($input['hasVatRate']) && $input['hasVatRate']) {
             $input['vatRates'] = ! $this->skipQueries
@@ -67,15 +64,10 @@ class PriceHydrate extends InputHydrate
                     ];
                 })->toArray()
                 : [];
-
-            // dd($input);
         }
 
-        $input['items'] = ! $this->skipQueries
-            ? $query->get()->toArray()
-            : [];
-
-        $input['default'][0]['currency_id'] = Request::getUserCurrency()->id;
+        $userCurrency = method_exists(Request::class, 'getUserCurrency') ? Request::getUserCurrency() : null;
+        $input['default'][0]['currency_id'] = $userCurrency?->id ?? ($input['items'][0]['id'] ?? 1);
 
         return $input;
     }

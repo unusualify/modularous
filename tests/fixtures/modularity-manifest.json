@@ -1,0 +1,17 @@
+{
+  "src/js/core-inertia.js": {
+    "file": "entries/core-inertia.js",
+    "name": "core-inertia",
+    "src": "src/js/core-inertia.js",
+    "isEntry": true,
+    "imports": []
+  },
+  "src/js/core-auth.js": {
+    "file": "entries/core-auth.js",
+    "name": "core-auth",
+    "src": "src/js/core-auth.js",
+    "isEntry": true,
+    "imports": [],
+    "css": ["css/core-auth.css"]
+  }
+}

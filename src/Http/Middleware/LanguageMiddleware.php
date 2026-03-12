@@ -4,7 +4,7 @@ namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\App;
-use Oobook\Priceable\Models\Currency;
+use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 use Unusualify\Modularity\Facades\ModularityLog;
 
 class LanguageMiddleware
@@ -61,9 +61,12 @@ class LanguageMiddleware
 
         if ($currency !== mb_strtoupper(config('priceable.currency'))) {
             config(['priceable.currency' => $currency]);
-            $currencyModel = Currency::where('iso_4217', config('priceable.currency'))->first();
-            if ($currencyModel) {
-                $request->setUserCurrency($currencyModel);
+            $provider = App::make(CurrencyProviderInterface::class);
+            if ($provider->isAvailable()) {
+                $currencyModel = $provider->findByIso4217(config('priceable.currency'));
+                if ($currencyModel && method_exists($request, 'setUserCurrency')) {
+                    $request->setUserCurrency($currencyModel);
+                }
             }
         }
 

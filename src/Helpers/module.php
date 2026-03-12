@@ -55,7 +55,15 @@ if (! function_exists('curtModuleName')) {
 
         preg_match($pattern, $dir, $matches);
         if (! count($matches)) {
-            dd($file, $matches, $dir, debug_backtrace());
+            \Illuminate\Support\Facades\Log::error('curtModule: Could not extract module name from path', [
+                'file' => $file,
+                'matches' => $matches,
+                'dir' => $dir,
+            ]);
+
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                'Could not determine current module from file path. Ensure the path contains a valid module directory (e.g. Modules/ModuleName/).'
+            );
         }
 
         return studlyName($matches[0]);
@@ -206,25 +214,23 @@ if (! function_exists('moduleRoute')) {
         // );
         // Build the route
         try {
-            // code...
             return route($routeName, $parameters, $absolute);
         } catch (\Throwable $th) {
-            dd(
-                [
-                    'throw' => $th,
-                    'routeName' => $routeName,
-                    'moduleName' => $moduleName,
-                    'prefix' => $prefix,
-                    'action' => $action,
-                    'parameters' => $parameters,
-                    'absolute' => $absolute,
-                ],
-                debug_backtrace()
-            );
-            // throw $th;
-        }
+            \Illuminate\Support\Facades\Log::error('modularityRoute: Route generation failed', [
+                'routeName' => $routeName,
+                'moduleName' => $moduleName,
+                'prefix' => $prefix,
+                'action' => $action,
+                'parameters' => $parameters,
+                'exception' => $th->getMessage(),
+            ]);
 
-        return route($routeName, $parameters, $absolute);
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                "Failed to generate route '{$routeName}': {$th->getMessage()}",
+                (int) $th->getCode(),
+                $th
+            );
+        }
     }
 }
 
@@ -257,9 +263,7 @@ if (! function_exists('modularityRoute')) {
 
         //  Add the action name
         $routeName .= $action ? ".{$action}" : '';
-        dd($routeName);
 
-        // dd($routeName, $moduleName, $prefix);
         // Build the route
         return route($routeName, $parameters, $absolute);
     }
@@ -438,10 +442,18 @@ if (! function_exists('backtrace_formatter')) {
             $carry[$item['file'] ?? $item['class']] = [
                 'line' => $item['line'] ?? null,
                 'function' => $item['function'] ?? null,
-                // 'args' => $noArgs ? null : $item['args'] ?? null,
             ];
         } catch (\Throwable $th) {
-            dd($item);
+            \Illuminate\Support\Facades\Log::error('backtrace_formatter: Failed to format backtrace item', [
+                'item' => $item,
+                'exception' => $th->getMessage(),
+            ]);
+
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                "Failed to format backtrace: {$th->getMessage()}",
+                (int) $th->getCode(),
+                $th
+            );
         }
 
         return $carry;
@@ -498,7 +510,9 @@ if (! function_exists('benchmark')) {
         $elapsedString = $elapsed . ' in ' . $unit;
 
         if ($die) {
-            dd($elapsedString);
+            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                "Benchmark stopped: {$elapsedString}"
+            );
         }
 
         // $modularityLogDir = concatenate_path(modularityConfig('log_dir', storage_path('logs/modularity')), 'benchmarks');

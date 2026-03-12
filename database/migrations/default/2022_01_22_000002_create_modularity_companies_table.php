@@ -12,10 +12,10 @@ return new class extends Migration
             // this will create an id, a "published" column, and soft delete and timestamps columns
             createDefaultTableFields($table);
             // $table->{modularityIntegerMethod()}("_id")->unsigned();
-            $table->string('name', 30)->nullable();
+            $table->string('name', 99)->nullable();
             $table->text('address')->nullable();
-            $table->string('city', 30)->nullable();
-            $table->string('state', 30)->nullable();
+            $table->string('city', 50)->nullable();
+            $table->string('state', 50)->nullable();
             $table->integer('country_id')->nullable();
             $table->string('zip_code', 10)->nullable();
             $table->string('phone', 20)->nullable();

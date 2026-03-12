@@ -34,6 +34,8 @@ class ComposerScriptsCommand extends BaseCommand
      */
     public function handle(): int
     {
+        Stub::setBasePath(__DIR__ . '/stubs');
+
         $composerPath = base_path('composer-dev.json');
 
         $scriptsStub = new Stub('/composer-scripts.json', []);

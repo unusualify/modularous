@@ -199,7 +199,7 @@ trait WarmupCache
      */
     public function warmupModuleRouteCache($moduleName, $routeName, $chunkSize = 100)
     {
-        $this->warmModuleRouteCacheCounts($moduleName, $routeName);
-        $this->warmModuleRouteCacheItems($moduleName, $routeName, $chunkSize);
+        $this->warmupModuleRouteCacheCounts($moduleName, $routeName);
+        $this->warmupModuleRouteCacheItems($moduleName, $routeName, $chunkSize);
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create($userOauthTable, function (Blueprint $table) use ($usersTable) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('token')->index();
+            $table->text('token')->index();
             $table->string('provider')->index();
             $table->longText('avatar')->nullable();
             $table->string('oauth_id')->index();

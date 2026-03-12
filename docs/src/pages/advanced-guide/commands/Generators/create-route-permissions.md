@@ -1,10 +1,11 @@
-# `Create Route Permissions`
+# `Make Route Permissions`
 
 > Create permissions for routes
 
 ## Command Information
 
-- **Signature:** `modularity:create:route:permissions [--route [ROUTE]] [--] <route>`
+- **Signature:** `modularity:make:route:permissions [--route [ROUTE]] [--] <route>`
+- **Alias:** `modularity:make:route:permissions` (deprecated, use `make:route:permissions`)
 - **Category:** Generators
 
 
@@ -13,29 +14,29 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:route:permissions ROUTE
+php artisan modularity:make:route:permissions ROUTE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:create:route:permissions --route=ROUTE
+php artisan modularity:make:route:permissions --route=ROUTE
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:route:permissions ROUTE
+php artisan modularity:make:route:permissions ROUTE
 ```
 
-`modularity:create:route:permissions`
+`modularity:make:route:permissions`
 -------------------------------------
 
 Create permissions for routes
 
 ### Usage
 
-* `modularity:create:route:permissions [--route [ROUTE]] [--] <route>`
+* `modularity:make:route:permissions [--route [ROUTE]] [--] <route>`
 
 Create permissions for routes
 

@@ -1,10 +1,11 @@
-# `Create Test Laravel`
+# `Make Laravel Test`
 
 > Create a test file for laravel features or components
 
 ## Command Information
 
-- **Signature:** `modularity:create:test:laravel [--unit] [--] <module> <test>`
+- **Signature:** `modularity:make:laravel:test [--unit] [--] <module> <test>`
+- **Alias:** `modularity:create:laravel:test` (deprecated, use `make:laravel:test`)
 - **Category:** Generators
 
 
@@ -13,29 +14,29 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:create:test:laravel MODULE TEST
+php artisan modularity:make:laravel:test MODULE TEST
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:create:test:laravel --unit
+php artisan modularity:make:laravel:test --unit
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:test:laravel MODULE
+php artisan modularity:make:laravel:test MODULE
 ```
 
-`modularity:create:test:laravel`
+`modularity:make:laravel:test`
 --------------------------------
 
 Create a test file for laravel features or components
 
 ### Usage
 
-* `modularity:create:test:laravel [--unit] [--] <module> <test>`
+* `modularity:make:laravel:test [--unit] [--] <module> <test>`
 
 Create a test file for laravel features or components
 

@@ -248,6 +248,29 @@ class RegisterBrokerTest extends ModelTestCase
         );
 
         Notification::assertSentTimes(EmailVerification::class, 1);
+    }
 
+    public function test_send_verification_link_with_callback()
+    {
+        Notification::fake();
+
+        $credentials = ['email' => 'callback-user@example.com'];
+
+        $callbackUser = null;
+        $callbackToken = null;
+        $callback = function ($user, $token) use (&$callbackUser, &$callbackToken) {
+            $callbackUser = $user;
+            $callbackToken = $token;
+
+            return 'custom-response';
+        };
+
+        $result = $this->broker->sendVerificationLink($credentials, $callback);
+
+        $this->assertEquals('custom-response', $result);
+        $this->assertNotNull($callbackUser);
+        $this->assertEquals('callback-user@example.com', $callbackUser->email);
+        $this->assertNotNull($callbackToken);
+        Notification::assertNothingSent();
     }
 }
