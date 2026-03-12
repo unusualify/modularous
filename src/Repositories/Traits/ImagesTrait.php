@@ -100,7 +100,7 @@ trait ImagesTrait
                             });
                         }
                     } else {
-                        $medias = $mediasByRole[$role]->groupBy('pivot.locale')[$default_locale] ?? $mediasByRole[$role]->groupBy('pivot.locale')[$fallback_locale];
+                        $medias = $mediasByRole[$role]->groupBy('pivot.locale')[$default_locale] ?? $mediasByRole[$role]->groupBy('pivot.locale')[$fallback_locale] ?? collect([]);
                         $fields[$role] = $medias->map(function ($media) {
                             return $media->mediableFormat();
                         });
