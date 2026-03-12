@@ -22,12 +22,20 @@
 </template>
 
 <script>
-import mediaItemsMixin from '@/mixins/mediaLibrary/mediaItems'
 import { mapState } from 'vuex'
+import { useMediaItems } from '@/hooks'
 
 export default {
   name: 'A17Mediagrid',
-  mixins: [mediaItemsMixin],
+  props: {
+    items: { type: Array, default: () => [] },
+    selectedItems: { type: Array, default: () => [] },
+    usedItems: { type: Array, default: () => [] }
+  },
+  emits: ['change', 'shiftChange'],
+  setup (props, { emit }) {
+    return { ...useMediaItems(props, emit) }
+  },
   computed: {
     ...mapState({
       showFileName: state => state.mediaLibrary.showFileName
