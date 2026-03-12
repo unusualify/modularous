@@ -5,10 +5,33 @@ import { fileURLToPath, URL } from 'node:url'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import Vue from '@vitejs/plugin-vue'
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const srcDir = fileURLToPath(new URL('src', import.meta.url))
 
 export default defineConfig({
+  root: path.resolve(__dirname),
   test: {
+    coverage: {
+      provider: 'v8',
+      reporter: [
+        'text',
+        'text-summary',
+        ['html', { subdir: '.' }],
+        ['lcov', { projectRoot: path.resolve(__dirname, '../../..') }],
+        'clover',
+        'json',
+      ],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.{js,ts,vue}'],
+      exclude: [
+        '**/components/customs/**',
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/coverage/**',
+        '**/*.test.{js,ts,vue}',
+        '**/*.spec.{js,ts,vue}',
+      ],
+    },
     globals: true,
     environment: 'jsdom',
     include: ['**/*.{test,spec,mest}.?(c|m)[jt]s?(x)'],
