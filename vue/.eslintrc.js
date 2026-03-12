@@ -11,7 +11,9 @@ module.exports = {
     'vue/html-comment-indent': 'off',
     'vue/valid-v-slot': ['error', {
       allowModifiers: true
-    }]
+    }],
+    // Enforce Composition API for new components (warn during migration)
+    'vue/component-api-style': ['warn', ['composition', 'script-setup']]
 
     // indent
     // 'indent': ['error', 2, { 'SwitchCase': 1 }],
