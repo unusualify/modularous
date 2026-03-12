@@ -85,6 +85,17 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
+     * Create a new model record.
+     *
+     * Lifecycle order:
+     * 1. prepareFieldsBeforeCreate($fields)
+     * 2. model->create($fields) — creates DB record
+     * 3. beforeSave($object, $original_fields)
+     * 4. prepareFieldsBeforeSave($object, $fields)
+     * 5. $object->save()
+     * 6. afterSave($object, $fields)
+     * 7. dispatchEvent($object, 'create')
+     *
      * @param string[] $fields
      * @return \Unusualify\Modularity\Models\Model
      */
@@ -165,6 +176,16 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
+     * Update an existing model record.
+     *
+     * Lifecycle order:
+     * 1. beforeSave($object, $fields)
+     * 2. prepareFieldsBeforeSave($object, $fields)
+     * 3. $object->fill($fields)
+     * 4. $object->save()
+     * 5. afterSave($object, $fields)
+     * 6. dispatchEvent($object, 'update')
+     *
      * @param mixed $id
      * @param array $fields
      * @return bool
