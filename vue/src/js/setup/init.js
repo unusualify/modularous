@@ -26,527 +26,68 @@ import { handleSuccessResponse, handleErrorResponse } from '@/utils/response'
 
 /*
  |--------------------------------------------------------------------------
- | Global Helper Definitions
+ | Global Helper Definitions (backward compatibility)
  |--------------------------------------------------------------------------
- |
- | Global js functions are defined here.
- | Functions will be defined with '__' prefix as a unusual enterprise's standard
- |
+ | Helpers are exported from @/utils/helpers. Prefer: import { isObject } from '@/utils/helpers'
+ | window.__* is deprecated but kept for backward compatibility during migration.
  */
- function assignBOMHElpers(){
-  window.__log = console.log
+import * as helpers from '@/utils/helpers'
 
-  window.__isString = (value) => {
-    return (Object.prototype.toString.call(value) === '[object String]')
-  }
-
-  window.__isBoolean = (value) => {
-    return typeof value == "boolean"
-  }
-
-  window.__isNumber = (value) => {
-    return !isNaN(value)
-  }
-
-  window.__isObject = (value) => {
-    return Object.prototype.toString.call(value) === '[object Object]'
-  },
-
-  window.__isArray = (value) => {
-    return Array.isArray(value)
-  }
-
-  window.__isset = (...args) => {
-    // !No description available for isset. @php.js developers: Please update the function summary text file.
-    //
-    // version: 1103.1210
-    // discuss at: http://phpjs.org/functions/isset
-    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: FremyCompany
-    // +   improved by: Onno Marsman
-    // +   improved by: Rafał Kukawski
-    // *     example 1: isset( undefined, true);
-    // *     returns 1: false
-    // *     example 2: isset( 'Kevin van Zonneveld' );
-    // *     returns 2: true
-    const a = args
-    const l = a.length
-    let i = 0
-    let undef
-
-    if (l === 0) {
-      throw new Error('Empty isset')
-    }
-
-    while (i !== l) {
-      if (a[i] === undef || a[i] === null) {
-        return false
-      }
-      i++
-    }
-    return true
-  }
-
-  window.__issetReturn = (arg, defaultValue) => {
-    return __isset(arg) ? arg : defaultValue
-  }
-
-  window.__getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
-
-  window.__globalizeMethods = (input) => {
-    if (Array.isArray(input)) {
-      input.forEach(function (obj) {
-        __getMethods(obj).forEach(function (v) {
-          window[v] = obj[v]
-        })
-      })
-    } else if (__isObject(input)) {
-      __getMethods(obj).forEach(function (v) {
-        window[v] = obj[v]
-      })
-    }
-  }
-
-  window.__responseHandler = (response) => {
-    if (__isset(response.data.errors)) {
-      return {
-        status: false,
-        text: errorHandler(response.data.errors)
-      }
-    } else {
-      return {
-        status: true,
-        data: response.data.data
-      }
-    }
-  }
-
-  /**
-   * @param  {} errors
-   * !danger, does not work
-   * TODO make it work
-   */
-  window.__errorHandler = (errors) => {
-    let rows = ''
-    Object.keys(errors).forEach((key, i) => {
-      rows += `
-              <tr>
-                  <td> <strong> ${capitalCase(key)} </strong> </td>
-                  <td>
-                      ${errors[key].join('</br>')}
-                  </td>
-              </tr>
-          `
-    })
-
-    const html = `
-      <table> \
-         <tbody> \
-          ${rows} \
-         </tbody> \
-      </table>`
-
-    return html
-  }
-
-  window.__functionDefinition = (func) => {
-    return Function.prototype.toString.call(func)
-  }
-
-  window.__convertArrayOrObject = (el, key = null) => {
-    if (__isObject(el)) {
-      const object = {}
-      Object.keys(el).forEach((key) => {
-        object[key] = __convertArrayOrObject(el[key], key)
-      })
-      return object
-    } else if (Array.isArray(el)) {
-      const array = []
-      el.forEach((item) => {
-        array.push(__convertArrayOrObject(item))
-      })
-      return array
-    } else if (typeof el === 'function') {
-      let string = __functionDefinition(el)
-
-      if (key) {
-        string = string.replace(key + '(', 'function (')
-      }
-      return string
-    } else if (el instanceof RegExp) {
-      return el.toString()
-    } else {
-      return el
-    }
-  }
-
-  window.__printDefinition = (variable) => {
-    // return  __convertArrayOrObject(variable);
-    return JSON.stringify(__convertArrayOrObject(variable))
-  }
-
-  window.__shorten = (string, maxLength = 40) => {
-    // return  __convertArrayOrObject(variable);
-    return string.length > maxLength ? string.substring(0, maxLength) + '...' : string
-  }
-
-  window.__preg_quote = (str, delimeter = '') => {
-    return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&');
-  }
-
-  window.__extract = (obj) => {
-    for (var key in obj) {
-      window[key] = obj[key];
-    }
-  }
-
-  window.__dot = (obj, prefix = '') => {
-    return Object.keys(obj).reduce((acc, key) => {
-      const newKey = prefix ? `${prefix}.${key}` : key;
-
-      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-        Object.assign(acc, __dot(obj[key], newKey));
-      } else {
-        acc[newKey] = obj[key];
-      }
-
-      return acc;
-    }, {});
-  }
-
-  window.__reverseDot = (flatObj) => {
-    const result = {};
-
-    for (const [key, value] of Object.entries(flatObj)) {
-      const keys = key.split('.');
-      let current = result;
-
-      for (let i = 0; i < keys.length; i++) {
-        const k = keys[i];
-        if (i === keys.length - 1) {
-          current[k] = value;
-        } else {
-          current[k] = current[k] || {};
-          current = current[k];
-        }
-      }
-    }
-
-    return result;
-  };
-
-  window.__wildcard_change = (string, val, search_key = 'id') => {
-    let values = Array.isArray(val) ? val.join(',') : val
-    return string.replace(/^([\w\.]+)?(\*)([\w_\-\.\*]+)$/, '$1*' + `${search_key}=${values}` + '$3')
-  }
-
-  window.__data_get = (data, path, defaultValue) => {
-    if (!data || typeof path !== 'string') {
-      return defaultValue;
-    }
-
-    const parts = tokenizePath(path);
-    let current = data;
-
-    for (const index in parts) {
-      let part = parts[index]
-      if (current === undefined || current === null) {
-        return defaultValue;
-      }
-
-      if (typeof current === 'object') {
-        let _tmp
-
-        let matches = part ? part.match(/^\*(.*)/) : false
-
-        if (matches) {
-          // if part is *id=1,2,3, current will be filtered wrt values splitted ',' comma
-          let filterMatches
-          if(matches[1] && (filterMatches = matches[1].match(/^(\w+)\=([\w\d\,]+)/))){
-            let filterKey = filterMatches[1]
-            let filterValues = filterMatches[2].split(',')
-            current = lodash.filter(current, (el) => filterValues.includes( lodash.isNumber(el[filterKey]) ? el[filterKey].toString() : el[filterKey] ))
-          }
-
-          // Handle wildcard (modified for array case):
-          if (Array.isArray(current)) {
-            let _index = parseInt(index)
-            // return current.map(item => window.__data_get(item, parts.slice(1).join('.'), defaultValue)); // Recursively get desired property from each object
-            return current.map(item => __data_get(item, parts.slice(_index+1).join('.'), defaultValue)); // Recursively get desired property from each object
-          } else {
-            return Object.assign({}, current); // Shallow copy for single object
-          }
-        } else if (part.indexOf('[') !== -1) {
-          // Handle brackets for array access
-          const key = extractKeyFromBracket(part);
-          if (key !== undefined) {
-            current = current[key];
-          } else {
-            return defaultValue; // Invalid bracket syntax
-          }
-        } else {
-          _tmp = current[part];
-        }
-
-        if(!_tmp){
-          current = lodash.get(current, parts.slice(index).join('.'))
-          if(current)
-            break;
-        }else{
-          current = _tmp
-        }
-
-      } else {
-        return defaultValue; // Path points to a non-object
-      }
-    }
-
-    return current;
-  }
-
-  // TODO: inputs/FormTabs.vue
-
-  window.__snakeToHeadline = (str) => {
-    return str
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  }
-
-  window.__headline = (str) => {
-    str = snakeCase(str)
-    return str
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  }
-
-  /**
-   * Extracts the foreign key from a given model name.
-   * Converts camelCase or snake_case and plural forms to snake_case singular with '_id'.
-   *
-   * @param {string} modelName - The name of the model (e.g., 'packageFeature', 'package_features').
-   * @returns {string} - The foreign key in snake_case singular form with '_id' suffix (e.g., 'package_feature_id').
-   */
-  window.__extractForeignKey = (modelName) => {
-    if (typeof modelName !== 'string') {
-      throw new TypeError('modelName must be a string');
-    }
-
-    // Convert camelCase to snake_case if necessary
-    let snakeCaseName = lodash.snakeCase(modelName);
-
-    // Convert to singular form
-    let singularName = pluralize.isPlural(snakeCaseName) ? pluralize.singular(snakeCaseName) : snakeCaseName;
-
-    // Append '_id' suffix
-    const foreignKey = `${singularName}_id`;
-
-    return foreignKey;
-  }
-
-  window.__snakeNameFromForeignKey = (str) => {
-    let matches = str.match(/(.*)(_id)/)
-
-    if (matches) {
-      return snakeCase(matches[1]);
-    }
-
-    return false;
-  }
-
-  window.__nameFromForeignKey = (str) => {
-    str = __snakeNameFromForeignKey(str)
-
-    return !str ? __snakeToHeadline(str) : str;
-  }
-
-  window.__moduleName = (str) => {
-    let matches = str.match('/(.*)(_id)/')
-    if(matches){ // is foreign key
-      return __snakeNameFromForeignKey(matches[1])
-    }
-
-    return snakeCase(str);
-  }
+function assignBOMHElpers () {
+  window.__log = helpers.log
+  window.__isString = helpers.isString
+  window.__isBoolean = helpers.isBoolean
+  window.__isNumber = helpers.isNumber
+  window.__isObject = helpers.isObject
+  window.__isArray = helpers.isArray
+  window.__isset = helpers.isset
+  window.__issetReturn = helpers.issetReturn
+  window.__getMethods = helpers.getMethods
+  window.__globalizeMethods = helpers.globalizeMethods
+  window.__functionDefinition = helpers.functionDefinition
+  window.__convertArrayOrObject = helpers.convertArrayOrObject
+  window.__printDefinition = helpers.printDefinition
+  window.__shorten = helpers.shorten
+  window.__preg_quote = helpers.pregQuote
+  window.__extract = helpers.extract
+  window.__dot = helpers.dot
+  window.__reverseDot = helpers.reverseDot
+  window.__wildcard_change = helpers.wildcardChange
+  window.__data_get = helpers.dataGet
+  window.__snakeToHeadline = helpers.snakeToHeadline
+  window.__headline = helpers.headline
+  window.__extractForeignKey = helpers.extractForeignKey
+  window.__snakeNameFromForeignKey = helpers.snakeNameFromForeignKey
+  window.__nameFromForeignKey = helpers.nameFromForeignKey
+  window.__moduleName = helpers.moduleName
+  window.__removeQueryParams = helpers.removeQueryParams
+  window.__pluralize = helpers.pluralizeStr
+  window.__pushQueryParams = helpers.pushQueryParams
+  window.__formatCurrencyPrice = helpers.formatCurrencyPrice
+  window.__addParametersToUrl = helpers.addParametersToUrl
+  window.__removeParametersFromUrl = helpers.removeParametersFromUrl
 
   window.__moduleTranslationName = (str) => {
     const { t, te } = useI18n({ useScope: 'global' })
+    return helpers.moduleTranslationName(str, { t, te })
+  }
 
-    let isPlural = false
-    let name = str
-
-    let snakeNameFromForeignKey = __snakeNameFromForeignKey(name)
-
-    if(snakeNameFromForeignKey){ // is foreign key
-      name = snakeNameFromForeignKey
-      str = snakeNameFromForeignKey
+  window.__responseHandler = (response) => {
+    if (helpers.isset(response?.data?.errors)) {
+      return { status: false, text: '' }
     }
-
-    if(pluralize.isPlural(name)){
-      isPlural = true
-      name = pluralize.singular(name)
-    }
-
-    name = snakeCase(name)
-    str = snakeCase(str)
-
-    return te(`modules.${name}`) ? t(`modules.${name}`, isPlural ? 1 : 0) : __snakeToHeadline(str)
+    return { status: true, data: response?.data?.data }
   }
 
-  window.__removeQueryParams = (paramsToRemove) => {
-    // Get the current URL
-    const currentUrl = new URL(window.location.href);
-
-    // Convert the search params to an object
-    let queryObject = {};
-    for (const [key, value] of currentUrl.searchParams.entries()) {
-      queryObject[key] = value;
-    }
-
-    // Remove specified parameters and clean the object
-    paramsToRemove.forEach(param => {
-      delete queryObject[param];
-    });
-
-    // Clean the object by removing undefined or null values
-    Object.keys(queryObject).forEach(key =>
-      (queryObject[key] === undefined || queryObject[key] === null) && delete queryObject[key]
-    );
-
-    // Reconstruct the URL with the cleaned query parameters
-    const newSearchParams = new URLSearchParams();
-    Object.keys(queryObject).forEach(key => {
-      newSearchParams.append(key, queryObject[key]);
-    });
-
-    // Construct the new URL
-    const newUrl = currentUrl.origin + currentUrl.pathname + (newSearchParams.toString() ? '?' + newSearchParams.toString() : '');
-
-    // Update the URL without refreshing the page using replaceState
-    window.history.replaceState({}, '', newUrl);
+  window.__errorHandler = (errors) => {
+    let rows = ''
+    Object.keys(errors || {}).forEach((key) => {
+      rows += `<tr><td><strong>${helpers.snakeToHeadline(key)}</strong></td><td>${(errors[key] || []).join('<br>')}</td></tr>`
+    })
+    return `<table><tbody>${rows}</tbody></table>`
   }
 
-  window.__pluralize = (str) => pluralize.plural(str)
-
-  window.__pushQueryParams = (params) => {
-    // Get current URL and create URLSearchParams object
-    const url = new URL(window.location);
-    const searchParams = url.searchParams;
-
-    // Add new parameters
-    Object.entries(params).forEach(([key, value]) => {
-        searchParams.set(key, value);
-    });
-
-    // Update URL without reloading the page
-    window.history.pushState({}, '', url);
-  }
-
-  window.__formatCurrencyPrice = (amount, symbol, preferedLocale = 'en') => {
-
-    // const { locale } = useI18n({ useScope: 'global' })
-
-    // Handle invalid input
-    // if(isNull(preferedLocale))
-    //   preferedLocale = locale.value;
-    if (typeof amount !== 'number' || isNaN(amount))
-      throw new Error('Amount must be a valid number');
-
-    // Format the number with proper grouping and decimal places
-    const formatter = new Intl.NumberFormat(preferedLocale, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
-
-    // Format the number and add the symbol
-    return `${symbol}${formatter.format(amount)}`;
-  }
-
-  window.__addParametersToUrl = (url, params) => {
-    const urlInstance = new URL(url);
-    const searchParams = urlInstance.searchParams;
-
-    Object.entries(params).forEach(([key, value]) => {
-      searchParams.set(key, value);
-    });
-
-    return urlInstance.toString();
-  }
-  window.__removeParametersFromUrl = (url, params) => {
-    const urlInstance = new URL(url);
-    const searchParams = urlInstance.searchParams;
-
-    Object.entries(params).forEach(([key, value]) => {
-      searchParams.delete(key);
-    });
-
-    return urlInstance.toString();
-  }
-}
-
-function tokenizePath(path) {
-  const tokens = [];
-  let currentToken = '';
-  let inBracket = false;
-  let escaped = false;
-
-  for (let i = 0; i < path.length; i++) {
-    const char = path[i];
-
-    if (escaped) {
-      currentToken += char;
-      escaped = false;
-    } else if (char === '\\') {
-      escaped = true;
-    } else if (char === '[') {
-      if (currentToken) {
-        tokens.push(currentToken);
-        currentToken = '';
-      }
-      inBracket = true;
-      currentToken += char;
-    } else if (char === ']') {
-      if (!inBracket) {
-        throw new Error('Mismatched brackets in path');
-      }
-      currentToken += char;
-      tokens.push(extractBracketContent(currentToken));
-      currentToken = '';
-      inBracket = false;
-    } else if (char === '.' && !inBracket) {
-      if (currentToken) {
-        tokens.push(currentToken);
-        currentToken = '';
-      }
-    } else {
-      currentToken += char;
-    }
-  }
-
-  if (currentToken) {
-    tokens.push(currentToken);
-  }
-
-  return tokens;
-}
-
-function extractBracketContent(bracketToken) {
-  // Remove brackets and trim whitespace
-  const content = bracketToken.slice(1, -1).trim();
-
-  // If it's a number, return as a number
-  if (/^\d+$/.test(content)) {
-    return content;
-  }
-
-  // Otherwise, return as a string
-  return content;
-}
-
-function extractKeyFromBracket(part) {
-  const match = part.match(/\[([^\]]*)\]/);
-  return match ? match[1] : undefined;
+  window.__helpers = helpers
 }
 
 function assignObjectHelpers(){

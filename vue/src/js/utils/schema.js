@@ -1,4 +1,5 @@
 import { reduce } from 'lodash-es'
+import { isset } from '@/utils/helpers'
 
 export const isViewOnlyInput = (input) => {
   return Object.prototype.hasOwnProperty.call(input, 'viewOnlyComponent')
@@ -8,7 +9,7 @@ export const isFormEventInput = (input) => {
   return Object.prototype.hasOwnProperty.call(input, 'isEvent')
     && input.isEvent
     && ( ['select', 'autocomplete', 'combobox', 'switch'].includes(input.type)
-      || __isset(input.viewOnlyComponent)
+      || isset(input?.viewOnlyComponent)
       || input.noSubmit
     )
 }
@@ -18,8 +19,8 @@ export const getTranslationInputsCount = (inputs) => {
 }
 
 export const getTranslationInputs = (inputs, acc = []) => {
-  return _.reduce(inputs, (acc, input) => {
-    if(__isset(input) && __isset(input.schema) && ['wrap', 'group', 'repeater', 'input-repeater'].includes(input.type)){
+  return reduce(inputs, (acc, input) => {
+    if (isset(input) && isset(input?.schema) && ['wrap', 'group', 'repeater', 'input-repeater'].includes(input.type)) {
       acc = getTranslationInputs(input.schema, acc)
     } else if(Object.prototype.hasOwnProperty.call(input, 'translated') && input.translated)
       acc.push(input)
