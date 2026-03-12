@@ -29,7 +29,6 @@ class FilepondController extends Controller
 
     public function preview(Request $request, $folder)
     {
-        // dd($folder);
         return $this->filepondManager->previewFile($folder);
     }
 }

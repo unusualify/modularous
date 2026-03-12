@@ -80,7 +80,9 @@ class FilepondManager
 
         $storagePath = Storage::path($path);
 
-        ob_end_clean(); // if I remove this, it does not work
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         $fileType = pathinfo($storagePath, PATHINFO_EXTENSION);
 
