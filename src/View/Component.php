@@ -194,6 +194,17 @@ class Component extends LaravelComponent
     }
 
     /**
+     * Set the component name (alias for setTag)
+     *
+     * @param string $component
+     * @return self
+     */
+    public function setComponent($component)
+    {
+        return $this->setTag($component);
+    }
+
+    /**
      * Set the tag of the component
      *
      * @param string $tag
