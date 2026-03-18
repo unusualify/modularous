@@ -5,7 +5,7 @@ return [
 
     'choose-password' => 'Şifre Girin',
     'company' => 'Şirket Adı',
-    'confirm-provider' => '{provider} Hesabınızı Doğrulayın',
+    'confirm-provider' => '{Provider} Hesabınızı Doğrulayın',
     'complete-registration' => 'Kayıt Oluştur',
     'complete-registration-title' => 'KAYIT OLUŞTUR',
     'conditions-policy' => 'Koşullar ve Politika',
