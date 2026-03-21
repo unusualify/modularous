@@ -852,60 +852,61 @@
           :key="`formatter-${i}`"
           v-slot:[`item.${col.key}`]="{ item }"
         >
-          <template v-if="col.formatterName == 'edit' || col.formatterName == 'activate'">
-            <v-tooltip :text="item[col.key]" :key="i" :disabled="col.isFormatting" maxWidth="300">
-              <template v-slot:activator="{ props }">
-                <div class="d-flex">
-                  <template v-if="(col.hasCopy ?? false) || col.key.match(/^id|uuid$/)">
-                    <ue-copy-text :text="item[col.key]" class="mr-2"/>
-                  </template>
-                  <div
-                    :key="i"
-                    v-bind="props"
-                    class="justify-start text-none text-wrap text-primary darken-1 cursor-pointer text-truncate"
-                    @click="itemAction(item, { name: col.formatterName, target: col.target ?? '_blank' })"
-                  >
-                    <template v-if="col.isFormatting">
-                      <ue-recursive-stuff
-                        v-bind="handleFormatter(col.formatter, item[col.key])"
-                      />
+          <div class="d-flex"> 
+            <template v-if="col.formatterName == 'edit' || col.formatterName == 'activate'">
+              <v-tooltip :text="item[col.key]" :key="i" :disabled="col.isFormatting" maxWidth="300">
+                <template v-slot:activator="{ props }">
+                    <template v-if="(col.hasCopy ?? false) || col.key.match(/^id|uuid$/)">
+                      <ue-copy-text :text="item[col.key]" class="mr-2"/>
                     </template>
-                    <template v-else>
-                      {{ item[col.key] }}
-                    </template>
-                  </div>
-                </div>
+                    <div
+                      :key="i"
+                      v-bind="props"
+                      class="justify-start text-none text-wrap text-primary darken-1 cursor-pointer text-truncate"
+                      @click="itemAction(item, { name: col.formatterName, target: col.target ?? '_blank' })"
+                    >
+                      <template v-if="col.isFormatting">
+                        <ue-recursive-stuff
+                          v-bind="handleFormatter(col.formatter, item[col.key])"
+                        />
+                      </template>
+                      <template v-else>
+                        {{ item[col.key] }}
+                      </template>
+                    </div>
+                </template>
+              </v-tooltip>
+            </template>
+            <template v-else-if="col.formatterName == 'switch'">
+              <v-switch
+                :key="i"
+                :model-value="item[col.key]"
+                color="success"
+                :true-value="1"
+                false-value="0"
+                hide-details
+                @update:modelValue="itemAction(item, 'switch', $event, col.key )"
+              >
+                <template v-slot:label></template>
+              </v-switch>
+            </template>
+            <template v-else-if="col.formatterName == 'dynamic'">
+              <ue-dynamic-component-renderer
+                :subject="item[col.key]"
+                :key="item[col.key]"
+              >
+              </ue-dynamic-component-renderer>
+            </template>
+            <template v-else>
+              <div>
+                <ue-recursive-stuff
+                  v-bind="handleFormatter(col.formatter, window.__shorten(item[col.key] ?? '', cellOptions.maxChars))"
+                  :key="item[col.key]"
+                />
+              </div>
+            </template>
+          </div>
 
-
-              </template>
-            </v-tooltip>
-          </template>
-          <template v-else-if="col.formatterName == 'switch'">
-            <v-switch
-              :key="i"
-              :model-value="item[col.key]"
-              color="success"
-              :true-value="1"
-              false-value="0"
-              hide-details
-              @update:modelValue="itemAction(item, 'switch', $event, col.key )"
-            >
-              <template v-slot:label></template>
-            </v-switch>
-          </template>
-          <template v-else-if="col.formatterName == 'dynamic'">
-            <ue-dynamic-component-renderer
-              :subject="item[col.key]"
-              :key="item[col.key]"
-            >
-            </ue-dynamic-component-renderer>
-          </template>
-          <template v-else>
-            <ue-recursive-stuff
-              v-bind="handleFormatter(col.formatter, window.__shorten(item[col.key] ?? '', cellOptions.maxChars))"
-              :key="item[col.key]"
-            />
-          </template>
         </template>
 
         <template v-if="isClickableRows" v-slot:item="itemScope">
