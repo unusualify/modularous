@@ -111,7 +111,7 @@ trait HasCompany
     {
         return Attribute::make(
             get: fn () => ! modularityConfig('disable_billing_banner', false)
-                && $this->isClient()
+                && $this->is_client
                 && ! $this->validCompany
                 && Modularity::shouldUseCountryBasedVatRates()
         );

@@ -23,14 +23,6 @@ class AuthServiceProvider extends ServiceProvider implements DeferrableProvider
 
     protected function authorize($user, $callback)
     {
-        // if (!$user->isPublished()) {
-        //     return false;
-        // }
-
-        // if ($user->isSuperAdmin()) {
-        //     return true;
-        // }
-
         return $callback($user);
     }
 
@@ -153,7 +145,7 @@ class AuthServiceProvider extends ServiceProvider implements DeferrableProvider
 
         Horizon::auth(function ($request) {
             // dd($request->user());
-            return app()->environment('local') || $request->user()->isSuperAdmin() || in_array($request->user()->email, [
+            return app()->environment('local') || $request->user()->is_superadmin || in_array($request->user()->email, [
                 'software-dev@unusualgrowth.cm',
             ]);
         });

@@ -36,6 +36,7 @@ class PaymentServiceHydrate extends InputHydrate
         $input['currencyConversionEndpoint'] = route('currency.convert');
 
         $input['useCountryBasedVatRates'] = Modularity::shouldUseCountryBasedVatRates();
+
         if ($input['useCountryBasedVatRates']) {
             if (! $this->skipQueries) {
                 $userPaymentCountryCurrencies = get_user_payment_country_currencies();
@@ -52,7 +53,7 @@ class PaymentServiceHydrate extends InputHydrate
                     ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
                     ->with('paymentServices', 'paymentService');
 
-                if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
+                if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->is_client && ($user->validCompany)) {
                     if ($user->company->isCorporateCompany) {
                         $query = $query->defaultCorporatePaymentCurrency();
                     } else {

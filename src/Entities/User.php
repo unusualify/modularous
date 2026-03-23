@@ -10,7 +10,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 use Unusualify\Modularity\Database\Factories\UserFactory;
 use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;
@@ -75,6 +77,12 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         'ui_preferences' => 'array',
     ];
 
+    protected $appends = [
+        'roles_meta',
+        'is_client',
+        'is_superadmin',
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -91,11 +99,48 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
                 $model->saveQuietly();
             }
         });
+
+        static::addGlobalScope('roles_meta', function ($query) {
+            $query->with('rolesMetaRelation');
+        });
     }
 
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return UserFactory::new();
+    }
+
+    /**
+     * Minimal roles relation (id, name, title) for roles_meta.
+     * Does not affect the original roles relationship.
+     */
+    public function rolesMetaRelation(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        $rolesTable = config('permission.table_names.roles');
+        $relation = $this->morphToMany(
+            config('permission.models.role'),
+            'model',
+            config('permission.table_names.model_has_roles'),
+            config('permission.column_names.model_morph_key'),
+            PermissionRegistrar::$pivotRole
+        )->select("{$rolesTable}.id", "{$rolesTable}.name", "{$rolesTable}.title");
+
+        if (! PermissionRegistrar::$teams) {
+            return $relation;
+        }
+
+        return $relation->wherePivot(PermissionRegistrar::$teamsKey, getPermissionsTeamId())
+            ->where(function ($q) use ($rolesTable) {
+                $teamField = "{$rolesTable}." . PermissionRegistrar::$teamsKey;
+                $q->whereNull($teamField)->orWhere($teamField, getPermissionsTeamId());
+            });
+    }
+
+    protected function rolesMeta(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->rolesMetaRelation
+        );
     }
 
     public function setImpersonating($id)
@@ -113,19 +158,34 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return Session::has('impersonate');
     }
 
-    public function isSuperAdmin()
+    public function isSuperadmin(): Attribute
     {
-        return $this->hasRole('superadmin');
+        return new Attribute(
+            get: fn () => collect($this->roles_meta)
+                ->contains(fn ($role) => $role['name'] === 'superadmin'),
+        );
     }
 
-    public function isAdmin()
+    public function isAdmin(): Attribute
     {
-        return $this->hasRole('admin');
+        return new Attribute(
+            get: fn () => collect($this->roles_meta)
+                ->contains(fn ($role) => $role['name'] === 'admin'),
+        );
     }
 
-    public function isClient()
+    /**
+     * @deprecated Use $this->is_client instead
+     */
+    public function isClient() : bool
     {
-        return (bool) $this->roles()->where('name', 'like', 'client%')->exists();
+        return $this->is_client;
+    }
+
+    public function getIsClientAttribute()
+    {
+        return collect($this->roles_meta)
+            ->contains(fn ($role) => Str::startsWith($role['name'], 'client'));
     }
 
     protected function avatar(): Attribute

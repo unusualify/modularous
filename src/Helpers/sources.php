@@ -180,7 +180,7 @@ if (! function_exists('get_modularity_navigation_config')) {
                 $sidebarKey = 'superadmin';
                 $profileMenuKey = 'superadmin';
                 $sidebarBottomKey = 'superadmin';
-            } elseif (count($user->roles) > 0 && $user->isClient()) {
+            } elseif (count($user->roles) > 0 && $user->is_client) {
                 $sidebarKey = 'client';
                 $profileMenuKey = 'client';
                 $sidebarBottomKey = 'client';
@@ -217,8 +217,10 @@ if (! function_exists('get_modularity_authorization_config')) {
         });
 
         return [
-            'isSuperAdmin' => $user?->isSuperAdmin() ?? false,
-            'isClient' => $user?->isClient() ?? false,
+            'isSuperAdmin' => $user?->is_superadmin ?? false,
+            'is_superadmin' => $user?->is_superadmin ?? false,
+            'isClient' => $user?->is_client ?? false,
+            'is_client' => $user?->is_client ?? false,
             'roles' => $roles,
             'permissions' => $permissions,
         ];
@@ -233,7 +235,7 @@ if (! function_exists('get_modularity_impersonation_config')) {
 
         if (Auth::check()) {
             $activeUser = Auth::user();
-            $canFetchUsers = $activeUser->isSuperAdmin() || $activeUser->isImpersonating();
+            $canFetchUsers = $activeUser->is_superadmin || $activeUser->isImpersonating();
         }
 
         $userRepository = app()->make(\Modules\SystemUser\Repositories\UserRepository::class);
@@ -241,7 +243,7 @@ if (! function_exists('get_modularity_impersonation_config')) {
         $defaultInput = modularityConfig('default_input');
 
         return [
-            'active' => $activeUser ? $activeUser->isSuperAdmin() || $activeUser->isImpersonating() : false,
+            'active' => $activeUser ? $activeUser->is_superadmin || $activeUser->isImpersonating() : false,
             'impersonated' => $activeUser ? $activeUser->isImpersonating() : false,
             'stopRoute' => route(Route::hasAdmin('impersonate.stop')),
             'route' => route(Route::hasAdmin('impersonate'), ['id' => ':id']),
@@ -350,7 +352,7 @@ if (! function_exists('get_user_currency_vat_rates')) {
             if ((($guard = Auth::guard('modularity')) !== null) && $guard->check()) {
                 $user = $guard->user();
 
-                if ($user->isClient() && $user->validCompany) {
+                if ($user->is_client && $user->validCompany) {
                     $company = $user->company;
                     $paymentCountry = $company->paymentCountry;
                     $collection->push(...$paymentCountry->currencyVatRates);

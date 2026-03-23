@@ -93,7 +93,7 @@ class TableWidget extends ModularityWidget
             $newColumns = $this->getAllowableItems(
                 $attributes['columns'],
                 searchKey: 'allowedRoles',
-                orClosure: fn ($item, $user) => $user->isSuperAdmin(),
+                orClosure: fn ($item, $user) => $user->is_superadmin,
             );
 
             $newColumns = configure_table_columns($newColumns);
