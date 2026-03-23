@@ -480,7 +480,7 @@ if (! function_exists('backtrace_formatted')) {
  * @return mixed Time elapsed in seconds or [time, result] if $returnResult is true
  */
 if (! function_exists('benchmark')) {
-    function benchmark(callable $callback, ?string $label = null, bool $die = false, $unit = 'milliseconds')
+    function benchmark(callable $callback, ?string $label = null, bool $die = false, $unit = 'milliseconds', &$elapsedString = null)
     {
         if (! $die && is_null($label)) {
             throw new \Exception('Label is required');
