@@ -61,7 +61,13 @@ trait FormPageUtility
                 $data[$itemTitle] = data_get($item, $itemValue);
             }
 
-            return object_to_array(array_to_object(array_merge(
+            return object_to_array(array_to_object(array_merge([
+                    'id' => $id,
+                    $this->titleColumnKey => data_get($item, $this->titleColumnKey, ''),
+                    'created_at' => $repositoryItem->created_at,
+                    'updated_at' => $repositoryItem->updated_at,
+                    'deleted_at' => $repositoryItem->deleted_at,
+                ],
                 // $item->toArray(),
                 $data,
                 $this->repository->getFormFields($repositoryItem, $this->formSchema, noSerialization: true),
