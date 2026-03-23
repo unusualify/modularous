@@ -3,6 +3,7 @@
 namespace Modules\SystemPricing\Entities\Mutators;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 
 trait PriceMutators
 {
@@ -16,6 +17,13 @@ trait PriceMutators
     // {
     //     $this->attributes['raw_price'] = $amount * 100;
     // }
+
+    protected function booted()
+    {
+        static::addGlobalScope('is_paid', function ($query) {
+            $query->whereHas('payments', fn ($q) => $q->whereIn('status', [PaymentStatus::COMPLETED]));
+        });
+    }
 
     public function initializePriceMutators()
     {
@@ -144,14 +152,14 @@ trait PriceMutators
     protected function isPaid(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->payment('COMPLETED')->exists(),
+            get: fn ($value) => $value !== null && $this->payments->contains(fn ($pm) => static::resolvePaymentStatusValue($pm) === PaymentStatus::COMPLETED->value),
         );
     }
 
     protected function isUnpaid(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => ! $this->isPaid,
+            get: fn ($value) => ! $this->is_paid,
         );
     }
 }
