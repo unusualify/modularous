@@ -83,6 +83,11 @@ abstract class BaseController extends PanelController
         $this->addWiths();
         $this->addIndexWiths();
 
+        $tableEditOnModal = $this->tableAttributes['editOnModal'] ?? true;
+        if ($tableEditOnModal) {
+            $this->addFormWiths();
+        }
+
         $ajaxResponse = $this->respondToIndexAjax();
         if ($ajaxResponse !== null) {
             return $ajaxResponse;
