@@ -51,7 +51,7 @@ trait ManageTable
                     return isset($item['searchable']) ? $item['searchable'] : false;
                 })->map(function ($item) {
                     $this->dehydrateHeaderSuffix($item);
-                    $searchKey = $item['searchKey'] ?? $item['key'];
+                    $searchKey = $item['searchKey'] ?? $item['sourceKey'] ?? $item['key'];
 
                     return $searchKey;
                 })->implode('|'),

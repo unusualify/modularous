@@ -23,6 +23,8 @@ class HeaderHydrator
             // $header['align'] = 'center';
         }
 
+        $key = $header['key'] ?? $header['sourceKey'] ?? null;
+
         if (isset($header['sortable']) && $header['sortable']) {
             if (preg_match('/(.*)(_relation)/', $header['key'], $matches)) {
                 $header['sortable'] = false;
@@ -30,10 +32,16 @@ class HeaderHydrator
 
         }
 
-        if ($header['key'] == 'actions') {
+        if ($key == 'actions') {
             $header['width'] ??= 100;
             $header['align'] ??= 'center';
             $header['sortable'] ??= false;
+            $header['fixed'] ??= 'end';
+        }
+
+        if (! empty($header['groupable']) && $header['groupable'] === true) {
+            $order = $header['groupOrder'] ?? 'asc';
+            $header['groupOrder'] = in_array($order, ['asc', 'desc'], true) ? $order : 'asc';
         }
 
         if (isset($header['noMobile']) && $header['noMobile']) {

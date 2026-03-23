@@ -102,21 +102,23 @@ trait TableColumns
      */
     protected function hydrateHeaderSuffix(&$header)
     {
-        if ($this->isRelationField($header['key'])) {
+        $header['sourceKey'] = $header['sourceKey'] ?? $header['key'];
+
+        if ($this->isRelationField($header['sourceKey'])) {
             $itemTitle = $header['itemTitle'] ?? 'name';
-            $header['key'] .= '_relation_' . $itemTitle;
+            $header['key'] = $header['key'] . '_' . $itemTitle;
+            $header['sourceKey'] .= '_relation_' . $itemTitle;
         }
 
-        if (method_exists($this->repository->getModel(), 'isTimestampColumn') && $this->repository->isTimestampColumn($header['key'])) {
-            $header['key'] .= '_timestamp';
+        if (method_exists($this->repository->getModel(), 'isTimestampColumn') && $this->repository->isTimestampColumn($header['sourceKey'])) {
+            $header['sourceKey'] .= '_timestamp';
         }
 
         // add uuid suffix for formatting on view
-        if ($header['key'] == 'id' && $this->repository->hasModelTrait('Unusualify\Modularity\Entities\Traits\HasUuid')) {
-            $header['key'] .= '_uuid';
+        if ($header['sourceKey'] == 'id' && $this->repository->hasModelTrait('Unusualify\Modularity\Entities\Traits\HasUuid')) {
+            $header['sourceKey'] .= '_uuid';
             $header['formatter'] ??= ['edit'];
         }
-
     }
 
     /**
@@ -146,7 +148,7 @@ trait TableColumns
         return $this->getAllowableItems(
             items: $headers,
             searchKey: 'allowedRoles',
-            orClosure: fn ($item) => $this->user->isSuperAdmin(),
+            orClosure: fn ($item) => $this->user->is_superadmin,
         );
     }
 }
