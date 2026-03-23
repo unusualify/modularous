@@ -45,6 +45,7 @@ return [
     'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),
     'use_country_based_vat_rates' => env('MODULARITY_USE_COUNTRY_BASED_VAT_RATES', false),
     'use_language_based_prices' => env('MODULARITY_USE_LANGUAGE_BASED_PRICES', false),
+    'use_format_item_eager' => env('MODULARITY_USE_FORMAT_ITEM_EAGER', false),
     'language_currencies' => [],
     'hide_description_for_language_based_prices' => env('MODULARITY_HIDE_DESCRIPTION_FOR_LANGUAGE_BASED_PRICES', false),
     'disable_billing_banner' => env('MODULARITY_DISABLE_BILLING_BANNER', false),
