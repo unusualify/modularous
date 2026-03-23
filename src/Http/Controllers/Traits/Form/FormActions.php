@@ -67,7 +67,7 @@ trait FormActions
             $isAllowed = $this->isAllowedItem(
                 $action,
                 searchKey: 'allowedRoles',
-                orClosure: fn ($item) => $this->user->isSuperAdmin(),
+                orClosure: fn ($item) => $this->user->is_superadmin,
             );
 
             if (! $isAllowed) {

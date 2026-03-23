@@ -11,7 +11,7 @@ trait ManageAuthorization
      */
     public function isSuperAdmin()
     {
-        return $this->user && $this->user->isSuperAdmin();
+        return $this->user?->is_superadmin ?? false;
     }
 
     /**

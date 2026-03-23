@@ -67,8 +67,9 @@ class HandleInertiaRequests extends Middleware
         }
 
         return [
-            'isSuperAdmin' => $user->hasRole('superadmin') ?? false,
+            'isSuperAdmin' => $user->is_superadmin ?? false,
             'isClient' => $user->isClient() ?? false,
+            'is_client' => $user->is_client ?? false,
             'hasRestorable' => method_exists($user, 'hasRestorable') ? $user->hasRestorable() : false,
             'hasBulkable' => method_exists($user, 'hasBulkable') ? $user->hasBulkable() : false,
             'permissions' => $user->getAllPermissions()->pluck('name')->toArray() ?? [],

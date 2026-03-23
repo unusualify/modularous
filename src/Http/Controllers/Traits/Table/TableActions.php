@@ -79,19 +79,12 @@ trait TableActions
             $isAllowed = $this->isAllowedItem(
                 $action,
                 searchKey: 'allowedRoles',
-                orClosure: fn ($item) => ! $noSuperAdmin && $this->user->isSuperAdmin(),
+                orClosure: fn ($item) => ! $noSuperAdmin && $this->user->is_superadmin,
             );
 
             if (! $isAllowed) {
                 return $acc;
             }
-
-            // if (!(!$noSuperAdmin && $this->isSuperAdmin()) && $allowedRoles) {
-
-            //     if ($this->doesNotHaveAuthorization($allowedRoles)) {
-            //         return $acc;
-            //     }
-            // }
 
             if (isset($action['endpoint']) && ($routeName = Route::hasAdmin($action['endpoint']))) {
                 $route = Route::getRoutes()->getByName($routeName);
