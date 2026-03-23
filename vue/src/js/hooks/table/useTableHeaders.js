@@ -10,6 +10,10 @@ export const makeTableHeadersProps = propsFactory({
     type: Array,
     default: () => []
   },
+  fixedLastColumn: {
+    type: Boolean,
+    default: false
+  },
   hideHeaders: {
     type: Boolean,
     default: false

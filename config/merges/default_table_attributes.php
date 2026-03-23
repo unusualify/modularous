@@ -140,6 +140,7 @@ return [
     'headerOptions' => [
         'color' => 'rgba(140,160,167, .2)', // Hex, rgba or default css colors
     ],
+    'fixedLastColumn' => true,
 
     'formAttributes' => [
         'rowAttribute' => [

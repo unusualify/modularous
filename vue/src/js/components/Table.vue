@@ -30,7 +30,8 @@
           striped ? 'ue-datatable--striped' : '',
           roundedRows ? 'ue-datatable--rounded-row' : '',
           hideBorderRow ? 'ue-datatable--no-border-row' : '',
-          controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'ue-datatable--bottom-controls' : ''
+          controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'ue-datatable--bottom-controls' : '',
+          fixedLastColumn ? 'ue-datatable--fixed-last-column' : ''
         ]"
         id="ue-table"
 
@@ -1210,4 +1211,17 @@ export default {
       .v-overlay__content
         border: 1px solid #49454F !important //TODO: table action border must be variable
 
+    &.ue-datatable--fixed-last-column
+      .v-table__wrapper
+        table
+          th, td
+            &:last-child
+              position: sticky !important
+              right: 0
+              z-index: 2
+              background-color: rgb(var(--v-theme-surface))
+              box-shadow: -1px 0 4px -2px rgba(0, 0, 0, 0.15)
+
+          th:last-child
+            z-index: 3
 </style>
