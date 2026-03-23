@@ -34,40 +34,29 @@ trait ManageForm
 
     protected function addWithsManageForm(): array
     {
+        $counter = 0;
+
+        $fetchFormWiths = $this->tableAttributes['editOnModal'] ?? true;
+
+        if(!$fetchFormWiths){
+            return [];
+        }
+
         return collect(array_to_object($this->formSchema))->filter(function ($input) {
             // return $this->hasWithModel($item['type']);
             return in_array($input->type, [
                 'treeview',
                 'input-treeview',
-                // 'checklist',
-                // 'input-checklist',
                 'select',
                 'combobox',
                 'autocomplete',
-                'input-repeater',
+                // 'input-repeater',
             ]) && ! (isset($input->ext) && $input->ext == 'morphTo');
-        })->mapWithKeys(function ($input) {
+        })->mapWithKeys(function ($input, $key) use (&$counter) {
 
-            if ($input->type == 'input-repeater') {
+            if ($input->type == 'input-repeaterx') {
                 if (isset($input->ext) && $input->ext == 'relationship') {
-                    return [$input->name];
-
-                    // try {
-                    //     $relationships =  method_exists($this->repository->getModel(), 'getDefinedRelations')
-                    //         ? $this->repository->getDefinedRelations()
-                    //         : $this->repository->modelRelations();
-
-                    //     return in_array($relationshipName, $relationships)
-                    //         ? [$relationshipName]
-                    //         : [];
-                    // } catch (\Throwable $th) {
-                    //     dd(
-                    //         $th,
-                    //         $this->repository,
-                    //         $relationshipName
-                    //     );
-                    // }
-
+                    return [$counter++ => $input->name];
                 } else {
                     return [];
                 }
@@ -93,7 +82,7 @@ trait ManageForm
 
             if (in_array($relationType, ['MorphToMany', 'BelongsToMany'])) {
                 return [
-                    $relationship,
+                    $counter++ => $relationship,
                 ];
             }
 
