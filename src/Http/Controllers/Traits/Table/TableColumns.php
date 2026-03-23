@@ -73,6 +73,44 @@ trait TableColumns
     }
 
     /**
+     * Add relations on index page
+     */
+    protected function addIndexWithsTableColumns(): array
+    {
+        $withs = [];
+
+        $rawHeaders = $this->getConfigFieldsByRoute('headers', []);
+
+        if (count($rawHeaders) > 0) {
+            $model = $this->repository->getModel();
+            if (method_exists($model, 'hasRelation') || method_exists($model, 'definedRelations')) {
+                foreach ($rawHeaders as $header) {
+                    $header = (array) $header;
+
+                    if (isset($header['with'])) {
+                        $withs = $this->mergeIndexWiths(
+                            $withs,
+                            $this->resolveHeaderWiths($header['with'], $model)
+                        );
+                    }
+
+                    $withs = $this->mergeIndexWiths(
+                        $withs,
+                        $this->deriveHeaderWithsFromDotNotation($header, $model)
+                    );
+                }
+            }
+
+            if (classHasTrait($model, \Unusualify\Modularity\Entities\Traits\HasPayment::class)
+                && method_exists($model, 'getPaymentEagerLoads')) {
+                $withs = $this->mergeIndexWiths($withs, $model->getPaymentEagerLoads());
+            }
+        }
+
+        return $withs;
+    }
+
+    /**
      * Get the header for the table
      *
      * @param array $header

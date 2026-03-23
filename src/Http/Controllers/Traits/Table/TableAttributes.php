@@ -8,7 +8,7 @@ use Unusualify\Modularity\Traits\Allowable;
 
 trait TableAttributes
 {
-    use Allowable;
+    use Allowable, TableEager;
 
     /**
      * @var array
@@ -138,38 +138,18 @@ trait TableAttributes
         );
     }
 
-    /**
-     * Add relations on index page
-     */
-    protected function addIndexWithsTableHeaders(): array
+    protected function addIndexWithsTableAttributes(): array
     {
-        $withs = [];
+        $indexWith = [];
+        $model = $this->repository->getModel();
 
-        $rawHeaders = $this->getConfigFieldsByRoute('headers', []);
-
-        if (count($rawHeaders) > 0) {
-            $model = $this->repository->getModel();
-            if (method_exists($model, 'hasRelation')) {
-                foreach ($rawHeaders as $header) {
-                    if (isset($header->with)) {
-                        $with = is_string($header->with) ? [$header->with] : (array) $header->with;
-
-                        if (Arr::isAssoc($with)) {
-                            foreach ($with as $relationshipName => $mappings) {
-                                if (isset($mappings['functions'])) {
-                                    $withs[$relationshipName] = fn ($query) => array_reduce($mappings['functions'], fn ($query, $function) => $query->$function(), $query);
-                                } else {
-                                    $withs[$relationshipName] = $mappings;
-                                }
-                            }
-                        } else {
-                            $withs[] = $with;
-                        }
-                    }
-                }
-            }
+        if (method_exists($model, 'hasRelation') || method_exists($model, 'definedRelations')) {
+            $indexWith = $this->mergeIndexWiths(
+                $indexWith,
+                $this->resolveHeaderWiths($this->getConfigFieldsByRoute('index_with', []), $model)
+            );
         }
 
-        return $withs;
+        return $indexWith;
     }
 }

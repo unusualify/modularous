@@ -9,7 +9,7 @@ use Unusualify\Modularity\Facades\ModularityLog;
 
 trait TableItem
 {
-    use TableAttributes;
+    use TableAttributes, TableEager, TableCustomRow;
 
     /**
      * Name of the index column to use as identifier column.

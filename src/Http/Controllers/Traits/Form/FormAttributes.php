@@ -28,4 +28,24 @@ trait FormAttributes
 
         return [];
     }
+
+    public function addFormAppendsFormAttributes(): array
+    {
+        return $this->getConfigFieldsByRoute('form_appends', []);
+    }
+
+    protected function addFormWithsFormAttributes(): array
+    {
+        $formWith = [];
+        $model = $this->repository->getModel();
+
+        if (method_exists($model, 'hasRelation') || method_exists($model, 'definedRelations')) {
+            $formWith = $this->mergeIndexWiths(
+                $formWith,
+                $this->resolveHeaderWiths($this->getConfigFieldsByRoute('form_with', []), $model)
+            );
+        }
+
+        return $formWith;
+    }
 }
