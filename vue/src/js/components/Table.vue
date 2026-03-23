@@ -21,6 +21,8 @@
         v-if="!hideTable"
         :class="[
           'px-4 h-100',
+          options.groupBy?.length ? 'ue-table--has-group-by' : '',
+          $store.getters.isSuperAdmin && showSelect ? 'ue-table--has-row-select' : '',
           tableClasses,
           rounded ? $lodash.isBoolean(rounded) ? 'rounded' : `rounded-${rounded}` : '',
           fullWidthWrapper ? '' : 'ue-table--narrow-wrapper',
@@ -32,7 +34,7 @@
         ]"
         id="ue-table"
 
-        :headers="selectedHeaders"
+        :headers="headersForDataTable"
         :fixed-header="fixedHeader"
 
         :sticky="sticky"
@@ -53,6 +55,7 @@
         :hide-default-header="hideHeaders || ($vuetify.display.smAndDown && !showMobileHeaders)"
         :multi-sort="multiSort"
         :must-sort="mustSort"
+        :group-by="options.groupBy"
         :density="tableDensity ?? 'comfortable'"
         :disable-sort="disableSort"
         :loading="loading"
@@ -64,6 +67,7 @@
         :show-select="$store.getters.isSuperAdmin && showSelect"
         item-value="id"
         v-model="selectedItems"
+        :row-props="dataTableRowProps"
 
         @update:options="changeOptions($event)"
       >
@@ -764,12 +768,12 @@
           </div>
         </template>
 
-        <!-- #header actions slot -->
+        <!-- #header actions slot: column visibility (cog) -->
         <template v-slot:header.actions="_obj">
           <v-menu v-if="!(hideHeaders || (hideMobileActions && $vuetify.display.xs))"
             :close-on-content-click="false"
             location="bottom"
-            >
+          >
             <template v-slot:activator="{ props }">
               <v-btn
                 size="large"
@@ -778,11 +782,6 @@
                 icon="mdi-cog-outline"
                 v-bind="props"
               />
-              <!-- <v-icon
-                size="large"
-                icon="mdi-cog-outline"
-                v-bind="props"
-              /> -->
             </template>
             <v-card>
               <v-card-title>
@@ -810,7 +809,6 @@
                 ></v-btn>
               </v-card-actions>
             </v-card>
-
           </v-menu>
         </template>
 
@@ -844,131 +842,76 @@
               ></v-icon>
             </template>
           </v-tooltip>
-
-        </template>
-
-        <!-- #formatterColumns -->
-        <template v-for="(col, i) in formatterColumns"
-          :key="`formatter-${i}`"
-          v-slot:[`item.${col.key}`]="{ item }"
-        >
-          <div class="d-flex"> 
-            <template v-if="col.formatterName == 'edit' || col.formatterName == 'activate'">
-              <v-tooltip :text="item[col.key]" :key="i" :disabled="col.isFormatting" maxWidth="300">
-                <template v-slot:activator="{ props }">
-                    <template v-if="(col.hasCopy ?? false) || col.key.match(/^id|uuid$/)">
-                      <ue-copy-text :text="item[col.key]" class="mr-2"/>
-                    </template>
-                    <div
-                      :key="i"
-                      v-bind="props"
-                      class="justify-start text-none text-wrap text-primary darken-1 cursor-pointer text-truncate"
-                      @click="itemAction(item, { name: col.formatterName, target: col.target ?? '_blank' })"
-                    >
-                      <template v-if="col.isFormatting">
-                        <ue-recursive-stuff
-                          v-bind="handleFormatter(col.formatter, item[col.key])"
-                        />
-                      </template>
-                      <template v-else>
-                        {{ item[col.key] }}
-                      </template>
-                    </div>
-                </template>
-              </v-tooltip>
-            </template>
-            <template v-else-if="col.formatterName == 'switch'">
-              <v-switch
-                :key="i"
-                :model-value="item[col.key]"
-                color="success"
-                :true-value="1"
-                false-value="0"
-                hide-details
-                @update:modelValue="itemAction(item, 'switch', $event, col.key )"
-              >
-                <template v-slot:label></template>
-              </v-switch>
-            </template>
-            <template v-else-if="col.formatterName == 'dynamic'">
-              <ue-dynamic-component-renderer
-                :subject="item[col.key]"
-                :key="item[col.key]"
-              >
-              </ue-dynamic-component-renderer>
-            </template>
-            <template v-else>
-              <div>
-                <ue-recursive-stuff
-                  v-bind="handleFormatter(col.formatter, window.__shorten(item[col.key] ?? '', cellOptions.maxChars))"
-                  :key="item[col.key]"
-                />
-              </div>
-            </template>
-          </div>
-
-        </template>
-
-        <template v-if="isClickableRows" v-slot:item="itemScope">
-          <!-- use original datatable row with slots but add a onClick event to the row -->
-          <VDataTableRow
-            v-bind="itemScope.props"
-            @click="($isset(itemScope.item[clickableItemAttribute]) || endpoints.show) ? itemAction(itemScope.item, 'link') : null"
-            style="cursor: pointer;"
+          <v-tooltip
+            v-if="header.groupable === true"
+            :text="isGroupActiveForKey(header.key) ? $t('Clear grouping') : $t('Group by this column')"
           >
-            <!-- #formatterColumns -->
-            <template v-for="(col, i) in formatterColumns"
-              :key="`formatter-${i}`"
-              v-slot:[`item.${col.key}`]="{ item }"
-            >
-              <template v-if="col.formatter == 'edit' || col.formatter == 'activate'">
-                <v-tooltip :text="item[col.key]" :key="i">
-                  <template v-slot:activator="{ props }">
-                    <span
-                      :key="i"
-                      v-bind="props"
-                      class="pa-0 justify-start text-none text-wrap text-primary darken-1 cursor-pointer"
-                      @click="itemAction(item, ...col.formatter)"
-                    >
-                      {{ window.__isset(item[col.key]) ? window.__shorten(item[col.key], item[col.key]?.textLength ?? 8) : '' }}
-                    </span>
-                    <template v-if="col.key.match(/^id|uuid$/)">
-                      <ue-copy-text :text="item[col.key]" />
-                    </template>
-                  </template>
-                </v-tooltip>
-              </template>
-              <template v-else-if="col.formatter == 'switch'">
-                <v-switch
-                  :key="i"
-                  :model-value="item[col.key]"
-                  color="success"
-                  :true-value="1"
-                  false-value="0"
-                  hide-details
-                  @update:modelValue="itemAction(item, 'switch', $event, col.key )"
-                >
-                  <template v-slot:label></template>
-                </v-switch>
-              </template>
-              <template v-else-if="col.formatter == 'dynamic'">
-                <ue-dynamic-component-renderer
-                  :subject="item[col.key]"
-                  :key="item[col.key]"
-                >
-                </ue-dynamic-component-renderer>
-              </template>
-              <template v-else>
-                <ue-recursive-stuff
-                  v-bind="handleFormatter(col.formatter, window.__shorten(item[col.key] ?? '', cellOptions.maxChars))"
-                  :key="item[col.key]"
-                />
-              </template>
+            <template v-slot:activator="{ props: groupToggleProps }">
+              <v-icon
+                v-bind="groupToggleProps"
+                size="small"
+                icon="mdi-format-list-group"
+                :color="isGroupActiveForKey(header.key) ? 'success' : 'medium-emphasis'"
+                @click.stop="toggleGroupByColumn(header.key)"
+              />
             </template>
-          </VDataTableRow>
+          </v-tooltip>
+
         </template>
 
-        <!-- #item actions slot-->
+        <template v-slot:header.data-table-group>
+          <div class="d-inline-flex align-center ga-1 flex-nowrap">
+            <span>{{ $t('Group') }}</span>
+            <v-tooltip
+              v-if="isGroupingActive"
+              :text="$t('Clear grouping')"
+            >
+              <template v-slot:activator="{ props: clearGroupProps }">
+                <v-icon
+                  v-bind="clearGroupProps"
+                  size="small"
+                  color="medium-emphasis"
+                  icon="mdi-ungroup"
+                  @click.stop="clearGroupBy"
+                />
+              </template>
+            </v-tooltip>
+          </div>
+        </template>
+
+        <!-- Full-width group bar: one colspan cell so flex uses horizontal space (replaces default multi-td row) -->
+        <template v-slot:group-header="slotProps">
+          <TableGroupHeaderRow
+            :key="`group-header_${slotProps.item.id}`"
+            :group="slotProps.item"
+            :columns="slotProps.columns"
+            :show-select="$store.getters.isSuperAdmin && showSelect"
+            :formatter-column="formatterColumnForGroupKey(slotProps.item.key)"
+            :synthetic-item="syntheticItemForGroup(slotProps.item)"
+            :handle-formatter="handleFormatter"
+            :item-action="itemAction"
+            :cell-options="cellOptions"
+            :disable-formatter-tooltip="isDataTableMobile"
+          />
+        </template>
+
+        <!-- Formatter columns: item.<key> on v-data-table-server so VDataTableRows forwards slots to VDataTableRow (custom v-slot:item breaks item.actions). -->
+        <template
+          v-for="(col, i) in formatterColumns"
+          :key="`formatter-${i}`"
+          v-slot:[`item.${col.key}`]="slotProps"
+        >
+          <TableFormatterCell
+            :col="col"
+            :item="slotProps.item"
+            :handle-formatter="handleFormatter"
+            :item-action="itemAction"
+            :cell-options="cellOptions"
+            :clickable-row="isClickableRows"
+            :disable-tooltip="isDataTableMobile"
+          />
+        </template>
+
         <template v-slot:item.actions="{ item }">
           <template v-if="!( (hideMobileActions && $vuetify.display.xs) || (visibleRowActions.length === 0) )">
             <v-menu v-if="actionShowingType === 'dropdown'"
@@ -1117,6 +1060,8 @@ import {
 
 import ActiveTableItem from '__components/labs/ActiveTableItem.vue'
 import PaymentService from './inputs/PaymentService.vue'
+import TableFormatterCell from './TableFormatterCell.vue'
+import TableGroupHeaderRow from './TableGroupHeaderRow.vue'
 
 const { ignoreFormatters } = makeFormatterProps()
 
@@ -1126,8 +1071,9 @@ export default {
     Draggable,
     VDataTableRow,
     PaymentService,
-    TableActions
-
+    TableActions,
+    TableFormatterCell,
+    TableGroupHeaderRow
   },
   props: {
     ...makeTableNamesProps(),
@@ -1167,12 +1113,56 @@ export default {
 
   },
   methods: {
+    formatterColumnForGroupKey (key) {
+      return this.formatterColumns.find((c) => c.key === key) ?? null
+    },
+    syntheticItemForGroup (group) {
+      const k = group?.key
+      const v = group?.value
+      if (!k) {
+        return {}
+      }
+      return { [k]: v, id: group.id ?? `group-${k}` }
+    }
   },
 
 }
 </script>
 
 <style lang="sass">
+  // Fixed width for Vuetify `data-table-group` column (chevron / indent); stable across expand/collapse clicks
+  #ue-table.ue-table--has-group-by
+    &:not(.ue-table--has-row-select)
+      .v-data-table__th:first-child,
+      .v-data-table__td:first-child
+        width: 100px !important
+        min-width: 100px !important
+        max-width: 100px !important
+    &.ue-table--has-row-select
+      .v-data-table__th:nth-child(2),
+      .v-data-table__td:nth-child(2)
+        width: 100px !important
+        min-width: 100px !important
+        max-width: 100px !important
+
+  #ue-table
+    .v-data-table-group-header-row
+      > td
+        vertical-align: middle
+        text-align: start !important
+
+    .ue-table-group-header-td
+      padding: 8px 16px
+
+    .ue-table-group-header
+      min-height: 40px
+      justify-content: flex-start !important
+
+  // Striped tables: do not apply alternating grey to full-width group header row
+  #ue-table.ue-datatable--striped
+    .v-data-table-group-header-row > td
+      background: rgb(var(--v-theme-surface)) !important
+
   .ue-datatable__container
     width: 100%
 
@@ -1219,4 +1209,5 @@ export default {
     .action-dropdown
       .v-overlay__content
         border: 1px solid #49454F !important //TODO: table action border must be variable
+
 </style>

@@ -9,3 +9,12 @@ export { default as useTableModals, makeTableModalsProps } from './useTableModal
 export { default as useTableIterator, makeTableIteratorProps, tableIterableEmits } from './useTableIterator'
 export { default as useTableActions, makeTableActionsProps } from './useTableActions'
 export { default as useTableState } from './useTableState'
+export {
+  default as useTableGroup,
+  useGroup,
+  onlyGroupByChanged,
+  pickFetchRelevantOptions,
+  parseGroupByConfigItem,
+  normalizeGroupByConfig,
+  normalizeGroupOrder
+} from './useTableGroup'

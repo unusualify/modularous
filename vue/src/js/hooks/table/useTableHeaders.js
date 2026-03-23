@@ -77,6 +77,7 @@ export default function useTableHeaders(props) {
       return (h.hasOwnProperty('columnEditable') && h.columnEditable === true)
       || (h.hasOwnProperty('removable') && h.removable === true)
       || (h.hasOwnProperty('searchable') && h.searchable === true)
+      || h.groupable === true
     })
   })
 

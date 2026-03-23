@@ -53,4 +53,35 @@ describe('useTableState', () => {
     wrapper.vm.setLastParameters({ page: 3, itemsPerPage: 20 })
     expect(setItemSpy).toHaveBeenCalled()
   })
+
+  test('getLastParameters strips legacy groupBy from cache and rewrites storage', async () => {
+    Storage.prototype.getItem.mockReturnValue(
+      JSON.stringify({
+        page: 1,
+        itemsPerPage: 10,
+        groupBy: [{ key: 'status', order: 'asc' }]
+      })
+    )
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
+    const wrapper = await factory()
+    const last = wrapper.vm.getLastParameters()
+    expect(last.groupBy).toBeUndefined()
+    expect(setItemSpy).toHaveBeenCalledWith(
+      'table_filters_/posts',
+      JSON.stringify({ page: 1, itemsPerPage: 10 })
+    )
+  })
+
+  test('setLastParameters does not persist groupBy', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
+    const wrapper = await factory()
+    wrapper.vm.setLastParameters({
+      page: 2,
+      itemsPerPage: 15,
+      groupBy: [{ key: 'x', order: 'asc' }]
+    })
+    const stored = setItemSpy.mock.calls.find((c) => c[0] === 'table_filters_/posts')?.[1]
+    expect(stored).toBeDefined()
+    expect(JSON.parse(stored)).not.toHaveProperty('groupBy')
+  })
 })

@@ -10,7 +10,8 @@ export default function useTableState(props, context) {
   const filterStorageKey = `table_filters_${path}`
 
   const removeKeys = ['id', 'page', 'itemsPerPage', 'sortBy', 'groupBy', 'filter', 'replaceUrl']
-  const cachedKeys = ['page', 'itemsPerPage', 'sortBy', 'groupBy', 'filter']
+  /** Persisted table UI state. `groupBy` is client-only (VDataTable) and must not be cached. */
+  const cachedKeys = ['page', 'itemsPerPage', 'sortBy', 'filter']
 
   const getQueryParameters = () => {
     const url = new URL(window.location.href)
@@ -35,6 +36,11 @@ export default function useTableState(props, context) {
     const queryParameters = getQueryParameters()
 
     const cachedParameters = lastParameters ? JSON.parse(lastParameters) : {}
+    // Drop legacy groupBy from localStorage (previously cached with cachedKeys).
+    if (Object.prototype.hasOwnProperty.call(cachedParameters, 'groupBy')) {
+      delete cachedParameters.groupBy
+      localStorage.setItem(filterStorageKey, JSON.stringify(pick(cachedParameters, cachedKeys)))
+    }
 
     return {
       ...cachedParameters,

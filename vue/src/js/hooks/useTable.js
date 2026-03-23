@@ -12,6 +12,7 @@ import ACTIONS from '@/store/actions'
 import { LANGUAGE } from '@/store/mutations/index'
 
 import { getSubmitFormData } from '@/utils/getFormData.js'
+import { isset } from '@/utils/helpers'
 
 import { useRoot, useFormatter } from '@/hooks'
 
@@ -24,7 +25,9 @@ import {
   useTableItemActions,
   useTableModals,
   useTableActions,
-  useTableState
+  useTableState,
+  useTableGroup,
+  pickFetchRelevantOptions
 } from '@/hooks/table'
 
 
@@ -207,13 +210,31 @@ export const makeTableProps = propsFactory({
   },
 })
 
+const DEFAULT_TABLE_OPTIONS = {
+  itemsPerPage: 10,
+  page: 1,
+  search: '',
+  sortBy: [],
+  groupBy: [],
+}
+
 // by convention, composable function names start with "use"
 export default function useTable (props, context) {
   // state encapsulated and managed by the composable
   // a composable can also hook into its owner component's
   // lifecycle to setup and teardown side effects.
   const store = useStore()
-  const { smAndDown } = useDisplay()
+  const display = useDisplay()
+  const { smAndDown } = display
+  /** Matches `v-data-table` mobile layout (`mobile-breakpoint` prop) for formatter cells (no hover tooltips). */
+  const isDataTableMobile = computed(() => {
+    const bp = props.mobileBreakpoint
+    const w = display.width.value
+    if (typeof bp === 'number') {
+      return w < bp
+    }
+    return w < display.thresholds.value[bp]
+  })
   const { t, te, tm } = useI18n({ useScope: 'global' })
 
   if(props.languages && _.isArray(props.languages) && props.languages.length > 0) {
@@ -232,6 +253,7 @@ export default function useTable (props, context) {
   const form = ref(null)
   const loading = ref(false)
   const options = ref(_.pick({
+    ...DEFAULT_TABLE_OPTIONS,
     ...(props.defaultTableOptions ?? {}),
     ...(props.tableOptions ?? {}),
     ...(isStoreTable.value ? lastParameters : {})
@@ -367,6 +389,7 @@ export default function useTable (props, context) {
   })
   const TableFilters = useTableFilters(props)
   const TableHeaders = useTableHeaders(props)
+  const TableGroup = useTableGroup(props, options)
   const state = reactive({ id: Math.ceil(Math.random() * 1000000) + '-table' })
   const TableForms = useTableForms(props, {
     ...context,
@@ -603,13 +626,27 @@ export default function useTable (props, context) {
   // watch(() => state.deleteModalActive, (newValue, oldValue) => {
   //   newValue || methods.resetEditedItem()
   // })
-  watch(() => state.options, (newValue, oldValue) => {
-    if(!updatingOptions.value){
+  // Watch only fields that affect the index request. `groupBy` is excluded so
+  // client-side grouping (menu / VDataTable) does not trigger loadItems — a deep
+  // watch on `state.options` would pass the same object ref for old/new when only
+  // `groupBy` mutates, so onlyGroupByChanged could not reliably skip the fetch.
+  watch(
+    () => pickFetchRelevantOptions(state.options),
+    (newFetch, oldFetch) => {
+      if (updatingOptions.value) {
+        updatingOptions.value = false
+        return
+      }
+      if (oldFetch === undefined) {
+        return
+      }
+      if (_.isEqual(newFetch, oldFetch)) {
+        return
+      }
       loadItems()
-    }else{
-      updatingOptions.value = false
-    }
-  }, { deep: true })
+    },
+    { deep: true }
+  )
   watch(() => state.elements, (newValue, oldValue) => {
     // Refresh edited item
     if(state.editedIndex > -1) {
@@ -750,6 +787,57 @@ export default function useTable (props, context) {
   }, { immediate: true })
 
   const formatter = useFormatter(props, context, TableHeaders.selectedHeaders)
+  const { formatterColumns } = formatter
+
+  /**
+   * Row click for legacy clickable tables. Do not use a custom v-slot:item (that bypasses Vuetify's
+   * slot forwarding and breaks item.actions and other item.* slots on VDataTableRow).
+   */
+  const dataTableRowProps = computed(() => {
+    if (!props.isClickableRows || TableHeaders.hasCustomRow.value || props.draggable) {
+      return undefined
+    }
+    return ({ item }) => {
+      const attr = props.clickableItemAttribute
+      const canOpen =
+        (attr && isset(item[attr])) ||
+        (_.isObject(props.endpoints) && !!props.endpoints.show)
+      if (!canOpen) {
+        return {}
+      }
+      return {
+        style: 'cursor: pointer;',
+        onClick: () => TableItemActions.itemAction(item, 'link'),
+      }
+    }
+  })
+
+  /** Vuetify group-by column (`data-table-group`); fixed width so it does not grow/shrink on UI interaction. */
+  const DATA_TABLE_GROUP_COLUMN_WIDTH = 100
+
+  const headersForDataTable = computed(() => {
+    const headers = TableHeaders.selectedHeaders.value.map((h) => ({ ...h }))
+    if (!options.groupBy?.length) {
+      return headers
+    }
+    const fixedGroup = {
+      key: 'data-table-group',
+      title: '\u00A0',
+      width: DATA_TABLE_GROUP_COLUMN_WIDTH,
+      minWidth: DATA_TABLE_GROUP_COLUMN_WIDTH,
+      maxWidth: DATA_TABLE_GROUP_COLUMN_WIDTH,
+      sortable: false,
+    }
+    const idx = headers.findIndex((h) => h.key === 'data-table-group')
+    if (idx >= 0) {
+      return headers.map((h) =>
+        h.key === 'data-table-group'
+          ? { ...h, ...fixedGroup, title: h.title ?? fixedGroup.title }
+          : h
+      )
+    }
+    return [fixedGroup, ...headers]
+  })
 
   return {
     form,
@@ -759,9 +847,13 @@ export default function useTable (props, context) {
     ...TableNames,
     ...TableFilters,
     ...TableHeaders,
+    ...TableGroup,
     ...TableForms,
     ...TableItemActions,
     ...TableModals,
+    dataTableRowProps,
+    headersForDataTable,
+    isDataTableMobile,
     ...formatter,
   }
 }
