@@ -385,6 +385,18 @@ class BaseServiceProvider extends ServiceProvider
             });
         });
 
+        \Illuminate\Support\Facades\Request::macro('getCachedUserCurrency', function () {
+            if ($session = \Illuminate\Support\Facades\Session::get('user-currency')) {
+                return config('priceable.models.currency')::find($session);
+            }
+
+            $currency = app(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class)->findById(config('priceable.defaults.currencies'));
+            if (!$currency) {
+                $currency = config('priceable.models.currency')::first();
+            }
+
+            return $currency;
+        });
         // Lang::handleMissingKeysUsing(function (string $key, array $replacements, string $locale) {
         //     info("Missing translation key [$key] detected.");
 

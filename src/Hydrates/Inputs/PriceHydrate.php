@@ -66,7 +66,7 @@ class PriceHydrate extends InputHydrate
                 : [];
         }
 
-        $userCurrency = method_exists(Request::class, 'getUserCurrency') ? Request::getUserCurrency() : null;
+        $userCurrency = method_exists(Request::class, 'getCachedUserCurrency') ? Request::getCachedUserCurrency() : null;
         $input['default'][0]['currency_id'] = $userCurrency?->id ?? ($input['items'][0]['id'] ?? 1);
 
         return $input;

@@ -128,7 +128,7 @@ trait PricesTrait
             $query = $object->prices();
 
             if ($onlyBaseCurrency) {
-                $query = $query->where('currency_id', Request::getUserCurrency()->id);
+                $query = $query->where('currency_id', Request::getCachedUserCurrency()->id);
             }
 
             $prices = $query->get();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Services\Currency;
 
+use Illuminate\Support\Facades\Cache;
 use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 
 /**
@@ -18,9 +19,22 @@ class SystemPricingCurrencyProvider implements CurrencyProviderInterface
             return null;
         }
 
-        return \Modules\SystemPricing\Entities\Currency::query()
-            ->where('iso_4217', mb_strtoupper($isoCode))
-            ->first();
+        return Cache::remember('currency_by_iso_4217_' . $isoCode, now()->addHours(1), function () use ($isoCode) {
+            return \Modules\SystemPricing\Entities\Currency::query()
+                ->where('iso_4217', mb_strtoupper($isoCode))
+                ->first();
+        });
+    }
+
+    public function findById(int $id): ?object
+    {
+        if (! class_exists(\Modules\SystemPricing\Entities\Currency::class)) {
+            return null;
+        }
+
+        return Cache::remember('currency_by_id_' . $id, now()->addHours(1), function () use ($id) {
+            return \Modules\SystemPricing\Entities\Currency::find($id);
+        });
     }
 
     public function getCurrenciesForSelect(): array

@@ -22,13 +22,15 @@ trait HasPriceable
     public function originalBasePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
-            ->where('currency_id', Request::getUserCurrency()?->id);
+            ->with('currency')
+            ->where('currency_id', Request::getCachedUserCurrency()?->id);
     }
 
     public function basePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         $query = $this->morphOne(Price::class, 'priceable')
-            ->where('currency_id', Request::getUserCurrency()?->id);
+            ->with('currency')
+            ->where('currency_id', Request::getCachedUserCurrency()?->id);
 
         $currencyForLanguageBasedPrices = Modularity::getCurrencyForLanguageBasedPrices();
 
@@ -106,7 +108,7 @@ trait HasPriceable
      */
     public function scopeOrderByBasePrice($query, $direction = 'asc', $role = null)
     {
-        return $query->orderByCurrencyPrice(currencyId: Request::getUserCurrency()->id, direction: $direction, role: $role);
+        return $query->orderByCurrencyPrice(currencyId: Request::getCachedUserCurrency()->id, direction: $direction, role: $role);
     }
 
     protected function getLanguageBasedPriceFactor(): int
