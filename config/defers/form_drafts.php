@@ -278,9 +278,9 @@ return [
         ],
     ],
     'login_form' => [
-        'timezone' => [
-            'type' => '_timezone',
-        ],
+        // 'timezone' => [
+        //     'type' => '_timezone',
+        // ],
         'email' => [
             'type' => 'text',
             'name' => 'email',
