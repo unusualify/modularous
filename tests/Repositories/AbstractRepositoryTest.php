@@ -1016,6 +1016,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 'ext' => 'relationship',
                 'name' => 'notes',
                 'relationship' => 'notes',
+                'isSerialized' => true,
                 'schema' => [
                     [
                         'name' => 'id',

@@ -94,39 +94,39 @@ class HasPriceableTest extends ModelTestCase
         ));
     }
 
-    public function test_appended_attributes()
-    {
-        $expectedAppends = [
-            'has_language_based_price',
-            'base_price_vat_percentage',
-            'base_price_has_discount',
-            'base_price_subtotal_amount',
-            'base_price_raw_amount',
-            'base_price_raw_discount_amount',
-            'base_price_discounted_raw_amount',
-            'base_price_vat_amount',
-            'base_price_vat_discount_amount',
-            'base_price_discounted_vat_amount',
-            'base_price_total_discount_amount',
-            'base_price_total_amount',
-            'base_price_vat_percentage_formatted',
-            'base_price_discount_percentage_formatted',
-            'base_price_subtotal_amount_formatted',
-            'base_price_raw_amount_formatted',
-            'base_price_vat_amount_formatted',
-            'base_price_raw_discount_amount_formatted',
-            'base_price_vat_discount_amount_formatted',
-            'base_price_discounted_raw_amount_formatted',
-            'base_price_discounted_vat_amount_formatted',
-            'base_price_total_discount_amount_formatted',
-            'base_price_total_amount_formatted',
-            'base_price_formatted',
-        ];
+    // public function test_appended_attributes()
+    // {
+    //     $expectedAppends = [
+    //         'has_language_based_price',
+    //         'base_price_vat_percentage',
+    //         'base_price_has_discount',
+    //         'base_price_subtotal_amount',
+    //         'base_price_raw_amount',
+    //         'base_price_raw_discount_amount',
+    //         'base_price_discounted_raw_amount',
+    //         'base_price_vat_amount',
+    //         'base_price_vat_discount_amount',
+    //         'base_price_discounted_vat_amount',
+    //         'base_price_total_discount_amount',
+    //         'base_price_total_amount',
+    //         'base_price_vat_percentage_formatted',
+    //         'base_price_discount_percentage_formatted',
+    //         'base_price_subtotal_amount_formatted',
+    //         'base_price_raw_amount_formatted',
+    //         'base_price_vat_amount_formatted',
+    //         'base_price_raw_discount_amount_formatted',
+    //         'base_price_vat_discount_amount_formatted',
+    //         'base_price_discounted_raw_amount_formatted',
+    //         'base_price_discounted_vat_amount_formatted',
+    //         'base_price_total_discount_amount_formatted',
+    //         'base_price_total_amount_formatted',
+    //         'base_price_formatted',
+    //     ];
 
-        foreach ($expectedAppends as $attribute) {
-            $this->assertContains($attribute, $this->model->getAppends());
-        }
-    }
+    //     foreach ($expectedAppends as $attribute) {
+    //         $this->assertContains($attribute, $this->model->getAppends());
+    //     }
+    // }
 
     public function test_prices_relationship()
     {

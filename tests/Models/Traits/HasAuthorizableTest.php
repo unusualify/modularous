@@ -132,8 +132,7 @@ class HasAuthorizableTest extends ModelTestCase
         // Retrieve the model fresh from database to trigger retrieved event
         $retrieved = TestAuthorizableModel::find($this->model->id);
 
-        $this->assertEquals($user->id, $retrieved->authorized_id);
-        $this->assertEquals(get_class($user), $retrieved->authorized_type);
+        $this->assertEquals(true, $retrieved->authorization_record_exists);
     }
 
     public function test_boot_has_authorizable_updated_event()

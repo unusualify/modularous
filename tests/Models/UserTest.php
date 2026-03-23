@@ -315,20 +315,20 @@ class UserTest extends ModelTestCase
         ]);
 
         $superadminUser->assignRole('superadmin');
-        $this->assertTrue($superadminUser->isSuperAdmin());
+        $this->assertTrue($superadminUser->is_superadmin);
 
         $adminUser->assignRole('admin');
-        $this->assertTrue($adminUser->isAdmin());
+        $this->assertTrue($adminUser->is_admin);
 
         $clientUser->assignRole('client-manager');
-        $this->assertEquals(1, $clientUser->isClient());
+        $this->assertEquals(1, $clientUser->is_client);
 
-        $this->assertFalse($superadminUser->isAdmin());
-        $this->assertFalse($adminUser->isSuperAdmin());
-        $this->assertFalse($clientUser->isAdmin());
+        $this->assertFalse($superadminUser->is_admin);
+        $this->assertFalse($adminUser->is_superadmin);
+        $this->assertFalse($clientUser->is_admin);
 
-        $this->assertNotEquals(1, $superadminUser->isClient());
-        $this->assertNotEquals(1, $adminUser->isClient());
+        $this->assertNotEquals(1, $superadminUser->is_client);
+        $this->assertNotEquals(1, $adminUser->is_client);
     }
 
     public function test_company_name()

@@ -850,8 +850,9 @@ class HasStateableTest extends ModelTestCase
     public function test_cached_states()
     {
         // First call should cache the states
-        $states1 = $this->testModel::getStates();
+        $object = $this->testModel::create(['name' => 'Test Model']);
 
+        $states1 = $object->states;
         // Second call should use cached states
         $states2 = $this->testModel::getStates();
 
