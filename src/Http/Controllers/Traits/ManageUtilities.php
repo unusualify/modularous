@@ -165,7 +165,7 @@ trait ManageUtilities
                 'modelValue' => $formItem,
                 'title' => $title,
                 'isEditing' => $isEditing,
-                'actions' => $this->getFormActions(),
+                'actions' => $this->getFormActions($isEditing ? 'edit' : 'create'),
                 // ...(($formAttributes['async'] ?? true) ? [] : ['actionUrl' => $this->getFormUrl($itemId)]),
                 'actionUrl' => $this->getFormUrl($itemId),
                 'schema' => $eventualSchema,
