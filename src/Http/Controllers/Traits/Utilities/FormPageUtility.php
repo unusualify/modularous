@@ -41,13 +41,30 @@ trait FormPageUtility
 
     public function getFormItem($id = null, $withoutDefaultScopes = false, $item = null)
     {
+        $this->addFormAppends();
+
         return $this->getCacheableFormItem($id, function () use ($id, $withoutDefaultScopes, $item) {
             $repositoryItem = ($item instanceof \Illuminate\Database\Eloquent\Model ? $item : $this->getRepositoryItem($id, withoutDefaultScopes: $withoutDefaultScopes));
             $item = $this->formItem($repositoryItem);
 
+            $data = [];
+
+            foreach ($this->getFormAppends() as $append) {
+                $itemTitle = $append;
+                $itemValue = $append;
+                preg_match('/(.*) as (.*)/', $append, $matches);
+                if($matches) {
+                    $itemTitle = $matches[2];
+                    $itemValue = $matches[1];
+                }
+
+                $data[$itemTitle] = data_get($item, $itemValue);
+            }
+
             return object_to_array(array_to_object(array_merge(
-                $item->toArray(),
-                $this->repository->getFormFields($repositoryItem, $this->formSchema),
+                // $item->toArray(),
+                $data,
+                $this->repository->getFormFields($repositoryItem, $this->formSchema, noSerialization: true),
             )));
         });
     }

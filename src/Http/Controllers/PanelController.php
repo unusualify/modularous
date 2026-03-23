@@ -15,12 +15,14 @@ use Unusualify\Modularity\Entities\Enums\Permission;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Controllers\Traits\CacheableResponse;
 use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
+use Unusualify\Modularity\Http\Controllers\Traits\ManageAppends;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageAuthorization;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageScopes;
+use Unusualify\Modularity\Http\Controllers\Traits\ManageWiths;
 
 abstract class PanelController extends CoreController implements CacheableInterface
 {
-    use MakesResponses, ManageScopes, ManageAuthorization, CacheableResponse;
+    use MakesResponses, ManageScopes, ManageAuthorization, CacheableResponse, ManageWiths, ManageAppends;
 
     /**
      * @var Unusualify\Modularity\Entities\Model
@@ -108,20 +110,6 @@ abstract class PanelController extends CoreController implements CacheableInterf
      * @var array
      */
     protected $indexOptions;
-
-    /**
-     * Relations to eager load for the index view.
-     *
-     * @var array
-     */
-    protected $indexWith = [];
-
-    /**
-     * Relations to eager load for the form view.
-     *
-     * @var array
-     */
-    protected $formWith = [];
 
     /**
      * Relation count to eager load for the form view.
@@ -242,12 +230,6 @@ abstract class PanelController extends CoreController implements CacheableInterf
         $this->applyFiltersDefaultOptions();
 
         // $this->fixedFilters = array_merge((array) $this->getConfigFieldsByRoute('filters.fixed', []), $this->fixedFilters ?? []);
-
-        // $this->addWiths();
-
-        // $this->addIndexWiths();
-
-        // $this->addFormWiths();
 
     }
 
@@ -499,6 +481,8 @@ abstract class PanelController extends CoreController implements CacheableInterf
             );
         }
 
+        $this->addIndexAppends();
+        $this->addFormAppends();
         $paginator = $this->getIndexItems(with: $with, scopes: $scopes, appends: $appends);
 
         return $this->getTransformer($this->getFormattedIndexItems($paginator));
@@ -761,40 +745,6 @@ abstract class PanelController extends CoreController implements CacheableInterf
 
         // return false;
         // return in_array($key, $model_relations);
-    }
-
-    protected function addIndexWiths()
-    {
-        $methods = array_filter(get_class_methods(static::class), function ($method) {
-            return preg_match('/addIndexWiths[A-Z]{1}[A-Za-z]+/', $method);
-        });
-
-        foreach ($methods as $key => $method) {
-            $this->indexWith = array_merge($this->indexWith, $this->{$method}());
-        }
-    }
-
-    protected function addFormWiths()
-    {
-        $methods = array_filter(get_class_methods(static::class), function ($method) {
-            return preg_match('/addFormWiths[A-Z]{1}[A-Za-z]+/', $method);
-        });
-
-        foreach ($methods as $key => $method) {
-            $this->formWith += $this->{$method}();
-        }
-    }
-
-    protected function addWiths()
-    {
-        $methods = array_filter(get_class_methods(static::class), function ($method) {
-            return preg_match('/addWiths[A-Z]{1}[A-Za-z]+/', $method);
-        });
-
-        foreach ($methods as $key => $method) {
-            $this->indexWith += $this->{$method}();
-            $this->formWith += $this->{$method}();
-        }
     }
 
     protected function getReplaceUrl()
