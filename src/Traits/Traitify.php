@@ -28,6 +28,21 @@ trait Traitify
         });
     }
 
+    protected static function staticTraitsMethods(?string $method = null)
+    {
+        $traits = array_values(class_uses_recursive(get_called_class()));
+
+        $uniqueTraits = array_unique(array_map('class_basename', $traits));
+
+        $methods = array_map(function (string $trait) use ($method) {
+            return $method . $trait;
+        }, $uniqueTraits);
+
+        return array_filter($methods, function (string $method) {
+            return method_exists(get_called_class(), $method);
+        });
+    }
+
     /**
      * Get the properties for property name.
      *
