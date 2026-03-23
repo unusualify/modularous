@@ -71,7 +71,6 @@ import { useGoTo, useDisplay } from 'vuetify'
 import { useStore } from 'vuex'
 import { useSidebar, useSvg } from '@/hooks'
 import { USER, CONFIG } from '@/store/mutations'
-import SidebarContent from './SidebarContent.vue'
 
 const props = defineProps({
   items: { type: Array, required: true },

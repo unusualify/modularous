@@ -1,5 +1,11 @@
 import { CONFIG } from '../mutations'
 
+/** Align with Vuetify `useDisplay().lgAndUp` (default lg breakpoint is 1280px). */
+function isVuetifyLgAndUp () {
+  if (typeof window === 'undefined' || !window.matchMedia) return true
+  return window.matchMedia('(min-width: 1280px)').matches
+}
+
 const state = {
   test: window[import.meta.env.VUE_APP_NAME]?.STORE.config.test ?? false,
   isInertia: window[import.meta.env.VUE_APP_NAME]?.STORE.config.isInertia ?? false,
@@ -12,13 +18,23 @@ const state = {
     const expandHover = sidebarOpts.expandHover ?? prefs?.expandHover ?? (sidebarOpts.fullyHidden ? 'hidden' : 'mini')
 
     if (prefs?.status !== undefined) {
-      // In mini mode, ignore persisted status: false from hidden mode – sidebar should be visible
-      if (expandHover === 'mini' && prefs.status === false) return true
-      // In hidden mode, only respect status: true when pinned – otherwise start closed
-      if (expandHover === 'hidden' && !(prefs.pinned ?? false) && prefs.status === true) return false
+      // Mini + false: desktop keeps sidebar open (hidden→mini migration); mobile stays closed
+      if (expandHover === 'mini' && prefs.status === false) return isVuetifyLgAndUp()
+      // Hidden + open: restore only when pinned on desktop; otherwise start closed (incl. mobile w/ pinned pref)
+      if (
+        expandHover === 'hidden' &&
+        prefs.status === true &&
+        (!isVuetifyLgAndUp() || !(prefs.pinned ?? false))
+      ) {
+        return false
+      }
+      // Mini (and other modes): persisted open from desktop must not show drawer below lg
+      if (prefs.status === true && !isVuetifyLgAndUp()) return false
       return prefs.status
     }
-    return expandHover === 'hidden' ? false : true
+    // Hidden overlay defaults closed; mini defaults open on lg+ only (mobile: overlay closed on load)
+    if (expandHover === 'hidden') return false
+    return isVuetifyLgAndUp()
   })(),
   sidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.sidebarOptions ?? [],
   secondarySidebarOptions: window[import.meta.env.VUE_APP_NAME]?.STORE.config.secondarySidebarOptions ?? [],

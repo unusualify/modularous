@@ -72,19 +72,20 @@ export default function useSidebar () {
     hasRail: computed(() => state.options?.rail),
     isHoverable: computed(() => (lgAndUp.value || state.rail) && state.options?.expandOnHover),
     sidebarPinned: computed(() => store.state.config.uiPreferences?.sidebar?.pinned ?? false),
-    // mini: drawer in layout (persistent) so v-main narrows. hidden: overlay unless pinned.
+    // mini: drawer in layout (persistent) so v-main narrows. hidden+pinned: layout sidebar only on lg+.
     effectivePersistent: computed(() =>
       (state.expandHover === 'mini' && (state.isExpanded || store.state.config.sidebarStatus)) ||
-      (state.expandHover === 'hidden' && (store.state.config.uiPreferences?.sidebar?.pinned ?? false)) ||
+      (state.expandHover === 'hidden' && (store.state.config.uiPreferences?.sidebar?.pinned ?? false) && lgAndUp.value) ||
       (state.options?.persistent ?? false)
     ),
     // In mini mode on desktop: always visible, part of layout (Vuetify layout system)
     effectivePermanent: computed(() =>
       state.expandHover === 'mini' && lgAndUp.value && store.state.config.sidebarStatus
     ),
-    // In hidden mode when not pinned: drawer overlays, must be temporary to hide when closed
+    // Hidden: overlay when unpinned, or on mobile (pinned layout applies only on lg+)
     effectiveTemporary: computed(() =>
-      state.expandHover === 'hidden' && !(store.state.config.uiPreferences?.sidebar?.pinned ?? false)
+      state.expandHover === 'hidden' &&
+        (!(store.state.config.uiPreferences?.sidebar?.pinned ?? false) || !lgAndUp.value)
     ),
 
     secondaryOptions: store.state.config.secondarySidebarOptions,
@@ -187,10 +188,17 @@ export default function useSidebar () {
   onMounted(() => {
     const prefs = store.state.config.uiPreferences?.sidebar
     if (prefs?.rail !== undefined) railManual.value = prefs.rail
-    // In mini mode, don't restore status: false from hidden mode – sidebar should stay open
-    if (prefs?.status !== undefined && !(state.expandHover === 'mini' && prefs.status === false)) {
-      // In hidden mode, only restore status: true when pinned – otherwise keep closed
-      if (state.expandHover === 'hidden' && !(prefs.pinned ?? false) && prefs.status === true) {
+    if (prefs?.status !== undefined) {
+      if (state.expandHover === 'mini' && prefs.status === false) {
+        // Match config.js: open on desktop (hidden→mini), closed on mobile overlay
+        store.commit(CONFIG.SET_SIDEBAR, lgAndUp.value)
+      } else if (
+        state.expandHover === 'hidden' &&
+        prefs.status === true &&
+        (!lgAndUp.value || !(prefs.pinned ?? false))
+      ) {
+        store.commit(CONFIG.SET_SIDEBAR, false)
+      } else if (prefs.status === true && !lgAndUp.value) {
         store.commit(CONFIG.SET_SIDEBAR, false)
       } else {
         store.commit(CONFIG.SET_SIDEBAR, prefs.status)

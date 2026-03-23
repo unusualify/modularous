@@ -263,7 +263,7 @@ const props = defineProps({
 })
 
 const store = useStore()
-const { lgAndUp, mdAndDown } = useDisplay()
+const { lgAndUp } = useDisplay()
 const { shouldUseInertia } = useConfig()
 const { showTopbar: showTopbarRaw, showBottomNav, topbarOptions } = useNavigationLayout()
 const { isExpanded, expandHover, rail, railWidth, width, sidebarPinned } = useSidebar()
@@ -350,12 +350,8 @@ function profileFormSubmitted() {
 }
 
 onMounted(() => {
-  const opts = store.state.config.sidebarOptions ?? {}
-  const prefs = store.state.config.uiPreferences?.sidebar ?? {}
-  const expandHoverMode =
-    opts.expandHover ?? prefs.expandHover ?? (opts.fullyHidden ? 'hidden' : 'mini')
-  const isMini = expandHoverMode === 'mini'
-  if (mdAndDown.value && !isMini) {
+  // Below lg: drawer is overlay; never leave it open after full page load (mini + persisted status:true).
+  if (!lgAndUp.value) {
     store.commit(CONFIG.SET_SIDEBAR, false)
   }
 
