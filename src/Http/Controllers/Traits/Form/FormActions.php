@@ -58,11 +58,37 @@ trait FormActions
      */
     public function setFormActions() {}
 
-    public function getFormActions(): array
+    public function getFormActions($type = 'index'): array
     {
         $default_action = (array) Config::get(modularityBaseKey() . '.default_form_action');
 
-        return Collection::make($this->formActions)->reduce(function ($acc, $action, $key) use ($default_action) {
+        $editOnModal = $this->tableAttributes['editOnModal'] ?? true;
+        $createOnModal = $this->tableAttributes['createOnModal'] ?? true;
+
+        if($type === 'index' && !$editOnModal && !$createOnModal) {
+            return [];
+        }
+
+        return Collection::make($this->formActions)->reduce(function ($acc, $action, $key) use ($default_action, $editOnModal, $createOnModal, $type) {
+
+            $creatable = $action['creatable'] ?? true;
+            $editable = $action['editable'] ?? true;
+
+            if($type === 'index' && !$editOnModal && !$creatable) {
+                return $acc;
+            }
+
+            if($type === 'index' && !$createOnModal && !$editable) {
+                return $acc;
+            }
+
+            if($type === 'edit' && !$editable) {
+                return $acc;
+            }
+
+            if($type === 'create' && !$creatable) {
+                return $acc;
+            }
 
             $isAllowed = $this->isAllowedItem(
                 $action,
