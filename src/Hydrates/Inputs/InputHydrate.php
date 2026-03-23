@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Services\Connector;
 use Unusualify\Modularity\Traits\ManageNames;
 
 /**
@@ -198,52 +199,58 @@ abstract class InputHydrate
 
         $noRecords = isset($input['noRecords']) && $input['noRecords'];
 
-        if (isset($input['repository']) && ! $noRecords && ! App::runningInConsole()) {
-            $args = explode(':', $input['repository']);
+        if ((isset($input['newConnector']) || isset($input['repository'])) && (! $noRecords && ! App::runningInConsole())) {
+            if (isset($input['repository'])) {
+                $args = explode(':', $input['repository']);
 
-            $className = array_shift($args);
-            $methodName = array_shift($args) ?? 'list';
+                $className = array_shift($args);
+                $methodName = array_shift($args) ?? 'list';
 
-            if (! @class_exists($className)) {
-                return $input;
-            }
-
-            $repository = App::make($className);
-
-            $params = Collection::make($args)->mapWithKeys(function ($arg) {
-                [$name, $value] = explode('=', $arg);
-
-                // return [$name => [$value]];
-                return [$name => explode(',', $value)];
-            })->toArray();
-
-            $params = array_merge_recursive($params, ['with' => $this->getWiths()]);
-
-            $items = [];
-
-            if (! $this->skipQueries) {
-                $items = call_user_func_array([$repository, $methodName], [
-                    ...($methodName == 'list' ? ['column' => [$input['itemTitle'] ?? 'name', ...$this->getItemColumns()]] : []),
-                    ...$params,
-                ])->toArray();
-            }
-
-            $input['items'] = $items;
-
-            if (count($input['items']) > 0) {
-                if (isset($input['setFirstDefault']) && $input['setFirstDefault']) {
-                    $input['default'] = $input['items'][0][$input['itemValue']];
+                if (! @class_exists($className)) {
+                    return $input;
                 }
-                if (! isset($input['items'][0][$input['itemTitle']])) {
-                    $input['itemTitle'] = array_keys(Arr::except($input['items'][0], [$input['itemValue']]))[0];
+
+                $repository = App::make($className);
+
+                $params = Collection::make($args)->mapWithKeys(function ($arg) {
+                    [$name, $value] = explode('=', $arg);
+
+                    // return [$name => [$value]];
+                    return [$name => explode(',', $value)];
+                })->toArray();
+
+                $params = array_merge_recursive($params, ['with' => $this->getWiths()]);
+
+                $items = [];
+
+                if (! $this->skipQueries) {
+                    $items = call_user_func_array([$repository, $methodName], [
+                        ...($methodName == 'list' ? ['column' => [$input['itemTitle'] ?? 'name', ...$this->getItemColumns()]] : []),
+                        ...$params,
+                    ])->toArray();
                 }
-            }
 
-            if ($this->selectable) {
-                $this->hydrateSelectableInput($input);
-            }
+                $input['items'] = $items;
 
-            $this->afterHydrateRecords($input);
+                if (count($input['items']) > 0) {
+                    if (isset($input['setFirstDefault']) && $input['setFirstDefault']) {
+                        $input['default'] = $input['items'][0][$input['itemValue']];
+                    }
+                    if (! isset($input['items'][0][$input['itemTitle']])) {
+                        $input['itemTitle'] = array_keys(Arr::except($input['items'][0], [$input['itemValue']]))[0];
+                    }
+                }
+
+                if ($this->selectable) {
+                    $this->hydrateSelectableInput($input);
+                }
+
+                $this->afterHydrateRecords($input);
+            } else if (isset($input['newConnector'])) {
+                $connector = new Connector($input['newConnector']);
+
+                $connector->run($input, 'items');
+            }
         }
 
         return $input;

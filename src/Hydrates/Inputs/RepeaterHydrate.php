@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Services\Connector;
 
 class RepeaterHydrate extends InputHydrate
 {
@@ -53,10 +54,10 @@ class RepeaterHydrate extends InputHydrate
 
             if (isset($input['repository'])) {
                 if (preg_match('/(\w+)Repository/', get_class_short_name($input['repository']), $matches)) {
-                    $relation_class = App::make($input['repository']);
+                    // $relation_class = App::make($input['repository']);
                     $inputStudlyName = $matches[1];
                     $inputSnakeName = $this->getSnakeCase($inputStudlyName);
-                    $inputCamelName = $this->getCamelCase($inputStudlyName);
+                    // $inputCamelName = $this->getCamelCase($inputStudlyName);
                 }
             } elseif (isset($input['model'])) {
                 // if( preg_match( '/(\w+)/', get_class_short_name($input['model']), $matches)){
@@ -66,6 +67,10 @@ class RepeaterHydrate extends InputHydrate
                 //     $inputStudlyName = $matches[1];
                 //     $inputSnakeName = $this->getSnakeCase($inputStudlyName);
                 // }
+            } else if (isset($input['newConnector'])) {
+                $connector = new Connector($input['newConnector']);
+                $inputStudlyName = $connector->getRouteName();
+                $inputSnakeName = $this->getSnakeCase($inputStudlyName);
             }
 
             foreach ($input['schema'] as $key => &$_input) {
@@ -81,6 +86,8 @@ class RepeaterHydrate extends InputHydrate
                                     $_input['repository'] ??= $input['repository'];
                                 } elseif (isset($input['model'])) {
                                     $_input['model'] ??= $input['model'];
+                                } else if (isset($input['newConnector'])) {
+                                    $_input['newConnector'] ??= $input['newConnector'];
                                 }
                             } else {
                                 $_input['items'] ??= [];
