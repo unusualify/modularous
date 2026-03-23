@@ -339,10 +339,9 @@ trait Relationships
                 $repository = ModularityFinder::getRouteRepository(Str::studly(Str::singular($input['name'])), asClass: true);
                 $relationshipName = $input['relationship'] ?? $input['name'];
                 $records = $object->{$relationshipName};
-                // dd($records, $repository);
                 $fields[$relationshipName] = ((bool) $records && ! $records->isEmpty()) ? $object->{$input['name']}->map(function ($model) use ($input, $repository) {
-                    return $repository->getFormFields($model, $input['schema']);
-                }) : $repository->getFormFields($repository->newInstance(), $input['schema']);
+                    return $repository->getFormFields($model, $input['schema'], noSerialization: !($input['isSerialized'] ?? false));
+                }) : $repository->getFormFields($repository->newInstance(), $input['schema'], noSerialization: !($input['isSerialized'] ?? false));
             }
         }
 
