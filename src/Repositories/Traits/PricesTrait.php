@@ -131,10 +131,14 @@ trait PricesTrait
                 $query = $query->where('currency_id', Request::getCachedUserCurrency()->id);
             }
 
-            $prices = $query->get();
-            $pricesByRole = $prices->groupBy('role');
+            $prices = null;
+            $pricesByRole = null;
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
+                if(!isset($prices)) {
+                    $prices = $query->where('role', $role)->get();
+                    $pricesByRole = $prices->groupBy('role');
+                }
                 if (isset($pricesByRole[$role])) {
                     $fields[$role] = $pricesByRole[$role]->map(function ($price) use ($priceSavingKey) {
                         return Arr::mapWithKeys(Arr::only($price->toArray(), array_merge($this->formatableColumns, [$priceSavingKey])), function ($val, $key) use ($priceSavingKey) {

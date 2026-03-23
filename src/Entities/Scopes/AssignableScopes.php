@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Entities\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\PermissionRegistrar;
 use Unusualify\Modularity\Entities\Assignment;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
 
@@ -88,30 +89,22 @@ trait AssignableScopes
         $assignmentTable = (new Assignment)->getTable();
         $modelTable = $this->getTable();
         $modelClass = get_class($this);
-        $userClass = get_class($user);
+        $modelHasRolesTable = config('permission.table_names.model_has_roles');
+        $modelMorphKey = config('permission.column_names.model_morph_key');
+        $rolePivotKey = PermissionRegistrar::$pivotRole;
 
-        $users = $userClass::whereHas('roles', function ($query) use ($userRoleIds) {
-            $query->whereIn('id', $userRoleIds);
-        })->get();
-
-        // if user is exceptep from its role, filter it
-        // $userIds = $users->filter(fn ($u) => $u->id !== $user->id)->pluck('id');
-        // if ($userIds->isEmpty()) {
-        //     return $query->whereRaw('1 = 0');
-        // }
-        $userIds = $users->pluck('id');
-
-        if ($userIds->isEmpty()) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        $query->whereExists(function ($subQuery) use ($assignmentTable, $modelTable, $modelClass, $userClass, $userIds) {
+        $query->whereExists(function ($subQuery) use ($assignmentTable, $modelTable, $modelClass, $userClass, $userRoleIds, $modelHasRolesTable, $modelMorphKey, $rolePivotKey) {
             $subQuery->select(\DB::raw(1))
                 ->from($assignmentTable)
                 ->whereColumn("{$assignmentTable}.assignable_id", "{$modelTable}.id")
                 ->where("{$assignmentTable}.assignable_type", $modelClass)
-                ->whereIn("{$assignmentTable}.assignee_id", $userIds->toArray())
                 ->where("{$assignmentTable}.assignee_type", $userClass)
+                ->whereIn("{$assignmentTable}.assignee_id", function ($roleSubQuery) use ($modelHasRolesTable, $modelMorphKey, $rolePivotKey, $userClass, $userRoleIds) {
+                    $roleSubQuery->select($modelMorphKey)
+                        ->from($modelHasRolesTable)
+                        ->where('model_type', $userClass)
+                        ->whereIn($rolePivotKey, $userRoleIds);
+                })
                 ->whereRaw("{$assignmentTable}.created_at = (
                     SELECT MAX(created_at)
                     FROM {$assignmentTable} AS latest
@@ -316,10 +309,11 @@ trait AssignableScopes
             // If no specific roles defined, get all roles from the user
             if (! (is_null($rolesToCheck) || empty($rolesToCheck))) {
                 // Check for specific roles
-                $roleModel = config('permission.models.role');
-                $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
+                // $roleModel = config('permission.models.role');
+                // $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
 
-                if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                // if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                if (! $user->roles_meta->contains(fn ($role) => in_array($role->name, $rolesToCheck))) {
                     return $query;
                 }
             }
@@ -347,10 +341,10 @@ trait AssignableScopes
             // If no specific roles defined, get all roles from the user
             if (! (is_null($rolesToCheck) || empty($rolesToCheck))) {
                 // Check for specific roles
-                $roleModel = config('permission.models.role');
-                $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
-
-                if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                // $roleModel = config('permission.models.role');
+                // $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
+                // if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                if (! $user->roles_meta->contains(fn ($role) => in_array($role->name, $rolesToCheck))) {
                     return $query;
                 }
             }

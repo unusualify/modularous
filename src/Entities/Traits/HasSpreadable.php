@@ -25,15 +25,17 @@ trait HasSpreadable
     {
         // TODO: Keep the old spreadable data from model and remove attributes based on that don't remove all column fields
         self::saving(static function (Model $model) {
+
             // Store the spread data before cleaning
-            if (! $model->exists) {
+            if (!$model->exists) { // fill if creating a new record
                 // Set property to preserve data through events
                 $model->spreadablePayload = $model->{$model->getSpreadableSavingKey()} ?: $model->prepareSpreadableJson();
             } elseif ($model->{$model->getSpreadableSavingKey()}) {
                 if (! $model->spreadable) {
-                    $model->spreadable()->create([
+                    $spreadable = $model->spreadable()->create([
                         'content' => $model->{$model->getSpreadableSavingKey()},
                     ]);
+
                     $model->spreadableIsUpdated = true;
                 } else {
                     // Handle existing spread updates
@@ -57,7 +59,7 @@ trait HasSpreadable
             $model->spreadable()->create([
                 'content' => $model->spreadablePayload ?? [],
             ]);
-            foreach ($model->spreadablePayload as $key => $value) {
+            foreach ($model->spreadablePayload ?? [] as $key => $value) {
                 if (! $model->isProtectedAttribute($key)) {
                     $model->append($key);
                     $model->spreadableMutatorMethods['get' . Str::studly($key) . 'Attribute'] = $value;
@@ -70,7 +72,7 @@ trait HasSpreadable
 
         self::retrieved(static function (Model $model) {
             // If there's a spread model, load its attributes
-            if ($model->spreadable()->exists()) {
+            if ($model->hasSpreadable()) {
                 $model->spreadableKeys = array_keys($model->spreadable?->content ?? []);
                 $jsonData = $model->spreadable?->content ?? [];
 
@@ -104,6 +106,8 @@ trait HasSpreadable
 
     public function initializeHasSpreadable()
     {
+        $this->makeHidden(array_merge($this->hidden, ['spreadable']));
+
         $this->mergeFillable([$this->getSpreadableSavingKey()]);
 
         // $this->append($this->getSpreadableSavingKey());
@@ -133,6 +137,28 @@ trait HasSpreadable
         $class->setRelations($this->getRelations());
 
         return $class;
+    }
+
+    /**
+     * Pre-computed flag from withExists('spreadable') in the fetch query.
+     * Avoids lazy load when checking if spreadable exists.
+     */
+    protected function spreadableExists(): Attribute
+    {
+        return Attribute::get(function (?int $value) {
+            return $value !== null ? (bool) $value : $this->spreadable()->exists();
+        });
+    }
+
+    /**
+     * Check if spreadable exists without triggering a lazy load when
+     * the model was fetched with withExists('spreadable') (via global scope).
+     *
+     * @return bool
+     */
+    protected function hasSpreadable(): bool
+    {
+        return $this->spreadable_exists ?? $this->spreadable()->exists();
     }
 
     // TODO: rename relation to spread as well

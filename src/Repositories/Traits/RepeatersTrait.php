@@ -176,18 +176,19 @@ trait RepeatersTrait
         // not possess any repeater data
         if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && method_exists($object, 'repeaters')) {
             $schema = $schema ?? $this->getRawInputs();
-            if (! $object->repeaters()->exists()) {
-                $fields += Arr::mapWithKeys($this->getRepeaterInputs($schema), function ($input) {
+
+            $repeaterInputs = $this->getRepeaterInputs($schema);
+            if (!empty($repeaterInputs) && ! $object->repeaters()->exists()) {
+                $fields += Arr::mapWithKeys($repeaterInputs, function ($input) {
                     return [
                         $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
                             return [$locale => []];
                         }) : ($input['default'] ?? []),
                     ];
                 });
-            } else {
+            } else if (!empty($repeaterInputs)) {
 
                 foreach ($object->repeaters->groupBy('locale') as $repeatersByLocale) {
-
                     foreach ($repeatersByLocale as $repeater) {
                         if ($schema[$repeater->role]['translated'] ?? false) {
                             $name = $repeater->role . '.' . $repeater->locale;

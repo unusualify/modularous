@@ -37,6 +37,11 @@ class Assignment extends Model
         'completed_at',
     ];
 
+    protected $with = [
+        'assignee',
+        'assigner',
+    ];
+
     protected $appends = [
         'assignee_name',
         'assignee_avatar',
@@ -188,7 +193,7 @@ class Assignment extends Model
     protected function attachments(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->whereRole('attachments')->get()->map(function ($filepond) {
+            get: fn ($value) => $this->fileponds->where('role', 'attachments')->map(function ($filepond) {
                 return $filepond->mediableFormat();
             }),
         );
@@ -197,7 +202,7 @@ class Assignment extends Model
     protected function preliminaries(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->whereRole('preliminaries')->get()->map(function ($filepond) {
+            get: fn ($value) => $this->fileponds->where('role', 'preliminaries')->map(function ($filepond) {
                 return $filepond->mediableFormat();
             }),
         );

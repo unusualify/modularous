@@ -41,9 +41,9 @@ trait CreatorTrait
             //     }
             // }
 
-            if ($isAllowed && $object->creator()->exists()) {
-                $fields['custom_creator_id'] = $object?->creator?->id;
-            }
+            $fields['custom_creator_id'] = $object?->creator?->id;
+            // if ($isAllowed && $object->creator()->exists()) {
+            // }
         }
 
         return $fields;

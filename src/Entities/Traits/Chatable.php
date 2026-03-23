@@ -44,11 +44,11 @@ trait Chatable
      */
     public function initializeChatable(): void
     {
-        $noAppend = static::$noChatableAppends ?? false;
+        // $noAppend = static::$noChatableAppends ?? false;
 
-        if (! $noAppend) {
-            $this->setAppends(array_merge($this->getAppends(), ['chat_messages_count', 'unread_chat_messages_count', 'unread_chat_messages_for_you_count']));
-        }
+        // if (! $noAppend) {
+        //     $this->setAppends(array_merge($this->getAppends(), ['chat_messages_count', 'unread_chat_messages_count', 'unread_chat_messages_for_you_count']));
+        // }
     }
 
     public function chat(): \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -162,7 +162,10 @@ trait Chatable
     protected function unreadChatMessagesFromClientCount(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->numberOfUnreadChatMessagesFromClient(),
+            // get: fn () => $this->unreadChatMessagesFromClient()->count(),
+            get: fn () => !$this->relationLoaded('unreadChatMessagesFromClient') && $this->relationLoaded('chatMessages')
+                ? ($this->chatMessages->filter(fn ($message) => $message->creator->roles_meta->contains('name', 'client-manager') || $message->creator->roles_meta->contains('name', 'client-assistant'))->count() ?? 0)
+                : $this->unreadChatMessagesFromClient->count()
         );
     }
 
@@ -223,7 +226,7 @@ trait Chatable
      */
     public function numberOfChatMessages(): int
     {
-        return $this->chatMessages()->count();
+        return $this->chatMessages->count();
     }
 
     /**
@@ -231,7 +234,7 @@ trait Chatable
      */
     public function numberOfUnreadChatMessages(): int
     {
-        return $this->unreadChatMessages()->count();
+        return $this->unreadChatMessages->count();
     }
 
     /**
@@ -239,7 +242,7 @@ trait Chatable
      */
     public function numberOfUnreadChatMessagesForYou(): int
     {
-        return $this->unreadChatMessagesForYou()->count();
+        return $this->unreadChatMessagesForYou->count();
     }
 
     /**
@@ -247,7 +250,7 @@ trait Chatable
      */
     public function numberOfUnreadChatMessagesFromCreator(): int
     {
-        return $this->unreadChatMessagesFromCreator()->count();
+        return $this->unreadChatMessagesFromCreator->count();
     }
 
     /**
@@ -255,7 +258,7 @@ trait Chatable
      */
     public function numberOfUnreadChatMessagesFromClient(): int
     {
-        return $this->unreadChatMessagesFromClient()->count();
+        return $this->unreadChatMessagesFromClient->count();
     }
 
     /**
@@ -263,7 +266,7 @@ trait Chatable
      */
     public function numberOfUnansweredCreatorChatMessages(): int
     {
-        $latestMessage = $this->latestChatMessage()->first();
+        $latestMessage = $this->latestChatMessage;
 
         if (! $latestMessage) {
             return 0;

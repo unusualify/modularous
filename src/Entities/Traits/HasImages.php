@@ -76,7 +76,10 @@ trait HasImages
         });
     }
 
-    public function initializeHasImages(): void {}
+    public function initializeHasImages(): void 
+    {
+        $this->makeHidden(array_merge($this->hidden, ['medias']));
+    }
 
     /**
      * Defines the many-to-many relationship for media objects.

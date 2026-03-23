@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Auth;
 use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Facades\Modularity;
@@ -134,6 +135,28 @@ trait HasCreator
     }
 
     /**
+     * Pre-computed flag from withExists('creatorRecord') in the fetch query.
+     * Avoids lazy load when checking if creator record exists.
+     */
+    protected function creatorRecordExists(): Attribute
+    {
+        return Attribute::get(function (?int $value) {
+            return $value !== null ? (bool) $value : $this->creatorRecord()->exists();
+        });
+    }
+
+    /**
+     * Check if creator record exists without triggering a lazy load when
+     * the model was fetched with withExists('creatorRecord') (via global scope).
+     *
+     * @return bool
+     */
+    protected function hasCreatorRecord(): bool
+    {
+        return $this->creator_record_exists;
+    }
+
+    /**
      * Get the creator record associated with this model
      */
     public function creatorRecord(): \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -189,72 +212,72 @@ trait HasCreator
         // );
     }
 
-    public function company(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        $creatorRecordModel = new ($this->getCreatorRecordModel());
-        $creatorModel = new ($this->getCreatorModel());
+    // public function company(): \Illuminate\Database\Eloquent\Relations\HasOne
+    // {
+    //     $creatorRecordModel = new ($this->getCreatorRecordModel());
+    //     $creatorModel = new ($this->getCreatorModel());
 
-        $companyModel = new Company;
-        $query = Company::query()
-            ->select($companyModel->getTable() . '.*')  // Only select company fields
-            ->join(
-                $creatorModel->getTable(),
-                $creatorModel->getTable() . '.company_id',
-                '=',
-                $companyModel->getTable() . '.id'
-            )
-            ->join(
-                $creatorRecordModel->getTable(),
-                function ($join) use ($creatorRecordModel, $creatorModel) {
-                    $join->on($creatorRecordModel->getTable() . '.creator_id', '=', $creatorModel->getTable() . '.id')
-                        ->where($creatorRecordModel->getTable() . '.creatable_type', '=', get_class($this->getCreatableClass()))
-                        ->where($creatorRecordModel->getTable() . '.creatable_id', '=', $this->id);
-                }
-            );
+    //     $companyModel = new Company;
+    //     $query = Company::query()
+    //         ->select($companyModel->getTable() . '.*')  // Only select company fields
+    //         ->join(
+    //             $creatorModel->getTable(),
+    //             $creatorModel->getTable() . '.company_id',
+    //             '=',
+    //             $companyModel->getTable() . '.id'
+    //         )
+    //         ->join(
+    //             $creatorRecordModel->getTable(),
+    //             function ($join) use ($creatorRecordModel, $creatorModel) {
+    //                 $join->on($creatorRecordModel->getTable() . '.creator_id', '=', $creatorModel->getTable() . '.id')
+    //                     ->where($creatorRecordModel->getTable() . '.creatable_type', '=', get_class($this->getCreatableClass()))
+    //                     ->where($creatorRecordModel->getTable() . '.creatable_id', '=', $this->id);
+    //             }
+    //         );
 
-        return new \Illuminate\Database\Eloquent\Relations\HasOne(
-            $query,
-            $this->getCreatableClass(),
-            $creatorRecordModel->getTable() . '.creatable_id',
-            'id'
-        );
-    }
+    //     return new \Illuminate\Database\Eloquent\Relations\HasOne(
+    //         $query,
+    //         $this->getCreatableClass(),
+    //         $creatorRecordModel->getTable() . '.creatable_id',
+    //         'id'
+    //     );
+    // }
 
-    public function creatorCompany(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        $creatableClass = $this->getCreatableClass();
-        $creatorRecordModel = new ($this->getCreatorRecordModel());
-        $creatorModel = new ($this->getCreatorModel());
+    // public function creatorCompany(): \Illuminate\Database\Eloquent\Relations\HasOne
+    // {
+    //     $creatableClass = $this->getCreatableClass();
+    //     $creatorRecordModel = new ($this->getCreatorRecordModel());
+    //     $creatorModel = new ($this->getCreatorModel());
 
-        $companyModel = new Company;
+    //     $companyModel = new Company;
 
-        $relatedQuery = $companyModel->newQuery()
-            ->select($companyModel->getTable() . '.*')
-            ->join(
-                $creatorModel->getTable(),
-                $creatorModel->getTable() . '.company_id',
-                '=',
-                $companyModel->getTable() . '.id'
-            )
-            ->join(
-                $creatorRecordModel->getTable(),
-                function ($join) use ($creatorRecordModel, $creatorModel, $creatableClass) {
-                    $join->on($creatorRecordModel->getTable() . '.creator_id', '=', $creatorModel->getTable() . '.id')
-                        ->where($creatorRecordModel->getTable() . '.creatable_type', '=', get_class($creatableClass));
-                }
-            );
+    //     $relatedQuery = $companyModel->newQuery()
+    //         ->select($companyModel->getTable() . '.*')
+    //         ->join(
+    //             $creatorModel->getTable(),
+    //             $creatorModel->getTable() . '.company_id',
+    //             '=',
+    //             $companyModel->getTable() . '.id'
+    //         )
+    //         ->join(
+    //             $creatorRecordModel->getTable(),
+    //             function ($join) use ($creatorRecordModel, $creatorModel, $creatableClass) {
+    //                 $join->on($creatorRecordModel->getTable() . '.creator_id', '=', $creatorModel->getTable() . '.id')
+    //                     ->where($creatorRecordModel->getTable() . '.creatable_type', '=', get_class($creatableClass));
+    //             }
+    //         );
 
-        return new CreatorCompanyRelation(
-            $relatedQuery,
-            $creatableClass,
-            $creatorRecordModel->getTable() . '.creatable_id',
-            $creatableClass->getKeyName(),
-            $creatorRecordModel->getTable(),
-            $creatorModel->getTable(),
-            $companyModel->getTable(),
-            get_class($creatableClass)
-        );
-    }
+    //     return new CreatorCompanyRelation(
+    //         $relatedQuery,
+    //         $creatableClass,
+    //         $creatorRecordModel->getTable() . '.creatable_id',
+    //         $creatableClass->getKeyName(),
+    //         $creatorRecordModel->getTable(),
+    //         $creatorModel->getTable(),
+    //         $companyModel->getTable(),
+    //         get_class($creatableClass)
+    //     );
+    // }
 
     // protected static function getAuthorizedGuardName()
     // {
@@ -280,7 +303,11 @@ trait HasCreator
     {
         $key = $this->getKey();
 
-        return (! is_null($key) && $this->creatorRecord()->exists()) ? $this->creatorRecord->creator_type : static::getDefaultCreatorModel();
+        if(is_null($key) || ! $this->hasCreatorRecord()) {
+            return $this->getDefaultCreatorModel();
+        }
+
+        return $this->creatorRecord?->creator_type ?? $this->getDefaultCreatorModel();
     }
 
     /**
@@ -399,9 +426,10 @@ trait HasCreator
         if (! $abortRoleExceptions) {
 
             if ($hasSpatiePermission) {
-                $existingRoles = $spatieRoleModel::whereIn('name', $this->getRolesHasAccessToCreation())->get();
+                // $existingRoles = $spatieRoleModel::whereIn('name', $this->getRolesHasAccessToCreation())->get();
 
-                if ($user->isSuperAdmin() || $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                // if ($user->is_superadmin || $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                if ($user->is_superadmin || $user->roles_meta->contains(fn ($role) => in_array($role->name, $this->getRolesHasAccessToCreation()))) {
                     return $query;
                 }
             }
@@ -415,8 +443,8 @@ trait HasCreator
                 $query = $query->where('id', $user->id);
 
                 if ($hasSpatiePermission) {
-                    $existingRoles = $spatieRoleModel::whereIn('name', $this->getCompanyRolesHasAccessToCreation())->get();
-                    if ($user->company_id && $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                    // $existingRoles = $spatieRoleModel::whereIn('name', $this->getCompanyRolesHasAccessToCreation())->get();
+                    if ($user->company_id && $user->roles->contains(fn ($role) => in_array($role->name, $this->getCompanyRolesHasAccessToCreation()))) {
                         $query = $query->orWhere('company_id', $user->company_id);
                     }
                 }

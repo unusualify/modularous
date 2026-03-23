@@ -3,9 +3,9 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\ModularityLog;
 
 trait TableItem
 {
@@ -51,6 +51,10 @@ trait TableItem
 
     protected function getItemColumnData($item, $column)
     {
+        $preferEager = $this->isFormatItemEagerEnabled();
+
+        $titleKey = $column['key'];
+        $sourceKey = $column['sourceKey'] ?? $column['key'];
 
         if (isset($column['thumb']) && $column['thumb']) {
             if (isset($column['present']) && $column['present']) {
@@ -79,12 +83,11 @@ trait TableItem
             $value .= moduleRoute("$this->moduleName.$field", $this->routePrefix, 'index', [$module => $this->getItemIdentifier($item)]);
             $value .= '">' . $nestedCount . ' ' . (mb_strtolower(Str::plural($column['title'], $nestedCount))) . '</a>';
         } else {
-            $field = $column['key'];
-            $value = data_get($item, $field, null);
+            $value = data_get($item, $sourceKey, null);
         }
 
         // for relationship fields
-        if (preg_match('/(.*)(_relation)/', $column['key'], $matches)) {
+        if (preg_match('/(.*)(_relation)/', $sourceKey, $matches)) {
             // $field = $column['key'];
             $relationshipName = $matches[1];
             $exploded = explode('.', $relationshipName);
@@ -93,9 +96,7 @@ trait TableItem
 
             if (count($exploded) > 1) {
                 $relationshipName = $exploded[1];
-                $item = $item->{$exploded[0]};
-            } else {
-                $relation = $item->{$relationshipName}();
+                $item = $this->getRelatedItemForFormatting($item, $exploded[0], $preferEager);
             }
 
             $itemTitle = $column['itemTitle'] ?? 'name';
@@ -104,108 +105,137 @@ trait TableItem
 
             $count = 0;
 
-            $relationshipType = get_class($item->{$relationshipName}());
-
-            if (in_array($relationshipType, [
-                'Illuminate\Database\Eloquent\Relations\BelongsTo',
-                'Illuminate\Database\Eloquent\Relations\HasOne',
-                'Illuminate\Database\Eloquent\Relations\HasOneThrough',
-                'Illuminate\Database\Eloquent\Relations\MorphOne',
-                'Illuminate\Database\Eloquent\Relations\MorphTo',
-            ])) {
-
-                // Allow overriding the relation via "relation.field" or "relation->field"
-                if (preg_match('/^([\w_]+)(?:\.|->)(.+)$/', $itemTitle, $m) && method_exists($item, $m[1])) {
-                    $relationshipName = $m[1];
-                    $itemTitle = $m[2];
-                }
-
+            if($item != null) {
+                $relationshipType = get_class($item->{$relationshipName}());
+                $eagerLoadedRelation = $this->getLoadedRelationForFormatting($item, $relationshipName, $preferEager);
+                $isRelationLoaded = $this->isRelationLoadedForFormatting($item, $relationshipName, $preferEager);
                 $relation = $item->{$relationshipName}();
-                $related = $relation->getRelated();
-                $table = $related->getTable();
-                $driver = $related->getConnection()->getDriverName();
 
-                // Handle nested JSON like "field.headline" or "field->headline"
-                if (preg_match('/^([\w_]+)(?:\.|->)(.+)$/', $itemTitle, $jm)) {
-                    $jsonCol = $jm[1];
-                    $jsonPathDots = str_replace('->', '.', $jm[2]);
-                    $jsonPathEsc = str_replace("'", "''", $jsonPathDots);
+                $isRelationship = is_subclass_of($relationshipType, 'Illuminate\Database\Eloquent\Relations\Relation');
+                $singularRelationships = collect([
+                    'Illuminate\Database\Eloquent\Relations\BelongsTo',
+                    'Illuminate\Database\Eloquent\Relations\HasOne',
+                    'Illuminate\Database\Eloquent\Relations\HasOneThrough',
+                    'Illuminate\Database\Eloquent\Relations\MorphOne',
+                    'Illuminate\Database\Eloquent\Relations\MorphTo',
+                ]);
+                $pluralRelationships = collect([
+                    'Illuminate\Database\Eloquent\Relations\BelongsToMany',
+                    'Illuminate\Database\Eloquent\Relations\HasMany',
+                    'Illuminate\Database\Eloquent\Relations\HasManyThrough',
+                    'Illuminate\Database\Eloquent\Relations\MorphMany',
+                    'Illuminate\Database\Eloquent\Relations\MorphToMany',
+                ]);
 
-                    switch ($driver) {
-                        case 'pgsql':
-                            $segments = explode('.', $jsonPathDots);
-                            $expr = $table . '.' . $jsonCol . " #>> '{" . implode(',', $segments) . "}'";
 
-                            break;
-                        case 'sqlsrv':
-                            $expr = "JSON_VALUE($table.$jsonCol, '$.$jsonPathEsc')";
+                if ($isRelationship && $singularRelationships->first(fn($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
 
-                            break;
-                        case 'sqlite':
-                            $expr = "json_extract($table.$jsonCol, '$.$jsonPathEsc')";
+                    // Allow overriding the relation via "relation.field" or "relation->field"
 
-                            break;
-                        default: // mysql / mariadb
-                            $expr = "JSON_UNQUOTE(JSON_EXTRACT($table.$jsonCol, '$.$jsonPathEsc'))";
-
-                            break;
+                    if (preg_match('/^([\w_]+)(?:\.|->)(.+)$/', $itemTitle, $m) && method_exists($item, $m[1])) {
+                        $relationshipName = $m[1];
+                        $itemTitle = $m[2];
+                        $eagerLoadedRelation = $this->getLoadedRelationForFormatting($item, $relationshipName, $preferEager);
+                        $isRelationLoaded = $this->isRelationLoadedForFormatting($item, $relationshipName, $preferEager);
+                        $relation = $item->{$relationshipName}();
                     }
 
-                    // Use an alias so value('_val') works reliably
-                    $result = $relation->selectRaw("$expr as _val")->value('_val');
+                    // Handle nested JSON like "field.headline" or "field->headline"
+                    if (preg_match('/^([\w_]+)(?:\.|->)(.+)$/', $itemTitle, $jm)) {
+                        $jsonCol = $jm[1];
+                        $jsonPathDots = str_replace('->', '.', $jm[2]);
+                        $jsonPathEsc = str_replace("'", "''", $jsonPathDots);
+
+                        if ($eagerLoadedRelation instanceof Model) {
+                            $result = data_get($eagerLoadedRelation, $jsonCol . '.' . $jsonPathDots);
+                        } elseif ($isRelationLoaded) {
+                            $result = null;
+                        } else {
+                            $related = $relation->getRelated();
+                            $table = $related->getTable();
+                            $driver = $related->getConnection()->getDriverName();
+
+                            switch ($driver) {
+                                case 'pgsql':
+                                    $segments = explode('.', $jsonPathDots);
+                                    $expr = $table . '.' . $jsonCol . " #>> '{" . implode(',', $segments) . "}'";
+
+                                    break;
+                                case 'sqlsrv':
+                                    $expr = "JSON_VALUE($table.$jsonCol, '$.$jsonPathEsc')";
+
+                                    break;
+                                case 'sqlite':
+                                    $expr = "json_extract($table.$jsonCol, '$.$jsonPathEsc')";
+
+                                    break;
+                                default: // mysql / mariadb
+                                    $expr = "JSON_UNQUOTE(JSON_EXTRACT($table.$jsonCol, '$.$jsonPathEsc'))";
+
+                                    break;
+                            }
+
+                            // Use an alias so value('_val') works reliably
+                            $result = $relation->selectRaw("$expr as _val")->value('_val');
+                        }
+                    } else {
+                        // Simple column on the related model
+                        if ($isSole) {
+                            if ($eagerLoadedRelation instanceof Model) {
+                                $result = data_get($eagerLoadedRelation, str_replace('->', '.', $itemTitle));
+                            } elseif ($isRelationLoaded) {
+                                $result = null;
+                            } else {
+                                $result = $item->{$relationshipName}()->value($itemTitle);
+                            }
+                        } else {
+                            $result = $isRelationLoaded ? $eagerLoadedRelation : $item->{$relationshipName};
+                        }
+                    }
+                } elseif ($isRelationship && $pluralRelationships->first(fn($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
+
+                    if ($eagerLoadedRelation instanceof Collection) {
+                        $count = $eagerLoadedRelation->count();
+                        $result = $eagerLoadedRelation->take($maxItems);
+                    } else {
+                        $count = $item->{$relationshipName}()->count();
+                        $result = $item->{$relationshipName}()
+                            ->take($maxItems)
+                            ->get();
+                    }
                 } else {
-                    // Simple column on the related model
-                    $result = $isSole ?
-                        $item->{$relationshipName}()->value($itemTitle) :
-                        $item->{$relationshipName};
+                    if ($eagerLoadedRelation instanceof Model) {
+                        $result = data_get($eagerLoadedRelation, str_replace('->', '.', $itemTitle));
+                    } elseif ($isRelationLoaded) {
+                        $result = null;
+                    } else {
+                        $result = $item->{$relationshipName}()->value($itemTitle);
+                    }
                 }
-            } elseif (in_array($relationshipType, [
-                'Illuminate\Database\Eloquent\Relations\BelongsToMany',
-                'Illuminate\Database\Eloquent\Relations\HasMany',
-                'Illuminate\Database\Eloquent\Relations\HasManyThrough',
-                'Illuminate\Database\Eloquent\Relations\MorphMany',
-                'Illuminate\Database\Eloquent\Relations\MorphToMany',
-            ])) {
-                $count = $item->{$relationshipName}()->count();
-                $result = $item->{$relationshipName}()
-                    ->take($maxItems)
-                    // ->pluck($itemTitle)
-                    ->get();
-            } else {
-                $result = $item->{$relationshipName}()->value($itemTitle);
-            }
 
-            if ($result instanceof Collection) {
-                $value = $result
-                    ->pluck($itemTitle)
-                    ->join(', ');
+                if ($result instanceof Collection) {
+                    $value = $result
+                        ->pluck($itemTitle)
+                        ->join(', ');
 
-                if ($count > $maxItems) {
-                    $value .= ' ...';
+                    if ($count > $maxItems) {
+                        $value .= ' ...';
+                    }
+                } elseif ($result instanceof Model) {
+                    // itemTitle is for example content->headline how to get nested json fields?
+                    $value = data_get($result, str_replace('->', '.', $itemTitle));
+                    // dd($value);
+                } else {
+                    $value = $result;
                 }
-            } elseif ($result instanceof Model) {
-                // itemTitle is for example content->headline how to get nested json fields?
-                $value = $result->{$itemTitle};
-                // dd($value);
-            } else {
-                $value = $result;
-            }
-            try {
-            } catch (\Throwable $th) {
-                ModularityLog::error('Error getting item column data', [
-                    'relationshipName' => $relationshipName,
-                    'result' => $result,
-                    'item' => $item,
-                    'th' => $th,
-                ]);
             }
         }
 
-        if (preg_match('/(.*)(_timestamp)/', $column['key'], $matches)) {
+        if (preg_match('/(.*)(_timestamp)/', $sourceKey, $matches)) {
             $value = $item->{$matches[1]};
         }
 
-        if (preg_match('/(.*)(_uuid)/', $column['key'], $matches)) {
+        if (preg_match('/(.*)(_uuid)/', $sourceKey, $matches)) {
             // $value = $item->{$matches[1]};
             // $value = mb_substr($item->{$matches[1]}, 0, 6);
             $value = $item->{$matches[1]};
@@ -215,11 +245,23 @@ trait TableItem
         if (isset($column['relationship'])) {
             $field = $column['relationship'] . ucfirst($column['field']);
 
-            $relation = $item->{$column['relationship']}();
+            $loadedRelation = $this->getLoadedRelationForFormatting($item, $column['relationship'], $preferEager);
+            $isLoaded = $this->isRelationLoadedForFormatting($item, $column['relationship'], $preferEager);
 
-            $value = collect($relation->get())
-                ->pluck($column['field'])
-                ->join(', ');
+            if ($loadedRelation instanceof Collection) {
+                $value = $loadedRelation
+                    ->pluck($column['field'])
+                    ->join(', ');
+            } elseif ($loadedRelation instanceof Model) {
+                $value = data_get($loadedRelation, str_replace('->', '.', $column['field']));
+            } elseif ($isLoaded) {
+                $value = null;
+            } else {
+                $relation = $item->{$column['relationship']}();
+                $value = collect($relation->get())
+                    ->pluck($column['field'])
+                    ->join(', ');
+            }
 
         } elseif (isset($column['present']) && $column['present']) {
             $value = $item->presentAdmin()->{$column['field']};
@@ -239,7 +281,7 @@ trait TableItem
         }
 
         return [
-            "$field" => $value,
+            "$titleKey" => $value,
         ];
     }
 
@@ -343,30 +385,6 @@ trait TableItem
 
     /**
      * @param \Unusualify\Modularity\Models\Model $item
-     * @return array
-     */
-    protected function getCustomRowData($item)
-    {
-        $customRows = $this->getTableAttribute('customRow') ?? [];
-        $customRowFillable = [];
-
-        foreach ($customRows as $customRow) {
-            if ($customRow['itemAttributes'] && is_array($customRow['itemAttributes'])) {
-                $customRowFillable = array_unique(array_merge($customRowFillable, $customRow['itemAttributes']));
-            }
-        }
-
-        $customRowData = [];
-
-        foreach ($customRowFillable as $fillable) {
-            $customRowData[$fillable] = $item->{$fillable};
-        }
-
-        return $customRowData;
-    }
-
-    /**
-     * @param \Unusualify\Modularity\Models\Model $item
      * @param bool $translated
      * @param array $schema
      * @return array
@@ -377,7 +395,20 @@ trait TableItem
             return $this->getItemColumnData($item, $column);
         })->toArray();
 
-        // $name = $columnsData[$this->titleColumnKey] ?? $this->searchTitleKeyValue($columnsData);
+        foreach ($this->getIndexAppends() as $append) {
+            $itemTitle = $append;
+            $itemValue = $append;
+            preg_match('/(.*) as (.*)/', $append, $matches);
+            if($matches) {
+                $itemTitle = $matches[2];
+                $itemValue = $matches[1];
+            }
+
+            if(!isset($customRowData[$itemTitle])) {
+                $columnsData[$itemTitle] = data_get($item, $itemValue);
+            }
+        }
+
         $name = data_get($item, $this->titleColumnKey, '');
 
         if (empty($name)) {
@@ -394,34 +425,27 @@ trait TableItem
 
         unset($columnsData[$this->titleColumnKey]);
 
-        $itemIsTrashed = method_exists($item, 'trashed') && $item->trashed();
-        $itemCanDelete = $this->getIndexOption('delete') && ($item->canDelete ?? true);
-        $canEdit = $this->getIndexOption('edit');
-        $canDuplicate = $this->getIndexOption('duplicate');
-
         $itemId = $this->getItemIdentifier($item);
 
         $necessaryTableData = [
             'id' => $itemId,
             $this->titleColumnKey => $name,
             'deleted_at' => $item->deleted_at,
+            'created_at' => $item->created_at,
+            'updated_at' => $item->updated_at,
             // 'publish_start_date' => $item->publish_start_date,
             // 'publish_end_date' => $item->publish_end_date,
-            // 'edit' => $canEdit ? $this->getModuleRoute($itemId, 'edit') : null,
-            // 'duplicate' => $canDuplicate ? $this->getModuleRoute($itemId, 'duplicate') : null,
-            // 'delete' => $itemCanDelete ? $this->getModuleRoute($itemId, 'destroy') : null,
         ];
 
         return object_to_array(array_replace(
             array_merge(
-                (($this->tableAttributes['editOnModal'] ?? true) ? $this->repository->getShowFields($item, $schema) : []),
-                // ($this->tableAttributes['editOnModal'] ?? true) ? $item->toArray() : ['id' => $itemId],
-                $item->toArray(),
-                $necessaryTableData,
-                (($this->tableAttributes['editOnModal'] ?? true) ? $this->repository->getFormFields($item, $schema) : []),
-                // $this->repository->getFormFields($item, $schema),
-                $columnsData,
                 $this->getCustomRowData($item),
+                $necessaryTableData,
+                $columnsData,
+                // $item->toArray(),
+                // $item->relationsToArray(),
+                (($this->tableAttributes['editOnModal'] ?? true) ? $this->repository->getShowFields($item, $schema) : []),
+                (($this->tableAttributes['editOnModal'] ?? true) ? $this->repository->getFormFields($item, $schema) : []),
                 // + ($this->getIndexOption('editInModal') ? [
                 //     'editInModal' => $this->getModuleRoute($itemId, 'edit'),
                 //     'updateUrl' => $this->getModuleRoute($itemId, 'update'),

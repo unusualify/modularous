@@ -21,6 +21,10 @@ class State extends Model
         'color',
     ];
 
+    protected $with = [
+        'translations',
+    ];
+
     /**
      * The translated attributes that are assignable for hasTranslation Trait.
      *

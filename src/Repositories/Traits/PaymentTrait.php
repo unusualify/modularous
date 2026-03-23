@@ -224,9 +224,7 @@ trait PaymentTrait
 
     public function getFormFieldsPaymentTrait($object, $fields)
     {
-        if (method_exists($object, 'paymentPrice') && $object->paymentPrice()->exists() && $object->payment()->exists()) {
-            // $priceSavingKey = Price::$priceSavingKey;
-            // $query = $object->paymentPrice;
+        if (method_exists($object, 'paymentPrice') && $object->payment) {
             $fields['payment'] = $object->payment;
         }
 

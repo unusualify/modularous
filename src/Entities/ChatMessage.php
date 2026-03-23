@@ -32,6 +32,8 @@ class ChatMessage extends Model
         'notified_at',
     ];
 
+    protected $with = ['creator'];
+    
     /**
      * The accessors to append to the model's array form.
      *
@@ -84,7 +86,7 @@ class ChatMessage extends Model
     protected function attachments(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->whereRole('attachments')->get()->map(function ($filepond) {
+            get: fn ($value) => $this->fileponds->where('role', 'attachments')->map(function ($filepond) {
                 return $filepond->mediableFormat();
             }),
         );

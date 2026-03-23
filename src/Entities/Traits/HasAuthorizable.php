@@ -27,8 +27,10 @@ trait HasAuthorizable
         static::saving(function (Model $model) {
             if ($model->authorized_id) {
                 $authorizedType = $model->authorized_type
-                    ?? ($model->authorizationRecord()->exists()
-                        ? $model->authorizationRecord->authorized_type
+                    ?? ($model->hasAuthorizationRecord()
+                        ? (($model->relationLoaded('authorizationRecord')
+                            ? $model->authorizationRecord->authorized_type
+                            : $model->authorizationRecord()->value('authorized_type')) ?? $model->getDefaultAuthorizedModel())
                         : $model->getDefaultAuthorizedModel());
 
                 if (class_exists($authorizedType)) {
@@ -104,6 +106,28 @@ trait HasAuthorizable
     }
 
     /**
+     * Pre-computed flag from withExists('authorizationRecord') in the fetch query.
+     * Avoids lazy load when checking if authorization record exists.
+     */
+    protected function authorizationRecordExists(): Attribute
+    {
+        return Attribute::get(function (?int $value) {
+            return $value !== null ? (bool) $value : $this->authorizationRecord()->exists();
+        });
+    }
+
+    /**
+     * Check if authorization record exists without triggering a lazy load when
+     * the model was fetched with withExists('authorizationRecord') (via global scope).
+     *
+     * @return bool
+     */
+    protected function hasAuthorizationRecord(): bool
+    {
+        return $this->authorization_record_exists ?? false;
+    }
+
+    /**
      * Get the authorized user associated with this model through the authorization record
      */
     public function authorizedUser(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
@@ -121,9 +145,7 @@ trait HasAuthorizable
     protected function isAuthorized(): Attribute
     {
         return new Attribute(
-            get: function () {
-                return $this->authorizedUser()->exists();
-            }
+            get: fn ($value) => $value ?? $this->authorization_record_exists ?? false,
         );
     }
 
@@ -136,9 +158,11 @@ trait HasAuthorizable
      */
     final public function getAuthorizedModel()
     {
-        return $this->authorizationRecord()->exists()
-            ? ($this->authorizationRecord ? $this->authorizationRecord->authorized_type : $this->getDefaultAuthorizedModel())
-            : $this->getDefaultAuthorizedModel();
+        if (! $this->hasAuthorizationRecord()) {
+            return $this->getDefaultAuthorizedModel();
+        }
+
+        return $this->authorizationRecord?->authorized_type ?? $this->getDefaultAuthorizedModel();
     }
 
     /**
@@ -176,10 +200,11 @@ trait HasAuthorizable
             // If no specific roles defined, get all roles from the user
             if (! (is_null($rolesToCheck) || empty($rolesToCheck))) {
                 // Check for specific roles
-                $roleModel = config('permission.models.role');
-                $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
+                // $roleModel = config('permission.models.role');
+                // $existingRoles = $roleModel::whereIn('name', $rolesToCheck)->get();
 
-                if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                // if (! $user->hasRole($existingRoles->map(fn ($role) => $role->name)->toArray())) {
+                if (! $user->roles->contains(fn ($role) => in_array($role->name, $rolesToCheck))) {
                     return $query;
                 }
             }

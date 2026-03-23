@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Modules\SystemNotification\Events\StateableUpdated;
@@ -82,10 +83,15 @@ trait HasStateable
         $defaultStateCodes = array_column($defaultStates, 'code');
         $stateModel = static::$stateModel;
 
-        $states = static::$cachedStates[static::class] ?? $stateModel::whereIn('code', $defaultStateCodes)->get();
+        $statesCacheKey = static::class . '_states';
+        $states = Cache::get($statesCacheKey);
+        if($states && $states->count() === count($defaultStateCodes)) {
+            return $states;
+        }
 
-        if (! isset(static::$cachedStates[static::class])) {
-            static::$cachedStates[static::class] = $states;
+        $states = $stateModel::whereIn('code', $defaultStateCodes)->get();
+        if($states->count() === count($defaultStateCodes)) {
+            Cache::put($statesCacheKey, $states, now()->addHours(1));
         }
 
         return $states;

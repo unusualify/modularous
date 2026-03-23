@@ -59,7 +59,7 @@ class AuthorizeHydrate extends InputHydrate
         if ($authorizedModel) {
             $q = $authorizedModel::query();
 
-            if (isset($input['scopeRole'])) {
+            if (! $this->skipQueries && isset($input['scopeRole'])) {
                 if (in_array('Spatie\Permission\Traits\HasRoles', class_uses_recursive($authorizedModel))) {
                     $roleModel = config('permission.models.role');
                     $existingRoles = $roleModel::whereIn('name', $input['scopeRole'])->get();

@@ -48,7 +48,7 @@ class AssignmentHydrate extends InputHydrate
         $q = $assigneeType::query();
 
         if (isset($input['scopeRole'])) {
-            if (in_array('Spatie\Permission\Traits\HasRoles', class_uses_recursive($assigneeType))) {
+            if (! $this->skipQueries && in_array('Spatie\Permission\Traits\HasRoles', class_uses_recursive($assigneeType))) {
                 $roleModel = config('permission.models.role');
                 $existingRoles = $roleModel::whereIn('name', $input['scopeRole'])->get();
                 $q->role($existingRoles->map(fn ($role) => $role->name)->toArray());

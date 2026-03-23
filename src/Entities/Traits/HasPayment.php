@@ -17,7 +17,6 @@ trait HasPayment
 
     public static function bootHasPayment(): void
     {
-
         self::retrieved(static function (Model $model) {
             if ($model->paymentPrice) {
                 // $currency = new Currency($model->paymentPrice->currency->iso_4217);
@@ -104,21 +103,21 @@ trait HasPayment
             ->where('role', 'payment')
             ->latest('created_at');
 
-        $priceTable = (new Price)->getTable();
-        $morphClass = addslashes($this->getMorphClass());
+        // $priceTable = (new Price)->getTable();
+        // $morphClass = addslashes($this->getMorphClass());
 
-        return $this->morphOne(Price::class, 'priceable')
-            ->where('role', 'payment')
-            ->whereRaw("created_at = (
-                SELECT MAX(p2.created_at)
-                FROM {$priceTable} p2
-                WHERE p2.priceable_id = {$priceTable}.priceable_id
-                AND p2.priceable_type = {$priceTable}.priceable_type
-                AND p2.role = ?
-            )", ['payment']);
+        // return $this->morphOne(Price::class, 'priceable')
+        //     ->where('role', 'payment')
+        //     ->whereRaw("created_at = (
+        //         SELECT MAX(p2.created_at)
+        //         FROM {$priceTable} p2
+        //         WHERE p2.priceable_id = {$priceTable}.priceable_id
+        //         AND p2.priceable_type = {$priceTable}.priceable_type
+        //         AND p2.role = ?
+        //     )", ['payment']);
 
-        return $this->morphOne(Price::class, 'priceable')
-            ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
+        // return $this->morphOne(Price::class, 'priceable')
+        //     ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
 
         // return $this->morphOne(Price::class, 'priceable')
         //     ->where('role', 'payment')
@@ -131,11 +130,11 @@ trait HasPayment
             ->where('role', 'payment')
             ->oldest('created_at');
 
-        $priceTable = (new Price)->getTable();
-        $morphClass = addslashes($this->getMorphClass());
+        // $priceTable = (new Price)->getTable();
+        // $morphClass = addslashes($this->getMorphClass());
 
-        return $this->morphOne(Price::class, 'priceable')
-            ->whereRaw("{$priceTable}.created_at = (select min(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
+        // return $this->morphOne(Price::class, 'priceable')
+        //     ->whereRaw("{$priceTable}.created_at = (select min(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
 
     }
 
@@ -146,14 +145,14 @@ trait HasPayment
             ->whereDoesntHave('payments', fn ($q) => $q->whereIn('status', [PaymentStatus::COMPLETED, PaymentStatus::PROVISION]))
             ->latest('created_at');
 
-        $priceTable = (new Price)->getTable();
-        $morphClass = addslashes($this->getMorphClass());
+        // $priceTable = (new Price)->getTable();
+        // $morphClass = addslashes($this->getMorphClass());
 
-        return $this->morphOne(Price::class, 'priceable')
-            // ->hasPayment(false)
-            ->hasPayment(false)
-            ->orWhereHas('payments', fn ($q) => $q->where('status', '!=', PaymentStatus::COMPLETED))
-            ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
+        // return $this->morphOne(Price::class, 'priceable')
+        //     // ->hasPayment(false)
+        //     ->hasPayment(false)
+        //     ->orWhereHas('payments', fn ($q) => $q->where('status', '!=', PaymentStatus::COMPLETED))
+        //     ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
     }
 
     public function paidPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -168,6 +167,13 @@ trait HasPayment
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment')
             ->hasPayment(true, PaymentStatus::PROVISION);
+    }
+
+    public function refundedPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Price::class, 'priceable')
+            ->where('role', 'payment')
+            ->hasPayment(true, PaymentStatus::REFUNDED);
     }
 
     public function payment(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
@@ -207,14 +213,14 @@ trait HasPayment
     protected function totalCostExcludingVat(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->prices->sum('raw_amount')
+            get: fn ($value) => $this->paymentPrices->sum('raw_amount')
         );
     }
 
     protected function totalCostIncludingVat(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->prices->sum('total_amount')
+            get: fn ($value) => $this->paymentPrices->sum('total_amount')
         );
     }
 
@@ -222,7 +228,7 @@ trait HasPayment
     {
         return Attribute::make(
             get: fn ($value) => $this->totalCostExcludingVat
-                ? PriceService::formatAmount($this->totalCostExcludingVat, new Currency($this->initialPayablePrice->currency_iso_4217))
+                ? PriceService::formatAmount($this->totalCostExcludingVat, new Currency($this->paymentPrice->currency_iso_4217))
                 : null
         );
     }
@@ -231,21 +237,24 @@ trait HasPayment
     {
         return Attribute::make(
             get: fn ($value) => $this->totalCostIncludingVat
-                ? PriceService::formatAmount($this->totalCostIncludingVat, new Currency($this->initialPayablePrice->currency_iso_4217))
+                ? PriceService::formatAmount($this->totalCostIncludingVat, new Currency($this->paymentPrice->currency_iso_4217))
                 : null
         );
     }
 
     protected function initialPriceExcludingVat(): Attribute
     {
-        $price = 0;
-
-        if ($this->initialPayablePrice) {
-            $price = $this->initialPayablePrice->raw_amount;
-        }
 
         return Attribute::make(
-            get: fn ($value) => $price
+            get: function ($value) {
+                $price = 0;
+
+                if ($this->initialPayablePrice) {
+                    $price = $this->initialPayablePrice->raw_amount;
+                }
+
+                return $price;
+            }
         );
     }
 
@@ -291,21 +300,23 @@ trait HasPayment
     protected function isPaid(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->paidPrices()->exists(),
+            get: function ($value) {
+                return $value ?? $this->paid_prices_exists ?? $this->paidPrices()->exists();
+            }
         );
     }
 
     protected function isUnpaid(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->payablePrice()->exists(),
+            get: fn ($value) => $value ?? $this->payable_price_exists ?? $this->payablePrice()->exists(),
         );
     }
 
     protected function isProvided(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->providedPrices()->exists(),
+            get: fn ($value) => $value ?? $this->provided_prices_exists ?? $this->providedPrices()->exists(),
         );
     }
 
@@ -319,20 +330,43 @@ trait HasPayment
     protected function isRefunded(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->payment()->where('status', PaymentStatus::REFUNDED)->exists(),
+            get: fn ($value) => $value ?? $this->refunded_prices_exists ?? $this->refundedPrices()->exists(),
         );
     }
 
     protected function paymentStatusFormatted(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => match (true) {
-                $this->is_refunded => "<v-chip color='error'>" . __(PaymentStatus::REFUNDED->label()) . '</v-chip>',
-                $this->is_provided => "<v-chip color='info'>" . __(PaymentStatus::PROVISION->label()) . '</v-chip>',
-                $this->is_paid => "<v-chip color='success'>" . __('Paid') . '</v-chip>',
-                $this->is_partially_paid => "<v-chip color='warning'>" . __('Partially Paid') . '</v-chip>',
-                $this->is_unpaid => "<v-chip color='error'>" . __('Unpaid') . '</v-chip>',
-                default => '<v-chip>' . __('Not Ready') . '</v-chip>',
+            get: function ($value) {
+                $color = 'grey';
+                $label = '';
+                switch (true) {
+                    case $this->is_refunded:
+                        $color = 'error';
+                        $label = __(PaymentStatus::REFUNDED->label());
+                        break;
+                    case $this->is_provided:
+                        $color = 'info';
+                        $label = __(PaymentStatus::PROVISION->label());
+                        break;
+                    case $this->is_paid:
+                        $color = 'success';
+                        $label = __('Paid');
+                        break;
+                    case $this->is_partially_paid:
+                        $color = 'warning';
+                        $label = __('Partially Paid');
+                        break;
+                    case $this->is_unpaid:
+                        $color = 'error';
+                        $label = __('Unpaid');
+                        break;
+                    default:
+                        $label = __('Not Ready');
+                        break;
+                }
+
+                return '<v-chip color="' . $color . '">' . $label . '</v-chip>';
             },
         );
     }

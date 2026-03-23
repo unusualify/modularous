@@ -28,6 +28,14 @@ class Chat extends Model
         return $this->hasMany(ChatMessage::class);
     }
 
+    /**
+     * Latest message for this chat (one row per chat_id), using Laravel's one-of-many join.
+     */
+    public function latestMessage(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ChatMessage::class)->latestOfMany('created_at');
+    }
+
     public function fileponds(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
         return $this->hasManyThrough(Filepond::class, ChatMessage::class, 'chat_id', 'filepondable_id', 'id');
@@ -36,7 +44,7 @@ class Chat extends Model
     public function attachments(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->whereRole('attachments')->get()->map(function ($filepond) {
+            get: fn ($value) => $this->fileponds->where('role', 'attachments')->map(function ($filepond) {
                 return $filepond->mediableFormat();
             }),
         );

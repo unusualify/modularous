@@ -82,6 +82,7 @@ trait TableFilters
                 'params' => [$filter->scope ?? $filter->slug],
                 ...(isset($filter->allowedRoles) ? ['allowedRoles' => $filter->allowedRoles] : []),
                 ...(isset($filter->responsive) ? ['responsive' => $filter->responsive] : []),
+                ...(isset($filter->skip_count) ? ['skipCount' => true] : []),
             ];
         }
 
@@ -132,13 +133,17 @@ trait TableFilters
             }
 
             if (! isset($filter['number'])) {
-                $count = $this->handleFilterCount($filter);
+                if ($filter['skipCount'] ?? false) {
+                    $filter['number'] = null;
+                } else {
+                    $count = $this->handleFilterCount($filter);
 
-                if ($count < 1 && ! ($filter['force'] ?? false)) {
-                    return $carry;
+                    if ($count < 1 && ! ($filter['force'] ?? false)) {
+                        return $carry;
+                    }
+
+                    $filter['number'] = $count;
                 }
-
-                $filter['number'] = $count;
             }
 
             if (isset($filter['responsive'])) {
@@ -150,7 +155,7 @@ trait TableFilters
                 );
             }
 
-            $carry[] = Arr::except($filter, ['methods', 'params', 'force']);
+            $carry[] = Arr::except($filter, ['methods', 'params', 'force', 'skipCount']);
 
             return $carry;
         }, []);

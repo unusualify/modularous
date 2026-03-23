@@ -80,7 +80,8 @@ trait FilesTrait
      */
     public function getFormFieldsFilesTrait($object, $fields, $schema)
     {
-        if ($object->has('files')) {
+        $fileInputs = $this->getColumns(__TRAIT__);
+        if (!empty($fileInputs) && $object->has('files')) {
             $schema = $schema ?? $this->inputs();
             // foreach ($object->files->groupBy('pivot.role') as $role => $filesByRole) {
             //     foreach ($filesByRole->groupBy('pivot.locale') as $locale => $filesByLocale) {
@@ -97,7 +98,7 @@ trait FilesTrait
             $fallback_locale = config('app.fallback_locale');
             $filesByRole = $object->files->groupBy('pivot.role');
 
-            foreach ($this->getColumns(__TRAIT__) as $role) {
+            foreach ($fileInputs as $role) {
                 if (isset($filesByRole[$role])) {
                     $input = $schema[$role];
                     if ($input['translated'] ?? false) {

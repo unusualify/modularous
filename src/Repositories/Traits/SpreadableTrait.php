@@ -80,7 +80,7 @@ trait SpreadableTrait
     {
         $schema = empty($schema) ? $this->model->getRouteInputs() : $schema;
 
-        if ($object->spreadable()->exists()) {
+        if ($object->spreadable) {
             $columns = $this->getColumns(__TRAIT__);
 
             foreach ($columns as $column) {

@@ -84,7 +84,8 @@ trait ImagesTrait
     public function getFormFieldsImagesTrait($object, $fields, $schema)
     {
         // $t = [];
-        if ($object->has('medias')) {
+        $imageInputs = $this->getColumns(__TRAIT__);
+        if (!empty($imageInputs) && $object->has('medias')) {
             $schema = $schema ?? $this->inputs();
             $mediasByRole = $object->medias->groupBy('pivot.role');
             $default_locale = config('app.locale');
