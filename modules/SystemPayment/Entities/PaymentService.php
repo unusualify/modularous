@@ -27,11 +27,11 @@ class PaymentService extends Model
     ];
 
     protected $appends = [
-        'has_built_in_form',
-        'button_logo_url',
-        'transferrable',
-        'bank_details',
-        'has_transaction_fee',
+        // 'has_built_in_form',
+        // 'button_logo_url',
+        // 'transferrable',
+        // 'bank_details',
+        // 'has_transaction_fee',
     ];
 
     protected $casts = [
@@ -39,7 +39,7 @@ class PaymentService extends Model
     ];
 
     protected $with = [
-        'paymentCurrencies',
+        // 'paymentCurrencies',
     ];
 
     protected function hasTransactionFee(): Attribute
@@ -80,51 +80,53 @@ class PaymentService extends Model
 
     protected function serviceClass(): Attribute
     {
-        $serviceClass = null;
-        $paymentGateway = null;
-
-        try {
-            $paymentGateway = $this->key;
-        } catch (\Throwable $th) {
-            // throw $th;
-        }
-
-        if ($paymentGateway) {
-
-            try {
-                $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
-            } catch (\Exception $e) {
-
-                try {
-                    // code...
-                    // Check transferrable status directly from spreadable relationship instead of using the accessor
-                    $isTransferrable = $this->spreadable && isset($this->spreadable->content['type']) && $this->spreadable->content['type'] == 2;
-
-                    if ($e->getMessage() == 'Service class not found for slug: ' . $paymentGateway && $isTransferrable) {
-                        $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService
-                        {
-                            public function __construct()
-                            {
-                                $this->mode = 'test';
-                                $this->config = [];
-                            }
-
-                            public function hydrateParams(array|object $params): array
-                            {
-                                return $params;
-                            }
-                        };
-                    } else {
-                        throw $e;
-                    }
-                } catch (\Throwable $th) {
-                    dd($th, $this, $serviceClass, $paymentGateway);
-                }
-            }
-        }
 
         return Attribute::make(
-            get: fn ($value) => $serviceClass,
+            get: function () {
+                $serviceClass = null;
+                $paymentGateway = null;
+
+                try {
+                    $paymentGateway = $this->key;
+                } catch (\Throwable $th) {
+                    // throw $th;
+                }
+
+                if ($paymentGateway) {
+
+                    try {
+                        $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
+                    } catch (\Exception $e) {
+
+                        try {
+                            // code...
+                            // Check transferrable status directly from spreadable relationship instead of using the accessor
+                            $isTransferrable = $this->spreadable && isset($this->spreadable->content['type']) && $this->spreadable->content['type'] == 2;
+
+                            if ($e->getMessage() == 'Service class not found for slug: ' . $paymentGateway && $isTransferrable) {
+                                $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService
+                                {
+                                    public function __construct()
+                                    {
+                                        $this->mode = 'test';
+                                        $this->config = [];
+                                    }
+
+                                    public function hydrateParams(array|object $params): array
+                                    {
+                                        return $params;
+                                    }
+                                };
+                            } else {
+                                throw $e;
+                            }
+                        } catch (\Throwable $th) {
+                            dd($paymentGateway, $serviceClass, $this, $th);
+                        }
+                    }
+                }
+                return $serviceClass;
+            },
         );
     }
 

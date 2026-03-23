@@ -21,10 +21,14 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
         'vat_rate_id',
     ];
 
+    protected $with = [
+        // 'repeaters'
+    ];
+
     protected $appends = [
-        'has_credit_card_payment_service',
-        'corporate_vat_rate_name_with_rate',
-        'personal_vat_rate_name_with_rate',
+        // 'has_credit_card_payment_service',
+        // 'corporate_vat_rate_name_with_rate',
+        // 'personal_vat_rate_name_with_rate',
     ];
 
     /**
@@ -111,35 +115,6 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
         );
     }
 
-    public function scopeDefaultCorporatePaymentCurrency($query): Builder
-    {
-        return $query->whereHas('repeaters', function ($query) {
-            $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->corporate');
-        });
-    }
-
-    public function scopeDefaultPersonalPaymentCurrency($query): Builder
-    {
-        return $query->whereHas('repeaters', function ($query) {
-            $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->personal');
-        });
-    }
-
-    public function scopeHasStandartPaymentService($query)
-    {
-        return $query->whereHas('paymentServices');
-    }
-
-    public function scopeHasCreditCardPaymentService($query)
-    {
-        return $query->whereHas('paymentService');
-    }
-
-    public function scopeHasAnyPaymentService($query)
-    {
-        return $query->whereHas('paymentServices')->orWhereHas('paymentService');
-    }
-
     /**
      * Check if the currency has a corporate VAT rate.
      *
@@ -208,7 +183,7 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
      */
     public function setCompanyVatRate()
     {
-        if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany)) {
+        if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->is_client && ($user->validCompany)) {
             if ($user->company->isCorporateCompany) {
                 $this->setCorporateVatRate();
             } elseif ($user->company->isPersonalCompany) {
@@ -219,5 +194,34 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
         }
 
         return $this;
+    }
+
+    public function scopeDefaultCorporatePaymentCurrency($query): Builder
+    {
+        return $query->whereHas('repeaters', function ($query) {
+            $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->corporate');
+        });
+    }
+
+    public function scopeDefaultPersonalPaymentCurrency($query): Builder
+    {
+        return $query->whereHas('repeaters', function ($query) {
+            $query->whereRole('default_vat_rates')->whereJsonContainsKey('content->personal');
+        });
+    }
+
+    public function scopeHasStandartPaymentService($query)
+    {
+        return $query->whereHas('paymentServices');
+    }
+
+    public function scopeHasCreditCardPaymentService($query)
+    {
+        return $query->whereHas('paymentService');
+    }
+
+    public function scopeHasAnyPaymentService($query)
+    {
+        return $query->whereHas('paymentServices')->orWhereHas('paymentService');
     }
 }

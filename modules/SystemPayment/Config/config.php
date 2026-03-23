@@ -239,7 +239,7 @@ return [
                 'subtitle' => __('You can check all the payments that you receive and the invoices related to the payments here according to company list.'),
 
                 'createOnModal' => false,
-                'editOnModal' => true,
+                'editOnModal' => false,
                 'isRowEditing' => false,
                 'rowActionsType' => 'inline',
             ],
@@ -326,6 +326,14 @@ return [
                     ],
                 ],
             ],
+            'form_with' => [
+                'price',
+                'paymentable',
+            ],
+            'form_appends' => [
+                'amount_formatted',
+                'paymentable',
+            ],
             'headers' => [
                 [
                     'title' => 'Owner Id',
@@ -342,6 +350,8 @@ return [
                     'key' => 'price',
                     'itemTitle' => 'priceable_type',
                     'allowedRoles' => ['superadmin'],
+                    'groupable' => true,
+                    'groupOrder' => 'asc',
                     // 'itemTitle' => 'content->headline',
                 ],
                 [
@@ -352,11 +362,14 @@ return [
                 ],
                 [
                     'title' => 'Company',
-                    'key' => 'company',
+                    'key' => 'creator.company',
                     'itemTitle' => 'name',
                     'minWidth' => 150,
                     'searchable' => true,
                     'searchKey' => 'creator.company.name',
+
+                    'groupable' => true,
+                    'groupOrder' => 'asc',
                 ],
                 [
                     'title' => 'Service',
@@ -369,6 +382,7 @@ return [
                             'color' => 'primary',
                         ],
                     ],
+                    'groupable' => true,
                 ],
                 [
                     'title' => 'Total Price',
@@ -380,6 +394,8 @@ return [
                     'formatter' => [
                         'dynamic',
                     ],
+                    'groupable' => true,
+                    'groupOrder' => 'asc',
                 ],
                 [
                     'title' => 'User Email',
@@ -387,6 +403,8 @@ return [
                     'itemTitle' => 'email',
                     'searchable' => true,
                     'searchKey' => 'creator.email',
+                    'groupable' => true,
+                    'groupOrder' => 'asc',
                 ],
                 [
                     'title' => 'Created Time',

@@ -32,22 +32,42 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'response',
     ];
 
+    protected $with = [
+        'fileponds',
+        'creator.company',
+        'spreadable',
+        // 'paymentService',
+    ];
+
     protected $appends = [
-        'bank_receipts',
-        'invoice_file',
-        'amount_formatted',
-        'invoices',
+        // 'bank_receipts',
+        // 'invoice_file',
+        // 'amount_formatted',
+        // 'invoices',
 
         'status_label',
         'status_color',
         'status_icon',
         'status_vuetify_icon',
         'status_vuetify_chip',
-        'transaction_snapshot',
+        // 'transaction_snapshot',
     ];
 
     protected static function booted(): void
     {
+        static::addGlobalScope('price_currency_iso_4217', function (\Illuminate\Database\Eloquent\Builder $builder) {
+            $pricesTable = (new Price)->getTable();
+            $currenciesTable = (new Currency)->getTable();
+            $paymentTable = (new static)->getTable();
+
+            $builder->addSelect([
+                'price_currency_iso_4217' => Currency::query()
+                    ->select($currenciesTable . '.iso_4217')
+                    ->join($pricesTable, $pricesTable . '.currency_id', '=', $currenciesTable . '.id')
+                    ->whereColumn($pricesTable . '.id', $paymentTable . '.price_id')
+                    ->limit(1),
+            ]);
+        });
         static::addGlobalScope('paymentable_morph_keys', function (\Illuminate\Database\Eloquent\Builder $builder) {
             $paymentTable = (new static)->getTable();
             $pricesTable = (new Price)->getTable();
@@ -102,53 +122,44 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return $this->morphTo('paymentable');
     }
-    // /**
-    //  * Behaves like a real morphTo by providing the morph keys via subselects.
-    //  */
-    // public function paymentable(): \Illuminate\Database\Eloquent\Relations\MorphTo
-    // {
-    //     return new PaymentableRelation($this);
-    // }
 
     protected function serviceClass(): Attribute
     {
-        $serviceClass = null;
-        $paymentGateway = null;
-        try {
-            $paymentGateway = $this->paymentService->key;
-            $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
-        } catch (\Exception $e) {
-            if ($e->getMessage() == 'Service class not found for slug: ' . $paymentGateway && $this->paymentService->transferrable) {
-                $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService
-                {
-                    public function __construct()
-                    {
-                        $this->mode = 'test';
-                        $this->config = [];
-                    }
-
-                    public function hydrateParams(array|object $params): array
-                    {
-                        return $params;
-                    }
-                };
-            } else {
-                throw $e;
-            }
-        }
-
         return Attribute::make(
-            get: fn ($value) => $serviceClass,
+            get: function () {
+                $serviceClass = null;
+                $paymentGateway = null;
+                // dd(debug_backtrace());
+                try {
+                    // $paymentGateway = $this->paymentService->key;
+                    $paymentGateway = $this->payment_gateway;
+                    $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
+                } catch (\Exception $e) {
+                    if ($e->getMessage() == 'Service class not found for slug: ' . $paymentGateway && $this->paymentService->transferrable) {
+                        $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService {
+                            public function __construct() {
+                                $this->mode = 'test';
+                                $this->config = [];
+                            }
+
+                            public function hydrateParams(array|object $params): array {
+                                return $params;
+                            }
+                        };
+                    } else {
+                        throw $e;
+                    }
+                }
+
+                return $serviceClass;
+            }
         );
     }
 
     protected function amountFormatted(): Attribute
     {
-        $currency = Currency::find($this->currency_id);
-        $moneyCurrency = new \Money\Currency($currency->iso_4217);
-
         return Attribute::make(
-            get: fn ($value) => \Oobook\Priceable\Facades\PriceService::formatAmount($this->amount, $moneyCurrency),
+            get: fn ($value) => \Oobook\Priceable\Facades\PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217)),
         );
     }
 
@@ -171,23 +182,28 @@ class Payment extends \Unusualify\Payable\Models\Payment
     protected function bankReceipts(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->where('role', 'receipts')->get()->map(fn ($file) => $file->mediableFormat()),
+            get: function () {
+                return $this->fileponds->filter(fn ($file) => $file->role == 'receipts')->map(fn ($file) => $file->mediableFormat())->values();
+            }
         );
     }
 
     protected function invoiceFile(): Attribute
     {
-        $file = $this->fileponds()->where('role', 'invoice')->first();
-
         return Attribute::make(
-            get: fn ($value) => $file ? $file->mediableFormat() : null,
+            get: function () {
+                $file = $this->fileponds->first(fn ($file) => $file->role == 'invoice');
+                return $file ? $file->mediableFormat() : null;
+            }
         );
     }
 
     protected function invoices(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fileponds()->where('role', 'invoice')->get()->map(fn ($file) => $file->mediableFormat()),
+            get: function () {
+                return $this->fileponds->filter(fn ($file) => $file->role == 'invoice')->map(fn ($file) => $file->mediableFormat())->values();
+            }
         );
     }
 
