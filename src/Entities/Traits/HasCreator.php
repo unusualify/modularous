@@ -106,6 +106,17 @@ trait HasCreator
         $this->mergeFillable(static::$hasCreatorFillable ?? []);
     }
 
+    public static function addGlobalScopesHasCreator()
+    {
+        return [
+            'creator_record_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('creatorRecord');
+                },
+            ],
+        ];
+    }
+
     public function getCreatableClass()
     {
         // if $this is a table row, fill attributes and relations new class

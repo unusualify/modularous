@@ -109,6 +109,17 @@ trait HasSpreadable
         // $this->append($this->getSpreadableSavingKey());
     }
 
+    public static function addGlobalScopesHasSpreadable()
+    {
+        return [
+            'spreadable_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('spreadable');
+                },
+            ],
+        ];
+    }
+
     protected function getSpreadableClass(): \Illuminate\Database\Eloquent\Model
     {
         if (! property_exists(static::class, 'spreadableClass') || ! static::$spreadableClass || ! class_exists(static::$spreadableClass)) {

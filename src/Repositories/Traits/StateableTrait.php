@@ -85,7 +85,7 @@ trait StateableTrait
             $defaultStateCodes = array_column($defaultStates, 'code');
 
             if (in_array($slug, $defaultStateCodes)) {
-                $query = $model::query();
+                $query = method_exists($model, 'newCountQuery') ? $model->newCountQuery() : $model->newQuery();
                 $scopes = [];
 
                 $this->filter($query, $scopes);

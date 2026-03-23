@@ -86,7 +86,18 @@ trait HasAuthorizable
                 $model->authorizationRecord()->delete();
             });
         }
+    }
 
+    public static function addGlobalScopesHasAuthorizable()
+    {
+        return [
+            'authorization_record_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('authorizationRecord');
+                },
+                'count' => false,
+            ],
+        ];
     }
 
     /**

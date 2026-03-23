@@ -66,6 +66,38 @@ trait HasPayment
         ]);
     }
 
+    public static function addGlobalScopesHasPayment()
+    {
+        return [
+            'paid_prices_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('paidPrices');
+                },
+            ],
+            'payable_price_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('payablePrice');
+                },
+            ],
+            'provided_prices_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('providedPrices');
+                },
+            ],
+            'refunded_prices_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('refundedPrices');
+                },
+            ],
+        ];
+    }
+
+    public function paymentPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Price::class, 'priceable')
+            ->where('role', 'payment');
+    }
+
     public function paymentPrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')

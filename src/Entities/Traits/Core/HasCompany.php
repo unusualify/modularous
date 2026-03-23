@@ -56,9 +56,42 @@ trait HasCompany
         }
     }
 
+    public static function addGlobalScopesHasCompany()
+    {
+        return [
+            'company_exists' => [
+                'scope' => function ($query) {
+                    $query->withExists('company');
+                },
+            ],
+        ];
+    }
+
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Pre-computed flag from withExists('company') in the fetch query.
+     * Avoids lazy load when checking if company exists.
+     */
+    protected function companyExists(): Attribute
+    {
+        return Attribute::get(function (?int $value) {
+            return $value !== null ? (bool) $value : $this->company()->exists();
+        });
+    }
+
+    /**
+     * Check if company exists without triggering a lazy load when
+     * the model was fetched with withExists('company') (via global scope).
+     *
+     * @return bool
+     */
+    protected function hasCompany(): bool
+    {
+        return $this->company_exists;
     }
 
     public function scopeCompanyUser($query): Builder
@@ -69,7 +102,7 @@ trait HasCompany
     protected function companyType(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->company()->exists() ? $this->company->companyType : 'corporate',
+            get: fn () => $this->hasCompany() ? $this->company->companyType : 'corporate',
         );
     }
 
@@ -89,7 +122,7 @@ trait HasCompany
     protected function companyName(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->company()->exists() ? $this->company->name : null,
+            get: fn () => $this->company?->name ?? '',
         );
     }
 

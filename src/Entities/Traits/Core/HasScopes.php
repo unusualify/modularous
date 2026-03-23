@@ -6,9 +6,17 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PDO;
+use Unusualify\Modularity\Traits\Traitify;
 
 trait HasScopes
 {
+    use Traitify;
+
+    public static function bootHasScopes()
+    {
+        static::setFeatureGlobalScopes();
+    }
+
     public static function hasScope(string $scopeName): bool
     {
         $builder = static::query();
@@ -152,5 +160,37 @@ trait HasScopes
         }
 
         return $query;
+    }
+
+    public static function setFeatureGlobalScopes()
+    {
+        $class = get_called_class();
+
+        foreach (static::staticTraitsMethods('addGlobalScopes') as $method) {
+            $scopes = $class::$method();
+            foreach ($scopes as $scopeName => $scope) {
+                $class::addGlobalScope($scopeName, $scope['scope']);
+            }
+        }
+    }
+
+    public static function getUncountableGlobalScopes() : array
+    {
+        $uncountableScopes = [];
+        foreach (static::staticTraitsMethods('addGlobalScopes') as $method) {
+            $scopes = static::$method();
+            foreach ($scopes as $scopeName => $scope) {
+                if ( ($scope['count'] ?? false) === false) {
+                    $uncountableScopes[] = $scopeName;
+                }
+            }
+        }
+
+        return $uncountableScopes;
+    }
+
+    public function newCountQuery()
+    {
+        return $this->withoutGlobalScopes(static::getUncountableGlobalScopes())->newQuery();
     }
 }

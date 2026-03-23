@@ -12,7 +12,7 @@ trait CountBuilders
     public function getCountForAll()
     {
         return $this->cacheableCount('all', function () {
-            $query = $this->model->newQuery();
+            $query = method_exists($this->model, 'newCountQuery') ? $this->model->newCountQuery() : $this->model->newQuery();
 
             return $this->filter($query, $this->countScope)->count();
         });
@@ -24,7 +24,7 @@ trait CountBuilders
     public function getCountForPublished()
     {
         return $this->cacheableCount('published', function () {
-            $query = $this->model->newQuery();
+            $query = method_exists($this->model, 'newCountQuery') ? $this->model->newCountQuery() : $this->model->newQuery();
 
             return $this->filter($query, $this->countScope)->published()->count();
         });
@@ -36,7 +36,7 @@ trait CountBuilders
     public function getCountForDraft()
     {
         return $this->cacheableCount('draft', function () {
-            $query = $this->model->newQuery();
+            $query = method_exists($this->model, 'newCountQuery') ? $this->model->newCountQuery() : $this->model->newQuery();
 
             return $this->filter($query, $this->countScope)->draft()->count();
         });
@@ -48,7 +48,7 @@ trait CountBuilders
     public function getCountForTrash()
     {
         return $this->cacheableCount('trash', function () {
-            $query = $this->model->newQuery();
+            $query = method_exists($this->model, 'newCountQuery') ? $this->model->newCountQuery() : $this->model->newQuery();
 
             return $this->filter($query, $this->countScope)->onlyTrashed()->count();
         });
@@ -60,7 +60,7 @@ trait CountBuilders
     public function getCountFor($method, $args = [])
     {
         return $this->cacheableCount($method, function () use ($method, $args) {
-            $query = $this->model->newQuery();
+            $query = method_exists($this->model, 'newCountQuery') ? $this->model->newCountQuery() : $this->model->newQuery();
 
             if (method_exists($this->getModel(), 'scope' . ucfirst($method))) {
                 return $this->filter($query, $this->countScope)->$method(...$args)->count();
