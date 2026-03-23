@@ -24,19 +24,6 @@ trait HasAuthorizable
      */
     public static function bootHasAuthorizable(): void
     {
-        static::retrieved(function (Model $model) {
-            if ($model->authorizationRecord()->exists()) {
-                $model->authorized_id = $model->authorizationRecord->authorized_id;
-                $model->authorized_type = $model->authorizationRecord->authorized_type;
-
-                $authorizedModel = new $model->authorized_type;
-
-                if (! in_array('Unusualify\Modularity\Entities\Traits\HasUuid', class_uses_recursive($authorizedModel))) {
-                    $model->authorized_id = intval($model->authorized_id);
-                }
-            }
-        });
-
         static::saving(function (Model $model) {
             if ($model->authorized_id) {
                 $authorizedType = $model->authorized_type
