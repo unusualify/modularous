@@ -113,6 +113,18 @@ class Company extends Model
         );
     }
 
+    protected function isValidFormatted(): Attribute
+    {
+        return new Attribute(
+            get: function ($value) {
+                $label = $this->is_valid ? 'Yes' : 'No';
+                $color = $this->is_valid ? 'success' : 'error';
+                $icon = $this->is_valid ? 'mdi-check' : 'mdi-close';
+                return "<v-chip color='{$color}' prepend-icon='{$icon}' variant='text' >{$label}</v-chip>";
+            },
+        );
+    }
+
     public function getTable()
     {
         return modularityConfig('tables.companies', parent::getTable());

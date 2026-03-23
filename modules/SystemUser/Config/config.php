@@ -37,6 +37,10 @@ return [
                     ],
                 ],
             ],
+            'index_with' => [
+                'company',
+                'roles',
+            ],
             'headers' => [
                 [
                     'title' => 'Name',
@@ -1387,6 +1391,9 @@ return [
                 'isRowEditing' => true,
                 'rowActionsType' => 'inline',
             ],
+            'index_with' => [
+                'country',
+            ],
             'headers' => [
                 [
                     'title' => 'Name',
@@ -1394,13 +1401,35 @@ return [
                     'align' => 'start',
                     'sortable' => true,
                     'searchable' => true,
+                    'formatterName' => 'edit',
+                    'formatter' => [
+                        'shorten',
+                        20,
+                    ],
+                    'width' => 150,
                 ],
                 [
                     'title' => 'Country',
                     'key' => 'country_name',
                     'align' => 'start',
+                    'groupable' => true,
                     // 'sortable' => true,
                     // 'searchable' => true,
+                ],
+                [
+                    'title' => 'Type',
+                    'key' => 'company_type',
+                    'align' => 'start',
+                    'groupable' => true,
+                ],
+                [
+                    'title' => 'Valid',
+                    'key' => 'is_valid_formatted',
+                    'align' => 'start',
+                    'groupable' => true,
+                    'formatter' => [
+                        'dynamic',
+                    ]
                 ],
                 [
                     'title' => 'Users',
