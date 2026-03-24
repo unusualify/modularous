@@ -111,7 +111,7 @@
           if (props.multiple) {
             initialValue.value = initialData.map(responseItem => {
               const modelItem = initialValue.value.find(modelItem =>
-                modelItem[props.objectIdDefiner ?? props.itemValue] === responseItem[props.itemValue]
+                modelItem[props.objectIdDefiner ?? props.itemValue] == responseItem[props.itemValue]
               )
               return {
                 ...modelItem,
