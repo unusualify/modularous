@@ -120,12 +120,15 @@ trait HandlesOAuth
             ],
         ];
 
+        $provider = $request->session()->get('oauth:provider');
+
         $viewData = $this->buildAuthViewData('oauth_password', [
+            'pageTitle' => __('authentication.confirm-provider', ['provider' => $provider]),
             'formAttributes' => array_merge(
                 [
                     'title' => $this->authFormTitle(
-                        __('authentication.confirm-provider', ['provider' => $request->session()->get('oauth:provider')]),
-                        ['transform' => '']
+                        __('authentication.confirm-provider', ['provider' => $provider]),
+                        ['transform' => 'uppercase']
                     ),
                     'modelValue' => ['email' => $user->email, 'password' => ''],
                 ],

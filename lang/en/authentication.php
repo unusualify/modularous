@@ -5,7 +5,7 @@ return [
 
     'choose-password' => 'Choose password',
     'company' => 'Company Name',
-    'confirm-provider' => 'Confirm your {provider} account',
+    'confirm-provider' => 'Confirm Your {Provider} Account',
     'complete-registration-title' => 'COMPLETE REGISTRATION',
     'complete-registration' => 'Complete Registration',
     'conditions-policy' => 'Conditions Policy',
@@ -15,7 +15,6 @@ return [
     'complete-registration' => 'Complete Registration',
     'complete-registration-title' => 'COMPLETE REGISTRATION',
     'conditions-policy' => 'Conditions Policy',
-    'confirm-provider' => 'Confirm your {provider} account',
     'create-an-account' => 'CREATE AN ACCOUNT',
 
     'email' => 'E-mail address',
