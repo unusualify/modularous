@@ -2,6 +2,185 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.58.0 - 2026-03-24
+
+### :rocket: Features
+
+- Add comprehensive test suite for modularity components, traits, services, and support classes, alongside minor fixes and configuration updates. by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/05376bf48a314a671aff951d95d2f9e29a271f15
+- add 'test' option for enabling test mode in module generation by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/2f614360c7a53fb04e6f62bbd431b21f5c682dfa
+- add setName and getName methods for improved name handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/047f8979dc97dd923eb5cbe35cac8aa6deec0dcc
+- enhance path validation and improve glob to regex conversion for safer file handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9a98b3863ffd26f9039c168188b310384514bf5c
+- add deferred configuration for auth component and pages by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/37682eea30a3bdc15dd434f63d784dff21c77795
+- add 2FA login routes for enhanced security by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/aacf4bfa7244f3200f385c7f37ce6dc80e6d0e6b
+- add publishing for modularity authentication views by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b0ee58ad0719a88ccbc36274a26e11999c0050bd
+- remove unused SVG icons and update existing ones by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5c51fd028fbf52d2c1c22694315934d2eb5ba5bd
+- add default font size variable and apply it to html element by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/acf321b998210bed8dd57667b774d26b47ce8325
+- implement user interface preferences management by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/64540b64be87a0d18a87d7f0fa45024cb5751d42
+- integrate Ziggy support into Vue application by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9ba8ab305487153b8a2136128bfb448a9148e019
+- implement command discovery functionality by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cb5c56d3bc3afb92795dacd0f4bb94d385644556
+- add command to list route enable/disable status per module by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/213572b70ac70dc6bf074dc69ed1a915cb27f2c8
+- add custom exception class for modularity errors by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/456cfa4b1ee1ab21c3b58824fc4cc2901d087d63
+- implement currency provider interface and related services by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9a3e90538b4784feb6607e638579b96e21f7a25d
+- add optional currency provider configuration by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b5b477162f71e1345936a28f1c7e89488155ef43
+- enforce Composition API style for new components by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b61e18eb586adcddbd8fafbec044f46fc7629e7f
+- enhance test coverage configuration by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3d537fe8ad44ee21f3c548c14dd6a0f3b6c6e8bc
+- introduce InputRenderer and registry for dynamic component mapping by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e3a1d1ba6850115dc076e07af126d5ab3dc344ce
+- enhance item action handling with dynamic target support by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/784fb922c5b0724af6e40fe9d2a7de73e0a91f4f
+- implement client-side grouping functionality and enhance table formatting by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cc233cc9e7c80c4ab93ab66560220a8a8cead03c
+- add static method for retrieving trait methods by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b98ae306e0a528b486c2aa72290fd105487bb11e
+- enhance user role management and company existence checks by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e4c0d90449d3e6992cb61d2703910d52b71002fb
+- enhance global scopes and existence checks for various entities by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/fbbb672b87158a55bcb617eb1dddf6999c0342ae
+- integrate new connector handling in Input and Repeater hydration by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/7ae916e11645b104b48cd369e291793d227edbbf
+- integrate ManageAppends and ManageWiths traits for enhanced data handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/8d08766f929ee6526a933f7461d198d58201bcb8
+- enhance table handling with new eager loading and custom row features by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/54af77dfd0de76991f8de895596bfdd52d6f4f5c
+- add global scope for paid status and improve payment status checks by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e80507cc0459d8b25e036015f00beb1265d5f27b
+- add configuration option for item eager formatting by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/89ae1fd9b3a3bb75cadb020d953d057bcda1fcbb
+- add ui_preferences column to users table by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c6fdb7a40e7c7b57d0965d5041f106c44c67ec50
+- enhance company configuration and validation display by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/4af0cee06731d9a4e92318bfdbb3becf5b1c957c
+- add fixed last column feature for improved table usability by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/1eaeee6558333b7a06d75ee8faddd8e7be9631e8
+- enhance form fields retrieval with relationship appends by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/86865cc4e25117063a948a48607c03d99a623232
+
+### :wrench: Bug Fixes
+
+- update package name from 'Modularity' to 'Modularous' in AboutCommand for consistency by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f391f425e1158a7ca2ffbb7d9a55ffe8b2bbb228
+- check for repository existence before handling migration batches by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/d55abf229d7d318738ddc36f8c6e36772b21e5cc
+- correct file convention typo and update return types for clarity by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3d98ccc699098450ada3c55954e1fa7387484afc
+- adjust installed path resolution for Testbench compatibility by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ed29587e5879049d746588ce90601c7618e275d7
+- update Turkish login title for clarity by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/8d44e4a95294c3691e6a0576ebfb007068f4f364
+- enhance schema input source loading check by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3d8a15980c8a4dfe7fd7753da8c3db76b8513df2
+- update user creation method to use updateOrCreate for better handling of existing users by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cc77676460df248546e88cba6ee92383740ce47b
+- ensure columns are set correctly for list method by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/02ab929558967296af808f8d55aa101af2a754c4
+- add routes configuration option for additional API resource routes by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f068ae9e12e418b2b040902a4b71dba9ab01039a
+- handle missing media locales gracefully by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/529ea25b5b2c76741ad355f1b24cc93797ccc8e3
+- add paginate method for dynamic pagination based on request parameters by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c37aa0bc7decc446de7bd0f670200d0b6585ff9a
+- standardize capitalization in provider confirmation messages by @celikerde in https://github.com/unusualify/modularous/commit/7c431b9401de774721adc8f964c500ea58c42b6c
+- update provider confirmation message capitalization by @celikerde in https://github.com/unusualify/modularous/commit/00b8344d68b667766be7b7476eecc1b26f473e16
+- update benchmark function signature to include elapsed time reference by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/d88cad2b2fbb8e4c38e1864fb3dece16140ef4bd
+- update getFormActions call to include context parameter by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ffc119b5b5a3924a80e54a922c05bf201bfe4264
+- correct equality check in initial value mapping by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/01f245c92194dccec8bd44789f358cbf68a79b1c
+
+### :zap: Performance
+
+- enhance form action retrieval logic based on modal settings by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/6c4623bdf33d1fbee802350c02608c91a7987458
+- improve form schema handling and relationship mapping by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/8098eee696e1c6b43bdffd2f326c900d81021343
+- add conditional form handling for modal editing by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/2eb5a73ac228a21ea19aa63a3ee995ad359cc407
+- enhance eager loading and relationship handling across models by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f39d6c5dda4840667906b502ad52bce7858f9c5b
+
+### :recycle: Refactors
+
+- streamline ModuleActivator initialization and enhance caching logic for module statuses by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9832621f44599d2dffb67e8e1ee857a52357afbb
+- simplify module management methods, enhance authentication guard/provider retrieval, and improve caching logic by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/82f1dc82a606f4dc500ad1af602548cd23b3bfaf
+- consolidate object and collection handling in run method for improved readability by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/61228a901b0c87bfa308388017599230ba34b320
+- replace deprecated Config facade with helper function for retrieving view paths by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c0494b95b48cc9441543b18b5c12a0e5be6dbe23
+- remove backslash from Cache facade usage for consistency by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e7a4e897e2608fa9268cb22b18169953077bfaf6
+- streamline stub base path configuration by trimming trailing slashes by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f9c75ef973041c58b822476e9f1466b35318cbcc
+- remove unnecessary blank line for cleaner code by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e7b3e4d8fd26813c513425ad7e52301b8fa989f5
+- streamline method signatures, enhance clarity, and improve handling of module and translation settings by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cbac97ec0c3d68911c2af7f2a6fa535f2212199b
+- replace glob with RecursiveDirectoryIterator for improved file loading efficiency by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/75504203e00b1bb2670e9b42accbbfbbb819333e
+- clean up getModularityTraits function and update return type for activeModularityTraits by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/38a0706e0b06908112c3c981649089c05c1cca16
+- replace ModularityActivatorTest with a new implementation using Mockery for improved test structure and clarity by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0fee8a95b13562225d30923e1b232c7edb300d36
+- update exception handling methods to improve authentication checks and visibility, ensuring proper handling of HTTP exceptions by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c2be79b857330df3998c880ab6128fe0cc46aa57
+- remove deprecated controllers and implement new registration flow by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cd8aff5f7e34b13d6410adb0615c8ac9c898fcd3
+- correct class binding for bottom section and button alignment by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/2a26e1d8b27de59ba955501dd1777deb3d85304e
+- update field lengths and types in companies, chats, and user_oauths tables by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/079217616e33f1e0d7559a76819f3d32a096fa36
+- clean up code and update method return type by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e8ddae74bdb27beb20211bd2427a7d3d47cb1220
+- improve hydration logic and handle reserved keys by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/56cf385676665e5f445153f92b5742cd5e077850
+- introduce console command naming conventions and update command signatures by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ba35bd77c3e3611302981310a9c69059ca94a9d9
+- replace debugging code with structured logging and custom exceptions by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/17631c850afa7c5830801a9a3fa9fb0ab036398f
+- replace debugging with structured logging and custom exceptions by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/aeb4eb902846d258fa6bf3a35c71670cf4707bcd
+- enhance route middleware handling and type safety by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/77796ad4f3edd1d0b0453114cf66edc491fc1760
+- improve type handling and method calls by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0bd11a3b1def352ebc3e8b8b6a3376c3217705a5
+- add setComponent method for improved component name handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b68d9f533af46ac93930d00f7770b0348bdf1938
+- enhance error handling and method naming consistency by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e972b921f4101dc22f38e9442544c9fddcb875fa
+- extract AJAX handling into ManageIndexAjax trait by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c90258dbc9abab77cf8fe21fbdb730aff15bf32f
+- update form validation and component organization by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/12f5642873da3150b73c7ef4bea45f58289bba57
+- simplify constructor by using app() for dependency resolution by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/a9e203aa4ccc15e4d109fbd83519aad5eda5ae15
+- remove unused API controllers by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/903e3757074b0d5dcddf200fd16edc9131c79a14
+- remove unused SCSS files and mixins by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/da4ab10093fcfbd8e8b1a0de62ced376dce915d0
+- update modal binding and integrate useModal hook by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/dd3eba1f6d764b8336e606d12860ff637a65dfd2
+- replace mixin with props and useMediaItems hook by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9c8e91607091e68d2bb9cf5e4e4b209c81844fa0
+- replace mixin with useLocale hook and streamline state management by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/489a2f12b20c756ab1c96a93cb55d8c2c91da33d
+- remove unused mixins and integrate hooks for improved functionality by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0ff6656598369cdfb190c0a57cbc36d8bf99ed84
+- enhance functionality by integrating media library hooks and updating props by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cb9d865202dcab2b4785478df35ba37e917ad1ac
+- integrate new media hooks and streamline existing functionality by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/cbf17bdb398d3951dcfdef10eb6de0160c8f4c59
+- modularize global helper functions and improve backward compatibility by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/07418efc078753fa22f36aafeae633e3c8f52114
+- update useLocale hook to improve locale management by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/03dcd1a366c070964ad9c12e9fdf037c53ca7386
+- clean up preview method and improve output buffering by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/d4395d3ba3ac3cbb96083eed0ea866f80d3d8759
+- improve table item rendering and formatting logic by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/92aa8711b30aec79c428ba81f6163e8dc02852c7
+- streamline sidebar behavior and improve responsiveness by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/12bf202e4274fc55b85acebbfaf62d50cec63d55
+- implement cached user currency retrieval and update price queries by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ce476f1a840a20d20530aac46d0d7209245afe47
+- enhance form field retrieval with serialization control by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/70e4f1e98342ebf117e4780e7e66697f29b88790
+- optimize authorization record handling and existence checks by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0463ae08d638265a2516c7ae772c6f8758338eb7
+- clean up input data by unsetting unnecessary fields by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9da94ba6fc1995b2f9a922e71cb4d4c7d75eb296
+- update user role checks to use new attribute naming convention by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9bbfd04ab5a0729a85100b925948e95b03e68ac7
+- enhance header management and relationship handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/64db9a98f05b1f52e503ca3424fce13a89b4af11
+- remove PaymentableRelation class by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/881e420266f73dd0a221cb5f24f1b0b72cf46033
+- update payment attributes and scopes for improved functionality by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b704670f3fe92617d9ca402ee685839dc9de472f
+- improve translation service registration logic by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/acb8396101f43e20486debb2a6bb3ae5506bd6bd
+- comment out timezone configuration in login form by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5329e34085af9764e91ba0323c45c64f48856fa2
+- enhance form item retrieval with additional metadata by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/7e4c69edef4d306b7e24cd9805796a0ce8be6799
+- remove z-index from last column styling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/94b3c5c5b53952d0700feef4c029ff83ec8e43a2
+
+### :memo: Documentation
+
+- add custom auth pages documentation by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/bfa0d1c18554acce906babc436d21934f90fe242
+- add comprehensive guide for console command structure and conventions by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0e8064129c2bf5670dc5c3aefab0d50246fcf89f
+- add class-level documentation for input schema hydration by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/43af2cc65a6268551e9068d9e9bd178ebc5b611d
+- update package structure and add schema hydration guidelines by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b3413111f7840844d1e9c6e330b67f69a44db960
+- add comprehensive frontend enhancement suggestions document by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5c7fad61d7115fa838f19d1bdace44951eb5d9b6
+- remove default port from preview script in package.json by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f6be1b88032dbfbd047a0e8c4644e32ab972bd4a
+
+### :lipstick: Styling
+
+- lint coding styles for v0.58.0 by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/972f5d3a90561efaf0f6f3d5599f812d2821f96c
+
+### :white_check_mark: Testing
+
+- Update PHPUnit configuration to use custom bootstrap file and enable cache directory by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/db150ec143a730d60249208aeb48e688800d1a2b
+- add TestModulesCase class and enhance configuration for module paths and statuses by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/c85b4e304d9adbffdbfdf8af3e4685d5b429f871
+- add comprehensive test suite for ModuleActivator class, including instantiation, route status management, and JSON file handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/d80f4876ce55a3f6b76b06078fdc7f020b20d554
+- add comprehensive test suite for Modularity class, covering module management, path validation, caching, and URL handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/e07d2d362d6ebcc708e891b9626721bba7bf2551
+- introduce MockModuleManager for enhanced module testing capabilities by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/a89d2b95d1fc9137714d3fb323d5e155d3b2e3ac
+- add comprehensive test suite for module functionality, including configuration loading, route management, and service path validation by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/95429e066d2de89b06e225c68dd8f4651563e5f5
+- initialize SystemModule with configuration, routes, controllers, entities, and repositories by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/93b14598b6135e4ced6a614a1dd37ae8ca67f977
+- add initial test suite for console command functionality, including module creation and cleanup by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5868548e4eb9ef46e18ca9bbd5c29a450a8301fc
+- add comprehensive test suite for various facades, ensuring correct resolution and functionality of each facade in the Modularity package by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/0cecd567f5f919b5d57bd1e544de0fbe1873f7b4
+- add comprehensive test suites for various generators including Generator, LaravelTestGenerator, RouteGenerator, StubsGenerator, and VueTestGenerator, ensuring correct functionality and configuration handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/06bd188c3c9a3adcc8da4007db28ba05649b4245
+- add comprehensive test suites for various helper functions including ArrayHelpers, ColumnHelpers, ComponentHelpers, ComposerHelpers, ConnectorHelpers, DbHelpers, FrontHelpers, I18nHelpers, InputHelpers, MediaHelpers, MigrationHelpers, ModuleHelpers, and RouterHelpers, ensuring correct functionality and edge case handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/51212cea17701f5ee6fb9a9be9e77f08ab31fd9c
+- add unit tests for NavigationMiddleware functionality, including instantiation, request handling, and sharing navigation configuration with layouts by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/df44786fe9a0e3bfccb1f7bde2da58f9d641e059
+- add comprehensive test suite for Listener functionality, including mail configuration handling, notification path management, and event processing behavior by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/20e5f067afe697951093901ed8f3bc97f029e79f
+- add comprehensive test suite for ModularityLogHandler, covering instantiation, log writing, email notification behavior, log rotation, and message formatting by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/2e9069af0d217ea270c8911e089b8a8036ac52ae
+- add comprehensive test suites for EmailVerificationNotification, GeneratePasswordNotification, and ResetPasswordNotification, covering constructor behavior, mail channel handling, and URL generation by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9a545c8808d0395fd1d015226d64a3b4c73bf42f
+- add comprehensive test suites for ChatableScheduler and FilepondsScheduler, covering instantiation, model processing, error handling, and logging behavior by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/54290eaedd865193c6bd0ebcc1e7f0d274811c64
+- add comprehensive test suites for various services including Assets, BroadcastManager, CacheRelationshipGraph, Connector, CurrencyExchangeService, FilepondManager, FileTranslation, MessageStage, and ModularityCacheService, ensuring correct functionality and edge case handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/226d2c99cac3643a9c14f75c85ca9de0dec00944
+- add comprehensive test suites for CoverageAnalyzer, FileLoader, Finder, RegexReplacement, ModelRelationParser, SchemaParser, and ValidatorParser, ensuring correct functionality and edge case handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/75f61c1064f38191644534c5632e4cd6ed333e4e
+- add comprehensive test suites for Cache, ManageNames, ManageTraits, Misc, Model, and Relationship traits, ensuring correct functionality and edge case handling by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9e87a5a3665a243efc81be9cf613c7dfed8931be
+- add comprehensive test suites for AuthConfigurationException, ModularitySystemPathException, and ModuleNotFoundException, ensuring correct exception handling and message validation by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3cfcf7455e22804bee75ba368e79fd84ef317b2b
+- Exclude StubsGeneratorTest from PHPUnit configuration and disable the coverage facade test. by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/f2912e44e3bda18ed5239b36b80997c34b49e8c7
+- add comprehensive tests for authentication controllers by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/8c9a06187f6f90d50a749e1bbab3b3a3fcf980b1
+- add unit tests for Main, Sidebar, SidebarContent, and navigation hooks by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/98a49c6141da25db074ae29182163526c118b497
+- handle changed default use_inertia behavior by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/b422ef24117427118937b61888f25ffe16680ec3
+- enhance test coverage and add new tests for various components by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3aef10b3300cdde8e0896acc29484e8988077eea
+- add comprehensive tests for LocaleTagsCast, CacheObserver, and enums by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/01afa2e62cc2a1d7d29cb6e5f47454475e8adee6
+- enhance jsdom setup with CSRF token and utility helpers by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ee9a71fa1f95cfe2b04a0eb493617801e8dbeec6
+- add comprehensive unit tests for various components and hooks by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/61cfa697c6a68a82de401a7fdb98f9aaccfddb73
+- add TableEagerMergeTest for merging indexed arrays by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/a22da88f3ddd776d8c3279b6852eb0ad974bd6b5
+
+### :package: Build
+
+- update build artifacts for v0.58.0 by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/4b9e4d008fccd545fdb1b4207be7e08b7de59700
+
+### :green_heart: Workflow
+
+- update Laravel test command to `composer test:fast` by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/714c51b80af117c1abd9388c60f279bb5fcc96d9
+
+### :beers: Other Stuff
+
+- update composer.json to include paratest, adjust test scripts, and update package versions in composer.lock by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/ce6a483c8371d9f8cf3fd301673b1ccbd8f810e0
+- add /tmp-modules/ to ignore list for temporary module files by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/160dbc9e76adee80e8e415f1b7f28c824de55921
+- add create and update lifecycle docs by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/be154b2458584769ff673bda445aa64450b10aba
+- update asset references and remove deprecated files by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/9bed6d1146a69f7bee7a1ceda7c9010e098d46a5
+
 ## v0.57.4 - 2026-03-03
 
 ### :wrench: Bug Fixes
