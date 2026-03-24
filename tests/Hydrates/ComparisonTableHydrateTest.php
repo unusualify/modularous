@@ -14,8 +14,8 @@ class ComparisonTableHydrateTest extends TestCase
             'name' => 'comparison',
             'comparators' => [
                 'comp1' => ['label' => 'Option 1'],
-                'comp2' => ['label' => 'Option 2']
-            ]
+                'comp2' => ['label' => 'Option 2'],
+            ],
         ];
 
         $h = new ComparisonTableHydrate($input, null, null, true);
@@ -34,8 +34,8 @@ class ComparisonTableHydrateTest extends TestCase
             'name' => 'comparison',
             'schema' => [
                 ['name' => 'item1'],
-                ['name' => 'item2']
-            ]
+                ['name' => 'item2'],
+            ],
         ];
 
         $h = new ComparisonTableHydrate($input, null, null, true);

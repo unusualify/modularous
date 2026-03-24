@@ -57,10 +57,10 @@ class MediaHelpersTest extends TestCase
         // iconv transliteration may vary by system. Accept approximate results.
         $result = replaceAccents('café');
         $this->assertStringContainsString('caf', $result);
-        
+
         $result = replaceAccents('naïve');
         $this->assertStringContainsString('na', $result);
-        
+
         $result = replaceAccents('Zürich');
         $this->assertStringContainsString('rich', $result);
     }
@@ -71,7 +71,7 @@ class MediaHelpersTest extends TestCase
         // iconv transliteration may vary by system
         $result = replaceAccents('Français');
         $this->assertStringContainsString('Fran', $result);
-        
+
         $result = replaceAccents('Español');
         $this->assertStringContainsString('Espa', $result);
     }

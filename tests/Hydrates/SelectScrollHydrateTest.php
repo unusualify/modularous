@@ -12,7 +12,7 @@ class SelectScrollHydrateTest extends TestCase
         $input = [
             'type' => 'select-scroll',
             'name' => 'infinite_items',
-            'endpoint' => '/api/scroll'
+            'endpoint' => '/api/scroll',
         ];
 
         $h = new SelectScrollHydrate($input, null, null, true);

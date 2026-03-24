@@ -44,11 +44,11 @@ trait ChatableScopes
 
         return $query->whereHas('chat', function (Builder $chatQuery) use ($chatMessageTable) {
             $chatQuery->whereHas('messages', function (Builder $mq) use ($chatMessageTable) {
-                $mq->whereNull($chatMessageTable.'.deleted_at')
-                    ->whereRaw($chatMessageTable.'.`created_at` = (
+                $mq->whereNull($chatMessageTable . '.deleted_at')
+                    ->whereRaw($chatMessageTable . '.`created_at` = (
                         SELECT MAX(`m2`.`created_at`)
-                        FROM `'.$chatMessageTable.'` AS `m2`
-                        WHERE `m2`.`chat_id` = `'.$chatMessageTable.'`.`chat_id`
+                        FROM `' . $chatMessageTable . '` AS `m2`
+                        WHERE `m2`.`chat_id` = `' . $chatMessageTable . '`.`chat_id`
                         AND `m2`.`deleted_at` IS NULL
                     )')
                     ->fromClient();
@@ -86,11 +86,11 @@ trait ChatableScopes
 
         return $query->whereHas('chat', function (Builder $chatQuery) use ($creatorRecordTable, $chatMessageTable) {
             $chatQuery->whereHas('messages', function (Builder $mq) use ($creatorRecordTable, $chatMessageTable) {
-                $mq->whereNull($chatMessageTable.'.deleted_at')
-                    ->whereRaw($chatMessageTable.'.`created_at` = (
+                $mq->whereNull($chatMessageTable . '.deleted_at')
+                    ->whereRaw($chatMessageTable . '.`created_at` = (
                         SELECT MAX(`m2`.`created_at`)
-                        FROM `'.$chatMessageTable.'` AS `m2`
-                        WHERE `m2`.`chat_id` = `'.$chatMessageTable.'`.`chat_id`
+                        FROM `' . $chatMessageTable . '` AS `m2`
+                        WHERE `m2`.`chat_id` = `' . $chatMessageTable . '`.`chat_id`
                         AND `m2`.`deleted_at` IS NULL
                     )')
                     ->whereExists(function ($subQuery) use ($creatorRecordTable, $chatMessageTable) {
@@ -98,15 +98,15 @@ trait ChatableScopes
                         $chatableTableAlias = 'chatable_creators';
 
                         $subQuery->select(DB::raw(1))
-                            ->from($creatorRecordTable.' as '.$creatableTableAlias)
-                            ->join($creatorRecordTable.' as '.$chatableTableAlias, function ($join) use ($creatableTableAlias, $chatableTableAlias) {
-                                $join->on($creatableTableAlias.'.creator_id', '=', $chatableTableAlias.'.creator_id')
-                                    ->on($creatableTableAlias.'.guard_name', '=', $chatableTableAlias.'.guard_name');
+                            ->from($creatorRecordTable . ' as ' . $creatableTableAlias)
+                            ->join($creatorRecordTable . ' as ' . $chatableTableAlias, function ($join) use ($creatableTableAlias, $chatableTableAlias) {
+                                $join->on($creatableTableAlias . '.creator_id', '=', $chatableTableAlias . '.creator_id')
+                                    ->on($creatableTableAlias . '.guard_name', '=', $chatableTableAlias . '.guard_name');
                             })
-                            ->whereColumn($creatableTableAlias.'.creatable_id', $this->getTable().'.id')
-                            ->where($creatableTableAlias.'.creatable_type', static::class)
-                            ->whereColumn($chatableTableAlias.'.creatable_id', $chatMessageTable.'.id')
-                            ->where($chatableTableAlias.'.creatable_type', ChatMessage::class);
+                            ->whereColumn($creatableTableAlias . '.creatable_id', $this->getTable() . '.id')
+                            ->where($creatableTableAlias . '.creatable_type', static::class)
+                            ->whereColumn($chatableTableAlias . '.creatable_id', $chatMessageTable . '.id')
+                            ->where($chatableTableAlias . '.creatable_type', ChatMessage::class);
                     });
             });
         });
@@ -123,17 +123,17 @@ trait ChatableScopes
 
         return $query->whereHas('chat', function (Builder $chatQuery) use ($minuteOffset, $chatMessageTable) {
             $chatQuery->whereHas('messages', function (Builder $mq) use ($minuteOffset, $chatMessageTable) {
-                $mq->whereNull($chatMessageTable.'.deleted_at')
-                    ->whereRaw($chatMessageTable.'.`created_at` = (
+                $mq->whereNull($chatMessageTable . '.deleted_at')
+                    ->whereRaw($chatMessageTable . '.`created_at` = (
                         SELECT MAX(`m2`.`created_at`)
-                        FROM `'.$chatMessageTable.'` AS `m2`
-                        WHERE `m2`.`chat_id` = `'.$chatMessageTable.'`.`chat_id`
+                        FROM `' . $chatMessageTable . '` AS `m2`
+                        WHERE `m2`.`chat_id` = `' . $chatMessageTable . '`.`chat_id`
                         AND `m2`.`deleted_at` IS NULL
                     )')
-                    ->where($chatMessageTable.'.is_read', false)
-                    ->whereNull($chatMessageTable.'.notified_at')
+                    ->where($chatMessageTable . '.is_read', false)
+                    ->whereNull($chatMessageTable . '.notified_at')
                     ->when($minuteOffset, function (Builder $q) use ($minuteOffset, $chatMessageTable) {
-                        $q->where($chatMessageTable.'.created_at', '<', now()->subMinutes($minuteOffset));
+                        $q->where($chatMessageTable . '.created_at', '<', now()->subMinutes($minuteOffset));
                     });
             });
         });

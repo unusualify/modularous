@@ -9,7 +9,8 @@ class RelationshipArgumentsTest extends TestCase
 {
     protected function createTester(): object
     {
-        return new class {
+        return new class
+        {
             use RelationshipArguments;
         };
     }

@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Repositories\Logic;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Facades\ModularityFinder;
 use Unusualify\Modularity\Facades\ModularityLog;
 use Unusualify\Modularity\Repositories\Repository;
@@ -19,7 +20,7 @@ trait Relationships
     public $exceptRelations = [];
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model|null $object
+     * @param Model|null $object
      * @param array $fields
      * @return void
      */
@@ -102,7 +103,7 @@ trait Relationships
                 $relation = $object->{$relationName}();
                 $relatedLocalKey = $relation->getLocalKeyName(); // id
                 $foreignKey = $relation->getForeignKeyName(); // parent_name_id
-                $repository = \Unusualify\Modularity\Facades\ModularityFinder::getRouteRepository(Str::singular($relationName), asClass: true);
+                $repository = ModularityFinder::getRouteRepository(Str::singular($relationName), asClass: true);
                 $hasRepository = (bool) $repository && $repository instanceof Repository;
 
                 if (isset($fields[$relationName])) {
@@ -344,15 +345,15 @@ trait Relationships
                     $data = [
                         'id' => $model->getKey(),
                     ];
-                    foreach($appends as $append) {
+                    foreach ($appends as $append) {
                         $data[$append] = $model->{$append};
                     }
 
                     return [
                         ...$data,
-                        ...$repository->getFormFields($model, $input['schema'], noSerialization: !($input['isSerialized'] ?? false))
+                        ...$repository->getFormFields($model, $input['schema'], noSerialization: ! ($input['isSerialized'] ?? false)),
                     ];
-                }) : $repository->getFormFields($repository->newInstance(), $input['schema'], noSerialization: !($input['isSerialized'] ?? false));
+                }) : $repository->getFormFields($repository->newInstance(), $input['schema'], noSerialization: ! ($input['isSerialized'] ?? false));
 
             }
         }

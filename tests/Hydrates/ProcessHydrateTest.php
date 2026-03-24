@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Hydrates\Inputs\ProcessHydrate;
 use Unusualify\Modularity\Tests\TestCase;
 
@@ -12,7 +13,7 @@ class ProcessHydrateTest extends TestCase
         $input = [
             'type' => 'process',
             'name' => 'process',
-            'eager' => []
+            'eager' => [],
         ];
 
         $h = new ProcessHydrate($input, null, null, true);
@@ -30,12 +31,12 @@ class ProcessHydrateTest extends TestCase
             'type' => 'process',
             'name' => 'process',
             '_moduleName' => 'TestModule',
-            'eager' => []
+            'eager' => [],
         ];
 
         $moduleMock = \Mockery::mock();
-        
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+
+        Modularity::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 

@@ -4,7 +4,10 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
 use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class FilepondsTraitTest extends RepositoryTestCase
@@ -210,11 +213,11 @@ class FilepondsTraitTest extends RepositoryTestCase
     // }
 }
 
-class FilepondTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class FilepondTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
+    use FilepondsTrait;
 
-    public function __construct(\Unusualify\Modularity\Tests\Repositories\TestModel $model)
+    public function __construct(TestModel $model)
     {
         $this->model = $model;
     }

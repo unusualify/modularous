@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Notifications;
 
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
@@ -38,6 +39,7 @@ class GeneratePasswordNotificationTest extends TestCase
                 if ($key === 'app.name') {
                     return 'Test App';
                 }
+
                 return $default;
             });
 
@@ -51,7 +53,7 @@ class GeneratePasswordNotificationTest extends TestCase
 
         $mailMessage = $notification->toMail($notifiable);
 
-        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $mailMessage);
+        $this->assertInstanceOf(MailMessage::class, $mailMessage);
     }
 
     /** @test */
@@ -62,6 +64,7 @@ class GeneratePasswordNotificationTest extends TestCase
                 if ($key === 'app.name') {
                     return 'MyApp';
                 }
+
                 return $default;
             });
 
@@ -83,7 +86,7 @@ class GeneratePasswordNotificationTest extends TestCase
 
         $mailMessage = $method->invoke($notification, 'http://example.com/verify');
 
-        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $mailMessage);
+        $this->assertInstanceOf(MailMessage::class, $mailMessage);
     }
 
     /** @test */
@@ -145,7 +148,8 @@ class GeneratePasswordNotificationTest extends TestCase
 
     protected function createMockNotifiable($email = 'test@example.com')
     {
-        $notifiable = new class($email) {
+        $notifiable = new class($email)
+        {
             public $email;
 
             public function __construct($email)

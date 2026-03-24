@@ -21,7 +21,7 @@ class FilepondsSchedulerTest extends TestCase
      */
     public function it_can_be_instantiated()
     {
-        $scheduler = new FilepondsScheduler();
+        $scheduler = new FilepondsScheduler;
 
         $this->assertInstanceOf(FilepondsScheduler::class, $scheduler);
     }
@@ -90,7 +90,7 @@ class FilepondsSchedulerTest extends TestCase
             ->assertSuccessful();
     }
 
-   /**
+    /**
      * @test
      */
     public function it_logs_count_of_cleared_files()

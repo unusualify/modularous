@@ -3,6 +3,9 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Chat extends Model
 {
@@ -23,7 +26,7 @@ class Chat extends Model
      */
     protected $appends = ['attachments'];
 
-    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function messages(): HasMany
     {
         return $this->hasMany(ChatMessage::class);
     }
@@ -31,12 +34,12 @@ class Chat extends Model
     /**
      * Latest message for this chat (one row per chat_id), using Laravel's one-of-many join.
      */
-    public function latestMessage(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function latestMessage(): HasOne
     {
         return $this->hasOne(ChatMessage::class)->latestOfMany('created_at');
     }
 
-    public function fileponds(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function fileponds(): HasManyThrough
     {
         return $this->hasManyThrough(Filepond::class, ChatMessage::class, 'chat_id', 'filepondable_id', 'id');
     }

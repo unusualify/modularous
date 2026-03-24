@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Entities;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
 /**
  * No reverse relationship needed.
  * Repeater has one way access from the module it belongs to, (MorphTo).
@@ -28,7 +30,7 @@ class Repeater extends Model
         'content' => 'array',
     ];
 
-    public function repeatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function repeatable(): MorphTo
     {
         return $this->morphTo();
     }

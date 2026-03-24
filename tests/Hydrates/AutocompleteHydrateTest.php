@@ -39,4 +39,3 @@ class AutocompleteHydrateTest extends TestCase
         $this->assertEquals('name', $result['itemTitle']);
     }
 }
-

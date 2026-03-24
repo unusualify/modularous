@@ -2,10 +2,12 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Unusualify\Modularity\Entities\Model;
+
 trait SlugsTrait
 {
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -32,7 +34,7 @@ trait SlugsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @return void
      */
     public function afterDeleteSlugsTrait($object)
@@ -41,7 +43,7 @@ trait SlugsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @return void
      */
     public function afterRestoreSlugsTrait($object)
@@ -50,7 +52,7 @@ trait SlugsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
@@ -70,7 +72,7 @@ trait SlugsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @param array $slug
      * @return array
@@ -95,7 +97,7 @@ trait SlugsTrait
      * @param array $with
      * @param array $withCount
      * @param array $scopes
-     * @return \Unusualify\Modularity\Entities\Model|null
+     * @return Model|null
      */
     public function existsSlug($slug, $with = [], $withCount = [], $scopes = [])
     {
@@ -133,7 +135,7 @@ trait SlugsTrait
      * @param string $slug
      * @param array $with
      * @param array $withCount
-     * @return \Unusualify\Modularity\Entities\Model
+     * @return Model
      */
     public function existsSlugPreview($slug, $with = [], $withCount = [])
     {

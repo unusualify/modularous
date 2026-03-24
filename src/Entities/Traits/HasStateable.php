@@ -5,6 +5,8 @@ namespace Unusualify\Modularity\Entities\Traits;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
@@ -85,12 +87,12 @@ trait HasStateable
 
         $statesCacheKey = static::class . '_states';
         $states = Cache::get($statesCacheKey);
-        if($states && $states->count() === count($defaultStateCodes)) {
+        if ($states && $states->count() === count($defaultStateCodes)) {
             return $states;
         }
 
         $states = $stateModel::whereIn('code', $defaultStateCodes)->get();
-        if($states->count() === count($defaultStateCodes)) {
+        if ($states->count() === count($defaultStateCodes)) {
             Cache::put($statesCacheKey, $states, now()->addHours(1));
         }
 
@@ -104,7 +106,7 @@ trait HasStateable
         );
     }
 
-    public function state(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function state(): HasOneThrough
     {
         $stateableTable = (new Stateable)->getTable();
 
@@ -120,7 +122,7 @@ trait HasStateable
             ->where($stateableTable . '.stateable_type', get_class($this));
     }
 
-    public function stateable(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function stateable(): MorphOne
     {
         return $this->morphOne(Stateable::class, 'stateable');
     }

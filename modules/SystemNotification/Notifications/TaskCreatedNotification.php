@@ -4,6 +4,8 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
+use Modules\SystemTask\Entities\Assignment;
 
 class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
 {
@@ -12,7 +14,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
-     * @param \Modules\SystemTask\Entities\Assignment $model
+     * @param Assignment $model
      * @return void
      */
     public function __construct(\Unusualify\Modularity\Entities\Assignment $model)
@@ -33,7 +35,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
         ];
     }
 
-    public function getModuleRouteHeadline(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModuleRouteHeadline(Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -46,7 +48,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getModelTitleField(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModelTitleField(Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -59,7 +61,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -72,7 +74,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMessage(object $notifiable, Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -88,7 +90,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getNotificationRedirector(object $notifiable, \Illuminate\Database\Eloquent\Model $model)
+    public function getNotificationRedirector(object $notifiable, Model $model)
     {
         return parent::getNotificationRedirector($notifiable, $model->assignable);
     }

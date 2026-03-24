@@ -5,23 +5,25 @@ namespace Unusualify\Modularity\Tests\Generators;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
+use Mockery;
 use Nwidart\Modules\Support\Config\GeneratorPath;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Generators\Generator;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery;
 
 class GeneratorTest extends TestCase
 {
     protected $generator;
+
     protected $config;
+
     protected $filesystem;
+
     protected $console;
 
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
-    
+
         $fixturesPath = realpath(__DIR__ . '/../../test-modules');
         if ($fixturesPath) {
             $app['config']->set('modules.paths.modules', $fixturesPath);
@@ -48,7 +50,8 @@ class GeneratorTest extends TestCase
         $this->filesystem = Mockery::mock(Filesystem::class);
         $this->console = Mockery::mock(Console::class);
 
-        $this->generator = new class('TestGenerator', $this->config, $this->filesystem, $this->console) extends Generator {
+        $this->generator = new class('TestGenerator', $this->config, $this->filesystem, $this->console) extends Generator
+        {
             public function generate(): int
             {
                 return 0;

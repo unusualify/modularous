@@ -4,6 +4,7 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -26,7 +27,7 @@ class StateableUpdatedNotification extends FeatureNotification implements Should
         return true;
     }
 
-    public function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMessage(object $notifiable, Model $model): string
     {
         $moduleRouteHeadline = $this->getModuleRouteHeadline($model);
         $titleField = $this->getModelTitleField($model);
@@ -43,7 +44,7 @@ class StateableUpdatedNotification extends FeatureNotification implements Should
         return $default;
     }
 
-    public function getNotificationHtmlMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationHtmlMessage(object $notifiable, Model $model): string
     {
         $default = $this->getNotificationMessage($notifiable, $model) . $model->state_formatted;
 
@@ -54,7 +55,7 @@ class StateableUpdatedNotification extends FeatureNotification implements Should
         return $default;
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $default = __(':moduleRouteHeadline Status Changed', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),
@@ -67,7 +68,7 @@ class StateableUpdatedNotification extends FeatureNotification implements Should
         return $default;
     }
 
-    public function getMailMessage(MailMessage $mailMessage, object $notifiable, \Illuminate\Database\Eloquent\Model $model): MailMessage
+    public function getMailMessage(MailMessage $mailMessage, object $notifiable, Model $model): MailMessage
     {
         $redirector = $this->getNotificationRedirector($notifiable, $this->getModel());
 

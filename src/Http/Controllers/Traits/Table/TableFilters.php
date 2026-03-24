@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Services\Connector;
 use Unusualify\Modularity\Traits\Allowable;
 
 trait TableFilters
@@ -254,7 +255,7 @@ trait TableFilters
     protected function calibrateFilter($filter)
     {
         if (isset($filter['componentOptions']) && isset($filter['componentOptions']['connector'])) {
-            $connector = new \Unusualify\Modularity\Services\Connector($filter['componentOptions']['connector']);
+            $connector = new Connector($filter['componentOptions']['connector']);
             $connector->run(item: $filter['componentOptions'], setKey: 'items');
         }
 

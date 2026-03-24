@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -52,7 +53,7 @@ class HostRouteRegistrarTest extends TestCase
         $route = \Mockery::mock(\Illuminate\Routing\Route::class);
         $route->shouldReceive('parameters')->andReturn(['id' => 1]);
 
-        $request = \Illuminate\Http\Request::create('http://example.com/test');
+        $request = Request::create('http://example.com/test');
         $request->setRouteResolver(fn () => $route);
 
         $this->app->instance('request', $request);
@@ -70,7 +71,7 @@ class HostRouteRegistrarTest extends TestCase
         $route = \Mockery::mock(\Illuminate\Routing\Route::class);
         $route->shouldReceive('parameters')->andReturn(['item' => 5]);
 
-        $request = \Illuminate\Http\Request::create('http://example.com/test');
+        $request = Request::create('http://example.com/test');
         $request->setRouteResolver(fn () => $route);
 
         $this->app->instance('request', $request);

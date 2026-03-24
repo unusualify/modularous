@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console\Update;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\File;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 
 use function Laravel\Prompts\confirm;

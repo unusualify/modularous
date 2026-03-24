@@ -5,13 +5,14 @@ namespace Unusualify\Modularity\Traits\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityCache;
+use Unusualify\Modularity\Http\Controllers\BaseController;
 
 trait WarmupCache
 {
     /**
      * Warmup the counts cache for a controller.
      *
-     * @param \Unusualify\Modularity\Http\Controllers\BaseController $controller
+     * @param BaseController $controller
      * @return bool
      */
     public function warmupControllerCounts($controller)
@@ -34,8 +35,8 @@ trait WarmupCache
     /**
      * Warmup the item cache for a controller.
      *
-     * @param \Unusualify\Modularity\Http\Controllers\BaseController $controller
-     * @param \Illuminate\Database\Eloquent\Model $item
+     * @param BaseController $controller
+     * @param Model $item
      * @param bool $cacheFormItem
      * @param bool $cacheFormattedItem
      * @return void
@@ -55,7 +56,7 @@ trait WarmupCache
     /**
      * Warmup the items cache for a controller.
      *
-     * @param \Unusualify\Modularity\Http\Controllers\BaseController $controller
+     * @param BaseController $controller
      * @param int $chunkSize
      * @return void
      */

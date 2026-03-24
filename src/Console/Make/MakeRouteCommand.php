@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Support\Stub;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Generators\RouteGenerator;
 

@@ -2,11 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Services;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Unusualify\Modularity\Services\CurrencyExchangeService;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Config;
 
 class CurrencyExchangeServiceTest extends TestCase
 {
@@ -15,13 +15,13 @@ class CurrencyExchangeServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Config::set('modularity.services.currency_exchange.endpoint', 'http://api.test/latest');
         Config::set('modularity.services.currency_exchange.api_key', 'test-key');
         Config::set('modularity.services.currency_exchange.parameters', ['apiKey' => 'apikey', 'baseCurrency' => 'base_currency']);
         Config::set('modularity.services.currency_exchange.rates_key', 'data');
-        
-        $this->service = new CurrencyExchangeService();
+
+        $this->service = new CurrencyExchangeService;
     }
 
     /** @test */
@@ -32,7 +32,7 @@ class CurrencyExchangeServiceTest extends TestCase
         ]);
 
         $rates = $this->service->fetchExchangeRates();
-        
+
         $this->assertEquals(1.1, $rates['USD']);
         $this->assertTrue(Cache::has('exchange_rates'));
     }
@@ -53,7 +53,7 @@ class CurrencyExchangeServiceTest extends TestCase
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Unsupported currency: EUR');
-        
+
         $this->service->convertTo(100, 'EUR');
     }
 
@@ -61,7 +61,7 @@ class CurrencyExchangeServiceTest extends TestCase
     public function it_can_get_exchange_rate()
     {
         Cache::put('exchange_rates', ['USD' => 1.1], 3600);
-        
+
         $rate = $this->service->getExchangeRate('USD');
         $this->assertEquals(1.1, $rate);
     }

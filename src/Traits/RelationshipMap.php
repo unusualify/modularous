@@ -4,6 +4,8 @@ namespace Unusualify\Modularity\Traits;
 
 use Astrotomic\Translatable\Traits\Relationship;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\UFinder;
 
@@ -70,13 +72,13 @@ trait RelationshipMap
                     : null;
 
             } elseif ($parameter->required) {
-                \Illuminate\Support\Facades\Log::error('RelationshipMap: Missing required relationship argument', [
+                Log::error('RelationshipMap: Missing required relationship argument', [
                     'parameter' => $n,
                     'name' => $name,
                     'relationshipName' => $relationshipName,
                 ]);
 
-                throw new \Unusualify\Modularity\Exceptions\ModularityException(
+                throw new ModularityException(
                     "Missing required argument '{$n}' for relationship '{$relationshipName}' on '{$name}'."
                 );
             } else {

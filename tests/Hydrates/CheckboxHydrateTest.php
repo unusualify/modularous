@@ -11,7 +11,7 @@ class CheckboxHydrateTest extends TestCase
     {
         $input = [
             'type' => 'checkbox',
-            'name' => 'is_active'
+            'name' => 'is_active',
         ];
 
         $h = new CheckboxHydrate($input, null, null, true);

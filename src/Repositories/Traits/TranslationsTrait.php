@@ -2,8 +2,10 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Unusualify\Modularity\Entities\Model;
 
 trait TranslationsTrait
 {
@@ -36,7 +38,7 @@ trait TranslationsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model|null $object
+     * @param Model|null $object
      * @param array $fields
      * @return array
      */
@@ -102,7 +104,7 @@ trait TranslationsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
@@ -169,7 +171,7 @@ trait TranslationsTrait
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param array $orders
      * @return void
      */

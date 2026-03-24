@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -73,7 +75,7 @@ trait MakesResponses
     /**
      * @param int $id
      * @param array $params
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     protected function redirectToForm($id, $params = [])
     {
@@ -96,7 +98,7 @@ trait MakesResponses
 
     /**
      * @param string $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithSuccess($message, $attributes = [])
     {
@@ -105,7 +107,7 @@ trait MakesResponses
 
     /**
      * @param string $redirectUrl
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithRedirect($redirectUrl, $attributes = [])
     {
@@ -118,7 +120,7 @@ trait MakesResponses
 
     /**
      * @param string $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithError($message, $attributes = [])
     {
@@ -128,7 +130,7 @@ trait MakesResponses
     /**
      * @param string $message
      * @param mixed $variant
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithJson($message, $variant, $attributes = [])
     {

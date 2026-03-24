@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\View;
 
+use Illuminate\Contracts\View\View;
 use Unusualify\Modularity\Tests\TestCase;
 use Unusualify\Modularity\View\Table;
 
@@ -23,7 +24,7 @@ class TableTest extends TestCase
 
         $result = $table->render();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $result);
+        $this->assertInstanceOf(View::class, $result);
     }
 
     public function test_render_uses_modularity_base_key_when_base_key_not_set()

@@ -6,7 +6,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $token = getenv('TEST_TOKEN') ?: getmypid();
 $cachePath = sys_get_temp_dir() . '/modularous_cache_' . $token;
 
-if (!is_dir($cachePath)) {
+if (! is_dir($cachePath)) {
     mkdir($cachePath, 0777, true);
 }
 
@@ -18,9 +18,9 @@ putenv("APP_ROUTES_CACHE={$cachePath}/routes.php");
 putenv("APP_EVENTS_CACHE={$cachePath}/events.php");
 
 // Also set a constant for internal use if needed
-if (!defined('MODULAROUS_TEST_TOKEN')) {
+if (! defined('MODULAROUS_TEST_TOKEN')) {
     define('MODULAROUS_TEST_TOKEN', $token);
 }
-if (!defined('MODULAROUS_PROCESS_CACHE_PATH')) {
+if (! defined('MODULAROUS_PROCESS_CACHE_PATH')) {
     define('MODULAROUS_PROCESS_CACHE_PATH', $cachePath);
 }

@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Entities\UserOauth;
+use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularity\Repositories\Traits\OauthTrait;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class OauthTraitTest extends RepositoryTestCase
@@ -130,9 +132,9 @@ class OauthTraitTest extends RepositoryTestCase
     }
 }
 
-class OauthTestRepository extends \Unusualify\Modularity\Repositories\Repository
+class OauthTestRepository extends Repository
 {
-    use \Unusualify\Modularity\Repositories\Traits\OauthTrait;
+    use OauthTrait;
 
     public function __construct(User $model)
     {

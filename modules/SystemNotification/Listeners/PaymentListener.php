@@ -6,8 +6,10 @@ use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Modules\SystemNotification\Events\PaymentCompleted;
+use Modules\SystemNotification\Events\PaymentFailed;
 use Modules\SystemNotification\Notifications\PaymentCompletedNotification;
 use Modules\SystemNotification\Notifications\PaymentFailedNotification;
+use Unusualify\Modularity\Entities\User;
 
 class PaymentListener implements ShouldHandleEventsAfterCommit, ShouldQueue
 {
@@ -16,7 +18,7 @@ class PaymentListener implements ShouldHandleEventsAfterCommit, ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(\Modules\SystemNotification\Events\PaymentCompleted|\Modules\SystemNotification\Events\PaymentFailed $event): void
+    public function handle(PaymentCompleted|PaymentFailed $event): void
     {
         $activeUser = auth()->user();
         $isSuccess = get_class($event) === PaymentCompleted::class;
@@ -31,7 +33,7 @@ class PaymentListener implements ShouldHandleEventsAfterCommit, ShouldQueue
                 // throw $th;
             }
         } else {
-            $superadmins = \Unusualify\Modularity\Entities\User::role('superadmin')->get();
+            $superadmins = User::role('superadmin')->get();
             foreach ($superadmins as $superadmin) {
                 $superadmin->notify(new PaymentFailedNotification($payment));
             }

@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Entities;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Profile extends Model
 {
     protected $fillable = [
@@ -15,7 +17,7 @@ class Profile extends Model
         'timezone',
     ];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'user_id');
     }

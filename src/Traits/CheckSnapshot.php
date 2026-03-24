@@ -2,10 +2,12 @@
 
 namespace Unusualify\Modularity\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait CheckSnapshot
 {
     /**
-     * @param \Illuminate\Database\Eloquent\Model $related
+     * @param Model $related
      * @return bool
      */
     protected function isSnapshotRelation($related)
@@ -14,7 +16,7 @@ trait CheckSnapshot
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $related
+     * @param Model $related
      * @return string
      */
     protected function getSnapshotSourceForeignKey($related)

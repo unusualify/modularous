@@ -6,6 +6,4 @@ namespace Unusualify\Modularity\Exceptions;
 
 use Exception;
 
-class ModularityException extends Exception
-{
-}
+class ModularityException extends Exception {}

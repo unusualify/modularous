@@ -1018,10 +1018,11 @@ trait FormSchema
     public function addFormWithsFormSchema(): array
     {
         return collect(array_to_object($this->formSchema))->reduce(function ($carry, $input) {
-            if( isset($input->with) && ! empty($input->with)){
+            if (isset($input->with) && ! empty($input->with)) {
                 $with = is_string($input->with) ? explode(',', $input->with) : $input->with;
                 $carry = array_merge($carry, $with);
             }
+
             return $carry;
         }, []);
     }
@@ -1029,12 +1030,12 @@ trait FormSchema
     public function addFormAppendsFormSchema(): array
     {
         return collect(array_to_object($this->formSchema))->reduce(function ($carry, $input) {
-            if( isset($input->appends) && ! empty($input->appends)){
+            if (isset($input->appends) && ! empty($input->appends)) {
                 $append = is_string($input->appends) ? explode(',', $input->appends) : $input->appends;
                 $carry = array_unique(array_merge($carry, $append));
             }
 
-            if( isset($input->name) && ! empty($input->name)){
+            if (isset($input->name) && ! empty($input->name)) {
                 $carry = array_unique(array_merge($carry, [$input->name]));
             }
 

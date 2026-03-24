@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
+use Illuminate\Support\Facades\App;
+use Mockery as m;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Hydrates\Inputs\StateableHydrate;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery as m;
 
 class StateableHydrateTest extends TestCase
 {
@@ -13,25 +15,25 @@ class StateableHydrateTest extends TestCase
         $input = [
             'type' => 'stateable',
             '_moduleName' => 'TestModule',
-            '_routeName' => 'testRoute'
+            '_routeName' => 'testRoute',
         ];
 
         // Mock repository with getStateableList method
         $repositoryMock = m::mock();
         $repositoryMock->shouldReceive('getStateableList')->withAnyArgs()->andReturn([
             ['name' => 'active', 'id' => 1],
-            ['name' => 'inactive', 'id' => 0]
+            ['name' => 'inactive', 'id' => 0],
         ]);
 
         // Mock module
         $moduleMock = m::mock();
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'repository')->andReturn(get_class($repositoryMock));
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 
-        \Illuminate\Support\Facades\App::shouldReceive('make')
+        App::shouldReceive('make')
             ->with(get_class($repositoryMock))
             ->andReturn($repositoryMock);
 

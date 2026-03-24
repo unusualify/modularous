@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Console\BaseCommand;
 // use Illuminate\Console\Command as Console;
 use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
 use Unusualify\Modularity\Facades\Modularity;

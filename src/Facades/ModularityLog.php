@@ -2,10 +2,11 @@
 
 namespace Unusualify\Modularity\Facades;
 
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Illuminate\Log\LogManager
+ * @see LogManager
  */
 class ModularityLog extends Facade
 {

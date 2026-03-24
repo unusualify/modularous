@@ -2,11 +2,15 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
 use Unusualify\Modularity\Entities\File as LibraryFile;
 use Unusualify\Modularity\Entities\Traits\HasFiles;
+use Unusualify\Modularity\Repositories\Traits\FilesTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class FilesTraitTest extends RepositoryTestCase
@@ -41,7 +45,7 @@ class FilesTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\FilesTrait;
+            use FilesTrait;
         };
 
         $columns = $repo->setColumnsFilesTrait([], [
@@ -273,7 +277,7 @@ class FilesTraitTest extends RepositoryTestCase
         ];
         $fields = $this->repository->getFormFields($model, $schema);
         $this->assertArrayHasKey('file-1', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-1']);
+        $this->assertInstanceOf(Collection::class, $fields['file-1']);
         $this->assertSame('file-5.pdf', $fields['file-1'][0]['name']);
         $this->assertSame('100 B', $fields['file-1'][0]['size']);
     }
@@ -321,10 +325,10 @@ class FilesTraitTest extends RepositoryTestCase
         ];
         $fields = $this->repository->getFormFields($model, $schema);
         $this->assertArrayHasKey('file-1', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-1']);
+        $this->assertInstanceOf(Collection::class, $fields['file-1']);
         $this->assertCount(0, $fields['file-1']);
         $this->assertArrayHasKey('file-2', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['file-2']);
+        $this->assertInstanceOf(Collection::class, $fields['file-2']);
         $this->assertCount(2, $fields['file-2']);
         $this->assertArrayHasKey('en', $fields['file-2']);
         $this->assertArrayHasKey('tr', $fields['file-2']);
@@ -333,14 +337,14 @@ class FilesTraitTest extends RepositoryTestCase
     }
 }
 
-class FilesTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class FilesTestModel extends TestModel
 {
     use HasFiles;
 }
 
-class FilesTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class FilesTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\FilesTrait;
+    use FilesTrait;
 
     public function __construct(FilesTestModel $model)
     {

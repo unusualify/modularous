@@ -2,11 +2,12 @@
 
 namespace Unusualify\Modularity\Console\Sync;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
 use JoeDixon\Translation\Scanner;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Services\FileTranslation;
 
 class SyncTranslationsCommand extends BaseCommand
 {
@@ -53,7 +54,7 @@ class SyncTranslationsCommand extends BaseCommand
         $laravelLangPath = base_path('lang');
         $modularityLangPath = base_path('modularity/lang');
 
-        $translationFileClass = new \Unusualify\Modularity\Services\FileTranslation(
+        $translationFileClass = new FileTranslation(
             new Filesystem,
             $laravelLangPath,
             'en',
@@ -117,7 +118,7 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for a specific language.
      *
-     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
      * @param string $modularityLangPath
      * @param string $language
@@ -159,7 +160,7 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for all languages.
      *
-     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
      * @param string $modularityLangPath
      * @param bool $isDryRun
@@ -206,7 +207,7 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for specific languages.
      *
-     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
      * @param string $modularityLangPath
      * @param array $languages
@@ -233,7 +234,7 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Handle sync for exclude specific languages.
      *
-     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
      * @param string $modularityLangPath
     /**
@@ -277,7 +278,7 @@ class SyncTranslationsCommand extends BaseCommand
     /**
      * Ensure language folders exist in the target path.
      *
-     * @param \Unusualify\Modularity\Services\FileTranslation $translationFileClass
+     * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
      * @param string $modularityLangPath
      * @param string|null $specificLanguage
@@ -298,7 +299,7 @@ class SyncTranslationsCommand extends BaseCommand
             $languages = [$specificLanguage];
         } else {
             // Get all languages from Laravel lang path
-            $sourceInstance = new \Unusualify\Modularity\Services\FileTranslation(
+            $sourceInstance = new FileTranslation(
                 $disk,
                 $laravelLangPath,
                 'en',

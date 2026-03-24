@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +15,7 @@ use Modules\SystemNotification\Events\ProcessHistoryUpdated;
 use Unusualify\Modularity\Entities\Enums\ProcessStatus;
 use Unusualify\Modularity\Entities\Process;
 use Unusualify\Modularity\Entities\ProcessHistory;
+use Unusualify\Modularity\Entities\Scopes\ProcessableScopes;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\Processable;
 use Unusualify\Modularity\Entities\User;
@@ -70,7 +73,7 @@ class ProcessableTest extends ModelTestCase
 
         // Test that ProcessableScopes is included
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Scopes\ProcessableScopes::class,
+            ProcessableScopes::class,
             class_uses_recursive($this->model)
         ));
     }
@@ -80,7 +83,7 @@ class ProcessableTest extends ModelTestCase
         // Test the morphOne relationship
         $relationship = $this->model->process();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $relationship);
+        $this->assertInstanceOf(MorphOne::class, $relationship);
         $this->assertEquals(Process::class, get_class($relationship->getRelated()));
     }
 
@@ -89,7 +92,7 @@ class ProcessableTest extends ModelTestCase
         // Test the hasManyThrough relationship
         $relationship = $this->model->processHistories();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relationship);
+        $this->assertInstanceOf(HasManyThrough::class, $relationship);
         $this->assertEquals(ProcessHistory::class, get_class($relationship->getRelated()));
 
         // Test the relationship works by creating data

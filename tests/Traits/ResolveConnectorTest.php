@@ -2,12 +2,13 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
+use Illuminate\Support\Facades\File;
 use TestModules\TestModule\Repositories\ItemRepository;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Repositories\Repository;
 use Unusualify\Modularity\Tests\MockModuleManager;
 use Unusualify\Modularity\Tests\TestModulesCase;
 use Unusualify\Modularity\Traits\ResolveConnector;
-use Unusualify\Modularity\Facades\Modularity;
 
 class ResolveConnectorTest extends TestModulesCase
 {
@@ -19,7 +20,7 @@ class ResolveConnectorTest extends TestModulesCase
 
         // Only enable TestModule for fixture-based tests
         $statusFilePath = config('modules.activators.modularity.statuses-file');
-        \Illuminate\Support\Facades\File::put($statusFilePath, json_encode(['TestModule' => true], JSON_PRETTY_PRINT));
+        File::put($statusFilePath, json_encode(['TestModule' => true], JSON_PRETTY_PRINT));
 
         $module = MockModuleManager::getTestModule();
         $statusesFile = $module->getDirectoryPath('routes_statuses.json');
@@ -31,7 +32,8 @@ class ResolveConnectorTest extends TestModulesCase
 
     protected function createTester(): object
     {
-        return new class {
+        return new class
+        {
             use ResolveConnector;
 
             public function runFindConnectorRepository($connector)

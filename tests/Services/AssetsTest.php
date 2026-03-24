@@ -13,7 +13,7 @@ class AssetsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->assets = new Assets();
+        $this->assets = new Assets;
     }
 
     /** @test */
@@ -21,10 +21,13 @@ class AssetsTest extends TestCase
     {
         // Mock app environment
         $this->app->instance('env', 'local');
-        
+
         Config::shouldReceive('get')
             ->andReturnUsing(function ($key, $default = null) {
-                if ($key === 'app.env') return 'local';
+                if ($key === 'app.env') {
+                    return 'local';
+                }
+
                 return $default;
             });
 
@@ -43,6 +46,7 @@ class AssetsTest extends TestCase
                 if (str_contains($key, 'public_dir')) {
                     return 'unusual';
                 }
+
                 return $default;
             });
 
@@ -64,6 +68,7 @@ class AssetsTest extends TestCase
                 if (str_contains($key, 'vendor_path')) {
                     return 'vendor/unusualify/modularity';
                 }
+
                 return $default;
             });
 
@@ -82,6 +87,7 @@ class AssetsTest extends TestCase
                 if (str_contains($key, 'manifest')) {
                     return 'unusual-manifest.json';
                 }
+
                 return $default;
             });
 
@@ -99,8 +105,13 @@ class AssetsTest extends TestCase
 
         Config::shouldReceive('get')
             ->andReturnUsing(function ($key, $default = null) {
-                if ($key === 'app.env') return 'production';
-                if (str_contains($key, 'is_development')) return false;
+                if ($key === 'app.env') {
+                    return 'production';
+                }
+                if (str_contains($key, 'is_development')) {
+                    return false;
+                }
+
                 return $default;
             });
 
@@ -121,8 +132,13 @@ class AssetsTest extends TestCase
 
         Config::shouldReceive('get')
             ->andReturnUsing(function ($key, $default = null) {
-                if ($key === 'app.env') return 'local';
-                if (str_contains($key, 'is_development')) return true;
+                if ($key === 'app.env') {
+                    return 'local';
+                }
+                if (str_contains($key, 'is_development')) {
+                    return true;
+                }
+
                 return $default;
             });
 

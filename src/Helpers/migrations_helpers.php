@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
 if (! function_exists('modularityIncrementsMethod')) {
@@ -28,7 +29,7 @@ if (! function_exists('modularityIntegerMethod')) {
 
 if (! function_exists('createDefaultFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param bool $softDeletes
      * @param bool $published
      * @param bool $publishDates
@@ -44,7 +45,7 @@ if (! function_exists('createDefaultFields')) {
 
 if (! function_exists('createDefaultExtraTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param bool $softDeletes
      * @param bool $published
      * @param bool $publishDates
@@ -77,7 +78,7 @@ if (! function_exists('createDefaultExtraTableFields')) {
 
 if (! function_exists('createDefaultTranslationsTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param string $tableNameSingular
      * @param string|null $tableNamePlural
      * @return void
@@ -118,7 +119,7 @@ if (! function_exists('createDefaultTranslationsTableFields')) {
 
 if (! function_exists('createDefaultSlugsTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param string $tableNameSingular
      * @param string|null $tableNamePlural
      * @return void
@@ -143,7 +144,7 @@ if (! function_exists('createDefaultSlugsTableFields')) {
 
 if (! function_exists('createDefaultRelationshipTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param string $table1NameSingular
      * @param string $table2NameSingular
      * @param string|null $table1NamePlural
@@ -194,7 +195,7 @@ if (! function_exists('createDefaultRelationshipTableFields')) {
 
 if (! function_exists('createDefaultMorphPivotTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param string|null $modelName table
      * @param string|null $tableName tableables
      * @return void
@@ -202,7 +203,7 @@ if (! function_exists('createDefaultMorphPivotTableFields')) {
     function createDefaultMorphPivotTableFields($table, $modelName = null, $tableName = null, $morphedTableName = null)
     {
         if (! $modelName && ! $tableName) {
-            throw new \Exception('modelName or tableName is required');
+            throw new Exception('modelName or tableName is required');
         }
 
         if (! $modelName) {
@@ -233,7 +234,7 @@ if (! function_exists('createDefaultMorphPivotTableFields')) {
 
 if (! function_exists('createDefaultRevisionsTableFields')) {
     /**
-     * @param \Illuminate\Database\Schema\Blueprint $table
+     * @param Blueprint $table
      * @param string $tableNameSingular
      * @param string|null $tableNamePlural
      * @return void

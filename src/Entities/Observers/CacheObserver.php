@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Observers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -218,7 +219,7 @@ class CacheObserver
                             if ($target instanceof Model && get_class($target) === get_class($targetModelInstance)) {
 
                                 $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);
-                            } elseif ($target instanceof \Illuminate\Database\Eloquent\Collection) {
+                            } elseif ($target instanceof Collection) {
                                 foreach ($target as $item) {
                                     if ($item instanceof Model && get_class($item) === get_class($targetModelInstance)) {
                                         $this->invalidateItemCache($item, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);

@@ -4,9 +4,11 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\Modularity;
@@ -148,7 +150,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      */
     protected static array $mailMessageClassCallbacks = [];
 
-    public function __construct(public \Illuminate\Database\Eloquent\Model $model)
+    public function __construct(public Model $model)
     {
         $this->token = uniqid();
     }
@@ -174,7 +176,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
         ];
     }
 
-    public function getModel(): \Illuminate\Database\Eloquent\Model
+    public function getModel(): Model
     {
         return $this->model;
     }
@@ -221,7 +223,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the module route headline.
      *
-     * @param \Closure(\Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(Model): string $callback
      * @return void
      */
     public static function createModuleRouteHeadline(callable $callback)
@@ -232,7 +234,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the model title field.
      *
-     * @param \Closure(\Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(Model): string $callback
      * @return void
      */
     public static function createModelTitleField(callable $callback)
@@ -243,7 +245,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification subject.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createSubject(callable $callback)
@@ -254,7 +256,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification message.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createMailSubject(callable $callback)
@@ -265,7 +267,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification message.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createMessage(callable $callback)
@@ -276,7 +278,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification html message.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createHtmlMessage(callable $callback)
@@ -287,7 +289,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification mail message.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createMailMessage(callable $callback)
@@ -298,7 +300,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification action text.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createActionText(callable $callback)
@@ -309,7 +311,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification mail action text.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createMailActionText(callable $callback)
@@ -320,7 +322,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the notification mail salutation.
      *
-     * @param \Closure(mixed, \Illuminate\Database\Eloquent\Model): string $callback
+     * @param \Closure(mixed, Model): string $callback
      * @return void
      */
     public static function createMailSalutation(callable $callback)
@@ -331,7 +333,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when creating the database feature fields.
      *
-     * @param \Closure(array, mixed, \Illuminate\Database\Eloquent\Model): array $callback
+     * @param \Closure(array, mixed, Model): array $callback
      * @return void
      */
     public static function createDatabaseFeatureFields(callable $callback)
@@ -342,7 +344,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Set a callback that should be used when updating the Laravel mail message.
      *
-     * @param \Closure(MailMessage, mixed, \Illuminate\Database\Eloquent\Model): MailMessage $callback
+     * @param \Closure(MailMessage, mixed, Model): MailMessage $callback
      * @return void
      */
     public static function updateLaravelMailMessage(callable $callback)
@@ -353,7 +355,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the module route headline of the model.
      */
-    public function getModuleRouteHeadline(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModuleRouteHeadline(Model $model): string
     {
         if (isset(static::$moduleRouteHeadlineCallbacks[static::class]) && is_callable(static::$moduleRouteHeadlineCallbacks[static::class])) {
             return call_user_func(static::$moduleRouteHeadlineCallbacks[static::class], $model);
@@ -375,7 +377,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the title field of the model.
      */
-    public function getModelTitleField(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModelTitleField(Model $model): string
     {
         // if(!is_null($this->modelTitleField)){
         //     return $this->model->{$this->modelTitleField};
@@ -407,7 +409,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the subject for the notification.
      */
-    protected function getNotificationSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    protected function getNotificationSubject(object $notifiable, Model $model): string
     {
         $default = $this->getModuleRouteHeadline($model);
 
@@ -425,7 +427,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the subject for the notification.
      */
-    protected function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    protected function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $default = $this->getNotificationSubject($notifiable, $model);
 
@@ -443,7 +445,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the message for the notification.
      */
-    protected function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    protected function getNotificationMessage(object $notifiable, Model $model): string
     {
         $default = __('The :moduleRouteHeadline :modelTitleField has been updated.', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),
@@ -464,7 +466,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the message for the notification.
      */
-    protected function getNotificationMailMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    protected function getNotificationMailMessage(object $notifiable, Model $model): string
     {
         $default = $this->getNotificationMessage($notifiable, $model);
 
@@ -482,7 +484,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the html message for the notification.
      */
-    protected function getNotificationHtmlMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    protected function getNotificationHtmlMessage(object $notifiable, Model $model): string
     {
         $default = $this->getNotificationMessage($notifiable, $model);
 
@@ -500,7 +502,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the action text for the notification.
      */
-    public function getNotificationActionText(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationActionText(object $notifiable, Model $model): string
     {
         $default = __('View :module', ['module' => $this->getModuleRouteHeadline($model) ?? __('Notification')]);
 
@@ -518,7 +520,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     /**
      * Get the action text for the notification.
      */
-    public function getNotificationMailActionText(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailActionText(object $notifiable, Model $model): string
     {
         $default = $this->getNotificationActionText($notifiable, $model);
 
@@ -538,7 +540,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      *
      * @return string|null
      */
-    public function getNotificationRedirector(object $notifiable, \Illuminate\Database\Eloquent\Model $model)
+    public function getNotificationRedirector(object $notifiable, Model $model)
     {
         if (method_exists($this, 'redirectorModel')) {
             $model = $this->redirectorModel($model);
@@ -587,7 +589,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      *
      * @return string|null
      */
-    public function getNotificationMailRedirector(object $notifiable, \Illuminate\Database\Eloquent\Model $model)
+    public function getNotificationMailRedirector(object $notifiable, Model $model)
     {
         $notificationRecord = $notifiable->notifications()
             ->where('type', get_class($this))
@@ -622,7 +624,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
         return $default;
     }
 
-    protected function getMailMessage(MailMessage $mailMessage, object $notifiable, \Illuminate\Database\Eloquent\Model $model): MailMessage
+    protected function getMailMessage(MailMessage $mailMessage, object $notifiable, Model $model): MailMessage
     {
         if (isset(static::$mailMessageClassCallbacks[static::class]) && is_callable(static::$mailMessageClassCallbacks[static::class])) {
             return call_user_func(static::$mailMessageClassCallbacks[static::class], $mailMessage, $notifiable, $model);
@@ -734,7 +736,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      */
     public function failed(?\Throwable $exception): void
     {
-        \Illuminate\Support\Facades\Log::channel('modularity-notification-failure')->error(static::class . ' failed: ' . $exception->getMessage(), [
+        Log::channel('modularity-notification-failure')->error(static::class . ' failed: ' . $exception->getMessage(), [
             'exception' => $exception,
         ]);
     }

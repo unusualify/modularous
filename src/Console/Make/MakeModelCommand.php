@@ -2,13 +2,13 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Generators\FileGenerator;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\UFinder;
 use Unusualify\Modularity\Support\Decomposers\ModelRelationParser;

@@ -12,7 +12,7 @@ class JsonHydrateTest extends TestCase
         $input = [
             'type' => 'json',
             'name' => 'metadata',
-            'col' => ['sm' => 6]
+            'col' => ['sm' => 6],
         ];
 
         $h = new JsonHydrate($input, null, null, true);

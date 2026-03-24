@@ -3,7 +3,10 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
+use Unusualify\Modularity\Entities\File;
+use Unusualify\Modularity\Entities\Media;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -93,7 +96,7 @@ class HandleInertiaRequests extends Middleware
                 'topbarOptions' => modularityConfig('ui_settings.topbar'),
                 'bottomNavigationOptions' => modularityConfig('ui_settings.bottomNavigation'),
                 'uiPreferences' => $user ? get_modularity_ui_preferences() : [],
-                'uiPreferencesEndpoint' => \Illuminate\Support\Facades\Route::has('admin.profile.ui-preferences') ? route('admin.profile.ui-preferences') : '',
+                'uiPreferencesEndpoint' => Route::has('admin.profile.ui-preferences') ? route('admin.profile.ui-preferences') : '',
             ],
             'user' => [
                 'isGuest' => ! $user,
@@ -153,7 +156,7 @@ class HandleInertiaRequests extends Middleware
             $types[] = [
                 'value' => 'image',
                 'text' => 'Images',
-                'total' => \Unusualify\Modularity\Entities\Media::query()->authorized()->count(),
+                'total' => Media::query()->authorized()->count(),
                 'endpoint' => route('admin.media-library.media.index'),
                 'tagsEndpoint' => route('admin.media-library.media.tags'),
                 'uploaderConfig' => [],
@@ -164,7 +167,7 @@ class HandleInertiaRequests extends Middleware
             $types[] = [
                 'value' => 'file',
                 'text' => 'Files',
-                'total' => \Unusualify\Modularity\Entities\File::query()->authorized()->count(),
+                'total' => File::query()->authorized()->count(),
                 'endpoint' => route('admin.file-library.file.index'),
                 'tagsEndpoint' => route('admin.file-library.file.tags'),
                 'uploaderConfig' => [],

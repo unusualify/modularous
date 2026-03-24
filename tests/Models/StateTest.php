@@ -2,9 +2,12 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Unusualify\Modularity\Entities\State;
+use Unusualify\Modularity\Entities\Traits\HasTranslation;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class StateTest extends ModelTestCase
@@ -106,7 +109,7 @@ class StateTest extends ModelTestCase
     public function test_has_translation_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasTranslation::class,
+            HasTranslation::class,
             class_uses_recursive(new State)
         ));
     }
@@ -296,7 +299,7 @@ class StateTest extends ModelTestCase
 
         $translatedNames = $state->translatedAttribute('name');
 
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $translatedNames);
+        $this->assertInstanceOf(Collection::class, $translatedNames);
         $this->assertEquals('English Name', $translatedNames->get('en'));
         $this->assertEquals('Turkish Name', $translatedNames->get('tr'));
     }
@@ -339,7 +342,7 @@ class StateTest extends ModelTestCase
     public function test_state_extends_base_model()
     {
         $state = new State;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $state);
+        $this->assertInstanceOf(Model::class, $state);
     }
 
     public function test_has_timestamps()

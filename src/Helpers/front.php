@@ -70,7 +70,7 @@ if (! function_exists('modularity_svg_symbol_exists')) {
                             $parsedSymbolIds = array_fill_keys($matches[1], true);
                         }
                     });
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     return false;
                 }
             }

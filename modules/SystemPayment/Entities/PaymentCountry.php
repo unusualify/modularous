@@ -4,10 +4,12 @@ namespace Modules\SystemPayment\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\SystemPricing\Entities\VatRate;
+use Modules\SystemUtility\Entities\Country;
+use Modules\SystemUtility\Entities\Translations\CountryTranslation;
 use Unusualify\Modularity\Entities\Traits\HasRepeaters;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
 
-class PaymentCountry extends \Modules\SystemUtility\Entities\Country
+class PaymentCountry extends Country
 {
     use HasSpreadable, HasRepeaters;
 
@@ -22,7 +24,7 @@ class PaymentCountry extends \Modules\SystemUtility\Entities\Country
         'phone_code',
     ];
 
-    protected $translationModel = \Modules\SystemUtility\Entities\Translations\CountryTranslation::class;
+    protected $translationModel = CountryTranslation::class;
 
     protected $translationForeignKey = 'country_id';
 

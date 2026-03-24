@@ -2,14 +2,7 @@
 
 namespace Unusualify\Modularity\Tests;
 
-use Modules\SystemPayment\Entities\Payment;
-use Nwidart\Modules\LaravelModulesServiceProvider;
-use Spatie\Permission\PermissionServiceProvider;
 use Unusualify\Modularity\Activators\ModularityActivator;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Entities\Observers\PriceableObserver;
-use Unusualify\Modularity\LaravelServiceProvider;
-use Unusualify\Modularity\Providers\ModularityProvider;
 
 abstract class TestModulesCase extends TestCase
 {
@@ -38,7 +31,7 @@ abstract class TestModulesCase extends TestCase
         $generatorPaths = [
             'config' => ['path' => 'Config', 'generate' => true],
             'command' => ['path' => 'Console', 'generate' => false],
-            'migration' => ['path' => 'Database/Migrations', 'generate' =>true],
+            'migration' => ['path' => 'Database/Migrations', 'generate' => true],
             'seeder' => ['path' => 'Database/Seeders', 'generate' => true],
             'model' => ['path' => 'Entities', 'generate' => true],
             'repository' => ['path' => 'Repositories', 'generate' => true],
@@ -68,7 +61,7 @@ abstract class TestModulesCase extends TestCase
         } elseif (function_exists('getmypid')) {
             $statusesFile = 'modules_statuses_' . getmypid() . '.json';
         }
-        
+
         $this->statusesFilePath = base_path($statusesFile);
 
         $app['files']->put($this->statusesFilePath, json_encode([

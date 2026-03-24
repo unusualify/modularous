@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Tests\Helpers;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Tests\TestCase;
 
 class FrontHelpersTest extends TestCase

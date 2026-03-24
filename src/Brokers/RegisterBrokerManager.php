@@ -3,10 +3,11 @@
 namespace Unusualify\Modularity\Brokers;
 
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
+use Illuminate\Contracts\Auth\PasswordBroker;
 use InvalidArgumentException;
 
 /**
- * @mixin \Illuminate\Contracts\Auth\PasswordBroker
+ * @mixin PasswordBroker
  */
 class RegisterBrokerManager extends PasswordBrokerManager
 {

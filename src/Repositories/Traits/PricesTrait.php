@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Models\Currency;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Facades\CurrencyExchange;
 
 trait PricesTrait
@@ -35,7 +36,7 @@ trait PricesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -113,7 +114,7 @@ trait PricesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
@@ -135,7 +136,7 @@ trait PricesTrait
             $pricesByRole = null;
 
             foreach ($this->getColumns(__TRAIT__) as $role) {
-                if(!isset($prices)) {
+                if (! isset($prices)) {
                     $prices = $query->where('role', $role)->get();
                     $pricesByRole = $prices->groupBy('role');
                 }

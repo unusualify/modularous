@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Unusualify\Modularity\Entities\Filepond;
 
 class FilepondUpdated implements ShouldDispatchAfterCommit
 {
@@ -31,7 +32,7 @@ class FilepondUpdated implements ShouldDispatchAfterCommit
      *
      * @return void
      */
-    public function __construct(public \Unusualify\Modularity\Entities\Filepond $model) {}
+    public function __construct(public Filepond $model) {}
 
     public function broadcastOn(): array
     {

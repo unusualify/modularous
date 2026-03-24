@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
@@ -10,12 +11,14 @@ use Illuminate\Support\Facades\Schema;
 use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemPricing\Entities\Price;
+use Money\Currency;
 use Oobook\Priceable\Facades\PriceService;
 use Oobook\Priceable\Models\Currency as PriceableCurrency;
 use Oobook\Priceable\Models\PriceType;
 use Oobook\Priceable\Models\VatRate;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
 use Unusualify\Modularity\Entities\Traits\HasPayment;
+use Unusualify\Modularity\Entities\Traits\HasPriceable;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class HasPaymentTest extends ModelTestCase
@@ -192,7 +195,7 @@ class HasPaymentTest extends ModelTestCase
 
         // Test that HasPriceable is also included
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasPriceable::class,
+            HasPriceable::class,
             class_uses_recursive($this->model)
         ));
     }
@@ -217,7 +220,7 @@ class HasPaymentTest extends ModelTestCase
         // Test the morphMany relationship from HasPriceable
         $relationship = $this->model->prices();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relationship);
+        $this->assertInstanceOf(MorphMany::class, $relationship);
         $this->assertEquals(Price::class, get_class($relationship->getRelated()));
     }
 
@@ -517,7 +520,7 @@ class HasPaymentTest extends ModelTestCase
 
         $expectedFormatted = PriceService::formatAmount(
             $this->model->initial_price_excluding_vat,
-            new \Money\Currency($this->currency->iso_4217)
+            new Currency($this->currency->iso_4217)
         );
 
         $initialPriceExcludingVatFormatted = $this->model->initial_price_excluding_vat_formatted;
@@ -556,7 +559,7 @@ class HasPaymentTest extends ModelTestCase
 
         $expectedFormatted = PriceService::formatAmount(
             $this->model->payable_price_excluding_vat,
-            new \Money\Currency($this->currency->iso_4217)
+            new Currency($this->currency->iso_4217)
         ) . ' +' . __('VAT');
 
         $payablePriceExcludingVatFormatted = $this->model->payable_price_excluding_vat_formatted;
@@ -580,7 +583,7 @@ class HasPaymentTest extends ModelTestCase
 
         $expectedFormatted = PriceService::formatAmount(
             $this->model->total_cost_excluding_vat,
-            new \Money\Currency($this->currency->iso_4217)
+            new Currency($this->currency->iso_4217)
         );
 
         $totalCostExcludingVatFormatted = $this->model->total_cost_excluding_vat_formatted;
@@ -602,7 +605,7 @@ class HasPaymentTest extends ModelTestCase
 
         $expectedFormatted = PriceService::formatAmount(
             $this->model->total_cost_including_vat,
-            new \Money\Currency($this->currency->iso_4217)
+            new Currency($this->currency->iso_4217)
         );
         $totalCostIncludingVatFormatted = $this->model->total_cost_including_vat_formatted;
         $this->assertEquals($expectedFormatted, $totalCostIncludingVatFormatted);
@@ -642,7 +645,7 @@ class HasPaymentTest extends ModelTestCase
 
         $expectedFormatted = PriceService::formatAmount(
             $this->model->payable_price_including_vat,
-            new \Money\Currency($this->currency->iso_4217)
+            new Currency($this->currency->iso_4217)
         );
 
         $payablePriceIncludingVatFormatted = $this->model->payable_price_including_vat_formatted;

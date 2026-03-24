@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -12,6 +13,9 @@ use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Entities\Filepond;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Notifications\EmailVerification;
+use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
+use Unusualify\Modularity\Notifications\ResetPasswordNotification;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class UserTest extends ModelTestCase
@@ -231,7 +235,7 @@ class UserTest extends ModelTestCase
         ]);
 
         $this->assertInstanceOf(
-            \Illuminate\Database\Eloquent\Relations\BelongsTo::class,
+            BelongsTo::class,
             $user->company()
         );
 
@@ -526,16 +530,16 @@ class UserTest extends ModelTestCase
         $user = User::factory()->create();
         $token = Str::uuid();
         $user->sendGeneratePasswordNotification($token);
-        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\GeneratePasswordNotification::class, 1);
-        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\GeneratePasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
+        Notification::assertSentTimes(GeneratePasswordNotification::class, 1);
+        Notification::assertSentTo($user, GeneratePasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
             return $notification->token === $token;
         });
 
         $this->assertEquals($user->email, $user->getEmailForPasswordGeneration());
 
         $user->sendPasswordResetNotification($token);
-        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\ResetPasswordNotification::class, 1);
-        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\ResetPasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
+        Notification::assertSentTimes(ResetPasswordNotification::class, 1);
+        Notification::assertSentTo($user, ResetPasswordNotification::class, function ($notification, $channels, $notifiable) use ($token) {
             return $notification->token === $token;
         });
     }
@@ -555,8 +559,8 @@ class UserTest extends ModelTestCase
         $user = User::factory()->create();
         $token = Str::uuid();
         $user->sendRegisterNotification($token);
-        Notification::assertSentTimes(\Unusualify\Modularity\Notifications\EmailVerification::class, 1);
-        Notification::assertSentTo($user, \Unusualify\Modularity\Notifications\EmailVerification::class, function ($notification, $channels, $notifiable) use ($token) {
+        Notification::assertSentTimes(EmailVerification::class, 1);
+        Notification::assertSentTo($user, EmailVerification::class, function ($notification, $channels, $notifiable) use ($token) {
             return $notification->token === $token;
         });
 

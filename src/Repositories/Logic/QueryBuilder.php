@@ -4,10 +4,12 @@ namespace Unusualify\Modularity\Repositories\Logic;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
 use Unusualify\Modularity\Traits\SerializeModel;
 
@@ -22,7 +24,7 @@ trait QueryBuilder
      * @param int $perPage
      * @param bool $forcePagination
      * @param int|string|null $id
-     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function get($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
     {
@@ -157,7 +159,7 @@ trait QueryBuilder
      * @param bool $forcePagination
      * @param int|string|null $id
      * @param array $exceptIds
-     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getPaginator($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
     {
@@ -171,7 +173,7 @@ trait QueryBuilder
     /**
      * Paginate using request parameters (itemsPerPage, page, scopes, orders, etc.).
      *
-     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paginate(?Request $request = null)
     {
@@ -224,7 +226,7 @@ trait QueryBuilder
      * @param bool $forcePagination
      * @param int|string|null $id
      * @param array $exceptIds
-     * @return \Illuminate\Support\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getCached($with = [], $scopes = [], $orders = [], $perPage = 20, $appends = [], $forcePagination = false, $id = null, $exceptIds = [])
     {
@@ -291,7 +293,7 @@ trait QueryBuilder
 
         // Reconstruct the paginator from cached data
         if ($cachedData['type'] === 'paginator') {
-            return new \Illuminate\Pagination\LengthAwarePaginator(
+            return new LengthAwarePaginator(
                 collect($cachedData['items'])->map(function ($item) {
                     return $this->unserializeModel($item);
                 }),
@@ -299,7 +301,7 @@ trait QueryBuilder
                 $cachedData['perPage'],
                 $cachedData['currentPage'],
                 [
-                    'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+                    'path' => Paginator::resolveCurrentPath(),
                     'pageName' => 'page',
                 ]
             );
@@ -316,7 +318,7 @@ trait QueryBuilder
      * @param array $scopes
      * @return \Unusualify\Modularity\Models\Model
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function getById($id, $with = [], $withCount = [], $lazy = [], $scopes = [], $useDefaultScopes = false)
     {
@@ -335,7 +337,7 @@ trait QueryBuilder
 
         $result = $query->with($withs)->withCount($withCount)->findOrFail($id);
 
-        if ($lazy && count($lazy) > 0 && $result instanceof \Illuminate\Database\Eloquent\Model) {
+        if ($lazy && count($lazy) > 0 && $result instanceof Model) {
             foreach ($lazy as $relation) {
                 $parts = explode('.', $relation);
 
@@ -344,7 +346,7 @@ trait QueryBuilder
                         if ($i === 0) {
                             $result->load($part);
                         } else {
-                            if ($result->{$parts[$i - 1]} instanceof \Illuminate\Database\Eloquent\Model) {
+                            if ($result->{$parts[$i - 1]} instanceof Model) {
                                 $result->{$parts[$i - 1]}->load($part);
                             } elseif ($result->{$parts[$i - 1]} instanceof \Illuminate\Database\Eloquent\Collection) {
                                 $result->{$parts[$i - 1]} = $result->{$parts[$i - 1]}->map(function ($item) use ($part) {
@@ -371,7 +373,7 @@ trait QueryBuilder
      * @param bool $isFormatted Deprecated. it's functionless now, be removed on v1.0.0
      * @param array $schema
      * @param array $lazy
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getByIds(array $ids, $appends = [], $with = [], $scopes = [], $orders = [], $isFormatted = null, $schema = null, $lazy = [])
     {
@@ -403,7 +405,7 @@ trait QueryBuilder
 
         if ($lazy && count($lazy) > 0) {
             $result = $result->map(function ($item) use ($lazy) {
-                if ($lazy && count($lazy) > 0 && $item instanceof \Illuminate\Database\Eloquent\Model) {
+                if ($lazy && count($lazy) > 0 && $item instanceof Model) {
                     foreach ($lazy as $relation) {
                         $parts = explode('.', $relation);
 
@@ -412,7 +414,7 @@ trait QueryBuilder
                                 if ($i === 0) {
                                     $item->load($part);
                                 } else {
-                                    if ($item->{$parts[$i - 1]} instanceof \Illuminate\Database\Eloquent\Model) {
+                                    if ($item->{$parts[$i - 1]} instanceof Model) {
                                         $item->{$parts[$i - 1]}->load($part);
                                     } elseif ($item->{$parts[$i - 1]} instanceof \Illuminate\Database\Eloquent\Collection) {
                                         $item->{$parts[$i - 1]} = $item->{$parts[$i - 1]}->map(function ($item) use ($part) {
@@ -453,7 +455,7 @@ trait QueryBuilder
      * @param array $orders
      * @param bool $isFormatted
      * @param array $schema
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getByColumnValue($column, array|string|int|bool $value, $with = [], $scopes = [], $orders = [], $isFormatted = false, $schema = null)
     {
@@ -485,7 +487,7 @@ trait QueryBuilder
      * @param string $column
      * @param array $orders
      * @param null $exceptId
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function listAll($with = [], $scopes = [], $orders = [])
     {
@@ -511,7 +513,7 @@ trait QueryBuilder
      * @param string $column
      * @param array $orders
      * @param null $exceptId
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function list($column = 'name', $with = [], $scopes = [], $orders = [], $appends = [], $perPage = -1, $exceptId = null, $forcePagination = false)
     {
@@ -667,7 +669,7 @@ trait QueryBuilder
      * @param array $scopes
      * @return \Unusualify\Modularity\Models\Model
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      *
      * @deprecated getByIdWithScopes is deprecated, use getById instead with $useDefaultScopes = true, will be removed on v1.0.0
      */

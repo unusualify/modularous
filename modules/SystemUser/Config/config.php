@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\Permission\Models\Permission;
+
 return [
     'name' => 'SystemUser',
     'system_prefix' => true,
@@ -622,7 +624,7 @@ return [
                     ],
 
                     'route' => 'permission',
-                    'model' => Spatie\Permission\Models\Permission::class,
+                    'model' => Permission::class,
                 ],
                 'permissions_' => [
                     'type' => 'autocomplete',
@@ -1429,7 +1431,7 @@ return [
                     'groupable' => true,
                     'formatter' => [
                         'dynamic',
-                    ]
+                    ],
                 ],
                 [
                     'title' => 'Users',

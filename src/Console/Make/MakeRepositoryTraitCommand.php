@@ -2,10 +2,10 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class MakeRepositoryTraitCommand extends BaseCommand
 {

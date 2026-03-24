@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Tests\Models;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Unusualify\Modularity\Entities\File;
+use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Services\FileLibrary\FileService;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -108,7 +109,7 @@ class FileTest extends ModelTestCase
     public function test_has_creator_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasCreator::class,
+            HasCreator::class,
             class_uses_recursive($this->file)
         ));
     }

@@ -21,7 +21,7 @@ class CacheHelpersTest extends TestCase
         Config::set('modularity.cache.enabled', true);
         Config::set('modularity.cache.use_tags', false);
 
-        $this->cacheService = new ConcreteCacheHelpers();
+        $this->cacheService = new ConcreteCacheHelpers;
     }
 
     /** @test */
@@ -49,6 +49,7 @@ class CacheHelpersTest extends TestCase
         $callbackExecuted = false;
         $value = $this->cacheService->remember('test-key', 60, function () use (&$callbackExecuted) {
             $callbackExecuted = true;
+
             return 'test-value';
         });
 
@@ -293,7 +294,7 @@ class CacheHelpersTest extends TestCase
     public function it_uses_tags_for_forget_with_module_name()
     {
         $this->cacheService->setUsesTags(true);
-        
+
         $result = $this->cacheService->forget('tagged-forget-key', 'TestModule');
         // Array driver doesn't support tags properly, so result may vary
         $this->assertIsBool($result);
@@ -353,6 +354,7 @@ class CacheHelpersTest extends TestCase
             60,
             function () use (&$callbackExecuted) {
                 $callbackExecuted = true;
+
                 return 'callback-value';
             },
             'TestModule',
@@ -406,6 +408,7 @@ class CacheHelpersTest extends TestCase
         $callbackExecuted = false;
         $value = $this->cacheService->rememberForever('forever-key', function () use (&$callbackExecuted) {
             $callbackExecuted = true;
+
             return 'callback-value';
         });
 
@@ -495,8 +498,11 @@ class ConcreteCacheHelpers
     use CacheHelpers;
 
     protected $store;
+
     protected $prefix = 'modularity';
+
     protected $usesTags = false;
+
     protected $enabled = true;
 
     public function __construct()

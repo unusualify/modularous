@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use Unusualify\Modularity\Services\Connector;
 
 class RepeaterHydrate extends InputHydrate
@@ -41,7 +42,7 @@ class RepeaterHydrate extends InputHydrate
             $input['orderKey'] ??= 'position';
         }
 
-        $input['singularLabel'] = isset($input['label']) ? \Illuminate\Support\Str::singular($input['label']) : null;
+        $input['singularLabel'] = isset($input['label']) ? Str::singular($input['label']) : null;
 
         $default_repeater_col = [
             'cols' => 12,
@@ -67,7 +68,7 @@ class RepeaterHydrate extends InputHydrate
                 //     $inputStudlyName = $matches[1];
                 //     $inputSnakeName = $this->getSnakeCase($inputStudlyName);
                 // }
-            } else if (isset($input['newConnector'])) {
+            } elseif (isset($input['newConnector'])) {
                 $connector = new Connector($input['newConnector']);
                 $inputStudlyName = $connector->getRouteName();
                 $inputSnakeName = $this->getSnakeCase($inputStudlyName);
@@ -86,7 +87,7 @@ class RepeaterHydrate extends InputHydrate
                                     $_input['repository'] ??= $input['repository'];
                                 } elseif (isset($input['model'])) {
                                     $_input['model'] ??= $input['model'];
-                                } else if (isset($input['newConnector'])) {
+                                } elseif (isset($input['newConnector'])) {
                                     $_input['newConnector'] ??= $input['newConnector'];
                                 }
                             } else {

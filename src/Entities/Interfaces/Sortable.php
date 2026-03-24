@@ -2,11 +2,13 @@
 
 namespace Unusualify\Modularity\Entities\Interfaces;
 
+use Illuminate\Database\Eloquent\Builder;
+
 interface Sortable
 {
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function scopeOrdered($query);
 

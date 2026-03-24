@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Logging;
 
 use Illuminate\Support\Facades\Notification;
+use Modules\SystemNotification\Notifications\LogNotification;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
@@ -85,6 +86,6 @@ class ModularityLogHandler extends AbstractProcessingHandler
     protected function sendEmailNotification(LogRecord $record): void
     {
         Notification::route('mail', 'oguzhan@olmadikprojeler.com')
-            ->notify(new \Modules\SystemNotification\Notifications\LogNotification($record));
+            ->notify(new LogNotification($record));
     }
 }

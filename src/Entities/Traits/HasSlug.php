@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\TwillCapsules;
 
@@ -23,7 +26,7 @@ trait HasSlug
     /**
      * Defines the one-to-many relationship for slug objects.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function slugs()
     {
@@ -66,9 +69,9 @@ trait HasSlug
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $slug
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeExistsSlug($query, $slug)
     {
@@ -80,9 +83,9 @@ trait HasSlug
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $slug
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeExistsInactiveSlug($query, $slug)
     {
@@ -93,9 +96,9 @@ trait HasSlug
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $slug
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeExistsFallbackLocaleSlug($query, $slug)
     {
@@ -554,7 +557,7 @@ trait HasSlug
      *
      * @param mixed $value
      * @param string|null $field
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
     public function resolveRouteBinding($value, $field = null)
     {

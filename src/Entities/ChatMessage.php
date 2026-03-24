@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Unusualify\Modularity\Entities\Scopes\ChatMessageScopes;
 use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
@@ -33,7 +34,7 @@ class ChatMessage extends Model
     ];
 
     protected $with = ['creator'];
-    
+
     /**
      * The accessors to append to the model's array form.
      *
@@ -71,7 +72,7 @@ class ChatMessage extends Model
         });
     }
 
-    public function chat(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function chat(): BelongsTo
     {
         return $this->belongsTo(Chat::class);
     }

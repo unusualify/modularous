@@ -2,12 +2,15 @@
 
 namespace Unusualify\Modularity\Providers;
 
+use Camroncade\Timezone\TimezoneServiceProvider;
+use Torann\GeoIP\GeoIPServiceProvider;
+
 class ModularityProvider extends ServiceProvider
 {
     protected $providers = [
         // Third Party Providers
-        \Torann\GeoIP\GeoIPServiceProvider::class,
-        \Camroncade\Timezone\TimezoneServiceProvider::class,
+        GeoIPServiceProvider::class,
+        TimezoneServiceProvider::class,
 
         // Unusual Providers
         BaseServiceProvider::class,

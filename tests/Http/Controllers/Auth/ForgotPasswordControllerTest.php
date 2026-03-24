@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Contracts\Auth\PasswordBroker;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Mockery;
@@ -17,7 +21,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
     {
         parent::setUp();
 
-        $this->controller = new ForgotPasswordController();
+        $this->controller = new ForgotPasswordController;
     }
 
     protected function tearDown(): void
@@ -37,7 +41,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
     {
         $response = $this->controller->showLinkRequestForm();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -45,13 +49,13 @@ class ForgotPasswordControllerTest extends AuthTestCase
     {
         $broker = $this->controller->broker();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Auth\PasswordBroker::class, $broker);
+        $this->assertInstanceOf(PasswordBroker::class, $broker);
     }
 
     /** @test */
     public function it_returns_success_response_when_reset_link_sent(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('sendResetLink')
             ->andReturn(Password::RESET_LINK_SENT);
 
@@ -65,7 +69,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->sendResetLinkEmail($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('variant', $data);
@@ -74,7 +78,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_failed_response_when_reset_link_fails(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('sendResetLink')
             ->andReturn(Password::INVALID_USER);
 
@@ -88,7 +92,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->sendResetLinkEmail($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('email', $data);
         $this->assertArrayHasKey('message', $data);
@@ -98,7 +102,7 @@ class ForgotPasswordControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_redirect_on_success_when_not_requesting_json(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('sendResetLink')
             ->andReturn(Password::RESET_LINK_SENT);
 
@@ -111,13 +115,13 @@ class ForgotPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->sendResetLinkEmail($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
     public function it_returns_redirect_on_failure_when_not_requesting_json(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('sendResetLink')
             ->andReturn(Password::INVALID_USER);
 
@@ -130,6 +134,6 @@ class ForgotPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->sendResetLinkEmail($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

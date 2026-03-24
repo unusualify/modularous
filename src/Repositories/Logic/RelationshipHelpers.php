@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Repositories\Logic;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 
 trait RelationshipHelpers
@@ -58,11 +61,11 @@ trait RelationshipHelpers
 
     public function getRelationForeignKey($relation)
     {
-        if ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
+        if ($relation instanceof BelongsTo) {
             return $this->getForeignKeyBelongsTo($relation);
-        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsToMany) {
+        } elseif ($relation instanceof BelongsToMany) {
             return $this->getForeignKeyBelongsToMany($relation);
-        } elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\HasMany) {
+        } elseif ($relation instanceof HasMany) {
             return $this->getForeignKeyHasMany($relation);
         } else {
             throw new \InvalidArgumentException('Invalid relation type');
@@ -72,7 +75,7 @@ trait RelationshipHelpers
     /**
      * @return string
      */
-    private function getForeignKeyBelongsTo(\Illuminate\Database\Eloquent\Relations\BelongsTo $relation)
+    private function getForeignKeyBelongsTo(BelongsTo $relation)
     {
         return $relation->getForeignKeyName();
     }
@@ -80,7 +83,7 @@ trait RelationshipHelpers
     /**
      * @return string
      */
-    private function getForeignKeyBelongsToMany(\Illuminate\Database\Eloquent\Relations\BelongsToMany $relation)
+    private function getForeignKeyBelongsToMany(BelongsToMany $relation)
     {
         return $relation->getRelatedPivotKeyName();
     }
@@ -88,7 +91,7 @@ trait RelationshipHelpers
     /**
      * @return string
      */
-    private function getForeignKeyHasMany(\Illuminate\Database\Eloquent\Relations\HasMany $relation)
+    private function getForeignKeyHasMany(HasMany $relation)
     {
         return $relation->getForeignKeyName();
     }

@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Tests;
 use Oobook\Database\Eloquent\ManageEloquentServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Spatie\Activitylog\Models\Activity;
+use Unusualify\Modularity\Entities\User;
 
 abstract class ModelTestCase extends TestCase
 {
@@ -49,7 +50,7 @@ abstract class ModelTestCase extends TestCase
         ]);
         $app['config']->set('auth.providers.modularity_users', [
             'driver' => 'eloquent',
-            'model' => \Unusualify\Modularity\Entities\User::class,
+            'model' => User::class,
         ]);
         $app['config']->set('auth.passwords.modularity_users', [
             'provider' => 'modularity_users',

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\View;
 
 use Illuminate\View\Component;
+use Illuminate\View\View;
 
 class Table extends Component
 {
@@ -35,7 +36,7 @@ class Table extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\View\View|string
+     * @return View|string
      */
     public function render()
     {

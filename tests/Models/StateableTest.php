@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\State;
@@ -150,7 +151,7 @@ class StateableTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $stateable = new Stateable;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $stateable);
+        $this->assertInstanceOf(Model::class, $stateable);
     }
 
     public function test_pivot_table_functionality()

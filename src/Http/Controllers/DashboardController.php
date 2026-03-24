@@ -2,9 +2,12 @@
 
 namespace Unusualify\Modularity\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
 use Unusualify\Modularity\Traits\Allowable;
 use Unusualify\Modularity\View\Component;
@@ -23,7 +26,7 @@ class DashboardController extends BaseController
      */
     protected $routeName = 'Dashboard';
 
-    public function __construct(\Illuminate\Foundation\Application $app, Request $request)
+    public function __construct(Application $app, Request $request)
     {
         parent::__construct(
             $app,
@@ -45,7 +48,7 @@ class DashboardController extends BaseController
         }
 
         $endpoints = $this->getUrls();
-        $pageTitle = __('Dashboard') . ' - ' . \Unusualify\Modularity\Facades\Modularity::pageTitle();
+        $pageTitle = __('Dashboard') . ' - ' . Modularity::pageTitle();
         $headerTitle = __('Dashboard');
 
         if ($this->shouldUseInertia()) {
@@ -62,7 +65,7 @@ class DashboardController extends BaseController
     {
         $this->shareInertiaStoreVariables();
 
-        return \Inertia\Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard', [
             'blockItems' => $data['blockItems'] ?? [],
             'endpoints' => $data['endpoints'] ?? new \StdClass,
             'mainConfiguration' => $this->getInertiaMainConfiguration($data),

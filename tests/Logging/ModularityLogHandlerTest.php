@@ -34,7 +34,7 @@ class ModularityLogHandlerTest extends TestCase
 
     private function deleteDirectory($dir)
     {
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             return;
         }
 
@@ -51,7 +51,7 @@ class ModularityLogHandlerTest extends TestCase
      */
     public function it_can_be_instantiated_with_default_parameters()
     {
-        $handler = new ModularityLogHandler();
+        $handler = new ModularityLogHandler;
 
         $this->assertInstanceOf(ModularityLogHandler::class, $handler);
     }
@@ -71,7 +71,7 @@ class ModularityLogHandlerTest extends TestCase
      */
     public function it_generates_daily_log_path_with_current_date()
     {
-        $handler = new ModularityLogHandler();
+        $handler = new ModularityLogHandler;
 
         $reflection = new \ReflectionClass($handler);
         $method = $reflection->getMethod('getDailyLogPath');
@@ -95,14 +95,14 @@ class ModularityLogHandlerTest extends TestCase
 
         // Create logs subdirectory
         $logsDir = $this->tempLogDir . '/logs';
-        if (!is_dir($logsDir)) {
+        if (! is_dir($logsDir)) {
             mkdir($logsDir, 0777, true);
         }
 
-        $handler = new ModularityLogHandler();
+        $handler = new ModularityLogHandler;
 
         $record = new LogRecord(
-            datetime: new \DateTimeImmutable(),
+            datetime: new \DateTimeImmutable,
             channel: 'test',
             level: Level::Debug,
             message: 'Test debug message',
@@ -132,7 +132,7 @@ class ModularityLogHandlerTest extends TestCase
     {
         // We'll test that the sendEmailNotification method gets called for critical logs
         // by checking that it attempts to send via the notification route
-        
+
         // Skip this test as it requires actual notification classes to exist
         $this->markTestSkipped('Requires SystemNotification module to be present');
     }
@@ -150,14 +150,14 @@ class ModularityLogHandlerTest extends TestCase
 
         // Create logs subdirectory
         $logsDir = $this->tempLogDir . '/logs';
-        if (!is_dir($logsDir)) {
+        if (! is_dir($logsDir)) {
             mkdir($logsDir, 0777, true);
         }
 
-        $handler = new ModularityLogHandler();
+        $handler = new ModularityLogHandler;
 
         $record = new LogRecord(
-            datetime: new \DateTimeImmutable(),
+            datetime: new \DateTimeImmutable,
             channel: 'test',
             level: Level::Debug,
             message: 'Debug message',
@@ -217,11 +217,11 @@ class ModularityLogHandlerTest extends TestCase
 
         // Create logs subdirectory
         $logsDir = $this->tempLogDir . '/logs';
-        if (!is_dir($logsDir)) {
+        if (! is_dir($logsDir)) {
             mkdir($logsDir, 0777, true);
         }
 
-        $handler = new ModularityLogHandler();
+        $handler = new ModularityLogHandler;
 
         $record = new LogRecord(
             datetime: new \DateTimeImmutable('2024-02-15 10:30:00'),

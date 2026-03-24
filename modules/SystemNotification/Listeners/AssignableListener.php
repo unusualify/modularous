@@ -5,6 +5,7 @@ namespace Modules\SystemNotification\Listeners;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Modules\SystemNotification\Events\AssignmentCreated;
+use Modules\SystemNotification\Events\AssignmentUpdated;
 use Modules\SystemNotification\Notifications\TaskCreatedNotification;
 use Modules\SystemNotification\Notifications\TaskUpdatedNotification;
 
@@ -15,7 +16,7 @@ class AssignableListener implements ShouldHandleEventsAfterCommit
     /**
      * Handle the event.
      */
-    public function handle(\Modules\SystemNotification\Events\AssignmentCreated|\Modules\SystemNotification\Events\AssignmentUpdated $event): void
+    public function handle(AssignmentCreated|AssignmentUpdated $event): void
     {
         $isCreated = get_class($event) === AssignmentCreated::class;
         $model = $event->model;

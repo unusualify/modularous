@@ -9,6 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use JoeDixon\Translation\Drivers\Translation;
 use JoeDixon\Translation\Scanner;
@@ -18,7 +19,9 @@ use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
 use Unusualify\Modularity\Entities\Enums\Permission;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\LaravelServiceProvider;
 use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Services\FileTranslation;
 use Unusualify\Modularity\Support\Decomposers\SchemaParser;
 use Unusualify\Modularity\Traits\ManageNames;
 
@@ -66,7 +69,7 @@ class RouteGenerator extends Generator
     /**
      * The module instance.
      *
-     * @var \Unusualify\Modularity\Module
+     * @var Module
      */
     protected $module;
 
@@ -362,13 +365,13 @@ class RouteGenerator extends Generator
             : base_path('lang');
 
         if (! file_exists($langPath)) {
-            \Illuminate\Support\Facades\Artisan::call('vendor:publish', [
-                '--provider' => \Unusualify\Modularity\LaravelServiceProvider::class,
+            Artisan::call('vendor:publish', [
+                '--provider' => LaravelServiceProvider::class,
                 '--tag' => 'lang',
             ]);
         }
 
-        $this->translation = new \Unusualify\Modularity\Services\FileTranslation(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
+        $this->translation = new FileTranslation(new Filesystem, $langPath, 'en', $this->app->make(Scanner::class));
     }
 
     public function setTranslation($translation)
@@ -535,6 +538,7 @@ class RouteGenerator extends Generator
     {
         return $this->customModel;
     }
+
     /**
      * Set custom model.
      *
@@ -737,7 +741,6 @@ class RouteGenerator extends Generator
                 if ($this->filesystem->exists($path) === true) {
                     continue;
                 }
-
 
                 if ($this->getTest()) {
                     $this->console->info("It's going to create {$path} directory!");
@@ -1089,7 +1092,7 @@ class RouteGenerator extends Generator
     public function createRoutePermissions(): bool
     {
         try {
-            if (!class_exists($repo = 'Modules\SystemUser\Repositories\PermissionRepository')) {
+            if (! class_exists($repo = 'Modules\SystemUser\Repositories\PermissionRepository')) {
                 return true;
             }
 

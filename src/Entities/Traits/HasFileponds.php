@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Unusualify\Modularity\Entities\Filepond;
 use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
 
@@ -41,7 +42,7 @@ trait HasFileponds
         return $class;
     }
 
-    public function fileponds(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function fileponds(): MorphMany
     {
         $filepondableClass = $this->getFilepondableClass();
 

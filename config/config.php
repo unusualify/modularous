@@ -1,6 +1,11 @@
 <?php
 
 use Unusualify\Modularity\Activators\FileActivator;
+use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularity\Notifications\EmailVerification;
+use Unusualify\Modularity\Repositories\Repository;
 
 return [
     'namespace' => 'Unusualify\\Modularity',
@@ -8,7 +13,7 @@ return [
 
     'system_prefix' => 'system',
 
-    'verification_email_class' => \Unusualify\Modularity\Notifications\EmailVerification::class,
+    'verification_email_class' => EmailVerification::class,
     // 'app_url' => parse_url(env('APP_URL'))['host'] ?? parse_url(env('APP_URL'))['path'],
     'app_url' => env('APP_URL'),
     // 'admin_app_url' => env('ADMIN_APP_URL', env('ADMIN_APP_PATH') ? null : 'admin.' . parse_url(env('APP_URL'))['host']),
@@ -62,10 +67,10 @@ return [
     'benchmark_log_file' => env('MODULARITY_BENCHMARK_LOG_FILE', 'modularity-benchmark.log'),
     'benchmark_emergency_time' => env('MODULARITY_BENCHMARK_EMERGENCY_TIME', 1000), // in milliseconds
 
-    'base_model' => \Unusualify\Modularity\Entities\Model::class,
-    'base_repository' => \Unusualify\Modularity\Repositories\Repository::class,
-    'base_controller' => \Unusualify\Modularity\Http\Controllers\BaseController::class,
-    'base_request' => \Unusualify\Modularity\Http\Requests\Request::class,
+    'base_model' => Model::class,
+    'base_repository' => Repository::class,
+    'base_controller' => BaseController::class,
+    'base_request' => Request::class,
     'route_patterns' => [
         'id' => '[0-9]+',
         'payment' => '[0-9]+',

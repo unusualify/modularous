@@ -6,6 +6,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Modularity;
+use Unusualify\Modularity\Module;
 
 class ModularityTest extends TestCase
 {
@@ -59,7 +60,7 @@ class ModularityTest extends TestCase
     {
         // Mock a system module
         $modules = [
-            'test-module' => new \Unusualify\Modularity\Module('test-module', '/path/to/module'),
+            'test-module' => new Module('test-module', '/path/to/module'),
         ];
 
         $this->modularity->shouldReceive('allEnabled')
@@ -79,7 +80,7 @@ class ModularityTest extends TestCase
         $this->assertFalse($this->modularity->deleteModule($moduleName));
 
         // Test existing module
-        $module = new \Unusualify\Modularity\Module($moduleName, '/path/to/module');
+        $module = new Module($moduleName, '/path/to/module');
         $this->modularity->shouldReceive('all')
             ->once()
             ->andReturn([$module]);

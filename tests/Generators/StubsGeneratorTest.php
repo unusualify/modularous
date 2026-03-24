@@ -5,17 +5,21 @@ namespace Unusualify\Modularity\Tests\Generators;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
+use Mockery;
 use Unusualify\Modularity\Generators\StubsGenerator;
 use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery;
 
 class StubsGeneratorTest extends TestCase
 {
     protected $generator;
+
     protected $config;
+
     protected $filesystem;
+
     protected $console;
+
     protected $module;
 
     protected function setUp(): void
@@ -64,7 +68,7 @@ class StubsGeneratorTest extends TestCase
     public function it_verifies_forcible_stub_with_fix_true()
     {
         $this->generator->setFix(true);
-        
+
         // No only/except set, should return true (it falls through to return true after dd removal)
         // Wait, looking at the code:
         /*
@@ -94,13 +98,8 @@ class StubsGeneratorTest extends TestCase
     public function it_returns_zero_on_generate_when_no_existing_config()
     {
         // Use anonymous class to avoid real stub loading and Mockery issues with protected trait methods
-        $generator = new class(
-            'TestStubs',
-            $this->config,
-            $this->filesystem,
-            $this->console,
-            $this->module
-        ) extends StubsGenerator {
+        $generator = new class('TestStubs', $this->config, $this->filesystem, $this->console, $this->module) extends StubsGenerator
+        {
             protected function getStubContents($stub)
             {
                 return 'stub content';
@@ -109,11 +108,11 @@ class StubsGeneratorTest extends TestCase
 
         $this->module->shouldReceive('getRawRouteConfig')->with('TestStubs')->andReturn([]);
         $this->module->shouldReceive('getPath')->andReturn('/tmp/module');
-        
+
         $this->config->shouldReceive('get')->with('modularity.stubs.files')->andReturn(['stub' => 'file.php']);
         $this->filesystem->shouldReceive('isDirectory')->andReturn(true);
         $this->filesystem->shouldReceive('put')->atLeast()->once();
-        
+
         $this->console->shouldReceive('info');
 
         $this->assertEquals(0, $generator->generate());
@@ -124,7 +123,7 @@ class StubsGeneratorTest extends TestCase
     {
         $this->module->shouldReceive('getRawRouteConfig')->with('TestStubs')->andReturn(['existing' => 'config']);
         $this->console->shouldReceive('error')->with('Module Route [TestStubs] files already exist!');
-        
+
         $result = $this->generator->generate();
         $this->assertEquals(E_ERROR, $result);
     }
@@ -132,13 +131,8 @@ class StubsGeneratorTest extends TestCase
     /** @test */
     public function it_returns_zero_when_config_exists_with_force_flag()
     {
-        $generator = new class(
-            'TestStubs',
-            $this->config,
-            $this->filesystem,
-            $this->console,
-            $this->module
-        ) extends StubsGenerator {
+        $generator = new class('TestStubs', $this->config, $this->filesystem, $this->console, $this->module) extends StubsGenerator
+        {
             protected function getStubContents($stub)
             {
                 return 'stub content';
@@ -146,7 +140,7 @@ class StubsGeneratorTest extends TestCase
         };
 
         $generator->setForce(true);
-        
+
         $this->module->shouldReceive('getRawRouteConfig')->with('TestStubs')->andReturn(['existing' => 'config']);
         $this->module->shouldReceive('getPath')->andReturn('/tmp/module');
         $this->config->shouldReceive('get')->with('modularity.stubs.files')->andReturn(['stub' => 'file.php']);

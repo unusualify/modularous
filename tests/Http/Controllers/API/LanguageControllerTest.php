@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Unusualify\Modularity\Http\Controllers\API\LanguageController;
 use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\Translation\Translator;
 
 class LanguageControllerTest extends TestCase
 {
@@ -17,7 +18,7 @@ class LanguageControllerTest extends TestCase
 
     public function test_index_returns_json_response()
     {
-        $translator = $this->createMock(\Unusualify\Modularity\Translation\Translator::class);
+        $translator = $this->createMock(Translator::class);
         $translator->method('getTranslations')->willReturn(['en' => ['key' => 'value']]);
         $this->app->instance('translator', $translator);
 
@@ -32,7 +33,7 @@ class LanguageControllerTest extends TestCase
 
     public function test_index_returns_array_structure()
     {
-        $translator = $this->createMock(\Unusualify\Modularity\Translation\Translator::class);
+        $translator = $this->createMock(Translator::class);
         $translator->method('getTranslations')->willReturn(['en' => ['key' => 'value']]);
         $this->app->instance('translator', $translator);
 

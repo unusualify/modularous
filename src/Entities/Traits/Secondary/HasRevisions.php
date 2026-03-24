@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Secondary;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Unusualify\Modularity\Facades\TwillCapsules;
 
 trait HasRevisions
@@ -9,7 +11,7 @@ trait HasRevisions
     /**
      * Defines the one-to-many relationship for revisions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function revisions()
     {
@@ -19,8 +21,8 @@ trait HasRevisions
     /**
      * Scope a query to only include the current user's revisions.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function scopeMine($query)
     {

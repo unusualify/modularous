@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\TemporaryFilepond;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -89,7 +90,7 @@ class TemporaryFilepondTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $temporaryFilepond = new TemporaryFilepond;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $temporaryFilepond);
+        $this->assertInstanceOf(Model::class, $temporaryFilepond);
     }
 
     public function test_has_timestamps()

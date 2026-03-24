@@ -2,10 +2,12 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Unusualify\Modularity\Models\Model;
+
 trait AuthorizableTrait
 {
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param array $schema
      * @return array

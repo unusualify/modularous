@@ -2,7 +2,10 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -14,6 +17,7 @@ use Oobook\Priceable\Facades\PriceService;
 use Oobook\Priceable\Models\Currency as PriceableCurrency;
 use Oobook\Priceable\Models\PriceType;
 use Oobook\Priceable\Models\VatRate;
+use Unusualify\Modularity\Entities\Mutators\HasPriceableMutators;
 use Unusualify\Modularity\Entities\Traits\HasPriceable;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -89,7 +93,7 @@ class HasPriceableTest extends ModelTestCase
         ));
 
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Mutators\HasPriceableMutators::class,
+            HasPriceableMutators::class,
             class_uses_recursive($this->model)
         ));
     }
@@ -133,7 +137,7 @@ class HasPriceableTest extends ModelTestCase
         // Test the morphMany relationship
         $relationship = $this->model->prices();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relationship);
+        $this->assertInstanceOf(MorphMany::class, $relationship);
         $this->assertEquals(Price::class, get_class($relationship->getRelated()));
     }
 
@@ -149,7 +153,7 @@ class HasPriceableTest extends ModelTestCase
         ]);
 
         $originalBasePrice = $this->model->originalBasePrice();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $originalBasePrice);
+        $this->assertInstanceOf(MorphOne::class, $originalBasePrice);
         $this->assertEquals(1, $originalBasePrice->count());
         $this->assertEquals($usdPrice->id, $originalBasePrice->first()->id);
         $this->assertEquals($this->currency->id, $originalBasePrice->first()->currency_id);
@@ -713,7 +717,7 @@ class TestPriceablePackageModel extends TestPriceableModel
 
     public static $priceSavingKey = 'price_value';
 
-    public function getLanguageBasedPriceQuery(): \Illuminate\Database\Eloquent\Builder
+    public function getLanguageBasedPriceQuery(): Builder
     {
         return static::query()
             ->where('name', 'Test Priceable Package Model');

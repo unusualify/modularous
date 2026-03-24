@@ -7,8 +7,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Mockery\MockInterface;
+use Unusualify\Modularity\Repositories\Traits\TagsTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class TagsTraitTest extends RepositoryTestCase
@@ -28,7 +30,7 @@ class TagsTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\TagsTrait;
+            use TagsTrait;
         };
 
         $columns = $repo->setColumnsTagsTrait([], [
@@ -378,9 +380,9 @@ class TagsTraitTest extends RepositoryTestCase
     }
 }
 
-class TagsTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class TagsTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\TagsTrait;
+    use TagsTrait;
 
     public function __construct(TestModel $model)
     {

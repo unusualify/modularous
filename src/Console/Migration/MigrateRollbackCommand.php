@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Console\Migration;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Migrations\Migrator;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
 use Unusualify\Modularity\Facades\Modularity;
@@ -26,7 +27,7 @@ class MigrateRollbackCommand extends Command
     /**
      * The migrator instance.
      *
-     * @var \Illuminate\Database\Migrations\Migrator
+     * @var Migrator
      */
     protected $migrator;
 

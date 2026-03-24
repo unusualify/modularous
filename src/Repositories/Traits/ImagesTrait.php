@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Media;
+use Unusualify\Modularity\Entities\Model;
 
 trait ImagesTrait
 {
@@ -25,9 +26,9 @@ trait ImagesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
-     * @return \Unusualify\Modularity\Entities\Model
+     * @return Model
      */
     public function hydrateImagesTrait($object, $fields)
     {
@@ -53,7 +54,7 @@ trait ImagesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -77,7 +78,7 @@ trait ImagesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
@@ -85,7 +86,7 @@ trait ImagesTrait
     {
         // $t = [];
         $imageInputs = $this->getColumns(__TRAIT__);
-        if (!empty($imageInputs) && $object->has('medias')) {
+        if (! empty($imageInputs) && $object->has('medias')) {
             $schema = $schema ?? $this->inputs();
             $mediasByRole = $object->medias->groupBy('pivot.role');
             $default_locale = config('app.locale');
@@ -125,7 +126,7 @@ trait ImagesTrait
 
     /**
      * @param array $fields
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getMedias($object, $fields)
     {

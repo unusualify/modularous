@@ -575,7 +575,7 @@ class HasScopesTest extends ModelTestCase
         // This test verifies that the method correctly detects the database driver
         // and sets the appropriate LIKE operator
 
-        $currentDriver = DB::connection()->getPDO()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        $currentDriver = DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME);
 
         // Create test data
         $model = $this->testModel::create(['name' => 'Test Model']);

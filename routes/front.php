@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Http\Controllers\API\LanguageController;
 use Unusualify\Modularity\Http\Controllers\ChatableController;
@@ -47,6 +48,6 @@ Route::group(['prefix' => 'api'], function () {
     });
 });
 
-Route::get('/', function (\Illuminate\Http\Request $request) {
+Route::get('/', function (Request $request) {
     return redirect()->route(Route::hasAdmin('login.form'));
 })->name('modularity.home');

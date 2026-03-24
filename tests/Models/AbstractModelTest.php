@@ -3,11 +3,14 @@
 namespace Unusualify\Modularity\Tests\Models;
 
 use Carbon\Carbon;
+use Cartalyst\Tags\TaggableInterface;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Tag;
 use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
 use Unusualify\Modularity\Entities\Traits\HasTranslation;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -81,7 +84,7 @@ class AbstractModelTest extends ModelTestCase
 
     public function test_model_implements_taggable_interface()
     {
-        $this->assertInstanceOf(\Cartalyst\Tags\TaggableInterface::class, $this->model);
+        $this->assertInstanceOf(TaggableInterface::class, $this->model);
     }
 
     public function test_model_has_required_traits()
@@ -163,7 +166,7 @@ class AbstractModelTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'tags'));
 
         $relation = $this->model->tags();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphToMany::class, $relation);
+        $this->assertInstanceOf(MorphToMany::class, $relation);
     }
 
     public function test_tags_relationship_configuration()
@@ -177,7 +180,7 @@ class AbstractModelTest extends ModelTestCase
 
     public function test_boot_taggable_trait_sets_tags_model()
     {
-        $this->assertEquals(\Unusualify\Modularity\Entities\Tag::class, TestModel::getTagsModel());
+        $this->assertEquals(Tag::class, TestModel::getTagsModel());
     }
 
     public function test_model_can_be_saved()

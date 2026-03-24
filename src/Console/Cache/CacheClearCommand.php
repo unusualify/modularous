@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console\Cache;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityCache;
 

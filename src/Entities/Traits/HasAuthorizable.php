@@ -2,8 +2,12 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Auth;
 use Unusualify\Modularity\Entities\Authorization;
 use Unusualify\Modularity\Traits\Allowable;
@@ -100,7 +104,7 @@ trait HasAuthorizable
     /**
      * Get the authorization record associated with this model
      */
-    public function authorizationRecord(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function authorizationRecord(): MorphOne
     {
         return $this->morphOne(Authorization::class, 'authorizable');
     }
@@ -119,8 +123,6 @@ trait HasAuthorizable
     /**
      * Check if authorization record exists without triggering a lazy load when
      * the model was fetched with withExists('authorizationRecord') (via global scope).
-     *
-     * @return bool
      */
     protected function hasAuthorizationRecord(): bool
     {
@@ -130,7 +132,7 @@ trait HasAuthorizable
     /**
      * Get the authorized user associated with this model through the authorization record
      */
-    public function authorizedUser(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function authorizedUser(): HasOneThrough
     {
         return $this->hasOneThrough(
             $this->getAuthorizedModel(),
@@ -172,7 +174,7 @@ trait HasAuthorizable
      */
     public static function getDefaultAuthorizedModel()
     {
-        return static::$defaultAuthorizedModel ?? \App\Models\User::class;
+        return static::$defaultAuthorizedModel ?? User::class;
     }
 
     public function getUserForHasAuthorization($user = null)
@@ -183,9 +185,9 @@ trait HasAuthorizable
     /**
      * Scope query to only include records authorized for the given user
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param mixed|null $user The user to check authorization for (defaults to authenticated user)
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeHasAuthorization($query, $user = null)
     {

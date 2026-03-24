@@ -29,7 +29,6 @@ class SpreadHydrate extends InputHydrate
         // add your logic
         $input['type'] = 'input-spread';
 
-        
         if (in_array('scrollable', $input)) {
             $input = array_diff($input, ['scrollable']);
             $input['scrollable'] = true;
@@ -39,7 +38,7 @@ class SpreadHydrate extends InputHydrate
         if (isset($input['_moduleName']) && isset($input['_routeName'])) {
             $module = Modularity::find($input['_moduleName']);
             $model = App::make($module->getRouteClass($input['_routeName'], 'model'));
-            
+
             if (! isset($input['reservedKeys'])) {
                 $input['reservedKeys'] = $model->getReservedKeys();
             }
@@ -63,7 +62,7 @@ class SpreadHydrate extends InputHydrate
                 $input['name'] = 'spread_payload';
             }
         }
-        
+
         $input['col'] = [
             'cols' => 12,
             'sm' => 12,
@@ -71,6 +70,7 @@ class SpreadHydrate extends InputHydrate
             'lg' => 12,
             'xl' => 12,
         ];
+
         return $input;
     }
 }

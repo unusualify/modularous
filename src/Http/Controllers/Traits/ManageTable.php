@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\Config;
+use Unusualify\Modularity\Entities\Traits\HasPosition;
 
 trait ManageTable
 {
@@ -104,7 +105,7 @@ trait ManageTable
     {
         if ($this->repository) {
             return [
-                'draggable' => classHasTrait($this->repository->getModel(), \Unusualify\Modularity\Entities\Traits\HasPosition::class),
+                'draggable' => classHasTrait($this->repository->getModel(), HasPosition::class),
                 'orderKey' => 'position',
             ];
         }

@@ -3,6 +3,10 @@
 namespace Modules\SystemPricing\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Arr;
 use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPayment\Entities\PaymentCurrency;
@@ -73,40 +77,40 @@ class Price extends \Oobook\Priceable\Models\Price
         return (int) ($amount * (1 + $vatMultiplier));
     }
 
-    public function vatRate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function vatRate(): BelongsTo
     {
         return $this->belongsTo(config('priceable.models.vat'));
     }
 
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(config('priceable.models.currency'));
     }
 
-    public function paymentCurrency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function paymentCurrency(): BelongsTo
     {
         return $this->belongsTo(PaymentCurrency::class, 'currency_id');
     }
 
-    public function priceable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function priceable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function payment($status = null): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function payment($status = null): HasOne
     {
         return $this->hasOne(Payment::class)
             ->when($status, fn ($q) => is_array($status) ? $q->whereIn('status', $status) : $q->whereStatus($status));
     }
 
-    public function payments($status = null): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function payments($status = null): HasMany
     {
         // status : 'PENDING','CANCELLED','COMPLETED','FAILED','REFUNDED'
         return $this->hasMany(Payment::class)
             ->when($status, fn ($q) => is_array($status) ? $q->whereIn('status', $status) : $q->whereStatus($status));
     }
 
-    public function completedPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function completedPayments(): HasMany
     {
         return $this->payments('COMPLETED');
     }
@@ -148,7 +152,7 @@ class Price extends \Oobook\Priceable\Models\Price
 
         $alreadyConverted = $modularityPayload['converted'] ?? false;
         $currency = $defaultCurrency;
-        if (!$alreadyConverted && isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
+        if (! $alreadyConverted && isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
             $currency = Currency::find($payload['currency_id']);
             $rawAmount = CurrencyExchange::convertTo(
                 $rawAmount,
@@ -162,7 +166,7 @@ class Price extends \Oobook\Priceable\Models\Price
             $modularityPayload['converted_total_amount'] = $totalAmount;
             $modularityPayload['converted_currency'] = $currency->iso_4217;
             $modularityPayload['converted_currency_id'] = $payload['currency_id'];
-        } else if($modularityPayload['converted_currency_id'] != $defaultCurrency->id) {
+        } elseif ($modularityPayload['converted_currency_id'] != $defaultCurrency->id) {
             $currency = Currency::find($modularityPayload['converted_currency_id']);
         }
 
@@ -218,12 +222,12 @@ class Price extends \Oobook\Priceable\Models\Price
         return $payment;
     }
 
-    public function failedPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function failedPayments(): HasMany
     {
         return $this->payments('FAILED');
     }
 
-    public function refundedPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function refundedPayments(): HasMany
     {
         return $this->payments('REFUNDED');
     }

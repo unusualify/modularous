@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,7 @@ use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Entities\PriceType;
 use Modules\SystemPricing\Entities\VatRate;
 use Unusualify\Modularity\Entities\Enums\PaymentStatus;
+use Unusualify\Modularity\Models\Model;
 
 trait PaymentTrait
 {
@@ -45,7 +47,7 @@ trait PaymentTrait
     protected $snapshotTrait = 'Oobook\Snapshot\Traits\HasSnapshot';
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -122,7 +124,7 @@ trait PaymentTrait
 
                     if ($requirementMet) {
                         $records = $object->{$relationName}()->get();
-                        if ($records instanceof \Illuminate\Database\Eloquent\Collection) {
+                        if ($records instanceof Collection) {
 
                             foreach ($records as $record) {
                                 $price = $record->originalBasePrice;

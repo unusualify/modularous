@@ -270,9 +270,9 @@ trait TableEager
                 continue;
             }
 
-            $firstDot = strpos($path, '.');
-            $root = substr($path, 0, $firstDot);
-            $rest = substr($path, $firstDot + 1);
+            $firstDot = mb_strpos($path, '.');
+            $root = mb_substr($path, 0, $firstDot);
+            $rest = mb_substr($path, $firstDot + 1);
 
             if ($root === '' || $rest === '') {
                 continue;
@@ -363,9 +363,9 @@ trait TableEager
             return false;
         }
 
-        $firstDot = strpos($path, '.');
-        $root = substr($path, 0, $firstDot);
-        $rest = substr($path, $firstDot + 1);
+        $firstDot = mb_strpos($path, '.');
+        $root = mb_substr($path, 0, $firstDot);
+        $rest = mb_substr($path, $firstDot + 1);
 
         if ($root === '' || $rest === '') {
             return false;

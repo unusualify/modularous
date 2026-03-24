@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Unusualify\Modularity\Notifications\ResetPasswordNotification;
@@ -24,7 +25,8 @@ class ResetPasswordNotificationTest extends TestCase
         $callbackExecuted = false;
         $callback = function ($notifiable, $token) use (&$callbackExecuted) {
             $callbackExecuted = true;
-            return new \Illuminate\Notifications\Messages\MailMessage();
+
+            return new MailMessage;
         };
 
         // Set the static callback using reflection
@@ -39,7 +41,7 @@ class ResetPasswordNotificationTest extends TestCase
         $result = $notification->toMail($notifiable);
 
         $this->assertTrue($callbackExecuted);
-        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $result);
+        $this->assertInstanceOf(MailMessage::class, $result);
 
         // Clean up
         $property->setValue(null);
@@ -65,6 +67,7 @@ class ResetPasswordNotificationTest extends TestCase
                 if ($key === 'auth.passwords.users.expire') {
                     return 60;
                 }
+
                 return $default;
             });
 
@@ -79,6 +82,7 @@ class ResetPasswordNotificationTest extends TestCase
                 if (isset($params['count'])) {
                     return str_replace(':count', $params['count'], $key);
                 }
+
                 return $key;
             });
 
@@ -87,7 +91,7 @@ class ResetPasswordNotificationTest extends TestCase
 
         $mailMessage = $notification->toMail($notifiable);
 
-        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $mailMessage);
+        $this->assertInstanceOf(MailMessage::class, $mailMessage);
     }
 
     /** @test */
@@ -99,7 +103,7 @@ class ResetPasswordNotificationTest extends TestCase
         $property->setValue(null);
 
         Config::shouldReceive('get')->andReturn('TestApp');
-        
+
         $greetingCalled = false;
         Lang::shouldReceive('get')
             ->andReturnUsing(function ($key, $params = []) use (&$greetingCalled) {
@@ -107,6 +111,7 @@ class ResetPasswordNotificationTest extends TestCase
                     $greetingCalled = true;
                     $this->assertEquals('Jane Smith', $params['userName']);
                 }
+
                 return $key;
             });
 
@@ -131,6 +136,7 @@ class ResetPasswordNotificationTest extends TestCase
             ->andReturnUsing(function ($key, $default = null) use (&$appNameUsedCount) {
                 if ($key === 'app.name') {
                     $appNameUsedCount++;
+
                     return 'MyTestApp';
                 }
                 if ($key === 'auth.defaults.passwords') {
@@ -139,6 +145,7 @@ class ResetPasswordNotificationTest extends TestCase
                 if ($key === 'auth.passwords.users.expire') {
                     return 60;
                 }
+
                 return $default;
             });
 
@@ -158,8 +165,10 @@ class ResetPasswordNotificationTest extends TestCase
 
     protected function createMockNotifiable($name = 'Test User', $email = 'test@example.com')
     {
-        $notifiable = new class($name, $email) {
+        $notifiable = new class($name, $email)
+        {
             public $name;
+
             public $email;
 
             public function __construct($name, $email)

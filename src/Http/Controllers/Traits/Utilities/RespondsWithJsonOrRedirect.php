@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 use Unusualify\Modularity\Services\MessageStage;
 
 /**
@@ -16,9 +18,9 @@ trait RespondsWithJsonOrRedirect
     /**
      * Send success response (JSON or redirect).
      *
-     * @param  array<string, mixed>  $data  Additional data for JSON response (e.g. redirector, message)
+     * @param array<string, mixed> $data Additional data for JSON response (e.g. redirector, message)
      */
-    protected function sendSuccessResponse(Request $request, string $message, string $redirectUrl, array $data = []): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendSuccessResponse(Request $request, string $message, string $redirectUrl, array $data = []): JsonResponse|RedirectResponse
     {
         if ($request->wantsJson()) {
             return new JsonResponse(array_merge([
@@ -39,7 +41,7 @@ trait RespondsWithJsonOrRedirect
         string $message,
         string $field = 'email',
         int $jsonStatus = 200
-    ): JsonResponse|\Illuminate\Http\RedirectResponse {
+    ): JsonResponse|RedirectResponse {
         if ($request->wantsJson()) {
             return new JsonResponse([
                 $field => [$message],
@@ -56,9 +58,9 @@ trait RespondsWithJsonOrRedirect
     /**
      * Send validation failed response.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
+     * @param Validator $validator
      */
-    protected function sendValidationFailedResponse(Request $request, $validator): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendValidationFailedResponse(Request $request, $validator): JsonResponse|RedirectResponse
     {
         if ($request->wantsJson()) {
             return new JsonResponse([

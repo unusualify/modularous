@@ -3,16 +3,17 @@
 namespace Unusualify\Modularity\Tests\Hydrates;
 
 use Unusualify\Modularity\Hydrates\Inputs\AssignmentHydrate;
+use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Collection;
 
 // simple stub model to satisfy ::query()
 class AssignmentStubAssignee
 {
     public static function query()
     {
-        return new class {
-            public function get($cols = ['id','name'])
+        return new class
+        {
+            public function get($cols = ['id', 'name'])
             {
                 return [['id' => 2, 'name' => 'Assignee']];
             }
@@ -34,7 +35,8 @@ class AssignmentHydrateTest extends TestCase
         ];
 
         // provide a minimal Module subclass to satisfy type hint
-        $moduleStub = new class extends \Unusualify\Modularity\Module {
+        $moduleStub = new class extends Module
+        {
             public function __construct()
             {
                 // do not call parent constructor
@@ -42,7 +44,7 @@ class AssignmentHydrateTest extends TestCase
 
             public function getRouteClass(string $routeName, string $target, bool $asClass = false): string
             {
-                return \Unusualify\Modularity\Tests\Hydrates\AssignmentStubAssignee::class;
+                return AssignmentStubAssignee::class;
             }
 
             public function getRouteActionUrl(string $routeName, string $action, array $replacements = [], bool $absolute = false, bool $isPanel = true): string
@@ -62,4 +64,3 @@ class AssignmentHydrateTest extends TestCase
         $this->assertEquals('assignable_id', $result['name']);
     }
 }
-

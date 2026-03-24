@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Generators\RouteGenerator;
 use Unusualify\Modularity\Support\Decomposers\ValidatorParser;
 

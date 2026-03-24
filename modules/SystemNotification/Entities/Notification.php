@@ -4,6 +4,7 @@ namespace Modules\SystemNotification\Entities;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Unusualify\Modularity\Entities\Model;
 
@@ -61,7 +62,7 @@ class Notification extends Model
     /**
      * Get the notifiable entity that the notification belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function notifiable()
     {
@@ -173,7 +174,7 @@ class Notification extends Model
     /**
      * Scope a query to only include read notifications.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeRead(Builder $query)
     {
@@ -183,7 +184,7 @@ class Notification extends Model
     /**
      * Scope a query to only include unread notifications.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeUnread(Builder $query)
     {
@@ -216,7 +217,7 @@ class Notification extends Model
     /**
      * Create a new database notification collection instance.
      *
-     * @return \Illuminate\Notifications\DatabaseNotificationCollection
+     * @return DatabaseNotificationCollection
      */
     public function newCollection(array $models = [])
     {

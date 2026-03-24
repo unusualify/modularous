@@ -1,5 +1,7 @@
 <?php
 
+use Camroncade\Timezone\Timezone;
+
 return [
     '_language' => [
         'type' => 'select',
@@ -24,7 +26,7 @@ return [
         'returnObject' => false,
         'itemTitle' => 'label',
         'itemValue' => 'value',
-        'items' => collect((new \Camroncade\Timezone\Timezone)->timezoneList)->map(function ($value, $key) {
+        'items' => collect((new Timezone)->timezoneList)->map(function ($value, $key) {
             return [
                 'label' => $key,
                 'value' => $value,

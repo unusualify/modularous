@@ -4,7 +4,9 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
+use Modules\SystemPayment\Entities\Payment;
 
 class PaymentFailedNotification extends FeatureNotification implements ShouldQueue
 {
@@ -15,7 +17,7 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
     /**
      * Create a new notification instance.
      *
-     * @param \Modules\SystemPayment\Entities\Payment $model
+     * @param Payment $model
      * @return void
      */
     public function __construct($model)
@@ -35,7 +37,7 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
         ];
     }
 
-    public function getModelTitleField(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModelTitleField(Model $model): string
     {
         $priceableModel = $model->price && $model->price->priceable ? $model->price->priceable : $model;
 
@@ -48,7 +50,7 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
         return $default;
     }
 
-    public function getModuleRouteHeadline(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModuleRouteHeadline(Model $model): string
     {
         $priceableModel = $model->price && $model->price->priceable ? $model->price->priceable : $model;
 
@@ -61,7 +63,7 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
         return $default;
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $priceableModel = $model->price && $model->price->priceable ? $model->price->priceable : $model;
 
@@ -74,7 +76,7 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
         return $default;
     }
 
-    public function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMessage(object $notifiable, Model $model): string
     {
         $priceableModel = $model->price && $model->price->priceable ? $model->price->priceable : $model;
 
@@ -90,14 +92,14 @@ class PaymentFailedNotification extends FeatureNotification implements ShouldQue
         return $default;
     }
 
-    public function getNotificationRedirector(object $notifiable, \Illuminate\Database\Eloquent\Model $model)
+    public function getNotificationRedirector(object $notifiable, Model $model)
     {
         $priceableModel = $model->price && $model->price->priceable ? $model->price->priceable : $model;
 
         return parent::getNotificationRedirector($notifiable, $priceableModel);
     }
 
-    public function getMailMessage(MailMessage $mailMessage, object $notifiable, \Illuminate\Database\Eloquent\Model $model): MailMessage
+    public function getMailMessage(MailMessage $mailMessage, object $notifiable, Model $model): MailMessage
     {
         $mailMessage = $mailMessage
             ->line('Price: ' . $model->amount_formatted)

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -77,7 +78,7 @@ trait CreateVerifiedEmailAccount
      * Get the response for a successful password reset.
      *
      * @param string $response
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     protected function sendRegisterResponse(Request $request, $response)
     {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Contracts;
 
-use Illuminate\Support\Collection;
+use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
 
 /**
  * Contract for resolving currency data. Implementations may be provided by
  * pricing modules (e.g. SystemPricing) when enabled. When no pricing module
  * is present, NullCurrencyProvider is used.
  *
- * @see \Unusualify\Modularity\Services\Currency\NullCurrencyProvider
+ * @see NullCurrencyProvider
  */
 interface CurrencyProviderInterface
 {

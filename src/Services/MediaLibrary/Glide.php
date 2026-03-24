@@ -9,8 +9,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use League\Glide\Responses\LaravelResponseFactory;
+use League\Glide\Server;
 use League\Glide\ServerFactory;
 use League\Glide\Signatures\SignatureFactory;
+use League\Glide\Urls\UrlBuilder;
 use League\Glide\Urls\UrlBuilderFactory;
 
 class Glide implements ImageServiceInterface
@@ -33,12 +35,12 @@ class Glide implements ImageServiceInterface
     protected $request;
 
     /**
-     * @var \League\Glide\Server
+     * @var Server
      */
     private $server;
 
     /**
-     * @var \League\Glide\Urls\UrlBuilder
+     * @var UrlBuilder
      */
     private $urlBuilder;
 

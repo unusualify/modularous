@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
 use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Controllers\Traits\CacheableResponse;
 use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
@@ -19,6 +21,7 @@ use Unusualify\Modularity\Http\Controllers\Traits\ManageAppends;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageAuthorization;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageScopes;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageWiths;
+use Unusualify\Modularity\Transformers;
 
 abstract class PanelController extends CoreController implements CacheableInterface
 {
@@ -65,7 +68,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
     /**
      * Model record if route is nested
      *
-     * @var \Unusualify\Modularity\Entities\Model
+     * @var Model
      */
     protected $nestedParentModel;
 
@@ -589,7 +592,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
     }
 
     /**
-     * @return \Unusualify\Modularity\Transformers
+     * @return Transformers
      */
     protected function getTransformerClass()
     {
@@ -810,7 +813,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
      * @param array $paginator
      * @return array
      */
-    public function getFormattedIndexItems(\Illuminate\Pagination\AbstractPaginator $paginator) // getIndexTableItems
+    public function getFormattedIndexItems(AbstractPaginator $paginator) // getIndexTableItems
     {
         return $paginator;
     }

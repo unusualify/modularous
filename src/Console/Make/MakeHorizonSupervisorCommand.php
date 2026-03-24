@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\File;
 use Nwidart\Modules\Support\Stub;
+use Unusualify\Modularity\Console\BaseCommand;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;

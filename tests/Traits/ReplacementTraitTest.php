@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
+use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Tests\TestCase;
 use Unusualify\Modularity\Traits\ReplacementTrait;
-use Illuminate\Support\Facades\Config;
 
 class ReplacementTraitTest extends TestCase
 {
@@ -25,7 +25,8 @@ class ReplacementTraitTest extends TestCase
 
     protected function createTester(): object
     {
-        return new class {
+        return new class
+        {
             use ReplacementTrait;
 
             public function setName($name)

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Mockery;
-use Unusualify\Modularity\Facades\Register;
 use Unusualify\Modularity\Brokers\RegisterBroker;
+use Unusualify\Modularity\Facades\Register;
 use Unusualify\Modularity\Http\Controllers\Auth\CompleteRegisterController;
 
 class CompleteRegisterControllerTest extends AuthTestCase
@@ -21,7 +25,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
     {
         parent::setUp();
 
-        $this->controller = new CompleteRegisterController();
+        $this->controller = new CompleteRegisterController;
     }
 
     protected function tearDown(): void
@@ -52,7 +56,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
         $method->setAccessible(true);
         $guard = $method->invoke($this->controller);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Auth\Guard::class, $guard);
+        $this->assertInstanceOf(Guard::class, $guard);
     }
 
     /** @test */
@@ -69,7 +73,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
 
         $response = $this->controller->showCompleteRegisterForm($request, 'invalid-token');
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -95,7 +99,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
 
         $response = $this->controller->showCompleteRegisterForm($request, $plainToken);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -109,7 +113,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
 
         $response = $this->controller->completeRegister($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('errors', $data);
     }
@@ -137,7 +141,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
 
         $response = $this->controller->completeRegister($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('redirector', $data);
@@ -166,7 +170,7 @@ class CompleteRegisterControllerTest extends AuthTestCase
 
         $response = $this->controller->completeRegister($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('email', $data);
     }

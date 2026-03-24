@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console\Setup;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\Process;
+use Unusualify\Modularity\Console\BaseCommand;
 
 use function Laravel\Prompts\text;
 

@@ -2,24 +2,34 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Tests\TestCase;
 use Unusualify\Modularity\Traits\Cache\Cacheable;
 use Unusualify\Modularity\Traits\Cache\CacheKeyGenerators;
 use Unusualify\Modularity\Traits\Cache\HasUserAwareCache;
 use Unusualify\Modularity\Traits\Cache\WarmupCache;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Facades\Modularity;
-use Illuminate\Support\Facades\Auth;
 
 class CacheTraitsTest extends TestCase
 {
     /** @test */
     public function it_can_check_if_cache_should_be_used()
     {
-        $tester = new class { 
-            use Cacheable; 
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+        $tester = new class
+        {
+            use Cacheable;
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', null)->andReturn(true);
@@ -32,17 +42,29 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_can_generate_cache_keys_with_user_context()
     {
-        $tester = new class { 
+        $tester = new class
+        {
             use Cacheable, HasUserAwareCache;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
-            
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
+
             // Override traitProperties for HasUserAwareCache detection since we are an anonymous class
-            protected function traitProperties($method) { return []; } 
+            protected function traitProperties($method)
+            {
+                return [];
+            }
         };
         $tester->withUserAwareCache(true);
 
-        $user = \Mockery::mock(\Illuminate\Contracts\Auth\Authenticatable::class);
+        $user = \Mockery::mock(Authenticatable::class);
         $user->shouldReceive('getAuthIdentifier')->andReturn(123);
         Auth::shouldReceive('user')->andReturn($user);
 
@@ -55,8 +77,11 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_can_manage_cache_enabled_status()
     {
-        $tester = new class { use Cacheable; };
-        
+        $tester = new class
+        {
+            use Cacheable;
+        };
+
         $this->assertTrue($tester->getSelfCacheEnabled());
         $tester->withoutCache();
         $this->assertFalse($tester->getSelfCacheEnabled());
@@ -67,12 +92,15 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_can_handle_user_aware_cache_settings()
     {
-        $tester = new class { use HasUserAwareCache; };
-        
+        $tester = new class
+        {
+            use HasUserAwareCache;
+        };
+
         $this->assertFalse($tester->shouldUseUserAwareCache());
         $tester->withUserAwareCache(true);
         $this->assertTrue($tester->shouldUseUserAwareCache());
-        
+
         $tester->withSharedCache();
         $this->assertFalse($tester->shouldUseUserAwareCache());
     }
@@ -80,7 +108,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_generates_guest_identifier_when_unauthenticated()
     {
-        $tester = new class { use HasUserAwareCache; };
+        $tester = new class
+        {
+            use HasUserAwareCache;
+        };
 
         Auth::shouldReceive('user')->andReturn(null);
         $this->assertEquals('guest', $tester->getUserCacheIdentifier());
@@ -89,10 +120,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_generates_record_cache_key()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use CacheKeyGenerators;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         ModularityCache::shouldReceive('generateCacheKey')
@@ -106,10 +146,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_resolves_formatted_item_cache_specifiers()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Cacheable;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         ModularityCache::shouldReceive('generateCacheKey')
@@ -123,10 +172,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_resolves_form_item_cache_specifiers()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Cacheable;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         ModularityCache::shouldReceive('generateCacheKey')
@@ -140,10 +198,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_throws_when_slug_missing_for_count_cache_type()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Cacheable;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         $this->expectException(\InvalidArgumentException::class);
@@ -154,10 +221,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_throws_when_id_missing_for_formatted_item_cache_type()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Cacheable;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         $this->expectException(\InvalidArgumentException::class);
@@ -168,10 +244,19 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_throws_for_invalid_cache_type()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Cacheable;
-            public function getModuleName() { return 'Blog'; }
-            public function getRouteName() { return 'Post'; }
+
+            public function getModuleName()
+            {
+                return 'Blog';
+            }
+
+            public function getRouteName()
+            {
+                return 'Post';
+            }
         };
 
         $this->expectException(\InvalidArgumentException::class);
@@ -182,7 +267,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_warmups_controller_counts_when_not_user_aware()
     {
-        $tester = new class { use WarmupCache; };
+        $tester = new class
+        {
+            use WarmupCache;
+        };
 
         $mockRepo = \Mockery::mock();
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(false);
@@ -200,7 +288,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_skips_warmup_controller_counts_when_user_aware()
     {
-        $tester = new class { use WarmupCache; };
+        $tester = new class
+        {
+            use WarmupCache;
+        };
 
         $mockRepo = \Mockery::mock();
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(true);
@@ -216,7 +307,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_warmups_controller_item()
     {
-        $tester = new class { use WarmupCache; };
+        $tester = new class
+        {
+            use WarmupCache;
+        };
 
         $mockItem = (object) ['id' => 1];
         $mockController = \Mockery::mock();
@@ -230,7 +324,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_warmups_module_route_cache_counts()
     {
-        $tester = new class { use WarmupCache; };
+        $tester = new class
+        {
+            use WarmupCache;
+        };
 
         $mockController = \Mockery::mock();
         $mockRepo = \Mockery::mock();
@@ -252,7 +349,10 @@ class CacheTraitsTest extends TestCase
     /** @test */
     public function it_warmups_module_route_cache()
     {
-        $tester = new class { use WarmupCache; };
+        $tester = new class
+        {
+            use WarmupCache;
+        };
 
         $mockController = \Mockery::mock();
         $mockRepo = \Mockery::mock();

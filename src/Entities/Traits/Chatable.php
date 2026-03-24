@@ -4,6 +4,9 @@ namespace Unusualify\Modularity\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use Modules\SystemNotification\Events\UnreadChatMessage;
 use Modules\SystemNotification\Notifications\ChatableUnreadNotification;
@@ -51,17 +54,17 @@ trait Chatable
         // }
     }
 
-    public function chat(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function chat(): MorphOne
     {
         return $this->morphOne(Chat::class, 'chatable');
     }
 
-    public function chatMessages(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function chatMessages(): HasManyThrough
     {
         return $this->hasManyThrough(ChatMessage::class, Chat::class, 'chatable_id', 'chat_id', 'id', 'id');
     }
 
-    public function creatorChatMessages(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function creatorChatMessages(): HasManyThrough
     {
         $creator = $this->creator;
 
@@ -74,7 +77,7 @@ trait Chatable
             });
     }
 
-    public function latestChatMessage(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function latestChatMessage(): HasOneThrough
     {
         $chatTable = (new Chat)->getTable();
         $chatMessageTable = (new ChatMessage)->getTable();
@@ -83,22 +86,22 @@ trait Chatable
             ->whereRaw("{$chatMessageTable}.created_at = (select max(created_at) from {$chatMessageTable} where {$chatMessageTable}.chat_id = {$chatTable}.id)");
     }
 
-    public function unreadChatMessages(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function unreadChatMessages(): HasManyThrough
     {
         return $this->chatMessages()->where('is_read', false);
     }
 
-    public function unreadChatMessagesForYou(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function unreadChatMessagesForYou(): HasManyThrough
     {
         return $this->unreadChatMessages()->whereNot(fn ($query) => $query->authorized());
     }
 
-    public function unreadChatMessagesFromClient(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function unreadChatMessagesFromClient(): HasManyThrough
     {
         return $this->unreadChatMessages()->where(fn ($query) => $query->fromClient());
     }
 
-    public function unreadChatMessagesFromCreator(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function unreadChatMessagesFromCreator(): HasManyThrough
     {
         $creatorRecordTable = (new CreatorRecord)->getTable();
         $chatMessageTable = (new ChatMessage)->getTable();
@@ -163,7 +166,7 @@ trait Chatable
     {
         return new Attribute(
             // get: fn () => $this->unreadChatMessagesFromClient()->count(),
-            get: fn () => !$this->relationLoaded('unreadChatMessagesFromClient') && $this->relationLoaded('chatMessages')
+            get: fn () => ! $this->relationLoaded('unreadChatMessagesFromClient') && $this->relationLoaded('chatMessages')
                 ? ($this->chatMessages->filter(fn ($message) => $message->creator->roles_meta->contains('name', 'client-manager') || $message->creator->roles_meta->contains('name', 'client-assistant'))->count() ?? 0)
                 : $this->unreadChatMessagesFromClient->count()
         );

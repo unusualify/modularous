@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Unusualify\Modularity\Entities\File;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Unusualify\Modularity\Entities\File>
+ * @extends Factory<File>
  */
 class FileFactory extends Factory
 {

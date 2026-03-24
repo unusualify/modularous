@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers;
 
 use Illuminate\Auth\AuthManager;
+use Illuminate\Http\RedirectResponse;
 use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Facades\Modularity;
 
@@ -22,7 +23,7 @@ class ImpersonateController extends Controller
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function impersonate($id, UserRepository $users)
     {
@@ -35,7 +36,7 @@ class ImpersonateController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function stopImpersonate()
     {

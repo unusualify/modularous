@@ -2,16 +2,21 @@
 
 namespace Modules\SystemPayment\Entities;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
+use Oobook\Priceable\Facades\PriceService;
 use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
-use Unusualify\Modularity\Relations\PaymentableRelation;
+use Unusualify\Payable\Payable;
 
 class Payment extends \Unusualify\Payable\Models\Payment
 {
@@ -55,7 +60,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
 
     protected static function booted(): void
     {
-        static::addGlobalScope('price_currency_iso_4217', function (\Illuminate\Database\Eloquent\Builder $builder) {
+        static::addGlobalScope('price_currency_iso_4217', function (Builder $builder) {
             $pricesTable = (new Price)->getTable();
             $currenciesTable = (new Currency)->getTable();
             $paymentTable = (new static)->getTable();
@@ -68,7 +73,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
                     ->limit(1),
             ]);
         });
-        static::addGlobalScope('paymentable_morph_keys', function (\Illuminate\Database\Eloquent\Builder $builder) {
+        static::addGlobalScope('paymentable_morph_keys', function (Builder $builder) {
             $paymentTable = (new static)->getTable();
             $pricesTable = (new Price)->getTable();
 
@@ -88,17 +93,17 @@ class Payment extends \Unusualify\Payable\Models\Payment
     /**
      * Get the paymentService that owns the Payment.
      */
-    public function paymentService(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function paymentService(): BelongsTo
     {
-        return $this->belongsTo(\Modules\SystemPayment\Entities\PaymentService::class, 'payment_service_id', 'id');
+        return $this->belongsTo(PaymentService::class, 'payment_service_id', 'id');
     }
 
-    public function price(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function price(): BelongsTo
     {
         return $this->belongsTo(Price::class, 'price_id', 'id');
     }
 
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
@@ -118,7 +123,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
     /**
      * Behaves like a real morphTo by providing the morph keys via subselects.
      */
-    public function paymentable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function paymentable(): MorphTo
     {
         return $this->morphTo('paymentable');
     }
@@ -133,16 +138,19 @@ class Payment extends \Unusualify\Payable\Models\Payment
                 try {
                     // $paymentGateway = $this->paymentService->key;
                     $paymentGateway = $this->payment_gateway;
-                    $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
+                    $serviceClass = Payable::getServiceClass($paymentGateway);
                 } catch (\Exception $e) {
                     if ($e->getMessage() == 'Service class not found for slug: ' . $paymentGateway && $this->paymentService->transferrable) {
-                        $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService {
-                            public function __construct() {
+                        $serviceClass = new class extends \Unusualify\Payable\Services\PaymentService
+                        {
+                            public function __construct()
+                            {
                                 $this->mode = 'test';
                                 $this->config = [];
                             }
 
-                            public function hydrateParams(array|object $params): array {
+                            public function hydrateParams(array|object $params): array
+                            {
                                 return $params;
                             }
                         };
@@ -159,24 +167,24 @@ class Payment extends \Unusualify\Payable\Models\Payment
     protected function amountFormatted(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => \Oobook\Priceable\Facades\PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217)),
+            get: fn ($value) => PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217)),
         );
     }
 
     /**
      * The currencyServices that belong to the Payment.
      */
-    public function currencyServices(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function currencyServices(): BelongsToMany
     {
-        return $this->belongsToMany(\Modules\SystemPayment\Entities\PaymentCurrency::class);
+        return $this->belongsToMany(PaymentCurrency::class);
     }
 
     /**
      * The currencies that belong to the Payment.
      */
-    public function currencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function currencies(): BelongsToMany
     {
-        return $this->belongsToMany(\Modules\SystemPayment\Entities\PaymentCurrency::class);
+        return $this->belongsToMany(PaymentCurrency::class);
     }
 
     protected function bankReceipts(): Attribute
@@ -193,6 +201,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
         return Attribute::make(
             get: function () {
                 $file = $this->fileponds->first(fn ($file) => $file->role == 'invoice');
+
                 return $file ? $file->mediableFormat() : null;
             }
         );
@@ -254,22 +263,22 @@ class Payment extends \Unusualify\Payable\Models\Payment
 
                 return [
                     'paid_at' => $this->updated_at,
-                    'original_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'original_amount' => PriceService::formatAmount(
                         $t->original_amount ?? $this->price->raw_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))
                     ),
 
                     'discount_percentage' => ($t->discount_percentage > 0 ? '%' . $t->discount_percentage : '%0'),
-                    'discount_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'discount_amount' => PriceService::formatAmount(
                         $t->discount_amount ?? $this->price->raw_amount - $this->price->discounted_raw_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))
                     ),
 
-                    'subtotal' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'subtotal' => PriceService::formatAmount(
                         $t->subtotal ?? $t->original_raw_amount ?? $this->price->discounted_raw_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))
                     ),
-                    'original_total_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'original_total_amount' => PriceService::formatAmount(
                         $t->original_total_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))
                     ),
@@ -282,7 +291,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
                     'company_based_vat_rate_name' => $t->company_based_vat_rate_name ?? null,
                     'company_based_vat_percentage' => isset($t->company_based_vat_percentage) ? ($t->company_based_vat_percentage > 0 ? '%' . $t->company_based_vat_percentage : null) : null,
                     'company_based_vat_multiplier' => $t->company_based_vat_multiplier ?? 0,
-                    'company_based_total_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'company_based_total_amount' => PriceService::formatAmount(
                         $t->company_based_total_amount ?? $t->original_total_amount,
                         new \Money\Currency(mb_strtoupper($t->converted_currency ?? $t->original_currency))
                     ),
@@ -292,11 +301,11 @@ class Payment extends \Unusualify\Payable\Models\Payment
                     'is_converted' => ($t->converted ?? false) ? __('Yes') : __('No'),
                     'converted_currency' => $t->converted_currency ?? $t->original_currency,
                     'exchange_rate' => $t->exchange_rate ?? 1,
-                    'converted_raw_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'converted_raw_amount' => PriceService::formatAmount(
                         $t->converted_raw_amount ?? $t->subtotal ?? $t->original_raw_amount ?? $this->price->discounted_raw_amount,
                         new \Money\Currency(mb_strtoupper($t->converted_currency ?? $t->original_currency))
                     ),
-                    'converted_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'converted_amount' => PriceService::formatAmount(
                         $t->converted_total_amount,
                         new \Money\Currency(mb_strtoupper($t->converted_currency ?? $t->original_currency))
                     ),
@@ -304,11 +313,11 @@ class Payment extends \Unusualify\Payable\Models\Payment
 
                     'transaction_fee_exists' => ($t->transaction_fee_exists ?? false) ? __('Yes') : __('No'),
                     'transaction_fee_percentage' => isset($t->transaction_fee_percentage) ? ($t->transaction_fee_percentage > 0 ? '%' . $t->transaction_fee_percentage : '%0') : '%0',
-                    'transaction_fee_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'transaction_fee_amount' => PriceService::formatAmount(
                         $t->transaction_fee_amount ?? 0,
                         new \Money\Currency(mb_strtoupper($t->converted_currency ?? $t->original_currency))
                     ),
-                    'paid_amount' => \Oobook\Priceable\Facades\PriceService::formatAmount(
+                    'paid_amount' => PriceService::formatAmount(
                         $t->total_amount_with_transaction_fee ?? $t->converted_amount ?? $this->amount,
                         new \Money\Currency(mb_strtoupper($t->converted_currency ?? $t->original_currency))
                     ),

@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Entities\Spread;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -133,7 +135,7 @@ class SpreadTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $spread = new Spread;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $spread);
+        $this->assertInstanceOf(Model::class, $spread);
     }
 
     public function test_has_timestamps()
@@ -720,7 +722,7 @@ class SpreadTest extends ModelTestCase
     {
         $user = User::factory()->create();
         Event::fake();
-        $company = \Unusualify\Modularity\Entities\Company::factory()->create();
+        $company = Company::factory()->create();
 
         // Create spread for user
         $userSpread = Spread::create([

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities\Traits\Core;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PDO;
@@ -80,11 +81,11 @@ trait HasScopes
     /**
      * Scope to filter records between two dates
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $column
      * @param string $startDate
      * @param string $endDate
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeBetween($query, $column, $startDate = null, $endDate = null)
     {
@@ -98,10 +99,10 @@ trait HasScopes
     /**
      * Scope to filter records between two dates
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $startDate
      * @param string $endDate
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeCreatedAtBetween($query, $startDate, $endDate)
     {
@@ -111,10 +112,10 @@ trait HasScopes
     /**
      * Scope to filter records between two dates
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $startDate
      * @param string $endDate
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeUpdatedAtBetween($query, $startDate, $endDate)
     {
@@ -174,13 +175,13 @@ trait HasScopes
         }
     }
 
-    public static function getUncountableGlobalScopes() : array
+    public static function getUncountableGlobalScopes(): array
     {
         $uncountableScopes = [];
         foreach (static::staticTraitsMethods('addGlobalScopes') as $method) {
             $scopes = static::$method();
             foreach ($scopes as $scopeName => $scope) {
-                if ( ($scope['count'] ?? false) === false) {
+                if (($scope['count'] ?? false) === false) {
                     $uncountableScopes[] = $scopeName;
                 }
             }

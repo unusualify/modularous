@@ -2,8 +2,10 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Secondary;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\RelatedItem;
 
 trait HasRelated
@@ -13,7 +15,7 @@ trait HasRelated
     /**
      * Defines the one-to-many relationship for related items.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
     public function relatedItems()
     {
@@ -50,7 +52,7 @@ trait HasRelated
         return $this->relatedCache[$browser_name] = $this->relatedItems
             ->where('browser_name', $browser_name)
             ->map(function ($item) {
-                /** @var \Unusualify\Modularity\Entities\Model $model */
+                /** @var Model $model */
                 $model = $item->related;
 
                 $model->setRelation('pivot', $item);

@@ -4,7 +4,6 @@ namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 trait ManageAppends
 {
-
     /**
      * Appends to add to the index view.
      *
@@ -53,6 +52,7 @@ trait ManageAppends
         if ($editOnModal) {
             return array_unique(array_merge($this->indexAppends, $this->formAppends));
         }
+
         return $this->indexAppends;
     }
 

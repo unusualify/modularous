@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Logic;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
 use Unusualify\Modularity\Tests\Repositories\TestModel;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -22,7 +23,7 @@ class QueryBuilderTest extends RepositoryTestCase
         $this->seedFilterFixtures();
 
         $emptyPaginator = $this->repository->get(perPage: 0, forcePagination: false);
-        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $emptyPaginator);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $emptyPaginator);
         $this->assertEquals(5, $emptyPaginator->total());
     }
 
@@ -30,7 +31,7 @@ class QueryBuilderTest extends RepositoryTestCase
     {
         $this->seedFilterFixtures();
         $results = $this->repository->get(perPage: -1, forcePagination: false);
-        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $results);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $results);
         $this->assertEquals(5, $results->total());
     }
 

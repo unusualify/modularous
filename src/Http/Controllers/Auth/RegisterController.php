@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Auth;
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +41,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param array $data
-     * @return \App\Models\User
+     * @return User
      */
     protected function register(Request $request)
     {

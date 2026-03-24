@@ -2,8 +2,11 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
+use Unusualify\Modularity\Commands\RefreshLQIP;
 use Unusualify\Modularity\Entities\Media;
 use Unusualify\Modularity\Services\MediaLibrary\ImageService;
 
@@ -20,7 +23,7 @@ trait HasImages
     {
         self::deleted(static function (Model $model) {
             if (! method_exists($model, 'isForceDeleting') || $model->isForceDeleting()) {
-                /** @var \Unusualify\Modularity\Entities\Traits\HasImages $model */
+                /** @var HasImages $model */
                 $model->medias()->detach();
             }
         });
@@ -76,7 +79,7 @@ trait HasImages
         });
     }
 
-    public function initializeHasImages(): void 
+    public function initializeHasImages(): void
     {
         $this->makeHidden(array_merge($this->hidden, ['medias']));
     }
@@ -84,7 +87,7 @@ trait HasImages
     /**
      * Defines the many-to-many relationship for media objects.
      */
-    public function medias(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function medias(): MorphToMany
     {
         return $this->morphToMany(
             Media::class,
@@ -402,7 +405,7 @@ trait HasImages
      * @param bool $has_fallback Indicate that you can provide a fallback. Will return `null` instead of the default image fallback.
      * @return string|null
      *
-     * @see \Unusualify\Modularity\Commands\RefreshLQIP
+     * @see RefreshLQIP
      */
     public function lowQualityImagePlaceholder($role, $crop = 'default', $params = [], $has_fallback = false)
     {
@@ -481,7 +484,7 @@ trait HasImages
      *
      * @param string $role Role name.
      * @param string $crop Crop name.
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function imageObjects($role, $crop = 'default')
     {

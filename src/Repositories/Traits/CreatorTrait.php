@@ -2,7 +2,9 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Unusualify\Modularity\Models\Model;
 
 trait CreatorTrait
 {
@@ -11,8 +13,8 @@ trait CreatorTrait
     /**
      * Scope a query to only include the current user's revisions.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function filterCreatorTrait($query, &$scopes)
     {
@@ -20,7 +22,7 @@ trait CreatorTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param array $schema
      * @return array

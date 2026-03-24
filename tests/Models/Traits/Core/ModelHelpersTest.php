@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits\Core;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -77,10 +79,10 @@ class ModelHelpersTest extends ModelTestCase
 
     public function test_static_properties_are_set_correctly()
     {
-        $this->assertEquals(\Unusualify\Modularity\Entities\User::class, $this->testModel::$defaultAuthorizedModel);
+        $this->assertEquals(User::class, $this->testModel::$defaultAuthorizedModel);
         $this->assertEquals(['manager', 'account-executive'], $this->testModel::$authorizableRolesToCheck);
         $this->assertEquals(['editor', 'reporter'], $this->testModel::$assignableRolesToCheck);
-        $this->assertEquals(\Unusualify\Modularity\Entities\User::class, $this->testModel::$defaultHasCreatorModel);
+        $this->assertEquals(User::class, $this->testModel::$defaultHasCreatorModel);
     }
 
     public function test_boot_model_helpers_without_authentication()
@@ -414,7 +416,7 @@ class ModelHelpersTest extends ModelTestCase
 
             protected $fillable = ['name'];
 
-            public function user_posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+            public function user_posts(): HasMany
             {
                 return $this->hasMany(self::class, 'parent_id');
             }
@@ -627,12 +629,12 @@ class ModelHelperModel extends Model
     }
 
     // Define some relationships for testing
-    public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function comments(): MorphMany
     {
         return $this->morphMany(self::class, 'commentable');
     }

@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
+use Modularity\Entities\Models\Process;
+use Unusualify\Modularity\Models\Model;
 
 trait ProcessableTrait
 {
@@ -29,7 +31,7 @@ trait ProcessableTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param array $schema
      * @return array
@@ -69,7 +71,7 @@ trait ProcessableTrait
      * Get the process for this model, or create it if it doesn't exist
      *
      * @param string $status Initial status for new process
-     * @return \Modularity\Entities\Models\Process
+     * @return Process
      */
     public function getProcessId($object, string $status = 'preparing')
     {

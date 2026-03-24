@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Services\CoverageService;
 
 /**
  * Coverage Analysis Facade
@@ -28,7 +29,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool checkPR(string $baseBranch = 'main', bool $throwOnFailure = false)
  * @method static array stats(?array $files = null)
  *
- * @see \Unusualify\Modularity\Services\CoverageService
+ * @see CoverageService
  */
 class Coverage extends Facade
 {

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class CreatorRecord extends Model
 {
@@ -20,12 +21,12 @@ class CreatorRecord extends Model
     /**
      * get the parent creatable model
      */
-    public function creatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function creatable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function creator(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function creator(): MorphTo
     {
         return $this->morphTo();
     }

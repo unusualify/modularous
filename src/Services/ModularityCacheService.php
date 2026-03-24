@@ -2,9 +2,12 @@
 
 namespace Unusualify\Modularity\Services;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
+use Predis\Connection\ConnectionException;
+use Predis\Connection\Resource\Exception\StreamInitException;
 use Unusualify\Modularity\Services\Concerns\CacheHelpers;
 use Unusualify\Modularity\Services\Concerns\CacheInvalidation;
 use Unusualify\Modularity\Services\Concerns\CacheTags;
@@ -55,9 +58,9 @@ class ModularityCacheService
                 } else {
                     $this->connected = true;
                 }
-            } catch (\Predis\Connection\ConnectionException $e) {
+            } catch (ConnectionException $e) {
                 logger()->error('Redis connection failed with connection exception on modularity cache: ' . $e->getMessage());
-            } catch (\Predis\Connection\Resource\Exception\StreamInitException $e) {
+            } catch (StreamInitException $e) {
                 logger()->error('Redis connection failed with stream init exception on modularity cache: ' . $e->getMessage());
             } catch (\Exception $e) {
                 logger()->error('Redis connection failed with exception on modularity cache: ' . $e->getMessage(), ['exception' => get_class($e), 'trace' => $e->getTraceAsString()]);
@@ -139,7 +142,7 @@ class ModularityCacheService
     /**
      * Get the cache store instance.
      */
-    public function getStore(): \Illuminate\Cache\Repository
+    public function getStore(): Repository
     {
         return $this->store;
     }

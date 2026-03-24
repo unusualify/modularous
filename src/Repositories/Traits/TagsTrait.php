@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Unusualify\Modularity\Models\Model;
 
 trait TagsTrait
 {
@@ -24,7 +26,7 @@ trait TagsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -147,7 +149,7 @@ trait TagsTrait
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getTagsList()
     {

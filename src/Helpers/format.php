@@ -1,9 +1,12 @@
 <?php
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\ModularityLog;
 
 if (! function_exists('lowerName')) {
@@ -156,7 +159,7 @@ if (! function_exists('get_class_short_name')) {
      */
     function get_class_short_name($class)
     {
-        return (new \ReflectionClass($class))->getShortName();
+        return (new ReflectionClass($class))->getShortName();
     }
 }
 
@@ -176,7 +179,7 @@ if (! function_exists('class_namespace')) {
      */
     function class_namespace($class)
     {
-        return (new \ReflectionClass($class))->getNamespaceName();
+        return (new ReflectionClass($class))->getNamespaceName();
     }
 }
 
@@ -206,11 +209,11 @@ if (! function_exists('fileTrace')) {
             }
         }
         if (! $dir) {
-            \Illuminate\Support\Facades\Log::error('fileTrace: Could not find matching trace', [
+            Log::error('fileTrace: Could not find matching trace', [
                 'regex' => $regex,
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 'Could not find file or class matching pattern in debug backtrace.'
             );
         }
@@ -292,7 +295,7 @@ if (! function_exists('tryOperation')) {
             //     dd($callback, $callback());
             // }
             return $callback();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return $returnValue;
         }
     }
@@ -301,11 +304,11 @@ if (! function_exists('tryOperation')) {
 if (! function_exists('laravelRelationshipMap')) {
     function laravelRelationshipMap(): array
     {
-        $hasRelationshipsClass = \Illuminate\Database\Eloquent\Concerns\HasRelationships::class;
+        $hasRelationshipsClass = HasRelationships::class;
 
-        return collect((new \ReflectionClass($hasRelationshipsClass))->getMethods(\ReflectionMethod::IS_PUBLIC))->reduce(function ($carry, \ReflectionMethod $method) {
+        return collect((new ReflectionClass($hasRelationshipsClass))->getMethods(ReflectionMethod::IS_PUBLIC))->reduce(function ($carry, ReflectionMethod $method) {
             if ($method->getNumberOfParameters() > 2) {
-                $carry[$method->name] = collect($method->getParameters())->mapWithKeys(function (\ReflectionParameter $parameter) {
+                $carry[$method->name] = collect($method->getParameters())->mapWithKeys(function (ReflectionParameter $parameter) {
                     return [$parameter->name => [
                         'required' => ($required = ! $parameter->isOptional()),
                         'position' => $parameter->getPosition(),
@@ -879,7 +882,7 @@ if (! function_exists('transform_closure_value')) {
      */
     function transform_closure_value($value)
     {
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             return $value();
         }
 
@@ -914,7 +917,7 @@ if (! function_exists('transform_closure_values')) {
 
             return $wasObject && ! $forceArray ? array_to_object($result) : $result;
 
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             // throw $th;
             ModularityLog::error('Error transforming closure values', [
                 'error' => $th->getMessage(),

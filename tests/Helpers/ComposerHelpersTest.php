@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Tests\Helpers;
 
-use Illuminate\Support\Facades\File;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Tests\TestCase;
 
@@ -21,7 +20,7 @@ class ComposerHelpersTest extends TestCase
     public function test_get_package_installed_version_returns_version_for_existing_package()
     {
         $installed = get_installed_composer();
-        
+
         // Get a package thatis installed (Laravel framework should exist)
         if (isset($installed['versions']['laravel/framework'])) {
             $result = get_package_installed_version('laravel/framework');
@@ -106,8 +105,6 @@ class ComposerHelpersTest extends TestCase
         // Result should be a string (either 'development' or a version number)
         $this->assertIsString($result);
     }
-
-
 
     protected function tearDown(): void
     {

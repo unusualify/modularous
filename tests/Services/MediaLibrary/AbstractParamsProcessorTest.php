@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
 
+use Unusualify\Modularity\Services\MediaLibrary\AbstractParamsProcessor;
 use Unusualify\Modularity\Tests\TestCase;
 
 class AbstractParamsProcessorTest extends TestCase
@@ -11,7 +12,7 @@ class AbstractParamsProcessorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->processor = new ConcreteParamsProcessor();
+        $this->processor = new ConcreteParamsProcessor;
     }
 
     /** @test */
@@ -61,7 +62,7 @@ class AbstractParamsProcessorTest extends TestCase
 /**
  * Concrete implementation for testing
  */
-class ConcreteParamsProcessor extends \Unusualify\Modularity\Services\MediaLibrary\AbstractParamsProcessor
+class ConcreteParamsProcessor extends AbstractParamsProcessor
 {
     protected $specialHandled = false;
 

@@ -3,16 +3,17 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
+use Unusualify\Modularity\Facades\Utm;
 
 class UtmMiddleware
 {
     public function handle($request, Closure $next)
     {
-        \Unusualify\Modularity\Facades\Utm::getParameters();
+        Utm::getParameters();
 
         view()->composer(['modularity::layouts.app-inertia', 'modularity::layouts.master'], function ($view) {
             $view->with(array_merge($view->getData(), [
-                'utmParameters' => \Unusualify\Modularity\Facades\Utm::getParameters(),
+                'utmParameters' => Utm::getParameters(),
             ]));
         });
 

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use Unusualify\Modularity\Http\Controllers\Traits\Utilities\AuthFormBuilder;
 
 /**
  * Auth pages configuration (deferred - loaded when translator is ready).
@@ -13,7 +14,7 @@ declare(strict_types=1);
  *   attributes       - global attributes for all auth pages
  *   pages.[key].attributes - per-page overrides
  *
- * @see \Unusualify\Modularity\Http\Controllers\Traits\Utilities\AuthFormBuilder
+ * @see AuthFormBuilder
  */
 return [
     'component_name' => 'ue-auth',

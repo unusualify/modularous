@@ -5,6 +5,8 @@ namespace Unusualify\Modularity\Entities;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SystemPayment\Entities\PaymentCountry;
 use Modules\SystemUtility\Entities\Country;
 use Unusualify\Modularity\Database\Factories\CompanyFactory;
@@ -36,17 +38,17 @@ class Company extends Model
         return CompanyFactory::new();
     }
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
-    public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
-    public function paymentCountry(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function paymentCountry(): BelongsTo
     {
         return $this->belongsTo(PaymentCountry::class, 'country_id');
     }
@@ -120,6 +122,7 @@ class Company extends Model
                 $label = $this->is_valid ? 'Yes' : 'No';
                 $color = $this->is_valid ? 'success' : 'error';
                 $icon = $this->is_valid ? 'mdi-check' : 'mdi-close';
+
                 return "<v-chip color='{$color}' prepend-icon='{$icon}' variant='text' >{$label}</v-chip>";
             },
         );

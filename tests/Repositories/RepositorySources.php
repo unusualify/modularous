@@ -6,6 +6,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Modules\SystemPricing\Entities\Currency;
+use Modules\SystemPricing\Entities\PriceType;
+use Modules\SystemPricing\Entities\VatRate;
 
 trait RepositorySources
 {
@@ -122,19 +125,19 @@ trait RepositorySources
 
         $this->laravelRepository = App::make(LaravelTestRepository::class);
 
-        \Modules\SystemPricing\Entities\PriceType::updateOrCreate([
+        PriceType::updateOrCreate([
             'name' => 'Default Price Type',
         ], [
             'name' => 'Default Price Type',
         ]);
 
-        \Modules\SystemPricing\Entities\VatRate::updateOrCreate([
+        VatRate::updateOrCreate([
             'name' => 'Standard',
         ], [
             'rate' => 20,
         ]);
 
-        \Modules\SystemPricing\Entities\Currency::updateOrCreate([
+        Currency::updateOrCreate([
             'iso_4217' => 'EUR',
         ], [
             'name' => 'Euro',
@@ -142,7 +145,7 @@ trait RepositorySources
             'iso_4217_number' => 978,
         ]);
 
-        \Modules\SystemPricing\Entities\Currency::updateOrCreate([
+        Currency::updateOrCreate([
             'iso_4217' => 'USD',
         ], [
             'name' => 'US Dollar',

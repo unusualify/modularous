@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Contracts\View\View;
 use Unusualify\Modularity\Brokers\RegisterBroker;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Http\Controllers\Auth\PreRegisterController;
 use Unusualify\Modularity\Tests\TestCase;
 
@@ -25,7 +27,7 @@ class PreRegisterControllerTest extends TestCase
 
         config(['auth.providers.modularity_users' => [
             'driver' => 'eloquent',
-            'model' => \Unusualify\Modularity\Entities\User::class,
+            'model' => User::class,
         ]]);
         config(['auth.passwords.register_verified_users' => [
             'provider' => 'modularity_users',
@@ -34,7 +36,7 @@ class PreRegisterControllerTest extends TestCase
             'throttle' => 60,
         ]]);
 
-        $this->controller = new PreRegisterController();
+        $this->controller = new PreRegisterController;
     }
 
     /** @test */
@@ -56,6 +58,6 @@ class PreRegisterControllerTest extends TestCase
     {
         $response = $this->controller->showEmailForm();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 }

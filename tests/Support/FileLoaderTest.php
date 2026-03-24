@@ -2,25 +2,26 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
-use Unusualify\Modularity\Support\FileLoader;
-use Unusualify\Modularity\Tests\TestCase;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
+use Unusualify\Modularity\Support\FileLoader;
+use Unusualify\Modularity\Tests\TestCase;
 
 class FileLoaderTest extends TestCase
 {
     protected $tempDir;
+
     protected $fileLoader;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->tempDir = storage_path('framework/testing/file_loader');
-        if (!File::exists($this->tempDir)) {
+        if (! File::exists($this->tempDir)) {
             File::makeDirectory($this->tempDir, 0755, true);
         }
-        
-        $this->fileLoader = new FileLoader(new Filesystem(), $this->tempDir);
+
+        $this->fileLoader = new FileLoader(new Filesystem, $this->tempDir);
     }
 
     protected function tearDown(): void
@@ -43,7 +44,7 @@ class FileLoaderTest extends TestCase
     {
         $newPath = $this->tempDir . '/extra';
         $this->fileLoader->addPath($newPath);
-        
+
         $this->assertCount(2, $this->fileLoader->getPaths());
         $this->assertContains($newPath, $this->fileLoader->getPaths());
     }
@@ -53,7 +54,7 @@ class FileLoaderTest extends TestCase
     {
         $newPaths = [$this->tempDir . '/1', $this->tempDir . '/2'];
         $this->fileLoader->addPath($newPaths);
-        
+
         $this->assertCount(3, $this->fileLoader->getPaths());
     }
 
@@ -62,9 +63,9 @@ class FileLoaderTest extends TestCase
     {
         File::put($this->tempDir . '/auth.php', '<?php return [];');
         File::put($this->tempDir . '/validation.php', '<?php return [];');
-        
+
         $groups = $this->fileLoader->getGroups();
-        
+
         $this->assertContains('auth', $groups);
         $this->assertContains('validation', $groups);
         $this->assertCount(2, $groups);
@@ -76,9 +77,9 @@ class FileLoaderTest extends TestCase
         $subDir = $this->tempDir . '/nested';
         File::makeDirectory($subDir);
         File::put($subDir . '/test.php', '<?php return [];');
-        
+
         $groups = $this->fileLoader->getGroups();
-        
+
         $this->assertContains('test', $groups);
     }
 }

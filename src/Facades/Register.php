@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Password;
 use Unusualify\Modularity\Brokers\RegisterBroker;
+use Unusualify\Modularity\Brokers\RegisterBrokerManager;
 
 /**
  * @method static \Illuminate\Contracts\Auth\PasswordBroker broker(string|null $name = null)
@@ -17,8 +18,8 @@ use Unusualify\Modularity\Brokers\RegisterBroker;
  * @method static bool tokenExists(\Illuminate\Contracts\Auth\CanResetPassword $user, string $token)
  * @method static \Illuminate\Auth\Passwords\TokenRepositoryInterface getRepository()
  *
- * @see \Unusualify\Modularity\Brokers\RegisterBrokerManager
- * @see \Unusualify\Modularity\Brokers\RegisterBroker
+ * @see RegisterBrokerManager
+ * @see RegisterBroker
  */
 class Register extends Password
 {

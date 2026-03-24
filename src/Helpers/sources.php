@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\Navigation;
 
@@ -40,7 +41,7 @@ if (! function_exists('getTimezoneList')) {
     {
         return Cache::rememberForever('timezones_list_collection', function () {
             $timestamp = time();
-            foreach (timezone_identifiers_list(\DateTimeZone::ALL) as $key => $value) {
+            foreach (timezone_identifiers_list(DateTimeZone::ALL) as $key => $value) {
                 date_default_timezone_set($value);
                 $timezone[$value] = $value . ' (UTC ' . date('P', $timestamp) . ')';
             }
@@ -238,7 +239,7 @@ if (! function_exists('get_modularity_impersonation_config')) {
             $canFetchUsers = $activeUser->is_superadmin || $activeUser->isImpersonating();
         }
 
-        $userRepository = app()->make(\Modules\SystemUser\Repositories\UserRepository::class);
+        $userRepository = app()->make(UserRepository::class);
 
         $defaultInput = modularityConfig('default_input');
 

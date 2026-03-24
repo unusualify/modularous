@@ -11,7 +11,7 @@ class PriceHydrateTest extends TestCase
     {
         $input = [
             'type' => 'price',
-            'name' => 'prices'
+            'name' => 'prices',
         ];
 
         $h = new PriceHydrate($input, null, null, true);
@@ -23,7 +23,7 @@ class PriceHydrateTest extends TestCase
     {
         $input = [
             'type' => 'price',
-            'name' => 'prices'
+            'name' => 'prices',
         ];
 
         $h = new PriceHydrate($input, null, null, true);

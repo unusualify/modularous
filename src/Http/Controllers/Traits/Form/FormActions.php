@@ -65,7 +65,7 @@ trait FormActions
         $editOnModal = $this->tableAttributes['editOnModal'] ?? true;
         $createOnModal = $this->tableAttributes['createOnModal'] ?? true;
 
-        if($type === 'index' && !$editOnModal && !$createOnModal) {
+        if ($type === 'index' && ! $editOnModal && ! $createOnModal) {
             return [];
         }
 
@@ -74,19 +74,19 @@ trait FormActions
             $creatable = $action['creatable'] ?? true;
             $editable = $action['editable'] ?? true;
 
-            if($type === 'index' && !$editOnModal && !$creatable) {
+            if ($type === 'index' && ! $editOnModal && ! $creatable) {
                 return $acc;
             }
 
-            if($type === 'index' && !$createOnModal && !$editable) {
+            if ($type === 'index' && ! $createOnModal && ! $editable) {
                 return $acc;
             }
 
-            if($type === 'edit' && !$editable) {
+            if ($type === 'edit' && ! $editable) {
                 return $acc;
             }
 
-            if($type === 'create' && !$creatable) {
+            if ($type === 'create' && ! $creatable) {
                 return $acc;
             }
 

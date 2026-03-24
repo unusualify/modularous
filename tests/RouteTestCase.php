@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests;
 
+use App\Models\User;
 use Unusualify\Modularity\Providers\RouteServiceProvider;
 
 abstract class RouteTestCase extends TestCase
@@ -50,7 +51,7 @@ abstract class RouteTestCase extends TestCase
         // Configure the auth provider for modularity
         $app['config']->set('auth.providers.modularity_users', [
             'driver' => 'eloquent',
-            'model' => \App\Models\User::class, // Adjust this to your actual User model
+            'model' => User::class, // Adjust this to your actual User model
         ]);
 
         // Add password reset configuration

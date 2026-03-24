@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Entities;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Modules\SystemNotification\Events\AssignmentCreated;
@@ -84,17 +85,17 @@ class Assignment extends Model
         });
     }
 
-    public function assignable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function assignable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function assigner(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function assigner(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function assignee(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function assignee(): MorphTo
     {
         return $this->morphTo();
     }

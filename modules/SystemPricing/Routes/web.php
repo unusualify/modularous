@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Unusualify\Modularity\Facades\ModularityRoutes;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 | Now create something great!
 |
 */
-Route::middleware(['web.auth', ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares()])->group(function () {
+Route::middleware(['web.auth', ...ModularityRoutes::defaultMiddlewares()])->group(function () {
 
-    Route::middleware((\Unusualify\Modularity\Facades\ModularityRoutes::defaultPanelMiddlewares()))->group(function () {});
+    Route::middleware((ModularityRoutes::defaultPanelMiddlewares()))->group(function () {});
 
 });

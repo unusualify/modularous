@@ -2,13 +2,18 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Modules\SystemNotification\Events\AuthorizableCreated;
+use Modules\SystemNotification\Events\AuthorizableUpdated;
 use Spatie\Permission\Models\Role;
 use Unusualify\Modularity\Entities\Authorization;
 use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
@@ -72,7 +77,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'authorizationRecord'));
 
         $relation = $this->model->authorizationRecord();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $relation);
+        $this->assertInstanceOf(MorphOne::class, $relation);
     }
 
     public function test_authorization_record_relationship_configuration()
@@ -89,7 +94,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'authorizedUser'));
 
         $relation = $this->model->authorizedUser();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasOneThrough::class, $relation);
+        $this->assertInstanceOf(HasOneThrough::class, $relation);
     }
 
     public function test_can_create_authorization_record()
@@ -353,7 +358,7 @@ class HasAuthorizableTest extends ModelTestCase
     {
         $query = $this->model->query();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Builder::class, $this->model->hasAuthorization());
+        $this->assertInstanceOf(Builder::class, $this->model->hasAuthorization());
     }
 
     public function test_scope_has_authorization_filters_by_user()
@@ -674,8 +679,8 @@ class HasAuthorizableTest extends ModelTestCase
 
         // Mock the events
         Event::fake([
-            \Modules\SystemNotification\Events\AuthorizableCreated::class,
-            \Modules\SystemNotification\Events\AuthorizableUpdated::class,
+            AuthorizableCreated::class,
+            AuthorizableUpdated::class,
         ]);
 
         // Create authorization - should dispatch AuthorizableCreated
@@ -683,7 +688,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->model->authorized_type = get_class($user);
         $this->model->save();
 
-        Event::assertDispatched(\Modules\SystemNotification\Events\AuthorizableCreated::class);
+        Event::assertDispatched(AuthorizableCreated::class);
 
         // Update authorization - should dispatch AuthorizableUpdated
         $newUser = User::create([
@@ -696,7 +701,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->model->authorized_type = get_class($newUser);
         $this->model->save();
 
-        Event::assertDispatched(\Modules\SystemNotification\Events\AuthorizableUpdated::class);
+        Event::assertDispatched(AuthorizableUpdated::class);
     }
 
     protected function tearDown(): void

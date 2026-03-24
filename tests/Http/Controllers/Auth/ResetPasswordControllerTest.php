@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Auth\Passwords\DatabaseTokenRepository;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\PasswordBroker;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +38,7 @@ class ResetPasswordControllerTest extends AuthTestCase
     {
         parent::setUp();
 
-        $this->controller = new ResetPasswordController();
+        $this->controller = new ResetPasswordController;
     }
 
     protected function tearDown(): void
@@ -52,7 +58,7 @@ class ResetPasswordControllerTest extends AuthTestCase
     {
         $broker = $this->controller->broker();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Auth\PasswordBroker::class, $broker);
+        $this->assertInstanceOf(PasswordBroker::class, $broker);
     }
 
     /** @test */
@@ -60,7 +66,7 @@ class ResetPasswordControllerTest extends AuthTestCase
     {
         $response = $this->controller->success();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -70,7 +76,7 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->showResetForm($request, 'invalid-token');
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -86,7 +92,7 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->reset($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('errors', $data);
     }
@@ -98,13 +104,13 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->showWelcomeForm($request, 'invalid-token');
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
-    public function it_calls_sendResetResponse_when_password_reset_succeeds(): void
+    public function it_calls_send_reset_response_when_password_reset_succeeds(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('reset')
             ->andReturn(Password::PASSWORD_RESET);
 
@@ -121,7 +127,7 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->reset($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('variant', $data);
@@ -129,9 +135,9 @@ class ResetPasswordControllerTest extends AuthTestCase
     }
 
     /** @test */
-    public function it_calls_sendResetFailedResponse_when_password_reset_fails(): void
+    public function it_calls_send_reset_failed_response_when_password_reset_fails(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('reset')
             ->andReturn(Password::INVALID_TOKEN);
 
@@ -148,7 +154,7 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->reset($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('email', $data);
         $this->assertArrayHasKey('message', $data);
@@ -158,7 +164,7 @@ class ResetPasswordControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_redirect_on_reset_success_when_not_requesting_json(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('reset')
             ->andReturn(Password::PASSWORD_RESET);
 
@@ -174,13 +180,13 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->reset($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
     public function it_returns_redirect_on_reset_failure_when_not_requesting_json(): void
     {
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('reset')
             ->andReturn(Password::INVALID_TOKEN);
 
@@ -196,14 +202,20 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $this->controller->reset($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    private function createCanResetPasswordStub(string $email): \Illuminate\Contracts\Auth\CanResetPassword
+    private function createCanResetPasswordStub(string $email): CanResetPassword
     {
-        return new class($email) implements \Illuminate\Contracts\Auth\CanResetPassword {
+        return new class($email) implements CanResetPassword
+        {
             public function __construct(public string $email) {}
-            public function getEmailForPasswordReset(): string { return $this->email; }
+
+            public function getEmailForPasswordReset(): string
+            {
+                return $this->email;
+            }
+
             public function sendPasswordResetNotification($token): void {}
         };
     }
@@ -212,15 +224,15 @@ class ResetPasswordControllerTest extends AuthTestCase
     public function it_returns_reset_form_view_when_token_valid(): void
     {
         $stubUser = $this->createCanResetPasswordStub('resetuser@example.com');
-        $controller = new ResetPasswordControllerTestable();
+        $controller = new ResetPasswordControllerTestable;
         $controller->stubUser = $stubUser;
 
-        $mockRepository = Mockery::mock(\Illuminate\Auth\Passwords\DatabaseTokenRepository::class);
+        $mockRepository = Mockery::mock(DatabaseTokenRepository::class);
         $mockRepository->shouldReceive('exists')
             ->with($stubUser, 'valid-reset-token')
             ->andReturn(true);
 
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('getRepository')
             ->andReturn($mockRepository);
 
@@ -232,25 +244,25 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $controller->showResetForm($request, 'valid-reset-token');
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
     public function it_returns_welcome_form_view_when_user_exists_for_token(): void
     {
         $stubUser = $this->createCanResetPasswordStub('welcomeuser@example.com');
-        $controller = new ResetPasswordControllerTestable();
+        $controller = new ResetPasswordControllerTestable;
         $controller->stubUser = $stubUser;
 
         $request = Request::create('/password/welcome/valid-welcome-token', 'GET');
 
         $response = $controller->showWelcomeForm($request, 'valid-welcome-token');
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
-    public function it_resolves_user_from_hashed_token_via_getUserFromToken(): void
+    public function it_resolves_user_from_hashed_token_via_get_user_from_token(): void
     {
         $plainToken = 'hashed-token-value';
         $email = 'hasheduser@example.com';
@@ -262,14 +274,14 @@ class ResetPasswordControllerTest extends AuthTestCase
         ]);
 
         $stubUser = $this->createCanResetPasswordStub($email);
-        $controller = new ResetPasswordControllerTestable();
+        $controller = new ResetPasswordControllerTestable;
         $controller->stubUser = $stubUser;
 
-        $mockRepository = Mockery::mock(\Illuminate\Auth\Passwords\DatabaseTokenRepository::class);
+        $mockRepository = Mockery::mock(DatabaseTokenRepository::class);
         $mockRepository->shouldReceive('exists')
             ->andReturn(true);
 
-        $mockBroker = Mockery::mock(\Illuminate\Contracts\Auth\PasswordBroker::class);
+        $mockBroker = Mockery::mock(PasswordBroker::class);
         $mockBroker->shouldReceive('getRepository')
             ->andReturn($mockRepository);
 
@@ -281,7 +293,6 @@ class ResetPasswordControllerTest extends AuthTestCase
 
         $response = $controller->showResetForm($request, $plainToken);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
-
 }

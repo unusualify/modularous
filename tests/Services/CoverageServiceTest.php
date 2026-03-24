@@ -5,8 +5,9 @@ namespace Unusualify\Modularity\Tests\Services;
 use InvalidArgumentException;
 use RuntimeException;
 use Unusualify\Modularity\Services\CoverageService;
+use Unusualify\Modularity\Tests\TestCase;
 
-class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
+class CoverageServiceTest extends TestCase
 {
     private string $cloverDir;
 
@@ -124,12 +125,12 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
         // Test that different branch formats are handled
         $mock = new class($this->cloverDir, $this->cloverName) extends CoverageService
         {
-            public function testGetGitChangedFiles(string $baseBranch): array
+            public function test_get_git_changed_files(string $baseBranch): array
             {
                 // Call the private method through reflection
                 $method = new \ReflectionMethod(parent::class, 'getGitChangedFiles');
                 $method->setAccessible(true);
-                
+
                 // This will actually run git commands, so we just verify it doesn't crash
                 // In a real environment, this would return actual changed files
                 try {
@@ -143,7 +144,7 @@ class CoverageServiceTest extends \Unusualify\Modularity\Tests\TestCase
 
         // Test various branch formats don't crash
         $formats = ['main', 'origin/main', 'refs/heads/main', 'refs/tags/v1.0', 'refs/remotes/origin/develop'];
-        
+
         foreach ($formats as $branch) {
             $result = $mock->testGetGitChangedFiles($branch);
             $this->assertIsArray($result);

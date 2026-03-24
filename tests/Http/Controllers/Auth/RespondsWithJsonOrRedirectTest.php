@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Unusualify\Modularity\Http\Controllers\Auth\Controller;
+use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
 use Unusualify\Modularity\Tests\TestCase;
 
 /**
@@ -13,7 +17,7 @@ use Unusualify\Modularity\Tests\TestCase;
  */
 class TestRespondsController extends Controller
 {
-    use \Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
+    use RespondsWithJsonOrRedirect;
 
     public function callSendSuccessResponse(Request $request, string $message, string $redirectUrl, array $data = [])
     {
@@ -38,7 +42,7 @@ class RespondsWithJsonOrRedirectTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new TestRespondsController();
+        $this->controller = new TestRespondsController;
     }
 
     /** @test */
@@ -53,7 +57,7 @@ class RespondsWithJsonOrRedirectTest extends TestCase
             'https://example.com/redirect'
         );
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getContent(), true);
         $this->assertEquals('Success message', $data['message']);
@@ -71,7 +75,7 @@ class RespondsWithJsonOrRedirectTest extends TestCase
             'https://example.com/redirect'
         );
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('https://example.com/redirect', $response->getTargetUrl());
     }
 
@@ -87,7 +91,7 @@ class RespondsWithJsonOrRedirectTest extends TestCase
             'email'
         );
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertEquals('Error message', $data['message']);
         $this->assertArrayHasKey('email', $data);
@@ -106,7 +110,7 @@ class RespondsWithJsonOrRedirectTest extends TestCase
             'email'
         );
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertTrue($response->isRedirection());
     }
 
@@ -116,14 +120,14 @@ class RespondsWithJsonOrRedirectTest extends TestCase
         $request = Request::create('/test', 'POST', ['email' => 'invalid']);
         $request->headers->set('Accept', 'application/json');
 
-        $validator = \Illuminate\Support\Facades\Validator::make(
+        $validator = Validator::make(
             ['email' => ''],
             ['email' => 'required']
         );
 
         $response = $this->controller->callSendValidationFailedResponse($request, $validator);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('errors', $data);
     }

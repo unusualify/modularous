@@ -21,7 +21,7 @@ class CacheInvalidationTest extends TestCase
         Config::set('modularity.cache.enabled', true);
         Config::set('modularity.cache.use_tags', false);
 
-        $this->cacheService = new ConcreteCacheInvalidation();
+        $this->cacheService = new ConcreteCacheInvalidation;
     }
 
     /** @test */
@@ -29,7 +29,7 @@ class CacheInvalidationTest extends TestCase
     {
         // Method should complete without error
         $result = $this->cacheService->invalidateModule('TestModule');
-        
+
         $this->assertIsBool($result);
     }
 
@@ -37,7 +37,7 @@ class CacheInvalidationTest extends TestCase
     public function it_can_invalidate_module_route_without_tags()
     {
         $result = $this->cacheService->invalidateModuleRoute('TestModule', 'TestRoute');
-        
+
         $this->assertIsBool($result);
     }
 
@@ -45,7 +45,7 @@ class CacheInvalidationTest extends TestCase
     public function it_returns_false_for_invalidate_by_related_model_without_tags()
     {
         $result = $this->cacheService->invalidateByRelatedModel('Company', 1);
-        
+
         $this->assertFalse($result);
     }
 
@@ -54,9 +54,9 @@ class CacheInvalidationTest extends TestCase
     {
         $count = $this->cacheService->invalidateByRelatedModels([
             'Company' => 1,
-            'User' => [1, 2, 3]
+            'User' => [1, 2, 3],
         ]);
-        
+
         $this->assertEquals(0, $count);
     }
 
@@ -64,9 +64,9 @@ class CacheInvalidationTest extends TestCase
     public function it_returns_zero_for_invalidate_by_pattern_with_tags()
     {
         $this->cacheService->setUsesTags(true);
-        
+
         $count = $this->cacheService->invalidateByPattern('modularity:*');
-        
+
         $this->assertEquals(0, $count);
     }
 
@@ -121,7 +121,7 @@ class CacheInvalidationTest extends TestCase
     /** @test */
     public function it_can_invalidate_for_model()
     {
-        $model = new TestModel();
+        $model = new TestModel;
         $model->id = 1;
         $model->exists = true;
 
@@ -137,11 +137,11 @@ class CacheInvalidationTest extends TestCase
     /** @test */
     public function it_skips_invalidation_for_model_without_module_info()
     {
-        $model = new InvalidTestModel();
+        $model = new InvalidTestModel;
         $model->id = 1;
 
         $this->cacheService->invalidateForModel($model);
-        
+
         // Should skip invalidation and not throw
         $this->assertTrue(true);
     }
@@ -149,7 +149,7 @@ class CacheInvalidationTest extends TestCase
     /** @test */
     public function it_can_invalidate_for_newly_created_model()
     {
-        $model = new TestModel();
+        $model = new TestModel;
         $model->id = 1;
         $model->exists = true;
         $model->wasRecentlyCreated = true;
@@ -172,8 +172,11 @@ class ConcreteCacheInvalidation
     use CacheInvalidation;
 
     protected $store;
+
     protected $prefix = 'modularity';
+
     protected $usesTags = false;
+
     protected $enabled = true;
 
     public function __construct()

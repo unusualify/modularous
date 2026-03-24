@@ -2,7 +2,10 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
@@ -44,7 +47,7 @@ class HasFilepondsTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'fileponds'));
 
         $relation = $this->model->fileponds();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relation);
+        $this->assertInstanceOf(MorphMany::class, $relation);
     }
 
     public function test_fileponds_relationship_configuration()
@@ -151,7 +154,7 @@ class HasFilepondsTest extends ModelTestCase
 
         $fileponds = $this->model->getFileponds();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $fileponds);
+        $this->assertInstanceOf(Collection::class, $fileponds);
         $this->assertCount(1, $fileponds);
         $this->assertEquals('test.pdf', $fileponds->first()->file_name);
     }
@@ -281,7 +284,7 @@ class HasFilepondsTest extends ModelTestCase
             'locale' => 'en',
         ]);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
         $this->model->fileponds()->save($filepond2);
     }
 
@@ -293,7 +296,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_set_deleted_fileponds_as_changed()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->setDeletedFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->getDeletedFileponds()->contains($this->model));
@@ -301,7 +304,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_merge_deleted_fileponds_as_changed()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->mergeDeletedFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->getDeletedFileponds()->contains($this->model));
@@ -309,7 +312,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_set_new_fileponds_as_changed()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->setNewFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->getNewFileponds()->contains($this->model));
@@ -317,7 +320,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_has_deleted_fileponds()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->setDeletedFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->hasDeletedFileponds());
@@ -325,7 +328,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_has_new_fileponds()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->setNewFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->hasNewFileponds());
@@ -333,7 +336,7 @@ class HasFilepondsTest extends ModelTestCase
 
     public function test_get_new_fileponds()
     {
-        $fileponds = \Illuminate\Database\Eloquent\Collection::make([$this->model]);
+        $fileponds = Collection::make([$this->model]);
         $this->model->setNewFilepondsAsChanged($fileponds);
 
         $this->assertTrue($this->model->getNewFileponds()->contains($this->model));

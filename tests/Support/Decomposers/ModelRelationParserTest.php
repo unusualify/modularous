@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Support\Decomposers;
 
+use Illuminate\Support\Facades\Config;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Facades\UFinder;
 use Unusualify\Modularity\Support\Decomposers\ModelRelationParser;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Facades\Config;
 
 class ModelRelationParserTest extends TestCase
 {
@@ -13,7 +15,7 @@ class ModelRelationParserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Config::set('modularity.laravel-relationship-map', [
             'belongsTo' => [
                 'related' => ['position' => 0, 'required' => true],
@@ -34,13 +36,13 @@ class ModelRelationParserTest extends TestCase
                 'parentKey' => ['position' => 4, 'required' => false],
                 'relatedKey' => ['position' => 5, 'required' => false],
                 'relation' => ['position' => 6, 'required' => false],
-            ]
+            ],
         ]);
 
-        \Unusualify\Modularity\Facades\UFinder::shouldReceive('getPossibleModels')->andReturnUsing(function($str) {
-            return ["App\\Models\\" . ucfirst($str)];
+        UFinder::shouldReceive('getPossibleModels')->andReturnUsing(function ($str) {
+            return ['App\\Models\\' . ucfirst($str)];
         });
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('getModels')->andReturn([]);
+        Modularity::shouldReceive('getModels')->andReturn([]);
     }
 
     /** @test */
@@ -71,9 +73,9 @@ class ModelRelationParserTest extends TestCase
     public function it_can_parse_belongs_to_many_with_pivot_fields()
     {
         $parser = new ModelRelationParser('Post', 'belongsToMany:Tag,active:boolean,position:integer');
-        
+
         $this->assertTrue($parser->hasCreatablePivotModel());
-        
+
         $pivots = $parser->getPivotModels();
         $this->assertCount(1, $pivots);
         $this->assertEquals('PostTag', $pivots[0]['class']);

@@ -16,7 +16,7 @@ if (! function_exists('previous_route_name')) {
             $referrerRouteName = app('router')->getRoutes()->match(
                 app('request')->create($previousUrl)
             )->getName();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Route not found or other error, leave referrerRouteName as null
         }
 
@@ -127,7 +127,7 @@ if (! function_exists('resolve_route')) {
             if ($routeName) {
                 $routeExists = true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $routeExists = Route::has($routeName);
         }
 
@@ -141,7 +141,7 @@ if (! function_exists('resolve_route')) {
                         $routeParameters[$parameter] = $params[$parameter];
                         unset($params[$parameter]);
                     } else {
-                        throw new \Exception('Action route must not have parameters: ' . $routeName);
+                        throw new Exception('Action route must not have parameters: ' . $routeName);
                     }
                 }
                 // throw new \Exception('Action route must not have parameters: ' . $routeName);

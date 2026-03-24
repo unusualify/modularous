@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Modules\SystemPayment\Entities\Payment;
 
 class PaymentFailed implements ShouldDispatchAfterCommit
 {
@@ -31,7 +32,7 @@ class PaymentFailed implements ShouldDispatchAfterCommit
      *
      * @return void
      */
-    public function __construct(public \Modules\SystemPayment\Entities\Payment $model)
+    public function __construct(public Payment $model)
     {
         //
     }

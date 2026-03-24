@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities\Traits\Core;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Casts\LocaleTagsCast;
 
@@ -54,7 +55,7 @@ trait LocaleTags
         }
     }
 
-    public static function allLocaleTags(?string $locale = null): \Illuminate\Database\Eloquent\Builder
+    public static function allLocaleTags(?string $locale = null): Builder
     {
         $instance = new static;
         $tagsModel = $instance->createTagsModel();
@@ -224,7 +225,7 @@ trait LocaleTags
     /**
      * {@inheritdoc}
      */
-    public function localeTags($locale = null): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function localeTags($locale = null): MorphToMany
     {
         $locale = $locale ?: app()->getLocale();
         $tagsModel = $this->createTagsModel();

@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Oobook\Database\Eloquent\ManageEloquentServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
@@ -47,7 +51,7 @@ class RegisterControllerTest extends AuthTestCase
     {
         parent::setUp();
 
-        $this->controller = new RegisterController();
+        $this->controller = new RegisterController;
         Role::firstOrCreate(
             ['name' => 'client-manager', 'guard_name' => Modularity::getAuthGuardName()],
             ['name' => 'client-manager', 'guard_name' => Modularity::getAuthGuardName()]
@@ -65,18 +69,18 @@ class RegisterControllerTest extends AuthTestCase
     {
         $response = $this->controller->showForm();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
     public function it_redirects_to_email_form_when_email_verified_register_enabled(): void
     {
         config(['modularity.email_verified_register' => true]);
-        $controller = new RegisterController();
+        $controller = new RegisterController;
 
         $response = $controller->showForm();
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -84,7 +88,7 @@ class RegisterControllerTest extends AuthTestCase
     {
         $response = $this->controller->success();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -114,14 +118,14 @@ class RegisterControllerTest extends AuthTestCase
             'password_confirmation' => 'Password123!',
         ]);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Validation\Validator::class, $validator);
+        $this->assertInstanceOf(Validator::class, $validator);
     }
 
     /** @test */
     public function it_returns_json_with_restricted_message_when_email_verified_register_enabled_and_requesting_json(): void
     {
         config(['modularity.email_verified_register' => true]);
-        $controller = new RegisterController();
+        $controller = new RegisterController;
 
         $request = Request::create('/register', 'POST', []);
         $request->headers->set('Accept', 'application/json');
@@ -132,7 +136,7 @@ class RegisterControllerTest extends AuthTestCase
 
         $response = $method->invoke($controller, $request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertEquals('Restricted Registration', $data['message']);
@@ -142,7 +146,7 @@ class RegisterControllerTest extends AuthTestCase
     public function it_redirects_when_email_verified_register_enabled_and_not_requesting_json(): void
     {
         config(['modularity.email_verified_register' => true]);
-        $controller = new RegisterController();
+        $controller = new RegisterController;
 
         $request = Request::create('/register', 'POST', []);
 
@@ -152,7 +156,7 @@ class RegisterControllerTest extends AuthTestCase
 
         $response = $method->invoke($controller, $request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -173,7 +177,7 @@ class RegisterControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(422, $response->getStatusCode());
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('errors', $data);
@@ -197,7 +201,7 @@ class RegisterControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('success', $data['status']);

@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Models\Model;
 use Unusualify\Modularity\Services\View\UWrapper;
 
 trait ManageUtilities
@@ -108,7 +110,7 @@ trait ManageUtilities
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $item
+     * @param Model $item
      * @return array
      */
     public function indexItemData($item)
@@ -118,7 +120,7 @@ trait ManageUtilities
 
     /**
      * @param int $id
-     * @param \Unusualify\Modularity\Models\Model|null $item
+     * @param Model|null $item
      * @return array
      */
     protected function getFormData($id = null)
@@ -269,7 +271,7 @@ trait ManageUtilities
         }
 
         return [
-            'pageTitle' => "$pageTitle - " . \Unusualify\Modularity\Facades\Modularity::pageTitle(),
+            'pageTitle' => "$pageTitle - " . Modularity::pageTitle(),
             'headerTitle' => $headerTitle,
         ];
     }

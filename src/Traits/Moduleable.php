@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Unusualify\Modularity\Repositories\Repository;
+
 trait Moduleable
 {
     /**
@@ -26,13 +29,13 @@ trait Moduleable
             return $this->moduleName;
         }
 
-        if (property_exists($this, 'repository') && $this->repository instanceof \Unusualify\Modularity\Repositories\Repository) {
+        if (property_exists($this, 'repository') && $this->repository instanceof Repository) {
             $this->moduleName = class_basename($this->repository->getModel());
 
             return $this->moduleName;
         }
 
-        if (property_exists($this, 'model') && $this->model instanceof \Illuminate\Database\Eloquent\Model) {
+        if (property_exists($this, 'model') && $this->model instanceof Model) {
             $this->moduleName = class_basename($this->model);
 
             return $this->moduleName;

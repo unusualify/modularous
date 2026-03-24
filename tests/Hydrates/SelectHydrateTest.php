@@ -11,7 +11,7 @@ class SelectHydrateTest extends TestCase
     {
         $input = [
             'type' => 'select',
-            'name' => 'category'
+            'name' => 'category',
         ];
 
         $h = new SelectHydrate($input, null, null, true);

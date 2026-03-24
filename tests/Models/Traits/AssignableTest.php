@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -75,7 +77,7 @@ class AssignableTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'assignments'));
 
         $relation = $this->model->assignments();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relation);
+        $this->assertInstanceOf(MorphMany::class, $relation);
     }
 
     public function test_assignments_relationship_configuration()
@@ -285,7 +287,7 @@ class AssignableTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'lastAssignment'));
 
         $relation = $this->model->lastAssignment();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $relation);
+        $this->assertInstanceOf(MorphOne::class, $relation);
     }
 
     public function test_last_assignment_relationship_configuration()

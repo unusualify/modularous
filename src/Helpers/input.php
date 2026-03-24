@@ -42,7 +42,7 @@ if (! function_exists('hydrate_input_type')) {
             }
 
             return $input;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             dd($input, $th);
         }
     }
@@ -388,7 +388,7 @@ if (! function_exists('hydrate_input_extension')) {
                 $data = (array) ($data ?? $input);
                 try {
                     $data['event'] = implode('|', array_unique(array_merge($events, isset($data['event']) ? explode('|', $data['event']) : [])));
-                } catch (\Throwable $th) {
+                } catch (Throwable $th) {
                     dd($events, $data, $th);
                 }
             }
@@ -528,7 +528,7 @@ if (! function_exists('format_input')) {
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
                             $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
                         } else {
-                            throw new \Exception('Repository or connector not found on morphTo input: ' . $name);
+                            throw new Exception('Repository or connector not found on morphTo input: ' . $name);
                         }
 
                         $columns = $modelClass->getTableColumns();
@@ -569,7 +569,7 @@ if (! function_exists('format_input')) {
                             $_input = $this->getSchemaInput($attachable);
 
                             $data += $_input;
-                        } catch (\Throwable $th) {
+                        } catch (Throwable $th) {
                             dd($attachable, $th);
                         }
                     }
@@ -585,13 +585,13 @@ if (! function_exists('format_input')) {
                 $arrayable = true;
 
                 if (! isset($input['model'])) {
-                    throw new \Exception('Model is required for polymorphic input');
+                    throw new Exception('Model is required for polymorphic input');
                 }
 
                 $model = $input['model'];
 
                 if (! class_exists($model)) {
-                    throw new \Exception('Model ' . $model . ' does not exist on polymorphic input');
+                    throw new Exception('Model ' . $model . ' does not exist on polymorphic input');
                 }
 
                 $modelInstance = App::make($model);
@@ -602,12 +602,12 @@ if (! function_exists('format_input')) {
                 $columns = $modelInstance->getTableColumns();
 
                 if (! (in_array($morphId, $columns) && in_array($morphType, $columns))) {
-                    throw new \Exception("{$morphType} and {$morphId} columns are not present in the model " . $model);
+                    throw new Exception("{$morphType} and {$morphId} columns are not present in the model " . $model);
                 }
 
                 // Ensure we have morphs array
                 if (! isset($input['morphs']) || ! is_array($input['morphs'])) {
-                    throw new \Exception('Morphs array is required for polymorphic input');
+                    throw new Exception('Morphs array is required for polymorphic input');
                 }
 
                 // Transform models into options for the type combobox
@@ -626,7 +626,7 @@ if (! function_exists('format_input')) {
                     $repository = $polymorphic['repository'] ?? '';
 
                     if (is_string($repository) && ! class_exists($repository) && ! $hasConnector) {
-                        throw new \Exception('Repository ' . $repository . ' does not exist on polymorphic input');
+                        throw new Exception('Repository ' . $repository . ' does not exist on polymorphic input');
                     }
 
                     $repositoryInstance = null;
@@ -635,7 +635,7 @@ if (! function_exists('format_input')) {
                         if (class_exists($repository)) {
                             $repositoryInstance = App::make($repository);
                         }
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         dd($th);
                     }
 
@@ -646,11 +646,11 @@ if (! function_exists('format_input')) {
                     if (is_array($polymorphic)) {
                         $repository = $polymorphic['repository'];
                     } else {
-                        throw new \Exception('Invalid polymorphic input');
+                        throw new Exception('Invalid polymorphic input');
                     }
 
                     if (! class_exists($repository)) {
-                        throw new \Exception('Repository ' . $repository . ' does not exist on polymorphic input');
+                        throw new Exception('Repository ' . $repository . ' does not exist on polymorphic input');
                     }
 
                     $repositoryInstance = App::make($repository);

@@ -50,7 +50,7 @@ class SchemaParserTest extends TestCase
         $rendered = $parser->up();
 
         // soft_delete is a custom attribute mapped to softDeletes()
-        $this->assertStringContainsString("\$table->softDeletes()", $rendered);
+        $this->assertStringContainsString('$table->softDeletes()', $rendered);
     }
 
     /** @test */
@@ -83,7 +83,7 @@ class SchemaParserTest extends TestCase
         $parser = new SchemaParser($schema);
         $rendered = $parser->up();
 
-        $this->assertStringContainsString("\$table->rememberToken()", $rendered);
+        $this->assertStringContainsString('$table->rememberToken()', $rendered);
     }
 
     /** @test */
@@ -160,7 +160,7 @@ class SchemaParserTest extends TestCase
     /** @test */
     public function parse_updates_schema_and_returns_parsed_array()
     {
-        $parser = new SchemaParser();
+        $parser = new SchemaParser;
 
         $parsed = $parser->parse('title:string,body:text');
 

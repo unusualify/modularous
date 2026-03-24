@@ -2,10 +2,15 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Unusualify\Modularity\Entities\Media;
 use Unusualify\Modularity\Entities\Traits\HasImages;
+use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class ImagesTraitTest extends RepositoryTestCase
@@ -25,7 +30,7 @@ class ImagesTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\ImagesTrait;
+            use ImagesTrait;
         };
 
         $columns = $repo->setColumnsImagesTrait([], [
@@ -256,7 +261,7 @@ class ImagesTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($model, $schema);
         $this->assertArrayHasKey('name', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['image-1']);
+        $this->assertInstanceOf(Collection::class, $fields['image-1']);
         $this->assertSame('img-6.jpg', $fields['image-1'][0]['name']);
         $this->assertSame(200, $fields['image-1'][0]['width']);
         $this->assertSame(100, $fields['image-1'][0]['height']);
@@ -277,7 +282,7 @@ class ImagesTraitTest extends RepositoryTestCase
         $schema = [
             'image-1' => ['name' => 'image-1', 'type' => 'image', 'translated' => true],
         ];
-        $inputsMap = \Illuminate\Support\Arr::mapWithKeys($schema, fn ($i) => [$i['name'] => $i]);
+        $inputsMap = Arr::mapWithKeys($schema, fn ($i) => [$i['name'] => $i]);
         $repo = new ImagesTestRepositoryTranslated(new ImagesTestModel, $inputsMap);
         $model = $repo->create(['name' => 'Translated Show Fields'], $schema);
         $model->medias()->attach($media->id, [
@@ -305,10 +310,10 @@ class ImagesTraitTest extends RepositoryTestCase
         $fields = $this->repository->getFormFields($model, $schema);
 
         $this->assertArrayHasKey('image-1', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['image-1']);
+        $this->assertInstanceOf(Collection::class, $fields['image-1']);
         $this->assertCount(0, $fields['image-1']);
         $this->assertArrayHasKey('image-2', $fields);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $fields['image-2']);
+        $this->assertInstanceOf(Collection::class, $fields['image-2']);
         $this->assertCount(2, $fields['image-2']);
         $this->assertArrayHasKey('en', $fields['image-2']);
         $this->assertArrayHasKey('tr', $fields['image-2']);
@@ -325,7 +330,7 @@ class ImagesTraitTest extends RepositoryTestCase
     }
 }
 
-class ImagesTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class ImagesTestModel extends TestModel
 {
     use HasImages;
 
@@ -339,9 +344,9 @@ class ImagesTestModel extends \Unusualify\Modularity\Tests\Repositories\TestMode
     ];
 }
 
-class ImagesTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class ImagesTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\ImagesTrait;
+    use ImagesTrait;
 
     public function __construct(ImagesTestModel $model)
     {

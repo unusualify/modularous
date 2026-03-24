@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Tests\View;
 
 use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\View\Component;
 use Unusualify\Modularity\View\ModularityWidget;
 use Unusualify\Modularity\View\Widgets\MetricsWidget;
 
@@ -106,6 +107,6 @@ class ModularityWidgetTest extends TestCase
         $widget = new MetricsWidget;
 
         $this->assertInstanceOf(ModularityWidget::class, $widget);
-        $this->assertInstanceOf(\Unusualify\Modularity\View\Component::class, $widget);
+        $this->assertInstanceOf(Component::class, $widget);
     }
 }

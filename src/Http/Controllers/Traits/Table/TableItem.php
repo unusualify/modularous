@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -105,7 +106,7 @@ trait TableItem
 
             $count = 0;
 
-            if($item != null) {
+            if ($item != null) {
                 $relationshipType = get_class($item->{$relationshipName}());
                 $eagerLoadedRelation = $this->getLoadedRelationForFormatting($item, $relationshipName, $preferEager);
                 $isRelationLoaded = $this->isRelationLoadedForFormatting($item, $relationshipName, $preferEager);
@@ -127,8 +128,7 @@ trait TableItem
                     'Illuminate\Database\Eloquent\Relations\MorphToMany',
                 ]);
 
-
-                if ($isRelationship && $singularRelationships->first(fn($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
+                if ($isRelationship && $singularRelationships->first(fn ($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
 
                     // Allow overriding the relation via "relation.field" or "relation->field"
 
@@ -192,7 +192,7 @@ trait TableItem
                             $result = $isRelationLoaded ? $eagerLoadedRelation : $item->{$relationshipName};
                         }
                     }
-                } elseif ($isRelationship && $pluralRelationships->first(fn($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
+                } elseif ($isRelationship && $pluralRelationships->first(fn ($relationship) => is_subclass_of($relationshipType, $relationship) || $relationshipType == $relationship)) {
 
                     if ($eagerLoadedRelation instanceof Collection) {
                         $count = $eagerLoadedRelation->count();
@@ -399,12 +399,12 @@ trait TableItem
             $itemTitle = $append;
             $itemValue = $append;
             preg_match('/(.*) as (.*)/', $append, $matches);
-            if($matches) {
+            if ($matches) {
                 $itemTitle = $matches[2];
                 $itemValue = $matches[1];
             }
 
-            if(!isset($customRowData[$itemTitle])) {
+            if (! isset($customRowData[$itemTitle])) {
                 $columnsData[$itemTitle] = data_get($item, $itemValue);
             }
         }
@@ -501,7 +501,7 @@ trait TableItem
      * @param Illuminate\Pagination\LengthAwarePaginator $paginator
      * @return array
      */
-    public function getFormattedIndexItems(\Illuminate\Pagination\AbstractPaginator $paginator) // getIndexTableItems
+    public function getFormattedIndexItems(AbstractPaginator $paginator) // getIndexTableItems
     {
         $paginator->getCollection()->transform(function ($item) {
             return $this->getFormattedIndexItem($item);

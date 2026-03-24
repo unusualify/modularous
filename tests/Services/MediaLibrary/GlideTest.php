@@ -139,7 +139,7 @@ class GlideTest extends TestCase
     public function it_returns_original_url_for_svg_files()
     {
         Storage::disk('public')->put('test.svg', '<svg></svg>');
-        
+
         $url = $this->service->getUrl('test.svg');
 
         $this->assertIsString($url);

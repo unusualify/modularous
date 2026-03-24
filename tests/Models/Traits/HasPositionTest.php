@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
@@ -213,7 +214,7 @@ class HasPositionTest extends ModelTestCase
             $this->assertEquals(1, $model1->position);
         } catch (\Exception $e) {
             // If it throws an exception, that's also valid behavior
-            $this->assertInstanceOf(\Illuminate\Database\Eloquent\ModelNotFoundException::class, $e);
+            $this->assertInstanceOf(ModelNotFoundException::class, $e);
         }
     }
 

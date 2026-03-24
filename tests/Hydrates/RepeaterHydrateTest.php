@@ -14,7 +14,7 @@ class RepeaterHydrateTest extends TestCase
             'name' => 'items',
             'schema' => [
                 ['type' => 'input', 'name' => 'name'],
-            ]
+            ],
         ];
 
         $h = new RepeaterHydrate($input, null, null, true);
@@ -32,7 +32,7 @@ class RepeaterHydrateTest extends TestCase
             'type' => 'repeater',
             'name' => 'items',
             'label' => 'Product Items',
-            'schema' => []
+            'schema' => [],
         ];
 
         $h = new RepeaterHydrate($input, null, null, true);

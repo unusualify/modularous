@@ -18,4 +18,3 @@ class BrowserHydrateTest extends TestCase
         $this->assertEquals('input-browser', $result['type']);
     }
 }
-

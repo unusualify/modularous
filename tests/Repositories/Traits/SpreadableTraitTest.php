@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\App;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
 use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class SpreadableTraitTest extends RepositoryTestCase
@@ -131,18 +133,18 @@ class SpreadableTraitTest extends RepositoryTestCase
     }
 }
 
-class SpreadableTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class SpreadableTestModel extends TestModel
 {
     use HasSpreadable;
 
     protected static $spreadableSavingKey = 'spread_payload';
 
-    public static $spreadableClass = \Unusualify\Modularity\Tests\Repositories\TestModel::class;
+    public static $spreadableClass = TestModel::class;
 }
 
-class SpreadableTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class SpreadableTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+    use SpreadableTrait;
 
     public function __construct(SpreadableTestModel $model)
     {

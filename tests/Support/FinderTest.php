@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
+use Illuminate\Support\Facades\File;
+use TestModules\TestModule\Entities\Item;
+use TestModules\TestModule\Repositories\ItemRepository;
 use Unusualify\Modularity\Support\Finder;
 use Unusualify\Modularity\Tests\MockModuleManager;
 use Unusualify\Modularity\Tests\TestModulesCase;
@@ -18,7 +21,7 @@ class FinderTest extends TestModulesCase
 
         // Only enable TestModule so getRouteModel/getRouteRepository return TestModule's Item (not SystemModule's)
         $statusFilePath = config('modules.activators.modularity.statuses-file');
-        \Illuminate\Support\Facades\File::put($statusFilePath, json_encode(['TestModule' => true], JSON_PRETTY_PRINT));
+        File::put($statusFilePath, json_encode(['TestModule' => true], JSON_PRETTY_PRINT));
 
         $module = MockModuleManager::getTestModule();
         $statusesFile = $module->getDirectoryPath('routes_statuses.json');
@@ -27,7 +30,7 @@ class FinderTest extends TestModulesCase
         }
         file_put_contents($statusesFile, json_encode(['Item' => true], JSON_PRETTY_PRINT));
 
-        $this->finder = new Finder();
+        $this->finder = new Finder;
     }
 
     public function test_it_can_find_classes_in_path(): void
@@ -96,7 +99,7 @@ class FinderTest extends TestModulesCase
         $result = $this->finder->getRouteModel('Item', true);
 
         $this->assertNotFalse($result);
-        $this->assertInstanceOf(\TestModules\TestModule\Entities\Item::class, $result);
+        $this->assertInstanceOf(Item::class, $result);
     }
 
     public function test_get_route_repository_returns_class_for_item_route(): void
@@ -112,7 +115,7 @@ class FinderTest extends TestModulesCase
         $result = $this->finder->getRouteRepository('Item', true);
 
         $this->assertNotFalse($result);
-        $this->assertInstanceOf(\TestModules\TestModule\Repositories\ItemRepository::class, $result);
+        $this->assertInstanceOf(ItemRepository::class, $result);
     }
 
     public function test_get_route_model_returns_false_for_unknown_route(): void

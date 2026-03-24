@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\CreatorRecord;
@@ -156,7 +157,7 @@ class CreatorRecordTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $creatorRecord = new CreatorRecord;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $creatorRecord);
+        $this->assertInstanceOf(Model::class, $creatorRecord);
     }
 
     public function test_polymorphic_creator_relationship()

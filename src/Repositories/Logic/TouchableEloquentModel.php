@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Repositories\Logic;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait TouchableEloquentModel
 {
     protected $mustTouchEloquentModel = false;
@@ -18,7 +20,7 @@ trait TouchableEloquentModel
         }
     }
 
-    public function touchEloquentModel(\Illuminate\Database\Eloquent\Model $object)
+    public function touchEloquentModel(Model $object)
     {
         if ($this->mustTouchEloquentModel) {
             $object->touch();

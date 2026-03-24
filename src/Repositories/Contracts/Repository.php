@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Repositories\Contracts;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface Repository
 {
     /**
@@ -21,7 +23,7 @@ interface Repository
     /**
      * Get the model for the repository.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getModel();
 }

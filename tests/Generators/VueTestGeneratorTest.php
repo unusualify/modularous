@@ -5,16 +5,19 @@ namespace Unusualify\Modularity\Tests\Generators;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
+use Mockery;
 use Nwidart\Modules\Support\Stub;
 use Unusualify\Modularity\Generators\VueTestGenerator;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery;
 
 class VueTestGeneratorTest extends TestCase
 {
     protected $generator;
+
     protected $config;
+
     protected $filesystem;
+
     protected $console;
 
     protected function setUp(): void
@@ -23,13 +26,13 @@ class VueTestGeneratorTest extends TestCase
 
         $this->config = Mockery::mock(Config::class);
         $filesystem = Mockery::mock(Filesystem::class);
-        $filesystem->shouldReceive("isDirectory")->andReturn(false);
-        $filesystem->shouldReceive("makeDirectory")->andReturn(true);
-        $filesystem->shouldReceive("put")->andReturn(true);
+        $filesystem->shouldReceive('isDirectory')->andReturn(false);
+        $filesystem->shouldReceive('makeDirectory')->andReturn(true);
+        $filesystem->shouldReceive('put')->andReturn(true);
 
         $this->filesystem = $filesystem;
         $console = Mockery::mock(Console::class);
-        $console->shouldReceive("info")->andReturn(0);
+        $console->shouldReceive('info')->andReturn(0);
         $this->console = $console;
 
         $this->generator = new VueTestGenerator(
@@ -128,8 +131,6 @@ class VueTestGeneratorTest extends TestCase
         $this->assertEquals('CustomTarget', $this->generator->subTargetDir);
     }
 
-    
-
     /** @test */
     public function it_verifies_generate_method_exists()
     {
@@ -139,7 +140,7 @@ class VueTestGeneratorTest extends TestCase
 
         $originalStubPath = Stub::getBasePath();
         Stub::setBasePath(rtrim(modularityConfig('stubs.path', dirname(__FILE__) . '/stubs')));
-        
+
         $tmpDir = sys_get_temp_dir() . '/vue-test-generator';
 
         $generator = $this->generator->setType('component')

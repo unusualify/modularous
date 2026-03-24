@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Console\Make;
 
 use Unusualify\Modularity\Console\BaseCommand;
+
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 

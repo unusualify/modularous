@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Traits;
 
 use Closure;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,7 @@ trait Allowable
     /**
      * The user to check if the items are allowable for
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable|null
+     * @var Authenticatable|null
      */
     public $allowableUser;
 

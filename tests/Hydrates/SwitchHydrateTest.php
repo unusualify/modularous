@@ -11,7 +11,7 @@ class SwitchHydrateTest extends TestCase
     {
         $input = [
             'type' => 'switch',
-            'name' => 'is_active'
+            'name' => 'is_active',
         ];
 
         $h = new SwitchHydrate($input, null, null, true);
@@ -30,7 +30,7 @@ class SwitchHydrateTest extends TestCase
         $input = [
             'type' => 'switch',
             'name' => 'is_active',
-            'default' => 0
+            'default' => 0,
         ];
 
         $h = new SwitchHydrate($input, null, null, true);

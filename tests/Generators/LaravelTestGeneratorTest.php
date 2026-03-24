@@ -5,15 +5,18 @@ namespace Unusualify\Modularity\Tests\Generators;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
+use Mockery;
 use Unusualify\Modularity\Generators\LaravelTestGenerator;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery;
 
 class LaravelTestGeneratorTest extends TestCase
 {
     protected $generator;
+
     protected $config;
+
     protected $filesystem;
+
     protected $console;
 
     protected function setUp(): void

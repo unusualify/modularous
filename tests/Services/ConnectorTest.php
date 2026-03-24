@@ -2,11 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Services;
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Schema;
 use TestModules\TestModule\Entities\Item;
-use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Exceptions\ModuleNotFoundException;
 use Unusualify\Modularity\Repositories\Repository;
 use Unusualify\Modularity\Services\Connector;
@@ -17,7 +13,7 @@ class ConnectorTest extends TestModulesCase
     /** @test */
     public function it_constructs_without_connector()
     {
-        $connector = new Connector();
+        $connector = new Connector;
 
         $this->assertInstanceOf(Connector::class, $connector);
     }
@@ -455,6 +451,7 @@ class ConnectorTest extends TestModulesCase
         $this->expectExceptionMessageMatches('/not found for connector TestModule\|Item\^trial/');
         new Connector('TestModule|Item^trial');
     }
+
     /** @test */
     public function it_parses_ordered_arguments()
     {

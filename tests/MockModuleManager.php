@@ -19,7 +19,7 @@ class MockModuleManager
     {
         self::$mockModulesPath = realpath(__DIR__ . '/../test-modules');
 
-        if (!self::$mockModulesPath) {
+        if (! self::$mockModulesPath) {
             throw new \Exception('Mock modules path not found: ' . __DIR__ . '/../test-modules');
         }
 
@@ -81,6 +81,7 @@ class MockModuleManager
     public static function getConfig($moduleName)
     {
         $module = self::get($moduleName);
+
         return $module ? $module->getConfig() : null;
     }
 
@@ -90,7 +91,7 @@ class MockModuleManager
     public static function getEntity($moduleName, $entityName)
     {
         $module = self::get($moduleName);
-        if (!$module) {
+        if (! $module) {
             return null;
         }
 
@@ -107,7 +108,7 @@ class MockModuleManager
     public static function getRepository($moduleName, $repositoryName)
     {
         $module = self::get($moduleName);
-        if (!$module) {
+        if (! $module) {
             return null;
         }
 
@@ -124,7 +125,7 @@ class MockModuleManager
     public static function getController($moduleName, $controllerName)
     {
         $module = self::get($moduleName);
-        if (!$module) {
+        if (! $module) {
             return null;
         }
 
@@ -142,7 +143,7 @@ class MockModuleManager
     {
         $entitiesPath = self::$mockModulesPath . "/{$moduleName}/Entities";
 
-        if (!is_dir($entitiesPath)) {
+        if (! is_dir($entitiesPath)) {
             return [];
         }
 
@@ -163,7 +164,7 @@ class MockModuleManager
     {
         $repositoriesPath = self::$mockModulesPath . "/{$moduleName}/Repositories";
 
-        if (!is_dir($repositoriesPath)) {
+        if (! is_dir($repositoriesPath)) {
             return [];
         }
 
@@ -184,7 +185,7 @@ class MockModuleManager
     {
         $controllersPath = self::$mockModulesPath . "/{$moduleName}/Controllers";
 
-        if (!is_dir($controllersPath)) {
+        if (! is_dir($controllersPath)) {
             return [];
         }
 

@@ -23,7 +23,7 @@ class TwicPicsTest extends TestCase
         Config::set(modularityBaseKey() . '.twicpics.social_default_params', ['cover' => '1200x630']);
         Config::set(modularityBaseKey() . '.twicpics.cms_default_params', ['resize' => '800x']);
 
-        $this->service = new TwicPics(new TwicPicsParamsProcessor());
+        $this->service = new TwicPics(new TwicPicsParamsProcessor);
     }
 
     /** @test */

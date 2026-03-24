@@ -4,8 +4,12 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Entities\Traits\HasPriceable;
 use Unusualify\Modularity\Facades\CurrencyExchange;
+use Unusualify\Modularity\Repositories\Traits\PricesTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class PricesTraitTest extends RepositoryTestCase
@@ -193,16 +197,16 @@ class PricesTraitTest extends RepositoryTestCase
     }
 }
 
-class HasPriceableTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class HasPriceableTestModel extends TestModel
 {
-    use \Unusualify\Modularity\Entities\Traits\HasPriceable;
+    use HasPriceable;
 
     public static $priceSavingKey = 'price_value';
 }
 
-class PricesTraitTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class PricesTraitTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\PricesTrait;
+    use PricesTrait;
 
     public function __construct(HasPriceableTestModel $model)
     {

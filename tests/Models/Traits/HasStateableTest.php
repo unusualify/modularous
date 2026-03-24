@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -78,7 +79,7 @@ class HasStateableTest extends ModelTestCase
 
         $states = $this->testModel::getStates();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $states);
+        $this->assertInstanceOf(Collection::class, $states);
         $this->assertCount(2, $states);
         $this->assertEquals('draft', $states->first()->code);
         $this->assertEquals('published', $states->last()->code);
@@ -90,7 +91,7 @@ class HasStateableTest extends ModelTestCase
 
         $states = $model->states;
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $states);
+        $this->assertInstanceOf(Collection::class, $states);
         $this->assertCount(2, $states);
     }
 

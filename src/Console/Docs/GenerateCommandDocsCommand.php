@@ -2,11 +2,12 @@
 
 namespace Unusualify\Modularity\Console\Docs;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Descriptor\MarkdownDescriptor;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class GenerateCommandDocsCommand extends BaseCommand
 {
@@ -89,7 +90,7 @@ class GenerateCommandDocsCommand extends BaseCommand
 
                 // Run the help command for each command
                 $input = new ArrayInput(['command_name' => $name]);
-                $helpCommand = new \Symfony\Component\Console\Command\HelpCommand;
+                $helpCommand = new HelpCommand;
                 $helpCommand->setCommand($command);
 
                 // Use Markdown descriptor

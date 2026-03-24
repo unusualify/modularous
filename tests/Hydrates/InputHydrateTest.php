@@ -2,10 +2,13 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\InputHydrate;
-use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Mockery as m;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Hydrates\Inputs\InputHydrate;
+use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Tests\TestCase;
 
 /**
  * Concrete implementation of InputHydrate for testing abstract class
@@ -18,6 +21,7 @@ class ConcreteInputHydrate extends InputHydrate
     {
         $input = $this->input;
         $input['type'] = 'test-input';
+
         return $input;
     }
 
@@ -42,12 +46,12 @@ class InputHydrateTest extends TestCase
         $h = new ConcreteInputHydrate($input, null, $routeName, true);
 
         $this->assertEquals($input, $h->input);
-        
+
         // Verify routeName was set via hasRouteName method
         $reflection = new \ReflectionClass($h);
         $method = $reflection->getMethod('hasRouteName');
         $method->setAccessible(true);
-        
+
         $this->assertTrue($method->invoke($h));
     }
 
@@ -96,7 +100,7 @@ class InputHydrateTest extends TestCase
         $this->assertArrayNotHasKey('items', $result);
     }
 
-    public function test_hydrate_records_skips_when_skipRecords_set()
+    public function test_hydrate_records_skips_when_skip_records_set()
     {
         $input = ['type' => 'test', 'skipRecords' => true];
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -226,15 +230,15 @@ class InputHydrateTest extends TestCase
 
         // Unknown extensions should not produce output
         $this->assertTrue(
-            empty(trim($types)) || strpos($types, 'unknown') === false
+            empty(trim($types)) || ! str_contains($types, 'unknown')
         );
     }
 
     public function test_has_module_returns_true_when_set()
     {
         // Create a stub Module object instead of Mockery mock
-        $module = new \stdClass();
-        
+        $module = new \stdClass;
+
         // We can't directly test with mock due to type hint, so test indirectly
         $h = new ConcreteInputHydrate([], null, null, true);
 
@@ -283,7 +287,7 @@ class InputHydrateTest extends TestCase
         $input = ['_moduleName' => 'TestModule'];
         $h = new ConcreteInputHydrate($input, null, null, true);
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('TestModule')
             ->andReturn(m::mock());
 
@@ -305,7 +309,7 @@ class InputHydrateTest extends TestCase
         $method->setAccessible(true);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("No Module");
+        $this->expectExceptionMessage('No Module');
 
         $method->invoke($h, false);
     }
@@ -332,7 +336,7 @@ class InputHydrateTest extends TestCase
         $method->setAccessible(true);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("No Route Name");
+        $this->expectExceptionMessage('No Route Name');
 
         $method->invoke($h, false);
     }
@@ -459,7 +463,7 @@ class InputHydrateTest extends TestCase
     {
         $input = ['endpoint' => 'admin.users'];
         $h = new ConcreteInputHydrate($input, null, null, true);
-        
+
         // Mock the resolve_route helper if it exists
         // Otherwise it will pass through unchanged
         $h->setDefaults();
@@ -485,13 +489,13 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             '_moduleName' => 'TestModule',
-            'type' => 'test'
+            'type' => 'test',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('TestModule')
-            ->andReturn(m::mock(\Unusualify\Modularity\Module::class));
+            ->andReturn(m::mock(Module::class));
 
         // Just verify getModule can use _moduleName
         $reflection = new \ReflectionClass($h);
@@ -508,9 +512,9 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'setFirstDefault' => true,
             'itemValue' => 'id',
-            'itemTitle' => 'name'
+            'itemTitle' => 'name',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = false;
 
@@ -526,9 +530,9 @@ class InputHydrateTest extends TestCase
         $input = [
             'type' => 'test',
             'itemValue' => 'id',
-            'itemTitle' => 'name'
+            'itemTitle' => 'name',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
 
         $reflection = new \ReflectionClass($h);
@@ -538,9 +542,9 @@ class InputHydrateTest extends TestCase
         $testInput = array_merge($input, [
             'items' => [
                 ['id' => 1, 'title' => 'Item One'],
-            ]
+            ],
         ]);
-        
+
         $property->setValue($h, $testInput);
 
         $result = $h->render();
@@ -561,9 +565,9 @@ class InputHydrateTest extends TestCase
             'cascades' => ['department.id', 'status'],
             'items' => [
                 ['id' => 1, 'name' => 'Item', 'department' => ['id' => 10, 'name' => 'Dept']],
-            ]
+            ],
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
 
@@ -592,10 +596,10 @@ class InputHydrateTest extends TestCase
             'itemTitle' => 'name',
             'items' => [
                 ['id' => 1, 'name' => 'Item One'],
-                ['id' => 2, 'name' => 'Item Two']
-            ]
+                ['id' => 2, 'name' => 'Item Two'],
+            ],
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
 
@@ -618,11 +622,11 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             'type' => 'test',
-            'repository' => 'NonExistentClass:list'
+            'repository' => 'NonExistentClass:list',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
-        
+
         $result = $h->render();
 
         // When class doesn't exist, items should not be set
@@ -633,13 +637,13 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             'type' => 'test',
-            'repository' => 'TestRepository:list'
+            'repository' => 'TestRepository:list',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
 
         // Mock App::runningInConsole to return true
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(true);
 
         $result = $h->render();
@@ -652,9 +656,9 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             'type' => 'test',
-            'repository' => 'TestRepository:list:limit=10,status=active'
+            'repository' => 'TestRepository:list:limit=10,status=active',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
 
         // The repository string should be parsed correctly:
@@ -671,9 +675,9 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             '_routeName' => 'custom.route.name',
-            'type' => 'test'
+            'type' => 'test',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, 'default.route', true);
 
         $reflection = new \ReflectionClass($h);
@@ -690,15 +694,15 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             '_moduleName' => 'CustomModule',
-            'type' => 'test'
+            'type' => 'test',
         ];
-        
-        $module = m::mock(\Unusualify\Modularity\Module::class);
+
+        $module = m::mock(Module::class);
         $h = new ConcreteInputHydrate($input, $module, null, true);
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('CustomModule')
-            ->andReturn(m::mock(\Unusualify\Modularity\Module::class));
+            ->andReturn(m::mock(Module::class));
 
         $reflection = new \ReflectionClass($h);
         $method = $reflection->getMethod('getModule');
@@ -714,9 +718,9 @@ class InputHydrateTest extends TestCase
     {
         $input = [
             'type' => 'text',
-            'rules' => 'required|email|max:255'
+            'rules' => 'required|email|max:255',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
 
         $result = $h->render();
@@ -754,10 +758,10 @@ class InputHydrateTest extends TestCase
             'itemTitle' => 'name',
             'items' => [
                 ['id' => 1, 'name' => 'Item'],
-                ['id' => 2, 'name' => 'Another']
-            ]
+                ['id' => 2, 'name' => 'Another'],
+            ],
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
 
@@ -798,14 +802,14 @@ class InputHydrateTest extends TestCase
     public function test_hydrate_records_guard_clause_running_in_console()
     {
         // Line 190: ! App::runningInConsole() - MOCK to enable the block
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false); // Allow the block to execute
 
         $input = ['type' => 'test', 'repository' => 'Test\\Repo:list'];
         $h = new ConcreteInputHydrate($input, null, null, false); // skipQueries = false to execute
-        
+
         $result = $h->render();
-        
+
         // With runningInConsole=false, the block should attempt to execute
         // But class won't exist, so items should be empty or not set
         $this->assertIsArray($result);
@@ -815,12 +819,12 @@ class InputHydrateTest extends TestCase
     {
         // Lines 191-194: explode(':') and array_shift()
         // Mock runningInConsole to allow block execution
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $input = ['repository' => 'Repo\\MyClass:custom', 'itemTitle' => 'name', 'itemValue' => 'id'];
         $h = new ConcreteInputHydrate($input, null, null, false);
-        
+
         $result = $h->render();
         // When class doesn't exist, returns early but now we test the parsing path
         $this->assertIsArray($result);
@@ -829,12 +833,12 @@ class InputHydrateTest extends TestCase
     public function test_repository_method_defaults_to_list()
     {
         // Line 194: ?? 'list'
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $input = ['repository' => 'TestRepo:', 'itemTitle' => 'name', 'itemValue' => 'id'];
         $h = new ConcreteInputHydrate($input, null, null, false);
-        
+
         $result = $h->render();
         // Method should default to 'list'
         $this->assertIsArray($result);
@@ -843,12 +847,12 @@ class InputHydrateTest extends TestCase
     public function test_repository_class_exists_check()
     {
         // Line 196: @class_exists($className) returns false, so line 197 returns
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $input = ['repository' => 'NonExistent\\Class:list', 'itemTitle' => 'name', 'itemValue' => 'id'];
         $h = new ConcreteInputHydrate($input, null, null, false);
-        
+
         $result = $h->render();
         // When class doesn't exist, returns input early (line 197)
         $this->assertIsArray($result);
@@ -857,18 +861,18 @@ class InputHydrateTest extends TestCase
     public function test_repository_parameter_parsing_multiple_values()
     {
         // Lines 202-207: mapWithKeys explode('=', $arg) and explode(',', $value)
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $mockRepository = m::mock();
         $mockRepository->shouldReceive('list')
             ->andReturn(collect([
                 ['id' => 1, 'name' => 'Item 1'],
-                ['id' => 2, 'name' => 'Item 2']
+                ['id' => 2, 'name' => 'Item 2'],
             ]));
 
-        \Illuminate\Support\Facades\App::shouldReceive('make')
-            ->with(\Illuminate\Testing\Fluent\AssertableJson::class)
+        App::shouldReceive('make')
+            ->with(AssertableJson::class)
             ->andReturn($mockRepository)
             ->byDefault();
 
@@ -876,10 +880,10 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'repository' => 'Test\\Repo:list:ids=1,2,3:status=active,pending',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
         $h = new ConcreteInputHydrate($input, null, null, false);
-        
+
         // The parsing logic should work even if class doesn't exist
         $result = $h->render();
         $this->assertIsArray($result);
@@ -888,17 +892,17 @@ class InputHydrateTest extends TestCase
     public function test_repository_parameter_single_value()
     {
         // Lines 202-207: Single param without comma
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $input = [
             'type' => 'test',
             'repository' => 'TestRepo:list:limit=10',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
         $h = new ConcreteInputHydrate($input, null, null, false);
-        
+
         $result = $h->render();
         $this->assertIsArray($result);
     }
@@ -906,7 +910,7 @@ class InputHydrateTest extends TestCase
     public function test_hydrate_records_skip_queries_prevents_call()
     {
         // Line 213: if (! $this->skipQueries)
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')
+        App::shouldReceive('runningInConsole')
             ->andReturn(false);
 
         $input = ['type' => 'test', 'repository' => 'Test:list', 'itemTitle' => 'name', 'itemValue' => 'id'];
@@ -930,7 +934,7 @@ class InputHydrateTest extends TestCase
         // Line 215: $methodName == 'list' ? ['column' => [...]]
         $input = [
             'type' => 'test',
-            'itemTitle' => 'name'
+            'itemTitle' => 'name',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         // Validates list method receives column parameter
@@ -945,7 +949,7 @@ class InputHydrateTest extends TestCase
         $h = new ConcreteInputHydrate($input, null, null, true);
         $result = $h->render();
         // Items should exist (even if empty with skipQueries=true)
-        $this->assertTrue(isset($result['items']) || !isset($input['repository']));
+        $this->assertTrue(isset($result['items']) || ! isset($input['repository']));
     }
 
     public function test_hydrate_records_items_count_check()
@@ -964,7 +968,7 @@ class InputHydrateTest extends TestCase
         $input = [
             'type' => 'test',
             'setFirstDefault' => false,
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         // Don't set requirements with 'default' to avoid conflict
@@ -981,7 +985,7 @@ class InputHydrateTest extends TestCase
         $input = [
             'type' => 'test',
             'itemValue' => 'id',
-            'itemTitle' => 'name'
+            'itemTitle' => 'name',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $result = $h->render();
@@ -995,7 +999,7 @@ class InputHydrateTest extends TestCase
         $input = [
             'type' => 'test',
             'itemValue' => 'id',
-            'itemTitle' => 'nonexistent'
+            'itemTitle' => 'nonexistent',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $result = $h->render();
@@ -1033,11 +1037,11 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'itemValue' => 'id',
             'itemTitle' => 'name',
-            'items' => []
+            'items' => [],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1055,11 +1059,11 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'itemValue' => 'id',
             'itemTitle' => 'name',
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1078,11 +1082,11 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'cascades' => ['rel'],
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1101,11 +1105,11 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'cascades' => ['department.location.name:withParams'],
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1128,13 +1132,13 @@ class InputHydrateTest extends TestCase
                 [
                     'id' => 1,
                     'name' => 'Item',
-                    'dept' => ['id' => 10, 'name' => 'IT']
-                ]
-            ]
+                    'dept' => ['id' => 10, 'name' => 'IT'],
+                ],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1153,11 +1157,11 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'cascades' => ['relation_name'],
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
-        
+
         $reflection = new \ReflectionClass($h);
         $property = $reflection->getProperty('input');
         $property->setAccessible(true);
@@ -1174,7 +1178,7 @@ class InputHydrateTest extends TestCase
         $input = [
             'type' => 'test',
             'itemValue' => 'id',
-            'itemTitle' => 'name'
+            'itemTitle' => 'name',
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1196,7 +1200,7 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'itemValue' => 'id',
             'itemTitle' => 'name',
-            'items' => []
+            'items' => [],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1218,7 +1222,7 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'itemValue' => 'id',
             'itemTitle' => 'name',
-            'items' => [['name' => 'Item']] // Missing id
+            'items' => [['name' => 'Item']], // Missing id
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1240,7 +1244,7 @@ class InputHydrateTest extends TestCase
             'type' => 'test',
             'itemValue' => 'id',
             'itemTitle' => 'name',
-            'items' => [['id' => 0, 'name' => 'Item']]
+            'items' => [['id' => 0, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1264,8 +1268,8 @@ class InputHydrateTest extends TestCase
             'itemTitle' => 'name',
             'items' => [
                 ['id' => 1, 'name' => 'First'],
-                ['id' => 2, 'name' => 'Second']
-            ]
+                ['id' => 2, 'name' => 'Second'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1288,8 +1292,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'items' => [
-                ['id' => 1, 'name' => 'Item']
-            ]
+                ['id' => 1, 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1312,8 +1316,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'code',
             'itemTitle' => 'name',
             'items' => [
-                ['code' => 'ABC123', 'name' => 'Item']
-            ]
+                ['code' => 'ABC123', 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1336,8 +1340,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'items' => [
-                ['id' => 1, 'name' => 'Item']
-            ]
+                ['id' => 1, 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1360,8 +1364,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'items' => [
-                ['id' => 1, 'name' => 'Item']
-            ]
+                ['id' => 1, 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1384,8 +1388,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'code',
             'itemTitle' => 'name',
             'items' => [
-                ['code' => 'ABC', 'name' => 'Item']
-            ]
+                ['code' => 'ABC', 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1408,8 +1412,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'items' => [
-                ['id' => 1, 'name' => 'Item']
-            ]
+                ['id' => 1, 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1432,8 +1436,8 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'items' => [
-                ['id' => 1, 'name' => 'Item']
-            ]
+                ['id' => 1, 'name' => 'Item'],
+            ],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1456,7 +1460,7 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'cascades' => ['department', 'status', 'team.lead'],
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1479,7 +1483,7 @@ class InputHydrateTest extends TestCase
             'itemValue' => 'id',
             'itemTitle' => 'name',
             'cascades' => ['department:orderBy,name'],
-            'items' => [['id' => 1, 'name' => 'Item']]
+            'items' => [['id' => 1, 'name' => 'Item']],
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = true;
@@ -1499,17 +1503,17 @@ class InputHydrateTest extends TestCase
     public function test_line_190_running_in_console_false()
     {
         // Line 190: ! App::runningInConsole() - mocking allows the block to execute
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'Nonexistent:list',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
-        
+
         $h = new ConcreteInputHydrate($input, null, null, true);
         $result = $h->render();
-        
+
         // With mocked runningInConsole=false, the block should be entered
         $this->assertIsArray($result);
     }
@@ -1518,12 +1522,12 @@ class InputHydrateTest extends TestCase
     {
         // Line 196-197: if (! @class_exists($className)) return $input;
         // This tests the early return when class doesn't exist
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'Nonexistent\\Repository\\Class:list',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -1537,12 +1541,12 @@ class InputHydrateTest extends TestCase
     {
         // Line 203: [$name, $value] = explode('=', $arg);
         // Tests parameter parsing even with non-existent class
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'Nonexistent:list:ids=1,2,3:status=active',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -1556,12 +1560,12 @@ class InputHydrateTest extends TestCase
     {
         // Line 206: return [$name => explode(',', $value)];
         // Tests multi-value parameter parsing
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'Nonexistent:list:ids=1,2,3,4,5',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -1574,18 +1578,18 @@ class InputHydrateTest extends TestCase
     public function test_line_220_items_assignment()
     {
         // Line 220: $input['items'] = $items
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'NonExistent:list',
             'itemTitle' => 'name',
             'itemValue' => 'id',
-            'skipRecords' => false
+            'skipRecords' => false,
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = false;
-        
+
         $result = $h->render();
 
         // Items assignment should occur even with non-existent class
@@ -1595,19 +1599,19 @@ class InputHydrateTest extends TestCase
     public function test_line_224_set_first_default_assignment()
     {
         // Line 224: $input['default'] = $input['items'][0][$input['itemValue']];
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'NonExistent:list',
             'itemTitle' => 'name',
             'itemValue' => 'id',
             'setFirstDefault' => true,
-            'skipRecords' => false
+            'skipRecords' => false,
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
         $h->selectable = false;
-        
+
         $result = $h->render();
 
         // Test render doesn't crash with setFirstDefault flag
@@ -1617,12 +1621,12 @@ class InputHydrateTest extends TestCase
     public function test_line_227_item_title_auto_detection()
     {
         // Line 227: $input['itemTitle'] = array_keys(Arr::except(...))[0]
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'NonExistent:list',
             'itemTitle' => 'nonexistent_field',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -1635,12 +1639,12 @@ class InputHydrateTest extends TestCase
     public function test_line_232_selectable_hydration_call()
     {
         // Line 232: $this->hydrateSelectableInput($input)
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'NonExistent:list',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);
@@ -1655,12 +1659,12 @@ class InputHydrateTest extends TestCase
     public function test_line_235_after_hydrate_records_hook()
     {
         // Line 235: $this->afterHydrateRecords($input)
-        \Illuminate\Support\Facades\App::shouldReceive('runningInConsole')->andReturn(false);
+        App::shouldReceive('runningInConsole')->andReturn(false);
 
         $input = [
             'repository' => 'NonExistent:list',
             'itemTitle' => 'name',
-            'itemValue' => 'id'
+            'itemValue' => 'id',
         ];
 
         $h = new ConcreteInputHydrate($input, null, null, true);

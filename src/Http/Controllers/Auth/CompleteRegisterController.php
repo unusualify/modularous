@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Unusualify\Modularity\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\Register;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
@@ -79,12 +79,12 @@ class CompleteRegisterController extends Controller
             : $this->sendRegisterFailedResponse($request, $response);
     }
 
-    protected function sendRegisterResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendRegisterResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $this->sendSuccessResponse($request, trans($response), $this->redirectPath());
     }
 
-    protected function sendRegisterFailedResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendRegisterFailedResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $this->sendFailedResponse($request, trans($response), 'email');
     }

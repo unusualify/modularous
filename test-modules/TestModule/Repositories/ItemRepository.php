@@ -2,8 +2,8 @@
 
 namespace TestModules\TestModule\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
 use TestModules\TestModule\Entities\Item;
+use Unusualify\Modularity\Repositories\Repository;
 
 class ItemRepository extends Repository
 {

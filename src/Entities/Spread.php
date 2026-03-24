@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Spread extends Model
 {
@@ -21,7 +22,7 @@ class Spread extends Model
         'content' => 'array',
     ];
 
-    public function spreadable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function spreadable(): MorphTo
     {
         return $this->morphTo();
     }

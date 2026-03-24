@@ -2,27 +2,35 @@
 
 namespace Unusualify\Modularity\Tests\Generators;
 
+use Illuminate\Config\Repository;
+use Illuminate\Console\Command as Console;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
+use Mockery;
+use Modules\SystemUser\Repositories\PermissionRepository;
+use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Generators\RouteGenerator;
 use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Services\FileTranslation;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Console\Command as Console;
-use JoeDixon\Translation\Scanner;
-use Laravel\Prompts\Prompt;
 
 class RouteGeneratorTest extends TestCase
 {
     protected $generator;
+
     protected $filesystem;
+
     protected $console;
+
     protected $module;
+
     protected $newModule;
 
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
-    
+
         $fixturesPath = realpath(__DIR__ . '/../../test-modules');
         if ($fixturesPath) {
             $app['config']->set('modules.paths.modules', $fixturesPath);
@@ -41,19 +49,19 @@ class RouteGeneratorTest extends TestCase
         parent::setUp();
 
         $this->app['config']->set('modularity.base_key', 'modularity');
-        
+
         // Ensure ALL generators have 'generate' => true to avoid prompts
         $generators = [
             'route-controller', 'route-controller-api', 'route-controller-front',
             'repository', 'route-request', 'route-resource', 'lang',
-            'provider', 'filter'
+            'provider', 'filter',
         ];
-        
+
         foreach ($generators as $gen) {
             $this->app['config']->set("modularity.paths.generator.$gen", ['path' => 'Test', 'generate' => true]);
             $this->app['config']->set("modules.paths.generator.$gen", ['path' => 'Test', 'generate' => true]);
         }
-        
+
         $this->app['config']->set('modularity.stubs.files', []);
 
         $this->filesystem = Mockery::mock(Filesystem::class);
@@ -71,13 +79,7 @@ class RouteGeneratorTest extends TestCase
 
         $this->filesystem->shouldReceive('exists')->andReturn(true)->byDefault();
 
-        $this->generator = new class(
-            'TestRoute',
-            $this->app['config'],
-            $this->filesystem,
-            $this->console,
-            $this->module
-        ) extends RouteGenerator {};
+        $this->generator = new class('TestRoute', $this->app['config'], $this->filesystem, $this->console, $this->module) extends RouteGenerator {};
     }
 
     /** @test */
@@ -111,10 +113,10 @@ class RouteGeneratorTest extends TestCase
     public function it_creates_route_permissions()
     {
         // PermissionRepository is now stubbed in tests/Stubs/Modules/SystemUser/Repositories
-        $permissionRepository = Mockery::mock(\Modules\SystemUser\Repositories\PermissionRepository::class);
-        $this->app->instance(\Modules\SystemUser\Repositories\PermissionRepository::class, $permissionRepository);
+        $permissionRepository = Mockery::mock(PermissionRepository::class);
+        $this->app->instance(PermissionRepository::class, $permissionRepository);
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('getAuthGuardName')->andReturn('admin');
+        Modularity::shouldReceive('getAuthGuardName')->andReturn('admin');
         $permissionRepository->shouldReceive('firstOrCreate')->atLeast()->once();
 
         $this->assertTrue($this->generator->createRoutePermissions());
@@ -124,8 +126,8 @@ class RouteGeneratorTest extends TestCase
     public function it_adds_language_variables()
     {
         $this->module->shouldReceive('getSnakeName')->andReturn('test-module');
-        
-        $translationMock = Mockery::mock(\Unusualify\Modularity\Services\FileTranslation::class);
+
+        $translationMock = Mockery::mock(FileTranslation::class);
         $this->generator->setTranslation($translationMock);
 
         $translationMock->shouldReceive('addGroupTranslation')->atLeast()->once();
@@ -140,7 +142,7 @@ class RouteGeneratorTest extends TestCase
         $this->module->shouldReceive('getSnakeName')->andReturn('test_module');
         $this->module->shouldReceive('getConfigPath')->andReturn('/tmp/config.php');
         $this->app['config']->set('test_module', []);
-        
+
         $this->filesystem->shouldReceive('exists')->andReturn(false);
         $this->filesystem->shouldReceive('put')->once()->andReturn(true);
 
@@ -160,7 +162,7 @@ class RouteGeneratorTest extends TestCase
     public function it_generates_extra_migrations_for_relationships()
     {
         $this->generator->setRelationships('posts:belongsToMany');
-        
+
         $this->module->shouldReceive('isFileExists')->andReturn(false);
         $this->console->shouldReceive('call')->atLeast()->once();
 
@@ -174,9 +176,9 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_can_set_and_get_config()
     {
-        $newConfig = Mockery::mock(\Illuminate\Config\Repository::class);
+        $newConfig = Mockery::mock(Repository::class);
         $result = $this->generator->setConfig($newConfig);
-        
+
         $this->assertSame($this->generator, $result);
         $this->assertSame($newConfig, $this->generator->getConfig());
     }
@@ -186,7 +188,7 @@ class RouteGeneratorTest extends TestCase
     {
         $newFilesystem = Mockery::mock(Filesystem::class);
         $result = $this->generator->setFilesystem($newFilesystem);
-        
+
         $this->assertSame($this->generator, $result);
         $this->assertSame($newFilesystem, $this->generator->getFilesystem());
     }
@@ -196,7 +198,7 @@ class RouteGeneratorTest extends TestCase
     {
         $newConsole = Mockery::mock(Console::class);
         $result = $this->generator->setConsole($newConsole);
-        
+
         $this->assertSame($this->generator, $result);
         $this->assertSame($newConsole, $this->generator->getConsole());
     }
@@ -211,11 +213,11 @@ class RouteGeneratorTest extends TestCase
             'addPosition' => true,
             'addSlug' => true,
         ]));
-        
+
         $this->assertInstanceOf(RouteGenerator::class, $this->generator);
         $traits = $this->generator->getTraits();
-        
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $traits);
+
+        $this->assertInstanceOf(Collection::class, $traits);
         $this->assertSame(collect([
             'addTranslation' => true,
             'addMedia' => true,
@@ -311,11 +313,11 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('setCustomModel');
         $method->setAccessible(true);
-        
-        $result = $method->invoke($this->generator, \Unusualify\Modularity\Entities\User::class);
+
+        $result = $method->invoke($this->generator, User::class);
         $this->assertSame($this->generator, $result);
 
-        $this->assertEquals(\Unusualify\Modularity\Entities\User::class, $this->generator->getCustomModel());
+        $this->assertEquals(User::class, $this->generator->getCustomModel());
     }
 
     /** @test */
@@ -335,7 +337,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getLowerNameReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('testroute', $method->invoke($this->generator));
     }
 
@@ -345,7 +347,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getModuleLowerNameReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('testmodule', $method->invoke($this->generator));
     }
 
@@ -355,7 +357,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getLowerModuleNameReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('testmodule', $method->invoke($this->generator));
     }
 
@@ -365,7 +367,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getModuleStudlyNameReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('TestModule', $method->invoke($this->generator));
     }
 
@@ -375,7 +377,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getStudlyModuleNameReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('TestModule', $method->invoke($this->generator));
     }
 
@@ -383,11 +385,11 @@ class RouteGeneratorTest extends TestCase
     public function it_returns_vendor_replacement()
     {
         $this->app['config']->set('modularity.composer.vendor', 'test-vendor');
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getVendorReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('test-vendor', $method->invoke($this->generator));
     }
 
@@ -395,11 +397,11 @@ class RouteGeneratorTest extends TestCase
     public function it_returns_module_namespace_replacement()
     {
         $this->app['config']->set('modules.namespace', 'Modules\\Test');
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getModuleNamespaceReplacement');
         $method->setAccessible(true);
-        
+
         // Should escape backslashes
         $this->assertEquals('Modules\\\\Test', $method->invoke($this->generator));
     }
@@ -408,11 +410,11 @@ class RouteGeneratorTest extends TestCase
     public function it_returns_author_replacement()
     {
         $this->app['config']->set('modularity.composer.author.name', 'John Doe');
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getAuthorReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('John Doe', $method->invoke($this->generator));
     }
 
@@ -420,11 +422,11 @@ class RouteGeneratorTest extends TestCase
     public function it_returns_author_email_replacement()
     {
         $this->app['config']->set('modularity.composer.author.email', 'john@example.com');
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getAuthorEmailReplacement');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('john@example.com', $method->invoke($this->generator));
     }
 
@@ -434,7 +436,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getReplacements');
         $method->setAccessible(true);
-        
+
         $replacements = $method->invoke($this->generator);
         $this->assertIsArray($replacements);
     }
@@ -442,7 +444,7 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_gets_stub_contents()
     {
-        // getStubContents uses Stub class which tries to load files  
+        // getStubContents uses Stub class which tries to load files
         // Just verify the method exists and returns a string
         $this->assertTrue(method_exists($this->generator, 'getStubContents'));
     }
@@ -453,7 +455,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('replaceString');
         $method->setAccessible(true);
-        
+
         $result = $method->invoke($this->generator, 'Hello $NAME$');
         $this->assertIsString($result);
     }
@@ -464,7 +466,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getReplacement');
         $method->setAccessible(true);
-        
+
         $stub = 'test';
         $replacements = $method->invoke($this->generator, $stub);
         $this->assertIsArray($replacements);
@@ -480,21 +482,21 @@ class RouteGeneratorTest extends TestCase
         // Test the generateFolders method in isolation with mock filesystem
         $this->filesystem->shouldReceive('isDirectory')->andReturn(false);
         $this->filesystem->shouldReceive('makeDirectory')->andReturn(true);
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('generateFolders');
         $method->setAccessible(true);
-        
+
         // Test that method executes without exception
         $this->assertNull($method->invoke($this->generator));
-        
+
         // This test verifies that generateFolders works correctly in isolation.
         // Note: Due to a limitation in the vendor package (nwidart/laravel-modules),
-        // testing full module creation with multiple generators can cause "mkdir(): File exists" 
+        // testing full module creation with multiple generators can cause "mkdir(): File exists"
         // errors when the same directory path is used by multiple generators.
         // This is a known issue with the vendor package and cannot be fixed without
         // modifying vendor files, which is not recommended.
-        
+
         $this->assertTrue(true); // Test passes if no exceptions thrown above
     }
 
@@ -502,11 +504,11 @@ class RouteGeneratorTest extends TestCase
     public function it_generates_git_keep_file()
     {
         $this->filesystem->shouldReceive('put')->andReturn(true);
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('generateGitKeep');
         $method->setAccessible(true);
-        
+
         $method->invoke($this->generator, '/tmp/test-path');
         $this->assertTrue(true); // Method executed successfully
     }
@@ -515,11 +517,11 @@ class RouteGeneratorTest extends TestCase
     public function it_generates_files()
     {
         $this->app['config']->set('modularity.stubs.files', []);
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('generateFiles');
         $method->setAccessible(true);
-        
+
         // Test that method executes without exception
         $this->assertNull($method->invoke($this->generator));
     }
@@ -532,11 +534,11 @@ class RouteGeneratorTest extends TestCase
         $this->filesystem->shouldReceive('exists')->andReturn(true);
         $this->filesystem->shouldReceive('get')->andReturn('<?php return [];');
         $this->filesystem->shouldReceive('put')->andReturn(true);
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('cleanModuleJsonFile');
         $method->setAccessible(true);
-        
+
         $this->assertNull($method->invoke($this->generator));
     }
 
@@ -546,7 +548,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('generateRouteJsonFile');
         $method->setAccessible(true);
-        
+
         // This method has minimal logic; just verify it exists
         $this->assertTrue(method_exists($this->generator, 'generateRouteJsonFile'));
     }
@@ -561,7 +563,7 @@ class RouteGeneratorTest extends TestCase
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('updateRoutesStatuses');
         $method->setAccessible(true);
-        
+
         // Method has conditional logic; verify it executes
         $this->assertTrue(method_exists($this->generator, 'updateRoutesStatuses'));
     }
@@ -572,15 +574,15 @@ class RouteGeneratorTest extends TestCase
         $this->module->shouldReceive('getSnakeName')->andReturn('test_module');
         $this->module->shouldReceive('getConfigPath')->andReturn('/tmp/config.php');
         $this->app['config']->set('test_module.routes', []);
-        
+
         $this->filesystem->shouldReceive('exists')->andReturn(true);
         $this->filesystem->shouldReceive('get')->andReturn('<?php return [];');
         $this->filesystem->shouldReceive('put')->andReturn(true);
-        
+
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('fixConfigFile');
         $method->setAccessible(true);
-        
+
         $method->invoke($this->generator);
         $this->assertTrue(true); // Successfully executed
     }

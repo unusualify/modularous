@@ -12,6 +12,7 @@ use Unusualify\Modularity\Tests\TestCase;
 class ModularityNavigationTest extends TestCase
 {
     protected $navigation;
+
     protected $mockRequest;
 
     protected function setUp(): void
@@ -20,7 +21,7 @@ class ModularityNavigationTest extends TestCase
 
         $this->mockRequest = Mockery::mock(Request::class);
         $this->mockRequest->shouldReceive('url')->andReturn('http://localhost/admin/dashboard');
-        
+
         $this->navigation = new ModularityNavigation($this->mockRequest);
     }
 
@@ -165,7 +166,7 @@ class ModularityNavigationTest extends TestCase
         Route::shouldReceive('hasAdmin')
             ->with('admin.dashboard')
             ->andReturn('admin.dashboard');
-        
+
         Modularity::shouldReceive('isModularityRoute')
             ->with('admin.dashboard')
             ->andReturn(true);
@@ -386,7 +387,7 @@ class ModularityNavigationTest extends TestCase
         $user->shouldReceive('getAttribute')->andReturn($attributes['role'] ?? 'user');
         $user->shouldReceive('hasRole')->andReturn(true)->byDefault();
         $user->shouldReceive('getRoleNames')->andReturn([$attributes['role'] ?? 'user']);
-        
+
         return $user;
     }
 }

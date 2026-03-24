@@ -4,8 +4,10 @@ namespace Unusualify\Modularity\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use Oobook\Database\Eloquent\Concerns\ManageEloquent;
+use Unusualify\Modularity\Entities\Spread;
 
 trait HasSpreadable
 {
@@ -27,7 +29,7 @@ trait HasSpreadable
         self::saving(static function (Model $model) {
 
             // Store the spread data before cleaning
-            if (!$model->exists) { // fill if creating a new record
+            if (! $model->exists) { // fill if creating a new record
                 // Set property to preserve data through events
                 $model->spreadablePayload = $model->{$model->getSpreadableSavingKey()} ?: $model->prepareSpreadableJson();
             } elseif ($model->{$model->getSpreadableSavingKey()}) {
@@ -124,7 +126,7 @@ trait HasSpreadable
         ];
     }
 
-    protected function getSpreadableClass(): \Illuminate\Database\Eloquent\Model
+    protected function getSpreadableClass(): Model
     {
         if (! property_exists(static::class, 'spreadableClass') || ! static::$spreadableClass || ! class_exists(static::$spreadableClass)) {
             return $this;
@@ -153,8 +155,6 @@ trait HasSpreadable
     /**
      * Check if spreadable exists without triggering a lazy load when
      * the model was fetched with withExists('spreadable') (via global scope).
-     *
-     * @return bool
      */
     protected function hasSpreadable(): bool
     {
@@ -162,12 +162,12 @@ trait HasSpreadable
     }
 
     // TODO: rename relation to spread as well
-    public function spreadable(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function spreadable(): MorphOne
     {
         $spreadableClass = $this->getSpreadableClass();
 
         return $spreadableClass->morphOne(
-            \Unusualify\Modularity\Entities\Spread::class,
+            Spread::class,
             'spreadable'
         );
     }

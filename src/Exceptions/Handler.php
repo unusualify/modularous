@@ -7,6 +7,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Middleware\AuthorizationMiddleware;
 use Unusualify\Modularity\Http\Middleware\LanguageMiddleware;
@@ -24,7 +25,7 @@ class Handler extends ExceptionHandler
         $isAuthenticated = Auth::guard(Modularity::getAuthGuardName())->check();
 
         // For 404 errors, manually attempt authentication since middleware didn't run
-        if (!$isAuthenticated && $statusCode === 404) {
+        if (! $isAuthenticated && $statusCode === 404) {
             $isAuthenticated = $this->attemptModularityAuthentication();
         }
 
@@ -134,7 +135,7 @@ class Handler extends ExceptionHandler
     /**
      * Get user data from session file if it contains valid authentication data
      */
-    protected function getUserDataFromSession(string $sessionId): ?\Unusualify\Modularity\Entities\User
+    protected function getUserDataFromSession(string $sessionId): ?User
     {
         try {
             // Try to read the session file directly
@@ -150,7 +151,7 @@ class Handler extends ExceptionHandler
                 if ($unserializedData !== false) {
                     // Check if the session contains authentication data
                     // Look for the modularity guard session key
-                    $userClass = \Unusualify\Modularity\Entities\User::class;
+                    $userClass = User::class;
                     $loginKey = 'login_modularity_' . sha1($userClass);
 
                     // Check if session data contains the login key
@@ -171,7 +172,7 @@ class Handler extends ExceptionHandler
                     preg_match('/login_modularity_[a-f0-9]+";i:(\d+);/', $sessionData, $matches);
                     if (isset($matches[1])) {
                         $userId = $matches[1];
-                        $user = \Unusualify\Modularity\Entities\User::find($userId);
+                        $user = User::find($userId);
                         if ($user) {
                             return $user;
                         }

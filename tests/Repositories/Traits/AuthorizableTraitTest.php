@@ -4,7 +4,12 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
+use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularity\Repositories\Traits\AuthorizableTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class AuthorizableTraitTest extends RepositoryTestCase
@@ -50,7 +55,7 @@ class AuthorizableTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_authorizable_trait_returns_expected_fields()
     {
-        $user = \Unusualify\Modularity\Entities\User::create([
+        $user = User::create([
             'name' => 'Authorized User',
             'email' => 'authorized@example.com',
             'published' => true,
@@ -75,18 +80,19 @@ class AuthorizableTraitTest extends RepositoryTestCase
     }
 }
 
-class TestModelAuthorizable extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class TestModelAuthorizable extends TestModel
 {
-    use \Unusualify\Modularity\Entities\Traits\HasAuthorizable;
+    use HasAuthorizable;
+
     public function hasAuthorizationUsage()
     {
         return true;
     }
 }
 
-class AuthorizableTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class AuthorizableTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\AuthorizableTrait;
+    use AuthorizableTrait;
 
     public function __construct(TestModelAuthorizable $model)
     {

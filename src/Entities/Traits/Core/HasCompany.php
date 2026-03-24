@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Entities\Traits\Core;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Facades\Modularity;
 
@@ -67,7 +68,7 @@ trait HasCompany
         ];
     }
 
-    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
@@ -86,8 +87,6 @@ trait HasCompany
     /**
      * Check if company exists without triggering a lazy load when
      * the model was fetched with withExists('company') (via global scope).
-     *
-     * @return bool
      */
     protected function hasCompany(): bool
     {

@@ -2,11 +2,12 @@
 
 namespace Modules\SystemUser\Repositories;
 
+use Spatie\Permission\Models\Permission;
 use Unusualify\Modularity\Repositories\Repository;
 
 class PermissionRepository extends Repository
 {
-    public function __construct(\Spatie\Permission\Models\Permission $model)
+    public function __construct(Permission $model)
     {
         $this->model = $model;
     }

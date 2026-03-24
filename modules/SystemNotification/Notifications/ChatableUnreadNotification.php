@@ -3,12 +3,14 @@
 namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Modules\SystemNotification\Notifications\Contracts\AfterSendable;
+use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Facades\ModularityLog;
 
 class ChatableUnreadNotification extends FeatureNotification implements AfterSendable, ShouldQueue
 {
-    public function __construct(\Unusualify\Modularity\Entities\Chat $model)
+    public function __construct(Chat $model)
     {
         parent::__construct($model->chatable);
     }
@@ -25,7 +27,7 @@ class ChatableUnreadNotification extends FeatureNotification implements AfterSen
         ];
     }
 
-    public function getNotificationSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationSubject(object $notifiable, Model $model): string
     {
         $default = __(':moduleRouteHeadline', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),
@@ -38,7 +40,7 @@ class ChatableUnreadNotification extends FeatureNotification implements AfterSen
         return $default;
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $default = __('New Message on :moduleRouteHeadline', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),
@@ -51,7 +53,7 @@ class ChatableUnreadNotification extends FeatureNotification implements AfterSen
         return $default;
     }
 
-    public function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMessage(object $notifiable, Model $model): string
     {
         $default = __('You have a new message.', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),

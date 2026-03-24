@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -335,7 +336,7 @@ abstract class ApiController extends CoreController
         // Apply rate limiting first
         $rateLimitResponse = $this->applyRateLimit();
         if ($rateLimitResponse) {
-            throw new \Illuminate\Http\Exceptions\HttpResponseException($rateLimitResponse);
+            throw new HttpResponseException($rateLimitResponse);
         }
 
         // Validate pagination parameters (ApiValidation trait)
@@ -374,7 +375,7 @@ abstract class ApiController extends CoreController
     /**
      * Get bulk users
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function bulk()
     {
@@ -395,7 +396,7 @@ abstract class ApiController extends CoreController
     /**
      * Search users
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function search()
     {
@@ -416,7 +417,7 @@ abstract class ApiController extends CoreController
     /**
      * Get available filters
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function filters()
     {
@@ -436,7 +437,7 @@ abstract class ApiController extends CoreController
     /**
      * Get resource metadata with relationship counts
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function meta()
     {

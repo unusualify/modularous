@@ -2,6 +2,7 @@
 
 namespace Modules\SystemUser\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Unusualify\Modularity\Http\Controllers\BaseController;
 
@@ -36,7 +37,7 @@ class CompanyController extends BaseController
      */
     protected $modelName = 'Company';
 
-    public function __construct(\Illuminate\Foundation\Application $app, Request $request)
+    public function __construct(Application $app, Request $request)
     {
         parent::__construct(
             $app,

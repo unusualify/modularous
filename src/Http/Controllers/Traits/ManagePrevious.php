@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 trait ManagePrevious
 {
@@ -13,8 +15,8 @@ trait ManagePrevious
     /**
      * Initializes the previous route property before constructing the class.
      *
-     * @param \Illuminate\Foundation\Application $app The application instance.
-     * @param \Illuminate\Http\Request $request The request instance.
+     * @param Application $app The application instance.
+     * @param Request $request The request instance.
      */
     protected function __beforeConstructManagePrevious($app, $request)
     {
@@ -35,7 +37,7 @@ trait ManagePrevious
             return Route::getRoutes()->match(
                 Request::create($previousUrl)
             );
-        } catch (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e) {
+        } catch (MethodNotAllowedHttpException $e) {
             // If method not allowed, try to get the route information without matching the method
             foreach (Route::getRoutes() as $route) {
                 if ($route->matches(Request::create($previousUrl, 'HEAD'))) {

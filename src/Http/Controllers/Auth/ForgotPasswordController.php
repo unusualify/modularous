@@ -6,9 +6,9 @@ namespace Unusualify\Modularity\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Services\MessageStage;
 
@@ -26,7 +26,7 @@ class ForgotPasswordController extends Controller
         return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.email', $this->buildAuthViewData('forgot_password'));
     }
 
-    protected function sendResetLinkResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendResetLinkResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $request->wantsJson()
             ? new JsonResponse([
@@ -36,7 +36,7 @@ class ForgotPasswordController extends Controller
             : back()->with('status', ___($response));
     }
 
-    protected function sendResetLinkFailedResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendResetLinkFailedResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $request->wantsJson()
             ? new JsonResponse([

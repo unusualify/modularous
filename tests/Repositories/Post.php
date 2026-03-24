@@ -2,11 +2,13 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Traits\HasTranslation;
 
 class Post extends Model
 {
-    use \Unusualify\Modularity\Entities\Traits\HasTranslation;
+    use HasTranslation;
 
     protected $table = 'posts';
 
@@ -16,7 +18,7 @@ class Post extends Model
 
     public $translatedAttributes = ['title', 'content'];
 
-    public function postable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function postable(): MorphTo
     {
         return $this->morphTo();
     }

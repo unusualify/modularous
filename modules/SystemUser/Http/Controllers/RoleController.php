@@ -2,6 +2,7 @@
 
 namespace Modules\SystemUser\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Http\Controllers\BaseController;
@@ -26,7 +27,7 @@ class RoleController extends BaseController
         'permission',
     ];
 
-    public function __construct(\Illuminate\Foundation\Application $app, Request $request)
+    public function __construct(Application $app, Request $request)
     {
         parent::__construct(
             $app,

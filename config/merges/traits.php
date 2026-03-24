@@ -1,6 +1,8 @@
 <?php
 
+use Oobook\Snapshot\Traits\HasSnapshot;
 use Symfony\Component\Console\Input\InputOption;
+use Unusualify\Modularity\Entities\Interfaces\Sortable;
 
 return [
     'addTranslation' => [
@@ -42,7 +44,7 @@ return [
             'description' => 'Do you need to manage the position of records on this module?',
         ],
         'implementations' => [
-            \Unusualify\Modularity\Entities\Interfaces\Sortable::class,
+            Sortable::class,
         ],
     ],
     'addSlug' => [
@@ -106,7 +108,7 @@ return [
         ],
     ],
     'addSnapshot' => [
-        'model' => \Oobook\Snapshot\Traits\HasSnapshot::class,
+        'model' => HasSnapshot::class,
         'repository' => null,
         'question' => 'Do you need to attach snapshot feature on this module route?',
         'command_option' => [

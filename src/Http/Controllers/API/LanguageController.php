@@ -4,15 +4,17 @@ namespace Unusualify\Modularity\Http\Controllers\API;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use JoeDixon\Translation\Drivers\Translation;
 
 class LanguageController extends Controller
 {
     private $translation;
 
-    public function __construct(\JoeDixon\Translation\Drivers\Translation $translation)
+    public function __construct(Translation $translation)
     {
         $this->translation = $translation;
     }
@@ -65,8 +67,8 @@ class LanguageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store() {}
 
@@ -74,7 +76,7 @@ class LanguageController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -84,9 +86,9 @@ class LanguageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(RoleRequest $request, $id) {}
 
@@ -94,7 +96,7 @@ class LanguageController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id) {}
 }

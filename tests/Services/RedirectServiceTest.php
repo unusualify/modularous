@@ -14,7 +14,7 @@ class RedirectServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new RedirectService();
+        $this->service = new RedirectService;
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class RedirectServiceTest extends TestCase
             ->with(RedirectService::SESSION_KEY, 'https://example.com');
 
         $this->service->set('https://example.com');
-        
+
         $this->assertTrue(true); // Mockery validates the expectations
     }
 
@@ -37,7 +37,7 @@ class RedirectServiceTest extends TestCase
             ->with(RedirectService::CACHE_KEY, 'https://example.com', 600);
 
         $this->service->set('https://example.com', null, true);
-        
+
         $this->assertTrue(true); // Mockery validates the expectations
     }
 
@@ -49,7 +49,7 @@ class RedirectServiceTest extends TestCase
             ->with(RedirectService::CACHE_KEY, 'https://example.com', 300);
 
         $this->service->set('https://example.com', 300, true);
-        
+
         $this->assertTrue(true); // Mockery validates the expectations
     }
 

@@ -8,7 +8,7 @@ trait FormPageUtility
 {
     /**
      * @param int|null $id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getRepositoryItem($id = null, $withoutDefaultScopes = false)
     {
@@ -44,7 +44,7 @@ trait FormPageUtility
         $this->addFormAppends();
 
         return $this->getCacheableFormItem($id, function () use ($id, $withoutDefaultScopes, $item) {
-            $repositoryItem = ($item instanceof \Illuminate\Database\Eloquent\Model ? $item : $this->getRepositoryItem($id, withoutDefaultScopes: $withoutDefaultScopes));
+            $repositoryItem = ($item instanceof Model ? $item : $this->getRepositoryItem($id, withoutDefaultScopes: $withoutDefaultScopes));
             $item = $this->formItem($repositoryItem);
 
             $data = [];
@@ -53,7 +53,7 @@ trait FormPageUtility
                 $itemTitle = $append;
                 $itemValue = $append;
                 preg_match('/(.*) as (.*)/', $append, $matches);
-                if($matches) {
+                if ($matches) {
                     $itemTitle = $matches[2];
                     $itemValue = $matches[1];
                 }
@@ -62,12 +62,12 @@ trait FormPageUtility
             }
 
             return object_to_array(array_to_object(array_merge([
-                    'id' => $id,
-                    $this->titleColumnKey => data_get($item, $this->titleColumnKey, ''),
-                    'created_at' => $repositoryItem->created_at,
-                    'updated_at' => $repositoryItem->updated_at,
-                    'deleted_at' => $repositoryItem->deleted_at,
-                ],
+                'id' => $id,
+                $this->titleColumnKey => data_get($item, $this->titleColumnKey, ''),
+                'created_at' => $repositoryItem->created_at,
+                'updated_at' => $repositoryItem->updated_at,
+                'deleted_at' => $repositoryItem->deleted_at,
+            ],
                 // $item->toArray(),
                 $data,
                 $this->repository->getFormFields($repositoryItem, $this->formSchema, noSerialization: true),

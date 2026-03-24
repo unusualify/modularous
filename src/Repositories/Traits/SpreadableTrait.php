@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
+use Unusualify\Modularity\Models\Model;
 
 trait SpreadableTrait
 {
@@ -49,7 +50,7 @@ trait SpreadableTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */

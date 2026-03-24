@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Collection;
+use Unusualify\Modularity\Entities\Traits\HasPayment;
 use Unusualify\Modularity\Hydrates\HeaderHydrator;
 use Unusualify\Modularity\Traits\Allowable;
 
@@ -101,7 +102,7 @@ trait TableColumns
                 }
             }
 
-            if (classHasTrait($model, \Unusualify\Modularity\Entities\Traits\HasPayment::class)
+            if (classHasTrait($model, HasPayment::class)
                 && method_exists($model, 'getPaymentEagerLoads')) {
                 $withs = $this->mergeIndexWiths($withs, $model->getPaymentEagerLoads());
             }

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 use Unusualify\Modularity\Database\Factories\FileFactory;
@@ -21,7 +22,7 @@ class File extends Model
         'size',
     ];
 
-    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    protected static function newFactory(): Factory
     {
         return FileFactory::new();
     }

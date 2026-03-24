@@ -46,4 +46,3 @@ class HeaderHydratorTest extends TestCase
         $this->assertEquals('md', $result['responsive']['hideBelow']);
     }
 }
-

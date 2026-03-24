@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Console\Sync;
 
 use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularity\Entities\Traits\HasStateable;
 use Unusualify\Modularity\Facades\ModularityFinder;
 
 use function Laravel\Prompts\select;
@@ -56,7 +57,7 @@ class SyncStatesCommand extends BaseCommand
             }
         } else {
             // get all stateable models
-            $models = ModularityFinder::getModelsWithTrait(\Unusualify\Modularity\Entities\Traits\HasStateable::class);
+            $models = ModularityFinder::getModelsWithTrait(HasStateable::class);
 
             $model = select('Select a model', $models);
         }

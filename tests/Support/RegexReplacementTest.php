@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
+use Illuminate\Support\Facades\File;
 use Unusualify\Modularity\Support\RegexReplacement;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Facades\File;
 
 class RegexReplacementTest extends TestCase
 {
@@ -15,7 +15,7 @@ class RegexReplacementTest extends TestCase
         parent::setUp();
         // Use a unique directory per process/run to avoid collisions in parallel
         $this->tempDir = sys_get_temp_dir() . '/modularous_regex_' . uniqid();
-        if (!File::exists($this->tempDir)) {
+        if (! File::exists($this->tempDir)) {
             File::makeDirectory($this->tempDir, 0755, true);
         }
     }
@@ -32,14 +32,14 @@ class RegexReplacementTest extends TestCase
     public function it_can_be_instantiated_and_properties_set()
     {
         $regex = new RegexReplacement($this->tempDir, '/pattern/', 'data');
-        
+
         $this->assertInstanceOf(RegexReplacement::class, $regex);
-        
+
         $regex->setPath('/new/path');
         $regex->setPattern('/new-pattern/');
         $regex->setData('new-data');
         $regex->setDirectoryPattern('*.txt');
-        
+
         // Properties are protected, but we can test they were set by running methods that use them
         // or using reflection if strictly necessary. For now, we'll trust the setters if the logic works.
     }
@@ -62,7 +62,7 @@ class RegexReplacementTest extends TestCase
     {
         $subDir = $this->tempDir . '/sub';
         File::makeDirectory($subDir);
-        
+
         File::put($this->tempDir . '/file1.php', 'Old Content');
         File::put($subDir . '/file2.php', 'Old Content');
         File::put($this->tempDir . '/file3.txt', 'Old Content'); // Should not be matched by default **/*.php

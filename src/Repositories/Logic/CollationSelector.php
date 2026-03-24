@@ -2,11 +2,13 @@
 
 namespace Unusualify\Modularity\Repositories\Logic;
 
+use Illuminate\Database\Concerns\CompilesJsonPaths;
+use Illuminate\Database\Query\Builder;
 use Unusualify\Modularity\Facades\Modularity;
 
 trait CollationSelector
 {
-    use \Illuminate\Database\Concerns\CompilesJsonPaths;
+    use CompilesJsonPaths;
 
     private $collationSelectorColumns = [
         'char',
@@ -65,9 +67,9 @@ trait CollationSelector
     /**
      * Add search collation to the query.
      *
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param mixed $value
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
     public function addSearchCollationToQuery($query, string $field, $value, $model = null)
     {

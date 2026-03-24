@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Facades\Modularity;
@@ -12,7 +13,7 @@ class AuthenticateMiddleware extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return string|null
      */
     protected function redirectTo($request)

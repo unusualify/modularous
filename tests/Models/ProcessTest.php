@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -372,6 +373,6 @@ class ProcessTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $process = new Process;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $process);
+        $this->assertInstanceOf(Model::class, $process);
     }
 }

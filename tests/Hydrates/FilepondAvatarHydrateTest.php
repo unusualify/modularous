@@ -11,7 +11,7 @@ class FilepondAvatarHydrateTest extends TestCase
     {
         $input = [
             'type' => 'filepond-avatar',
-            'name' => 'avatar'
+            'name' => 'avatar',
         ];
 
         $h = new FilepondAvatarHydrate($input, null, null, true);

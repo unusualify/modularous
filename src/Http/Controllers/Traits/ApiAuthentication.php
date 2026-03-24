@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,7 @@ trait ApiAuthentication
     /**
      * Get authenticated API user
      *
-     * @return \Illuminate\Foundation\Auth\User|null
+     * @return User|null
      */
     protected function getApiUser()
     {

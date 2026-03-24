@@ -7,7 +7,6 @@ use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Unusualify\Modularity\Activators\ModuleActivator;
-use Unusualify\Modularity\Module;
 
 class ModuleActivatorTest extends TestCase
 {
@@ -41,7 +40,7 @@ class ModuleActivatorTest extends TestCase
         parent::setUp();
 
         // Create real filesystem for testing
-        $this->files = new Filesystem();
+        $this->files = new Filesystem;
         $this->statusFile = sys_get_temp_dir() . '/test_routes_statuses_' . uniqid() . '.json';
 
         // Create a mock container
@@ -192,7 +191,7 @@ class ModuleActivatorTest extends TestCase
     }
 
     /** @test */
-    public function it_can_set_route_active_via_setActive()
+    public function it_can_set_route_active_via_set_active()
     {
         $this->activator->setActive('products', true);
 
@@ -535,7 +534,7 @@ class ModuleActivatorTest extends TestCase
     }
 
     /** @test */
-    public function hasStatus_with_empty_statuses_returns_expected_defaults()
+    public function has_status_with_empty_statuses_returns_expected_defaults()
     {
         // When no statuses exist, non-existent routes should have status false
         $this->assertTrue($this->activator->hasStatus('any-route', false));
@@ -543,7 +542,7 @@ class ModuleActivatorTest extends TestCase
     }
 
     /** @test */
-    public function it_preserves_status_when_readJson_is_called()
+    public function it_preserves_status_when_read_json_is_called()
     {
         $this->activator->enable('preserved-route');
 

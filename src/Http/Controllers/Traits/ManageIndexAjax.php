@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
 /**
@@ -15,7 +16,7 @@ trait ManageIndexAjax
     /**
      * Respond to AJAX index request. Returns JSON response or null if not applicable.
      */
-    protected function respondToIndexAjax(): ?\Illuminate\Http\JsonResponse
+    protected function respondToIndexAjax(): ?JsonResponse
     {
         if (! $this->request->ajax()) {
             return null;
@@ -32,7 +33,7 @@ trait ManageIndexAjax
         return $this->respondToIndexAjaxWithEager();
     }
 
-    protected function respondToIndexAjaxByIds(): \Illuminate\Http\JsonResponse
+    protected function respondToIndexAjaxByIds(): JsonResponse
     {
         $ids = $this->request->get('ids');
         $ids = is_string($ids) ? explode(',', $ids) : $ids;
@@ -60,7 +61,7 @@ trait ManageIndexAjax
         );
     }
 
-    protected function respondToIndexAjaxWithEager(): \Illuminate\Http\JsonResponse
+    protected function respondToIndexAjaxWithEager(): JsonResponse
     {
         $with = $this->request->get('eager', $this->request->get('with', []));
         $with = is_string($with) ? explode(',', $with) : $with;

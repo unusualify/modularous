@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
@@ -56,7 +58,7 @@ class HasRepeatersTest extends ModelTestCase
         $this->assertTrue(method_exists($this->model, 'repeaters'));
 
         $relation = $this->model->repeaters();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relation);
+        $this->assertInstanceOf(MorphMany::class, $relation);
     }
 
     public function test_repeaters_relationship_configuration()
@@ -180,7 +182,7 @@ class HasRepeatersTest extends ModelTestCase
         ]);
 
         // Expect a database constraint violation when trying to save null content
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
         $this->expectExceptionMessage('NOT NULL constraint failed: um_repeaters.content');
 
         $this->model->repeaters()->save($repeater);
@@ -225,7 +227,7 @@ class HasRepeatersTest extends ModelTestCase
         $relation = $this->model->repeaters();
 
         // Verify it's a MorphMany relationship
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $relation);
+        $this->assertInstanceOf(MorphMany::class, $relation);
 
         // Verify the morph configuration
         $this->assertEquals('repeatable_type', $relation->getMorphType());

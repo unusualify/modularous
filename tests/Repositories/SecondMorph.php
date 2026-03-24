@@ -2,13 +2,16 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
-class SecondMorph extends \Unusualify\Modularity\Entities\Model
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Unusualify\Modularity\Entities\Model;
+
+class SecondMorph extends Model
 {
     protected $fillable = [
         'name',
     ];
 
-    public function testModels(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function testModels(): MorphMany
     {
         return $this->morphMany(TestModel::class, 'test_modelable');
     }

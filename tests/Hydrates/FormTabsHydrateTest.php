@@ -12,7 +12,7 @@ class FormTabsHydrateTest extends TestCase
         $input = [
             'type' => 'form-tabs',
             'name' => 'tabs',
-            'schema' => []
+            'schema' => [],
         ];
 
         $h = new FormTabsHydrate($input, null, null, true);
@@ -20,7 +20,7 @@ class FormTabsHydrateTest extends TestCase
         $result = $h->render();
 
         $this->assertEquals('input-form-tabs', $result['type']);
-        $this->assertEquals(new \stdClass(), $result['default']);
+        $this->assertEquals(new \stdClass, $result['default']);
         $this->assertEquals([], $result['eagers']);
         $this->assertEquals([], $result['lazy']);
     }
@@ -35,24 +35,24 @@ class FormTabsHydrateTest extends TestCase
                     'type' => 'checklist',
                     'name' => 'checklist1',
                     'itemValue' => 'id',
-                    'itemTitle' => 'name'
+                    'itemTitle' => 'name',
                 ],
                 [
                     'type' => 'select',
                     'name' => 'select1',
                     'lazy' => ['relation1', 'relation2'],
                     'itemValue' => 'id',
-                    'itemTitle' => 'name'
+                    'itemTitle' => 'name',
                 ],
                 [
                     'type' => 'input-comparison-table',
                     'name' => 'table1',
                     'comparators' => [
                         'comp1' => ['eager' => ['eager1']],
-                        'comp2' => ['lazy' => ['lazy1']]
-                    ]
-                ]
-            ]
+                        'comp2' => ['lazy' => ['lazy1']],
+                    ],
+                ],
+            ],
         ];
 
         $h = new FormTabsHydrate($input, null, null, true);

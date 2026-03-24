@@ -2,7 +2,8 @@
 
 namespace Unusualify\Modularity\Tests;
 
-use Illuminate\Container\Container;
+use Illuminate\Http\Request;
+use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
 use Unusualify\Modularity\Modularity;
 
 class ModularityTest extends TestModulesCase
@@ -132,7 +133,7 @@ class ModularityTest extends TestModulesCase
     {
         // Skip if production
         if ($this->modularity->isProduction()) {
-            $this->expectException(\Unusualify\Modularity\Exceptions\ModularitySystemPathException::class);
+            $this->expectException(ModularitySystemPathException::class);
             $this->modularity->setSystemModulesPath();
         } else {
             $originalPath = config('modules.paths.modules');
@@ -180,7 +181,7 @@ class ModularityTest extends TestModulesCase
         $this->app['config']->set('modularity.admin_app_path', 'admin');
 
         // Create a mock request to provide default values for request()->getHost() and request()->segment(1)
-        $request = \Illuminate\Http\Request::create('http://localhost/admin', 'GET');
+        $request = Request::create('http://localhost/admin', 'GET');
         $this->app->instance('request', $request);
 
         $this->assertTrue($this->modularity->isPanelUrl('http://localhost/admin/dashboard'));

@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Tests\Services;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Collection;
 use JoeDixon\Translation\Scanner;
 use Mockery;
 use Unusualify\Modularity\Services\FileTranslation;
@@ -12,8 +11,11 @@ use Unusualify\Modularity\Tests\TestCase;
 class FileTranslationTest extends TestCase
 {
     protected $fileTranslation;
+
     protected $mockFilesystem;
+
     protected $mockScanner;
+
     protected $languageFilesPath;
 
     protected function setUp(): void
@@ -39,7 +41,7 @@ class FileTranslationTest extends TestCase
     }
 
     /** @test */
-public function it_constructs_with_proper_dependencies()
+    public function it_constructs_with_proper_dependencies()
     {
         $this->assertInstanceOf(FileTranslation::class, $this->fileTranslation);
         $this->assertEquals($this->mockFilesystem, $this->fileTranslation->disk);
@@ -85,10 +87,10 @@ public function it_constructs_with_proper_dependencies()
         // This method creates a new static instance internally which is hard to mock
         // Instead we'll test that the method exists and its signature is correct
         $this->assertTrue(method_exists($this->fileTranslation, 'getTranslationsFromPath'));
-        
+
         $reflection = new \ReflectionMethod($this->fileTranslation, 'getTranslationsFromPath');
         $params = $reflection->getParameters();
-        
+
         $this->assertCount(2, $params);
         $this->assertEquals('languageFilesPath', $params[0]->getName());
         $this->assertEquals('language', $params[1]->getName());
@@ -102,7 +104,7 @@ public function it_constructs_with_proper_dependencies()
         $language = 'fr';
 
         $mockTranslation = Mockery::mock(FileTranslation::class)->makePartial();
-        
+
         // Mock source translations
         $sourceTranslations = collect([
             'group' => collect([
@@ -175,10 +177,10 @@ public function it_constructs_with_proper_dependencies()
         // This method creates a new static instance internally which is hard to mock
         // Instead we'll test that the method exists and returns correct structure
         $this->assertTrue(method_exists($this->fileTranslation, 'findAllMissingKeys'));
-        
+
         $reflection = new \ReflectionMethod($this->fileTranslation, 'findAllMissingKeys');
         $params = $reflection->getParameters();
-        
+
         $this->assertCount(2, $params);
         $this->assertEquals('sourcePath', $params[0]->getName());
         $this->assertEquals('targetPath', $params[1]->getName());
@@ -202,9 +204,9 @@ public function it_constructs_with_proper_dependencies()
             $this->mockFilesystem,
             $this->languageFilesPath,
             'en',
-            $this->mockScanner
+            $this->mockScanner,
         ])->makePartial()->shouldAllowMockingProtectedMethods();
-        
+
         $mockTranslation->shouldReceive('syncGroupTranslations')
             ->once();
 
@@ -232,9 +234,9 @@ public function it_constructs_with_proper_dependencies()
             $this->mockFilesystem,
             $this->languageFilesPath,
             'en',
-            $this->mockScanner
+            $this->mockScanner,
         ])->makePartial()->shouldAllowMockingProtectedMethods();
-        
+
         $mockTranslation->shouldReceive('syncSingleTranslations')
             ->once();
 
@@ -301,7 +303,7 @@ public function it_constructs_with_proper_dependencies()
         $targetPath = '/target/lang';
 
         $mockTranslation = Mockery::mock(FileTranslation::class)->makePartial();
-        
+
         $allMissingKeys = [
             'fr' => [
                 'group' => [

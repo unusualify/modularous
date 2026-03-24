@@ -2,12 +2,12 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
-// use Illuminate\Console\Command as Console;
 use Symfony\Component\Console\Input\InputOption;
+// use Illuminate\Console\Command as Console;
+use Unusualify\Modularity\Console\BaseCommand;
 
 use function Laravel\Prompts\text;
 

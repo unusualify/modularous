@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -227,7 +228,7 @@ class ProcessHistoryTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $processHistory = new ProcessHistory;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $processHistory);
+        $this->assertInstanceOf(Model::class, $processHistory);
     }
 
     public function test_create_process_history_with_minimum_fields()

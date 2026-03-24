@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\SystemUser\Entities\Role;
 use Unusualify\Modularity\Facades\Modularity;
 
 class DefaultRolesSeeder extends Seeder
@@ -55,7 +56,7 @@ class DefaultRolesSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            \Modules\SystemUser\Entities\Role::updateOrCreate([
+            Role::updateOrCreate([
                 'name' => $role['name'],
             ], $role);
         }

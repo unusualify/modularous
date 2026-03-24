@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Schedulers;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Unusualify\Modularity\Entities\Traits\Chatable;
 use Unusualify\Modularity\Facades\ModularityFinder;
 
 class ChatableScheduler extends Command
@@ -40,7 +41,7 @@ class ChatableScheduler extends Command
     public function handle()
     {
         try {
-            $models = ModularityFinder::getModelsWithTrait(\Unusualify\Modularity\Entities\Traits\Chatable::class);
+            $models = ModularityFinder::getModelsWithTrait(Chatable::class);
 
             foreach ($models as $model) {
                 $model::hasNotifiableMessage()->chunk(100, function ($items) {

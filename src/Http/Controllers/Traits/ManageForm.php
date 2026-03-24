@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 trait ManageForm
@@ -16,8 +18,8 @@ trait ManageForm
     protected $formAttributes = [];
 
     /**
-     * @param \Illuminate\Foundation\Application $app
-     * @param \Illuminate\Http\Request $request
+     * @param Application $app
+     * @param Request $request
      * @return void
      */
     protected function __afterConstructManageForm($app, $request)
@@ -38,7 +40,7 @@ trait ManageForm
 
         $fetchFormWiths = $this->tableAttributes['editOnModal'] ?? true;
 
-        if(!$fetchFormWiths){
+        if (! $fetchFormWiths) {
             return [];
         }
 

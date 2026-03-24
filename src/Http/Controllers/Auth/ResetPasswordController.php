@@ -6,12 +6,13 @@ namespace Unusualify\Modularity\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
@@ -28,7 +29,7 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function reset(Request $request)
     {
@@ -74,7 +75,7 @@ class ResetPasswordController extends Controller
 
     /**
      * @param string|null $token
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return RedirectResponse|View
      */
     public function showWelcomeForm(Request $request, $token = null)
     {
@@ -120,12 +121,12 @@ class ResetPasswordController extends Controller
         return null;
     }
 
-    protected function sendResetResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendResetResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $this->sendSuccessResponse($request, trans($response), $this->redirectPath());
     }
 
-    protected function sendResetFailedResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    protected function sendResetFailedResponse(Request $request, $response): JsonResponse|RedirectResponse
     {
         return $this->sendFailedResponse($request, trans($response), 'email');
     }

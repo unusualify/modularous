@@ -11,7 +11,7 @@ class DateHydrateTest extends TestCase
     {
         $input = [
             'type' => 'date',
-            'name' => 'published_at'
+            'name' => 'published_at',
         ];
 
         $h = new DateHydrate($input, null, null, true);

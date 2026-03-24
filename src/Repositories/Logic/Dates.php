@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Repositories\Logic;
 
 use Carbon\Carbon;
+use Unusualify\Modularity\Entities\Model;
 
 trait Dates
 {
@@ -16,7 +17,7 @@ trait Dates
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model|null $object
+     * @param Model|null $object
      * @param array $fields
      * @return array
      */

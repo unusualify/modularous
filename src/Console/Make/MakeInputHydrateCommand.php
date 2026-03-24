@@ -2,10 +2,10 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class MakeInputHydrateCommand extends BaseCommand
 {

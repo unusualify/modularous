@@ -2,8 +2,13 @@
 
 namespace Unusualify\Modularity\Repositories\Logic;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Unusualify\Modularity\Models\Model;
 use Unusualify\Modularity\Traits\ManageTraits;
 
 trait MethodTransformers
@@ -28,7 +33,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
@@ -161,7 +166,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return string[]
      */
@@ -177,7 +182,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -189,7 +194,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -201,7 +206,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -213,7 +218,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @return void
      */
     public function afterDelete($object)
@@ -224,7 +229,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @return void
      */
     public function afterForceDelete($object)
@@ -235,7 +240,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @return void
      */
     public function afterRestore($object)
@@ -246,9 +251,9 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
-     * @return \Unusualify\Modularity\Models\Model
+     * @return Model
      */
     public function hydrate($object, $fields)
     {
@@ -260,7 +265,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @return array
      */
     public function getFormFields($object, $schema = [], $noSerialization = false)
@@ -293,7 +298,7 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $schema
      * @return array
      */
@@ -374,8 +379,8 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function filter($query, array $scopes = [])
     {
@@ -412,7 +417,7 @@ trait MethodTransformers
                     $relationship = $this->getModel()->{$relationName}();
                     $related = $relationship->getRelated();
 
-                    if ($relationship instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
+                    if ($relationship instanceof MorphTo) {
                         // Handle morphTo relationship
                         $morphType = $relationship->getMorphType(); // Gets the type column (e.g., 'modelable_type')
                         $morphId = $relationship->getForeignKeyName(); // Gets the id column (e.g., 'modelable_id')
@@ -434,12 +439,12 @@ trait MethodTransformers
                                 ->whereIn($morphId, $values);
                         }
 
-                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOneThrough) {
+                    } elseif ($relationship instanceof HasOneThrough) {
                         $query->whereHas($relationName, function ($query) use ($value, $related) {
                             $table = $related->getTable();
                             $query->whereIn($table . '.id', $value);
                         });
-                    } elseif ($relationship instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
+                    } elseif ($relationship instanceof HasOne) {
                         $query->whereHas($relationName, function ($query) use ($value, $related) {
                             $table = $related->getTable();
                             $query->whereIn($table . '.id', $value);
@@ -502,8 +507,8 @@ trait MethodTransformers
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function order($query, array $orders = [])
     {

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait SerializeModel
 {
@@ -19,18 +20,18 @@ trait SerializeModel
 
         // Serialize loaded relationships
         foreach ($model->getRelations() as $relationName => $relationValue) {
-            if ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
+            if ($relationValue instanceof Model) {
                 // Single model relationship
                 $data['relations'][$relationName] = [
                     'type' => 'model',
                     'data' => $this->serializeModel($relationValue),
                 ];
-            } elseif ($relationValue instanceof \Illuminate\Support\Collection || is_array($relationValue)) {
+            } elseif ($relationValue instanceof Collection || is_array($relationValue)) {
                 // Collection of models relationship
                 $data['relations'][$relationName] = [
                     'type' => 'collection',
                     'data' => collect($relationValue)->map(function ($item) {
-                        return $item instanceof \Illuminate\Database\Eloquent\Model ? $this->serializeModel($item) : $item;
+                        return $item instanceof Model ? $this->serializeModel($item) : $item;
                     })->toArray(),
                 ];
             } else {

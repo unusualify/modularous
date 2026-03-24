@@ -3,13 +3,14 @@
 namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class NavigationMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function handle($request, Closure $next)

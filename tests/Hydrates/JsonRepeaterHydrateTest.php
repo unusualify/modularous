@@ -11,7 +11,7 @@ class JsonRepeaterHydrateTest extends TestCase
     {
         $input = [
             'type' => 'json-repeater',
-            'name' => 'items'
+            'name' => 'items',
         ];
 
         $h = new JsonRepeaterHydrate($input, null, null, true);

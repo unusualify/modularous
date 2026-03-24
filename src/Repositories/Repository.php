@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Repositories;
 
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
 use Unusualify\Modularity\Contracts\Cache\UserAwareCacheInterface;
 use Unusualify\Modularity\Contracts\ModuleableInterface;
+use Unusualify\Modularity\Models\Model;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularity\Traits\ManageNames;
 
@@ -32,7 +34,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
         Logic\TouchableEloquentModel;
 
     /**
-     * @var \Unusualify\Modularity\Models\Model
+     * @var Model
      */
     protected $model;
 
@@ -97,7 +99,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      * 7. dispatchEvent($object, 'create')
      *
      * @param string[] $fields
-     * @return \Unusualify\Modularity\Models\Model
+     * @return Model
      */
     public function create($fields, $schema = null, $options = [])
     {
@@ -114,7 +116,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
             $model = $this->model;
 
-            if(method_exists($model, 'preventDependentWarming')) {
+            if (method_exists($model, 'preventDependentWarming')) {
                 $model = $model->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
             }
 
@@ -137,7 +139,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @return \Unusualify\Modularity\Models\Model
+     * @return Model
      */
     public function firstOrCreate($attributes, $fields = [], $schema = null)
     {
@@ -146,7 +148,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
     /**
      * @param array $fields
-     * @return \Unusualify\Modularity\Models\Model
+     * @return Model
      */
     public function createForPreview($fields)
     {
@@ -162,7 +164,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     /**
      * @param array $attributes
      * @param array $fields
-     * @return \Unusualify\Modularity\Models\Model|void
+     * @return Model|void
      */
     public function updateOrCreate($attributes, $fields, $schema = null)
     {
@@ -211,7 +213,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
 
             $object->fill(Arr::except($fields, $this->getReservedFields()));
 
-            if(method_exists($object, 'preventDependentWarming')) {
+            if (method_exists($object, 'preventDependentWarming')) {
                 $object = $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
             }
 
@@ -495,7 +497,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param string $relationship
      * @param string $formField
@@ -520,7 +522,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param string $relationship
      * @return void
@@ -531,7 +533,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param array $scopes
      * @param string $scopeField
      * @param string $scopeRelation
@@ -589,7 +591,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param array $scopes
      * @param string $scopeField
      * @return void
@@ -603,7 +605,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param array $scopes
      * @param string $scopeField
      * @param string[] $orFields
@@ -628,7 +630,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     /**
      * Search in relationship fields
      *
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param array $scopes
      * @param string $scopeField
      * @param string[] $relationshipFields

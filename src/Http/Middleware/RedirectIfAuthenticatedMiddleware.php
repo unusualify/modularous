@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Http\Middleware;
 use Closure;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 
 class RedirectIfAuthenticatedMiddleware
@@ -34,7 +35,7 @@ class RedirectIfAuthenticatedMiddleware
     /**
      * Handles an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = 'modularity')

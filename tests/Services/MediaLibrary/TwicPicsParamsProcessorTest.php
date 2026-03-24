@@ -12,7 +12,7 @@ class TwicPicsParamsProcessorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->processor = new TwicPicsParamsProcessor();
+        $this->processor = new TwicPicsParamsProcessor;
     }
 
     /** @test */
@@ -97,7 +97,7 @@ class TwicPicsParamsProcessorTest extends TestCase
             'h' => 200,
             'fm' => 'webp',
             'q' => 85,
-            'custom' => 'test'
+            'custom' => 'test',
         ]);
 
         $this->assertArrayHasKey('resize', $result);
@@ -117,7 +117,7 @@ class TwicPicsParamsProcessorTest extends TestCase
             'fit' => 'crop',
             'crop' => '400x300',
             'w' => 300,
-            'h' => 200
+            'h' => 200,
         ]);
 
         // Should keep the existing crop param

@@ -5,7 +5,6 @@ namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
 use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Services\MediaLibrary\Imgix;
 use Unusualify\Modularity\Tests\TestCase;
-use Imgix\UrlBuilder;
 
 class ImgixTest extends TestCase
 {

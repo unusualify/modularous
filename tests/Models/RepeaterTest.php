@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Repeater;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -127,7 +128,7 @@ class RepeaterTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $repeater = new Repeater;
-        $this->assertInstanceOf(\Unusualify\Modularity\Entities\Model::class, $repeater);
+        $this->assertInstanceOf(Model::class, $repeater);
     }
 
     public function test_has_timestamps()

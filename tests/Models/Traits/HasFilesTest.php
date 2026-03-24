@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
@@ -74,7 +75,7 @@ class HasFilesTest extends ModelTestCase
         // Test the morphToMany relationship
         $relationship = $this->model->files();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphToMany::class, $relationship);
+        $this->assertInstanceOf(MorphToMany::class, $relationship);
         $this->assertEquals(File::class, get_class($relationship->getRelated()));
         $this->assertEquals(modularityConfig('tables.fileables'), $relationship->getTable());
     }

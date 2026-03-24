@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Secondary;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Unusualify\Modularity\Entities\Block;
 use Unusualify\Modularity\Services\Blocks\Block as BlockConfig;
 
@@ -10,7 +11,7 @@ trait HasBlocks
     /**
      * Defines the one-to-many relationship for block objects.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
     public function blocks()
     {

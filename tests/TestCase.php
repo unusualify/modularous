@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Tests;
 
+use Astrotomic\Translatable\TranslatableServiceProvider;
+use Illuminate\Foundation\Application;
+use JoeDixon\Translation\TranslationServiceProvider;
 use Modules\SystemPayment\Entities\Payment;
 use Nwidart\Modules\LaravelModulesServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
@@ -42,8 +45,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             ModularityProvider::class,
             PermissionServiceProvider::class,
             \Oobook\Priceable\LaravelServiceProvider::class,
-            \JoeDixon\Translation\TranslationServiceProvider::class,
-            \Astrotomic\Translatable\TranslatableServiceProvider::class,
+            TranslationServiceProvider::class,
+            TranslatableServiceProvider::class,
         ];
     }
 
@@ -70,7 +73,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $generatorPaths = [
             'config' => ['path' => 'Config', 'generate' => true],
             'command' => ['path' => 'Console', 'generate' => false],
-            'migration' => ['path' => 'Database/Migrations', 'generate' =>true],
+            'migration' => ['path' => 'Database/Migrations', 'generate' => true],
             'seeder' => ['path' => 'Database/Seeders', 'generate' => true],
             'model' => ['path' => 'Entities', 'generate' => true],
             'repository' => ['path' => 'Repositories', 'generate' => true],
@@ -149,7 +152,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * Set up the database.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      */
     protected function setUpDatabase($app)
     {

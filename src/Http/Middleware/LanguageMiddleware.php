@@ -2,8 +2,12 @@
 
 namespace Unusualify\Modularity\Http\Middleware;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 use Unusualify\Modularity\Facades\ModularityLog;
 
@@ -12,7 +16,7 @@ class LanguageMiddleware
     /**
      * Handles an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -42,7 +46,7 @@ class LanguageMiddleware
             }
         }
 
-        if ($locale !== $fallbackLocale && \Illuminate\Support\Facades\Route::currentRouteName() == 'languages.translations.index') {
+        if ($locale !== $fallbackLocale && Route::currentRouteName() == 'languages.translations.index') {
             $locale = $fallbackLocale;
         }
 
@@ -72,8 +76,8 @@ class LanguageMiddleware
 
         config(['priceable.currency_locale' => config('app.locale')]);
 
-        \Carbon\CarbonInterval::setLocale(config('app.locale'));
-        \Carbon\Carbon::setLocale(config('app.locale'));
+        CarbonInterval::setLocale(config('app.locale'));
+        Carbon::setLocale(config('app.locale'));
 
         return $next($request);
     }

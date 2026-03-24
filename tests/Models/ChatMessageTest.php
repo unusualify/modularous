@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Entities\ChatMessage;
+use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Scopes\ChatMessageScopes;
+use Unusualify\Modularity\Entities\Traits\HasCreator;
+use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -158,7 +162,7 @@ class ChatMessageTest extends ModelTestCase
     public function test_has_creator_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasCreator::class,
+            HasCreator::class,
             class_uses_recursive(new ChatMessage)
         ));
     }
@@ -166,7 +170,7 @@ class ChatMessageTest extends ModelTestCase
     public function test_has_fileponds_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasFileponds::class,
+            HasFileponds::class,
             class_uses_recursive(new ChatMessage)
         ));
     }
@@ -174,7 +178,7 @@ class ChatMessageTest extends ModelTestCase
     public function test_chat_message_scopes_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Scopes\ChatMessageScopes::class,
+            ChatMessageScopes::class,
             class_uses_recursive(new ChatMessage)
         ));
     }
@@ -219,7 +223,7 @@ class ChatMessageTest extends ModelTestCase
     public function test_extends_model()
     {
         $chatMessage = new ChatMessage;
-        $this->assertInstanceOf(\Unusualify\Modularity\Entities\Model::class, $chatMessage);
+        $this->assertInstanceOf(Model::class, $chatMessage);
     }
 
     public function test_has_timestamps()

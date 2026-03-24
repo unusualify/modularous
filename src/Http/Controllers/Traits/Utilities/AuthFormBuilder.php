@@ -18,7 +18,7 @@ trait AuthFormBuilder
     /**
      * Returns form title structure for auth pages.
      *
-     * @param  array<string, mixed>  $overrides
+     * @param array<string, mixed> $overrides
      * @return array<string, mixed>
      */
     protected function authFormTitle(string $text, array $overrides = []): array
@@ -39,8 +39,8 @@ trait AuthFormBuilder
     /**
      * Returns base form attributes for auth forms.
      *
-     * @param  string|array  $formDraft  Form draft name or array schema
-     * @param  array<string, mixed>  $overrides
+     * @param string|array $formDraft Form draft name or array schema
+     * @param array<string, mixed> $overrides
      * @return array<string, mixed>
      */
     protected function authFormBaseAttributes(
@@ -121,7 +121,7 @@ trait AuthFormBuilder
     /**
      * Returns form option slot (e.g. forgot password, have account link).
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     protected function authFormOptionSlot(string $text, string $href, array $attributes = []): array
     {
@@ -141,8 +141,8 @@ trait AuthFormBuilder
     /**
      * Returns bottom slots wrapper with given elements.
      *
-     * @param  array<int, array>  $elements
-     * @param  array<string, mixed>  $sheetAttributes
+     * @param array<int, array> $elements
+     * @param array<string, mixed> $sheetAttributes
      */
     protected function authBottomSlots(array $elements, array $sheetAttributes = []): array
     {
@@ -158,7 +158,7 @@ trait AuthFormBuilder
     /**
      * Returns form slots wrapper for bottom buttons (e.g. sign-in, reset-password).
      *
-     * @param  array<int, array>  $elements
+     * @param array<int, array> $elements
      */
     protected function authFormBottomSlots(array $elements): array
     {
@@ -236,8 +236,8 @@ trait AuthFormBuilder
     /**
      * Build auth view data from config-driven page definition.
      *
-     * @param  string  $pageKey  Key from auth_pages.pages (login, register, forgot_password, etc.)
-     * @param  array<string, mixed>  $overrides  Override attributes, formAttributes, formSlots, slots, modelValue
+     * @param string $pageKey Key from auth_pages.pages (login, register, forgot_password, etc.)
+     * @param array<string, mixed> $overrides Override attributes, formAttributes, formSlots, slots, modelValue
      * @return array{attributes: array, formAttributes: array, formSlots: array, slots: array, pageTitle: string}
      */
     protected function buildAuthViewData(string $pageKey, array $overrides = []): array

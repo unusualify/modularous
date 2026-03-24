@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Entities\ChatMessage;
 use Unusualify\Modularity\Entities\Filepond;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -196,7 +197,7 @@ class ChatTest extends ModelTestCase
     public function test_extends_model()
     {
         $chat = new Chat;
-        $this->assertInstanceOf(\Unusualify\Modularity\Entities\Model::class, $chat);
+        $this->assertInstanceOf(Model::class, $chat);
     }
 
     public function test_has_timestamps()

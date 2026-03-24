@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Http\Request;
 use Unusualify\Modularity\Facades\Modularity;
 
 class ImpersonateMiddleware
@@ -21,7 +22,7 @@ class ImpersonateMiddleware
     /**
      * Handles an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function handle($request, Closure $next)

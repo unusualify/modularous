@@ -6,6 +6,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Mockery;
+use Unusualify\Modularity\Modularity;
 use Unusualify\Modularity\Tests\Repositories\TestModel;
 use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
@@ -148,7 +149,7 @@ class CollationSelectorTest extends RepositoryTestCase
 
         $query = $this->createMySqlQueryBuilder();
 
-        $this->partialMock(\Unusualify\Modularity\Modularity::class, function ($mock) {
+        $this->partialMock(Modularity::class, function ($mock) {
             $mock->shouldReceive('shouldUseCollationForSearch')->andReturn(false);
         });
 

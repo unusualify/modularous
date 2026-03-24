@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Providers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Support\ServiceProvider as Provider;
 use Illuminate\Support\Str;
@@ -30,7 +31,7 @@ class ServiceProvider extends Provider
     /**
      * Create a new service provider instance.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param Application $app
      * @return void
      */
     public function __construct($app)

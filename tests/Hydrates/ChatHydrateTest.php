@@ -11,7 +11,7 @@ class ChatHydrateTest extends TestCase
     {
         $input = [
             'type' => 'chat',
-            'name' => 'messages'
+            'name' => 'messages',
         ];
 
         $h = new ChatHydrate($input, null, null, true);

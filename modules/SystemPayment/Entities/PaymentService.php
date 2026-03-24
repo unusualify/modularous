@@ -3,9 +3,12 @@
 namespace Modules\SystemPayment\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\HasImages;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Payable\Payable;
 
 class PaymentService extends Model
 {
@@ -52,30 +55,30 @@ class PaymentService extends Model
     /**
      * Get the payments for the PaymentService.
      */
-    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function payments(): HasMany
     {
-        return $this->hasMany(\Modules\SystemPayment\Entities\Payment::class);
+        return $this->hasMany(Payment::class);
     }
 
     /**
      * The currencies that belong to the PaymentService.
      */
-    public function paymentCurrencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function paymentCurrencies(): BelongsToMany
     {
-        return $this->belongsToMany(\Modules\SystemPayment\Entities\PaymentCurrency::class);
+        return $this->belongsToMany(PaymentCurrency::class);
     }
 
-    public function internalPaymentCurrencies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function internalPaymentCurrencies(): HasMany
     {
-        return $this->hasMany(\Modules\SystemPayment\Entities\PaymentCurrency::class, 'payment_service_id', 'id');
+        return $this->hasMany(PaymentCurrency::class, 'payment_service_id', 'id');
     }
 
     /**
      * The cardTypes that belong to the PaymentService.
      */
-    public function cardTypes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function cardTypes(): BelongsToMany
     {
-        return $this->belongsToMany(\Modules\SystemPayment\Entities\CardType::class);
+        return $this->belongsToMany(CardType::class);
     }
 
     protected function serviceClass(): Attribute
@@ -95,7 +98,7 @@ class PaymentService extends Model
                 if ($paymentGateway) {
 
                     try {
-                        $serviceClass = \Unusualify\Payable\Payable::getServiceClass($paymentGateway);
+                        $serviceClass = Payable::getServiceClass($paymentGateway);
                     } catch (\Exception $e) {
 
                         try {
@@ -125,6 +128,7 @@ class PaymentService extends Model
                         }
                     }
                 }
+
                 return $serviceClass;
             },
         );

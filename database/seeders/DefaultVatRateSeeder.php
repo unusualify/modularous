@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Modules\SystemPricing\Entities\VatRate;
 
 class DefaultVatRateSeeder extends Seeder
 {
@@ -80,7 +81,7 @@ class DefaultVatRateSeeder extends Seeder
         $now = Carbon::now()->format('Y-m-d H:i:s');
         $vatRates = array_map(fn ($vatRate) => $vatRate += ['created_at' => $now], $seedArray);
         foreach ($vatRates as $vatRate) {
-            \Modules\SystemPricing\Entities\VatRate::updateOrCreate(
+            VatRate::updateOrCreate(
                 ['slug' => $vatRate['slug']],
                 $vatRate,
             );

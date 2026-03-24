@@ -2,11 +2,14 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Entities\State;
+use Unusualify\Modularity\Entities\Traits\HasStateable;
 use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularity\Repositories\Traits\StateableTrait;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class StateableTraitTest extends RepositoryTestCase
@@ -155,9 +158,9 @@ class StateableTraitTest extends RepositoryTestCase
     }
 }
 
-class RepoStateableModel extends \Illuminate\Database\Eloquent\Model
+class RepoStateableModel extends Model
 {
-    use \Unusualify\Modularity\Entities\Traits\HasStateable;
+    use HasStateable;
 
     protected $table = 'repo_stateable_models';
 
@@ -181,7 +184,7 @@ class RepoStateableModel extends \Illuminate\Database\Eloquent\Model
 
 final class RepoStateableTestRepository extends Repository
 {
-    use \Unusualify\Modularity\Repositories\Traits\StateableTrait;
+    use StateableTrait;
 
     protected static $stateableFilterUserRoles = ['admin'];
 

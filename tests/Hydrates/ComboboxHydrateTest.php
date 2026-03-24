@@ -11,7 +11,7 @@ class ComboboxHydrateTest extends TestCase
     {
         $input = [
             'type' => 'combobox',
-            'name' => 'tags'
+            'name' => 'tags',
         ];
 
         $h = new ComboboxHydrate($input, null, null, true);

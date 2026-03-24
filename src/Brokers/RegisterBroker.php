@@ -10,6 +10,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Unusualify\Modularity\Contracts\RegisterBroker as RegisterBrokerContract;
+use Unusualify\Modularity\Entities\User;
 
 class RegisterBroker extends PasswordBroker implements RegisterBrokerContract
 {
@@ -32,7 +33,7 @@ class RegisterBroker extends PasswordBroker implements RegisterBrokerContract
         }
 
         $email = $credentials['email'];
-        $user = new \Unusualify\Modularity\Entities\User;
+        $user = new User;
         $user->email = $email;
 
         if ($this->tokens->recentlyCreatedToken($user)) {

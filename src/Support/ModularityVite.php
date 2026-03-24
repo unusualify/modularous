@@ -48,7 +48,7 @@ class ModularityVite extends Vite
      *
      * @param string|string[] $entrypoints
      * @param string|null $buildDirectory
-     * @return \Illuminate\Support\HtmlString
+     * @return HtmlString
      *
      * @throws \Exception
      */

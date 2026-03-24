@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\View\View;
 use Illuminate\Encryption\Encrypter;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
@@ -22,7 +26,7 @@ class LoginControllerTest extends AuthTestCase
 
         $this->controller = new LoginController(
             app(Config::class),
-            app(\Illuminate\Auth\AuthManager::class),
+            app(AuthManager::class),
             app(Encrypter::class),
             app(Redirector::class),
             app(ViewFactory::class)
@@ -40,7 +44,7 @@ class LoginControllerTest extends AuthTestCase
     {
         $response = $this->controller->showForm();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -62,7 +66,7 @@ class LoginControllerTest extends AuthTestCase
 
         $response = $this->controller->logout($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -70,7 +74,7 @@ class LoginControllerTest extends AuthTestCase
     {
         $response = $this->controller->showLogin2FaForm();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 
     /** @test */
@@ -97,7 +101,7 @@ class LoginControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('email', $data);
         $this->assertArrayHasKey('message', $data);
@@ -142,7 +146,7 @@ class LoginControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request, $user);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('variant', $data);
@@ -169,7 +173,7 @@ class LoginControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request, $user);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /** @test */
@@ -194,7 +198,7 @@ class LoginControllerTest extends AuthTestCase
 
         $response = $method->invoke($this->controller, $request, $user);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('redirector', $data);
     }

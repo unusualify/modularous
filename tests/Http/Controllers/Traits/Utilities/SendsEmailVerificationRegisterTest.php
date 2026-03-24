@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Tests\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
@@ -109,7 +110,7 @@ class SendsEmailVerificationRegisterTest extends ModelTestCase
         $response = $this->controller->sendVerificationLinkEmail($request);
 
         // Test that it's a redirect response
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
 
         // Test the redirect URL
         $this->assertEquals('http://localhost', $response->getTargetUrl());
@@ -126,7 +127,7 @@ class SendsEmailVerificationRegisterTest extends ModelTestCase
         $failedRequest->merge(['email' => 'test@test.com']);
         $failedResponse = $this->controller->sendVerificationLinkEmail($failedRequest);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $failedResponse);
+        $this->assertInstanceOf(RedirectResponse::class, $failedResponse);
 
         $this->assertTrue($failedResponse->getSession()->get('errors')->has('email'));
 

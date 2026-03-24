@@ -100,7 +100,7 @@ return new class extends OneTimeOperation
                             ->onDelete('CASCADE');
                     }
                 });
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->error('Could not update foreign key: ' . $e->getMessage());
             }
         }

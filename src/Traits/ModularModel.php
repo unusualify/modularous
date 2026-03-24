@@ -3,6 +3,9 @@
 namespace Unusualify\Modularity\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularity\Contracts\ModuleableInterface;
 
 trait ModularModel
 {
@@ -13,11 +16,11 @@ trait ModularModel
     protected function getModuleNameFromModel(Model $model): ?string
     {
         // First, check if the model defines its module explicitly
-        if ($model instanceof \Unusualify\Modularity\Contracts\Cache\CacheableInterface && ($moduleName = $model->getCacheModuleName())) {
+        if ($model instanceof CacheableInterface && ($moduleName = $model->getCacheModuleName())) {
             return $moduleName;
         }
 
-        if ($model instanceof \Unusualify\Modularity\Contracts\ModuleableInterface && ($moduleName = $model->getModuleName())) {
+        if ($model instanceof ModuleableInterface && ($moduleName = $model->getModuleName())) {
             return $moduleName;
         }
 
@@ -35,7 +38,7 @@ trait ModularModel
         }
 
         // Fallback to table name converted to StudlyCase
-        return \Illuminate\Support\Str::studly(\Illuminate\Support\Str::singular($model->getTable()));
+        return Str::studly(Str::singular($model->getTable()));
     }
 
     /**
@@ -45,11 +48,11 @@ trait ModularModel
     protected function getModuleRouteNameFromModel(Model $model): ?string
     {
         // First, check if the model defines its route explicitly
-        if ($model instanceof \Unusualify\Modularity\Contracts\Cache\CacheableInterface && ($routeName = $model->getCacheModuleRouteName())) {
+        if ($model instanceof CacheableInterface && ($routeName = $model->getCacheModuleRouteName())) {
             return $routeName;
         }
 
-        if ($model instanceof \Unusualify\Modularity\Contracts\ModuleableInterface && ($routeName = $model->getRouteName())) {
+        if ($model instanceof ModuleableInterface && ($routeName = $model->getRouteName())) {
             return $routeName;
         }
 
@@ -65,6 +68,6 @@ trait ModularModel
         }
 
         // Fallback to table name converted to StudlyCase
-        return \Illuminate\Support\Str::studly(\Illuminate\Support\Str::singular($model->getTable()));
+        return Str::studly(Str::singular($model->getTable()));
     }
 }

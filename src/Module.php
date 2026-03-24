@@ -3,19 +3,25 @@
 namespace Unusualify\Modularity;
 
 use Illuminate\Console\Application;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
+use Illuminate\Routing\Controller;
+use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Laravel\Module as NwidartModule;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Unusualify\Modularity\Activators\ModuleActivator;
+use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Repositories\Repository;
 use Unusualify\Modularity\Support\Finder;
 
 class Module extends NwidartModule
@@ -122,14 +128,14 @@ class Module extends NwidartModule
         try {
             return $this->moduleActivator->hasStatus($this, $status);
         } catch (\Throwable $th) {
-            \Illuminate\Support\Facades\Log::error('Modularity module status check failed', [
+            Log::error('Modularity module status check failed', [
                 'module' => $this->getName(),
                 'status' => $status,
                 'exception' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 "Failed to check module status for {$this->getName()}: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -819,7 +825,7 @@ class Module extends NwidartModule
 
         try {
             return route(name: $name, parameters: $replacements, absolute: $absolute);
-        } catch (\Illuminate\Routing\Exceptions\UrlGenerationException $e) {
+        } catch (UrlGenerationException $e) {
             $relativeUrl = replace_curly_braces($routes->first(), $replacements);
 
             if ($absolute) {
@@ -830,14 +836,14 @@ class Module extends NwidartModule
                 ? $relativeUrl
                 : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
-            \Illuminate\Support\Facades\Log::error('Modularity route generation failed', [
+            Log::error('Modularity route generation failed', [
                 'module' => $this->getName(),
                 'routeName' => $name ?? null,
                 'exception' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 "Failed to generate route: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -877,7 +883,7 @@ class Module extends NwidartModule
      * @param mixed $routeName
      * @param bool $asClass
      */
-    public function getRepository($routeName, $asClass = true): \Unusualify\Modularity\Repositories\Repository|string
+    public function getRepository($routeName, $asClass = true): Repository|string
     {
         return (new Finder)->getRouteRepository($routeName, $asClass);
     }
@@ -888,7 +894,7 @@ class Module extends NwidartModule
      * @param mixed $routeName
      * @param bool $asClass
      */
-    public function getModel($routeName, $asClass = true): \Illuminate\Database\Eloquent\Model|string
+    public function getModel($routeName, $asClass = true): Model|string
     {
         $classNamespace = $this->getTargetClassNamespace('model', Str::studly($routeName));
 
@@ -905,7 +911,7 @@ class Module extends NwidartModule
      * @param string $routeName
      * @param bool $asClass
      */
-    public function getController($routeName, $asClass = true): \Illuminate\Routing\Controller|string
+    public function getController($routeName, $asClass = true): Controller|string
     {
         $classNamespace = $this->getTargetClassNamespace('controller', Str::studly($routeName) . 'Controller');
 

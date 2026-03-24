@@ -11,6 +11,7 @@ use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Http\Requests\FileRequest;
+use Unusualify\Modularity\Models\File;
 use Unusualify\Modularity\Services\Uploader\SignAzureUpload;
 use Unusualify\Modularity\Services\Uploader\SignS3Upload;
 use Unusualify\Modularity\Services\Uploader\SignUploadListener;
@@ -131,7 +132,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\File $item
+     * @param File $item
      * @return array
      */
     private function buildFile($item)
@@ -190,7 +191,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
 
     /**
      * @param Request $request
-     * @return \Unusualify\Modularity\Models\File
+     * @return File
      */
     public function storeFile($request)
     {
@@ -231,7 +232,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
 
     /**
      * @param Request $request
-     * @return \Unusualify\Modularity\Models\File
+     * @return File
      */
     public function storeReference($request)
     {

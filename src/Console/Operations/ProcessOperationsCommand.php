@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console\Operations;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\Artisan;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class ProcessOperationsCommand extends BaseCommand
 {

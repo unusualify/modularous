@@ -11,7 +11,7 @@ class ImageHydrateTest extends TestCase
     {
         $input = [
             'type' => 'image',
-            'name' => 'gallery'
+            'name' => 'gallery',
         ];
 
         $h = new ImageHydrate($input, null, null, true);

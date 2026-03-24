@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stateable extends Model
 {
@@ -19,7 +20,7 @@ class Stateable extends Model
 
     public $timestamps = true;
 
-    public function state(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function state(): BelongsTo
     {
         return $this->belongsTo(modularityConfig('models.state', 'Unusualify\Modularity\Entities\State'));
     }

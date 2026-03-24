@@ -5,7 +5,10 @@ namespace Unusualify\Modularity\Tests\Repositories\Traits;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class CreatorTraitTest extends RepositoryTestCase
@@ -34,7 +37,7 @@ class CreatorTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+            use CreatorTrait;
         };
 
         $object = new class
@@ -76,7 +79,7 @@ class CreatorTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+            use CreatorTrait;
         };
 
         // Auth user with role
@@ -126,7 +129,7 @@ class CreatorTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+            use CreatorTrait;
         };
 
         // Auth user without required role
@@ -182,11 +185,11 @@ class CreatorTraitTest extends RepositoryTestCase
     }
 }
 
-class CreatorTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class CreatorTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+    use CreatorTrait;
 
-    public function __construct(\Unusualify\Modularity\Tests\Repositories\TestModel $model)
+    public function __construct(TestModel $model)
     {
         $this->model = $model;
     }

@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Schedulers;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Unusualify\Modularity\Entities\Traits\Chatable;
 use Unusualify\Modularity\Facades\ModularityFinder;
 use Unusualify\Modularity\Schedulers\ChatableScheduler;
 use Unusualify\Modularity\Tests\TestCase;
@@ -13,7 +13,7 @@ class ChatableSchedulerTest extends TestCase
     /** @test */
     public function test_constructor_initializes_correctly()
     {
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
 
         $this->assertInstanceOf(ChatableScheduler::class, $scheduler);
     }
@@ -21,7 +21,7 @@ class ChatableSchedulerTest extends TestCase
     /** @test */
     public function test_command_signature_is_correct()
     {
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
 
         $this->assertEquals('modularity:scheduler:chatable', $scheduler->getName());
     }
@@ -32,7 +32,7 @@ class ChatableSchedulerTest extends TestCase
         // Create mock model
         $mockModel = \Mockery::mock('alias:TestChatableModel');
         $mockQueryBuilder = \Mockery::mock('Illuminate\Database\Eloquent\Builder');
-        
+
         // Mock the chunk callback
         $mockQueryBuilder->shouldReceive('chunk')
             ->with(100, \Mockery::type('Closure'))
@@ -47,11 +47,11 @@ class ChatableSchedulerTest extends TestCase
             ->andReturn($mockQueryBuilder);
 
         ModularityFinder::shouldReceive('getModelsWithTrait')
-            ->with(\Unusualify\Modularity\Entities\Traits\Chatable::class)
+            ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel]);
 
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
         $scheduler->handle();
 
         $this->assertTrue(true); // Assertion to confirm no exceptions
@@ -71,13 +71,14 @@ class ChatableSchedulerTest extends TestCase
 
         $mockModel = \Mockery::mock('alias:TestChatableModel');
         $mockQueryBuilder = \Mockery::mock('Illuminate\Database\Eloquent\Builder');
-        
+
         $mockQueryBuilder->shouldReceive('chunk')
             ->with(100, \Mockery::type('Closure'))
             ->once()
             ->andReturnUsing(function ($size, $callback) use ($mockItem1, $mockItem2) {
                 // Simulate chunk with 2 items
                 $callback(collect([$mockItem1, $mockItem2]));
+
                 return true;
             });
 
@@ -86,11 +87,11 @@ class ChatableSchedulerTest extends TestCase
             ->andReturn($mockQueryBuilder);
 
         ModularityFinder::shouldReceive('getModelsWithTrait')
-            ->with(\Unusualify\Modularity\Entities\Traits\Chatable::class)
+            ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel]);
 
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
         $scheduler->handle();
 
         // Mockery will verify all expectations automatically
@@ -123,11 +124,11 @@ class ChatableSchedulerTest extends TestCase
             ->andReturn($mockQueryBuilder2);
 
         ModularityFinder::shouldReceive('getModelsWithTrait')
-            ->with(\Unusualify\Modularity\Entities\Traits\Chatable::class)
+            ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel1, $mockModel2]);
 
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
         $scheduler->handle();
 
         $this->assertTrue(true);
@@ -139,7 +140,7 @@ class ChatableSchedulerTest extends TestCase
         $exception = new \Exception('Test error message');
 
         ModularityFinder::shouldReceive('getModelsWithTrait')
-            ->with(\Unusualify\Modularity\Entities\Traits\Chatable::class)
+            ->with(Chatable::class)
             ->once()
             ->andThrow($exception);
 
@@ -150,14 +151,14 @@ class ChatableSchedulerTest extends TestCase
 
         Log::shouldReceive('error')
             ->with('Modularity: Chatable scheduler error', \Mockery::on(function ($context) {
-                return isset($context['error']) 
+                return isset($context['error'])
                     && $context['error'] === 'Test error message'
                     && isset($context['trace'])
                     && is_string($context['trace']);
             }))
             ->once();
 
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
         $scheduler->handle();
 
         // Mockery will verify the log was called
@@ -170,7 +171,7 @@ class ChatableSchedulerTest extends TestCase
         $error = new \Error('Test error');
 
         ModularityFinder::shouldReceive('getModelsWithTrait')
-            ->with(\Unusualify\Modularity\Entities\Traits\Chatable::class)
+            ->with(Chatable::class)
             ->once()
             ->andThrow($error);
 
@@ -183,7 +184,7 @@ class ChatableSchedulerTest extends TestCase
             ->with('Modularity: Chatable scheduler error', \Mockery::type('array'))
             ->once();
 
-        $scheduler = new ChatableScheduler();
+        $scheduler = new ChatableScheduler;
         $scheduler->handle();
 
         $this->assertTrue(true);

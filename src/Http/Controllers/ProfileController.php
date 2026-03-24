@@ -2,14 +2,18 @@
 
 namespace Unusualify\Modularity\Http\Controllers;
 
+use Illuminate\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Modules\SystemUser\Http\Requests\CompanyRequest;
 use Modules\SystemUser\Repositories\CompanyRepository;
 use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
 use Unusualify\Modularity\Services\View\UComponent;
 use Unusualify\Modularity\Services\View\UWrapper;
@@ -36,7 +40,7 @@ class ProfileController extends BaseController
     protected $modelName = 'User';
 
     public function __construct(
-        \Illuminate\Foundation\Application $app,
+        Application $app,
         Request $request,
         protected UserRepository $userRepository,
         protected CompanyRepository $companyRepository,
@@ -248,7 +252,7 @@ class ProfileController extends BaseController
         // dd($data);
         $endpoints = $this->getUrls();
 
-        $pageTitle = __('Profile Settings') . ' - ' . \Unusualify\Modularity\Facades\Modularity::pageTitle();
+        $pageTitle = __('Profile Settings') . ' - ' . Modularity::pageTitle();
         $headerTitle = __('My Profile');
 
         if ($this->shouldUseInertia()) {
@@ -264,7 +268,7 @@ class ProfileController extends BaseController
     {
         $this->shareInertiaStoreVariables();
 
-        return \Inertia\Inertia::render('Profile', [
+        return Inertia::render('Profile', [
             'elements' => $data['elements'] ?? [],
             'endpoints' => $data['endpoints'] ?? new \StdClass,
             'mainConfiguration' => $this->getInertiaMainConfiguration($data),
@@ -275,7 +279,7 @@ class ProfileController extends BaseController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update($id = null, $submoduleId = null)
     {
@@ -321,7 +325,7 @@ class ProfileController extends BaseController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateCompany(CompanyRequest $request)
     {

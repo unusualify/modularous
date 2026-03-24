@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Logic;
 
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class SchemaTest extends RepositoryTestCase
@@ -14,7 +16,7 @@ class SchemaTest extends RepositoryTestCase
     public function test_schema_get_raw_inputs(): void
     {
         // getFormFieldsRelationships for morphMany relationships
-        $mock = \Mockery::mock(\Unusualify\Modularity\Tests\Repositories\TestRepository::class, [new \Unusualify\Modularity\Tests\Repositories\TestModel])
+        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -32,7 +34,7 @@ class SchemaTest extends RepositoryTestCase
 
     public function test_schema_get_schema(): void
     {
-        $mock = \Mockery::mock(\Unusualify\Modularity\Tests\Repositories\TestRepository::class, [new \Unusualify\Modularity\Tests\Repositories\TestModel])
+        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $mock->setSchema([
@@ -54,7 +56,7 @@ class SchemaTest extends RepositoryTestCase
 
     public function test_schema_get_chunked_inputs(): void
     {
-        $mock = \Mockery::mock(\Unusualify\Modularity\Tests\Repositories\TestRepository::class, [new \Unusualify\Modularity\Tests\Repositories\TestModel])
+        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -109,7 +111,7 @@ class SchemaTest extends RepositoryTestCase
 
     public function test_schema_get_raw_chunked_inputs(): void
     {
-        $mock = \Mockery::mock(\Unusualify\Modularity\Tests\Repositories\TestRepository::class, [new \Unusualify\Modularity\Tests\Repositories\TestModel])
+        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 

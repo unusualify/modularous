@@ -4,13 +4,13 @@ namespace Modules\SystemPayment\Entities;
 
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 
-class MyPayment extends \Modules\SystemPayment\Entities\Payment
+class MyPayment extends Payment
 {
     use ModelHelpers;
 
-    public static $creatableClass = \Modules\SystemPayment\Entities\Payment::class;
+    public static $creatableClass = Payment::class;
 
-    protected $filepondableClass = \Modules\SystemPayment\Entities\Payment::class;
+    protected $filepondableClass = Payment::class;
 
     /**
      * The attributes that are mass assignable.

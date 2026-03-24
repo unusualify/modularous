@@ -2,12 +2,15 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Auth;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Socialite\Contracts\User;
 use Unusualify\Modularity\Entities\UserOauth;
 
 trait HasOauth
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function providers()
     {
@@ -18,9 +21,9 @@ trait HasOauth
 
     /**
      * @param string $provider Socialite provider
-     * @return \Illuminate\Database\Eloquent\Model|false
+     * @return Model|false
      */
-    public function linkProvider(\Laravel\Socialite\Contracts\User $oauthUser, $provider)
+    public function linkProvider(User $oauthUser, $provider)
     {
 
         $provider = new UserOauth([

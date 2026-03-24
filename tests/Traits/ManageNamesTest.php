@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
-use Unusualify\Modularity\Traits\ManageNames;
 use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\Traits\ManageNames;
 
 class ManageNamesTest extends TestCase
 {
@@ -12,11 +12,13 @@ class ManageNamesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->target = new class {
+        $this->target = new class
+        {
             use ManageNames;
-            
+
             // Expose protected methods for testing
-            public function callProtected($method, ...$args) {
+            public function callProtected($method, ...$args)
+            {
                 return $this->{$method}(...$args);
             }
         };
@@ -50,9 +52,9 @@ class ManageNamesTest extends TestCase
         $this->assertEquals('User', $this->target->callProtected('getStudlyNameFromForeignKey', 'user_id'));
         $this->assertEquals('user', $this->target->callProtected('getCamelNameFromForeignKey', 'user_id'));
         $this->assertEquals('user', $this->target->callProtected('getSnakeNameFromForeignKey', 'user_id'));
-        
+
         $this->assertNull($this->target->callProtected('getStudlyNameFromForeignKey', 'invalid_key'));
-        
+
         $this->assertEquals('user_id', $this->target->callProtected('getForeignKeyFromName', 'User'));
         $this->assertEquals('users', $this->target->callProtected('getTableNameFromName', 'User'));
     }

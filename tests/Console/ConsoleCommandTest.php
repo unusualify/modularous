@@ -2,7 +2,10 @@
 
 namespace Unusualify\Modularity\Tests\Console;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use JoeDixon\Translation\Drivers\Translation;
+use Laravel\Prompts\ConfirmPrompt;
 use Unusualify\Modularity\Tests\TestCase;
 
 class ConsoleCommandTest extends TestCase
@@ -13,20 +16,20 @@ class ConsoleCommandTest extends TestCase
 
         // Ensure modules directory exists
         $this->modulesPath = sys_get_temp_dir() . '/modules';
-        if (!File::isDirectory($this->modulesPath)) {
+        if (! File::isDirectory($this->modulesPath)) {
             File::makeDirectory($this->modulesPath, 0775, true);
         }
 
-        \Laravel\Prompts\ConfirmPrompt::fallbackUsing(fn () => false);
+        ConfirmPrompt::fallbackUsing(fn () => false);
 
         // Mock Translation service
-        $translation = \Mockery::mock(\JoeDixon\Translation\Drivers\Translation::class);
+        $translation = \Mockery::mock(Translation::class);
         $translation->shouldReceive('addGroupTranslation')->andReturn(null);
-        $translation->shouldReceive('allLanguages')->andReturn(new \Illuminate\Support\Collection(['en' => 'English']));
-        $this->app->instance(\JoeDixon\Translation\Drivers\Translation::class, $translation);
+        $translation->shouldReceive('allLanguages')->andReturn(new Collection(['en' => 'English']));
+        $this->app->instance(Translation::class, $translation);
 
         // Mock FileTranslation
-        $this->app->bind('JoeDixon\Translation\Drivers\Translation', function() use ($translation) {
+        $this->app->bind('JoeDixon\Translation\Drivers\Translation', function () use ($translation) {
             return $translation;
         });
     }
@@ -58,7 +61,7 @@ class ConsoleCommandTest extends TestCase
 
         // $modulePath = $this->modulesPath . '/' . $moduleName;
         // $this->assertTrue(File::isDirectory($modulePath), "Module directory {$modulePath} was not created.");
-        
+
         // // Modularity usually creates Config/config.php (Uppercase)
         // // But nwidart might create config/ (lowercase) initially
         // $configPath = $modulePath . '/Config/config.php';

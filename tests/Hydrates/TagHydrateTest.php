@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
+use Illuminate\Support\Facades\App;
+use Mockery as m;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Hydrates\Inputs\TagHydrate;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery as m;
 
 class TagHydrateTest extends TestCase
 {
@@ -14,24 +16,30 @@ class TagHydrateTest extends TestCase
             'type' => 'tag',
             'name' => 'tags',
             '_moduleName' => 'TestModule',
-            '_routeName' => 'testRoute'
+            '_routeName' => 'testRoute',
         ];
 
         $repositoryMock = m::mock();
         $repositoryMock->shouldReceive('getTags')->andReturn(
             collect([['id' => 1, 'name' => 'tag1']])
         );
-        $repositoryMock->shouldReceive('getModel')->andReturn(new class { public function __toString() { return 'TagModel'; }});
+        $repositoryMock->shouldReceive('getModel')->andReturn(new class
+        {
+            public function __toString()
+            {
+                return 'TagModel';
+            }
+        });
 
         $moduleMock = m::mock();
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'repository')->andReturn(get_class($repositoryMock));
         $moduleMock->shouldReceive('getRouteActionUrl')->andReturn('/tags');
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 
-        \Illuminate\Support\Facades\App::shouldReceive('make')
+        App::shouldReceive('make')
             ->andReturn($repositoryMock);
 
         $h = new TagHydrate($input, null, null, false);

@@ -44,7 +44,8 @@ class LocaleTagsCastTest extends TestCase
         $tag2 = (object) ['name' => 'tag2'];
         $tag3 = (object) ['name' => 'tag3'];
 
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             public $singularLocaleTags = false;
 
             public $localeTagsMap = [];
@@ -72,7 +73,8 @@ class LocaleTagsCastTest extends TestCase
     {
         $tag1 = (object) ['name' => 'single-tag'];
 
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             public $singularLocaleTags = true;
 
             public $localeTagsMap = [];
@@ -95,7 +97,8 @@ class LocaleTagsCastTest extends TestCase
 
     public function test_get_with_empty_tags_returns_empty_array_per_locale()
     {
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             public $singularLocaleTags = false;
 
             public $localeTagsMap = [];
@@ -118,7 +121,8 @@ class LocaleTagsCastTest extends TestCase
 
     private function createRelationMock(Collection $tags): object
     {
-        $relation = new class {
+        $relation = new class
+        {
             public $collection;
 
             public function get()

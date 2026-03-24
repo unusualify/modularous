@@ -5,8 +5,9 @@ namespace Unusualify\Modularity\Tests\Support;
 use InvalidArgumentException;
 use RuntimeException;
 use Unusualify\Modularity\Support\CoverageAnalyzer;
+use Unusualify\Modularity\Tests\TestCase;
 
-class CoverageAnalyzerTest extends \Unusualify\Modularity\Tests\TestCase
+class CoverageAnalyzerTest extends TestCase
 {
     private string $testCloverPath;
 

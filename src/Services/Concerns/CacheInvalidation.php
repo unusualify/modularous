@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Services\Concerns;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ trait CacheInvalidation
     /**
      * Get the cache store instance.
      */
-    abstract protected function getStore(): \Illuminate\Cache\Repository;
+    abstract protected function getStore(): Repository;
 
     /**
      * Get the cache prefix.

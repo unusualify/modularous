@@ -347,7 +347,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function bulkDelete()
     {

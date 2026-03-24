@@ -2,8 +2,8 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Console\BaseCommand;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;

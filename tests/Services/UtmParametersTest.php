@@ -11,7 +11,7 @@ class UtmParametersTest extends TestCase
     protected function createService($requestData = [])
     {
         $request = Request::create('/', 'GET', $requestData);
-        
+
         // Set env variables for testing
         putenv('MODULARITY_UTM_DISABLED=false');
         putenv('MODULARITY_UTM_TEMPORARY=true'); // Don't persist
@@ -121,7 +121,6 @@ class UtmParametersTest extends TestCase
         $this->assertEquals('linkedin', $serialized['utm_source']);
     }
 
-
     /** @test */
     public function test_handle_request_processes_utm_query_parameters()
     {
@@ -132,7 +131,7 @@ class UtmParametersTest extends TestCase
             'utm_campaign' => 'test_campaign',
             'other_param' => 'ignored', // This should be filtered out
         ]);
-        
+
         putenv('MODULARITY_UTM_DISABLED=false');
         putenv('MODULARITY_UTM_TEMPORARY=true'); // Don't persist
         putenv('MODULARITY_UTM_HANDLE_REQUEST=true'); // Enable auto-handle
@@ -140,7 +139,7 @@ class UtmParametersTest extends TestCase
         $service = new UtmParameters($request);
 
         $result = $service->getParameters();
-        
+
         $this->assertEquals('google', $result['utm_source']);
         $this->assertEquals('cpc', $result['utm_medium']);
         $this->assertEquals('test_campaign', $result['utm_campaign']);
@@ -151,7 +150,7 @@ class UtmParametersTest extends TestCase
     public function test_handle_request_does_nothing_when_no_utm_params()
     {
         $request = Request::create('/', 'GET', ['other_param' => 'value']);
-        
+
         putenv('MODULARITY_UTM_DISABLED=false');
         putenv('MODULARITY_UTM_TEMPORARY=true');
         putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
@@ -167,7 +166,7 @@ class UtmParametersTest extends TestCase
         $request = Request::create('/', 'GET', [
             'utm_source' => 'facebook',
         ]);
-        
+
         putenv('MODULARITY_UTM_DISABLED=false');
         putenv('MODULARITY_UTM_TEMPORARY=false'); // Enable persistence
         putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
@@ -178,7 +177,7 @@ class UtmParametersTest extends TestCase
         $service = new UtmParameters($request);
 
         $result = $service->getParameters();
-        
+
         $this->assertEquals('facebook', $result['utm_source']);
         $this->assertEquals('email', $result['utm_medium']); // Should remain from session
     }
@@ -189,7 +188,7 @@ class UtmParametersTest extends TestCase
         $request = Request::create('/', 'GET', [
             'utm_source' => 'twitter',
         ]);
-        
+
         putenv('MODULARITY_UTM_DISABLED=false');
         putenv('MODULARITY_UTM_TEMPORARY=true'); // Disable persistence
         putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
@@ -200,7 +199,7 @@ class UtmParametersTest extends TestCase
         $service = new UtmParameters($request);
 
         $result = $service->getParameters();
-        
+
         $this->assertEquals('twitter', $result['utm_source']);
         $this->assertNull($result['utm_medium']); // Should be null because setParameters was called
     }
@@ -278,15 +277,13 @@ class UtmParametersTest extends TestCase
     }
 
     protected function tearDown(): void
-
     {
         // Clean up env vars
         putenv('MODULARITY_UTM_DISABLED');
         putenv('MODULARITY_UTM_TEMPORARY');
         putenv('MODULARITY_UTM_HANDLE_REQUEST');
-        
+
         \Mockery::close();
         parent::tearDown();
     }
 }
-

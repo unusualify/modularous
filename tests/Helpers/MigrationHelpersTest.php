@@ -451,7 +451,7 @@ class MigrationHelpersTest extends TestCase
         });
 
         // Create users table (required for foreign key)
-        if (!Schema::hasTable('um_users')) {
+        if (! Schema::hasTable('um_users')) {
             Schema::create('um_users', function (Blueprint $table) {
                 $table->id();
             });
@@ -480,7 +480,7 @@ class MigrationHelpersTest extends TestCase
             $table->id();
         });
 
-        if (!Schema::hasTable('um_users')) {
+        if (! Schema::hasTable('um_users')) {
             Schema::create('um_users', function (Blueprint $table) {
                 $table->id();
             });
@@ -502,7 +502,7 @@ class MigrationHelpersTest extends TestCase
             $table->id();
         });
 
-        if (!Schema::hasTable('um_users')) {
+        if (! Schema::hasTable('um_users')) {
             Schema::create('um_users', function (Blueprint $table) {
                 $table->id();
             });
@@ -541,7 +541,7 @@ class MigrationHelpersTest extends TestCase
             $table->id();
         });
 
-        if (!Schema::hasTable('um_users')) {
+        if (! Schema::hasTable('um_users')) {
             Schema::create('um_users', function (Blueprint $table) {
                 $table->id();
             });

@@ -1,5 +1,7 @@
 <?php
 
+use Unusualify\Modularity\Entities\Observers\PriceableObserver;
+
 return [
     'prices_are_including_vat' => false,
     'currency' => env('CURRENCY', env('CASHIER_CURRENCY', 'eur')),
@@ -15,6 +17,6 @@ return [
         'price_type' => 1,
     ],
     'observers' => [
-        'price' => \Unusualify\Modularity\Entities\Observers\PriceableObserver::class,
+        'price' => PriceableObserver::class,
     ],
 ];

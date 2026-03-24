@@ -22,9 +22,9 @@ class CommandDiscovery
      * - Traits
      * - Classes that do not extend Illuminate\Console\Command
      *
-     * @param  array<string>  $paths  Glob patterns (e.g. __DIR__ . '/../Console/*.php')
-     * @param  array<string>  $exclude  Optional class names to exclude (e.g. for legacy compatibility)
-     * @return array<string>  Fully qualified class names
+     * @param array<string> $paths Glob patterns (e.g. __DIR__ . '/../Console/*.php')
+     * @param array<string> $exclude Optional class names to exclude (e.g. for legacy compatibility)
+     * @return array<string> Fully qualified class names
      */
     public static function discover(array $paths, array $exclude = []): array
     {

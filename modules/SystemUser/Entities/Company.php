@@ -11,5 +11,5 @@ class Company extends ModularityCompany
      *
      * @var string
      */
-    public static $spreadableClass = \Unusualify\Modularity\Entities\Company::class;
+    public static $spreadableClass = ModularityCompany::class;
 }

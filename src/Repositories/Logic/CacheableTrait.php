@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Repositories\Logic;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -150,7 +151,7 @@ trait CacheableTrait
         $result = $this->get($with, $scopes, $orders, $perPage, $appends, $forcePagination, $id, $exceptIds);
 
         // Extract relationship IDs from the result
-        $collection = $result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+        $collection = $result instanceof LengthAwarePaginator
             ? collect($result->items())
             : $result;
 

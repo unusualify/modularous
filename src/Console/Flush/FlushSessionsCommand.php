@@ -19,6 +19,7 @@ class FlushSessionsCommand extends Command
     protected $aliases = [
         'modularity:session:flush',
     ];
+
     /**
      * The console command description.
      *

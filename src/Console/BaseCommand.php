@@ -5,8 +5,10 @@ namespace Unusualify\Modularity\Console;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Nwidart\Modules\Exceptions\FileAlreadyExistException;
 use Nwidart\Modules\Generators\FileGenerator;
+use Nwidart\Modules\Module;
 use Nwidart\Modules\Support\Stub;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Support\Decomposers\SchemaParser;
@@ -57,7 +59,7 @@ abstract class BaseCommand extends Command implements PromptsForMissingInput
 
         parent::__construct();
 
-        $this->configBaseKey = \Illuminate\Support\Str::snake(env('MODULARITY_BASE_NAME', 'Modularity'));
+        $this->configBaseKey = Str::snake(env('MODULARITY_BASE_NAME', 'Modularity'));
         Stub::setBasePath(rtrim($this->baseConfig('stubs.path', dirname(__FILE__) . '/stubs'), '/'));
     }
 
@@ -148,7 +150,7 @@ abstract class BaseCommand extends Command implements PromptsForMissingInput
     /**
      * Get class namespace.
      *
-     * @param \Nwidart\Modules\Module $module
+     * @param Module $module
      * @return string
      */
     public function getClassNamespace($module)

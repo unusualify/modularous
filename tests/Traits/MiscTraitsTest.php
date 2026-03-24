@@ -2,26 +2,28 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\Pretending;
-use Unusualify\Modularity\Traits\Verbosity;
-use Unusualify\Modularity\Traits\Traitify;
-use Unusualify\Modularity\Traits\ReplacementTrait;
-use Unusualify\Modularity\Traits\ResolveConnector;
-use Unusualify\Modularity\Traits\SerializeModel;
-use Unusualify\Modularity\Traits\CheckSnapshot;
-use Symfony\Component\Console\Output\OutputInterface;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Symfony\Component\Console\Output\OutputInterface;
+use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\Traits\CheckSnapshot;
+use Unusualify\Modularity\Traits\Pretending;
+use Unusualify\Modularity\Traits\ReplacementTrait;
+use Unusualify\Modularity\Traits\SerializeModel;
+use Unusualify\Modularity\Traits\Traitify;
+use Unusualify\Modularity\Traits\Verbosity;
 
 class MiscTraitsTest extends TestCase
 {
     /** @test */
     public function it_can_use_pretending_trait()
     {
-        $tester = new class { use Pretending; };
-        
+        $tester = new class
+        {
+            use Pretending;
+        };
+
         $this->assertFalse($tester->pretending());
         $tester->setPretending(true);
         $this->assertTrue($tester->pretending());
@@ -30,7 +32,10 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_use_verbosity_trait()
     {
-        $tester = new class { use Verbosity; };
+        $tester = new class
+        {
+            use Verbosity;
+        };
 
         $this->assertEquals(OutputInterface::VERBOSITY_NORMAL, $tester->getVerbosity());
 
@@ -46,7 +51,10 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_set_verbosity_via_string_map()
     {
-        $tester = new class { use Verbosity; };
+        $tester = new class
+        {
+            use Verbosity;
+        };
 
         $tester->setVerbosity('v');
         $this->assertEquals(OutputInterface::VERBOSITY_VERBOSE, $tester->getVerbosity());
@@ -63,7 +71,10 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_set_verbosity_via_integer()
     {
-        $tester = new class { use Verbosity; };
+        $tester = new class
+        {
+            use Verbosity;
+        };
 
         $tester->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
         $this->assertEquals(OutputInterface::VERBOSITY_DEBUG, $tester->getVerbosity());
@@ -72,7 +83,10 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_keeps_current_verbosity_when_set_with_invalid_string()
     {
-        $tester = new class { use Verbosity; };
+        $tester = new class
+        {
+            use Verbosity;
+        };
         $tester->setVerbosity('vv');
 
         $tester->setVerbosity('invalid');
@@ -82,7 +96,10 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_returns_fluent_from_set_verbosity()
     {
-        $tester = new class { use Verbosity; };
+        $tester = new class
+        {
+            use Verbosity;
+        };
         $result = $tester->setVerbosity('quiet');
         $this->assertSame($tester, $result);
     }
@@ -91,10 +108,19 @@ class MiscTraitsTest extends TestCase
     public function it_can_use_traitify_trait()
     {
         // Using a named class to have a predictable class_basename
-        $tester = new class extends \stdClass {
+        $tester = new class extends \stdClass
+        {
             use Traitify;
-            public function testMethodTraitify() { return 'success'; }
-            public function run() { return $this->traitsMethods('testMethod'); }
+
+            public function test_method_traitify()
+            {
+                return 'success';
+            }
+
+            public function run()
+            {
+                return $this->traitsMethods('testMethod');
+            }
         };
 
         $methods = $tester->run();
@@ -104,10 +130,16 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_use_traitify_trait_properties()
     {
-        $tester = new class extends \stdClass {
+        $tester = new class extends \stdClass
+        {
             use Traitify;
+
             public $testPropTraitify = 'value';
-            public function run() { return $this->traitProperties('testProp'); }
+
+            public function run()
+            {
+                return $this->traitProperties('testProp');
+            }
         };
 
         $properties = $tester->run();
@@ -119,19 +151,36 @@ class MiscTraitsTest extends TestCase
     {
         Config::set('modularity.stubs.files', ['file1', 'file2']);
         Config::set('modularity.stubs.replacements', ['json' => ['NAME', 'LOWER_NAME']]);
-        
-        $tester = new class { 
-            use ReplacementTrait; 
-            public function setName($name) { $this->name = $name; }
-            public function getName() { return $this->name; }
-            protected function getNameReplacement() { return 'TestModule'; }
-            protected function getLowerNameReplacement() { return 'testmodule'; }
+
+        $tester = new class
+        {
+            use ReplacementTrait;
+
+            public function setName($name)
+            {
+                $this->name = $name;
+            }
+
+            public function getName()
+            {
+                return $this->name;
+            }
+
+            protected function getNameReplacement()
+            {
+                return 'TestModule';
+            }
+
+            protected function getLowerNameReplacement()
+            {
+                return 'testmodule';
+            }
         };
         $tester->setName('TestModule');
 
         $this->assertEquals(['file1', 'file2'], $tester->getFiles());
         $this->assertEquals(['json' => ['NAME', 'LOWER_NAME']], $tester->getReplacements());
-        
+
         $replaces = $tester->makeReplaces(['LOWER_NAME', 'STUDLY_NAME']);
         $this->assertEquals('testmodule', $replaces['LOWER_NAME']);
         $this->assertEquals('TestModule', $replaces['STUDLY_NAME']);
@@ -143,15 +192,20 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_serialize_and_unserialize_models()
     {
-        $tester = new class { use SerializeModel; };
-        
-        $model = new class extends Model {
+        $tester = new class
+        {
+            use SerializeModel;
+        };
+
+        $model = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['name' => 'Original'];
         };
 
         $serialized = $tester->serializeModel($model);
-        
+
         $this->assertEquals('Original', $serialized['attributes']['name']);
         $this->assertEquals(get_class($model), $serialized['class']);
 
@@ -164,15 +218,22 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_serialize_model_with_single_relation()
     {
-        $tester = new class { use SerializeModel; };
+        $tester = new class
+        {
+            use SerializeModel;
+        };
 
-        $related = new class extends Model {
+        $related = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 1, 'title' => 'Related'];
         };
 
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 1, 'name' => 'Parent'];
         };
         $model->setRelation('related', $related);
@@ -191,19 +252,28 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_serialize_model_with_collection_relation()
     {
-        $tester = new class { use SerializeModel; };
+        $tester = new class
+        {
+            use SerializeModel;
+        };
 
-        $item1 = new class extends Model {
+        $item1 = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 1, 'name' => 'Item1'];
         };
-        $item2 = new class extends Model {
+        $item2 = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 2, 'name' => 'Item2'];
         };
 
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 1];
         };
         $model->setRelation('items', collect([$item1, $item2]));
@@ -223,10 +293,15 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_serialize_model_with_other_type_relation()
     {
-        $tester = new class { use SerializeModel; };
+        $tester = new class
+        {
+            use SerializeModel;
+        };
 
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             protected $guarded = [];
+
             protected $attributes = ['id' => 1];
         };
         $model->setRelation('count', 42);
@@ -246,18 +321,35 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_use_check_snapshot_trait()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use CheckSnapshot;
-            public function runIsSnapshot($m) { return $this->isSnapshotRelation($m); }
-            public function runGetFk($m) { return $this->getSnapshotSourceForeignKey($m); }
+
+            public function runIsSnapshot($m)
+            {
+                return $this->isSnapshotRelation($m);
+            }
+
+            public function runGetFk($m)
+            {
+                return $this->getSnapshotSourceForeignKey($m);
+            }
         };
 
-        $modelWithoutSnapshot = new class extends Model { protected $guarded = []; };
+        $modelWithoutSnapshot = new class extends Model
+        {
+            protected $guarded = [];
+        };
         $this->assertFalse($tester->runIsSnapshot($modelWithoutSnapshot));
 
-        $modelWithSnapshotFk = new class extends Model {
+        $modelWithSnapshotFk = new class extends Model
+        {
             protected $guarded = [];
-            public function getSnapshotSourceForeignKey() { return 'source_id'; }
+
+            public function getSnapshotSourceForeignKey()
+            {
+                return 'source_id';
+            }
         };
         $this->assertEquals('source_id', $tester->runGetFk($modelWithSnapshotFk));
     }

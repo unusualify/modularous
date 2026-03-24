@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -88,7 +90,7 @@ class ChatableTest extends ModelTestCase
     {
         $relation = $this->testModel->chat();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $relation);
+        $this->assertInstanceOf(MorphOne::class, $relation);
         $this->assertEquals(Chat::class, $relation->getRelated()::class);
         $this->assertEquals('chatable_type', $relation->getMorphType());
         $this->assertEquals('chatable_id', $relation->getForeignKeyName());
@@ -98,7 +100,7 @@ class ChatableTest extends ModelTestCase
     {
         $relation = $this->testModel->chatMessages();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
+        $this->assertInstanceOf(HasManyThrough::class, $relation);
         $this->assertEquals(ChatMessage::class, $relation->getRelated()::class);
     }
 
@@ -597,7 +599,7 @@ class ChatableTest extends ModelTestCase
 
         // Test the relationship exists and is correctly typed
         $relation = $modelWithCreator->creatorChatMessages();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
+        $this->assertInstanceOf(HasManyThrough::class, $relation);
 
         // Test that we can get messages from the relationship
         $creatorMessages = $modelWithCreator->creatorChatMessages()->get();
@@ -653,7 +655,7 @@ class ChatableTest extends ModelTestCase
 
         // Test the relationship exists
         $relation = $model->unreadChatMessagesForYou();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
+        $this->assertInstanceOf(HasManyThrough::class, $relation);
 
         // Get the messages
         $unreadForYou = $model->unreadChatMessagesForYou()->get();
@@ -675,7 +677,7 @@ class ChatableTest extends ModelTestCase
 
         // Test the relationship exists
         $relation = $this->testModel->unreadChatMessagesFromClient();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
+        $this->assertInstanceOf(HasManyThrough::class, $relation);
     }
 
     public function test_unread_chat_messages_from_creator_relationship()
@@ -700,7 +702,7 @@ class ChatableTest extends ModelTestCase
 
         // Test the relationship exists and is correctly typed
         $relation = $modelWithCreator->unreadChatMessagesFromCreator();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $relation);
+        $this->assertInstanceOf(HasManyThrough::class, $relation);
     }
 
     public function test_handle_chatable_notification_from_chatable_model_with_creator()

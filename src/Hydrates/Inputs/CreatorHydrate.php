@@ -44,8 +44,8 @@ class CreatorHydrate extends InputHydrate
             'eager' => $input['with'],
             'appends' => $input['appends'],
         ]);
-        unset($input['appends']);
-        unset($input['with']);
+        unset($input['appends'], $input['with']);
+
         // add your logic
 
         return $input;

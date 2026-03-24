@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Request;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Traits\HasPriceable as TraitsHasPriceable;
@@ -14,19 +17,19 @@ trait HasPriceable
     use TraitsHasPriceable,
         HasPriceableMutators;
 
-    public function prices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function prices(): MorphMany
     {
         return $this->morphMany(Price::class, 'priceable');
     }
 
-    public function originalBasePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function originalBasePrice(): MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
             ->with('currency')
             ->where('currency_id', Request::getCachedUserCurrency()?->id);
     }
 
-    public function basePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function basePrice(): MorphOne
     {
         $query = $this->morphOne(Price::class, 'priceable')
             ->with('currency')
@@ -102,9 +105,9 @@ trait HasPriceable
     /**
      * Scope a query to order by the base price's raw_amount.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $direction
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeOrderByBasePrice($query, $direction = 'asc', $role = null)
     {

@@ -2,6 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Support;
 
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Foundation\Vite;
+use Illuminate\Foundation\ViteManifestNotFoundException;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\HtmlString;
 use Unusualify\Modularity\Support\ModularityVite;
@@ -60,7 +63,7 @@ class ModularityViteTest extends TestCase
     protected function tearDown(): void
     {
         // Clear cached manifests between tests
-        $reflection = new \ReflectionClass(\Illuminate\Foundation\Vite::class);
+        $reflection = new \ReflectionClass(Vite::class);
         $prop = $reflection->getProperty('manifests');
         $prop->setAccessible(true);
         $prop->setValue(null, []);
@@ -95,7 +98,7 @@ class ModularityViteTest extends TestCase
 
     public function test_extends_laravel_vite(): void
     {
-        $this->assertInstanceOf(\Illuminate\Foundation\Vite::class, $this->vite);
+        $this->assertInstanceOf(Vite::class, $this->vite);
     }
 
     public function test_invoke_returns_html_string_in_production(): void
@@ -153,7 +156,7 @@ class ModularityViteTest extends TestCase
 
     public function test_invoke_throws_when_manifest_not_found(): void
     {
-        $this->expectException(\Illuminate\Foundation\ViteManifestNotFoundException::class);
+        $this->expectException(ViteManifestNotFoundException::class);
         $this->expectExceptionMessageMatches('/Vite manifest not found at:/');
 
         ($this->vite)('nonexistent-entry', 'vendor/nonexistent-build');
@@ -202,7 +205,7 @@ class ModularityViteTest extends TestCase
         $hash = $this->vite->manifestHash();
 
         $this->assertIsString($hash);
-        $this->assertEquals(32, strlen($hash));
+        $this->assertEquals(32, mb_strlen($hash));
     }
 
     public function test_manifest_hash_returns_null_for_nonexistent_manifest(): void
@@ -236,7 +239,7 @@ class ModularityViteTest extends TestCase
 
     public function test_implements_htmlable(): void
     {
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Htmlable::class, $this->vite);
+        $this->assertInstanceOf(Htmlable::class, $this->vite);
     }
 
     public function test_invoke_in_hot_mode_prepends_svg_spritemap_client(): void

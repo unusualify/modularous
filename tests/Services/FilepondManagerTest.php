@@ -2,13 +2,12 @@
 
 namespace Unusualify\Modularity\Tests\Services;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Unusualify\Modularity\Entities\TemporaryFilepond;
 use Unusualify\Modularity\Services\FilepondManager;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\UploadedFile;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
 
 class FilepondManagerTest extends TestCase
 {
@@ -17,11 +16,11 @@ class FilepondManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Manual migration for testing fileponds since TestCase doesn't run all migrations
         $schema = $this->app['db']->connection()->getSchemaBuilder();
         $temporariesTable = modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries');
-        
+
         if (! $schema->hasTable($temporariesTable)) {
             $schema->create($temporariesTable, function ($table) {
                 $table->increments('id');
@@ -33,7 +32,7 @@ class FilepondManagerTest extends TestCase
         }
 
         Storage::fake('local');
-        $this->manager = new FilepondManager();
+        $this->manager = new FilepondManager;
     }
 
     /** @test */
@@ -44,15 +43,15 @@ class FilepondManagerTest extends TestCase
         $request->setLaravelSession(app('session')->driver('array'));
 
         $response = $this->manager->createTemporaryFilepond($request);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $folderName = $response->getContent();
-        
+
         $this->assertDatabaseHas(modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries'), [
             'folder_name' => $folderName,
-            'file_name' => 'avatar.jpg'
+            'file_name' => 'avatar.jpg',
         ]);
-        
+
         $this->assertTrue(Storage::disk('local')->exists('public/fileponds/tmp/' . $folderName . '/avatar.jpg'));
     }
 
@@ -63,19 +62,19 @@ class FilepondManagerTest extends TestCase
         $tmp = TemporaryFilepond::create([
             'folder_name' => $folderName,
             'file_name' => 'test.jpg',
-            'input_role' => 'avatar'
+            'input_role' => 'avatar',
         ]);
         Storage::disk('local')->makeDirectory('public/fileponds/tmp/' . $folderName);
         Storage::disk('local')->put('public/fileponds/tmp/' . $folderName . '/test.jpg', 'content');
 
         // request()->getContent() reads from php://input, we can simulate this by passing the content in the Request::create
         $request = Request::create('/delete', 'POST', [], [], [], [], $folderName);
-        
+
         // We need to bind this request to the container for request()->getContent() to work if it uses the facade/app
         $this->app->instance('request', $request);
 
         $this->manager->deleteTemporaryFilepond($request);
-        
+
         $this->assertDatabaseMissing(modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries'), ['folder_name' => $folderName]);
         $this->assertFalse(Storage::disk('local')->exists('public/fileponds/tmp/' . $folderName));
     }

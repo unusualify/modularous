@@ -27,7 +27,6 @@ class ConnectorHelpersTest extends TestCase
     // {
     //     $connector = 'test:index@create';
 
-
     //     $result = get_connector_event($connector);
 
     //     $this->assertEquals('create', $result);

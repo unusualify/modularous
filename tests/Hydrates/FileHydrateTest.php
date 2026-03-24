@@ -11,7 +11,7 @@ class FileHydrateTest extends TestCase
     {
         $input = [
             'type' => 'file',
-            'name' => 'documents'
+            'name' => 'documents',
         ];
 
         $h = new FileHydrate($input, null, null, true);

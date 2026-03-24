@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Repositories;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Unusualify\Modularity\Entities\File;
@@ -18,8 +19,8 @@ class FileRepository extends Repository
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function filter($query, array $scopes = [])
     {

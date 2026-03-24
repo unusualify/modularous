@@ -2,14 +2,13 @@
 
 namespace Unusualify\Modularity\Traits;
 
-use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Services\Connector;
 
 trait ResolveConnector
 {
     /**
      * @param string $connector
-     * @return \Unusualify\Modularity\Services\Connector
+     * @return Connector
      */
     protected function findConnectorRepository($connector)
     {
@@ -20,7 +19,7 @@ trait ResolveConnector
 
     /**
      * @param string $connector
-     * @return \Unusualify\Modularity\Services\Connector
+     * @return Connector
      */
     protected function findNewConnectorRepository($connector)
     {

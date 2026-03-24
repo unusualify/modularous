@@ -9,6 +9,7 @@ use Modules\SystemNotification\Events\FilepondCreated;
 use Modules\SystemNotification\Events\FilepondDeleted;
 use Modules\SystemNotification\Events\FilepondUpdated;
 use Unusualify\Modularity\Entities\Filepond;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -237,6 +238,6 @@ class FilepondTest extends ModelTestCase
     public function test_extends_model()
     {
         $filepond = new Filepond;
-        $this->assertInstanceOf(\Unusualify\Modularity\Entities\Model::class, $filepond);
+        $this->assertInstanceOf(Model::class, $filepond);
     }
 }

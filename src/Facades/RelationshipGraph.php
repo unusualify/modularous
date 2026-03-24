@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Services\CacheRelationshipGraph;
 
 /**
  * @method static bool isEnabled()
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isCached()
  * @method static array analyzeImpact(string $modelOrTable)
  *
- * @see \Unusualify\Modularity\Services\CacheRelationshipGraph
+ * @see CacheRelationshipGraph
  */
 class RelationshipGraph extends Facade
 {

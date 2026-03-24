@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Support\Finder;
 
 /**
  * @method static string|false getModel(string $table)
@@ -14,12 +15,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Support\Collection getAllModels()
  *
  * @deprecated Use \Unusualify\Modularity\Facades\ModularityFinder instead
- * @see \Unusualify\Modularity\Support\Finder
+ * @see Finder
  */
 class UFinder extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Unusualify\Modularity\Support\Finder::class;
+        return Finder::class;
     }
 }

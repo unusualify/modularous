@@ -246,7 +246,7 @@ abstract class InputHydrate
                 }
 
                 $this->afterHydrateRecords($input);
-            } else if (isset($input['newConnector'])) {
+            } elseif (isset($input['newConnector'])) {
                 $connector = new Connector($input['newConnector']);
 
                 $connector->run($input, 'items');

@@ -2,7 +2,9 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Illuminate\Database\Query\Builder;
 use Unusualify\Modularity\Entities\Assignment;
+use Unusualify\Modularity\Models\Model;
 use Unusualify\Modularity\Traits\Allowable;
 
 trait AssignmentTrait
@@ -34,7 +36,7 @@ trait AssignmentTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param Model $object
      * @param array $fields
      * @param array $schema
      * @return array
@@ -53,7 +55,7 @@ trait AssignmentTrait
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param array $scopes
      * @return void
      */

@@ -6,6 +6,7 @@ namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
 use Illuminate\Database\Schema\Blueprint;
 use Spatie\Activitylog\Models\Activity;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Tests\TestCase;
 
 /**
@@ -24,7 +25,7 @@ abstract class AuthTestCase extends TestCase
         ]);
         $app['config']->set('auth.providers.modularity_users', [
             'driver' => 'eloquent',
-            'model' => \Unusualify\Modularity\Entities\User::class,
+            'model' => User::class,
         ]);
         $app['config']->set('auth.passwords.modularity_users', [
             'provider' => 'modularity_users',

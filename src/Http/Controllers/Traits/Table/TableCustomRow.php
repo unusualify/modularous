@@ -2,12 +2,14 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
 
+use Unusualify\Modularity\Models\Model;
+
 trait TableCustomRow
 {
     /**
      * Get the custom row data
      *
-     * @param \Unusualify\Modularity\Models\Model $item
+     * @param Model $item
      * @return array
      */
     protected function getCustomRowData($item)
@@ -27,18 +29,18 @@ trait TableCustomRow
             $itemTitle = $key;
             $itemValue = $key;
             preg_match('/(.*) as (.*)/', $key, $matches);
-            if($matches) {
+            if ($matches) {
                 $itemTitle = $matches[2];
                 $itemValue = $matches[1];
             }
 
-            if(!isset($customRowData[$itemTitle])) {
+            if (! isset($customRowData[$itemTitle])) {
                 $customRowData[$itemTitle] = $item->{$itemValue};
             }
         }
 
         foreach ($customRowFillable as $fillable) {
-            if(!isset($customRowData[$fillable])) {
+            if (! isset($customRowData[$fillable])) {
                 $customRowData[$fillable] = $item->{$fillable};
             }
         }

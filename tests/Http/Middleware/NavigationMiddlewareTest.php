@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Tests\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Mockery;
@@ -16,7 +15,7 @@ class NavigationMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->middleware = new NavigationMiddleware();
+        $this->middleware = new NavigationMiddleware;
     }
 
     protected function tearDown(): void
@@ -35,7 +34,7 @@ class NavigationMiddlewareTest extends TestCase
     public function it_passes_request_to_next_middleware()
     {
         $request = Mockery::mock(Request::class);
-        
+
         $next = function ($req) {
             return 'response';
         };
@@ -49,8 +48,8 @@ class NavigationMiddlewareTest extends TestCase
     public function it_shares_navigation_config_with_modularity_layouts()
     {
         $request = Mockery::mock(Request::class);
-        
-        $next = function ($req) use ($request) {
+
+        $next = function ($req) {
             return 'passed';
         };
 
@@ -64,7 +63,7 @@ class NavigationMiddlewareTest extends TestCase
     public function it_shares_navigation_config_with_translation_layout()
     {
         $request = Mockery::mock(Request::class);
-        
+
         $next = function ($req) {
             return response('OK');
         };

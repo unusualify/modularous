@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Unusualify\Modularity\Entities\Model;
 
 /**
  * This trait is used for repeaters that may or may not have files or images in them.
@@ -42,9 +43,9 @@ trait RepeatersTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
-     * @return \Unusualify\Modularity\Entities\Model
+     * @return Model
      */
     public function afterSaveRepeatersTrait($object, $fields)
     {
@@ -178,7 +179,7 @@ trait RepeatersTrait
             $schema = $schema ?? $this->getRawInputs();
 
             $repeaterInputs = $this->getRepeaterInputs($schema);
-            if (!empty($repeaterInputs) && ! $object->repeaters()->exists()) {
+            if (! empty($repeaterInputs) && ! $object->repeaters()->exists()) {
                 $fields += Arr::mapWithKeys($repeaterInputs, function ($input) {
                     return [
                         $input['name'] => ($input['translated'] ?? false) ? Arr::mapWithKeys(getLocales(), function ($locale) {
@@ -186,7 +187,7 @@ trait RepeatersTrait
                         }) : ($input['default'] ?? []),
                     ];
                 });
-            } else if (!empty($repeaterInputs)) {
+            } elseif (! empty($repeaterInputs)) {
 
                 foreach ($object->repeaters->groupBy('locale') as $repeatersByLocale) {
                     foreach ($repeatersByLocale as $repeater) {

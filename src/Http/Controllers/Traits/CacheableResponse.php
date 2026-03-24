@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Traits\Cache\Cacheable;
@@ -34,7 +35,7 @@ trait CacheableResponse
         $relations = [];
 
         // Get items from paginator
-        $items = $paginator instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+        $items = $paginator instanceof LengthAwarePaginator
             ? $paginator->getCollection()
             : (is_array($paginator) ? collect($paginator) : $paginator);
 

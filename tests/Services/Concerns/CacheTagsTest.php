@@ -2,8 +2,6 @@
 
 namespace Unusualify\Modularity\Tests\Services\Concerns;
 
-use Illuminate\Cache\Repository;
-use Illuminate\Support\Facades\Cache;
 use Unusualify\Modularity\Services\Concerns\CacheTags;
 use Unusualify\Modularity\Tests\TestCase;
 
@@ -14,7 +12,7 @@ class CacheTagsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tagService = new ConcreteTagService();
+        $this->tagService = new ConcreteTagService;
     }
 
     /** @test */

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Json;
+use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
 
 class Modularity extends FileRepository
@@ -118,7 +119,7 @@ class Modularity extends FileRepository
      */
     protected function createModule(...$args)
     {
-        return new \Unusualify\Modularity\Module(...$args);
+        return new Module(...$args);
     }
 
     /**
@@ -729,7 +730,7 @@ class Modularity extends FileRepository
             return false;
         }
 
-        $provider = $this->app->make(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class);
+        $provider = $this->app->make(CurrencyProviderInterface::class);
         if (! $provider->isAvailable()) {
             return false;
         }

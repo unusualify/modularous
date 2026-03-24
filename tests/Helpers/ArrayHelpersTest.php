@@ -2,7 +2,6 @@
 
 namespace Unusualify\Modularity\Tests\Helpers;
 
-use Illuminate\Support\Facades\File;
 use Unusualify\Modularity\Tests\TestCase;
 
 class ArrayHelpersTest extends TestCase
@@ -80,7 +79,7 @@ class ArrayHelpersTest extends TestCase
 
         $result = array_merge_recursive_preserve($array1, $array2);
 
-        // b should be 3 (from array2)  
+        // b should be 3 (from array2)
         // c should be added
         $this->assertEquals(['a' => 1, 'b' => 3, 'c' => 4], $result);
     }
@@ -236,7 +235,7 @@ class ArrayHelpersTest extends TestCase
 
         $result = nested_array_merge($array1, $array2);
 
-        // Empty strings should keep original value  
+        // Empty strings should keep original value
         $this->assertEquals(['a' => 'value', 'b' => 'original', 'c' => 'new'], $result);
     }
 

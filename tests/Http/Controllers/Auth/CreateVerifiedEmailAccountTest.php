@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
 use Unusualify\Modularity\Tests\TestCase;
 
@@ -24,7 +25,7 @@ class TestCreateVerifiedEmailAccount
         return $this->rules();
     }
 
-    public function exposeCredentials(\Illuminate\Http\Request $request): array
+    public function exposeCredentials(Request $request): array
     {
         return $this->credentials($request);
     }
@@ -37,7 +38,7 @@ class CreateVerifiedEmailAccountTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->trait = new TestCreateVerifiedEmailAccount();
+        $this->trait = new TestCreateVerifiedEmailAccount;
     }
 
     /** @test */
@@ -77,7 +78,7 @@ class CreateVerifiedEmailAccountTest extends TestCase
     /** @test */
     public function it_extracts_credentials_from_request(): void
     {
-        $request = \Illuminate\Http\Request::create('/test', 'POST', [
+        $request = Request::create('/test', 'POST', [
             'email' => 'test@example.com',
             'name' => 'John',
             'surname' => 'Doe',

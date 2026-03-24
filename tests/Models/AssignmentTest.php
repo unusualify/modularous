@@ -14,6 +14,8 @@ use Modules\SystemNotification\Events\AssignmentCreated;
 use Modules\SystemNotification\Events\AssignmentUpdated;
 use Unusualify\Modularity\Entities\Assignment;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularity\Entities\Scopes\AssignmentScopes;
+use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Facades\Filepond;
 use Unusualify\Modularity\Tests\ModelTestCase;
@@ -303,7 +305,7 @@ class AssignmentTest extends ModelTestCase
     public function test_has_fileponds_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasFileponds::class,
+            HasFileponds::class,
             class_uses_recursive(new Assignment)
         ));
     }
@@ -311,7 +313,7 @@ class AssignmentTest extends ModelTestCase
     public function test_assignment_scopes_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Scopes\AssignmentScopes::class,
+            AssignmentScopes::class,
             class_uses_recursive(new Assignment)
         ));
     }

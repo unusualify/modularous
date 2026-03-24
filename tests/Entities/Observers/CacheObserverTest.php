@@ -67,7 +67,8 @@ class CacheObserverTest extends TestCase
 
     private function createTestModel(): Model
     {
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             protected $table = 'test_models';
 
             public function getKey()

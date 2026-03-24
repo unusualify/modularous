@@ -14,8 +14,8 @@ class RadioGroupHydrateTest extends TestCase
             'name' => 'choice',
             'items' => [
                 ['id' => 1, 'name' => 'Option 1'],
-                ['id' => 2, 'name' => 'Option 2']
-            ]
+                ['id' => 2, 'name' => 'Option 2'],
+            ],
         ];
 
         $h = new RadioGroupHydrate($input, null, null, true);

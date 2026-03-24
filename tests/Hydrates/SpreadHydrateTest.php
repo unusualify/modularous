@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Hydrates;
 
+use Illuminate\Support\Facades\App;
+use Mockery as m;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Hydrates\Inputs\SpreadHydrate;
 use Unusualify\Modularity\Tests\TestCase;
-use Mockery as m;
 
 class SpreadHydrateTest extends TestCase
 {
@@ -14,7 +16,7 @@ class SpreadHydrateTest extends TestCase
             'type' => 'spread',
             'name' => 'spread_data',
             '_moduleName' => 'TestModule',
-            '_routeName' => 'testRoute'
+            '_routeName' => 'testRoute',
         ];
 
         // Mock model with all required methods
@@ -22,18 +24,18 @@ class SpreadHydrateTest extends TestCase
         $modelMock->shouldReceive('getReservedKeys')->andReturn(['id', 'created_at', 'updated_at']);
         $modelMock->shouldReceive('getRouteInputs')->andReturn([
             ['name' => 'title', 'spreadable' => true],
-            ['name' => 'slug', 'spreadable' => false]
+            ['name' => 'slug', 'spreadable' => false],
         ]);
         $modelMock->shouldReceive('getSpreadableSavingKey')->andReturn('spread_data');
 
         $moduleMock = m::mock();
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'model')->andReturn(get_class($modelMock));
 
-        \Unusualify\Modularity\Facades\Modularity::shouldReceive('find')
+        Modularity::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 
-        \Illuminate\Support\Facades\App::shouldReceive('make')
+        App::shouldReceive('make')
             ->with(get_class($modelMock))
             ->andReturn($modelMock);
 

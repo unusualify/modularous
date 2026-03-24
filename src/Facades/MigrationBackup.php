@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Services\MigrationBackupService;
 
 /**
  * @method static void backup(string $table, ?array $columns = null)
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void clearBackup()
  * @method static string getBackupKey()
  *
- * @see \Unusualify\Modularity\Services\MigrationBackupService
+ * @see MigrationBackupService
  */
 class MigrationBackup extends Facade
 {

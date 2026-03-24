@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -176,7 +177,7 @@ class AuthServiceProvider extends ServiceProvider implements DeferrableProvider
             // adjust for your needs
 
             // dd($notifiable, $verificationUrl);
-            return (new \Illuminate\Notifications\Messages\MailMessage)
+            return (new MailMessage)
                 ->subject(Lang::get('Verify Email Address'))
                 ->line(Lang::get('Please click the button below to verify your email address.'))
                 ->action(

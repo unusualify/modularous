@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,7 +57,7 @@ class HasCreatorTest extends ModelTestCase
         // Test the morphOne relationship to CreatorRecord
         $relationship = $this->model->creatorRecord();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphOne::class, $relationship);
+        $this->assertInstanceOf(MorphOne::class, $relationship);
         $this->assertEquals(CreatorRecord::class, get_class($relationship->getRelated()));
     }
 
@@ -78,7 +80,7 @@ class HasCreatorTest extends ModelTestCase
 
         // Test the hasOneThrough relationship
         $relationship = $this->model->creator();
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasOneThrough::class, $relationship);
+        $this->assertInstanceOf(HasOneThrough::class, $relationship);
 
         // Test that we can retrieve the creator
         $creator = $this->model->creator;

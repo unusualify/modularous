@@ -5,7 +5,9 @@ namespace Unusualify\Modularity\Entities;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +24,7 @@ use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
+use Unusualify\Modularity\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
 {
@@ -105,7 +108,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         });
     }
 
-    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    protected static function newFactory(): Factory
     {
         return UserFactory::new();
     }
@@ -114,7 +117,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
      * Minimal roles relation (id, name, title) for roles_meta.
      * Does not affect the original roles relationship.
      */
-    public function rolesMetaRelation(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function rolesMetaRelation(): BelongsToMany
     {
         $rolesTable = config('permission.table_names.roles');
         $relation = $this->morphToMany(
@@ -177,7 +180,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     /**
      * @deprecated Use $this->is_client instead
      */
-    public function isClient() : bool
+    public function isClient(): bool
     {
         return $this->is_client;
     }
@@ -225,7 +228,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new \Unusualify\Modularity\Notifications\ResetPasswordNotification($token));
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function preferredLocale()

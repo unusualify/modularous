@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
-use Unusualify\Modularity\Traits\ManageTraits;
-use Unusualify\Modularity\Tests\TestCase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
+use Unusualify\Modularity\Facades\ModularityFinder;
+use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\Traits\ManageTraits;
 
 class ManageTraitsTest extends TestCase
 {
@@ -13,13 +15,25 @@ class ManageTraitsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->target = new class {
+        $this->target = new class
+        {
             use ManageTraits;
-            
+
             // Mocking required methods from other traits/classes
-            public function getModuleName() { return 'TestModule'; }
-            public function getRouteName() { return 'TestRoute'; }
-            public function getModule() { return null; }
+            public function getModuleName()
+            {
+                return 'TestModule';
+            }
+
+            public function getRouteName()
+            {
+                return 'TestRoute';
+            }
+
+            public function getModule()
+            {
+                return null;
+            }
         };
     }
 
@@ -30,13 +44,13 @@ class ManageTraitsTest extends TestCase
             'name' => 'John',
             'password' => 'secret',
             'settings->theme' => 'dark',
-            'profile.bio' => 'Hello'
+            'profile.bio' => 'Hello',
         ];
-        
+
         $object = (object) ['settings' => ['font' => 'sans']];
-        
+
         $prepared = $this->target->prepareFieldsBeforeSaveManageTraits($object, $fields);
-        
+
         $this->assertEquals('John', $prepared['name']);
         $this->assertTrue(Hash::check('secret', $prepared['password']));
         $this->assertEquals('dark', $prepared['settings']['theme']);
@@ -49,9 +63,9 @@ class ManageTraitsTest extends TestCase
     {
         $schema = [
             ['name' => 'title', 'translated' => true],
-            ['name' => 'description', 'translated' => false]
+            ['name' => 'description', 'translated' => false],
         ];
-        
+
         $this->assertTrue($this->target->hasTranslatedInput($schema));
         $this->assertFalse($this->target->hasTranslatedInput([['name' => 'test']]));
     }
@@ -65,13 +79,13 @@ class ManageTraitsTest extends TestCase
                 'name' => 'group1',
                 'type' => 'group',
                 'schema' => [
-                    ['name' => 'sub1', 'type' => 'text']
-                ]
-            ]
+                    ['name' => 'sub1', 'type' => 'text'],
+                ],
+            ],
         ];
-        
+
         $chunked = $this->target->chunkInputs($schema);
-        
+
         $this->assertArrayHasKey('title', $chunked);
         $this->assertArrayHasKey('group1.sub1', $chunked);
         $this->assertEquals('group1.sub1', $chunked['group1.sub1']['name']);
@@ -81,17 +95,17 @@ class ManageTraitsTest extends TestCase
     /** @test */
     public function it_can_resolve_model()
     {
-        \Unusualify\Modularity\Facades\ModularityFinder::shouldReceive('getRouteRepository')
+        ModularityFinder::shouldReceive('getRouteRepository')
             ->with('TestRoute')
             ->andReturn('TestRepository');
-            
+
         $repo = \Mockery::mock('TestRepository');
         $repo->shouldReceive('getModel')->andReturn('TestModel');
-        
-        \Illuminate\Support\Facades\App::shouldReceive('make')
+
+        App::shouldReceive('make')
             ->with('TestRepository')
             ->andReturn($repo);
-            
+
         $this->assertEquals('TestModel', $this->target->model());
     }
 }

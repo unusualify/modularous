@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\App;
 use Modules\SystemUser\Entities\Role;
 use Unusualify\Modularity\Entities\Traits\Assignable;
 use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class AssignmentTraitTest extends RepositoryTestCase
@@ -26,7 +28,7 @@ class AssignmentTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+            use AssignmentTrait;
 
             public array $traitColumns = [];
         };
@@ -44,7 +46,7 @@ class AssignmentTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+            use AssignmentTrait;
 
             public function getColumns($trait)
             {
@@ -68,7 +70,7 @@ class AssignmentTraitTest extends RepositoryTestCase
     {
         $repo = new class
         {
-            use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+            use AssignmentTrait;
         };
 
         $scopes = [];
@@ -159,9 +161,9 @@ class TestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
     use Assignable;
 }
 
-class AssignmentTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class AssignmentTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+    use AssignmentTrait;
 
     public function __construct(TestModel $model)
     {

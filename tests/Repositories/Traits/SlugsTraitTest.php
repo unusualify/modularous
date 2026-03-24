@@ -2,8 +2,11 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Astrotomic\Translatable\Locales;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\HasSlug;
 use Unusualify\Modularity\Entities\Traits\HasTranslation;
 use Unusualify\Modularity\Repositories\Repository;
@@ -349,8 +352,8 @@ class SlugsTraitTest extends RepositoryTestCase
         config(['translatable.locales' => ['en', 'tr']]);
 
         config(['translatable.locales' => ['en', 'tr']]);
-        app()->forgetInstance(\Astrotomic\Translatable\Locales::class);
-        app()->make(\Astrotomic\Translatable\Locales::class); // Force new instance now
+        app()->forgetInstance(Locales::class);
+        app()->make(Locales::class); // Force new instance now
 
         $object = $this->repository->create([
             'name' => 'Scope For Slug Test',
@@ -550,7 +553,7 @@ class SlugsTraitTest extends RepositoryTestCase
         ]);
 
         $this->assertInstanceOf(
-            \Illuminate\Database\Eloquent\Relations\HasMany::class,
+            HasMany::class,
             $object->slugs()
         );
     }
@@ -648,7 +651,7 @@ class SlugsTestModel extends TestModel
     protected $translatedAttributes = ['context', 'active'];
 }
 
-class SlugsTestModelTranslation extends \Unusualify\Modularity\Entities\Model
+class SlugsTestModelTranslation extends Model
 {
     protected $table = 'test_model_repo_translations';
 

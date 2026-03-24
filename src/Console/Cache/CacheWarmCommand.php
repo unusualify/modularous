@@ -2,8 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Cache;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityCache;
 use Unusualify\Modularity\Module;
@@ -208,7 +209,7 @@ class CacheWarmCommand extends BaseCommand
             $this->error($e->getTraceAsString(), verbosity: 'vvv');
             if (($logChannel = $this->getLogChannel())) {
                 // if log channel is exists, log the error
-                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm COUNTS error: ' . $e->getMessage(), [
+                Log::channel($logChannel)->error('Cache warm COUNTS error: ' . $e->getMessage(), [
                     'module' => $module->getName(),
                     'routeName' => $routeName,
                     'exception' => $e->getTraceAsString(),
@@ -295,7 +296,7 @@ class CacheWarmCommand extends BaseCommand
 
             if (($logChannel = $this->getLogChannel())) {
                 // if log channel is exists, log the error
-                \Illuminate\Support\Facades\Log::channel($logChannel)->error('Cache warm ITEMS error: ' . $e->getMessage(), [
+                Log::channel($logChannel)->error('Cache warm ITEMS error: ' . $e->getMessage(), [
                     'module' => $module->getName(),
                     'routeName' => $routeName,
                     'exception' => $e->getTraceAsString(),

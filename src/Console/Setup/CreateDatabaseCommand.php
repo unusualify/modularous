@@ -3,8 +3,8 @@
 namespace Unusualify\Modularity\Console\Setup;
 
 use Illuminate\Database\DatabaseManager;
-use Unusualify\Modularity\Console\BaseCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class CreateDatabaseCommand extends BaseCommand
 {

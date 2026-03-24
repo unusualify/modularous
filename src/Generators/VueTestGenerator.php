@@ -91,7 +91,7 @@ class VueTestGenerator extends Generator
         parent::__construct($name, $config, $filesystem, $console, $module);
 
         $this->targetPath = get_modularity_vendor_path('vue/test');
-        
+
     }
 
     /**
@@ -192,7 +192,7 @@ class VueTestGenerator extends Generator
         $this->targetPath = $targetPath;
 
         return $this;
-    }   
+    }
 
     public function getTestFileName()
     {
@@ -232,13 +232,14 @@ class VueTestGenerator extends Generator
     {
         return "{$this->getTargetPath()}/{$this->getTypeTargetDir()}/{$this->getTestFileName()}";
     }
+
     /**
      * Generate the module.
      */
     public function generate(): int
     {
         $path = $this->getFilePath();
-        
+
         $content = (new Stub("/{$this->getTypeStubFile()}.stub", $this->makeReplaces([
             'STUDLY_NAME',
             'CAMEL_CASE',
@@ -256,6 +257,6 @@ class VueTestGenerator extends Generator
             $this->console->info("Created : {$path} test file");
         }
 
-        return 0;   
+        return 0;
     }
 }

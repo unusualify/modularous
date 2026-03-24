@@ -7,10 +7,10 @@ use Illuminate\Console\Command as Console;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Generators\Generator as NwidartGenerator;
 use Nwidart\Modules\Support\Config\GeneratorPath;
+use Unusualify\Modularity\Modularity;
 use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Traits\ReplacementTrait;
 
@@ -56,7 +56,7 @@ abstract class Generator extends NwidartGenerator
     /**
      * The module instance.
      *
-     * @var \Unusualify\Modularity\Module
+     * @var Module
      */
     protected $module;
 
@@ -119,7 +119,6 @@ abstract class Generator extends NwidartGenerator
     }
 
     /**
-     * 
      * @param string $name
      * @return static
      */
@@ -217,7 +216,7 @@ abstract class Generator extends NwidartGenerator
      */
     public function setModule($module)
     {
-        $modularity = App::makeWith(\Unusualify\Modularity\Modularity::class, ['app' => app()]);
+        $modularity = App::makeWith(Modularity::class, ['app' => app()]);
 
         $this->module = $modularity->find($module);
 

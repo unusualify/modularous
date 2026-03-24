@@ -5,7 +5,6 @@ namespace Unusualify\Modularity\Tests;
 use Illuminate\Support\Facades\Config;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\MockModuleManager;
 
 class ModuleTest extends TestCase
 {

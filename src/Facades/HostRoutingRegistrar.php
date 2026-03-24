@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Suppo\HostRouting;
 
 /**
  * @method static void registerRoutes()
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getRegisteredRoutes()
  * @method static void clearRegisteredRoutes()
  *
- * @see \Unusualify\Modularity\Suppo\HostRouting
+ * @see HostRouting
  */
 class HostRoutingRegistrar extends Facade
 {

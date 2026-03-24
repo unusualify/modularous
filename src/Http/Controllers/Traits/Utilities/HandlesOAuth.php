@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Events\ModularityUserRegistered;
@@ -38,9 +41,9 @@ trait HandlesOAuth
     {
         try {
             $oauthUser = Socialite::driver($provider)->user();
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             return $this->oauthErrorRedirect('Authentication Cancelled', 'Google authentication was cancelled. Please try again or use alternative login methods.');
-        } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+        } catch (InvalidStateException $e) {
             return $this->oauthErrorRedirect('Invalid State', 'Google authentication was invalid. Please try again or use alternative login methods.');
         } catch (\Exception $e) {
             return $this->oauthErrorRedirect('General Error', 'An error occurred during authentication. Please try again or use alternative login methods.');
@@ -91,7 +94,7 @@ trait HandlesOAuth
     /**
      * Show password form when linking OAuth to existing account.
      */
-    public function showPasswordForm(\Illuminate\Http\Request $request)
+    public function showPasswordForm(Request $request)
     {
         $userId = $request->session()->get('oauth:user_id');
         $user = User::findOrFail($userId);
@@ -146,7 +149,7 @@ trait HandlesOAuth
     /**
      * Link OAuth provider after password verification.
      */
-    public function linkProvider(\Illuminate\Http\Request $request)
+    public function linkProvider(Request $request)
     {
         if ($this->attemptLogin($request)) {
             $userId = $request->session()->get('oauth:user_id');

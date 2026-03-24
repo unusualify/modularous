@@ -260,7 +260,8 @@ class ComponentTest extends TestCase
 
     public function test_add_children_with_child_component_renders_nested()
     {
-        $child = new class extends Component {
+        $child = new class extends Component
+        {
             public function __construct()
             {
                 parent::__construct();

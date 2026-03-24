@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Unusualify\Modularity\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Facades\Register;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\SendsEmailVerificationRegister;
 

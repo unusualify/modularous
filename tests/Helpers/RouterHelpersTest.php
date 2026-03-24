@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Tests\Helpers;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 use Unusualify\Modularity\Tests\TestCase;
 
 class RouterHelpersTest extends TestCase

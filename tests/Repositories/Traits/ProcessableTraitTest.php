@@ -2,12 +2,15 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularity\Entities\Enums\ProcessStatus;
 use Unusualify\Modularity\Entities\Process;
+use Unusualify\Modularity\Entities\Traits\Processable;
 use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularity\Repositories\Traits\ProcessableTrait;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class ProcessableTraitTest extends RepositoryTestCase
@@ -41,7 +44,7 @@ class ProcessableTraitTest extends RepositoryTestCase
 
         $this->repository->setColumns($this->repository->chunkInputs($schema));
 
-        $cols = $this->repository->getColumns(\Unusualify\Modularity\Repositories\Traits\ProcessableTrait::class);
+        $cols = $this->repository->getColumns(ProcessableTrait::class);
         $this->assertContains('main_process', $cols);
         $this->assertNotContains('name', $cols);
     }
@@ -102,9 +105,9 @@ class ProcessableTraitTest extends RepositoryTestCase
     }
 }
 
-class RepoProcessableModel extends \Illuminate\Database\Eloquent\Model
+class RepoProcessableModel extends Model
 {
-    use \Unusualify\Modularity\Entities\Traits\Processable;
+    use Processable;
 
     protected $table = 'repo_processable_models';
 
@@ -113,7 +116,7 @@ class RepoProcessableModel extends \Illuminate\Database\Eloquent\Model
 
 final class RepoProcessableTestRepository extends Repository
 {
-    use \Unusualify\Modularity\Repositories\Traits\ProcessableTrait;
+    use ProcessableTrait;
 
     public function __construct(RepoProcessableModel $model)
     {

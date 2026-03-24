@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Tests\Http\Controllers\Traits\Utilities;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Modules\SystemUser\Entities\Role;
 use Unusualify\Modularity\Brokers\RegisterBroker;
+use Unusualify\Modularity\Entities\Company;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Events\ModularityUserRegistered;
 use Unusualify\Modularity\Events\ModularityUserRegistering;
@@ -200,7 +202,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
         ]);
 
         // Verify the HasSpreadable observer worked - spread data should be in the spreads table
-        $company = \Unusualify\Modularity\Entities\Company::where('name', 'Test Company')->first();
+        $company = Company::where('name', 'Test Company')->first();
         $this->assertNotNull($company, 'Company should be created');
 
         // Test that the spreadable relationship was created by the observer
@@ -236,7 +238,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
 
         $response = $this->controller->register($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
 
         $this->assertEquals('http://localhost/home', $response->getTargetUrl());
 

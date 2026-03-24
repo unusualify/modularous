@@ -4,9 +4,9 @@ namespace Unusualify\Modularity\Tests\Exceptions;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Support\Facades\Log;
 use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Exceptions\Handler;
 use Unusualify\Modularity\Facades\Modularity;
@@ -21,7 +21,8 @@ class HandlerTest extends ModelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->handler = new class($this->app) extends Handler {
+        $this->handler = new class($this->app) extends Handler
+        {
             public function exposeGetHttpExceptionView($e): ?string
             {
                 return $this->getHttpExceptionView($e);
@@ -48,14 +49,14 @@ class HandlerTest extends ModelTestCase
     {
         // 1. Create a user
         $user = User::factory()->create();
-        
+
         // 2. Mock session file
         $sessionDir = storage_path('framework/sessions');
-        if (!is_dir($sessionDir)) {
+        if (! is_dir($sessionDir)) {
             mkdir($sessionDir, 0777, true);
         }
-        
-        $userClass = \Unusualify\Modularity\Entities\User::class;
+
+        $userClass = User::class;
         $loginKey = 'login_modularity_' . sha1($userClass);
         $sessionData = serialize([$loginKey => $user->id]);
         $sessionFile = 'test_session_id';
@@ -63,7 +64,7 @@ class HandlerTest extends ModelTestCase
 
         try {
             // 3. Mock View
-            $viewName = modularityBaseKey() . "::errors.404";
+            $viewName = modularityBaseKey() . '::errors.404';
             View::shouldReceive('exists')->with($viewName)->andReturn(true);
 
             // 4. Test 404
@@ -92,14 +93,14 @@ class HandlerTest extends ModelTestCase
     {
         // 1. Create a user
         $user = User::factory()->create();
-        
+
         // 2. Mock corrupted session file that still has the key in string format
         $sessionDir = storage_path('framework/sessions');
-        if (!is_dir($sessionDir)) {
+        if (! is_dir($sessionDir)) {
             mkdir($sessionDir, 0777, true);
         }
-        
-        $userClass = \Unusualify\Modularity\Entities\User::class;
+
+        $userClass = User::class;
         $loginKey = 'login_modularity_' . sha1($userClass);
         // Manually construct the string search pattern: login_modularity_[a-f0-9]+";i:(\d+);
         $sessionData = "raw_garbage;{$loginKey}\";i:{$user->id};more_garbage";
@@ -131,7 +132,7 @@ class HandlerTest extends ModelTestCase
         $exception = new HttpException(404);
         $result = $this->handler->exposeGetHttpExceptionView($exception);
 
-        // Note: attemptModularityAuthentication returns true if cookie exists, 
+        // Note: attemptModularityAuthentication returns true if cookie exists,
         // even if it doesn't log in the user (per implementation logic)
         $this->assertTrue(modularityBaseKey() . '::errors.404' === $result || true);
     }
@@ -140,11 +141,13 @@ class HandlerTest extends ModelTestCase
     {
         // 1. Mock session file with non-existent user ID
         $sessionDir = storage_path('framework/sessions');
-        $userClass = \Unusualify\Modularity\Entities\User::class;
+        $userClass = User::class;
         $loginKey = 'login_modularity_' . sha1($userClass);
         $sessionData = serialize([$loginKey => 9999]); // Non-existent ID
         $sessionFile = 'test_session_missing_user';
-        if (!is_dir($sessionDir)) mkdir($sessionDir, 0777, true);
+        if (! is_dir($sessionDir)) {
+            mkdir($sessionDir, 0777, true);
+        }
         file_put_contents($sessionDir . '/' . $sessionFile, $sessionData);
 
         try {
@@ -159,5 +162,4 @@ class HandlerTest extends ModelTestCase
             unlink($sessionDir . '/' . $sessionFile);
         }
     }
-
 }

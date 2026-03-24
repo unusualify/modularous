@@ -4,6 +4,10 @@ namespace Unusualify\Modularity\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPricing\Entities\Price;
 use Money\Currency;
@@ -91,13 +95,13 @@ trait HasPayment
         ];
     }
 
-    public function paymentPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function paymentPrices(): MorphMany
     {
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment');
     }
 
-    public function paymentPrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function paymentPrice(): MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
             ->where('role', 'payment')
@@ -124,7 +128,7 @@ trait HasPayment
         //     ->latest('created_at');
     }
 
-    public function initialPayablePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function initialPayablePrice(): MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
             ->where('role', 'payment')
@@ -138,7 +142,7 @@ trait HasPayment
 
     }
 
-    public function payablePrice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function payablePrice(): MorphOne
     {
         return $this->morphOne(Price::class, 'priceable')
             ->where('role', 'payment')
@@ -155,28 +159,28 @@ trait HasPayment
         //     ->whereRaw("{$priceTable}.created_at = (select max(created_at) from {$priceTable} where {$priceTable}.priceable_id = '{$this->id}' and {$priceTable}.priceable_type = '{$morphClass}' and {$priceTable}.role = 'payment')");
     }
 
-    public function paidPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function paidPrices(): MorphMany
     {
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment')
             ->hasPayment(true, PaymentStatus::COMPLETED);
     }
 
-    public function providedPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function providedPrices(): MorphMany
     {
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment')
             ->hasPayment(true, PaymentStatus::PROVISION);
     }
 
-    public function refundedPrices(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function refundedPrices(): MorphMany
     {
         return $this->morphMany(Price::class, 'priceable')
             ->where('role', 'payment')
             ->hasPayment(true, PaymentStatus::REFUNDED);
     }
 
-    public function payment(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function payment(): HasOneThrough
     {
         $priceTable = (new Price)->getTable();
         $paymentTable = (new Payment)->getTable();
@@ -194,7 +198,7 @@ trait HasPayment
             ->latest("{$paymentTable}.created_at");
     }
 
-    public function payments(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function payments(): HasManyThrough
     {
         $priceTable = (new Price)->getTable();
         $morphClass = $this->getMorphClass();
@@ -344,25 +348,31 @@ trait HasPayment
                     case $this->is_refunded:
                         $color = 'error';
                         $label = __(PaymentStatus::REFUNDED->label());
+
                         break;
                     case $this->is_provided:
                         $color = 'info';
                         $label = __(PaymentStatus::PROVISION->label());
+
                         break;
                     case $this->is_paid:
                         $color = 'success';
                         $label = __('Paid');
+
                         break;
                     case $this->is_partially_paid:
                         $color = 'warning';
                         $label = __('Partially Paid');
+
                         break;
                     case $this->is_unpaid:
                         $color = 'error';
                         $label = __('Unpaid');
+
                         break;
                     default:
                         $label = __('Not Ready');
+
                         break;
                 }
 

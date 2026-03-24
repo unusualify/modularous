@@ -4,6 +4,7 @@ namespace Unusualify\Modularity\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Modules\SystemUser\Repositories\UserRepository;
 
 class AuthorizationMiddleware
 {
@@ -21,7 +22,7 @@ class AuthorizationMiddleware
     {
         view()->composer(modularityBaseKey() . '::layouts.master', function ($view) {
             $user = auth()->user();
-            $userRepository = app()->make(\Modules\SystemUser\Repositories\UserRepository::class);
+            $userRepository = app()->make(UserRepository::class);
             $profileShortcutSchema = modularity_format_inputs(getFormDraft('profile_shortcut'));
             $profileShortcutModel = $userRepository->getFormFields($user, $profileShortcutSchema);
             $loginShortcutSchema = modularity_format_inputs(getFormDraft('login_shortcut'));

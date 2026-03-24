@@ -18,7 +18,7 @@ class LocalTest extends TestCase
         Config::set(modularityBaseKey() . '.media_library.disk', 'public');
         Storage::fake('public');
 
-        $this->service = new Local();
+        $this->service = new Local;
     }
 
     /** @test */

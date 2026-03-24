@@ -2,6 +2,7 @@
 
 namespace Modules\SystemUser\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
@@ -40,7 +41,7 @@ class UserController extends BaseController
      */
     protected $modelName = 'User';
 
-    public function __construct(\Illuminate\Foundation\Application $app, Request $request)
+    public function __construct(Application $app, Request $request)
     {
         parent::__construct(
             $app,

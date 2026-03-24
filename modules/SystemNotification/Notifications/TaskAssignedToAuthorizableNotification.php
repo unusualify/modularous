@@ -4,6 +4,7 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 
 class TaskAssignedToAuthorizableNotification extends FeatureNotification implements ShouldQueue
 {
@@ -34,7 +35,7 @@ class TaskAssignedToAuthorizableNotification extends FeatureNotification impleme
         ];
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $default = __('A Task Created On The :moduleRouteHeadline', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),
@@ -47,7 +48,7 @@ class TaskAssignedToAuthorizableNotification extends FeatureNotification impleme
         return $default;
     }
 
-    public function getModelTitleField(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModelTitleField(Model $model): string
     {
         $default = parent::getModelTitleField($model);
 
@@ -58,7 +59,7 @@ class TaskAssignedToAuthorizableNotification extends FeatureNotification impleme
         return $default;
     }
 
-    public function getNotificationMessage(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMessage(object $notifiable, Model $model): string
     {
         $default = __('A task has been created in the \':moduleRouteHeadline\' which you are authorised to.', [
             'moduleRouteHeadline' => $this->getModuleRouteHeadline($model),

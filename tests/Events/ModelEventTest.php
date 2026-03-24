@@ -11,8 +11,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Modules\SystemUser\Entities\Role;
 use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
 use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Events\ModelEvent;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -286,12 +288,12 @@ class ModelEventTest extends ModelTestCase
 
     public function test_has_user_returns_false()
     {
-        $role = \Modules\SystemUser\Entities\Role::create([
+        $role = Role::create([
             'name' => 'Admin',
             'guard_name' => 'modularity',
         ]);
 
-        $user = \Unusualify\Modularity\Entities\User::create([
+        $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),

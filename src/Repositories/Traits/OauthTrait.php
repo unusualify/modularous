@@ -2,10 +2,12 @@
 
 namespace Unusualify\Modularity\Repositories\Traits;
 
+use Laravel\Socialite\Contracts\User;
+
 trait OauthTrait
 {
     /**
-     * @param \Laravel\Socialite\Contracts\User $oauthUser
+     * @param User $oauthUser
      * @return \Unusualify\Modularity\Entities\User
      */
     public function oauthUser($oauthUser)
@@ -14,7 +16,7 @@ trait OauthTrait
     }
 
     /**
-     * @param \Laravel\Socialite\Contracts\User $oauthUser
+     * @param User $oauthUser
      * @param string $provider
      * @return bool
      */
@@ -28,7 +30,7 @@ trait OauthTrait
     }
 
     /**
-     * @param \Laravel\Socialite\Contracts\User $oauthUser
+     * @param User $oauthUser
      * @param string $provider
      * @return \Unusualify\Modularity\Entities\User
      */
@@ -47,7 +49,7 @@ trait OauthTrait
     }
 
     /**
-     * @param \Laravel\Socialite\Contracts\User $oauthUser
+     * @param User $oauthUser
      * @return \Unusualify\Modularity\Entities\User
      */
     public function oauthCreateUser($oauthUser)

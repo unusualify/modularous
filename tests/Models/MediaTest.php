@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Entities\Media;
+use Unusualify\Modularity\Entities\Traits\HasCreator;
 use Unusualify\Modularity\Services\MediaLibrary\ImageService;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
@@ -273,7 +274,7 @@ class MediaTest extends ModelTestCase
     public function test_has_creator_trait()
     {
         $this->assertTrue(in_array(
-            \Unusualify\Modularity\Entities\Traits\HasCreator::class,
+            HasCreator::class,
             class_uses_recursive($this->media)
         ));
     }

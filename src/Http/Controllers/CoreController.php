@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
 use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularity\Facades\HostRoutingRegistrar;
+use Unusualify\Modularity\Repositories\Repository;
 use Unusualify\Modularity\Services\MessageStage;
 use Unusualify\Modularity\Traits\ManageModuleRoute;
 use Unusualify\Modularity\Traits\ManageNames;
@@ -33,7 +35,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
         ManageTraits;
 
     /**
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var Application
      */
     protected $app;
 
@@ -64,7 +66,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
      */
     protected $config;
 
-    protected ?\Unusualify\Modularity\Repositories\Repository $repository;
+    protected ?Repository $repository;
 
     public function __construct(Application $app, Request $request)
     {
@@ -155,7 +157,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
     }
 
     /**
-     * @return \Unusualify\Modularity\Repositories\Repository | null
+     * @return Repository | null
      */
     public function getRepository()
     {
@@ -250,7 +252,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
         //     ? array_merge($this->request->route()->parameters(), $hostRoutingArguments)
         //     : [];
         $hostRoutingArguments = @class_exists('Unusualify\Modularity\Facades\HostRoutingRegistrar')
-                                ? \Unusualify\Modularity\Facades\HostRoutingRegistrar::getRouteArguments()
+                                ? HostRoutingRegistrar::getRouteArguments()
                                 : [];
 
         return $this->request->route()

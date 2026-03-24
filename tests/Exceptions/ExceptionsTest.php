@@ -28,7 +28,7 @@ class ExceptionsTest extends TestCase
     /** @test */
     public function it_can_create_modularity_system_path_exception()
     {
-        $e = new ModularitySystemPathException();
+        $e = new ModularitySystemPathException;
         $this->assertStringContainsString('system modules path', $e->getMessage());
     }
 

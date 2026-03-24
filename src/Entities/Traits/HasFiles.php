@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Unusualify\Modularity\Entities\File;
 use Unusualify\Modularity\Services\FileLibrary\FileService;
 
@@ -11,10 +12,11 @@ trait HasFiles
     {
         // $this->makeHidden(array_merge($this->hidden, ['files']));
     }
+
     /**
      * Defines the many-to-many relationship for file objects.
      */
-    public function files(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function files(): MorphToMany
     {
         return $this->morphToMany(
             File::class,

@@ -4,10 +4,10 @@ if (! function_exists('database_exists')) {
     function database_exists()
     {
         try {
-            \DB::connection()->getPDO();
+            DB::connection()->getPDO();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

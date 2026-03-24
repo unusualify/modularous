@@ -4,7 +4,9 @@ namespace Modules\SystemNotification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
+use Modules\SystemTask\Entities\Assignment;
 
 class TaskUpdatedNotification extends FeatureNotification implements ShouldQueue
 {
@@ -13,7 +15,7 @@ class TaskUpdatedNotification extends FeatureNotification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
-     * @param \Modules\SystemTask\Entities\Assignment $model
+     * @param Assignment $model
      * @return void
      */
     public function __construct(\Unusualify\Modularity\Entities\Assignment $model)
@@ -33,7 +35,7 @@ class TaskUpdatedNotification extends FeatureNotification implements ShouldQueue
         ];
     }
 
-    public function getNotificationMailSubject(object $notifiable, \Illuminate\Database\Eloquent\Model $model): string
+    public function getNotificationMailSubject(object $notifiable, Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -46,7 +48,7 @@ class TaskUpdatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getModelTitleField(\Illuminate\Database\Eloquent\Model $model): string
+    public function getModelTitleField(Model $model): string
     {
         $assignable = $model->assignable;
 
@@ -59,12 +61,12 @@ class TaskUpdatedNotification extends FeatureNotification implements ShouldQueue
         return $default;
     }
 
-    public function getNotificationRedirector(object $notifiable, \Illuminate\Database\Eloquent\Model $model)
+    public function getNotificationRedirector(object $notifiable, Model $model)
     {
         return parent::getNotificationRedirector($notifiable, $model->assignable);
     }
 
-    public function getMailMessage(MailMessage $mailMessage, object $notifiable, \Illuminate\Database\Eloquent\Model $model): MailMessage
+    public function getMailMessage(MailMessage $mailMessage, object $notifiable, Model $model): MailMessage
     {
         $assignable = $model->assignable;
 

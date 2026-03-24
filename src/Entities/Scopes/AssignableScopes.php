@@ -271,8 +271,8 @@ trait AssignableScopes
     /**
      * Scope to find models that have ever been assigned to users with the same roles as the current user
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function scopeEverAssignedToYourRole($query)
     {

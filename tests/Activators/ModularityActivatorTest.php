@@ -52,7 +52,7 @@ class ModularityActivatorTest extends TestCase
 
         // Create mocks for dependencies
         $this->mockCache = Mockery::mock(CacheManager::class);
-        $this->files = new Filesystem();
+        $this->files = new Filesystem;
         $this->mockConfig = Mockery::mock(Config::class);
 
         // Create container mock and bind the dependencies
@@ -436,7 +436,7 @@ class ModularityActivatorTest extends TestCase
         // Set up cache mock
         $storeMock = Mockery::mock();
         $this->mockCache->shouldReceive('store')->with('redis')->andReturn($storeMock);
-        $storeMock->shouldReceive('remember')->with('modularity.activator.installed', 604800, Mockery::any())->andReturnUsing(function ($key, $lifetime, $callback) use ($statuses) {
+        $storeMock->shouldReceive('remember')->with('modularity.activator.installed', 604800, Mockery::any())->andReturnUsing(function ($key, $lifetime, $callback) {
             return $callback();
         });
 

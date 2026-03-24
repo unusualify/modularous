@@ -11,7 +11,7 @@ class FilepondHydrateTest extends TestCase
     {
         $input = [
             'type' => 'filepond',
-            'name' => 'uploads'
+            'name' => 'uploads',
         ];
 
         $h = new FilepondHydrate($input, null, null, true);

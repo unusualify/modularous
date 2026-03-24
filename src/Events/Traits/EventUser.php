@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Events\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 trait EventUser
@@ -9,7 +10,7 @@ trait EventUser
     /**
      * The user model.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     public $user;
 
@@ -31,7 +32,7 @@ trait EventUser
     /**
      * Get the user model.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getUser()
     {

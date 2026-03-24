@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Unusualify\Modularity\Entities\Assignment;
 
 class AssignmentCreated implements ShouldDispatchAfterCommit
 {
@@ -26,7 +27,7 @@ class AssignmentCreated implements ShouldDispatchAfterCommit
      */
     public $queue = 'default';
 
-    public function __construct(public \Unusualify\Modularity\Entities\Assignment $model)
+    public function __construct(public Assignment $model)
     {
         //
     }

@@ -12,13 +12,13 @@ class ValidatorParserTest extends TestCase
     {
         $rules = 'required=true&min=3&max=10';
         $parser = new ValidatorParser($rules);
-        
+
         $expected = [
             'required' => 'true',
             'min' => '3',
-            'max' => '10'
+            'max' => '10',
         ];
-        
+
         $this->assertEquals($expected, $parser->toArray());
     }
 
@@ -34,12 +34,12 @@ class ValidatorParserTest extends TestCase
     {
         $rules = 'required&unique';
         $parser = new ValidatorParser($rules);
-        
+
         $expected = [
             'required' => '',
-            'unique' => ''
+            'unique' => '',
         ];
-        
+
         $this->assertEquals($expected, $parser->toArray());
     }
 
@@ -48,12 +48,12 @@ class ValidatorParserTest extends TestCase
     {
         $rules = 'required = true & min = 3';
         $parser = new ValidatorParser($rules);
-        
+
         $expected = [
             'required' => 'true',
-            'min' => '3'
+            'min' => '3',
         ];
-        
+
         $this->assertEquals($expected, $parser->toArray());
     }
 
@@ -62,9 +62,9 @@ class ValidatorParserTest extends TestCase
     {
         $rules = 'required=true';
         $parser = new ValidatorParser($rules);
-        
+
         $replacement = $parser->toReplacement();
-        
+
         // array_export is likely a helper that formats the array as PHP code
         // We expect it to contain 'required' => 'true'
         $this->assertStringContainsString("'required' => 'true'", $replacement);

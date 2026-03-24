@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Events\Traits;
 
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\HasStateable;
 
 trait EventStateable
@@ -36,7 +37,7 @@ trait EventStateable
 
     public function setupEventStateable()
     {
-        if ($this->model instanceof \Unusualify\Modularity\Entities\Model && classHasTrait($this->model, HasStateable::class)) {
+        if ($this->model instanceof Model && classHasTrait($this->model, HasStateable::class)) {
             $this->hasStateable = true;
             $this->stateableChanged = $this->model->stateableChanged();
             $this->previousStateableState = $this->model->previousStateableState();

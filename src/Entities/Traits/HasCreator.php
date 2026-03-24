@@ -2,9 +2,14 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Auth;
 use Unusualify\Modularity\Entities\Company;
+use Unusualify\Modularity\Entities\CreatorRecord;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Relations\CreatorCompanyRelation;
 
@@ -148,8 +153,6 @@ trait HasCreator
     /**
      * Check if creator record exists without triggering a lazy load when
      * the model was fetched with withExists('creatorRecord') (via global scope).
-     *
-     * @return bool
      */
     protected function hasCreatorRecord(): bool
     {
@@ -159,7 +162,7 @@ trait HasCreator
     /**
      * Get the creator record associated with this model
      */
-    public function creatorRecord(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function creatorRecord(): MorphOne
     {
         $creatableClass = $this->getCreatableClass();
         [$type, $id] = $creatableClass->getMorphs('creatable', null, null);
@@ -168,7 +171,7 @@ trait HasCreator
         $table = $instance->getTable();
         $localKey = $this->getKeyName();
 
-        return new \Illuminate\Database\Eloquent\Relations\MorphOne(
+        return new MorphOne(
             $instance->newQuery(),
             $creatableClass,
             $table . '.' . $type,
@@ -180,7 +183,7 @@ trait HasCreator
     /**
      * Get the creator associated with this model through the creator record
      */
-    public function creator(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function creator(): HasOneThrough
     {
         $creatableClass = $this->getCreatableClass(); // farParent
         $related = $this->getCreatorModel(); // related
@@ -188,7 +191,7 @@ trait HasCreator
         $throughInstance = $creatableClass->newRelatedThroughInstance($through); // throughInstance
         $relatedQuery = $creatableClass->newRelatedInstance($related)->newQuery(); // relatedQuery
 
-        $relation = new \Illuminate\Database\Eloquent\Relations\HasOneThrough(
+        $relation = new HasOneThrough(
             $relatedQuery,
             $creatableClass,
             $throughInstance,
@@ -291,7 +294,7 @@ trait HasCreator
      */
     protected function getCreatorRecordModel()
     {
-        return \Unusualify\Modularity\Entities\CreatorRecord::class;
+        return CreatorRecord::class;
     }
 
     /**
@@ -303,7 +306,7 @@ trait HasCreator
     {
         $key = $this->getKey();
 
-        if(is_null($key) || ! $this->hasCreatorRecord()) {
+        if (is_null($key) || ! $this->hasCreatorRecord()) {
             return $this->getDefaultCreatorModel();
         }
 
@@ -317,15 +320,15 @@ trait HasCreator
      */
     public static function getDefaultCreatorModel()
     {
-        return static::$defaultHasCreatorModel ?? \App\Models\User::class;
+        return static::$defaultHasCreatorModel ?? User::class;
     }
 
     /**
      * Add authorized query conditions for the creator record
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param mixed $user The user to check authorization for
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     protected function addAuthorizedQueryForCreatorRecord($query, $user)
     {
@@ -335,9 +338,9 @@ trait HasCreator
     /**
      * Add authorized user query conditions for the creator record
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param mixed $user The user to check authorization for
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     protected function addAuthorizedUserQueryForCreatorRecord($query, $user)
     {
@@ -374,10 +377,10 @@ trait HasCreator
     /**
      * Scope a query to only include related creator records.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param int $creator_id
      * @param string|null $guardName
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeIsCreator($query, $creator_id, $guardName = null)
     {
@@ -391,8 +394,8 @@ trait HasCreator
     /**
      * Scope a query to only include the current user's creations.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
     public function scopeIsMyCreation($query, $user = null, $guardName = null)
     {
@@ -435,11 +438,11 @@ trait HasCreator
             }
         }
 
-        return $query->whereHas('creatorRecord', function ($query) use ($user, $hasSpatiePermission, $spatieRoleModel) {
+        return $query->whereHas('creatorRecord', function ($query) use ($user, $hasSpatiePermission) {
 
             $query = $this->addAuthorizedQueryForCreatorRecord($query, $user);
 
-            $query = $query->whereHas('creator', function ($query) use ($user, $hasSpatiePermission, $spatieRoleModel) {
+            $query = $query->whereHas('creator', function ($query) use ($user, $hasSpatiePermission) {
                 $query = $query->where('id', $user->id);
 
                 if ($hasSpatiePermission) {

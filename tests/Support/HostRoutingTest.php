@@ -11,7 +11,6 @@ use Unusualify\Modularity\Tests\TestCase;
 
 class HostRoutingTest extends TestCase
 {
-
     public function test_get_base_host_name_returns_configured_host(): void
     {
         $hostRouting = new HostRouting(app(), 'localhost');

@@ -31,6 +31,7 @@ class RouteStatusCommand extends Command
 
             if (empty($statuses)) {
                 $rows[] = [$module->getName(), '(no routes tracked)', ''];
+
                 continue;
             }
 

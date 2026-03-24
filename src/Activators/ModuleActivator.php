@@ -5,7 +5,6 @@ namespace Unusualify\Modularity\Activators;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Nwidart\Modules\Activators\FileActivator;
-use Unusualify\Modularity\Module;
 
 class ModuleActivator extends FileActivator
 {

@@ -3,6 +3,8 @@
 namespace Unusualify\Modularity\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
@@ -104,7 +106,7 @@ abstract class BaseController extends PanelController
 
     /**
      * @param int $parentModuleId
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return JsonResponse|RedirectResponse|\Illuminate\View\View
      */
     public function create($parentModuleId = null)
     {
@@ -131,7 +133,7 @@ abstract class BaseController extends PanelController
 
     /**
      * @param int|null $parentModuleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store($parentId = null)
     {
@@ -206,7 +208,7 @@ abstract class BaseController extends PanelController
      * @param Request $request
      * @param int|$id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function show($id, $submoduleId = null)
     {
@@ -266,7 +268,7 @@ abstract class BaseController extends PanelController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return JsonResponse|RedirectResponse|\Illuminate\View\View
      */
     public function edit($id = null)
     {
@@ -292,7 +294,7 @@ abstract class BaseController extends PanelController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update($id, $submoduleId = null)
     {
@@ -384,7 +386,7 @@ abstract class BaseController extends PanelController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id, $submoduleId = null)
     {
@@ -423,7 +425,7 @@ abstract class BaseController extends PanelController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function forceDelete()
     {
@@ -453,7 +455,7 @@ abstract class BaseController extends PanelController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function restore()
     {
@@ -478,7 +480,7 @@ abstract class BaseController extends PanelController
     /**
      * @param int $id
      * @param int|null $submoduleId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function duplicate($id, $submoduleId = null)
     {

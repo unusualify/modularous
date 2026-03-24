@@ -11,7 +11,7 @@ class ChecklistHydrateTest extends TestCase
     {
         $input = [
             'type' => 'checklist',
-            'name' => 'options'
+            'name' => 'options',
         ];
 
         $h = new ChecklistHydrate($input, null, null, true);

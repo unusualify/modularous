@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Notifications;
 
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Unusualify\Modularity\Notifications\EmailVerification;
@@ -60,7 +61,7 @@ class EmailVerificationTest extends TestCase
 
         $mailMessage = $notification->toMail($notifiable);
 
-        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $mailMessage);
+        $this->assertInstanceOf(MailMessage::class, $mailMessage);
     }
 
     /** @test */
@@ -111,7 +112,8 @@ class EmailVerificationTest extends TestCase
 
     protected function createMockNotifiable($email = 'test@example.com')
     {
-        $notifiable = new class($email) {
+        $notifiable = new class($email)
+        {
             public $email;
 
             public function __construct($email)

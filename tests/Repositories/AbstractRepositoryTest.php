@@ -6,8 +6,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Mockery;
+use Mockery\MockInterface;
+use Unusualify\Modularity\Entities\Media;
 use Unusualify\Modularity\Facades\CurrencyExchange;
 use Unusualify\Modularity\Facades\ModularityFinder;
+use Unusualify\Modularity\Facades\ModularityLog;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class AbstractRepositoryTest extends RepositoryTestCase
@@ -128,7 +131,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         //         $mock->shouldReceive('getColumns')->andReturn(['is_active']);
         //     })
         // );
-        $this->repository = $this->partialMock(TestRepository::class, function (\Mockery\MockInterface $mock) {
+        $this->repository = $this->partialMock(TestRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getColumns')->andReturn(['is_active']);
         });
 
@@ -138,7 +141,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_any_trait_has_input()
     {
-        $this->repository = $this->partialMock(TestRepository::class, function (\Mockery\MockInterface $mock) {
+        $this->repository = $this->partialMock(TestRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getColumns')->andReturn(['is_active']);
         });
         $this->assertEquals(true, $this->repository->anyTraitHasInput(['Unusualify\Modularity\Repositories\Logic\MethodTransformers', 'Unusualify\Modularity\Repositories\Logic\InspectTraits'], 'is_active'));
@@ -442,7 +445,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals('Content of Post 1 Updated', $object->posts[0]->content);
 
         // getFormFieldsRelationships for morphMany relationships
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $mock->shouldReceive('inputs')->andReturn([
@@ -503,9 +506,9 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
         $this->assertCount(0, $object->notes);
 
-        $noteRepository = App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class);
+        $noteRepository = App::make(NoteRepository::class);
 
-        \Unusualify\Modularity\Facades\ModularityFinder::shouldReceive('getRouteRepository')
+        ModularityFinder::shouldReceive('getRouteRepository')
             ->with('note', true)
             ->andReturn($noteRepository);
 
@@ -545,13 +548,13 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $object->notes->count());
         $this->assertEquals('Note 1 Updated', $object->notes[0]->content);
 
-        \Unusualify\Modularity\Facades\ModularityLog::shouldReceive('critical')
+        ModularityLog::shouldReceive('critical')
             ->with('Found numeric data in hasMany relationship on afterSaveRelationships', [
                 'relationName' => 'notes',
                 'data' => $object->notes[0]->id,
                 'idsDeleted' => [$object->notes[0]->id],
-                'repository' => \Unusualify\Modularity\Tests\Repositories\TestRepository::class,
-                'relationRepository' => \Unusualify\Modularity\Tests\Repositories\NoteRepository::class,
+                'repository' => TestRepository::class,
+                'relationRepository' => NoteRepository::class,
             ])->once();
 
         $this->repository->update($object->id, [
@@ -561,7 +564,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         ]);
 
         // snapshot test
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -584,7 +587,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         ]], $fields['notes']);
 
         // getFormFieldsRelationships for hasMany relationships
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $formFields = $mock->getFormFields($object, [
@@ -644,7 +647,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals($testRole2->id, $object->testRoles[1]->id);
 
         // getFormFieldsRelationships for belongsToMany relationships
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $mock->shouldReceive('inputs')->andReturn([
@@ -659,7 +662,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals($testRole->id, $formFields['testRoles'][0]);
         $this->assertEquals($testRole2->id, $formFields['testRoles'][1]);
 
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $mock->shouldReceive('inputs')->andReturn([
@@ -688,9 +691,9 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 'deneme' => 'dee',
             ],
         ];
-        \Unusualify\Modularity\Facades\ModularityLog::shouldReceive('critical')
+        ModularityLog::shouldReceive('critical')
             ->with('Error syncing belongsToMany relationship on afterSaveRelationships', [
-                'repository' => \Unusualify\Modularity\Tests\Repositories\TestRepository::class,
+                'repository' => TestRepository::class,
                 'relationName' => 'testRoles',
                 'error' => 'Undefined array key "test_role_id"',
                 'data' => $errorData,
@@ -735,7 +738,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             ],
         ];
 
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -833,7 +836,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             ],
         ]);
         $mock->shouldReceive('findConnectorRepository')->withArgs(['connectorDefinition'])->once()
-            ->andReturn(App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class, [new Note]));
+            ->andReturn(App::make(NoteRepository::class, [new Note]));
         $this->assertEquals([
             'testModelable' => [
                 [
@@ -857,7 +860,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             ],
         ]);
         $mock->shouldReceive('findNewConnectorRepository')->withArgs(['connectorDefinition'])->once()
-            ->andReturn(App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class, [new Note]));
+            ->andReturn(App::make(NoteRepository::class, [new Note]));
         $this->assertEquals([
             'testModelable' => [
                 [
@@ -870,7 +873,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_morph_to_exception_model_not_found(): void
     {
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -893,7 +896,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_morph_to_exception_repository_not_found(): void
     {
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -916,7 +919,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
     public function test_repository_morph_to_exception_no_repository_or_connector(): void
     {
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -945,7 +948,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 'type' => 'text',
             ],
         ];
-        $image = \Unusualify\Modularity\Entities\Media::create([
+        $image = Media::create([
             'uuid' => 'uploads/folder/img-5.jpg',
             'filename' => 'img-5.jpg',
             'alt_text' => 'img-5.jpg',
@@ -974,7 +977,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals($object->medias()->first()->id, $image->id);
 
         // getFormFieldsRelationships for morphToMany relationships
-        $mock = \Mockery::mock(TestRepository::class, [new TestModel])
+        $mock = Mockery::mock(TestRepository::class, [new TestModel])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $mock->shouldReceive('inputs')->andReturn([
@@ -993,9 +996,9 @@ class AbstractRepositoryTest extends RepositoryTestCase
     {
         $owner = Owner::create(['name' => 'Test Owner']);
 
-        $noteRepository = App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class);
+        $noteRepository = App::make(NoteRepository::class);
 
-        \Unusualify\Modularity\Facades\ModularityFinder::shouldReceive('getRouteRepository')
+        ModularityFinder::shouldReceive('getRouteRepository')
             ->with('note', true)
             ->andReturn($noteRepository);
 
@@ -1008,7 +1011,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         ModularityFinder::shouldReceive('getRouteRepository')
             ->withArgs(['Note', true])
             ->once()
-            ->andReturn(App::make(\Unusualify\Modularity\Tests\Repositories\NoteRepository::class, [new Note]));
+            ->andReturn(App::make(NoteRepository::class, [new Note]));
 
         $formFields = $this->repository->getFormFields($object, [
             'notes' => [

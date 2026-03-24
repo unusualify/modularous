@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Contracts;
 
+use Illuminate\Filesystem\Filesystem;
+use Nwidart\Modules\Collection;
 use Nwidart\Modules\Exceptions\ModuleNotFoundException;
 use Nwidart\Modules\Module;
 
@@ -31,7 +33,7 @@ interface RepositoryInterface
     /**
      * Get modules as modules collection instance.
      *
-     * @return \Nwidart\Modules\Collection
+     * @return Collection
      */
     public function toCollection();
 
@@ -103,7 +105,7 @@ interface RepositoryInterface
     public function getModulePath($moduleName);
 
     /**
-     * @return \Illuminate\Filesystem\Filesystem
+     * @return Filesystem
      */
     public function getFiles();
 
@@ -138,7 +140,7 @@ interface RepositoryInterface
     /**
      * Delete a specific module.
      *
-     * @throws \Nwidart\Modules\Exceptions\ModuleNotFoundException
+     * @throws ModuleNotFoundException
      */
     public function delete(string $module): bool;
 

@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
+use Unusualify\Modularity\Console\BaseCommand;
 
 class MakeVueInputCommand extends BaseCommand
 {

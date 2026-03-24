@@ -4,15 +4,15 @@ namespace Unusualify\Modularity\Tests\Hydrates;
 
 use Unusualify\Modularity\Hydrates\Inputs\AuthorizeHydrate;
 use Unusualify\Modularity\Tests\TestCase;
-use Illuminate\Support\Collection;
 
 // simple stub model to satisfy ::query()
 class AuthorizeStubModel
 {
     public static function query()
     {
-        return new class {
-            public function get($cols = ['id','name'])
+        return new class
+        {
+            public function get($cols = ['id', 'name'])
             {
                 return [['id' => 1, 'name' => 'Authy']];
             }
@@ -50,4 +50,3 @@ class AuthorizeHydrateTest extends TestCase
         $this->assertEquals([], $result['items']);
     }
 }
-

@@ -3,7 +3,9 @@
 namespace Unusualify\Modularity\Entities\Traits;
 
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Facades\TwillCapsules;
@@ -75,7 +77,7 @@ trait HasTranslation
 
     protected function bypassTranslationFilling()
     {
-        return $this instanceof \Illuminate\Database\Eloquent\Relations\Pivot && ! $this->exists;
+        return $this instanceof Pivot && ! $this->exists;
     }
 
     public function setAttribute($key, $value)
@@ -204,9 +206,9 @@ trait HasTranslation
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string|null $locale
-     * @return \Illuminate\Database\Eloquent\Builder|null
+     * @return Builder|null
      */
     public function scopeWithActiveTranslations($query, $locale = null)
     {
@@ -234,11 +236,11 @@ trait HasTranslation
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $orderField
      * @param string $orderType
      * @param string|null $locale
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeOrderByTranslation($query, $orderField, $orderType = 'ASC', $locale = null)
     {
@@ -261,11 +263,11 @@ trait HasTranslation
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $orderRawString
      * @param string $groupByField
      * @param string|null $locale
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeOrderByRawByTranslation($query, $orderRawString, $groupByField, $locale = null)
     {

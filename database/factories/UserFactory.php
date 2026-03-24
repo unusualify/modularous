@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Unusualify\Modularity\Entities\User;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {

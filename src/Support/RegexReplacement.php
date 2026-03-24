@@ -175,7 +175,7 @@ class RegexReplacement
         // Improved glob to regex conversion
         $pattern = $this->directory_pattern;
         $pattern = str_replace('\\', '/', $pattern); // Normalize slashes
-        
+
         // Escape regex special characters except those we use for glob
         $pattern = preg_quote($pattern, '#');
         $pattern = str_replace(
@@ -187,7 +187,7 @@ class RegexReplacement
 
         foreach ($iterator as $file) {
             $pathname = str_replace('\\', '/', $file->getPathname());
-            
+
             // Normalize both base path and pathname to handle symlinks (common on macOS)
             if ($realPath = realpath($this->path)) {
                 $basePath = str_replace('\\', '/', $realPath);
@@ -200,19 +200,19 @@ class RegexReplacement
             } else {
                 $normalizedPathname = $pathname;
             }
-            
+
             // Ensure the file is actually within the base path
-            if (!str_starts_with($normalizedPathname, $basePath)) {
+            if (! str_starts_with($normalizedPathname, $basePath)) {
                 continue;
             }
 
             // Get relative path
-            $relativePath = substr($normalizedPathname, strlen($basePath));
+            $relativePath = mb_substr($normalizedPathname, mb_strlen($basePath));
             $relativePath = ltrim($relativePath, '/');
 
             // Hard safety: Never modify anything in vendor or node_modules unless the base path IS in there
             if (str_contains($normalizedPathname, '/vendor/') || str_contains($normalizedPathname, '/node_modules/')) {
-                if (!str_contains($basePath, '/vendor/') && !str_contains($basePath, '/node_modules/')) {
+                if (! str_contains($basePath, '/vendor/') && ! str_contains($basePath, '/node_modules/')) {
                     continue;
                 }
             }
@@ -229,8 +229,8 @@ class RegexReplacement
                 // Double check before writing
                 $normalizedFile = str_replace('\\', '/', realpath($file) ?: $file);
                 if (str_contains($normalizedFile, '/vendor/') || str_contains($normalizedFile, '/node_modules/')) {
-                    if (!str_contains(str_replace('\\', '/', realpath($this->path) ?: $this->path), '/vendor/')) {
-                         continue;
+                    if (! str_contains(str_replace('\\', '/', realpath($this->path) ?: $this->path), '/vendor/')) {
+                        continue;
                     }
                 }
                 $this->replacePatternFile($file);

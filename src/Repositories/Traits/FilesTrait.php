@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\File;
+use Unusualify\Modularity\Entities\Model;
 
 trait FilesTrait
 {
@@ -24,9 +25,9 @@ trait FilesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
-     * @return \Unusualify\Modularity\Entities\Model
+     * @return Model
      */
     public function hydrateFilesTrait($object, $fields)
     {
@@ -50,7 +51,7 @@ trait FilesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return void
      */
@@ -74,14 +75,14 @@ trait FilesTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Entities\Model $object
+     * @param Model $object
      * @param array $fields
      * @return array
      */
     public function getFormFieldsFilesTrait($object, $fields, $schema)
     {
         $fileInputs = $this->getColumns(__TRAIT__);
-        if (!empty($fileInputs) && $object->has('files')) {
+        if (! empty($fileInputs) && $object->has('files')) {
             $schema = $schema ?? $this->inputs();
             // foreach ($object->files->groupBy('pivot.role') as $role => $filesByRole) {
             //     foreach ($filesByRole->groupBy('pivot.locale') as $locale => $filesByLocale) {
@@ -136,7 +137,7 @@ trait FilesTrait
 
     /**
      * @param array $fields
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getFiles($object, $fields)
     {

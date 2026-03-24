@@ -2,13 +2,13 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\RelationshipMap;
-use Unusualify\Modularity\Traits\RelationshipArguments;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularity\Traits\RelationshipArguments;
+use Unusualify\Modularity\Traits\RelationshipMap;
 
 class RelationshipTraitsTest extends TestCase
 {
@@ -76,15 +76,18 @@ class RelationshipTraitsTest extends TestCase
 
     protected function createTester(string $model = 'Post'): object
     {
-        $tester = new class {
+        $tester = new class
+        {
             use RelationshipMap;
 
-            public function boot($model) {
+            public function boot($model)
+            {
                 $this->model = $model;
                 $this->relationshipParametersMap = config('modularity.laravel-relationship-map');
             }
 
-            public function runCreate($name, $rel, $args = []) {
+            public function runCreate($name, $rel, $args = [])
+            {
                 return $this->createRelationshipSchema($name, $rel, $args);
             }
         };
@@ -115,7 +118,10 @@ class RelationshipTraitsTest extends TestCase
     /** @test */
     public function it_can_generate_relationship_arguments()
     {
-        $tester = new class { use RelationshipArguments; };
+        $tester = new class
+        {
+            use RelationshipArguments;
+        };
 
         $arg = $tester->getRelationshipArgumentForeignKey('User', 'belongsTo', []);
         $this->assertEquals('user_id', $arg);
@@ -238,10 +244,12 @@ class RelationshipTraitsTest extends TestCase
             ],
         ]);
 
-        $tester = new class {
+        $tester = new class
+        {
             use RelationshipMap;
 
-            public function boot() {
+            public function boot()
+            {
                 $this->model = 'Post';
                 $this->relationshipParametersMap = config('modularity.laravel-relationship-map');
             }

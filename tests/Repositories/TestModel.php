@@ -3,6 +3,11 @@
 namespace Unusualify\Modularity\Tests\Repositories;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Unusualify\Modularity\Entities\Interfaces\Sortable;
 use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
@@ -38,27 +43,27 @@ class TestModel extends Model implements Sortable
         );
     }
 
-    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(Owner::class);
     }
 
-    public function testRoles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function testRoles(): BelongsToMany
     {
         return $this->belongsToMany(TestRole::class);
     }
 
-    public function notes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function notes(): HasMany
     {
         return $this->hasMany(Note::class);
     }
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function posts(): MorphMany
     {
         return $this->morphMany(Post::class, 'postable');
     }
 
-    public function testModelable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function testModelable(): MorphTo
     {
         return $this->morphTo();
     }

@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits\Core;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 use Oobook\Database\Eloquent\Concerns\ManageEloquent;
 use Spatie\Activitylog\ActivityLogger;
@@ -10,6 +11,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Unusualify\Modularity\Entities\State;
+use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Traits\ManageModuleRoute;
 
 trait ModelHelpers
@@ -18,13 +20,13 @@ trait ModelHelpers
 
     public $oldTranslations = [];
 
-    public static $defaultAuthorizedModel = \Unusualify\Modularity\Entities\User::class;
+    public static $defaultAuthorizedModel = User::class;
 
     public static $authorizableRolesToCheck = ['manager', 'account-executive'];
 
     public static $assignableRolesToCheck = ['editor', 'reporter'];
 
-    public static $defaultHasCreatorModel = \Unusualify\Modularity\Entities\User::class;
+    public static $defaultHasCreatorModel = User::class;
 
     /**
      * Boot the trait.
@@ -220,7 +222,7 @@ trait ModelHelpers
             ->dontSubmitEmptyLogs();
     }
 
-    public function lastActivities(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function lastActivities(): MorphMany
     {
         return $this->activities()
             ->with('causer')

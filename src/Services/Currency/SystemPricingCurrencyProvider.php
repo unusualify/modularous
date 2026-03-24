@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Unusualify\Modularity\Services\Currency;
 
 use Illuminate\Support\Facades\Cache;
+use Modules\SystemPricing\Entities\Currency;
 use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 
 /**
@@ -15,12 +16,12 @@ class SystemPricingCurrencyProvider implements CurrencyProviderInterface
 {
     public function findByIso4217(string $isoCode): ?object
     {
-        if (! class_exists(\Modules\SystemPricing\Entities\Currency::class)) {
+        if (! class_exists(Currency::class)) {
             return null;
         }
 
         return Cache::remember('currency_by_iso_4217_' . $isoCode, now()->addHours(1), function () use ($isoCode) {
-            return \Modules\SystemPricing\Entities\Currency::query()
+            return Currency::query()
                 ->where('iso_4217', mb_strtoupper($isoCode))
                 ->first();
         });
@@ -28,22 +29,22 @@ class SystemPricingCurrencyProvider implements CurrencyProviderInterface
 
     public function findById(int $id): ?object
     {
-        if (! class_exists(\Modules\SystemPricing\Entities\Currency::class)) {
+        if (! class_exists(Currency::class)) {
             return null;
         }
 
         return Cache::remember('currency_by_id_' . $id, now()->addHours(1), function () use ($id) {
-            return \Modules\SystemPricing\Entities\Currency::find($id);
+            return Currency::find($id);
         });
     }
 
     public function getCurrenciesForSelect(): array
     {
-        if (! class_exists(\Modules\SystemPricing\Entities\Currency::class)) {
+        if (! class_exists(Currency::class)) {
             return [];
         }
 
-        return \Modules\SystemPricing\Entities\Currency::query()
+        return Currency::query()
             ->select(['id', 'symbol as name', 'iso_4217 as iso'])
             ->when(
                 modularityConfig('services.currency_exchange.active'),
@@ -55,6 +56,6 @@ class SystemPricingCurrencyProvider implements CurrencyProviderInterface
 
     public function isAvailable(): bool
     {
-        return class_exists(\Modules\SystemPricing\Entities\Currency::class);
+        return class_exists(Currency::class);
     }
 }

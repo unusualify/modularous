@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Facades\Modularity;
 
 trait ManageInertia
@@ -181,7 +182,7 @@ trait ManageInertia
         view()->composer(modularityBaseKey() . '::layouts.app-inertia', function ($view) {
             $user = $this->user;
 
-            $userRepository = app()->make(\Modules\SystemUser\Repositories\UserRepository::class);
+            $userRepository = app()->make(UserRepository::class);
             $profileShortcutSchema = modularity_format_inputs(getFormDraft('profile_shortcut'));
             $profileShortcutModel = $userRepository->getFormFields($user, $profileShortcutSchema);
             $loginShortcutSchema = modularity_format_inputs(getFormDraft('login_shortcut'));

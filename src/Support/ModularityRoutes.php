@@ -2,10 +2,14 @@
 
 namespace Unusualify\Modularity\Support;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Spatie\Permission\Middlewares\PermissionMiddleware;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware;
 use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Http\Controllers\ApiController;
 use Unusualify\Modularity\Http\Middleware\AuthenticateMiddleware;
 use Unusualify\Modularity\Http\Middleware\AuthorizationMiddleware;
 use Unusualify\Modularity\Http\Middleware\CompanyRegistrationMiddleware;
@@ -16,7 +20,9 @@ use Unusualify\Modularity\Http\Middleware\LoadLocalizedConfig;
 use Unusualify\Modularity\Http\Middleware\LogMiddleware;
 use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
 use Unusualify\Modularity\Http\Middleware\RedirectIfAuthenticatedMiddleware;
+use Unusualify\Modularity\Http\Middleware\RedirectorMiddleware;
 use Unusualify\Modularity\Http\Middleware\UtmMiddleware;
+use Unusualify\Modularity\Module;
 
 class ModularityRoutes
 {
@@ -131,7 +137,7 @@ class ModularityRoutes
 
         Route::aliasMiddleware('authorization', AuthorizationMiddleware::class);
         Route::aliasMiddleware('modularity.company.registration', CompanyRegistrationMiddleware::class);
-        Route::aliasMiddleware('modularity.redirector', \Unusualify\Modularity\Http\Middleware\RedirectorMiddleware::class);
+        Route::aliasMiddleware('modularity.redirector', RedirectorMiddleware::class);
 
         Route::middlewareGroup('modularity.panel', [
             // 'modularity.core',
@@ -147,9 +153,9 @@ class ModularityRoutes
         * Define Spatie Laravel-Permission Middleware (https://github.com/spatie/laravel-permission)
         * See a typo? Note that since v6 the 'Middleware' namespace is singular. Prior to v6 it was 'Middlewares'. Time to upgrade your implementation!
         */
-        Route::aliasMiddleware('role', \Spatie\Permission\Middlewares\RoleMiddleware::class);
-        Route::aliasMiddleware('permission', \Spatie\Permission\Middlewares\PermissionMiddleware::class);
-        Route::aliasMiddleware('role_or_permission', \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class);
+        Route::aliasMiddleware('role', RoleMiddleware::class);
+        Route::aliasMiddleware('permission', PermissionMiddleware::class);
+        Route::aliasMiddleware('role_or_permission', RoleOrPermissionMiddleware::class);
 
     }
 
@@ -253,12 +259,7 @@ class ModularityRoutes
     /**
      * Register routes from a file within a group.
      *
-     * @param  \Illuminate\Routing\Router  $router
-     * @param  array  $groupOptions
-     * @param  array  $middlewares
-     * @param  string  $namespace
-     * @param  string  $routesFile
-     * @param  bool  $instant
+     * @param Router $router
      */
     public function registerRoutes(
         $router,
@@ -313,9 +314,7 @@ class ModularityRoutes
     /**
      * Register module routes with shared logic for admin, front and api routes.
      *
-     * @param  \Unusualify\Modularity\Module  $module
-     * @param  array  $options
-     * @param  string  $type  'admin', 'front' or 'api'
+     * @param string $type 'admin', 'front' or 'api'
      */
     public function registerModuleRoutes(Module $module, array $options, string $type): void
     {
@@ -441,7 +440,7 @@ class ModularityRoutes
                 $namespace = $lastGroup['namespace'] ?? null;
                 $controllerNamespace = concatenate_namespace($namespace, $controllerName);
 
-                if (! @class_exists($controllerNamespace) || ! is_subclass_of($controllerNamespace, \Unusualify\Modularity\Http\Controllers\ApiController::class)) {
+                if (! @class_exists($controllerNamespace) || ! is_subclass_of($controllerNamespace, ApiController::class)) {
                     continue;
                 }
             }

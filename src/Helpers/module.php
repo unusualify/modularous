@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\VarDumper\VarDumper;
 use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\Modularity;
 
 /*
@@ -23,7 +24,7 @@ if (! function_exists('modularityBaseKey')) {
     {
         $notation = ! $notation ? $notation : '.' . $notation;
 
-        return \Illuminate\Support\Str::snake(env('MODULARITY_BASE_NAME', 'Modularity')) . $notation;
+        return Str::snake(env('MODULARITY_BASE_NAME', 'Modularity')) . $notation;
     }
 }
 
@@ -55,13 +56,13 @@ if (! function_exists('curtModuleName')) {
 
         preg_match($pattern, $dir, $matches);
         if (! count($matches)) {
-            \Illuminate\Support\Facades\Log::error('curtModule: Could not extract module name from path', [
+            Log::error('curtModule: Could not extract module name from path', [
                 'file' => $file,
                 'matches' => $matches,
                 'dir' => $dir,
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 'Could not determine current module from file path. Ensure the path contains a valid module directory (e.g. Modules/ModuleName/).'
             );
         }
@@ -215,8 +216,8 @@ if (! function_exists('moduleRoute')) {
         // Build the route
         try {
             return route($routeName, $parameters, $absolute);
-        } catch (\Throwable $th) {
-            \Illuminate\Support\Facades\Log::error('modularityRoute: Route generation failed', [
+        } catch (Throwable $th) {
+            Log::error('modularityRoute: Route generation failed', [
                 'routeName' => $routeName,
                 'moduleName' => $moduleName,
                 'prefix' => $prefix,
@@ -225,7 +226,7 @@ if (! function_exists('moduleRoute')) {
                 'exception' => $th->getMessage(),
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 "Failed to generate route '{$routeName}': {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -443,13 +444,13 @@ if (! function_exists('backtrace_formatter')) {
                 'line' => $item['line'] ?? null,
                 'function' => $item['function'] ?? null,
             ];
-        } catch (\Throwable $th) {
-            \Illuminate\Support\Facades\Log::error('backtrace_formatter: Failed to format backtrace item', [
+        } catch (Throwable $th) {
+            Log::error('backtrace_formatter: Failed to format backtrace item', [
                 'item' => $item,
                 'exception' => $th->getMessage(),
             ]);
 
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 "Failed to format backtrace: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -483,7 +484,7 @@ if (! function_exists('benchmark')) {
     function benchmark(callable $callback, ?string $label = null, bool $die = false, $unit = 'milliseconds', &$elapsedString = null)
     {
         if (! $die && is_null($label)) {
-            throw new \Exception('Label is required');
+            throw new Exception('Label is required');
         }
 
         if (! $die && ! modularityConfig('benchmark_enabled', false)) {
@@ -491,7 +492,7 @@ if (! function_exists('benchmark')) {
         }
 
         if (! in_array($unit, ['microseconds', 'milliseconds', 'seconds'])) {
-            throw new \Exception('Invalid unit: ' . $unit);
+            throw new Exception('Invalid unit: ' . $unit);
         }
 
         $startTime = microtime(true);
@@ -510,7 +511,7 @@ if (! function_exists('benchmark')) {
         $elapsedString = $elapsed . ' in ' . $unit;
 
         if ($die) {
-            throw new \Unusualify\Modularity\Exceptions\ModularityException(
+            throw new ModularityException(
                 "Benchmark stopped: {$elapsedString}"
             );
         }

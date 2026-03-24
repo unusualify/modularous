@@ -4,11 +4,15 @@ namespace Modules\SystemPayment\Entities;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
+use Modules\SystemPricing\Entities\Currency;
+use Modules\SystemPricing\Entities\VatRate;
 use Unusualify\Modularity\Entities\Traits\HasRepeaters;
 use Unusualify\Modularity\Entities\Traits\HasSpreadable;
 
-class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
+class PaymentCurrency extends Currency
 {
     use HasSpreadable, HasRepeaters;
 
@@ -34,14 +38,14 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
     /**
      * The paymentServices that belong to the Currency.
      */
-    public function paymentServices(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function paymentServices(): BelongsToMany
     {
-        return $this->belongsToMany(\Modules\SystemPayment\Entities\PaymentService::class);
+        return $this->belongsToMany(PaymentService::class);
     }
 
-    public function paymentService(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function paymentService(): BelongsTo
     {
-        return $this->belongsTo(\Modules\SystemPayment\Entities\PaymentService::class, 'payment_service_id', 'id');
+        return $this->belongsTo(PaymentService::class, 'payment_service_id', 'id');
     }
 
     protected function hasCreditCardPaymentService(): Attribute
@@ -69,7 +73,7 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
                 $company_vat_rates = $this->getRepeaterField('default_vat_rates', $locale, default: []);
                 $companyVatRates = collect();
                 foreach ($company_vat_rates as $company_type => $object) {
-                    if (isset($object['vat_rate_id']) && ($vatRate = \Modules\SystemPricing\Entities\VatRate::find($object['vat_rate_id']))) {
+                    if (isset($object['vat_rate_id']) && ($vatRate = VatRate::find($object['vat_rate_id']))) {
                         $companyVatRates->push((object) [
                             'company_type' => $company_type,
                             'vat_rate_id' => $vatRate->id,
@@ -146,7 +150,7 @@ class PaymentCurrency extends \Modules\SystemPricing\Entities\Currency
     /**
      * Get the corporate VAT rate for the currency for corporate companies.
      *
-     * @return \Modules\SystemPricing\Entities\VatRate|null
+     * @return VatRate|null
      */
     public function getUserCorporateVatRate()
     {

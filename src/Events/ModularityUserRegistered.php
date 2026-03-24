@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Events;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
 class ModularityUserRegistered
@@ -11,14 +13,14 @@ class ModularityUserRegistered
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
+     * @var Authenticatable
      */
     public $user;
 
     /**
      * The request that triggered the event.
      *
-     * @var \Illuminate\Http\Request
+     * @var Request
      */
     public $request;
 
@@ -32,8 +34,8 @@ class ModularityUserRegistered
     /**
      * Create a new event instance.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param \Illuminate\Http\Request $request
+     * @param Authenticatable $user
+     * @param Request $request
      * @return void
      */
     public function __construct($user, $request, bool $isOauth = false)

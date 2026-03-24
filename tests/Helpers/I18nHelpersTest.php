@@ -30,7 +30,7 @@ class I18nHelpersTest extends TestCase
         $result = getLabelFromLocale('en');
 
         $this->assertIsString($result);
-        $this->assertStringContainsString('en', strtolower($result));
+        $this->assertStringContainsString('en', mb_strtolower($result));
     }
 
     /** @test */

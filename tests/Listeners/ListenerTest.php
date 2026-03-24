@@ -4,8 +4,6 @@ namespace Unusualify\Modularity\Tests\Listeners;
 
 use Illuminate\Support\Facades\Notification;
 use Mockery;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Listeners\Listener;
 use Unusualify\Modularity\Tests\TestCase;
@@ -34,7 +32,7 @@ class ListenerTest extends TestCase
             ->with('SystemNotification')
             ->andReturn($module);
 
-        $listener = new ConcreteListener();
+        $listener = new ConcreteListener;
 
         $reflection = new \ReflectionClass($listener);
         $property = $reflection->getProperty('mailEnabled');
@@ -59,7 +57,7 @@ class ListenerTest extends TestCase
             ->with('SystemNotification')
             ->andReturn($module);
 
-        $listener = new ConcreteListener();
+        $listener = new ConcreteListener;
 
         $reflection = new \ReflectionClass($listener);
         $property = $reflection->getProperty('mailEnabled');
@@ -84,7 +82,7 @@ class ListenerTest extends TestCase
             ->with('SystemNotification')
             ->andReturn($module);
 
-        $listener = new ConcreteListener();
+        $listener = new ConcreteListener;
         $listener->addNotificationPath('/custom/path');
 
         $reflection = new \ReflectionClass($listener);
@@ -111,7 +109,7 @@ class ListenerTest extends TestCase
             ->with('SystemNotification')
             ->andReturn($module);
 
-        $listener = new ConcreteListener();
+        $listener = new ConcreteListener;
         $listener->mergeNotificationPaths(['/path/one', '/path/two']);
 
         $reflection = new \ReflectionClass($listener);
@@ -139,9 +137,9 @@ class ListenerTest extends TestCase
             ->with('SystemNotification')
             ->andReturn($module);
 
-        $listener = new ConcreteListener();
+        $listener = new ConcreteListener;
 
-        $event = new \stdClass();
+        $event = new \stdClass;
         $result = $listener->getNotificationClassPublic($event);
 
         $this->assertNull($result);
@@ -166,9 +164,9 @@ class ListenerTest extends TestCase
         // Notification should NOT be called when mail is disabled
         Notification::shouldReceive('route')->never();
 
-        $listener = new ConcreteListener();
-        $event = new \stdClass();
-        $event->model = new \stdClass();
+        $listener = new ConcreteListener;
+        $event = new \stdClass;
+        $event->model = new \stdClass;
         $event->serializedData = [];
 
         $listener->handle($event);
@@ -196,9 +194,9 @@ class ListenerTest extends TestCase
         // Notification should NOT be called when no notification class is found
         Notification::shouldReceive('route')->never();
 
-        $listener = new ConcreteListener();
-        $event = new \stdClass();
-        $event->model = new \stdClass();
+        $listener = new ConcreteListener;
+        $event = new \stdClass;
+        $event->model = new \stdClass;
         $event->serializedData = [];
 
         $listener->handle($event);

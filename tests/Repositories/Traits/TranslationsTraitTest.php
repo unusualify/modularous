@@ -7,7 +7,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Traits\HasTranslation;
+use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class TranslationsTraitTest extends RepositoryTestCase
@@ -170,9 +175,9 @@ class TranslationsTraitTest extends RepositoryTestCase
     }
 }
 
-class TranslationsTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class TranslationsTestModel extends TestModel
 {
-    use \Unusualify\Modularity\Entities\Traits\HasTranslation;
+    use HasTranslation;
 
     protected $table = 'translations_test_models';
 
@@ -183,16 +188,16 @@ class TranslationsTestModel extends \Unusualify\Modularity\Tests\Repositories\Te
     protected $translatedAttributes = ['title', 'active'];
 }
 
-class TranslationsTestModelTranslation extends \Unusualify\Modularity\Entities\Model
+class TranslationsTestModelTranslation extends Model
 {
     protected $table = 'translations_test_model_translations';
 
     protected $baseModuleModel = TranslationsTestModel::class;
 }
 
-class TranslationsTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class TranslationsTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+    use TranslationsTrait;
 
     public function __construct(TranslationsTestModel $model)
     {

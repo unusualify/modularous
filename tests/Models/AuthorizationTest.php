@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Unusualify\Modularity\Entities\Authorization;
@@ -140,7 +141,7 @@ class AuthorizationTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $authorization = new Authorization;
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $authorization);
+        $this->assertInstanceOf(Model::class, $authorization);
     }
 
     public function test_has_timestamps()

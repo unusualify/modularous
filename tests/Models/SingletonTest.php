@@ -3,7 +3,9 @@
 namespace Unusualify\Modularity\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Singleton;
+use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Tests\ModelTestCase;
 
 class SingletonTest extends ModelTestCase
@@ -13,7 +15,7 @@ class SingletonTest extends ModelTestCase
     public function test_get_table_singleton()
     {
         $singleton = new Singleton;
-        $this->assertEquals(\Unusualify\Modularity\Facades\Modularity::config('tables.singletons', 'modularity_singletons'), $singleton->getTable());
+        $this->assertEquals(Modularity::config('tables.singletons', 'modularity_singletons'), $singleton->getTable());
     }
 
     public function test_fillable_attributes()
@@ -114,7 +116,7 @@ class SingletonTest extends ModelTestCase
     public function test_extends_base_model()
     {
         $singleton = new Singleton;
-        $this->assertInstanceOf(\Unusualify\Modularity\Entities\Model::class, $singleton);
+        $this->assertInstanceOf(Model::class, $singleton);
     }
 
     public function test_has_timestamps()

@@ -23,7 +23,7 @@ class CreatorHydrateTest extends TestCase
     {
         $input = [
             'type' => 'creator',
-            'name' => 'created_by'
+            'name' => 'created_by',
         ];
 
         $h = new CreatorHydrate($input, null, null, true);

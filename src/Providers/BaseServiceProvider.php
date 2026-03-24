@@ -2,23 +2,47 @@
 
 namespace Unusualify\Modularity\Providers;
 
+use App\Exceptions\Handler;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Nwidart\Modules\Contracts\RepositoryInterface;
+use Torann\GeoIP\Facades\GeoIP;
+use Unusualify\Modularity\Brokers\RegisterBrokerManager;
+use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
 use Unusualify\Modularity\Exceptions\AuthConfigurationException;
+use Unusualify\Modularity\Facades\ModularityVite;
+use Unusualify\Modularity\Http\Middleware\HandleInertiaRequests;
 use Unusualify\Modularity\Http\ViewComposers\CurrentUser;
 use Unusualify\Modularity\Http\ViewComposers\FilesUploaderConfig;
 use Unusualify\Modularity\Http\ViewComposers\Localization;
 use Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig;
 use Unusualify\Modularity\Http\ViewComposers\Urls;
+use Unusualify\Modularity\Logging\ModularityLogHandler;
 use Unusualify\Modularity\Modularity;
+use Unusualify\Modularity\Services\CacheRelationshipGraph;
+use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
+use Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
+use Unusualify\Modularity\Services\CurrencyExchangeService;
+use Unusualify\Modularity\Services\FilepondManager;
+use Unusualify\Modularity\Services\MigrationBackup;
+use Unusualify\Modularity\Services\ModularityCacheService;
+use Unusualify\Modularity\Services\RedirectService;
+use Unusualify\Modularity\Services\UtmParameters;
 use Unusualify\Modularity\Services\View\ModularityNavigation;
 use Unusualify\Modularity\Support\CommandDiscovery;
 use Unusualify\Modularity\Support\FileLoader;
+use Unusualify\Modularity\Support\HostRouteRegistrar;
+use Unusualify\Modularity\Support\HostRouting;
 use Unusualify\Modularity\Translation\Translator;
 
 class BaseServiceProvider extends ServiceProvider
@@ -128,7 +152,7 @@ class BaseServiceProvider extends ServiceProvider
         // });
         // CANCEL \Nwidart\Modules\Laravel\LaravelFileRepository binding
         // and Nwidart\Modules\Laravel\Module binding in the LaravelFileRepository createModule method
-        $this->app->singleton(\Nwidart\Modules\Contracts\RepositoryInterface::class, function ($app) {
+        $this->app->singleton(RepositoryInterface::class, function ($app) {
             $path = $app['config']->get('modules.paths.modules');
 
             return new Modularity($app, $path);
@@ -154,65 +178,65 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->app->singleton('unusualify.hosting', function (Application $app) {
             // return new \Unusualify\Modularity\Support\HostRouting($app, modularityConfig('app_url'));
-            return new \Unusualify\Modularity\Support\HostRouting($app, $app['modularity']->getAppHost());
+            return new HostRouting($app, $app['modularity']->getAppHost());
         });
 
         $this->app->singleton('unusualify.hostRouting', function (Application $app) {
             // return new \Unusualify\Modularity\Support\HostRouteRegistrar($app, modularityConfig('app_url'));
-            return new \Unusualify\Modularity\Support\HostRouteRegistrar($app, $app['modularity']->getAppHost());
+            return new HostRouteRegistrar($app, $app['modularity']->getAppHost());
         });
 
         $this->app->singleton('Filepond', function (Application $app) {
-            return new \Unusualify\Modularity\Services\FilepondManager;
+            return new FilepondManager;
         });
 
         $this->app->singleton('currency.exchange', function (Application $app) {
-            return new \Unusualify\Modularity\Services\CurrencyExchangeService;
+            return new CurrencyExchangeService;
         });
 
-        $this->app->singleton(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class, function (Application $app) {
+        $this->app->singleton(CurrencyProviderInterface::class, function (Application $app) {
             $providerClass = config('modularity.currency_provider', null);
             if ($providerClass && class_exists($providerClass)) {
                 return $app->make($providerClass);
             }
-            $systemPricing = new \Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
+            $systemPricing = new SystemPricingCurrencyProvider;
             if ($systemPricing->isAvailable()) {
                 return $systemPricing;
             }
 
-            return new \Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
+            return new NullCurrencyProvider;
         });
 
         $this->app->singleton('modularity.relationship.graph', function (Application $app) {
-            return new \Unusualify\Modularity\Services\CacheRelationshipGraph;
+            return new CacheRelationshipGraph;
         });
 
         $this->app->singleton('modularity.cache', function (Application $app) {
-            return new \Unusualify\Modularity\Services\ModularityCacheService;
+            return new ModularityCacheService;
         });
 
         $this->app->singleton('migration.backup', function (Application $app) {
-            return new \Unusualify\Modularity\Services\MigrationBackup;
+            return new MigrationBackup;
         });
 
         $this->app->singleton('modularity.redirect', function (Application $app) {
-            return new \Unusualify\Modularity\Services\RedirectService;
+            return new RedirectService;
         });
 
         $this->app->singleton('modularity.utm', function (Application $app) {
-            return new \Unusualify\Modularity\Services\UtmParameters($app['request']);
+            return new UtmParameters($app['request']);
         });
 
         $this->app->singleton('auth.register', function (Application $app) {
-            return new \Unusualify\Modularity\Brokers\RegisterBrokerManager($app);
+            return new RegisterBrokerManager($app);
         });
 
-        $this->app->alias(\Unusualify\Modularity\Facades\ModularityVite::class, 'ModularityVite');
+        $this->app->alias(ModularityVite::class, 'ModularityVite');
 
-        $this->app->alias(\Torann\GeoIP\Facades\GeoIP::class, 'GeoIP');
+        $this->app->alias(GeoIP::class, 'GeoIP');
 
         // Register Inertia middleware
-        $this->app->singleton('inertia.middleware', \Unusualify\Modularity\Http\Middleware\HandleInertiaRequests::class);
+        $this->app->singleton('inertia.middleware', HandleInertiaRequests::class);
 
         $this->app->register(TelescopeServiceProvider::class);
 
@@ -225,9 +249,9 @@ class BaseServiceProvider extends ServiceProvider
     private function registerExceptionHandler(): void
     {
         // Register our modularity exception handler
-        $this->app->extend(\Illuminate\Contracts\Debug\ExceptionHandler::class, function ($handler, $app) {
+        $this->app->extend(ExceptionHandler::class, function ($handler, $app) {
             // If the current handler is the default app handler, wrap it with modularity functionality
-            if (get_class($handler) === \App\Exceptions\Handler::class) {
+            if (get_class($handler) === Handler::class) {
                 if ($app['modularity']->isPanelUrl()) {
                     return new \Unusualify\Modularity\Exceptions\Handler($app);
                 }
@@ -299,7 +323,7 @@ class BaseServiceProvider extends ServiceProvider
 
             if ($hasIgnoredModularousPath && file_exists(base_path('lang'))) {
                 $paths[] = base_path('lang');
-            } else if (!$hasIgnoredModularousPath && !file_exists(base_path('lang'))) {
+            } elseif (! $hasIgnoredModularousPath && ! file_exists(base_path('lang'))) {
                 $app->useLangPath(realpath(__DIR__ . '/../../lang'));
             }
 
@@ -375,17 +399,17 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function bootMacros()
     {
-        \Illuminate\Support\Str::macro('modularitySlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
+        Str::macro('modularitySlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
             $dictionary = array_merge(Lang::get('slug-dictionary', locale: $language), $dictionary ?? []);
 
             if (array_key_exists($separator, $dictionary)) {
                 unset($dictionary[$separator]);
             }
 
-            return \Illuminate\Support\Str::slug($string, $separator, language: null, dictionary: $dictionary);
+            return Str::slug($string, $separator, language: null, dictionary: $dictionary);
         });
 
-        \Illuminate\Support\Collection::macro('recursive', function () {
+        Collection::macro('recursive', function () {
             return $this->map(function ($value) {
                 if (is_array($value) || is_object($value)) {
                     return collect($value)->recursive();
@@ -395,13 +419,13 @@ class BaseServiceProvider extends ServiceProvider
             });
         });
 
-        \Illuminate\Support\Facades\Request::macro('getCachedUserCurrency', function () {
-            if ($session = \Illuminate\Support\Facades\Session::get('user-currency')) {
+        Request::macro('getCachedUserCurrency', function () {
+            if ($session = Session::get('user-currency')) {
                 return config('priceable.models.currency')::find($session);
             }
 
-            $currency = app(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class)->findById(config('priceable.defaults.currencies'));
-            if (!$currency) {
+            $currency = app(CurrencyProviderInterface::class)->findById(config('priceable.defaults.currencies'));
+            if (! $currency) {
                 $currency = config('priceable.models.currency')::first();
             }
 
@@ -587,7 +611,7 @@ class BaseServiceProvider extends ServiceProvider
     {
         $this->app['config']->set('logging.channels.modularity', [
             'driver' => 'monolog',
-            'handler' => \Unusualify\Modularity\Logging\ModularityLogHandler::class,
+            'handler' => ModularityLogHandler::class,
             'handler_with' => [
                 'level' => env('MODULARITY_LOG_LEVEL', 'debug'),
                 'maxFiles' => 14, // Keep 14 days of logs

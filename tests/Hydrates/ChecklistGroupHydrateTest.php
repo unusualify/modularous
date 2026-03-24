@@ -15,16 +15,16 @@ class ChecklistGroupHydrateTest extends TestCase
             'schema' => [
                 [
                     'name' => 'group1',
-                    'items' => [['id' => 1, 'name' => 'Item 1']]
+                    'items' => [['id' => 1, 'name' => 'Item 1']],
                 ],
                 [
                     'name' => 'group2',
-                    'items' => [] // Should be filtered out
+                    'items' => [], // Should be filtered out
                 ],
                 [
-                    'name' => 'group3' // No items key, should be filtered out
-                ]
-            ]
+                    'name' => 'group3', // No items key, should be filtered out
+                ],
+            ],
         ];
 
         $h = new ChecklistGroupHydrate($input, null, null, true);

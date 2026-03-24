@@ -8,6 +8,8 @@ use Unusualify\Modularity\Entities\Traits\HasRepeaters;
 use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
 use Unusualify\Modularity\Tests\Repositories\Owner;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestModel;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class RepeatersTraitTest extends RepositoryTestCase
@@ -306,14 +308,14 @@ class RepeatersTraitTest extends RepositoryTestCase
     }
 }
 
-class RepeatersTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class RepeatersTestModel extends TestModel
 {
     use HasRepeaters;
 }
 
-class RepeatersTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class RepeatersTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
+    use RepeatersTrait;
 
     public function __construct(RepeatersTestModel $model)
     {

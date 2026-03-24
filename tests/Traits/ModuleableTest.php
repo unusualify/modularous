@@ -9,7 +9,8 @@ class ModuleableTest extends TestCase
 {
     public function test_get_module_name_returns_explicit_module_name()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Moduleable;
         };
         $tester->setModuleName('ExplicitModule');
@@ -19,7 +20,8 @@ class ModuleableTest extends TestCase
 
     public function test_get_module_name_from_class_basename_when_no_module_in_namespace()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Moduleable;
         };
 
@@ -30,7 +32,8 @@ class ModuleableTest extends TestCase
 
     public function test_set_module_name_returns_self_and_sets_value()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Moduleable;
         };
 
@@ -41,7 +44,8 @@ class ModuleableTest extends TestCase
 
     public function test_get_route_name_returns_explicit_route_name()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Moduleable;
         };
         $tester->setRouteName('ExplicitRoute');
@@ -51,7 +55,8 @@ class ModuleableTest extends TestCase
 
     public function test_set_route_name_returns_self_and_sets_value()
     {
-        $tester = new class {
+        $tester = new class
+        {
             use Moduleable;
         };
 

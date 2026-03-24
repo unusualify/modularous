@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Unusualify\Modularity\Services\ModularityCacheService;
 
 /**
  * @method static string getDriver()
@@ -36,7 +37,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool flush()
  * @method static array getStats(?string $module = null)
  *
- * @see \Unusualify\Modularity\Services\ModularityCacheService
+ * @see ModularityCacheService
  */
 class ModularityCache extends Facade
 {

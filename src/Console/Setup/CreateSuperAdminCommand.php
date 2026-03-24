@@ -2,13 +2,13 @@
 
 namespace Unusualify\Modularity\Console\Setup;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Factory as ValidatorFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Entities\User;
 
 use function Laravel\Prompts\confirm;

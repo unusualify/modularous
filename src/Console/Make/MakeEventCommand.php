@@ -2,10 +2,10 @@
 
 namespace Unusualify\Modularity\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Finder\Finder;
+use Unusualify\Modularity\Console\BaseCommand;
 use Unusualify\Modularity\Facades\Modularity;
 
 use function Laravel\Prompts\select;

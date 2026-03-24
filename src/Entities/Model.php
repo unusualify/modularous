@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use Cartalyst\Tags\TaggableInterface;
 use Cartalyst\Tags\TaggableTrait;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 // use Modules\Notification\Events\ModelCreated;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
 use Unusualify\Modularity\Contracts\ModuleableInterface;
@@ -96,7 +97,7 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
     /**
      * {@inheritdoc}
      */
-    public function tags(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function tags(): MorphToMany
     {
         return $this->morphToMany(
             static::$tagsModel,

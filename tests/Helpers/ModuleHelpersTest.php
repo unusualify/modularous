@@ -2,7 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Helpers;
 
-use Unusualify\Modularity\Facades\Modularity;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Unusualify\Modularity\Tests\TestCase;
 
 class ModuleHelpersTest extends TestCase
@@ -18,8 +18,9 @@ class ModuleHelpersTest extends TestCase
     /** @test */
     public function test_class_uses_deep_gets_all_traits()
     {
-        $class = new class {
-            use \Illuminate\Database\Eloquent\Concerns\HasAttributes;
+        $class = new class
+        {
+            use HasAttributes;
         };
 
         $result = classUsesDeep($class);
@@ -30,11 +31,12 @@ class ModuleHelpersTest extends TestCase
     /** @test */
     public function test_class_has_trait_checks_for_trait()
     {
-        $class = new class {
-            use \Illuminate\Database\Eloquent\Concerns\HasAttributes;
+        $class = new class
+        {
+            use HasAttributes;
         };
 
-        $result = classHasTrait($class, \Illuminate\Database\Eloquent\Concerns\HasAttributes::class);
+        $result = classHasTrait($class, HasAttributes::class);
 
         $this->assertTrue($result);
     }

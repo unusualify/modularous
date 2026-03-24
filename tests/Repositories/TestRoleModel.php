@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Tests\Repositories;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Unusualify\Modularity\Entities\Model;
 
 class TestRole extends Model
@@ -10,7 +11,7 @@ class TestRole extends Model
 
     protected $fillable = ['name'];
 
-    public function testModels(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function testModels(): BelongsToMany
     {
         return $this->belongsToMany(TestModel::class);
     }

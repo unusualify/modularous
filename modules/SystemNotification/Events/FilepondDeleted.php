@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Unusualify\Modularity\Entities\Filepond;
 
 class FilepondDeleted implements ShouldDispatchAfterCommit
 {
@@ -31,7 +32,7 @@ class FilepondDeleted implements ShouldDispatchAfterCommit
      *
      * @return void
      */
-    public function __construct(public \Unusualify\Modularity\Entities\Filepond $model) {}
+    public function __construct(public Filepond $model) {}
 
     public function broadcastOn(): array
     {

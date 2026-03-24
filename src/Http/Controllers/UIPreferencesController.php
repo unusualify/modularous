@@ -14,6 +14,7 @@ use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
 class UIPreferencesController extends Controller
 {
     use MakesResponses;
+
     /**
      * Allowed keys for ui_preferences (whitelist for security).
      */

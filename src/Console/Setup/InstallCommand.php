@@ -2,10 +2,11 @@
 
 namespace Unusualify\Modularity\Console\Setup;
 
-use Unusualify\Modularity\Console\BaseCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
+use Unusualify\Modularity\Console\BaseCommand;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
@@ -61,7 +62,7 @@ class InstallCommand extends BaseCommand
      *
      * @return void
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function handle(): int
     {

@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 trait ApiFiltering
 {
     /**
@@ -81,7 +83,7 @@ trait ApiFiltering
 
         // Handle trashed filter
         if ($this->request->has('trashed') && class_uses_recursive($this->repository->getModel())
-            && in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive($this->repository->getModel()))) {
+            && in_array(SoftDeletes::class, class_uses_recursive($this->repository->getModel()))) {
             $trashed = $this->request->get('trashed');
             if ($trashed === 'only') {
                 $scopes['onlyTrashed'] = true;

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Services\Concerns;
 
 use Closure;
+use Illuminate\Cache\Repository;
 
 /**
  * Cache helper methods.
@@ -19,7 +20,7 @@ trait CacheHelpers
     /**
      * Get the cache store instance.
      */
-    abstract protected function getStore(): \Illuminate\Cache\Repository;
+    abstract protected function getStore(): Repository;
 
     /**
      * Get the cache prefix.

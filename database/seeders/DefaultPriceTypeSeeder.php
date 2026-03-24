@@ -3,6 +3,7 @@
 namespace Unusualify\Modularity\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\SystemPricing\Entities\PriceType;
 
 class DefaultPriceTypeSeeder extends Seeder
 {
@@ -16,7 +17,7 @@ class DefaultPriceTypeSeeder extends Seeder
         ];
 
         foreach ($priceTypes as $priceType) {
-            \Modules\SystemPricing\Entities\PriceType::updateOrCreate(
+            PriceType::updateOrCreate(
                 ['slug' => $priceType['slug']],
                 $priceType,
             );

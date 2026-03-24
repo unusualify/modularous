@@ -2,14 +2,28 @@
 
 namespace Unusualify\Modularity\Tests\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Mockery\MockInterface;
+use Modules\SystemPayment\Entities\PaymentCurrency;
+use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemUser\Entities\Role;
+use Oobook\Snapshot\Traits\HasSnapshot;
+use Unusualify\Modularity\Entities\Enums\PaymentStatus;
+use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\TemporaryFilepond;
+use Unusualify\Modularity\Entities\Traits\HasCreator;
+use Unusualify\Modularity\Entities\Traits\HasPayment;
+use Unusualify\Modularity\Entities\Traits\HasPriceable;
+use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularity\Repositories\Traits\PaymentTrait;
 use Unusualify\Modularity\Tests\Repositories\RepositorySources;
+use Unusualify\Modularity\Tests\Repositories\TestRepository;
 use Unusualify\Modularity\Tests\RepositoryTestCase;
 
 class PaymentTraitTest extends RepositoryTestCase
@@ -72,7 +86,7 @@ class PaymentTraitTest extends RepositoryTestCase
             });
         });
 
-        $paymentCurrency = \Modules\SystemPayment\Entities\PaymentCurrency::updateOrCreate([
+        $paymentCurrency = PaymentCurrency::updateOrCreate([
             'iso_4217' => 'EUR',
         ], [
             'name' => 'Euro',
@@ -80,7 +94,7 @@ class PaymentTraitTest extends RepositoryTestCase
             'iso_4217_number' => 978,
         ]);
 
-        $paymentService = \Modules\SystemPayment\Entities\PaymentService::create([
+        $paymentService = PaymentService::create([
             'name' => 'Stripe',
             'key' => 'stripe',
             'published' => true,
@@ -211,7 +225,7 @@ class PaymentTraitTest extends RepositoryTestCase
             'currency_id' => $price->currency->id,
             'order_id' => $orderId,
 
-            'status' => \Unusualify\Modularity\Entities\Enums\PaymentStatus::COMPLETED,
+            'status' => PaymentStatus::COMPLETED,
 
             'amount' => 100,
             'modularity' => [
@@ -243,12 +257,12 @@ class PaymentTraitTest extends RepositoryTestCase
         $mapped = $this->repository->getFormFieldsPaymentTrait($object, $fields);
 
         $this->assertArrayHasKey('payment', $mapped);
-        $this->assertSame(\Unusualify\Modularity\Entities\Enums\PaymentStatus::COMPLETED, $mapped['payment']['status']);
+        $this->assertSame(PaymentStatus::COMPLETED, $mapped['payment']['status']);
     }
 
     public function test_after_save_payment_trait(): void
     {
-        $user = \Unusualify\Modularity\Entities\User::create([
+        $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
@@ -294,7 +308,7 @@ class PaymentTraitTest extends RepositoryTestCase
             'items' => [$item->id],
 
             'payment_description' => 'Test Payment Description',
-            'payment_status' => \Unusualify\Modularity\Entities\Enums\PaymentStatus::PENDING,
+            'payment_status' => PaymentStatus::PENDING,
             'payment_currency_id' => 1,
             'payment_receipts' => [
                 [
@@ -314,7 +328,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $this->assertSame(1, $paymentPrice->vat_rate_id);
 
         $this->assertNotEmpty($payment);
-        $this->assertSame(\Unusualify\Modularity\Entities\Enums\PaymentStatus::PENDING, $payment->status);
+        $this->assertSame(PaymentStatus::PENDING, $payment->status);
         $this->assertSame('Test Payment Description', $payment->description);
         $this->assertSame(1, $payment->currency_id);
 
@@ -333,7 +347,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $this->assertSame(500, $object->paymentPrice->price_value);
 
         $payment->update([
-            'status' => \Unusualify\Modularity\Entities\Enums\PaymentStatus::COMPLETED,
+            'status' => PaymentStatus::COMPLETED,
         ]);
 
         sleep(1);
@@ -353,7 +367,7 @@ class PaymentTraitTest extends RepositoryTestCase
     public function test_after_save_payment_trait_with_creator_trait(): void
     {
         $this->repository = App::makeWith(PaymentTraitTestRepository::class, ['model' => new HasCreatorTestModel]);
-        $user = \Unusualify\Modularity\Entities\User::create([
+        $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
@@ -440,7 +454,7 @@ class PaymentTraitTest extends RepositoryTestCase
         $this->assertEquals([], $this->repository->getDefaultPaymentPriceFields());
 
         // I wanna mock getDefaultPaymentPriceFields method to return empty array
-        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (\Mockery\MockInterface $mock) {
+        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getDefaultPaymentPriceFields')->andReturn([
                 'price_type_id' => 0,
                 'vat_rate_id' => 0,
@@ -450,7 +464,7 @@ class PaymentTraitTest extends RepositoryTestCase
 
         $this->assertEquals([], $mock->defaultPaymentPriceFields());
 
-        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (\Mockery\MockInterface $mock) {
+        $mock = $this->partialMock(PaymentTraitTestRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getDefaultPaymentPriceFields')->andReturn([
                 'price_type_id' => 1,
                 'vat_rate_id' => 1,
@@ -466,32 +480,32 @@ class PaymentTraitTest extends RepositoryTestCase
     }
 }
 
-class Item extends \Unusualify\Modularity\Entities\Model
+class Item extends Model
 {
-    use \Unusualify\Modularity\Entities\Traits\HasPriceable;
+    use HasPriceable;
 
     public $table = 'items';
 
     public $fillable = ['name'];
 
-    public function hasPaymentTestModel(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function hasPaymentTestModel(): BelongsToMany
     {
         return $this->belongsToMany(HasPaymentTestModel::class, 'test_model_item', 'item_id', 'test_model_id');
     }
 }
 
-class Product extends \Unusualify\Modularity\Entities\Model
+class Product extends Model
 {
-    use \Unusualify\Modularity\Entities\Traits\HasPriceable;
+    use HasPriceable;
 
     public $table = 'products';
 
     public $fillable = ['name', 'content'];
 }
 
-class CopyProduct extends \Unusualify\Modularity\Entities\Model
+class CopyProduct extends Model
 {
-    use \Oobook\Snapshot\Traits\HasSnapshot;
+    use HasSnapshot;
 
     public static $snapshotSourceModel = Product::class;
 
@@ -504,16 +518,16 @@ class CopyProduct extends \Unusualify\Modularity\Entities\Model
 
 class HasPaymentTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
 {
-    use \Unusualify\Modularity\Entities\Traits\HasPayment;
+    use HasPayment;
 
     public $hasPaymentRelations = ['items', 'copyProducts'];
 
-    public function items(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function items(): BelongsToMany
     {
         return $this->belongsToMany(Item::class, 'test_model_item', 'test_model_id', 'item_id');
     }
 
-    public function copyProducts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function copyProducts(): HasMany
     {
         return $this->hasMany(CopyProduct::class, 'test_model_id');
     }
@@ -542,14 +556,14 @@ class HasPaymentTestModel extends \Unusualify\Modularity\Tests\Repositories\Test
 
 class HasCreatorTestModel extends HasPaymentTestModel
 {
-    use \Unusualify\Modularity\Entities\Traits\HasCreator;
+    use HasCreator;
 
     protected static $creatableClass = TestModel::class;
 }
 
-class PaymentTraitTestRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class PaymentTraitTestRepository extends TestRepository
 {
-    use \Unusualify\Modularity\Repositories\Traits\PaymentTrait;
+    use PaymentTrait;
 
     public function __construct(HasPaymentTestModel $model)
     {
@@ -557,7 +571,7 @@ class PaymentTraitTestRepository extends \Unusualify\Modularity\Tests\Repositori
     }
 }
 
-class CopyProductRepository extends \Unusualify\Modularity\Tests\Repositories\TestRepository
+class CopyProductRepository extends TestRepository
 {
     public function __construct(CopyProduct $model)
     {

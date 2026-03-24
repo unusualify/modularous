@@ -2,6 +2,7 @@
 
 namespace Modules\SystemUtility\Entities;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SystemUser\Entities\Company;
 use Unusualify\Modularity\Entities\Model;
 use Unusualify\Modularity\Entities\Traits\HasTranslation;
@@ -31,7 +32,7 @@ class Country extends Model
         'active',
     ];
 
-    public function companies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function companies(): HasMany
     {
         return $this->hasMany(Company::class);
     }
