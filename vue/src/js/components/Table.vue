@@ -1218,10 +1218,6 @@ export default {
             &:last-child
               position: sticky !important
               right: 0
-              z-index: 2
               background-color: rgb(var(--v-theme-surface))
               box-shadow: -1px 0 4px -2px rgba(0, 0, 0, 0.15)
-
-          th:last-child
-            z-index: 3
 </style>
