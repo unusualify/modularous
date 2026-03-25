@@ -8,11 +8,6 @@ use Unusualify\Modularity\Services\FileLibrary\FileService;
 
 trait HasFiles
 {
-    public function initializeHasFiles(): void
-    {
-        // $this->makeHidden(array_merge($this->hidden, ['files']));
-    }
-
     /**
      * Defines the many-to-many relationship for file objects.
      */
