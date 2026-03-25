@@ -30,11 +30,12 @@ class PaymentService extends Model
     ];
 
     protected $appends = [
-        // 'has_built_in_form',
-        // 'button_logo_url',
-        // 'transferrable',
-        // 'bank_details',
-        // 'has_transaction_fee',
+        'has_built_in_form',
+        'button_logo_url',
+        'transferrable',
+        'bank_details',
+        'has_transaction_fee',
+        'transfer_details',
     ];
 
     protected $casts = [

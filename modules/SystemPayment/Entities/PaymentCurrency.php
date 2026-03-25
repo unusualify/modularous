@@ -30,9 +30,9 @@ class PaymentCurrency extends Currency
     ];
 
     protected $appends = [
-        // 'has_credit_card_payment_service',
-        // 'corporate_vat_rate_name_with_rate',
-        // 'personal_vat_rate_name_with_rate',
+        'has_credit_card_payment_service',
+        'corporate_vat_rate_name_with_rate',
+        'personal_vat_rate_name_with_rate',
     ];
 
     /**
