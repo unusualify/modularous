@@ -9,7 +9,8 @@
       ref="VForm"
       :action="actionUrl"
       method="POST"
-      v-model="validModel"
+      :modelValue="validModel"
+      @update:modelValue="updateFormValid"
       @submit="submit"
       :class="formClasses"
       >

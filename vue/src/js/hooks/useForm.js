@@ -175,6 +175,10 @@ export const makeFormProps = propsFactory({
     type: Array,
     default: null,
   },
+  noValidation: {
+    type: Boolean,
+    default: false
+  },
 })
 
 export default function useForm(props, context) {
@@ -202,6 +206,9 @@ export default function useForm(props, context) {
   const issetModel = ref(props.modelValue ? true : false)
   const issetSchema = ref(props.schema ? true : false)
 
+  const validModel = computed(() => {
+    return props.noValidation || validations.validModel.value
+  })
   const formLoading = ref(false)
   const serverValid = ref(true)
   const formErrors = ref({})
@@ -232,6 +239,7 @@ export default function useForm(props, context) {
 
   const inputSchema = ref(validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)))
   // const inputSchema = ref(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
+  console.log('inputSchema', inputSchema.value)
 
   const formEventSchema = ref(getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
   const extraValids = ref(props.actions.length ? props.actions.map(() => true) : [])
@@ -556,6 +564,9 @@ export default function useForm(props, context) {
 
       return result
     },
+    updateFormValid: (value) => {
+      validations.validModel.value = value
+    },
     createModel: (schema) => {
       return getModel(schema, states.model.value, store.state)
     },
@@ -596,7 +607,7 @@ export default function useForm(props, context) {
     },
     saveForm,
     submit: (e, callback = null, errorCallback = null) => {
-      if (validations.validModel.value) {
+      if (props.noValidation || validations.validModel.value) {
         if (props.async) {
           e && e.preventDefault()
           if (!props.actionUrl) {
@@ -722,6 +733,7 @@ export default function useForm(props, context) {
     ...inputHandlers,
     ...validations,
     ...locale,
+    validModel,
     // ...itemActions,
     // handleInput,
     // createModel,
