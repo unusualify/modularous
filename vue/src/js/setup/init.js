@@ -196,7 +196,7 @@ export default function init(){
 
   // Set validateStatus on both axios instances
   const validateStatus = (status) => {
-    return (status >= 200 && status < 300) || status === 422 || status === 401 || status === 419;
+    return (status >= 200 && status < 300) || status === 422 || status === 401 || status === 419 || status === 403;
   }
 
   // Add validateStatus config to accept 422 and 401 as valid
@@ -206,6 +206,12 @@ export default function init(){
   axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     store.commit(CONFIG.INCREASE_AXIOS_REQUEST)
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    if (csrfToken) {
+      config.headers = config.headers || {}
+      config.headers['X-CSRF-TOKEN'] = csrfToken
+    }
 
     return config;
   }, function (error) {
