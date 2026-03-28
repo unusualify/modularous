@@ -361,7 +361,7 @@ class RouteServiceProvider extends ServiceProvider
                 // 'feature',
                 // 'preview',
                 // 'bulkFeature',
-                // 'restoreRevision',
+                'restoreRevision',
 
                 'restore',
                 'bulkRestore',
