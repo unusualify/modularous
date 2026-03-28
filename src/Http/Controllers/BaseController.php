@@ -323,6 +323,7 @@ abstract class BaseController extends PanelController
             $formRequest = $this->validateFormRequest();
 
             $this->repository->update($id, $formRequest->all(), $this->getPreviousRouteSchema());
+            $item = $this->repository->getById($id);
 
             // $this->handleActionEvent($item, __FUNCTION__);
 
@@ -381,6 +382,39 @@ abstract class BaseController extends PanelController
 
             return redirect()->back();
         }
+    }
+
+    public function restoreRevision($id)
+    {
+        if (! $this->routeHasTrait('revisions')) {
+            return $this->respondWithError(__('Revisions are not enabled for this route.'));
+        }
+
+        $params = $this->request->route()->parameters();
+        $id = last($params);
+        $revisionId = (int) $this->request->get('revisionId');
+
+        if ($revisionId < 1) {
+            return $this->respondWithError(__('Revision id is required.'));
+        }
+
+        if ($this->request->get('preview')) {
+            // dd("preview");
+            $rawPayload = $this->repository->getRevisionPayload((int) $id, $revisionId);
+
+            return Response::json([
+                'form_fields' => $rawPayload,
+            ]);
+        }
+
+        $item = $this->repository->restoreRevision((int) $id, $revisionId);
+
+        return Response::json([
+            'message' => __('Revision restored successfully.'),
+            'variant' => MessageStage::SUCCESS,
+            'revisions' => $item->revisionsArray(),
+            'form_fields' => $this->repository->getFormFields($item, $this->getPreviousRouteSchema()),
+        ]);
     }
 
     /**
