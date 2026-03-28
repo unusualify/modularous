@@ -134,7 +134,7 @@
 
       <!-- Scrollable Content Section -->
       <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
-        <div :class="['w-100 d-flex', scrollable ? 'overflow-y-auto pr-3' : '']"
+        <div :class="['w-100 d-flex align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
         >
           <div class="flex-grow-1 px-1">
             <!-- Top Form Actions -->
@@ -276,13 +276,14 @@
                 $vuetify.display.smAndDown ? 'd-none' : 'd-flex flex-column',
               ]"
               :style="{
-                ...(rightSlotWidth ? {width: `${rightSlotWidth}px`} : {}),
+                width: `${rightSlotWidth || rightSlotMinWidth || 300}px`,
                 ...(rightSlotMinWidth ? {minWidth: `${rightSlotMinWidth}px`} : {}),
                 ...(rightSlotMaxWidth ? {maxWidth: `${rightSlotMaxWidth}px`} : {})
               }"
             >
               <slot name="right" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}">
                 <AdditionalSectionContent
+                  v-if="hasRightSlotContent"
                   :actions-position="actionsPosition"
                   :form-item="formItem"
                   :actions="actions"
@@ -299,6 +300,13 @@
                     <slot name="right.bottom" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                   </template>
                 </AdditionalSectionContent>
+                <RevisionsList
+                  v-if="currentRevisions && currentRevisions.length"
+                  :revisions="currentRevisions"
+                  :loading="loading"
+                  @select="restoreRevision"
+                  @preview="handlePreview"
+                />
               </slot>
             </div>
           </div>
@@ -318,6 +326,7 @@
               <v-card-text>
                 <slot name="right" v-bind="{item: formItem, schema: inputSchema, chunkedRawSchema}">
                   <AdditionalSectionContent
+                    v-if="hasRightSlotContent"
                     :actions-position="actionsPosition"
                     :is-editing="isEditing"
                     :form-item="formItem"
@@ -334,6 +343,13 @@
                       <slot name="right.bottom" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                     </template>
                   </AdditionalSectionContent>
+                  <RevisionsList
+                    v-if="currentRevisions && currentRevisions.length"
+                    :revisions="currentRevisions"
+                    :loading="loading"
+                    @select="restoreRevision"
+                    @preview="handlePreview"
+                  />
                 </slot>
               </v-card-text>
             </v-card>
@@ -402,17 +418,158 @@
       </div>
 
     </v-form>
+
+    <!-- Preview Dialog (fullscreen always) -->
+    <v-dialog v-model="previewDialogActive" fullscreen scrollable transition="dialog-bottom-transition">
+      <v-card class="d-flex flex-column">
+        <v-toolbar color="primary" density="compact">
+          <!-- Left: back -->
+          <v-btn icon color="white" @click="previewDialogActive = false">
+            <v-icon color="white">mdi-arrow-left</v-icon>
+          </v-btn>
+
+          <v-spacer />
+
+          <!-- Center: responsive viewport selector -->
+          <div class="d-flex align-center ga-1">
+            <v-btn
+              v-for="vp in VIEWPORTS"
+              :key="vp.key"
+              icon
+              size="small"
+              variant="text"
+              :title="vp.label"
+              :class="previewViewport === vp.key ? 'preview-viewport-btn--active' : 'preview-viewport-btn--inactive'"
+              @click="previewViewport = vp.key"
+            >
+              <v-icon color="white" :size="vp.iconSize">{{ vp.icon }}</v-icon>
+            </v-btn>
+          </div>
+
+          <v-spacer />
+
+          <!-- Right: placeholder to keep center truly centered -->
+          <div style="width: 40px;" />
+        </v-toolbar>
+
+        <!-- Preview content with optional viewport frame -->
+        <v-card-text
+          class="flex-grow-1 pa-0 overflow-y-auto"
+          style="background: #3a3a3a;"
+        >
+          <div :style="previewFrameStyle">
+            <!-- Custom component if provided -->
+            <component
+              v-if="previewComponent"
+              :is="previewComponent"
+              :data="model"
+            />
+            <!-- Generic field table fallback -->
+            <div v-else>
+              <v-table density="comfortable">
+                <tbody>
+                  <tr v-for="field in previewFields" :key="field.name">
+                    <td class="text-caption text-medium-emphasis font-weight-medium border-0" style="width: 160px; vertical-align: middle;">
+                      {{ field.label }}
+                    </td>
+                    <td class="text-body-1 border-0">{{ field.value || '—' }}</td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!-- Restore Revision Dialog -->
+    <v-dialog
+      v-model="restoreDialogActive"
+      :fullscreen="!!previewComponent"
+      :max-width="previewComponent ? undefined : 600"
+      :transition="previewComponent ? 'dialog-bottom-transition' : undefined"
+      scrollable
+    >
+      <v-card :class="previewComponent ? 'd-flex flex-column' : ''">
+
+        <!-- Fullscreen header (when previewComponent is set) -->
+        <template v-if="previewComponent">
+          <v-toolbar color="primary" density="compact">
+            <v-btn icon color="white" @click="restoreDialogActive = false">
+              <v-icon color="white">mdi-arrow-left</v-icon>
+            </v-btn>
+            <v-spacer />
+            <v-toolbar-title class="text-center">
+              <div class="d-flex align-center justify-center ga-2">
+                <v-icon size="small" color="white">mdi-history</v-icon>
+                <span class="text-subtitle-1 font-weight-semibold text-white">Restore Revision</span>
+              </div>
+            </v-toolbar-title>
+            <v-spacer />
+            <div style="width: 40px;" />
+          </v-toolbar>
+        </template>
+
+        <!-- Small modal header (when no previewComponent) -->
+        <template v-else>
+          <v-card-title class="d-flex align-center pa-4">
+            <v-icon class="mr-2" color="primary">mdi-history</v-icon>
+            <span>Restore Revision</span>
+          </v-card-title>
+          <v-divider />
+        </template>
+
+        <v-card-text :class="previewComponent ? 'flex-grow-1 pa-6' : 'pa-4'">
+          <div v-if="restoringRevisionId" class="d-flex justify-center align-center pa-8">
+            <v-progress-circular indeterminate color="primary" :size="48" :width="4" />
+          </div>
+          <!-- Custom component (fullscreen mode) -->
+          <component
+            v-else-if="previewComponent"
+            :is="previewComponent"
+            :data="restorePreviewData"
+          />
+          <!-- Generic fields table (small modal mode) -->
+          <v-table v-else density="comfortable">
+            <tbody>
+              <tr v-for="field in restorePreviewFields" :key="field.name">
+                <td class="text-caption text-medium-emphasis font-weight-medium border-0" style="width: 140px; vertical-align: middle;">
+                  {{ field.label }}
+                </td>
+                <td class="text-body-2 border-0">{{ field.value || '—' }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+
+        <v-divider v-if="!previewComponent" />
+        <v-card-actions :class="previewComponent ? 'justify-center pa-6' : 'pa-3 justify-center'">
+          <v-btn
+            color="primary"
+            variant="flat"
+            :size="previewComponent ? 'large' : 'default'"
+            :min-width="previewComponent ? 180 : undefined"
+            :loading="loading"
+            :disabled="!!restoringRevisionId"
+            @click="confirmRestore"
+          >
+            Approve
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useForm, makeFormProps } from '@/hooks'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from './form/FormActions.vue'
 import FormEvents from './form/FormEvents.vue'
+import RevisionsList from './form/RevisionsList.vue'
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -487,7 +644,8 @@ export default {
   components: {
     FormActions,
     FormEvents,
-    AdditionalSectionContent
+    AdditionalSectionContent,
+    RevisionsList,
   },
   emits: [
     'update:valid',
@@ -511,7 +669,7 @@ export default {
   setup(props, context) {
     const store = useStore()
     const useFormInstance = useForm(props, context)
-    const { t, te, locale } = useI18n({ useScope: 'global' })
+    const { t, te } = useI18n({ useScope: 'global' })
     // const i18n = useI18n()
 
     const formClasses = computed(() => [
@@ -605,33 +763,6 @@ export default {
         : title
     })
 
-    const formColumnAttrs = computed(() => {
-      return props.hasStickyFrame
-        ? {
-            cols: '12',
-            sm: '12',
-            md: '12',
-            lg: '8',
-            xl: '6',
-            'order-lg': '0',
-            'order-xl': '0'
-          }
-        : {
-            cols: '12'
-          }
-    })
-
-    const stickyColumnAttrs = computed(() => {
-      return {
-        cols: '12',
-        sm: '12',
-        md: '12',
-        lg: '4',
-        xl: '6',
-        'order-lg': '1',
-        'order-xl': '1'
-      }
-    })
 
     onMounted(() => {
       let timezoneInput = document.getElementById('timezone_session')
@@ -640,19 +771,117 @@ export default {
       }
     })
 
+    const hasRightSlotContent = computed(() =>
+      context.slots['right.top']
+      || context.slots['right.middle']
+      || context.slots['right.bottom']
+      || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
+    )
+
+    const previewDialogActive = ref(false)
+
+    // -------------------------------------------------------------------------
+    // Responsive viewport preview
+    // -------------------------------------------------------------------------
+    const VIEWPORTS = [
+      { key: 'desktop', icon: 'mdi-monitor',   label: 'Desktop (1278px)', width: 1278, iconSize: 'default' },
+      { key: 'laptop',  icon: 'mdi-laptop',    label: 'Laptop (1024px)',  width: 1024, iconSize: 'default' },
+      { key: 'tablet',  icon: 'mdi-tablet',    label: 'Tablet (768px)',   width: 768,  iconSize: 'small'   },
+      { key: 'mobile',  icon: 'mdi-cellphone', label: 'Mobile (320px)',   width: 320,  iconSize: 'x-small' },
+    ]
+
+    const previewViewport = ref('desktop')
+
+    const previewFrameStyle = computed(() => {
+      const vp = VIEWPORTS.find(v => v.key === previewViewport.value) ?? VIEWPORTS[0]
+      return {
+        maxWidth: `${vp.width}px`,
+        width: '100%',
+        margin: '32px auto',
+        borderRadius: '8px',
+        backgroundColor: '#ffffff',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
+        padding: '24px',
+        transition: 'max-width 0.3s ease',
+        minHeight: 'calc(100vh - 112px)',
+      }
+    })
+
+    const buildPreviewFields = (data) => {
+      const fields = []
+      const schema = useFormInstance.chunkedRawSchema.value
+      if (!schema || !data) return fields
+
+      const activeLocale = store.state.language.active?.value
+
+      for (const key in schema) {
+        const input = schema[key]
+        if (input.type === 'switch' || input.noSubmit || input.isEvent) continue
+
+        const label = input.label || input.name || key
+        let value = data[key]
+
+        if (input.type === 'select' && input.items && value != null) {
+          const items = input.items
+          if (Array.isArray(value)) {
+            value = value.map(v => {
+              const item = items.find(i => i.value === v || i.id === v)
+              return item ? (item.text || item.name || item.title || v) : v
+            }).join(', ')
+          } else {
+            const item = items.find(i => i.value === value || i.id === value)
+            value = item ? (item.text || item.name || item.title || value) : value
+          }
+        } else if (Array.isArray(value)) {
+          value = value.join(', ')
+        } else if (isObject(value)) {
+          value = activeLocale && value[activeLocale] ? value[activeLocale] : Object.values(value).filter(Boolean).join(', ')
+        }
+
+        fields.push({ name: key, label, value: value ?? '' })
+      }
+      return fields
+    }
+
+    const previewFields = computed(() => buildPreviewFields(useFormInstance.model.value))
+    const restorePreviewFields = computed(() => buildPreviewFields(useFormInstance.restorePreviewData.value))
+
+    const handlePreview = () => {
+      if (props.previewUrl) {
+        window.open(props.previewUrl, '_blank')
+      } else {
+        previewViewport.value = 'desktop'
+        previewDialogActive.value = true
+      }
+    }
+
     return {
       ...useFormInstance,
       formClasses,
       formSlots,
       titleOptions,
-      titleSerialized
-      // formColumnAttrs,
-      // stickyColumnAttrs
+      titleSerialized,
+      hasRightSlotContent,
+      previewDialogActive,
+      previewFields,
+      restorePreviewFields,
+      handlePreview,
+      VIEWPORTS,
+      previewViewport,
+      previewFrameStyle,
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
+.preview-viewport-btn--active
+  background: rgba(255, 255, 255, 0.2) !important
+  border-radius: 6px
 
+.preview-viewport-btn--inactive
+  opacity: 0.55
+
+  &:hover
+    opacity: 0.85
 </style>
