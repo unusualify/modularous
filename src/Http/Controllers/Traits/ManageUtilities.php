@@ -172,6 +172,9 @@ trait ManageUtilities
                 'actionUrl' => $this->getFormUrl($itemId),
                 'schema' => $eventualSchema,
                 'languages' => getLanguagesForVueStore($eventualSchema, $translate)['all'] ?? [],
+                'revisions' => $this->routeHasTrait('revisions') && $item ? $item->revisionsArray() : [],
+                'restoreUrl' => Route::has($restoreRouteName) && $itemId ? moduleRoute($this->moduleName, $this->routePrefix, 'restoreRevision', [$itemId]) : null,
+                'previewUrl' => Route::has($previewRouteName) && $itemId ? moduleRoute($this->moduleName, $this->routePrefix, 'preview', [$itemId]) : null,
             ], $formAttributes),
             'endpoints' => [
                 ($isEditing ? 'update' : 'store') => $this->getFormUrl($itemId),
