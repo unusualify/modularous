@@ -13,10 +13,11 @@ import 'moment/dist/locale/nl'
 import { useI18n } from 'vue-i18n'
 
 import store from '@/store' // Adjust the import based on your store structure
-import { CONFIG, USER } from '@/store/mutations'
+import { CONFIG } from '@/store/mutations'
 import { addParametersToUrl, replaceState } from '@/utils/pushState'
 
 import { handleSuccessResponse, handleErrorResponse } from '@/utils/response'
+import { redirectFromUnauthorizedPayload, redirectToLoginFullPage } from '@/utils/authRedirect'
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -225,13 +226,15 @@ export default function init(){
     // Do something with response data
     store.commit(CONFIG.DECREASE_AXIOS_REQUEST)
 
-    // Check for 401 Unauthenticated error
-    if (response.status === 401 && response.data.message === 'Unauthenticated.') {
-      store.commit(USER.OPEN_LOGIN_MODAL)
+    // 401: server sends JSON { message, login_url?, redirect? }; client redirects when asked.
+    if (response.status === 401) {
+      if (!redirectFromUnauthorizedPayload(response.data)) {
+        redirectToLoginFullPage()
+      }
     }
 
     if (response.status === 419 || response.data.message === 'CSRF token mismatch.') {
-      // store.commit(USER.OPEN_LOGIN_MODAL)
+      // Optionally: reload or redirect to login
     }
 
     handleSuccessResponse(response)
@@ -243,9 +246,10 @@ export default function init(){
     store.commit(CONFIG.DECREASE_AXIOS_REQUEST)
     // Any status codes that falls outside the range of 2xx cause this function to trigger
 
-    // Check for 401 Unauthenticated error
     if (error.response?.status === 401) {
-      store.commit(USER.OPEN_LOGIN_MODAL)
+      if (!redirectFromUnauthorizedPayload(error.response?.data)) {
+        redirectToLoginFullPage()
+      }
     }
     // Do something with response error
     return Promise.reject(error);
