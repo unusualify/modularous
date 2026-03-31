@@ -167,7 +167,7 @@ trait CreateVerifiedEmailAccount
 
         $user->setRememberToken(Str::random(60));
 
-        $user->assignRole('client-manager');
+        $user->assignRole(modularityConfig('default_register_role'));
 
         return $user;
     }
