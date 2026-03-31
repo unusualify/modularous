@@ -82,6 +82,7 @@ trait AuthFormBuilder
                 'class' => 'mt-5 mb-2 custom-auth-button',
                 'color' => 'grey-lighten-1',
                 'density' => 'default',
+                'block' => true,
             ],
             'slots' => [
                 'prepend' => [
