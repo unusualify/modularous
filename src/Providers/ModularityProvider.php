@@ -15,6 +15,7 @@ class ModularityProvider extends ServiceProvider
         // Unusual Providers
         BaseServiceProvider::class,
         ModuleServiceProvider::class,
+        SecurityServiceProvider::class,
         RouteServiceProvider::class,
         AuthServiceProvider::class,
         CoverageServiceProvider::class,
