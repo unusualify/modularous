@@ -112,7 +112,7 @@ class MiscTraitsTest extends TestCase
         {
             use Traitify;
 
-            public function test_method_traitify()
+            public function testMethodTraitify()
             {
                 return 'success';
             }
