@@ -16,6 +16,7 @@ use Unusualify\Modularity\Database\Factories\UserFactory;
 use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;
 use Unusualify\Modularity\Entities\Traits\Auth\HasOauth;
 use Unusualify\Modularity\Entities\Traits\Core\HasCompany;
+use Unusualify\Modularity\Entities\Traits\Core\HasCapabilities;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularity\Entities\Traits\Core\Rolable;
 use Unusualify\Modularity\Entities\Traits\HasFileponds;
@@ -28,6 +29,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     use HasApiTokens,
         HasFactory,
         Rolable,
+        HasCapabilities,
         IsTranslatable,
         ModelHelpers,
         Notifiable,

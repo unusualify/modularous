@@ -59,6 +59,12 @@ return [
         'user' => [
             'name' => 'User | Users | {n} Users',
         ],
+        'capability' => [
+            'name' => 'Capability | Capabilities | {n} Capabilities',
+        ],
+        'capability_route' => [
+            'name' => 'Capability Route | Capability Routes | {n} Capability Routes',
+        ],
     ],
     'system_utility' => [
         'country' => [
