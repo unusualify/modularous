@@ -26,10 +26,54 @@ use Unusualify\Modularity\Module;
 
 class ModularityRoutes
 {
+    private static array $dynamicDefaultMiddlewares = [];
+
+    private static array $dynamicPanelMiddlewares = [];
+
     private array $defaultMiddlewares = [
         'modularity.log',
         'modularity.core',
     ];
+
+    public function addDefaultMiddleware(string $middleware): void
+    {
+        $middleware = trim($middleware);
+        if ($middleware === '') {
+            return;
+        }
+
+        self::$dynamicDefaultMiddlewares[] = $middleware;
+        self::$dynamicDefaultMiddlewares = array_values(array_unique(self::$dynamicDefaultMiddlewares));
+    }
+
+    public function addPanelMiddleware(string $middleware): void
+    {
+        $middleware = trim($middleware);
+        if ($middleware === '') {
+            return;
+        }
+
+        self::$dynamicPanelMiddlewares[] = $middleware;
+        self::$dynamicPanelMiddlewares = array_values(array_unique(self::$dynamicPanelMiddlewares));
+    }
+
+    public function addDefaultMiddlewares(array $middlewares): void
+    {
+        foreach ($middlewares as $middleware) {
+            if (is_string($middleware)) {
+                $this->addDefaultMiddleware($middleware);
+            }
+        }
+    }
+
+    public function addPanelMiddlewares(array $middlewares): void
+    {
+        foreach ($middlewares as $middleware) {
+            if (is_string($middleware)) {
+                $this->addPanelMiddleware($middleware);
+            }
+        }
+    }
 
     public function configureRoutePatterns(): void
     {
@@ -56,48 +100,52 @@ class ModularityRoutes
 
     public function webMiddlewares(): array
     {
-        return [
-            ...['web'],
-            ...$this->defaultMiddlewares,
-        ];
+        return array_values(array_unique([
+            'web',
+            ...$this->defaultMiddlewares(),
+        ]));
     }
 
     public function webPanelMiddlewares(): array
     {
-        return [
-            ...['web.auth'],
-            ...$this->defaultMiddlewares,
-            ...['modularity.panel'],
-        ];
+        return array_values(array_unique([
+            'web.auth',
+            ...$this->defaultMiddlewares(),
+            ...$this->defaultPanelMiddlewares(),
+        ]));
     }
 
     public function apiMiddlewares(): array
     {
-        return [
-            ...['api'],
-            ...$this->defaultMiddlewares,
-        ];
+        return array_values(array_unique([
+            'api',
+            ...$this->defaultMiddlewares(),
+        ]));
     }
 
     public function apiPanelMiddlewares(): array
     {
-        return [
-            ...['api.auth'],
-            ...$this->defaultMiddlewares,
-            ...['modularity.panel'],
-        ];
+        return array_values(array_unique([
+            'api.auth',
+            ...$this->defaultMiddlewares(),
+            ...$this->defaultPanelMiddlewares(),
+        ]));
     }
 
     public function defaultMiddlewares(): array
     {
-        return $this->defaultMiddlewares;
+        return array_values(array_unique([
+            ...$this->defaultMiddlewares,
+            ...self::$dynamicDefaultMiddlewares,
+        ]));
     }
 
     public function defaultPanelMiddlewares(): array
     {
-        return [
+        return array_values(array_unique([
             'modularity.panel',
-        ];
+            ...self::$dynamicPanelMiddlewares,
+        ]));
     }
 
     public function generateRouteMiddlewares(): void
