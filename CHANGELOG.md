@@ -2,6 +2,12 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.58.3 - 2026-04-01
+
+### :wrench: Bug Fixes
+
+- merge formAttributes without losing in AuthFormBuilder by @web-flow in https://github.com/unusualify/modularous/commit/b95edf9a477fb5c9cc9616d1288037a191139535
+
 ## v0.58.2 - 2026-03-28
 
 ### :wrench: Bug Fixes
