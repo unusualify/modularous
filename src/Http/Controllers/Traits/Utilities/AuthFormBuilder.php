@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -301,13 +302,13 @@ trait AuthFormBuilder
 
         return array_merge([
             'attributes' => $attributes,
-            'formAttributes' => $formAttributes,
+            'formAttributes' => array_merge_recursive_preserve($formAttributes, $overrides['formAttributes'] ?? []),
             'formSlots' => $formSlots,
             'slots' => $slots,
             'pageTitle' => $pageTitle,
             'endpoints' => $overrides['endpoints'] ?? new \stdClass,
             'formStore' => $overrides['formStore'] ?? new \stdClass,
-        ], $overrides);
+        ], Arr::except($overrides, ['formAttributes']));
     }
 
     /**
