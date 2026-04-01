@@ -239,7 +239,6 @@ export default function useForm(props, context) {
 
   const inputSchema = ref(validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)))
   // const inputSchema = ref(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
-  console.log('inputSchema', inputSchema.value)
 
   const formEventSchema = ref(getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
   const extraValids = ref(props.actions.length ? props.actions.map(() => true) : [])
@@ -344,17 +343,31 @@ export default function useForm(props, context) {
   }
 
   const saveForm = (callback = null, errorCallback = null) => {
-
-    if (props.actionUrl) {
-      formErrors.value = {}
-      formLoading.value = true
-
-      const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
-
-      const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
-
-      api[method](props.actionUrl, formData,
+    const submitRequest = (method, endpoint, data) => {
+      api[method](endpoint, data,
         (response) => {
+          if (response.status === 428 && response.data?.step_up_required) {
+            formLoading.value = false
+
+            window.$modalService.open('ue-step-up-challenge', {
+              props: {
+                stepUp: response.data.step_up ?? {}
+              },
+              emits: {
+                verified: () => {
+                  formLoading.value = true
+                  submitRequest(method, endpoint, data)
+                }
+              },
+              modalProps: {
+                noActions: true,
+                // title: response.data?.step_up?.title ?? 'Verification required'
+              }
+            })
+
+            return
+          }
+
           formLoading.value = false
           if (Object.prototype.hasOwnProperty.call(response.data, 'errors')) {
             serverValid.value = false
@@ -393,6 +406,27 @@ export default function useForm(props, context) {
         },
         (response) => {
           formLoading.value = false
+
+          if (response?.status === 428 && response?.data?.step_up_required) {
+            window.$modalService.open('ue-step-up-challenge', {
+              props: {
+                stepUp: response.data.step_up ?? {},
+                noActions: true,
+              },
+              emits: {
+                verified: () => {
+                  formLoading.value = true
+                  submitRequest(method, endpoint, data)
+                }
+              },
+              modalProps: {
+                title: response.data?.step_up?.title ?? 'Verification required'
+              }
+            })
+
+            return
+          }
+
           if (Object.prototype.hasOwnProperty.call(response.data, 'exception')) {
             store.commit(ALERT.SET_ALERT, { message: 'Your submission could not be processed.', variant: 'error' })
           } else {
@@ -402,6 +436,16 @@ export default function useForm(props, context) {
           if (errorCallback && typeof errorCallback === 'function') errorCallback(response.data)
         }
       )
+    }
+
+    if (props.actionUrl) {
+      formErrors.value = {}
+      formLoading.value = true
+
+      const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
+      const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
+
+      submitRequest(method, props.actionUrl, formData)
     }
   }
 
