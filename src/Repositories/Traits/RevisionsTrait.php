@@ -16,6 +16,22 @@ trait RevisionsTrait
         $this->createRevisionIfNeeded($object, $fields);
     }
 
+        /**
+     * @param Model $object
+     * @param array $fields
+     * @param array $schema
+     * @return array
+     */
+    public function getFormFieldsRevisionsTrait($object, $fields, $schema = [])
+    {
+        // set, cast, unset or manipulate the fields by using object, fields and schema
+        if (isset($schema['revisionable_id'])) {
+            $fields['revisionable_id'] = $object?->id;
+        }
+
+        return $fields;
+    }
+
     public function createRevisionIfNeeded($object, array $fields): array
     {
         if ($this->skipRevisionCreation) {
@@ -112,5 +128,15 @@ trait RevisionsTrait
         $object->fill(Arr::except($fields, $this->getReservedFields()));
 
         return $this->hydrate($object, $fields);
+    }
+
+    public function getRevisions(int $id)
+    {
+        $revisionModel = $this->model->getRevisionModel();
+        $revisions = $revisionModel::where($this->model->getForeignKey(), $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $revisions;
     }
 }

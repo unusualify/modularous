@@ -82,7 +82,7 @@ trait HasRevisions
     }
 
 
-    protected function getRevisionModel()
+    public function getRevisionModel()
     {
         if (property_exists($this, 'revisionModel') && is_string($this->revisionModel) && @class_exists($this->revisionModel)) {
             return $this->revisionModel;
