@@ -36,47 +36,14 @@
 
         <div ref="scrollContainer" class="revision-items" @scroll.passive="onScroll">
           <v-list density="compact" class="pa-0" bg-color="transparent">
-            <v-list-item
+            <Revision
               v-for="(revision, index) in visibleRevisions"
               :key="revision.id"
-              class="px-3 py-2"
-            >
-              <template #prepend>
-                <v-avatar size="28" color="primary" variant="tonal" class="mr-3">
-                  <span class="text-caption font-weight-medium">{{ getInitials(revision.author) }}</span>
-                </v-avatar>
-              </template>
-
-              <v-list-item-title class="d-flex align-center ga-2 text-body-2">
-                <span class="font-weight-medium">{{ revision.author }}</span>
-              </v-list-item-title>
-
-              <v-list-item-subtitle class="text-caption mt-1">
-                <v-tooltip
-                  v-if="revision.source_label"
-                  :text="`from ${getSourceDate(revision.source_label)}`"
-                  location="top"
-                >
-                  <template #activator="{ props: tooltipProps }">
-                    <span v-bind="tooltipProps">{{ formatDate(revision.datetime) }}</span>
-                  </template>
-                </v-tooltip>
-                <span v-else>{{ formatDate(revision.datetime) }}</span>
-              </v-list-item-subtitle>
-
-              <template #append>
-                <v-btn
-                  v-if="windowStart !== 0 || index !== 0"
-                  variant="text"
-                  color="primary"
-                  size="small"
-                  class="px-2"
-                  @click.stop="selectRevision(revision.id)"
-                >
-                  Restore
-                </v-btn>
-              </template>
-            </v-list-item>
+              :revision="revision"
+              :all-revisions="revisions"
+              :show-restore="windowStart !== 0 || index !== 0"
+              @restore="selectRevision"
+            />
           </v-list>
         </div>
 
@@ -113,6 +80,7 @@
 
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
+import Revision from './Revision.vue'
 
 const props = defineProps({
   revisions: {
@@ -201,21 +169,6 @@ watch(
 
 function selectRevision(revisionId) {
   emit('select', revisionId)
-}
-
-function getSourceDate(sourceLabel) {
-  const source = props.revisions.find((r) => r.label === sourceLabel)
-  return source ? formatDate(source.datetime) : sourceLabel
-}
-
-function getInitials(name) {
-  if (!name) return '?'
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
 }
 
 function formatDate(dateString) {
