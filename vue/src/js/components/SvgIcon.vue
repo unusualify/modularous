@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <span v-svg :symbol="symbol"></span>
-  </div>
+  <span
+    v-svg
+    class="ue-svg-icon"
+    :symbol="symbol"
+    :style="wrapperStyle"
+  ></span>
 </template>
 
 <script>
@@ -26,31 +29,37 @@ export default {
         return props.symbol
       }
     })
-    const style = computed(() => {
-      if(props.height || props.width){
-        return "height:" + props.height + "px;" + "width:" + props.width + "px;"
+    const wrapperStyle = computed(() => {
+      if (!props.height && !props.width) {
+        return undefined
       }
+      const style = {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+      if (props.width) {
+        style.width = `${props.width}px`
+      }
+      if (props.height) {
+        style.height = `${props.height}px`
+      }
+      return style
     })
-    // You can add any additional logic here if needed
     return {
       symbol,
-      style
+      wrapperStyle
     }
   }
 }
 </script>
 
-<style>
-
-div span svg{
+<style scoped>
+.ue-svg-icon :deep(svg) {
+  display: block;
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
 }
-div.center-image span{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
 </style>

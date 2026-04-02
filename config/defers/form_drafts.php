@@ -310,6 +310,48 @@ return [
             'hideDetails' => 'auto',
         ],
     ],
+    'login_email_form' => [
+        'email' => [
+            'type' => 'text',
+            'name' => 'email',
+            'label' => 'E-mail',
+            'hint' => 'enter @example.com',
+            'default' => '',
+            'col' => [
+                'lg' => 12,
+            ],
+            'rules' => [
+                ['email', '', 'E-mail must be valid'],
+            ],
+            'validateOn' => 'lazy blur',
+        ],
+    ],
+    'login_2fa_form' => [
+        'verify_code' => [
+            'type' => 'otp-input',
+            'name' => 'verify-code',
+            'label' => 'One Time Password',
+            'default' => '',
+            'col' => [
+                'lg' => 12,
+            ],
+            'length' => env('MODULARITY_SECURITY_MFA_EMAIL_OTP_LENGTH', 6),
+            'rules' => 'required',
+        ],
+    ],
+    'step_up_form' => [
+        'verify_code' => [
+            'type' => 'otp-input',
+            'name' => 'verify-code',
+            'label' => 'Verification Code',
+            'default' => '',
+            'col' => [
+                'lg' => 12,
+            ],
+            'length' => 6,
+            'rules' => 'required',
+        ],
+    ],
     'forgot_password_form' => [
         'email' => [
             'type' => 'text',

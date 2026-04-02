@@ -24,6 +24,8 @@ return new class extends Migration
                 $table->boolean('published')->default(true);
                 $table->string('email')->unique();
                 $table->timestamp('email_verified_at')->nullable();
+                $table->boolean('google_2fa_enabled')->default(false);
+                $table->string('google_2fa_secret')->nullable();
                 $table->string('language')->default('en');
                 $table->string('timezone')->default('Europe/London');
                 $table->string('phone', 20)->nullable();

@@ -175,21 +175,9 @@ export const makeFormProps = propsFactory({
     type: Array,
     default: null,
   },
-  revisions: {
-    type: Array,
-    default: () => [],
-  },
-  restoreUrl: {
-    type: String,
-    default: null,
-  },
-  previewUrl: {
-    type: String,
-    default: null,
-  },
-  previewComponent: {
-    type: [Object, Function],
-    default: null,
+  noValidation: {
+    type: Boolean,
+    default: false
   },
 })
 
@@ -218,6 +206,9 @@ export default function useForm(props, context) {
   const issetModel = ref(props.modelValue ? true : false)
   const issetSchema = ref(props.schema ? true : false)
 
+  const validModel = computed(() => {
+    return props.noValidation || validations.validModel.value
+  })
   const formLoading = ref(false)
   const serverValid = ref(true)
   const formErrors = ref({})
@@ -356,17 +347,31 @@ export default function useForm(props, context) {
   }
 
   const saveForm = (callback = null, errorCallback = null) => {
-
-    if (props.actionUrl) {
-      formErrors.value = {}
-      formLoading.value = true
-
-      const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
-
-      const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
-
-      api[method](props.actionUrl, formData,
+    const submitRequest = (method, endpoint, data) => {
+      api[method](endpoint, data,
         (response) => {
+          if (response.status === 428 && response.data?.step_up_required) {
+            formLoading.value = false
+
+            window.$modalService.open('ue-step-up-challenge', {
+              props: {
+                stepUp: response.data.step_up ?? {}
+              },
+              emits: {
+                verified: () => {
+                  formLoading.value = true
+                  submitRequest(method, endpoint, data)
+                }
+              },
+              modalProps: {
+                noActions: true,
+                // title: response.data?.step_up?.title ?? 'Verification required'
+              }
+            })
+
+            return
+          }
+
           formLoading.value = false
           if (Object.prototype.hasOwnProperty.call(response.data, 'errors')) {
             serverValid.value = false
@@ -409,6 +414,27 @@ export default function useForm(props, context) {
         },
         (response) => {
           formLoading.value = false
+
+          if (response?.status === 428 && response?.data?.step_up_required) {
+            window.$modalService.open('ue-step-up-challenge', {
+              props: {
+                stepUp: response.data.step_up ?? {},
+                noActions: true,
+              },
+              emits: {
+                verified: () => {
+                  formLoading.value = true
+                  submitRequest(method, endpoint, data)
+                }
+              },
+              modalProps: {
+                title: response.data?.step_up?.title ?? 'Verification required'
+              }
+            })
+
+            return
+          }
+
           if (Object.prototype.hasOwnProperty.call(response.data, 'exception')) {
             store.commit(ALERT.SET_ALERT, { message: 'Your submission could not be processed.', variant: 'error' })
           } else {
@@ -418,6 +444,16 @@ export default function useForm(props, context) {
           if (errorCallback && typeof errorCallback === 'function') errorCallback(response.data)
         }
       )
+    }
+
+    if (props.actionUrl) {
+      formErrors.value = {}
+      formLoading.value = true
+
+      const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
+      const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
+
+      submitRequest(method, props.actionUrl, formData)
     }
   }
 
@@ -580,6 +616,9 @@ export default function useForm(props, context) {
 
       return result
     },
+    updateFormValid: (value) => {
+      validations.validModel.value = value
+    },
     createModel: (schema) => {
       return getModel(schema, states.model.value, store.state)
     },
@@ -620,7 +659,7 @@ export default function useForm(props, context) {
     },
     saveForm,
     submit: (e, callback = null, errorCallback = null) => {
-      if (validations.validModel.value) {
+      if (props.noValidation || validations.validModel.value) {
         if (props.async) {
           e && e.preventDefault()
           if (!props.actionUrl) {
@@ -864,13 +903,15 @@ export default function useForm(props, context) {
     ...inputHandlers,
     ...validations,
     ...locale,
-    currentRevisions,
-    restoringRevisionId,
-    restoreRevision,
-    restoreDialogActive,
-    restorePreviewData,
-    pendingRestoreRevisionId,
-    confirmRestore,
-    cancelRestore,
+    validModel,
+    // ...itemActions,
+    // handleInput,
+    // createModel,
+    // createSchema,
+    // submit,
+    // resetValidation,
+    // initialize,
+    // resetSchemaError,
+    // setSchemaErrors,
   }
 }

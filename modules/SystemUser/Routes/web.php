@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SystemUser\Http\Controllers\API\CapabilityRouteDiscoveryController;
 use Unusualify\Modularity\Facades\ModularityRoutes;
 
 /*
@@ -17,6 +18,9 @@ use Unusualify\Modularity\Facades\ModularityRoutes;
 */
 Route::middleware(['web.auth', ...ModularityRoutes::defaultMiddlewares()])->group(function () {
 
-    Route::middleware((ModularityRoutes::defaultPanelMiddlewares()))->group(function () {});
+    Route::middleware((ModularityRoutes::defaultPanelMiddlewares()))->group(function () {
+        Route::get('capabilities/discover-routes', [CapabilityRouteDiscoveryController::class, 'index'])
+            ->name('capabilities.discover_routes');
+    });
 
 });

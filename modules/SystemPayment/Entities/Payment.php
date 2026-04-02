@@ -167,7 +167,9 @@ class Payment extends \Unusualify\Payable\Models\Payment
     protected function amountFormatted(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217)),
+            get: function () {
+                return PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217 ?? $this->currency->iso_4217));
+            },
         );
     }
 

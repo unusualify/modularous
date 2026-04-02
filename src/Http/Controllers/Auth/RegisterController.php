@@ -86,7 +86,7 @@ class RegisterController extends Controller
             'language' => $request['language'] ?? app()->getLocale(),
         ]);
 
-        $user->assignRole('client-manager');
+        $user->assignRole(modularityConfig('default_register_role'));
 
         event(new ModularityUserRegistered($user, $request));
 

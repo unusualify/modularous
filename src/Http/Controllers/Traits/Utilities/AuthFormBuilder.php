@@ -82,6 +82,7 @@ trait AuthFormBuilder
                 'class' => 'mt-5 mb-2 custom-auth-button',
                 'color' => 'grey-lighten-1',
                 'density' => 'default',
+                'block' => true,
             ],
             'slots' => [
                 'prepend' => [
@@ -324,6 +325,24 @@ trait AuthFormBuilder
                     route('admin.password.reset.link')
                 ),
             ],
+            'login_mfa_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('authentication.create-an-account'),
+                    route(Route::hasAdmin('register.email_form'))
+                ),
+            ],
+            'login_2fa_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('authentication.back-to-login'),
+                    route(Route::hasAdmin('login.form'))
+                ),
+            ],
+            'step_up_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('Resend verification code'),
+                    route(Route::hasAdmin('step-up.resend'))
+                ),
+            ],
             'have_account' => $this->haveAccountOptionSlot(),
             'restart' => $this->restartOptionSlot(),
             'resend' => $this->resendOptionSlot(),
@@ -388,6 +407,11 @@ trait AuthFormBuilder
                 'bottom' => $this->authBottomSlots([
                     $this->oauthGoogleButtonSlot('sign-in'),
                     $this->createAccountButtonSlot(),
+                ]),
+            ],
+            'login_mfa_bottom' => [
+                'bottom' => $this->authBottomSlots([
+                    $this->oauthGoogleButtonSlot('sign-in'),
                 ]),
             ],
             'register_bottom' => [

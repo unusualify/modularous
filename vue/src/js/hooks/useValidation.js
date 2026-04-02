@@ -482,7 +482,7 @@ export default function useValidation (props) {
     return inputs
   }
 
-  watch(() => state.valid, (newValue, oldValue) => {
+  watch(() => state.validModel, (newValue, oldValue) => {
 
   })
   // expose managed state as return value
