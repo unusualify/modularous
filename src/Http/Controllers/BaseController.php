@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageIndexAjax;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
+use Unusualify\Modularity\Http\Controllers\Traits\ManagePreview;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageTranslations;
@@ -23,7 +24,7 @@ use Unusualify\Modularity\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
-    use ManageIndexAjax, ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations;
+    use ManageIndexAjax, ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations, ManagePreview;
 
     /**
      * @var string
@@ -323,6 +324,7 @@ abstract class BaseController extends PanelController
             $formRequest = $this->validateFormRequest();
 
             $this->repository->update($id, $formRequest->all(), $this->getPreviousRouteSchema());
+            $item = $this->repository->getById($id);
 
             // $this->handleActionEvent($item, __FUNCTION__);
 

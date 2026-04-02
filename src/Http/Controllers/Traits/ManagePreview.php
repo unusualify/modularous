@@ -1,0 +1,89 @@
+<?php
+
+namespace Unusualify\Modularity\Http\Controllers\Traits;
+
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Unusualify\Modularity\Services\MessageStage;
+
+trait ManagePreview
+{
+    public function showView($id)
+    {
+        // dd($id);
+        // dd($this->request->has('revisionId'));
+        if ($this->request->has('revisionId')) {
+            $item = $this->repository->previewForRevision($id, $this->request->get('revisionId'));
+        } else {
+            $formRequest = $this->validateFormRequest();
+            $item = $this->repository->preview($id, $formRequest->all());
+        }
+
+        if ($this->request->has('activeLanguage')) {
+            //App::setLocale($this->request->get('activeLanguage'));
+        }
+
+        // dd($this->previewView);
+
+        $previewView = $this->previewView ?? (Config::get('twill.frontend.views_path', 'site') . '.' . Str::singular(
+            $this->moduleName
+        ));
+
+        // dd($previewView);
+
+        return View::exists($previewView) ? View::make(
+            $previewView,
+            array_replace([
+                'item' => $item,
+            ], $this->previewData($item))
+        ) : View::make('twill::errors.preview', [
+            'moduleName' => Str::singular($this->moduleName),
+        ]);
+    }
+
+    public function listRevisions($id)
+    {
+        $revisions = $this->repository->getRevisions($id);
+        return $revisions;
+    }
+
+    public function restoreRevision($id)
+    {
+        // dd('restoreRevision');
+        if (! $this->routeHasTrait('revisions')) {
+            return $this->respondWithError(__('Revisions are not enabled for this route.'));
+        }
+
+        $params = $this->request->route()->parameters();
+        $id = last($params);
+        $revisionId = (int) $this->request->get('revisionId');
+        // dd($revisionId);
+
+        if ($revisionId < 1) {
+            return $this->respondWithError(__('Revision id is required.'));
+        }
+
+        if ($this->request->get('preview')) {
+            // dd("preview is called for revision id: $revisionId");
+            $rawPayload = $this->repository->getRevisionPayload((int) $id, $revisionId);
+
+            return Response::json([
+                'form_fields' => $rawPayload,
+            ]);
+        }
+
+
+        $item = $this->repository->restoreRevision((int) $id, $revisionId);
+        // dd($item);
+
+        return Response::json([
+            'message' => __('Revision restored successfully.'),
+            'variant' => MessageStage::SUCCESS,
+            'revisions' => $item->revisionsArray(),
+            'form_fields' => $this->repository->getFormFields($item, $this->getPreviousRouteSchema()),
+        ]);
+    }
+
+}

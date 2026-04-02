@@ -282,11 +282,15 @@ export default function useForm(props, context) {
     }) || find(formEventSchema.value, checkSubmittable) ? true : false
   })
 
+  const currentRevisions = ref(props.revisions || [])
+  const restoringRevisionId = ref(null)
+
   const hasAdditionalSection = computed(() => context.slots.right
     || context.slots['right.top']
     || context.slots['right.bottom']
     || context.slots['right.middle']
     || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
+    || (currentRevisions.value && currentRevisions.value.length > 0)
   )
 
   const states = reactive({
@@ -375,6 +379,10 @@ export default function useForm(props, context) {
           } else if (Object.prototype.hasOwnProperty.call(response.data, 'variant')) {
             serverValid.value = false
             store.commit(ALERT.SET_ALERT, { message: response.data.message, variant: response.data.variant })
+          }
+
+          if (Object.prototype.hasOwnProperty.call(response.data, 'revisions')) {
+            currentRevisions.value = response.data.revisions
           }
 
           if(props.clearOnSaved) {
@@ -768,9 +776,127 @@ export default function useForm(props, context) {
 
   }, { deep: true })
 
+  watch(() => props.revisions, (newVal) => {
+    if (newVal) {
+      currentRevisions.value = newVal
+    }
+  })
+
+  const restoreDialogActive = ref(false)
+  const restorePreviewData = ref(null)
+  const pendingRestoreRevisionId = ref(null)
+
+  const getRestoreUrl = () => {
+    if (props.restoreUrl) return props.restoreUrl
+    if (props.actionUrl) {
+      const segments = props.actionUrl.replace(/\/+$/, '').split('/')
+      const id = segments.pop()
+      return segments.join('/') + '/restore-revision/' + id
+    }
+    return null
+  }
+
+  const normalizeRevisionPayload = (payload) => {
+    if (!payload) return payload
+
+    const locales = (store.state.language.all || []).map(l => l.value)
+    if (!locales.length) return payload
+
+    const result = {}
+    const translatedFields = {}
+
+    for (const key in payload) {
+      if (locales.includes(key) && payload[key] && typeof payload[key] === 'object' && !Array.isArray(payload[key])) {
+        const locale = key
+        for (const field in payload[locale]) {
+          if (!translatedFields[field]) translatedFields[field] = {}
+          translatedFields[field][locale] = payload[locale][field]
+        }
+      } else {
+        result[key] = payload[key]
+      }
+    }
+
+    return { ...result, ...translatedFields }
+  }
+
+  const restoreRevision = (revisionId) => {
+    const url = getRestoreUrl()
+    if (!url) return
+
+    // Open dialog immediately and remember which revision is being previewed
+    restorePreviewData.value = null
+    pendingRestoreRevisionId.value = revisionId
+    restoreDialogActive.value = true
+    restoringRevisionId.value = revisionId
+
+    api.get(`${url}?revisionId=${revisionId}&preview=1`,
+      (response) => {
+        restoringRevisionId.value = null
+
+        if (response.data.form_fields) {
+          restorePreviewData.value = normalizeRevisionPayload(response.data.form_fields)
+        }
+      },
+      () => {
+        restoringRevisionId.value = null
+        store.commit(ALERT.SET_ALERT, { message: 'Failed to load revision preview.', variant: 'error' })
+      }
+    )
+  }
+
+  const confirmRestore = () => {
+    const url = getRestoreUrl()
+    if (!url || !pendingRestoreRevisionId.value) return
+
+    const revisionId = pendingRestoreRevisionId.value
+    restoreDialogActive.value = false
+    restoringRevisionId.value = revisionId
+    formLoading.value = true
+
+    api.get(`${url}?revisionId=${revisionId}`,
+      (response) => {
+        formLoading.value = false
+        restoringRevisionId.value = null
+        restorePreviewData.value = null
+        pendingRestoreRevisionId.value = null
+
+        if (response.data.variant) {
+          store.commit(ALERT.SET_ALERT, { message: response.data.message, variant: response.data.variant })
+        }
+
+        if (response.data.revisions) {
+          currentRevisions.value = response.data.revisions
+        }
+
+        if (response.data.form_fields) {
+          model.value = getModel(rawSchema.value, response.data.form_fields, store.state)
+          inputSchema.value = validations.invokeRuleGenerator(
+            getSchema(rawSchema.value, { ...model.value, ...response.data.form_fields }, props.isEditing)
+          )
+          context.emit('update:modelValue', response.data.form_fields)
+        } else if (shouldUseInertia.value) {
+          router.reload({ only: ['formAttributes'] })
+        } else {
+          window.location.reload(true)
+        }
+      },
+      () => {
+        formLoading.value = false
+        restoringRevisionId.value = null
+        store.commit(ALERT.SET_ALERT, { message: 'Failed to restore revision.', variant: 'error' })
+      }
+    )
+  }
+
+  const cancelRestore = () => {
+    restoreDialogActive.value = false
+    restorePreviewData.value = null
+    pendingRestoreRevisionId.value = null
+  }
+
   initialize()
 
-  // Add resetSchemaErrors to the returned methods
   return {
     ...toRefs(states),
     ...toRefs(methods),

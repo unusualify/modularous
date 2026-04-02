@@ -54,6 +54,9 @@ class Module extends NwidartModule
         'tagsUpdate',
         'assignments',
         'createAssignment',
+        'restoreRevision',
+        'showView',
+        'listRevisions',
     ];
 
     /**
