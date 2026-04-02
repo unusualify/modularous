@@ -361,6 +361,8 @@ class RouteServiceProvider extends ServiceProvider
                 // 'feature',
                 // 'preview',
                 // 'bulkFeature',
+                'showView',
+                'listRevisions',
                 'restoreRevision',
 
                 'restore',
@@ -400,8 +402,9 @@ class RouteServiceProvider extends ServiceProvider
                     'uses' => "{$controllerClass}@{$customRoute}",
                 ];
 
-                if ($customRoute === 'assignments') {
-                    Route::get("{$url}/{{$snakeCase}}/assignments", $mapping);
+                if (in_array($customRoute, ['assignments', 'listRevisions'])) {
+                    // dd($customRoute, $routeSlug, $mapping, $url, $snakeCase);
+                    Route::get("{$url}/{{$snakeCase}}/{$customRouteKebab}", $mapping, );
                 }
 
                 if ($customRoute === 'createAssignment') {
@@ -429,11 +432,12 @@ class RouteServiceProvider extends ServiceProvider
                     Route::put($routeSlug, $mapping);
                 }
 
-                if (in_array($customRoute, ['duplicate'])) {
+                if (in_array($customRoute, ['duplicate', 'preview', 'showView','restoreRevision'])) {
                     Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
                 }
 
-                if (in_array($customRoute, ['preview'])) {
+                if (in_array($customRoute, ['preview', 'showView', 'restoreRevision'])) {
+                    // dd($customRoute, $routeSlug, $routeSlug . "/{{$snakeCase}}", $mapping);
                     Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
                 }
 
