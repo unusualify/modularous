@@ -1,12 +1,12 @@
 // hooks/useForm.js
-import { ref, computed, watch, toRefs, reactive, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, toRefs, reactive, nextTick, onMounted, provide } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { cloneDeep, isEqual, find, reduce, set, get, isArray } from 'lodash-es'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 
-import { useConfig, useInputHandlers, useValidation, useLocale, useItemActions, useAuthorization } from '@/hooks'
+import { useConfig, useInputHandlers, useValidation, useLocale, useItemActions, useAuthorization, useUser } from '@/hooks'
 import { ALERT, LANGUAGE } from '@/store/mutations/index'
 import ACTIONS from '@/store/actions'
 import api from '@/store/api/form'
@@ -185,7 +185,7 @@ export default function useForm(props, context) {
   const store = useStore()
   const { t, te } = useI18n({ useScope: 'global' })
   const { shouldUseInertia } = useConfig()
-
+  const { isSuperAdmin } = useUser()
   if(props.languages && isArray(props.languages) && props.languages.length > 0) {
     store.commit(LANGUAGE.SET_LANGUAGES, props.languages)
   }
@@ -237,7 +237,7 @@ export default function useForm(props, context) {
   // const formItem = computed(() => issetModel.value ? props.modelValue : store.state.form.editedItem)
   const formItem = computed(() => props.modelValue)
 
-  const inputSchema = ref(validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)))
+  const inputSchema = ref(validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing, ({ ...model.value, ...formItem.value }).id)))
   // const inputSchema = ref(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
 
   const formEventSchema = ref(getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
@@ -343,7 +343,7 @@ export default function useForm(props, context) {
   // Methods
 
   const createSchema = (schema, modelValue) => {
-    return validations.invokeRuleGenerator(getSchema(schema, modelValue, true))
+    return validations.invokeRuleGenerator(getSchema(schema, modelValue, true, modelValue?.id))
   }
 
   const saveForm = (callback = null, errorCallback = null) => {
@@ -733,7 +733,7 @@ export default function useForm(props, context) {
       rawSchema.value = newValue
       defaultItem.value = getModel(rawSchema.value)
 
-      inputSchema.value = validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
+      inputSchema.value = validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing, ({ ...model.value, ...formItem.value }).id))
       formEventSchema.value = getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)
       // states.extraValids = props.actions.length ? props.actions.map(() => true) : []
       initialize()
@@ -769,134 +769,31 @@ export default function useForm(props, context) {
       if (!isEqual(newModel, oldModel)) {
         model.value = newModel
         inputSchema.value = validations.invokeRuleGenerator(
-          getSchema(value, props.modelValue, props.isEditing)
+          getSchema(value, props.modelValue, props.isEditing, props.modelValue?.id)
         )
       }
     }
 
   }, { deep: true })
 
-  watch(() => props.revisions, (newVal) => {
-    if (newVal) {
-      currentRevisions.value = newVal
-    }
-  })
-
-  const restoreDialogActive = ref(false)
-  const restorePreviewData = ref(null)
-  const pendingRestoreRevisionId = ref(null)
-
-  const getRestoreUrl = () => {
-    if (props.restoreUrl) return props.restoreUrl
-    if (props.actionUrl) {
-      const segments = props.actionUrl.replace(/\/+$/, '').split('/')
-      const id = segments.pop()
-      return segments.join('/') + '/restore-revision/' + id
-    }
-    return null
-  }
-
-  const normalizeRevisionPayload = (payload) => {
-    if (!payload) return payload
-
-    const locales = (store.state.language.all || []).map(l => l.value)
-    if (!locales.length) return payload
-
-    const result = {}
-    const translatedFields = {}
-
-    for (const key in payload) {
-      if (locales.includes(key) && payload[key] && typeof payload[key] === 'object' && !Array.isArray(payload[key])) {
-        const locale = key
-        for (const field in payload[locale]) {
-          if (!translatedFields[field]) translatedFields[field] = {}
-          translatedFields[field][locale] = payload[locale][field]
-        }
-      } else {
-        result[key] = payload[key]
-      }
-    }
-
-    return { ...result, ...translatedFields }
-  }
-
-  const restoreRevision = (revisionId) => {
-    const url = getRestoreUrl()
-    if (!url) return
-
-    // Open dialog immediately and remember which revision is being previewed
-    restorePreviewData.value = null
-    pendingRestoreRevisionId.value = revisionId
-    restoreDialogActive.value = true
-    restoringRevisionId.value = revisionId
-
-    api.get(`${url}?revisionId=${revisionId}&preview=1`,
-      (response) => {
-        restoringRevisionId.value = null
-
-        if (response.data.form_fields) {
-          restorePreviewData.value = normalizeRevisionPayload(response.data.form_fields)
-        }
-      },
-      () => {
-        restoringRevisionId.value = null
-        store.commit(ALERT.SET_ALERT, { message: 'Failed to load revision preview.', variant: 'error' })
-      }
-    )
-  }
-
-  const confirmRestore = () => {
-    const url = getRestoreUrl()
-    if (!url || !pendingRestoreRevisionId.value) return
-
-    const revisionId = pendingRestoreRevisionId.value
-    restoreDialogActive.value = false
-    restoringRevisionId.value = revisionId
-    formLoading.value = true
-
-    api.get(`${url}?revisionId=${revisionId}`,
-      (response) => {
-        formLoading.value = false
-        restoringRevisionId.value = null
-        restorePreviewData.value = null
-        pendingRestoreRevisionId.value = null
-
-        if (response.data.variant) {
-          store.commit(ALERT.SET_ALERT, { message: response.data.message, variant: response.data.variant })
-        }
-
-        if (response.data.revisions) {
-          currentRevisions.value = response.data.revisions
-        }
-
-        if (response.data.form_fields) {
-          model.value = getModel(rawSchema.value, response.data.form_fields, store.state)
-          inputSchema.value = validations.invokeRuleGenerator(
-            getSchema(rawSchema.value, { ...model.value, ...response.data.form_fields }, props.isEditing)
-          )
-          context.emit('update:modelValue', response.data.form_fields)
-        } else if (shouldUseInertia.value) {
-          router.reload({ only: ['formAttributes'] })
-        } else {
-          window.location.reload(true)
-        }
-      },
-      () => {
-        formLoading.value = false
-        restoringRevisionId.value = null
-        store.commit(ALERT.SET_ALERT, { message: 'Failed to restore revision.', variant: 'error' })
-      }
-    )
-  }
-
-  const cancelRestore = () => {
-    restoreDialogActive.value = false
-    restorePreviewData.value = null
-    pendingRestoreRevisionId.value = null
-  }
-
   initialize()
 
+
+  if(isSuperAdmin.value) {
+    console.info('useForm', {
+      states,
+      methods,
+      inputHandlers,
+      validations,
+      locale,
+      validModel,
+      inputSchema,
+      formEventSchema,
+      rawSchema,
+    })
+  }
+
+  // Add resetSchemaErrors to the returned methods
   return {
     ...toRefs(states),
     ...toRefs(methods),
@@ -904,6 +801,7 @@ export default function useForm(props, context) {
     ...validations,
     ...locale,
     validModel,
+    applyRevisionRestoreResponse,
     // ...itemActions,
     // handleInput,
     // createModel,
