@@ -107,4 +107,9 @@ trait Rolable
         return collect($roles)
             ->some(fn ($role) => $this->existRole($role));
     }
+
+    public function hasPermission($permission): bool
+    {
+        return $this->hasPermissionTo($permission);
+    }
 }
