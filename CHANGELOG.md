@@ -2,6 +2,19 @@
 
 All notable changes to `modularity` will be documented in this file
 
+## v0.58.2 - 2026-03-28
+
+### :wrench: Bug Fixes
+
+- remove unused transfer_details attribute by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/33b87e329779e58cbb180c3dacdd3d7544964833
+
+## v0.58.1 - 2026-03-25
+
+### :wrench: Bug Fixes
+
+- remove unused initialization methods by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/7b14079a423ba3bc15cd4247a0a82049051e8bc1
+- update amount formatting and enable additional appends by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/5407dae9a0785c1c6818116b58a2a1176535c69d
+
 ## v0.58.0 - 2026-03-24
 
 ### :rocket: Features

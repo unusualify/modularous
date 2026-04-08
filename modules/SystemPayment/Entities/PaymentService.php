@@ -34,8 +34,7 @@ class PaymentService extends Model
         'button_logo_url',
         'transferrable',
         'bank_details',
-        'has_transaction_fee',
-        'transfer_details',
+        'has_transaction_fee'
     ];
 
     protected $casts = [
