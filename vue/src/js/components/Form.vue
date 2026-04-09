@@ -405,70 +405,6 @@
       </div>
 
     </v-form>
-
-    <!-- Preview Dialog (fullscreen always) -->
-    <v-dialog v-model="previewDialogActive" fullscreen scrollable transition="dialog-bottom-transition">
-      <v-card class="d-flex flex-column">
-        <v-toolbar color="primary" density="compact">
-          <!-- Left: back -->
-          <v-btn icon color="white" @click="previewDialogActive = false">
-            <v-icon color="white">mdi-arrow-left</v-icon>
-          </v-btn>
-
-          <v-spacer />
-
-          <!-- Center: responsive viewport selector -->
-          <div class="d-flex align-center ga-1">
-            <v-btn
-              v-for="vp in VIEWPORTS"
-              :key="vp.key"
-              icon
-              size="small"
-              variant="text"
-              :title="vp.label"
-              :class="previewViewport === vp.key ? 'preview-viewport-btn--active' : 'preview-viewport-btn--inactive'"
-              @click="previewViewport = vp.key"
-            >
-              <v-icon color="white" :size="vp.iconSize">{{ vp.icon }}</v-icon>
-            </v-btn>
-          </div>
-
-          <v-spacer />
-
-          <!-- Right: placeholder to keep center truly centered -->
-          <div style="width: 40px;" />
-        </v-toolbar>
-
-        <!-- Preview content with optional viewport frame -->
-        <v-card-text
-          class="flex-grow-1 pa-0 overflow-y-auto"
-          style="background: #3a3a3a;"
-        >
-          <div :style="previewFrameStyle">
-            <!-- Custom component if provided -->
-            <component
-              v-if="previewComponent"
-              :is="previewComponent"
-              :data="model"
-            />
-            <!-- Generic field table fallback -->
-            <div v-else>
-              <v-table density="comfortable">
-                <tbody>
-                  <tr v-for="field in previewFields" :key="field.name">
-                    <td class="text-caption text-medium-emphasis font-weight-medium border-0" style="width: 160px; vertical-align: middle;">
-                      {{ field.label }}
-                    </td>
-                    <td class="text-body-1 border-0">{{ field.value || '—' }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </div>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
   </div>
 </template>
 
@@ -476,7 +412,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { useForm, makeFormProps } from '@/hooks'
+import { useForm, makeFormProps } from '@/hooks/form'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from './form/FormActions.vue'
 import FormEvents from './form/FormEvents.vue'
@@ -784,13 +720,5 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.preview-viewport-btn--active
-  background: rgba(255, 255, 255, 0.2) !important
-  border-radius: 6px
 
-.preview-viewport-btn--inactive
-  opacity: 0.55
-
-  &:hover
-    opacity: 0.85
 </style>

@@ -73,7 +73,7 @@
 
 <script>
 import { useSlots, onBeforeMount, watch } from 'vue'
-import useFormBaseLogic from '@/hooks/useFormBaseLogic'
+import useFormBaseLogic from '@/hooks/form/useFormBaseLogic'
 import FormBaseField from './FormBaseField.vue'
 
 const defaultID = 'form-base'

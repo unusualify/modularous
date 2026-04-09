@@ -5,7 +5,7 @@ export { default as useInputHandlers } from './useInputHandlers'
 export { default as useTable, makeTableProps } from './useTable'
 export { default as useActiveTableItem, makeActiveTableItemProps } from './useActiveTableItem'
 export { default as useValidation } from './useValidation'
-export { default as useFormBase } from './useFormBase'
+export { useFormBase } from './form'
 export { default as useModal, makeModalProps } from './useModal'
 export { default as useMediaItems } from './useMediaItems'
 export { default as useMediaLibrary } from './useMediaLibrary'
@@ -25,7 +25,7 @@ export { default as useItemActions, makeItemActionsProps } from './useItemAction
 
 export { default as useCurrency } from './useCurrency'
 
-export { default as useForm, makeFormProps } from './useForm'
+export { useForm, makeFormProps } from './form'
 
 export { default as useAuthorization } from './useAuthorization'
 export { default as useCache } from './useCache'
@@ -38,6 +38,12 @@ export { default as useFilepond, makeFilepondProps } from './useFilepond'
 export { default as useInputFetch, makeInputFetchProps } from './useInputFetch'
 
 export { default as useAlert } from './useAlert'
+export {
+  default as useJsonDiff,
+  stringifyJsonPretty,
+  diffJsonLineParts,
+  jsonDiffPartClass,
+} from './useJsonDiff'
 
 export { default as useCastAttributes } from './useCastAttributes'
 
