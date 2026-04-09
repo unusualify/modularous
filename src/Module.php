@@ -12,6 +12,8 @@ use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +21,7 @@ use Illuminate\Support\Str;
 use Nwidart\Modules\Laravel\Module as NwidartModule;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Unusualify\Modularity\Activators\ModuleActivator;
+use Unusualify\Modularity\Entities\Enums\Permission;
 use Unusualify\Modularity\Exceptions\ModularityException;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Repositories\Repository;
@@ -657,6 +660,60 @@ class Module extends NwidartModule
         $tableName = is_string($model) ? (new $model)->getTable() : $model->getTable();
 
         return Schema::hasTable($tableName);
+    }
+
+    /**
+     * Generate permission name from permission and route name
+     *
+     * @param mixed $permission
+     * @param mixed $routeName
+     */
+    public function generatePermissionName(string $permission, string $routeName): string
+    {
+        return Permission::generatePermissionName($permission, $routeName);
+    }
+
+    /**
+     * Generate permission middleware definition
+     *
+     * @param mixed $permission
+     * @param mixed $routeName
+     */
+    public function generatePermissionMiddlewareDefinition(string $permission, string $routeName): string
+    {
+        return Permission::generatePermissionMiddlewareDefinition($permission, $routeName);
+    }
+
+    /**
+     * Check if the user has the permission
+     *
+     * @param mixed $permissionName
+     * @param mixed $routeName
+     */
+    public function userHasPermission(string $permissionName, string $routeName): bool
+    {
+        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+
+        if(! $user) {
+            return false;
+        }
+
+        $permissionName = $this->generatePermissionName($permissionName, $routeName);
+
+        return $user->hasPermission($permissionName);
+    }
+
+    /**
+     * Check if the user is allowed to perform the permission
+     *
+     * @param mixed $permission
+     * @param mixed $routeName
+     */
+    public function allowedPermission(string $permission, string $routeName)
+    {
+        $permissionName = $this->generatePermissionName($permission, $routeName);
+
+        return Gate::allows($permissionName);
     }
 
     /**

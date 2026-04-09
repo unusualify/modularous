@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Entities\Enums;
 
+use Illuminate\Support\Str;
+
 enum Permission: string
 {
     // case DASHBOARD = 'dashboard';
@@ -30,5 +32,15 @@ enum Permission: string
         }
 
         return null;
+    }
+
+    public static function generatePermissionName($permission, $routeName)
+    {
+        return Str::kebab($routeName) . '_' . static::get($permission);
+    }
+
+    public static function generatePermissionMiddlewareDefinition($permission, $routeName)
+    {
+        return 'can:' . self::generatePermissionName($permission, $routeName);
     }
 }
