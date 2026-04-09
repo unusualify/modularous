@@ -334,6 +334,7 @@
                 <v-input-locale v-else-if="obj.schema.translated"
                   :type="mapTypeToComponent(obj.schema.type)"
                   :attributes="obj.schema"
+                  :obj="obj"
                   :modelValue="setValue(obj)"
                   @update:modelValue="onInput($event, obj)"
                 />

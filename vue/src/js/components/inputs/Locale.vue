@@ -5,8 +5,10 @@
         <component
           v-bind:is="`${type}`"
           v-bind="attributesPerLang[`${language.value}`]"
+          :obj="obj"
           :class="[language.value === currentLocale.value || isCustomForm ? '' : 'd-none']"
           @update:modelValue="modelUpdated($event, language.value)"
+          :localeKey="language.value"
           >
           <template v-slot:appendx>
             <v-chip v-if="languages.length > 1" @click="updateLocale(currentLocale)">
@@ -54,6 +56,7 @@
       <component
         v-bind:is="`${type}`"
         :name="attributes.name"
+        :obj="obj"
         v-bind="attributesNoLang()"
         @change="updateValue(false, ...arguments)"
         @blur="$emit('blur')"
@@ -124,7 +127,6 @@ export default {
         return this.modelValue
       },
       set (val, old) {
-        console.log('input set', val, old);
         this.inputOnSet(val, old)
         this.updateModelValue(val)
         // context.emit('update:modelValue', val)
