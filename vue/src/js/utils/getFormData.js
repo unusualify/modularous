@@ -33,7 +33,9 @@ const numberable = 'number-input'
 // const isMediableTypes = 'input-file|input-image'
 // const isMediableFields = 'files|medias'
 
-export const getSchema = (inputs, model = null, isEditing = false) => {
+export const getSchema = (inputs, model = null, isEditing = false, editingEntityId = null) => {
+  const entityId = editingEntityId ?? (__isset(model) && __isset(model.id) ? model.id : null)
+
   let _inputs = _.omitBy(inputs, (value, key) => {
     return Object.prototype.hasOwnProperty.call(value, 'slotable')
       || isFormEventInput(value, model)
@@ -99,7 +101,14 @@ export const getSchema = (inputs, model = null, isEditing = false) => {
     }
 
     if (__isset(input) && __isset(input.schema) && ['wrap', 'group', 'repeater', 'input-repeater'].includes(input.type)) {
-      input.schema = getSchema(input.schema, input.type === 'wrap' ? model : model[key], isEditing);
+      input.schema = getSchema(input.schema, input.type === 'wrap' ? model : model[key], isEditing, entityId);
+    }
+
+    if (isEditing && entityId != null && entityId !== '') {
+      const slugTypes = ['input-slug', 'slug']
+      if (slugTypes.includes(input.type)) {
+        input.excludeId = entityId
+      }
     }
 
     input.creatable = isCreatable

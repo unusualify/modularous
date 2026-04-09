@@ -163,8 +163,8 @@ class SlugsTraitTest extends RepositoryTestCase
         $fields = $this->repository->getFormFields($object);
 
         $this->assertArrayHasKey('translations', $fields);
-        $this->assertArrayHasKey('slug', $fields['translations']);
-        $this->assertEquals('form-field-test', $fields['translations']['slug']['en']);
+        $this->assertArrayHasKey('name', $fields['translations']);
+        $this->assertEquals('form-field-test', $fields['translations']['name']['en']);
     }
 
     public function test_get_form_fields_slugs_trait_returns_slugs_for_multiple_locales(): void
@@ -178,9 +178,9 @@ class SlugsTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($object);
 
-        $this->assertArrayHasKey('slug', $fields['translations']);
-        $this->assertEquals('multi-locale-test', $fields['translations']['slug']['en']);
-        $this->assertEquals('multi-locale-test', $fields['translations']['slug']['tr']);
+        $this->assertArrayHasKey('name', $fields['translations']);
+        $this->assertEquals('multi-locale-test', $fields['translations']['name']['en']);
+        $this->assertEquals('multi-locale-test', $fields['translations']['name']['tr']);
     }
 
     public function test_get_slug_parameters_returns_base_slug_params(): void
@@ -618,10 +618,10 @@ class SlugsTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($object);
 
-        // The raw 'slugs' key should be removed and replaced with translations.slug
+        // The raw 'slugs' key should be removed; slug data is under translations.{slugAttribute}
         $this->assertArrayNotHasKey('slugs', $fields);
         $this->assertArrayHasKey('translations', $fields);
-        $this->assertArrayHasKey('slug', $fields['translations']);
+        $this->assertArrayHasKey('name', $fields['translations']);
     }
 }
 
