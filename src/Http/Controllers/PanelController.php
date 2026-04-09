@@ -213,7 +213,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
         });
 
         // $this->setMiddlewareBasePermission();
-        $this->setMiddlewarePermission();
+        $this->setMiddlewarePermissions();
 
         // $this->titleColumnKey = $this->getConfigFieldsByRoute('title_column_key', 'name');
 
@@ -274,39 +274,48 @@ abstract class PanelController extends CoreController implements CacheableInterf
         }
     }
 
-    protected function permissionPrefix($permission = '')
+    protected function addMiddlewarePermissions()
     {
-        return $this->getKebabCase($this->routeName) . ($permission != '' ? "_{$permission}" : '');
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $this->$method();
+        }
     }
 
-    protected function setMiddlewarePermission()
+    protected function setMiddlewarePermission($permission, $options)
     {
+        $this->middleware($this->module->generatePermissionMiddlewareDefinition($permission, $this->routeName), $options);
+    }
 
-        // Permission::where('name', 'LIKE', "%{$this->getKebabCase($this->routeName)}%")->get(),
-
-        $name = $this->getKebabCase($this->routeName);
-        // foreach ( Permission::cases() as $permission) {
-        //     // $this->middleware("can:{$name}_{$permission->value}", ['only' => ['index', 'show']]);
-        // }
-
-        // dd(Permission::ACCESS->value, $name);
+    protected function setMiddlewarePermissions()
+    {
         if ($this->isGateable() && $this->setDefaultPermissions) {
-            $this->middleware("can:{$this->permissionPrefix(Permission::VIEW->value)}", ['only' => ['index', 'show']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::CREATE->value)}", ['only' => ['create', 'store']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::EDIT->value)}", ['only' => ['edit', 'update']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::DELETE->value)}", ['only' => ['delete']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::FORCEDELETE->value)}", ['only' => ['forceDelete']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::RESTORE->value)}", ['only' => ['restore']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::DUPLICATE->value)}", ['only' => ['duplicate']]);
-            $this->middleware("can:{$this->permissionPrefix(Permission::REORDER->value)}", ['only' => ['reorder']]);
-        }
 
-        // $this->middleware('can:list', ['only' => ['index', 'show']]);
-        // $this->middleware('can:edit', ['only' => ['store', 'edit', 'update']]);
-        // $this->middleware('can:duplicate', ['only' => ['duplicate']]);
-        // $this->middleware('can:publish', ['only' => ['publish', 'feature', 'bulkPublish', 'bulkFeature']]);
-        // $this->middleware('can:reorder', ['only' => ['reorder']]);
-        // $this->middleware('can:delete', ['only' => ['destroy', 'bulkDelete', 'restore', 'bulkRestore', 'forceDelete', 'bulkForceDelete', 'restoreRevision']]);
+            if($this->module) {
+                $permissions = [
+                    'VIEW' => [ 'only' => ['index', 'show']],
+                    'CREATE' => [ 'only' => ['create', 'store']],
+                    'EDIT' => [ 'only' => ['edit', 'update']],
+                    'DELETE' => [ 'only' => ['delete']],
+                    'FORCEDELETE' => [ 'only' => ['forceDelete']],
+                    'RESTORE' => [ 'only' => ['restore']],
+                    'DUPLICATE' => [ 'only' => ['duplicate']],
+                    'REORDER' => [ 'only' => ['reorder']],
+
+                    // 'LIST' => [ 'only' => ['index', 'show']],
+                    // 'EDIT' => [ 'only' => ['edit', 'update']],
+                    // 'DUPLICATE' => [ 'only' => ['duplicate']],
+                    // 'PUBLISH' => [ 'only' => ['publish', 'feature', 'bulkPublish', 'bulkFeature']],
+                    // 'REORDER' => [ 'only' => ['reorder']],
+                    // 'DELETE' => [ 'only' => ['destroy', 'bulkDelete', 'restore', 'bulkRestore', 'forceDelete', 'bulkForceDelete', 'restoreRevision']],
+
+                ];
+                foreach ($permissions as $permission => $options) {
+                    $this->setMiddlewarePermission($permission, $options);
+                }
+            }
+
+            $this->addMiddlewarePermissions();
+        }
     }
 
     protected function checkNestedAttributes()
@@ -394,21 +403,21 @@ abstract class PanelController extends CoreController implements CacheableInterf
                 : $option;
 
             $authorizableOptions = [
-                'index' => $this->permissionPrefix(Permission::VIEW->value),
-                'create' => $this->permissionPrefix(Permission::CREATE->value),
-                'edit' => $this->permissionPrefix(Permission::EDIT->value),
-                'delete' => $this->permissionPrefix(Permission::DELETE->value),
-                'destroy' => $this->permissionPrefix(Permission::DELETE->value),
+                'index' => $this->module->generatePermissionName(Permission::VIEW->value, $this->routeName),
+                'create' => $this->module->generatePermissionName(Permission::CREATE->value, $this->routeName),
+                'edit' => $this->module->generatePermissionName(Permission::EDIT->value, $this->routeName),
+                'delete' => $this->module->generatePermissionName(Permission::DELETE->value, $this->routeName),
+                'destroy' => $this->module->generatePermissionName(Permission::DELETE->value, $this->routeName),
 
-                'restore' => $this->permissionPrefix(Permission::RESTORE->value),
-                'forceDelete' => $this->permissionPrefix(Permission::FORCEDELETE->value),
-                'duplicate' => $this->permissionPrefix(Permission::DUPLICATE->value),
-                'activity' => $this->permissionPrefix(Permission::ACTIVITY->value),
-                'show' => $this->permissionPrefix(Permission::SHOW->value),
+                'restore' => $this->module->generatePermissionName(Permission::RESTORE->value, $this->routeName),
+                'forceDelete' => $this->module->generatePermissionName(Permission::FORCEDELETE->value, $this->routeName),
+                'duplicate' => $this->module->generatePermissionName(Permission::DUPLICATE->value, $this->routeName),
+                'activity' => $this->module->generatePermissionName(Permission::ACTIVITY->value, $this->routeName),
+                'show' => $this->module->generatePermissionName(Permission::SHOW->value, $this->routeName),
             /**
              * TODO #additionalRoutePermission
              */
-                // 'duplicate' => $this->permissionPrefix(Permission::DUPLICATE->value),
+                // 'duplicate' => $this->module->generatePermissionName(Permission::DUPLICATE->value, $this->routeName),
 
                 // 'index' => 'access',
                 // 'create' => 'edit',
