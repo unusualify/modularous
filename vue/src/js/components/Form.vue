@@ -301,13 +301,6 @@
                     <slot name="right.bottom" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                   </template>
                 </AdditionalSectionContent>
-                <RevisionsList
-                  v-if="currentRevisions && currentRevisions.length"
-                  :revisions="currentRevisions"
-                  :loading="loading"
-                  @select="restoreRevision"
-                  @preview="handlePreview"
-                />
               </slot>
             </div>
           </div>
@@ -344,13 +337,6 @@
                       <slot name="right.bottom" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                     </template>
                   </AdditionalSectionContent>
-                  <RevisionsList
-                    v-if="currentRevisions && currentRevisions.length"
-                    :revisions="currentRevisions"
-                    :loading="loading"
-                    @select="restoreRevision"
-                    @preview="handlePreview"
-                  />
                 </slot>
               </v-card-text>
             </v-card>
@@ -483,82 +469,6 @@
       </v-card>
     </v-dialog>
 
-    <!-- Restore Revision Dialog -->
-    <v-dialog
-      v-model="restoreDialogActive"
-      :fullscreen="!!previewComponent"
-      :max-width="previewComponent ? undefined : 600"
-      :transition="previewComponent ? 'dialog-bottom-transition' : undefined"
-      scrollable
-    >
-      <v-card :class="previewComponent ? 'd-flex flex-column' : ''">
-
-        <!-- Fullscreen header (when previewComponent is set) -->
-        <template v-if="previewComponent">
-          <v-toolbar color="primary" density="compact">
-            <v-btn icon color="white" @click="restoreDialogActive = false">
-              <v-icon color="white">mdi-arrow-left</v-icon>
-            </v-btn>
-            <v-spacer />
-            <v-toolbar-title class="text-center">
-              <div class="d-flex align-center justify-center ga-2">
-                <v-icon size="small" color="white">mdi-history</v-icon>
-                <span class="text-subtitle-1 font-weight-semibold text-white">Restore Revision</span>
-              </div>
-            </v-toolbar-title>
-            <v-spacer />
-            <div style="width: 40px;" />
-          </v-toolbar>
-        </template>
-
-        <!-- Small modal header (when no previewComponent) -->
-        <template v-else>
-          <v-card-title class="d-flex align-center pa-4">
-            <v-icon class="mr-2" color="primary">mdi-history</v-icon>
-            <span>Restore Revision</span>
-          </v-card-title>
-          <v-divider />
-        </template>
-
-        <v-card-text :class="previewComponent ? 'flex-grow-1 pa-6' : 'pa-4'">
-          <div v-if="restoringRevisionId" class="d-flex justify-center align-center pa-8">
-            <v-progress-circular indeterminate color="primary" :size="48" :width="4" />
-          </div>
-          <!-- Custom component (fullscreen mode) -->
-          <component
-            v-else-if="previewComponent"
-            :is="previewComponent"
-            :data="restorePreviewData"
-          />
-          <!-- Generic fields table (small modal mode) -->
-          <v-table v-else density="comfortable">
-            <tbody>
-              <tr v-for="field in restorePreviewFields" :key="field.name">
-                <td class="text-caption text-medium-emphasis font-weight-medium border-0" style="width: 140px; vertical-align: middle;">
-                  {{ field.label }}
-                </td>
-                <td class="text-body-2 border-0">{{ field.value || '—' }}</td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-
-        <v-divider v-if="!previewComponent" />
-        <v-card-actions :class="previewComponent ? 'justify-center pa-6' : 'pa-3 justify-center'">
-          <v-btn
-            color="primary"
-            variant="flat"
-            :size="previewComponent ? 'large' : 'default'"
-            :min-width="previewComponent ? 180 : undefined"
-            :loading="loading"
-            :disabled="!!restoringRevisionId"
-            @click="confirmRestore"
-          >
-            Approve
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -570,7 +480,6 @@ import { useForm, makeFormProps } from '@/hooks'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from './form/FormActions.vue'
 import FormEvents from './form/FormEvents.vue'
-import RevisionsList from './form/RevisionsList.vue'
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -646,7 +555,6 @@ export default {
     FormActions,
     FormEvents,
     AdditionalSectionContent,
-    RevisionsList,
   },
   emits: [
     'update:valid',
