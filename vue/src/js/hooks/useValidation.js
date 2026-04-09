@@ -342,12 +342,6 @@ export default function useValidation (props) {
         if (!formData[field]) return true;
         return rules.every(rule => rule(v, formData) === true) || msg || t('validation.invalid_based_on', { field });
     },
-
-
-
-
-    generateInputRules,
-    validateInput,
   })
 
   // function invokeRuleValidator () {
@@ -486,11 +480,13 @@ export default function useValidation (props) {
 
   })
   // expose managed state as return value
+  // Spread ruleMethods first; plain functions last so they are never overwritten by toRefs(ruleMethods).
   return {
-    // invokeRuleValidator,
+    ...toRefs(ruleMethods),
+    ...toRefs(state),
     invokeRule,
     invokeRuleGenerator,
-    ...toRefs(ruleMethods),
-    ...toRefs(state)
+    generateInputRules,
+    validateInput,
   }
 }
