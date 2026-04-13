@@ -149,6 +149,15 @@ export const makeModalProps = propsFactory({
     type: Boolean,
     default: true
   },
+  /**
+   * Vuetify 3 overlay scroll blocking: default "block" can throw if the scroll target is missing
+   * (Cannot read properties of undefined (reading 'classList') in blockScrollStrategy).
+   * Use "none" for stable modals; set "block" if you need body scroll lock.
+   */
+  scrollStrategy: {
+    type: String,
+    default: 'none',
+  },
 })
 
 export const makeModalMediaProps = propsFactory({
