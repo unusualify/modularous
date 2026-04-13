@@ -40,7 +40,7 @@ export default {
     })
   },
   post (endpoint, data, callback, errorCallback) {
-    axios.post(endpoint, withCsrfToken(data), {
+    axios.post(endpoint, data, {
       validateStatus: status => (status >= 200 && status < 300) || status === 422 || status === 403 || status === 419 || status === 428
     }).then(function (resp) {
       if (callback && typeof callback === 'function') callback(resp)
@@ -56,7 +56,7 @@ export default {
     })
   },
   put (endpoint, data, callback, errorCallback) {
-    axios.put(endpoint, withCsrfToken(data), {
+    axios.put(endpoint, data, {
       validateStatus: status => (status >= 200 && status < 300) || status === 422 || status === 403 || status === 419 || status === 428
     }).then(function (resp) {
       if (callback && typeof callback === 'function') callback(resp)
