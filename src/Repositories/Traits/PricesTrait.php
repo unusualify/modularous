@@ -11,6 +11,12 @@ use Unusualify\Modularity\Facades\CurrencyExchange;
 
 trait PricesTrait
 {
+    /**
+     * When true, {@see RevisionsTrait::bypassAfterSaves} may set `passAfterSavePricesTrait` during pending-only
+     * revision saves so {@see afterSavePricesTrait} is skipped.
+     */
+    protected bool $pendingBypassRevisionPricesTrait = true;
+
     protected $formatableColumns = [
         'id',
         'raw_amount',

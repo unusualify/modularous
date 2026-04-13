@@ -58,6 +58,8 @@ class Module extends NwidartModule
         'assignments',
         'createAssignment',
         'restoreRevision',
+        'approveRevision',
+        'rejectRevision',
         'showView',
         'listRevisions',
     ];

@@ -7,6 +7,46 @@ use Unusualify\Modularity\Entities\Model;
 trait SlugsTrait
 {
     /**
+     * When true, {@see RevisionsTrait::bypassAfterSaves} may set `passAfterSaveSlugsTrait` during pending-only
+     * revision saves so {@see afterSaveSlugsTrait} is skipped.
+     */
+    protected bool $pendingBypassRevisionSlugsTrait = true;
+
+    /**
+     * Map per-locale slug attribute strings into {@see afterSaveSlugsTrait}'s `slugs` key.
+     * Runs after {@see TranslationsTrait::prepareFieldsBeforeSaveTranslationsTrait} when repository uses both traits.
+     *
+     * @param Model $object
+     * @param array $fields
+     * @return array
+     */
+    public function prepareFieldsBeforeSaveSlugsTrait($object, $fields)
+    {
+        if (! property_exists($this->model, 'slugAttributes')) {
+            return $fields;
+        }
+
+        $slugAttributes = $object->getSlugAttributes();
+
+        if ($slugAttributes === []) {
+            return $fields;
+        }
+
+        foreach (getLocales() as $locale) {
+            foreach ($slugAttributes as $attr) {
+                $slugPayload = $fields[$locale][$attr] ?? null;
+                if ($slugPayload !== null && $slugPayload !== '') {
+                    $fields['slugs'][$locale] = $slugPayload;
+
+                    break;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
      * @param Model $object
      * @param array $fields
      * @return void
@@ -60,10 +100,26 @@ trait SlugsTrait
     {
         unset($fields['slugs']);
 
-        if ($object->slugs != null) {
+        if (! property_exists($this->model, 'slugAttributes')) {
+            return $fields;
+        }
+
+        $slugAttributes = $object->getSlugAttributes();
+
+        if ($slugAttributes === []) {
+            return $fields;
+        }
+
+        $object->loadMissing('slugs');
+
+        if ($object->slugs === null) {
+            return $fields;
+        }
+
+        foreach ($slugAttributes as $attr) {
             foreach ($object->slugs as $slug) {
                 if ($slug->active || $object->slugs->where('locale', $slug->locale)->where('active', true)->count() === 0) {
-                    $fields['translations']['slug'][$slug->locale] = $slug->slug;
+                    $fields['translations'][$attr][$slug->locale] = $slug->slug;
                 }
             }
         }

@@ -9,6 +9,12 @@ use Unusualify\Modularity\Entities\Model;
 
 trait FilesTrait
 {
+    /**
+     * When true, {@see RevisionsTrait::bypassAfterSaves} may set `passAfterSaveFilesTrait` during pending-only
+     * revision saves so {@see afterSaveFilesTrait} is skipped.
+     */
+    protected bool $pendingBypassRevisionFilesTrait = true;
+
     public function setColumnsFilesTrait($columns, $inputs)
     {
         $traitName = get_class_short_name(__TRAIT__);
@@ -35,17 +41,7 @@ trait FilesTrait
             return $object;
         }
 
-        $filesCollection = Collection::make();
-        $filesFromFields = $this->getFiles($object, $fields);
-
-        $filesFromFields->each(function ($file) use ($object, $filesCollection) {
-            $newFile = File::withTrashed()->find($file['file_id']);
-            $pivot = $newFile->newPivot($object, Arr::except($file, ['id']), 'fileables', true);
-            $newFile->setRelation('pivot', $pivot);
-            $filesCollection->push($newFile);
-        });
-
-        $object->setRelation('files', $filesCollection);
+        $object->setRelation('files', $this->getPreviewFiles($object, $fields));
 
         return $object;
     }
@@ -61,16 +57,72 @@ trait FilesTrait
             return;
         }
 
-        $this->getFiles($object, $fields)->each(function ($file) use ($object) {
-            if (isset($file['id']) && $file['id']) {
-                $result = $object->files()->updateExistingPivot($file['id'], Arr::except($file, ['id', 'file_id']));
-                if ($result) {
-                    $this->mustTouchEloquentModel();
+        $object->loadMissing('files');
+
+        foreach ($this->resolveFileTraitRoles($fields) as $role) {
+            if (! $this->attachmentRoleIsPresentInFields($fields, $role)) {
+                continue;
+            }
+
+            $payload = $this->getAttachmentPayloadForRole($fields, $role);
+            if ($payload === null) {
+                continue;
+            }
+
+            if ($this->isAttachmentRoleTranslatedForFields($fields, $role)) {
+                $rolePayload = is_array($payload) ? $payload : [];
+
+                foreach (getLocales() as $locale) {
+                    if (! array_key_exists($locale, $rolePayload)) {
+                        continue;
+                    }
+
+                    $slice = $rolePayload[$locale];
+                    $this->detachFilesForRoleLocale($object, $role, $locale);
+
+                    if ($slice === null) {
+                        continue;
+                    }
+
+                    $rows = is_array($slice) ? $slice : [];
+                    $this->attachFileSpecsFromRows($object, $rows, $role, $locale);
                 }
             } else {
-                $object->files()->attach($file['file_id'], Arr::except($file, ['file_id']));
-                $this->mustTouchEloquentModel();
+                $locale = (string) config('app.locale', 'en');
+                $this->detachFilesForRoleLocale($object, $role, $locale);
+                $rows = is_array($payload) ? $payload : [];
+                $this->attachFileSpecsFromRows($object, $rows, $role, $locale);
             }
+        }
+    }
+
+    /**
+     * Remove all file pivots for this role + locale so the next attach matches {@code fields} exactly.
+     */
+    private function detachFilesForRoleLocale($object, string $role, string $locale): void
+    {
+        $relatedKey = $object->files()->getRelated()->getQualifiedKeyName();
+        $ids = $object->files()
+            ->wherePivot('role', $role)
+            ->wherePivot('locale', $locale)
+            ->pluck($relatedKey);
+
+        if ($ids->isEmpty()) {
+            return;
+        }
+
+        $object->files()->detach($ids->all());
+        $this->mustTouchEloquentModel();
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $rows
+     */
+    private function attachFileSpecsFromRows($object, array $rows, string $role, string $locale): void
+    {
+        $this->collectPivotSpecsForFileRows($object, $rows, $role, $locale)->each(function ($file) use ($object) {
+            $object->files()->attach($file['file_id'], Arr::except($file, ['file_id', 'id']));
+            $this->mustTouchEloquentModel();
         });
     }
 
@@ -84,17 +136,6 @@ trait FilesTrait
         $fileInputs = $this->getColumns(__TRAIT__);
         if (! empty($fileInputs) && $object->has('files')) {
             $schema = $schema ?? $this->inputs();
-            // foreach ($object->files->groupBy('pivot.role') as $role => $filesByRole) {
-            //     foreach ($filesByRole->groupBy('pivot.locale') as $locale => $filesByLocale) {
-            //         // $fields['files'][$locale][$role] = $filesByLocale->map(function ($file) {
-            //         //     return $file->mediableFormat();
-            //         // });
-            //         $fields[$role][$locale] = $filesByLocale->map(function ($file) {
-            //             return $file->mediableFormat();
-            //         });
-            //     } d
-            // }
-            $systemLocales = getLocales();
             $default_locale = config('app.locale');
             $fallback_locale = config('app.fallback_locale');
             $filesByRole = $object->files->groupBy('pivot.role');
@@ -124,10 +165,6 @@ trait FilesTrait
                             })) : Collection::make([]),
                         ];
                     }
-
-                    // foreach ($systemLocales as $locale) {
-                    //     $fields[$role][$locale] = [];
-                    // }
                 }
             }
         }
@@ -136,66 +173,138 @@ trait FilesTrait
     }
 
     /**
-     * @param array $fields
-     * @return Collection
+     * Preview: merge DB file pivots with payload.
+     *
+     * @param  array<string, mixed>  $fields
      */
-    private function getFiles($object, $fields)
+    private function getPreviewFiles($object, array $fields): Collection
     {
-        $files = Collection::make();
-        $systemLocales = getLocales();
-        $fileRoles = $this->getColumns(__TRAIT__);
-        $fileablesTable = modularityConfig('tables.fileables', 'um_fileables');
+        $object->loadMissing('files');
 
-        foreach ($fileRoles as $role) {
-            if (isset($fields[$role]) && count(array_keys($fields[$role])) > 0) {
-                $default_locale = array_keys($fields[$role])[0];
-                foreach ($systemLocales as $locale) {
-                    if (isset($fields[$role][$locale])) {
-                        Collection::make($fields[$role][$locale])->each(function ($file) use ($object, $fileablesTable, &$files, $role, $locale) {
-                            $fileableId = $object->files()
-                                ->select($fileablesTable . '.id as pivot_id')
-                                ->where('file_id', $file['id'])
-                                ->where('role', $role)
-                                ->where('locale', $locale)->value('pivot_id') ?? null;
+        $roles = $this->resolveFileTraitRoles($fields);
+        $original = $object->files;
 
-                            $files->push([
-                                ...($fileableId ? ['id' => $fileableId] : []),
-                                'file_id' => $file['id'],
-                                'role' => $role,
-                                'locale' => $locale,
-                            ]);
-                        });
-                    } else {
-                        Collection::make($fields[$role])->each(function ($file) use ($object, $fileablesTable, &$files, $role, $locale) {
-                            $fileableId = $object->files()
-                                ->select($fileablesTable . '.id as pivot_id')
-                                ->where('file_id', $file['id'])
-                                ->where('role', $role)
-                                ->where('locale', $locale)->value('pivot_id') ?? null;
+        if (! collect($roles)->contains(fn ($role) => $this->attachmentRoleIsPresentInFields($fields, $role))) {
+            return $original;
+        }
 
-                            $files->push([
-                                ...($fileableId ? ['id' => $fileableId] : []),
-                                'file_id' => $file['id'],
-                                'role' => $role,
-                                'locale' => $locale,
-                            ]);
-                        });
+        $out = Collection::make();
+
+        foreach ($roles as $role) {
+            if (! $this->attachmentRoleIsPresentInFields($fields, $role)) {
+                $out = $out->merge($original->where('pivot.role', $role));
+
+                continue;
+            }
+
+            $payload = $this->getAttachmentPayloadForRole($fields, $role);
+
+            if ($this->isAttachmentRoleTranslatedForFields($fields, $role)) {
+                $rolePayload = is_array($payload) ? $payload : [];
+
+                foreach (getLocales() as $locale) {
+                    if (! array_key_exists($locale, $rolePayload)) {
+                        $out = $out->merge($original->filter(
+                            fn ($f) => $f->pivot->role === $role && $f->pivot->locale === $locale
+                        ));
+
+                        continue;
                     }
+
+                    $slice = $rolePayload[$locale];
+                    if ($slice === null) {
+                        continue;
+                    }
+
+                    $rows = is_array($slice) ? $slice : [];
+                    $out = $out->merge($this->pivotSpecsToFileModels(
+                        $object,
+                        $this->collectPivotSpecsForFileRows($object, $rows, $role, $locale)
+                    ));
                 }
-                // foreach($fields[$role] as $locale => $filesForRole){
-                //     Collection::make($filesForRole)->each(function ($file) use (&$files, $role, $locale) {
-                //         $files->push([
-                //             'id' => $file['id'],
-                //             'role' => $role,
-                //             'locale' => $locale,
-                //         ]);
-                //     });
-                // }
             } else {
-                // dd($role);
+                $rows = is_array($payload) ? $payload : [];
+                $locale = (string) config('app.locale', 'en');
+                $out = $out->merge($this->pivotSpecsToFileModels(
+                    $object,
+                    $this->collectPivotSpecsForFileRows($object, $rows, $role, $locale)
+                ));
             }
         }
 
-        return $files;
+        $out = $out->merge($original->filter(
+            fn ($f) => ! in_array($f->pivot->role, $roles, true)
+        ));
+
+        return $out->values();
+    }
+
+    /**
+     * Roles for file pivots only — never image / media-library fields (e.g. {@code photos}).
+     *
+     * @param  array<string, mixed>  $fields
+     * @return list<string>
+     */
+    private function resolveFileTraitRoles(array $fields): array
+    {
+        $resolved = $this->resolveAttachmentRoles(
+            __TRAIT__,
+            '/\bfile\b/',
+            $fields,
+            fn ($k, $v) => $this->valueLooksLikeFileRolePayload($v)
+        );
+
+        return array_values(array_filter(
+            $resolved,
+            fn (string $role) => ! $this->shouldExcludeRoleFromFileTrait($role, $fields)
+        ));
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $rows
+     */
+    private function collectPivotSpecsForFileRows($object, array $rows, string $role, string $locale): Collection
+    {
+        $specs = Collection::make();
+        $fileablesTable = modularityConfig('tables.fileables', 'um_fileables');
+
+        Collection::make($rows)->each(function ($file) use ($object, $fileablesTable, $specs, $role, $locale) {
+            if (! is_array($file) || ! isset($file['id'])) {
+                return;
+            }
+
+            $fileableId = $object->files()
+                ->select($fileablesTable . '.id as pivot_id')
+                ->where('file_id', $file['id'])
+                ->where('role', $role)
+                ->where('locale', $locale)->value('pivot_id') ?? null;
+
+            $specs->push([
+                ...($fileableId ? ['id' => $fileableId] : []),
+                'file_id' => $file['id'],
+                'role' => $role,
+                'locale' => $locale,
+            ]);
+        });
+
+        return $specs;
+    }
+
+    private function pivotSpecsToFileModels($object, Collection $specs): Collection
+    {
+        $filesCollection = Collection::make();
+
+        $specs->each(function ($file) use ($object, $filesCollection) {
+            $newFile = File::withTrashed()->find($file['file_id']);
+            if (! $newFile) {
+                return;
+            }
+
+            $pivot = $newFile->newPivot($object, Arr::except($file, ['id']), 'fileables', true);
+            $newFile->setRelation('pivot', $pivot);
+            $filesCollection->push($newFile);
+        });
+
+        return $filesCollection;
     }
 }

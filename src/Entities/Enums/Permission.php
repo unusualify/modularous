@@ -19,6 +19,9 @@ enum Permission: string
     case BULKDELETE = 'bulkDelete';
     case BULKFORCEDELETE = 'bulkForceDelete';
     case BULKRESTORE = 'bulkRestore';
+    case REVISION_APPROVE = 'revisionApprove';
+    case REVISION_REJECT = 'revisionReject';
+    case REVISION_RESTORE = 'revisionRestore';
 
     case ACTIVITY = 'activity';
     case SHOW = 'show';

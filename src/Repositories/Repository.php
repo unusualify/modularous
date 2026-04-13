@@ -15,11 +15,13 @@ use Unusualify\Modularity\Contracts\Cache\UserAwareCacheInterface;
 use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Models\Model;
 use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
+use Unusualify\Modularity\Repositories\Traits\Concerns\InteractsWithAttachmentPayloads;
 use Unusualify\Modularity\Traits\ManageNames;
 
 abstract class Repository implements CacheableInterface, ModuleableInterface, RepositoryContract, UserAwareCacheInterface
 {
-    use ManageNames,
+    use InteractsWithAttachmentPayloads,
+        ManageNames,
         Logic\InspectTraits,
         Logic\RelationshipHelpers,
         Logic\MethodTransformers,

@@ -2,12 +2,44 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use RuntimeException;
+use Unusualify\Modularity\Entities\Enums\RevisionStatus;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Module;
+use Unusualify\Modularity\Entities\Enums\Permission;
 
 trait HasRevisions
 {
+    
+    /**
+     * Override and return true together with {@see revisionPermissionPrefix()} to enable approval workflow.
+     * This property is used to check if the revision workflow is enabled for the model.
+     * Do not use a model property named revisionWorkflowEnabled — Eloquent resolves it as this method (relationship).
+     */
+    protected function revisionWorkflowEnabled(): bool
+    {
+        return $this->isRevisionWorkflowEnabled ?? false;
+    }
+
+    /**
+     * Kebab-case route segment for permissions, e.g. "page" → "page_revision_approve".
+     * Override in the composed model; do not redeclare as a property.
+     */
+    protected function revisionPermissionPrefix(): ?string
+    {
+        if(method_exists($this, 'getModule') && ($module = $this->getModule()) instanceof Module) {
+            $routeName = $this->getRouteName();
+            
+            return snakeCase($routeName);
+        }
+
+        return null;
+    }
+
     /**
      * Defines the one-to-many relationship for revisions.
      *
@@ -15,7 +47,116 @@ trait HasRevisions
      */
     public function revisions()
     {
-        return $this->hasMany($this->getRevisionModel())->orderBy('created_at', 'desc');
+        return $this->hasMany($this->getRevisionModel())
+            ->orderBy('created_at', 'desc')
+            ->with(['user', 'source']);
+    }
+
+    /**
+     * Latest revision row by id (the only row that may be {@see RevisionStatus::Pending} when workflow is on).
+     */
+    public function latestRevision(): HasOne
+    {
+        return $this->hasOne($this->getRevisionModel())->latestOfMany('id');
+    }
+
+    public function usesRevisionWorkflow(): bool
+    {
+        return $this->revisionWorkflowEnabled() === true
+            && is_string($this->revisionPermissionPrefix())
+            && $this->revisionPermissionPrefix() !== '';
+    }
+
+    /**
+     * Id of the current pending revision when the newest revision row has status pending; otherwise null.
+     */
+    public function getPendingRevisionId(): ?int
+    {
+        $revisionModel = $this->getRevisionModel();
+        $instance = new $revisionModel;
+
+        if (! Schema::hasColumn($instance->getTable(), 'status')) {
+            return null;
+        }
+
+        $latest = $this->revisions()->orderByDesc('id')->first();
+
+        if (! $latest || ($latest->status ?? RevisionStatus::Approved->value) !== RevisionStatus::Pending->value) {
+            return null;
+        }
+
+        return (int) $latest->id;
+    }
+
+    /**
+     * True when the newest revision row is pending. That state locks update and restore.
+     */
+    public function isRevisionWorkflowLocked(): bool
+    {
+        if (! $this->usesRevisionWorkflow()) {
+            return false;
+        }
+
+        return $this->latestRevisionIsPending();
+    }
+
+    /**
+     * @deprecated Use {@see isRevisionWorkflowLocked()} for workflow models.
+     */
+    public function hasPendingRevision(): bool
+    {
+        return $this->isRevisionWorkflowLocked();
+    }
+
+    protected function latestRevisionIsPending(): bool
+    {
+        $revisionModel = $this->getRevisionModel();
+        $instance = new $revisionModel;
+
+        if (! Schema::hasColumn($instance->getTable(), 'status')) {
+            return false;
+        }
+
+        $latest = $this->revisions()->orderByDesc('id')->first();
+
+        if (! $latest) {
+            return false;
+        }
+
+        return ($latest->status ?? RevisionStatus::Approved->value) === RevisionStatus::Pending->value;
+    }
+
+    public function userCanApproveRevisions(): bool
+    {
+        if (! $this->usesRevisionWorkflow()) {
+            return true;
+        }
+
+        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+
+        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_APPROVE', $this->revisionPermissionPrefix()));
+    }
+
+    public function userCanRejectRevisions(): bool
+    {
+        if (! $this->usesRevisionWorkflow()) {
+            return true;
+        }
+
+        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+
+        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_REJECT', $this->revisionPermissionPrefix()));
+    }
+
+    public function userCanRestoreRevisions(): bool
+    {
+        if (! $this->usesRevisionWorkflow()) {
+            return true;
+        }
+
+        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+
+        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_RESTORE', $this->revisionPermissionPrefix()));
     }
 
     /**
@@ -53,8 +194,8 @@ trait HasRevisions
 
         return $revisions
             ->map(function ($revision, $index) use ($total, $versionMap) {
-                $sourceLabel = $revision->source_revision_id && isset($versionMap[$revision->source_revision_id])
-                    ? 'V' . $versionMap[$revision->source_revision_id]
+                $sourceLabel = $revision->source_id && isset($versionMap[$revision->source_id])
+                    ? 'V' . $versionMap[$revision->source_id]
                     : null;
 
                 return [
@@ -63,6 +204,9 @@ trait HasRevisions
                     'datetime' => $revision->created_at->toIso8601String(),
                     'label' => 'V' . ($total - $index),
                     'source_label' => $sourceLabel,
+                    'is_restored' => (bool) $revision->source_id,
+                    'source_datetime' => $revision->source?->created_at?->toIso8601String(),
+                    'status' => $revision->status ?? 'approved',
                 ];
             })
             ->toArray();
@@ -80,7 +224,6 @@ trait HasRevisions
 
         $this->revisions()->get()->slice($maxRevisions)->each->delete();
     }
-
 
     public function getRevisionModel()
     {

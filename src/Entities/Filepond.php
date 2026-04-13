@@ -9,6 +9,12 @@ use Unusualify\Modularity\Facades\Filepond as FilepondFacade;
 
 class Filepond extends Model
 {
+    /**
+     * Preview / hydrate only: true when the row is built for a pending revision and the UUID still exists only
+     * as a {@see TemporaryFilepond} (not persisted on the subject yet). Not stored in the database.
+     */
+    public bool $isTemporaryRevisionPreview = false;
+
     protected $fillable = [
         'uuid',
         'file_name',

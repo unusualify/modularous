@@ -8,6 +8,12 @@ use Unusualify\Modularity\Models\Model;
 
 trait TagsTrait
 {
+    /**
+     * When true, {@see RevisionsTrait::bypassAfterSaves} may set `passAfterSaveTagsTrait` during pending-only
+     * revision saves so {@see afterSaveTagsTrait} is skipped.
+     */
+    protected bool $pendingBypassRevisionTagsTrait = true;
+
     public function setColumnsTagsTrait($columns, $inputs)
     {
         $traitName = get_class_short_name(__TRAIT__);

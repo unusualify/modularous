@@ -364,6 +364,8 @@ class RouteServiceProvider extends ServiceProvider
                 'showView',
                 'listRevisions',
                 'restoreRevision',
+                'approveRevision',
+                'rejectRevision',
 
                 'restore',
                 'bulkRestore',
@@ -432,11 +434,11 @@ class RouteServiceProvider extends ServiceProvider
                     Route::put($routeSlug, $mapping);
                 }
 
-                if (in_array($customRoute, ['duplicate', 'preview', 'showView','restoreRevision'])) {
+                if (in_array($customRoute, ['duplicate', 'preview', 'showView','restoreRevision', 'approveRevision', 'rejectRevision'])) {
                     Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
                 }
 
-                if (in_array($customRoute, ['preview', 'showView', 'restoreRevision'])) {
+                if (in_array($customRoute, ['preview', 'showView', 'restoreRevision', 'approveRevision', 'rejectRevision'])) {
                     // dd($customRoute, $routeSlug, $routeSlug . "/{{$snakeCase}}", $mapping);
                     Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
                 }

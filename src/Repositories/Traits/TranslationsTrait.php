@@ -90,7 +90,7 @@ trait TranslationsTrait
 
                         return [
                             // $attribute => ($attributeValue[$locale] ?? null),
-                            $attribute => ($attributeValue[$locale] ?? $attributeValue ?? null),
+                            $attribute => (isset($attributeValue[$locale]) ? $attributeValue[$locale] : null),
                         ];
                     })->toArray();
                 }
@@ -110,12 +110,35 @@ trait TranslationsTrait
      */
     public function getFormFieldsTranslationsTrait($object, $fields)
     {
-        unset($fields['translations']);
         $translatedAttributes = $object->getTranslatedAttributes();
+        $slugAttributes = (method_exists($object, 'getSlugAttributes'))
+            ? $object->getSlugAttributes()
+            : [];
+
+        // SlugsTrait may run before this trait and fill translations.{slugAttr}[locale]. Clearing translations
+        // below would drop that data; when slugs exist we also skip the translation row for slug attrs.
+        $preservedSlugTranslations = [];
+        if ($slugAttributes !== [] && isset($fields['translations'])) {
+            foreach ($slugAttributes as $attr) {
+                if (isset($fields['translations'][$attr])) {
+                    $preservedSlugTranslations[$attr] = $fields['translations'][$attr];
+                }
+            }
+        }
+
+        unset($fields['translations']);
+
         if ($object->translations != null && $translatedAttributes != null) {
             foreach ($object->translations as $translation) {
                 foreach ($translatedAttributes as $attribute) {
                     unset($fields[$attribute]);
+
+                    if ($slugAttributes !== [] && in_array($attribute, $slugAttributes, true)) {
+                        $object->loadMissing('slugs');
+                        if ($object->slugs !== null && $object->slugs->isNotEmpty()) {
+                            continue;
+                        }
+                    }
 
                     if (array_key_exists($attribute, $this->fieldsGroups) && is_array($translation->{$attribute})) {
                         // foreach ($this->fieldsGroups[$attribute] as $field_name) {
@@ -133,6 +156,10 @@ trait TranslationsTrait
                     }
                 }
             }
+        }
+
+        foreach ($preservedSlugTranslations as $attr => $perLocale) {
+            $fields['translations'][$attr] = $perLocale;
         }
 
         return $fields;

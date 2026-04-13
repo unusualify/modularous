@@ -234,6 +234,9 @@ if (! function_exists('createDefaultMorphPivotTableFields')) {
 
 if (! function_exists('createDefaultRevisionsTableFields')) {
     /**
+     * Standard revision table: payload, optional lineage (source_id), and workflow columns (status, approved_at, approved_by).
+     * Pending state is represented by the latest row’s status only — no column on the subject model.
+     *
      * @param Blueprint $table
      * @param string $tableNameSingular
      * @param string|null $tableNamePlural
@@ -248,10 +251,16 @@ if (! function_exists('createDefaultRevisionsTableFields')) {
         $table->{modularityIncrementsMethod()}('id');
         $table->{modularityIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
         $table->{modularityIntegerMethod()}('user_id')->unsigned()->nullable();
+        $table->unsignedBigInteger('source_id')->nullable();
+
+        $table->string('status', 32)->default('approved');
+        $table->timestamp('approved_at')->nullable();
+        $table->{modularityIntegerMethod()}('approved_by')->unsigned()->nullable();
 
         $table->timestamps();
         $table->json('payload');
         $table->foreign("{$tableNameSingular}_id")->references('id')->on("{$tableNamePlural}")->onDelete('cascade');
         $table->foreign('user_id')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
+        $table->foreign('approved_by')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
     }
 }

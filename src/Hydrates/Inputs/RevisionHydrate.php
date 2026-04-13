@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Hydrates\Inputs;
 
+use Unusualify\Modularity\Entities\Enums\Permission;
+
 class RevisionHydrate extends InputHydrate
 {
     /**
@@ -11,10 +13,12 @@ class RevisionHydrate extends InputHydrate
      * @var array
      */
     public $requirements = [
-        'name' => 'revision_id',
+        'name' => 'revisionable_id',
         'noSubmit' => true,
         'col' => ['cols' => 12],
         'default' => null,
+        /** Max height of the scrollable revision list (CSS length, e.g. 320px). */
+        'maxHeight' => '320px',
     ];
 
     /**
@@ -27,8 +31,6 @@ class RevisionHydrate extends InputHydrate
         $input = $this->input;
 
         $input['type'] = 'input-revision';
-        $input['name'] = 'revisionable_id';
-
 
         $snakeRouteName = snakeCase($this->routeName);
 
@@ -38,19 +40,43 @@ class RevisionHydrate extends InputHydrate
             [$snakeRouteName => ':id']
         );
 
-        $input['showViewEndpoint'] = $this->module->getRouteActionUrl(
+        $input['approveEndpoint'] = $this->module->getRouteActionUrl(
+            $this->routeName,
+            'approveRevision',
+            [$snakeRouteName => ':id']
+        );
+
+        $input['rejectEndpoint'] = $this->module->getRouteActionUrl(
+            $this->routeName,
+            'rejectRevision',
+            [$snakeRouteName => ':id']
+        );
+
+        $input['showEndpoint'] = $this->module->getRouteActionUrl(
             $this->routeName,
             'showView',
             [$snakeRouteName => ':id']
         );
 
-        $input['listRevisionsEndpoint'] = $this->module->getRouteActionUrl(
+        $input['fetchEndpoint'] = $this->module->getRouteActionUrl(
             $this->routeName,
             'listRevisions',
             [$snakeRouteName => ':id']
         );
 
-        dd($input);
+        $canApprove = false;
+        $canReject = false;
+        $canRestore = false;
+
+        if($this->module && $this->module->getRepository($this->routeName)->hasBehavior('revisions')) {
+            $canApprove = $this->module->getModel($this->routeName)->usesRevisionWorkflow() && $this->module->allowedPermission(Permission::REVISION_APPROVE->value, $this->routeName);
+            $canReject = $this->module->getModel($this->routeName)->usesRevisionWorkflow() && $this->module->allowedPermission(Permission::REVISION_REJECT->value, $this->routeName);
+            $canRestore = $this->module->allowedPermission(Permission::REVISION_RESTORE->value, $this->routeName);
+        }
+
+        $input['canApprove'] = $canApprove;
+        $input['canReject'] = $canReject;
+        $input['canRestore'] = $canRestore;
 
         return $input;
     }

@@ -4,22 +4,130 @@ namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Spatie\Activitylog\Facades\LogBatch;
+use Unusualify\Modularity\Entities\Enums\RevisionStatus;
+use Unusualify\Modularity\Facades\ValidationException;
 use Unusualify\Modularity\Facades\Modularity;
 
 trait RevisionsTrait
 {
     protected bool $skipRevisionCreation = false;
+
     protected ?int $pendingSourceRevisionId = null;
+
+    protected bool $workflowBypassPendingGuard = false;
+
+    /**
+     * Runtime flags for MethodTransformers::afterSave: when true, that hook is skipped.
+     * Declared here; set by bypassAfterSaves() when a composing trait opts in via pendingBypassRevision* (see each trait).
+     *
+     * @see resetPassAfterSaves()
+     */
+    protected bool $passAfterSaveSlugsTrait = false;
+
+    protected bool $passAfterSaveFilesTrait = false;
+
+    protected bool $passAfterSaveImagesTrait = false;
+
+    protected bool $passAfterSaveFilepondsTrait = false;
+
+    protected bool $passAfterSaveRepeatersTrait = false;
+
+    protected bool $passAfterSavePricesTrait = false;
+
+    protected bool $passAfterSaveTagsTrait = false;
+
+    protected bool $passAfterSaveRelationships = false;
+
+    protected bool $passAfterSavePaymentTrait = false;
+
+    /**
+     * Overrides {@see \Unusualify\Modularity\Repositories\Repository::update} so pending-only workflow
+     * can persist a revision row and skip subject fill/save without changing Repository.
+     *
+     * @param mixed $id
+     * @param array<string, mixed> $fields
+     */
+    public function update($id, $fields, $schema = null, $options = [])
+    {
+        $this->setSchema($schema);
+
+        $this->setColumns($schema ?? $this->chunkInputs(all: true));
+
+        return DB::transaction(function () use ($id, $fields, $options) {
+            LogBatch::startBatch();
+
+            if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
+                $object = $this->model->single();
+            } else {
+                $object = $this->model->findOrFail($id);
+            }
+
+            $this->beforeSave($object, $fields);
+
+            $fields = $this->prepareFieldsBeforeSave($object, $fields);
+
+            if (
+                $this->shouldQueuePendingRevisionOnly($object, $fields)
+                && $this->processPendingRevisionSubmission($object, $fields)
+            ) {
+                LogBatch::endBatch();
+
+                $object = $this->touchEloquentModel($object->fresh());
+
+                $this->dispatchEvent($object, 'update');
+
+                return true;
+            }
+
+            $object->fill(Arr::except($fields, $this->getReservedFields()));
+
+            if (method_exists($object, 'preventDependentWarming')) {
+                $object = $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
+            }
+
+            $object->save();
+
+            $this->afterSave($object, $fields);
+
+            LogBatch::endBatch();
+
+            $object = $this->touchEloquentModel($object);
+
+            $this->dispatchEvent($object, 'update');
+
+            return $object->wasChanged();
+        }, 3);
+    }
+
+    public function beforeSaveRevisionsTrait($object, $fields): void
+    {
+        if (! method_exists($object, 'usesRevisionWorkflow') || ! $object->usesRevisionWorkflow()) {
+            return;
+        }
+
+        if ($this->workflowBypassPendingGuard) {
+            return;
+        }
+
+        if (method_exists($object, 'isRevisionWorkflowLocked') && $object->isRevisionWorkflowLocked()) {
+            $message = __('messages.revision.pending-locks-record');
+
+            throw ValidationException::withMessages([
+                'revision' => [$message],
+            ])->variant('warning');
+        }
+    }
 
     public function afterSaveRevisionsTrait($object, $fields): void
     {
         $this->createRevisionIfNeeded($object, $fields);
     }
 
-        /**
-     * @param Model $object
-     * @param array $fields
-     * @param array $schema
+    /**
+     * @param \Unusualify\Modularity\Models\Model $object
      * @return array
      */
     public function getFormFieldsRevisionsTrait($object, $fields, $schema = [])
@@ -38,20 +146,27 @@ trait RevisionsTrait
             return $fields;
         }
 
-        $lastRevision = $object->revisions()->latest('id')->first();
-        $lastRevisionPayload = json_decode($lastRevision->payload ?? '{}', true) ?: [];
+        $lastRevisionPayload = $this->getLastApprovedRevisionPayload($object);
 
         $fullPayload = array_replace_recursive($lastRevisionPayload, $fields);
 
-        if ($fullPayload !== $lastRevisionPayload) {
-            $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
-
-            $object->revisions()->create([
-                'payload' => json_encode($fullPayload),
-                'user_id' => $userId,
-                'source_revision_id' => $this->pendingSourceRevisionId,
-            ]);
+        if ($this->revisionPayloadsAreEquivalent($fullPayload, $lastRevisionPayload)) {
+            return $fields;
         }
+
+        $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+
+        $revisionAttributes = [
+            'payload' => json_encode($fullPayload),
+            'user_id' => $userId,
+            'source_id' => $this->pendingSourceRevisionId,
+        ];
+
+        if ($this->revisionTableHasStatusColumn($object)) {
+            $this->applyApprovedRevisionAttributes($revisionAttributes, $userId);
+        }
+
+        $object->revisions()->create($revisionAttributes);
 
         if (isset($object->limitRevisions) && (int) $object->limitRevisions > 0) {
             $object->deleteSpecificRevisions((int) $object->limitRevisions);
@@ -67,8 +182,11 @@ trait RevisionsTrait
         return $this->hydrateObject($object, $fields);
     }
 
-    public function previewForRevision(int $id, int $revisionId)
+    public function previewForRevision(int $id, int $revisionId, $schema = [])
     {
+        $this->setSchema($schema);
+        $this->setColumns($schema ?? $this->chunkInputs(all: true));
+
         $object = $this->model->findOrFail($id);
         $revision = $object->revisions()->where('id', $revisionId)->firstOrFail();
         $fields = json_decode($revision->payload, true) ?: [];
@@ -80,7 +198,36 @@ trait RevisionsTrait
     {
         $object = $this->model->findOrFail($id);
         $revision = $object->revisions()->where('id', $revisionId)->firstOrFail();
+
+        if ($this->revisionTableHasStatusColumn($object) && ($revision->status ?? RevisionStatus::Approved->value) === RevisionStatus::Rejected->value) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.restore-blocked-rejected')],
+            ]);
+        }
+
+        if (method_exists($object, 'usesRevisionWorkflow') && $object->usesRevisionWorkflow()) {
+            if (method_exists($object, 'isRevisionWorkflowLocked') && $object->isRevisionWorkflowLocked()) {
+                throw ValidationException::withMessages([
+                    'revision' => [__('messages.revision.restore-blocked-pending')],
+                ]);
+            }
+
+            if (! $object->userCanRestoreRevisions()) {
+                throw ValidationException::withMessages([
+                    'revision' => [__('messages.revision.restore-forbidden')],
+                ]);
+            }
+        }
+
+        if ($revision->source_id !== null) {
+            abort(422, __('messages.revision.restore-disabled-already-restored'));
+        }
+
         $fields = json_decode($revision->payload, true) ?: [];
+
+        if ($this->shouldRestoreAsPendingOnly($object)) {
+            return $this->restoreRevisionAsPendingOnly($object, $fields, $revisionId);
+        }
 
         // Skip auto-revision creation during update so we can force-create one below,
         // ensuring a restore is always recorded even when content is identical to the latest revision.
@@ -89,11 +236,217 @@ trait RevisionsTrait
         $this->skipRevisionCreation = false;
 
         $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
-        $object->revisions()->create([
+        $restoreAttributes = [
             'payload' => json_encode($fields),
             'user_id' => $userId,
-            'source_revision_id' => $revisionId,
-        ]);
+            'source_id' => $revisionId,
+        ];
+        if ($this->revisionTableHasStatusColumn($object)) {
+            $this->applyApprovedRevisionAttributes($restoreAttributes, $userId);
+        }
+
+        $object->revisions()->create($restoreAttributes);
+
+        return $this->model->findOrFail($id);
+    }
+
+    /**
+     * Workflow on + user lacks {@code *_revision_approve}: restore only queues a pending snapshot (subject row unchanged), like a normal edit.
+     *
+     * @param \Unusualify\Modularity\Models\Model $object
+     */
+    protected function shouldRestoreAsPendingOnly($object): bool
+    {
+        if (! $this->revisionTableHasStatusColumn($object)) {
+            return false;
+        }
+
+        if (! method_exists($object, 'usesRevisionWorkflow') || ! $object->usesRevisionWorkflow()) {
+            return false;
+        }
+
+        return ! $object->userCanApproveRevisions();
+    }
+
+    /**
+     * Record a proposed restore as the latest pending revision without persisting payload to the subject.
+     *
+     * @param \Unusualify\Modularity\Models\Model $object
+     */
+    protected function restoreRevisionAsPendingOnly($object, array $fields, int $sourceRevisionId): mixed
+    {
+        if (method_exists($object, 'isRevisionWorkflowLocked') && $object->isRevisionWorkflowLocked()) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.pending-only-one')],
+            ]);
+        }
+
+        $this->skipRevisionCreation = true;
+
+        try {
+            $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+
+            $revisionAttributes = [
+                'payload' => json_encode($fields),
+                'user_id' => $userId,
+                'source_id' => $sourceRevisionId,
+            ];
+
+            if ($this->revisionTableHasStatusColumn($object)) {
+                $revisionAttributes['status'] = RevisionStatus::Pending->value;
+                $revisionAttributes['approved_at'] = null;
+                $revisionAttributes['approved_by'] = null;
+            }
+
+            $object->revisions()->create($revisionAttributes);
+
+            $this->bypassAfterSaves();
+            try {
+                $this->afterSave($object, $fields);
+            } finally {
+                $this->resetPassAfterSaves();
+            }
+        } finally {
+            $this->skipRevisionCreation = false;
+        }
+
+        return $this->model->findOrFail($object->id);
+    }
+
+    /**
+     * Sets passAfterSave* flags when a composing trait opts in via traitProperties('pendingBypassRevision').
+     * Only traits that declare pendingBypassRevision{TraitBasename} participate; when that flag is true,
+     * passAfterSave{SameSuffix} is set so the corresponding afterSave hook is skipped during pending-only saves.
+     *
+     * File / Filepond: when bypassed, Filepond::saveFile does not run; the revision JSON must still store upload
+     * response metadata (ids, paths). On approve, a normal afterSave finalizes. Mitigate temp expiry via longer TTL,
+     * staging disk, or a dedicated “promote temp file to library without attaching to live row” step.
+     */
+    protected function bypassAfterSaves(): void
+    {
+        foreach ($this->traitProperties('pendingBypassRevision') as $pendingKey) {
+            if (! $this->{$pendingKey}) {
+                continue;
+            }
+
+            $suffix = (string) preg_replace('/^pendingBypassRevision/', '', $pendingKey);
+
+            if ($suffix === 'RevisionsTrait') {
+                continue;
+            }
+
+            $passKey = 'passAfterSave' . $suffix;
+
+            if (property_exists($this, $passKey)) {
+                $this->{$passKey} = true;
+            }
+        }
+    }
+
+    protected function resetPassAfterSaves(): void
+    {
+        foreach ($this->traitProperties('passAfterSave') as $passKey) {
+            $this->{$passKey} = false;
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    protected function applyApprovedRevisionAttributes(array &$attributes, $userId): void
+    {
+        $attributes['status'] = RevisionStatus::Approved->value;
+        $attributes['approved_at'] = now();
+        $attributes['approved_by'] = $userId;
+    }
+
+    /**
+     * Apply a pending revision payload to the subject and mark the revision approved.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function approveRevision(int $id, int $revisionId)
+    {
+        $object = $this->model->findOrFail($id);
+        $revision = $object->revisions()->where('id', $revisionId)->firstOrFail();
+
+        if (! method_exists($object, 'usesRevisionWorkflow') || ! $object->usesRevisionWorkflow()) {
+            abort(422, __('messages.revision.approve-not-applicable'));
+        }
+
+        $latest = $object->revisions()->orderByDesc('id')->first();
+
+        if (! $latest || (int) $latest->id !== (int) $revision->id) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.approve-not-latest')],
+            ]);
+        }
+
+        if ($this->revisionTableHasStatusColumn($object) && ! $revision->isPending()) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.approve-not-pending')],
+            ]);
+        }
+
+        $fields = json_decode($revision->payload, true) ?: [];
+
+        $this->workflowBypassPendingGuard = true;
+        $this->skipRevisionCreation = true;
+
+        try {
+            $this->update($id, $fields);
+
+            if ($this->revisionTableHasStatusColumn($object)) {
+                $revision->refresh();
+                $revision->update([
+                    'status' => RevisionStatus::Approved->value,
+                    'approved_at' => now(),
+                    'approved_by' => Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id(),
+                ]);
+            }
+        } finally {
+            $this->workflowBypassPendingGuard = false;
+            $this->skipRevisionCreation = false;
+        }
+
+        return $this->model->findOrFail($id);
+    }
+
+    /**
+     * Mark the latest pending revision as rejected. Does not update the subject row.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function rejectRevision(int $id, int $revisionId)
+    {
+        $object = $this->model->findOrFail($id);
+        $revision = $object->revisions()->where('id', $revisionId)->firstOrFail();
+
+        if (! method_exists($object, 'usesRevisionWorkflow') || ! $object->usesRevisionWorkflow()) {
+            abort(422, __('messages.revision.reject-not-applicable'));
+        }
+
+        $latest = $object->revisions()->orderByDesc('id')->first();
+
+        if (! $latest || (int) $latest->id !== (int) $revision->id) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.reject-not-latest')],
+            ]);
+        }
+
+        if ($this->revisionTableHasStatusColumn($object) && ! $revision->isPending()) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.reject-not-pending')],
+            ]);
+        }
+
+        if ($this->revisionTableHasStatusColumn($object)) {
+            $revision->update([
+                'status' => RevisionStatus::Rejected->value,
+                'approved_at' => null,
+                'approved_by' => null,
+            ]);
+        }
 
         return $this->model->findOrFail($id);
     }
@@ -138,5 +491,144 @@ trait RevisionsTrait
             ->get();
 
         return $revisions;
+    }
+
+    protected function shouldQueuePendingRevisionOnly($object, array $fields): bool
+    {
+        if (! method_exists($object, 'usesRevisionWorkflow') || ! $object->usesRevisionWorkflow()) {
+            return false;
+        }
+
+        if ($this->workflowBypassPendingGuard) {
+            return false;
+        }
+
+        if (! $object->userCanApproveRevisions()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Unusualify\Modularity\Models\Model $object
+     * @return bool false when merged payload matches last approved (nothing new to queue)
+     */
+    protected function processPendingRevisionSubmission($object, array $fields): bool
+    {
+        if (method_exists($object, 'isRevisionWorkflowLocked') && $object->isRevisionWorkflowLocked()) {
+            throw ValidationException::withMessages([
+                'revision' => [__('messages.revision.pending-only-one')],
+            ]);
+        }
+
+        $lastPayload = $this->getLastApprovedRevisionPayload($object);
+        $fullPayload = array_replace_recursive($lastPayload, $fields);
+
+        if ($this->revisionPayloadsAreEquivalent($fullPayload, $lastPayload)) {
+            return false;
+        }
+
+        $this->skipRevisionCreation = true;
+
+        try {
+            $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+
+            $revisionAttributes = [
+                'payload' => json_encode($fullPayload),
+                'user_id' => $userId,
+                'source_id' => $this->pendingSourceRevisionId,
+            ];
+
+            if ($this->revisionTableHasStatusColumn($object)) {
+                $revisionAttributes['status'] = RevisionStatus::Pending->value;
+                $revisionAttributes['approved_at'] = null;
+                $revisionAttributes['approved_by'] = null;
+            }
+
+            $object->revisions()->create($revisionAttributes);
+
+            $this->bypassAfterSaves();
+            try {
+                $this->afterSave($object, $fields);
+            } finally {
+                $this->resetPassAfterSaves();
+            }
+
+            return true;
+        } finally {
+            $this->skipRevisionCreation = false;
+        }
+    }
+
+    /**
+     * Compare revision payloads without regard to associative key order (PHP's array === is order-sensitive).
+     *
+     * @param array<string, mixed> $a
+     * @param array<string, mixed> $b
+     */
+    protected function revisionPayloadsAreEquivalent(array $a, array $b): bool
+    {
+        $na = $this->normalizeRevisionPayloadForComparison($a);
+        $nb = $this->normalizeRevisionPayloadForComparison($b);
+
+        return json_encode($na, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            === json_encode($nb, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @param array<string, mixed> $value
+     * @return array<int|string, mixed>|mixed
+     */
+    protected function normalizeRevisionPayloadForComparison(mixed $value): mixed
+    {
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        if (array_is_list($value)) {
+            return array_map(fn ($item) => $this->normalizeRevisionPayloadForComparison($item), $value);
+        }
+
+        ksort($value);
+
+        foreach ($value as $k => $v) {
+            $value[$k] = $this->normalizeRevisionPayloadForComparison($v);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param \Unusualify\Modularity\Models\Model $object
+     */
+    protected function revisionTableHasStatusColumn($object): bool
+    {
+        $modelClass = $object->getRevisionModel();
+        $instance = new $modelClass;
+
+        return Schema::hasColumn($instance->getTable(), 'status');
+    }
+
+    /**
+     * Payload merged from the latest approved (or legacy unmarked) revision.
+     *
+     * @param \Unusualify\Modularity\Models\Model $object
+     * @return array<string, mixed>
+     */
+    public function getLastApprovedRevisionPayload($object): array
+    {
+        $query = $object->revisions()->orderByDesc('id');
+
+        if ($this->revisionTableHasStatusColumn($object)) {
+            $query->where(function ($q) {
+                $q->where('status', RevisionStatus::Approved->value)
+                    ->orWhereNull('status');
+            });
+        }
+
+        $revision = $query->first();
+
+        return json_decode($revision->payload ?? '{}', true) ?: [];
     }
 }
