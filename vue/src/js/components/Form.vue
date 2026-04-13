@@ -282,6 +282,11 @@
                 ...(rightSlotMaxWidth ? {maxWidth: `${rightSlotMaxWidth}px`} : {})
               }"
             >
+              <FormSecondaryInputs v-if="secondaryInputs && secondaryInputs.length && model"
+                :inputs="secondaryInputs"
+                v-model="model"
+                :form-item="formItem"
+              />
               <slot name="right" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}">
                 <AdditionalSectionContent
                   v-if="hasRightSlotContent"
@@ -291,6 +296,7 @@
                   :form-actions-active="formActionsActive"
                   @action-complete="$emit('actionComplete', $event)"
                 >
+                 
                   <template #right-top>
                     <slot name="right.top" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                   </template>
@@ -318,6 +324,11 @@
                 </v-btn>
               </v-card-title>
               <v-card-text>
+                <FormSecondaryInputs v-if="secondaryInputs && secondaryInputs.length && model"
+                  :inputs="secondaryInputs"
+                  v-model="model"
+                  :form-item="formItem"
+                />
                 <slot name="right" v-bind="{item: formItem, schema: inputSchema, chunkedRawSchema}">
                   <AdditionalSectionContent
                     v-if="hasRightSlotContent"
@@ -416,6 +427,7 @@ import { useForm, makeFormProps } from '@/hooks/form'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from './form/FormActions.vue'
 import FormEvents from './form/FormEvents.vue'
+import FormSecondaryInputs from './form/FormSecondaryInputs.vue'
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -490,6 +502,7 @@ export default {
   components: {
     FormActions,
     FormEvents,
+    FormSecondaryInputs,
     AdditionalSectionContent,
   },
   emits: [

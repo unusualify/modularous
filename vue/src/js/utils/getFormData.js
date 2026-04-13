@@ -6,6 +6,7 @@ import axios from 'axios'
 import {
   isViewOnlyInput,
   isFormEventInput,
+  isSecondaryInput,
   getTranslationInputsCount,
   getTranslationInputs,
   flattenGroupSchema,
@@ -39,6 +40,7 @@ export const getSchema = (inputs, model = null, isEditing = false, editingEntity
   let _inputs = _.omitBy(inputs, (value, key) => {
     return Object.prototype.hasOwnProperty.call(value, 'slotable')
       || isFormEventInput(value, model)
+      || isSecondaryInput(value, model)
       || isViewOnlyInput(value)
   })
 
@@ -260,6 +262,26 @@ export const getFormEventSchema = (inputs, model = null, isEditing = false) => {
 
     let res = handleItemConditions(input.conditions, model, input)
     if(res !== false){
+      acc.push(res)
+    }
+
+    return acc
+  }, [])
+}
+
+export const getSecondaryInputs = (inputs, model = null, isEditing = false) => {
+  return _.reduce(inputs, (acc, input) => {
+    if (!isSecondaryInput(input, model))
+      return acc
+
+    if (isEditing && __isset(input.editable) && (input.editable === false || input.editable === 'hidden'))
+      return acc
+
+    if (!isEditing && __isset(input.creatable) && (input.creatable === false || input.creatable === 'hidden'))
+      return acc
+
+    let res = handleItemConditions(input.conditions, model, input)
+    if (res !== false) {
       acc.push(res)
     }
 

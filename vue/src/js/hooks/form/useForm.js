@@ -11,7 +11,7 @@ import useFormResponseStatus from './useFormResponseStatus'
 import { LANGUAGE } from '@/store/mutations/index'
 import ACTIONS from '@/store/actions'
 import api from '@/store/api/form'
-import { getModel, getSubmitFormData, getSchema, getFormEventSchema, } from '@/utils/getFormData.js'
+import { getModel, getSubmitFormData, getSchema, getFormEventSchema, getSecondaryInputs } from '@/utils/getFormData.js'
 import { handleEvents } from '@/utils/formEvents'
 import { getTranslationInputsCount, processInputs } from '@/utils/schema.js'
 
@@ -243,6 +243,7 @@ export default function useForm(props, context) {
   // const inputSchema = ref(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
 
   const formEventSchema = ref(getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
+  const secondaryInputs = ref(getSecondaryInputs(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing))
   const extraValids = ref(props.actions.length ? props.actions.map(() => true) : [])
 
   const checkSubmittable = (item) => {
@@ -281,7 +282,7 @@ export default function useForm(props, context) {
         result = checkSubmittable(input)
       }
       return result
-    }) || find(formEventSchema.value, checkSubmittable) ? true : false
+    }) || find(formEventSchema.value, checkSubmittable) || find(secondaryInputs.value, checkSubmittable) ? true : false
   })
 
   const currentRevisions = ref(props.revisions || [])
@@ -292,6 +293,7 @@ export default function useForm(props, context) {
     || context.slots['right.bottom']
     || context.slots['right.middle']
     || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
+    || (secondaryInputs.value && secondaryInputs.value.length > 0)
     || (currentRevisions.value && currentRevisions.value.length > 0)
   )
 
@@ -312,6 +314,7 @@ export default function useForm(props, context) {
     chunkedRawSchema,
     inputSchema,
     formEventSchema,
+    secondaryInputs,
     isSubmittable,
     extraValids,
 
@@ -677,6 +680,7 @@ export default function useForm(props, context) {
 
       inputSchema.value = validations.invokeRuleGenerator(getSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing, ({ ...model.value, ...formItem.value }).id))
       formEventSchema.value = getFormEventSchema(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)
+      secondaryInputs.value = getSecondaryInputs(rawSchema.value, { ...model.value, ...formItem.value }, props.isEditing)
       // states.extraValids = props.actions.length ? props.actions.map(() => true) : []
       initialize()
       // context.emit('update:schema' )
@@ -731,6 +735,7 @@ export default function useForm(props, context) {
       validModel,
       inputSchema,
       formEventSchema,
+      secondaryInputs,
       rawSchema,
     })
   }

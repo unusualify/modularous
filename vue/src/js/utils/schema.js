@@ -14,6 +14,11 @@ export const isFormEventInput = (input) => {
     )
 }
 
+export const isSecondaryInput = (input) => {
+  return Object.prototype.hasOwnProperty.call(input, 'isSecondary')
+    && input.isSecondary
+}
+
 export const getTranslationInputsCount = (inputs) => {
   return getTranslationInputs(inputs).length
 }
