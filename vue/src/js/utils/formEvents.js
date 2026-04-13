@@ -56,53 +56,56 @@ export const onInputEventFormData = (obj, schema, stateData, sortedStateData, va
 }
 
 export const handleInputEvents = (events = null, fields, moduleSchema, name = null) => {
-  const _fields = fields
-  const _field = fields[name]
-  const _schema = moduleSchema[name]
+  const _fields = fields ?? {}
+  if(fields) {
+    const _field = fields[name]
+    const _schema = moduleSchema[name]
 
-  const isFieldFalsy = (Array.isArray(_field) && _field.length > 0) || (!Array.isArray(_field) && !!_field)
+    const isFieldFalsy = (Array.isArray(_field) && _field.length > 0) || (!Array.isArray(_field) && !!_field)
 
-  if (events) {
-    const formatEvents = events.split('|')
-    formatEvents.forEach(e => {
-      const [methodName, formattedInputName, formatingInputName] = e.split(':')
-      switch (methodName) {
-        case 'formatPermalink':
-          if (isFieldFalsy) {
-            _fields[formattedInputName] = filters.slugify(_field)
-          }
-          break
-        case 'formatPermalinkPrefix':
-          if (['select', 'combobox'].includes(_schema.type) && _field && isFieldFalsy) {
-            const newValue = filters.slugify(_schema.items.find((item) => item[_schema.itemValue] === _field)[_schema.itemTitle])
-            moduleSchema[formattedInputName ?? 'slug'].prefix = moduleSchema[formattedInputName ?? 'slug'].prefixFormat.replace(':' + formatingInputName, newValue)
-          } else if (['text'].includes(_schema.type) && isFieldFalsy) {
-            const newValue = filters.slugify(_field)
-            const [firstLevelName, secondLevelName] = formattedInputName.split('.')
-            moduleSchema[firstLevelName].schema[secondLevelName ?? 'slug'].prefix = moduleSchema[firstLevelName].schema[secondLevelName ?? 'slug'].prefixFormat.replace(':' + formatingInputName, newValue)
-          }
-          break
-        case 'formatLock':
-          if (['select', 'combobox'].includes(_schema.type) && _field) {
-            const lockInput = _schema.items.find((item) => item[_schema.itemValue] === _field)?.[formatingInputName]
-            moduleSchema[formattedInputName].disabled = !!lockInput
-            moduleSchema[formattedInputName].focused = !!lockInput
-            moduleSchema[formattedInputName].placeHolder = lockInput
-          } else if (['text'].includes(_schema.type) && _field) {
-            const lockInput = _field
-            const [firstLevelName, secondLevelName] = formattedInputName.split('.')
-            moduleSchema[firstLevelName].schema[secondLevelName].disabled = !!lockInput
-            moduleSchema[firstLevelName].schema[secondLevelName].focused = !!lockInput
-            moduleSchema[firstLevelName].schema[secondLevelName].placeHolder = lockInput
-          }
-          break
-        case 'formatFilter':
-          break
-        default:
-          break
-      }
-    })
+    if (events) {
+      const formatEvents = events.split('|')
+      formatEvents.forEach(e => {
+        const [methodName, formattedInputName, formatingInputName] = e.split(':')
+        switch (methodName) {
+          case 'formatPermalink':
+            if (isFieldFalsy) {
+              _fields[formattedInputName] = filters.slugify(_field)
+            }
+            break
+          case 'formatPermalinkPrefix':
+            if (['select', 'combobox'].includes(_schema.type) && _field && isFieldFalsy) {
+              const newValue = filters.slugify(_schema.items.find((item) => item[_schema.itemValue] === _field)[_schema.itemTitle])
+              moduleSchema[formattedInputName ?? 'slug'].prefix = moduleSchema[formattedInputName ?? 'slug'].prefixFormat.replace(':' + formatingInputName, newValue)
+            } else if (['text'].includes(_schema.type) && isFieldFalsy) {
+              const newValue = filters.slugify(_field)
+              const [firstLevelName, secondLevelName] = formattedInputName.split('.')
+              moduleSchema[firstLevelName].schema[secondLevelName ?? 'slug'].prefix = moduleSchema[firstLevelName].schema[secondLevelName ?? 'slug'].prefixFormat.replace(':' + formatingInputName, newValue)
+            }
+            break
+          case 'formatLock':
+            if (['select', 'combobox'].includes(_schema.type) && _field) {
+              const lockInput = _schema.items.find((item) => item[_schema.itemValue] === _field)?.[formatingInputName]
+              moduleSchema[formattedInputName].disabled = !!lockInput
+              moduleSchema[formattedInputName].focused = !!lockInput
+              moduleSchema[formattedInputName].placeHolder = lockInput
+            } else if (['text'].includes(_schema.type) && _field) {
+              const lockInput = _field
+              const [firstLevelName, secondLevelName] = formattedInputName.split('.')
+              moduleSchema[firstLevelName].schema[secondLevelName].disabled = !!lockInput
+              moduleSchema[firstLevelName].schema[secondLevelName].focused = !!lockInput
+              moduleSchema[firstLevelName].schema[secondLevelName].placeHolder = lockInput
+            }
+            break
+          case 'formatFilter':
+            break
+          default:
+            break
+        }
+      })
+    }
   }
+
   return {
     _fields,
     moduleSchema
