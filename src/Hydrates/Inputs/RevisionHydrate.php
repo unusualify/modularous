@@ -19,6 +19,7 @@ class RevisionHydrate extends InputHydrate
         'default' => null,
         /** Max height of the scrollable revision list (CSS length, e.g. 320px). */
         'maxHeight' => '320px',
+        'isSecondary' => true,
     ];
 
     /**
