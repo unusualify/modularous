@@ -2,6 +2,7 @@
   <v-dialog
     v-model="dialog"
     v-bind="$bindAttributes()"
+    :scroll-strategy="scrollStrategy"
     :transition="transition"
     :fullscreen="full"
     :width="modalWidth"
