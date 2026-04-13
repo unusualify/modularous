@@ -18,6 +18,20 @@ trait FormSchema
     use Allowable;
 
     /**
+     * Relation count to eager load for the form view.
+     *
+     * @var array
+     */
+    protected $formWithCount = [];
+
+    /**
+     * formSchema
+     *
+     * @var array
+     */
+    protected $formSchema;
+
+    /**
      * @var array
      */
     protected $inputTypes = [];
