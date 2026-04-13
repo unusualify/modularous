@@ -247,7 +247,9 @@ export default {
       const i = typeof index === 'number' ? index : -1
       const inputVal = imageApi.input?.value ?? imageApi.input ?? []
       baseOpen(max, n, i, Array.isArray(inputVal) ? inputVal : [])
-      nextTick(() => { imageApi.mediableActive = true })
+      nextTick(() => {
+        imageApi.mediableActive.value = true
+      })
     }
     return {
       ...imageApi,
