@@ -32,10 +32,8 @@ trait ManagePreview
 
     public function showView($id)
     {
-        // dd($id);
-        // dd($this->request->has('revisionId'));
         if ($this->request->has('revisionId')) {
-            $item = $this->repository->previewForRevision($id, $this->request->get('revisionId'));
+            $item = $this->repository->previewForRevision($id, $this->request->get('revisionId'), $this->formSchema);
         } else {
             $formRequest = $this->validateFormRequest();
             $item = $this->repository->preview($id, $formRequest->all());
