@@ -63,9 +63,10 @@ export default function useFormResponseStatus() {
       onRetry,
       setLoading,
     })
-    if (statusResult.handled) return
 
     setLoading(false)
+
+    if (statusResult.handled) return
 
     if (Object.prototype.hasOwnProperty.call(response.data, 'errors')) {
       setServerValid(false)
