@@ -153,13 +153,35 @@ export const getModel = (inputs, item = null, rootState = null) => {
 
     if (isArrayable.includes(input.type)) _default = []
 
+    const slugTypes = ['input-slug', 'slug']
+    const slugObjectDefault = { slug: '', active: true }
+    if (
+      slugTypes.includes(input.type)
+      && isTranslated
+      && input.manageActive !== false
+    ) {
+      _default = slugObjectDefault
+    }
+
     _default = Object.prototype.hasOwnProperty.call(input, 'default') ? input.default : _default
 
     if (input.type == 'group') _default = getModel(input.schema, item ?? input.default)
 
     if (isTranslated) {
+      const baseDefault = _default
       _default = _.reduce(languages, function (acc, language, k) {
-        acc[language] = _default
+        if (
+          slugTypes.includes(input.type)
+          && input.manageActive !== false
+          && baseDefault
+          && typeof baseDefault === 'object'
+          && !Array.isArray(baseDefault)
+          && Object.prototype.hasOwnProperty.call(baseDefault, 'slug')
+        ) {
+          acc[language] = { ...baseDefault }
+        } else {
+          acc[language] = baseDefault
+        }
         return acc
       }, {})
     }

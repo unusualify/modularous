@@ -137,7 +137,7 @@ if (! function_exists('createDefaultSlugsTableFields')) {
         $table->timestamps();
         $table->string('slug');
         $table->string('locale', 7)->index();
-        $table->boolean('active');
+        $table->boolean('active')->default(true);
         $table->foreign("{$tableNameSingular}_id", "fk_{$tableNameSingular}_slugs_{$tableNameSingular}_id")->references('id')->on($tableNamePlural)->onDelete('CASCADE')->onUpdate('NO ACTION');
     }
 }

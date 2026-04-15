@@ -35,7 +35,11 @@ trait SlugsTrait
         foreach (getLocales() as $locale) {
             foreach ($slugAttributes as $attr) {
                 $slugPayload = $fields[$locale][$attr] ?? null;
-                if ($slugPayload !== null && $slugPayload !== '') {
+                $hasSlugPayload = $slugPayload !== null && $slugPayload !== '';
+                if (is_array($slugPayload)) {
+                    $hasSlugPayload = isset($slugPayload['slug']) && $slugPayload['slug'] !== '';
+                }
+                if ($hasSlugPayload) {
                     $fields['slugs'][$locale] = $slugPayload;
 
                     break;
@@ -63,8 +67,8 @@ trait SlugsTrait
                     $currentSlug['slug'] = $isArray ? $slugValue['slug'] : $slugValue;
                     $currentSlug['locale'] = $locale;
                     $currentSlug['active'] = ($this->model->isTranslatable() && isset($object->translations) && count($object->translations) > 0 && ! ($isArray && isset($slugValue['active'])))
-                        ? $object->translate($locale)->active
-                        : ($isArray && isset($slugValue['active']) ? (bool) $slugValue['active'] : 1);
+                        ? true
+                        : ($isArray && isset($slugValue['active']) ? (bool) $slugValue['active'] : true);
                     $currentSlug = $this->getSlugParameters($object, $fields, $currentSlug);
 
                     $object->updateOrNewSlug($currentSlug);
@@ -119,7 +123,10 @@ trait SlugsTrait
         foreach ($slugAttributes as $attr) {
             foreach ($object->slugs as $slug) {
                 if ($slug->active || $object->slugs->where('locale', $slug->locale)->where('active', true)->count() === 0) {
-                    $fields['translations'][$attr][$slug->locale] = $slug->slug;
+                    $fields['translations'][$attr][$slug->locale] = [
+                        'slug' => $slug->slug,
+                        'active' => (bool) $slug->active,
+                    ];
                 }
             }
         }

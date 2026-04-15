@@ -127,6 +127,8 @@ trait HasSlug
      */
     public function updateOrNewSlug($slugParams, $restoring = false)
     {
+        $slugParams = $this->normalizeSlugParamsPayload($slugParams);
+
         if (in_array($slugParams['locale'], modularityConfig('slug_utf8_languages', []))) {
             $slugParams['slug'] = $this->getUtf8Slug($slugParams['slug']);
         } else {
@@ -282,6 +284,53 @@ trait HasSlug
     }
 
     /**
+     * Translation / model attribute used as slug source may be a legacy string or
+     * `['slug' => string, 'active' => bool]` from the admin form.
+     *
+     * @param  mixed  $value
+     * @return array{slug: string, active: bool}
+     */
+    protected function normalizeSlugSourceValue($value): array
+    {
+        if (is_array($value) && array_key_exists('slug', $value)) {
+            $slug = $value['slug'];
+
+            return [
+                'slug' => $slug === null || $slug === '' ? '' : (string) $slug,
+                'active' => ! array_key_exists('active', $value) ? true : (bool) $value['active'],
+            ];
+        }
+
+        if ($value === null || $value === '') {
+            return ['slug' => '', 'active' => true];
+        }
+
+        return [
+            'slug' => is_scalar($value) ? (string) $value : '',
+            'active' => true,
+        ];
+    }
+
+    /**
+     * Defensive unwrap when {@see updateOrNewSlug} receives a nested slug payload.
+     *
+     * @param  array<string, mixed>  $slugParams
+     * @return array<string, mixed>
+     */
+    protected function normalizeSlugParamsPayload(array $slugParams): array
+    {
+        if (isset($slugParams['slug']) && is_array($slugParams['slug']) && array_key_exists('slug', $slugParams['slug'])) {
+            $nested = $slugParams['slug'];
+            $slugParams['slug'] = $nested['slug'] === null || $nested['slug'] === '' ? '' : (string) $nested['slug'];
+            if (array_key_exists('active', $nested)) {
+                $slugParams['active'] = (bool) $nested['active'];
+            }
+        }
+
+        return $slugParams;
+    }
+
+    /**
      * @param string|null $locale
      * @return array|null
      */
@@ -315,9 +364,12 @@ trait HasSlug
                     throw new \Exception("You must define the field {$slugAttribute} in your model");
                 }
 
+                $rawSlug = $translation->$slugAttribute ?? $this->$slugAttribute;
+                $normalized = $this->normalizeSlugSourceValue($rawSlug);
+
                 $slugParam = [
-                    'active' => $translation->active,
-                    'slug' => $translation->$slugAttribute ?? $this->$slugAttribute,
+                    'active' => $normalized['active'],
+                    'slug' => $normalized['slug'],
                     'locale' => $translation->locale,
                 ] + $slugDependenciesAttributes;
 
@@ -362,9 +414,11 @@ trait HasSlug
                     throw new \Exception("You must define the field {$slugAttribute} in your model");
                 }
 
+                $normalized = $this->normalizeSlugSourceValue($this->$slugAttribute);
+
                 $slugParam = [
-                    'active' => 1,
-                    'slug' => $this->$slugAttribute,
+                    'active' => $normalized['active'] ? 1 : 0,
+                    'slug' => $normalized['slug'],
                     'locale' => $appLocale,
                 ] + $slugDependenciesAttributes;
 

@@ -5,15 +5,38 @@
 
   Translated fields: Locale.vue receives :obj from FormBase and forwards it to children (same as non-translated).
   effectiveSchema still falls back to flat props when obj.schema is missing (legacy callers).
+
+  When manageActive is true (default from SlugHydrate), modelValue is `{ slug: string, active: boolean }` per locale.
+  Legacy string values are normalized for display and upgraded on edit.
 -->
 <template>
   <v-text-field
     ref="VInput"
-    v-model="input"
+    v-model="slugText"
     :loading="validating"
     :rules="mergedRules"
     v-bind="textFieldBind"
-  />
+  >
+    <template v-if="manageActive" #append>
+      <v-tooltip location="top">
+        <template #activator="{ props: tipProps }">
+          <span v-bind="tipProps" class="d-inline-flex align-center">
+            <v-switch
+              v-model="slugActive"
+              class="ma-0"
+              color="primary"
+              density="compact"
+              hide-details
+              inset
+              :ripple="false"
+              :aria-label="t('fields.slug_active', 'Published')"
+            />
+          </span>
+        </template>
+        <span>{{ t('fields.slug_active', 'Published') }}</span>
+      </v-tooltip>
+    </template>
+  </v-text-field>
 </template>
 
 <script setup>
@@ -21,7 +44,7 @@
   import axios from 'axios'
   import { useI18n } from 'vue-i18n'
   import { omit } from 'lodash-es'
-  import { useInput, makeInputProps, makeInputEmits, useValidation } from '@/hooks'
+  import { makeInputProps, makeInputEmits, useValidation } from '@/hooks'
 
   defineOptions({
     name: 'v-input-slug',
@@ -76,7 +99,7 @@
   })
 
   const { t, locale: i18nLocale } = useI18n({ useScope: 'global' })
-  const { VInput, input } = useInput(props, { emit })
+  const VInput = ref(null)
   const { generateInputRules } = useValidation(props)
   const validating = ref(false)
 
@@ -99,6 +122,69 @@
       'rules',
       'required',
     ])
+  })
+
+  const manageActive = computed(() => {
+    const s = effectiveSchema.value
+    if (s.manageActive === false) {
+      return false
+    }
+    if (s.translated === true) {
+      return true
+    }
+
+    return s.manageActive === true
+  })
+
+  function normalizePayload(raw) {
+    if (!manageActive.value) {
+      return { slug: String(raw ?? ''), active: true }
+    }
+    if (typeof raw === 'string') {
+      return { slug: raw, active: true }
+    }
+    if (raw && typeof raw === 'object' && Object.prototype.hasOwnProperty.call(raw, 'slug')) {
+      return {
+        slug: String(raw.slug ?? ''),
+        active: raw.active !== false,
+      }
+    }
+
+    return { slug: '', active: true }
+  }
+
+  const payload = computed(() => normalizePayload(props.modelValue))
+
+  function emitModel(next) {
+    if (!manageActive.value) {
+      emit('update:modelValue', next.slug)
+
+      return
+    }
+    emit('update:modelValue', { slug: next.slug, active: next.active })
+  }
+
+  const slugText = computed({
+    get: () => (manageActive.value ? payload.value.slug : String(props.modelValue ?? '')),
+    set: (v) => {
+      const s = v ?? ''
+      if (!manageActive.value) {
+        emit('update:modelValue', s)
+
+        return
+      }
+      emitModel({ slug: s, active: payload.value.active })
+    },
+  })
+
+  const slugActive = computed({
+    get: () => payload.value.active,
+    set: (v) => {
+      if (!manageActive.value) {
+        return
+      }
+      emitModel({ slug: payload.value.slug, active: !!v })
+    },
   })
 
   const moduleName = computed(() => effectiveSchema.value._moduleName ?? props._moduleName)
@@ -159,6 +245,7 @@
       'localeScoped',
       'excludeId',
       'locale',
+      'manageActive',
     ]),
   )
 

@@ -17,6 +17,8 @@ class SlugHydrate extends InputHydrate
         'localeScoped' => true,
         'excludeId' => null,
         'locale' => null,
+        /** When true (default), the slug input exposes an active toggle and submits `{ slug, active }` per locale. */
+        'manageActive' => true,
     ];
 
     /**
