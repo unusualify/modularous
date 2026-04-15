@@ -240,6 +240,14 @@
                 </template>
                 <!-- END LIST -->
 
+                <v-input-locale v-else-if="obj.schema.translated"
+                  :type="mapTypeToComponent(obj.schema.type)"
+                  :attributes="obj.schema"
+                  :obj="obj"
+                  :modelValue="setValue(obj)"
+                  @update:modelValue="onInput($event, obj)"
+                />
+
                 <!-- CHECKBOX | SWITCH -->
                 <component v-else-if="/(switch|checkbox)/.test(obj.schema.type)"
                   :is="mapTypeToComponent(obj.schema.type)"
@@ -330,14 +338,6 @@
                   {{ obj.schema.label }}
                 </v-btn>
                 <!-- END BTN -->
-
-                <v-input-locale v-else-if="obj.schema.translated"
-                  :type="mapTypeToComponent(obj.schema.type)"
-                  :attributes="obj.schema"
-                  :obj="obj"
-                  :modelValue="setValue(obj)"
-                  @update:modelValue="onInput($event, obj)"
-                />
 
                 <!-- MASK  -->
                 <component v-else-if="obj.schema.mask"
