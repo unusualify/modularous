@@ -1,5 +1,6 @@
 <script setup>
   import { ref, computed, watch, inject } from 'vue'
+  import { useStore } from 'vuex'
   import { useI18n } from 'vue-i18n'
   import {
     useInput,
@@ -9,6 +10,7 @@
   } from '@/hooks'
   import { useRevisionDiff, useRevisionVisualCompare, revisionIdEq, formatRevisionDate } from '@/hooks/revision'
   import axios from 'axios'
+  import { getActiveContentLocale } from '@/utils/locale'
   import api from '@/store/api/form'
   import RevisionItem from '@/components/others/RevisionItem.vue'
   import RevisionPreviewDialog from '@/components/others/RevisionPreviewDialog.vue'
@@ -66,6 +68,9 @@
 
   const { input } = useInput(props, { emit })
   const { t } = useI18n()
+  const store = useStore()
+  /** Laravel `App::setLocale` — same as Form.vue / `language` store `active.value`. */
+  const previewActiveLanguage = computed(() => getActiveContentLocale(store) ?? '')
   const Alert = useAlert()
   const applyRevisionRestoreResponse = inject('applyRevisionRestoreResponse', null)
   const applyRevisionApproveResponse = inject('applyRevisionApproveResponse', null)
@@ -176,6 +181,7 @@
     effectiveCompareBaseId,
     previewDialogActive,
     previewTab,
+    activeLanguage: previewActiveLanguage,
     onError: () => {
       Alert.openAlert({
         message: t('messages.revision.compare-load-error'),
@@ -372,11 +378,16 @@
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
 
     try {
+      const params = { revisionId }
+      if (previewActiveLanguage.value) {
+        params.activeLanguage = previewActiveLanguage.value
+      }
+
       const { data } = await axios.put(
         url,
         { _token: token },
         {
-          params: { revisionId },
+          params,
           responseType: 'text',
           headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -396,6 +407,13 @@
       previewLoading.value = false
     }
   }
+
+  watch(previewActiveLanguage, () => {
+    if (!previewDialogActive.value || previewTab.value !== 'preview') return
+    const rid = previewRevisionId.value
+    if (rid == null || rid === '') return
+    loadPreviewHtmlForRevision(rid)
+  })
 
   /**
    * Switch target revision from the modal sidebar (diff/compare hooks react via watch).

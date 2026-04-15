@@ -15,6 +15,7 @@ import { revisionIdEq } from './useRevisionDiff'
  * @param {import('vue').ComputedRef<unknown>} options.effectiveCompareBaseId
  * @param {import('vue').Ref<boolean>} options.previewDialogActive
  * @param {import('vue').Ref<string>} options.previewTab — `'compare'` triggers load
+ * @param {import('vue').Ref<string>|import('vue').ComputedRef<string>|string} [options.activeLanguage] — forwarded to showView (Laravel locale)
  * @param {(error: unknown) => void} [options.onError]
  */
 export default function useRevisionVisualCompare(options) {
@@ -27,6 +28,7 @@ export default function useRevisionVisualCompare(options) {
     effectiveCompareBaseId,
     previewDialogActive,
     previewTab,
+    activeLanguage,
     onError,
   } = options
 
@@ -48,6 +50,8 @@ export default function useRevisionVisualCompare(options) {
 
     const url = unref(showEndpoint).replace(':id', id)
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    const lang = activeLanguage != null ? unref(activeLanguage) : ''
+    const localeParams = lang ? { activeLanguage: lang } : {}
 
     compareLoading.value = true
     try {
@@ -59,8 +63,8 @@ export default function useRevisionVisualCompare(options) {
         },
       }
       const [resLeft, resRight] = await Promise.all([
-        axios.put(url, { _token: token }, { ...putOpts, params: { revisionId: baseId } }),
-        axios.put(url, { _token: token }, { ...putOpts, params: { revisionId: target } }),
+        axios.put(url, { _token: token }, { ...putOpts, params: { revisionId: baseId, ...localeParams } }),
+        axios.put(url, { _token: token }, { ...putOpts, params: { revisionId: target, ...localeParams } }),
       ])
       compareHtmlLeft.value = typeof resLeft.data === 'string' ? resLeft.data : ''
       compareHtmlRight.value = typeof resRight.data === 'string' ? resRight.data : ''
@@ -80,8 +84,13 @@ export default function useRevisionVisualCompare(options) {
     compareHtmlRight.value = ''
   }
 
+  const compareWatchSources = [previewTab, targetRevisionId, compareBaseRevisionId]
+  if (activeLanguage != null) {
+    compareWatchSources.push(activeLanguage)
+  }
+
   watch(
-    [previewTab, targetRevisionId, compareBaseRevisionId],
+    compareWatchSources,
     () => {
       if (!previewDialogActive.value || previewTab.value !== 'compare') return
       const candidates = compareCandidates.value
