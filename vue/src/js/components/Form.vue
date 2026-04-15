@@ -425,6 +425,7 @@ import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useForm, makeFormProps } from '@/hooks/form'
 import { cloneDeep, omit, isObject } from 'lodash-es'
+import { getActiveContentLocale } from '@/utils/locale'
 import FormActions from './form/FormActions.vue'
 import FormEvents from './form/FormEvents.vue'
 import FormSecondaryInputs from './form/FormSecondaryInputs.vue'
@@ -670,7 +671,7 @@ export default {
       const schema = useFormInstance.chunkedRawSchema.value
       if (!schema || !data) return fields
 
-      const activeLocale = store.state.language.active?.value
+      const activeLocale = getActiveContentLocale(store)
 
       for (const key in schema) {
         const input = schema[key]

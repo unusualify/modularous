@@ -3,6 +3,17 @@ import { map } from 'lodash-es'
 import { useLocale } from '@/hooks'
 import store from '@/store'
 
+/**
+ * Active CMS content locale (user’s selected language tab).
+ * Reads `store.state.language.active.value` (see `store/modules/language.js`).
+ *
+ * @param {import('vuex').Store} [storeInstance]
+ * @returns {string|undefined}
+ */
+export function getActiveContentLocale (storeInstance = store) {
+  return storeInstance?.state?.language?.active?.value
+}
+
 export const getTranslationLanguages = (input) => {
   try {
     const Locale = useLocale()
