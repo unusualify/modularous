@@ -13,6 +13,42 @@ trait SlugsTrait
     protected bool $pendingBypassRevisionSlugsTrait = true;
 
     /**
+     * Skip {@see HasSlug}'s automatic {@see setSlugs()} on {@see Model::saved} when the incoming
+     * payload did not include any slug source attribute (or explicit `slugs`), so unrelated updates
+     * do not rewrite the slug table or stringify object payloads.
+     */
+    public function beforeSaveSlugsTrait(Model $object, array $fields): void
+    {
+        if (! property_exists($this->model, 'slugAttributes')) {
+            return;
+        }
+
+        $object->modularitySkipAutomaticSlugSync = $this->shouldSkipAutomaticSlugSyncOnSave($object, $fields);
+    }
+
+    /**
+     * @param  array<string, mixed>  $fields  Raw request fields (before {@see prepareFieldsBeforeSave} transforms).
+     */
+    protected function shouldSkipAutomaticSlugSyncOnSave(Model $object, array $fields): bool
+    {
+        if (isset($fields['slugs']) && is_array($fields['slugs'])) {
+            return false;
+        }
+
+        foreach ($object->getSlugAttributes() as $attr) {
+            if (array_key_exists($attr, $fields)) {
+                return false;
+            }
+
+            if (isset($fields['translations']) && is_array($fields['translations']) && array_key_exists($attr, $fields['translations'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Map per-locale slug attribute strings into {@see afterSaveSlugsTrait}'s `slugs` key.
      * Runs after {@see TranslationsTrait::prepareFieldsBeforeSaveTranslationsTrait} when repository uses both traits.
      *
