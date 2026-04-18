@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Unusualify\Modularity\Entities\File;
 use Unusualify\Modularity\Entities\Media;
+use Unusualify\Modularity\Support\ModularityFlashWarnings;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -44,6 +45,8 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message'),
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
+                /** Stacked non-blocking warnings (session {@see ModularityFlashWarnings::SESSION_KEY}). */
+                'warnings' => fn () => $request->session()->pull(ModularityFlashWarnings::SESSION_KEY, []),
             ],
 
             'config' => [
