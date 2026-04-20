@@ -1,8 +1,7 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularity\Http\Controllers\Traits\API;
 
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 trait ApiValidation
