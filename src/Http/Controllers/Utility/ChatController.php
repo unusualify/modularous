@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularity\Http\Controllers\Utility;
 
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Unusualify\Modularity\Entities\Chat;
 use Unusualify\Modularity\Entities\ChatMessage;
 use Unusualify\Modularity\Facades\Filepond;

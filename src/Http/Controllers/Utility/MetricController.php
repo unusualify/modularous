@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularity\Http\Controllers\Utility;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

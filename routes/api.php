@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Http\Controllers\SlugInputValidationController;
+use Unusualify\Modularity\Http\Controllers\Utility\SlugInputValidationController;
 
 /*
 |--------------------------------------------------------------------------

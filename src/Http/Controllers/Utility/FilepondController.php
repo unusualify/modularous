@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularity\Http\Controllers\Utility;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Unusualify\Modularity\Services\FilepondManager;
 

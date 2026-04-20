@@ -1,9 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularity\Http\Controllers\Utility;
 
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller;
 use Modules\SystemUser\Repositories\UserRepository;
 use Unusualify\Modularity\Facades\Modularity;
 

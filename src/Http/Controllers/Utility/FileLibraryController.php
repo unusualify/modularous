@@ -1,35 +1,43 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularity\Http\Controllers\Utility;
 
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Unusualify\Modularity\Http\Requests\MediaRequest;
-use Unusualify\Modularity\Models\Media;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Facades\Route;
+use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularity\Http\Requests\FileRequest;
+use Unusualify\Modularity\Models\File;
 use Unusualify\Modularity\Services\Uploader\SignAzureUpload;
 use Unusualify\Modularity\Services\Uploader\SignS3Upload;
 use Unusualify\Modularity\Services\Uploader\SignUploadListener;
 
-class MediaLibraryController extends BaseController implements SignUploadListener
+class FileLibraryController extends BaseController implements SignUploadListener
 {
     /**
      * @var string
      */
-    protected $moduleName = 'Media';
+    protected $moduleName = 'File';
 
     /**
      * @var string
      */
-    protected $routeName = 'Media';
+    protected $routeName = 'File';
 
     /**
      * @var string
      */
+    protected $routePrefix = 'file-library';
+
+    /**
+     * @var string
+     */
+    // protected $namespace = 'Unusualify\Modularity';
     protected $namespace = 'Unusualify\Modularity';
 
     /**
@@ -59,9 +67,9 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     protected $endpointType;
 
     /**
-     * @var array
+     * @var Illuminate\Routing\UrlGenerator
      */
-    protected $customFields;
+    protected $urlGenerator;
 
     /**
      * @var Illuminate\Routing\ResponseFactory
@@ -77,19 +85,19 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
     public function __construct(
         Application $app,
-        Config $config,
         Request $request,
-        ResponseFactory $responseFactory
+        UrlGenerator $urlGenerator,
+        ResponseFactory $responseFactory,
+        Config $config
     ) {
         parent::__construct($app, $request);
+        $this->urlGenerator = $urlGenerator;
         $this->responseFactory = $responseFactory;
         $this->laravelConfig = $config;
 
         // $this->removeMiddleware('can:edit');
-        // $this->removeMiddleware('can:_create');
         // $this->middleware('can:edit', ['only' => ['signS3Upload', 'signAzureUpload', 'tags', 'store', 'singleUpdate', 'bulkUpdate']]);
-        $this->endpointType = $this->laravelConfig->get(modularityBaseKey() . '.media_library.endpoint_type');
-        $this->customFields = $this->laravelConfig->get(modularityBaseKey() . '.media_library.extra_metadatas_fields');
+        $this->endpointType = $this->laravelConfig->get(modularityBaseKey() . '.file_library.endpoint_type');
     }
 
     /**
@@ -116,11 +124,30 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
         return [
             'items' => $items->map(function ($item) {
-                return $item->mediableFormat();
+                return $this->buildFile($item);
             })->toArray(),
             'maxPage' => $items->lastPage(),
             'total' => $items->total(),
             'tags' => $this->repository->getTagsList(),
+        ];
+    }
+
+    /**
+     * @param File $item
+     * @return array
+     */
+    private function buildFile($item)
+    {
+        $routeNamePrefix = adminRouteNamePrefix() ? adminRouteNamePrefix() . '.' : '';
+
+        return $item->mediableFormat() + [
+            'tags' => $item->tags->map(function ($tag) {
+                return $tag->name;
+            }),
+            'deleteUrl' => $item->canDeleteSafely() ? moduleRoute($this->moduleName, $routeNamePrefix . $this->routePrefix, 'destroy', ['file' => $item->id]) : null,
+            'updateUrl' => $this->urlGenerator->route(Route::hasAdmin('file-library.file.single-update')),
+            'updateBulkUrl' => $this->urlGenerator->route(Route::hasAdmin('file-library.file.bulk-update')),
+            'deleteBulkUrl' => $this->urlGenerator->route(Route::hasAdmin('file-library.file.bulk-delete')),
         ];
     }
 
@@ -146,62 +173,59 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
     /**
      * @param int|null $parentModuleId
+     * @return JsonResponse
+     *
+     * @throws BindingResolutionException
      */
     public function store($parentModuleId = null)
     {
-        $request = $this->app->make(MediaRequest::class);
+        $request = $this->app->make(FileRequest::class);
+
         if ($this->endpointType === 'local') {
-            $media = $this->storeFile($request);
+            $file = $this->storeFile($request);
         } else {
-            $media = $this->storeReference($request);
+            $file = $this->storeReference($request);
         }
 
-        return $this->responseFactory->json(['media' => $media->mediableFormat(), 'success' => true], 200);
+        return $this->responseFactory->json(['media' => $this->buildFile($file), 'success' => true], 200);
     }
 
     /**
      * @param Request $request
-     * @return Media
+     * @return File
      */
     public function storeFile($request)
     {
-        $originalFilename = $request->input('qqfilename');
+        $filename = $request->input('qqfilename');
 
-        $filename = sanitizeFilename($originalFilename);
-
-        // dd($filename);
+        $cleanFilename = preg_replace("/\s+/i", '-', $filename);
 
         $fileDirectory = $request->input('unique_folder_name');
 
-        $uuid = $request->input('unique_folder_name') . '/' . $filename;
+        $uuid = $request->input('unique_folder_name') . '/' . $cleanFilename;
 
-        if ($this->laravelConfig->get(modularityBaseKey() . '.media_library.prefix_uuid_with_local_path', false)) {
-            $prefix = trim($this->laravelConfig->get(modularityBaseKey() . '.media_library.local_path'), '/ ') . '/';
+        if ($this->laravelConfig->get(modularityBaseKey() . '.file_library.prefix_uuid_with_local_path', false)) {
+            $prefix = trim($this->laravelConfig->get(modularityBaseKey() . '.file_library.local_path'), '/ ') . '/';
             $fileDirectory = $prefix . $fileDirectory;
             $uuid = $prefix . $uuid;
         }
 
-        $disk = $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk');
+        $disk = $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk');
 
-        $uploadedFile = $request->file('qqfile');
-
-        [$w, $h] = getimagesize($uploadedFile->path());
-
-        $uploadedFile->storeAs($fileDirectory, $filename, ['disk' => $disk]);
+        $request->file('qqfile')->storeAs($fileDirectory, $cleanFilename, $disk);
 
         $fields = [
             'uuid' => $uuid,
-            'filename' => $originalFilename,
-            'width' => $w,
-            'height' => $h,
+            'filename' => $cleanFilename,
+            'size' => $request->input('qqtotalfilesize'),
         ];
 
-        if ($this->shouldReplaceMedia($id = $request->input('media_to_replace_id'))) {
-            $media = $this->repository->whereId($id)->first();
-            $this->repository->afterDelete($media);
-            $media->replace($fields);
+        if ($this->shouldReplaceFile($id = $request->input('media_to_replace_id'))) {
+            $file = $this->repository->whereId($id)->first();
+            $this->repository->afterDelete($file);
+            $file->update($fields);
 
-            return $media->fresh();
+            return $file->fresh();
         } else {
             return $this->repository->create($fields);
         }
@@ -209,22 +233,21 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
     /**
      * @param Request $request
+     * @return File
      */
     public function storeReference($request)
     {
         $fields = [
             'uuid' => $request->input('key') ?? $request->input('blob'),
             'filename' => $request->input('name'),
-            'width' => $request->input('width'),
-            'height' => $request->input('height'),
         ];
 
-        if ($this->shouldReplaceMedia($id = $request->input('media_to_replace_id'))) {
-            $media = $this->repository->whereId($id)->first();
-            $this->repository->afterDelete($media);
-            $media->update($fields);
+        if ($this->shouldReplaceFile($id = $request->input('media_to_replace_id'))) {
+            $file = $this->repository->whereId($id)->first();
+            $this->repository->afterDelete($file);
+            $file->update($fields);
 
-            return $media->fresh();
+            return $file->fresh();
         } else {
             return $this->repository->create($fields);
         }
@@ -237,16 +260,10 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     {
         $this->repository->update(
             $this->request->input('id'),
-            array_merge([
-                'alt_text' => $this->request->get('alt_text', null),
-                'caption' => $this->request->get('caption', null),
-                'tags' => $this->request->get('tags', null),
-            ], $this->getExtraMetadatas()->toArray())
+            $this->request->only('tags')
         );
 
-        return $this->responseFactory->json([
-            'tags' => $this->repository->getTagsList(),
-        ], 200);
+        return $this->responseFactory->json([], 200);
     }
 
     /**
@@ -256,24 +273,11 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     {
         $ids = explode(',', $this->request->input('ids'));
 
-        $metadatasFromRequest = $this->getExtraMetadatas()->reject(function ($meta) {
-            return is_null($meta);
-        })->toArray();
-
-        $extraMetadatas = array_diff_key($metadatasFromRequest, array_flip((array) $this->request->get('fieldsRemovedFromBulkEditing', [])));
-
-        if (in_array('tags', $this->request->get('fieldsRemovedFromBulkEditing', []))) {
-            $this->repository->addIgnoreFieldsBeforeSave('bulk_tags');
-        } else {
-            $previousCommonTags = $this->repository->getTags(null, $ids);
-            $newTags = array_filter(explode(',', $this->request->input('tags')));
-        }
+        $previousCommonTags = $this->repository->getTags(null, $ids);
+        $newTags = array_filter(explode(',', $this->request->input('tags')));
 
         foreach ($ids as $id) {
-            $this->repository->update($id, [
-                'bulk_tags' => $newTags ?? [],
-                'previous_common_tags' => $previousCommonTags ?? [],
-            ] + $extraMetadatas);
+            $this->repository->update($id, ['bulk_tags' => $newTags, 'previous_common_tags' => $previousCommonTags]);
         }
 
         $scopes = $this->filterScope(['id' => $ids]);
@@ -281,7 +285,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
         return $this->responseFactory->json([
             'items' => $items->map(function ($item) {
-                return $item->mediableFormat();
+                return $this->buildFile($item);
             })->toArray(),
             'tags' => $this->repository->getTagsList(),
         ], 200);
@@ -292,7 +296,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
      */
     public function signS3Upload(Request $request, SignS3Upload $signS3Upload)
     {
-        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk'));
+        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk'));
     }
 
     /**
@@ -300,7 +304,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
      */
     public function signAzureUpload(Request $request, SignAzureUpload $signAzureUpload)
     {
-        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk'));
+        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk'));
     }
 
     /**
@@ -323,38 +327,10 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     }
 
     /**
-     * @return Collection
-     */
-    private function getExtraMetadatas()
-    {
-        return Collection::make($this->customFields)->mapWithKeys(function ($field) {
-            $fieldInRequest = $this->request->get($field['name']);
-
-            if (isset($field['type']) && $field['type'] === 'checkbox') {
-                return [$field['name'] => $fieldInRequest ? Arr::first($fieldInRequest) : false];
-            }
-
-            return [$field['name'] => $fieldInRequest];
-        });
-    }
-
-    /**
      * @return bool
      */
-    private function shouldReplaceMedia($id)
+    private function shouldReplaceFile($id)
     {
         return is_numeric($id) ? $this->repository->whereId($id)->exists() : false;
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function bulkDelete()
-    {
-        if ($this->repository->bulkDelete(explode(',', $this->request->get('ids')))) {
-            return $this->respondWithSuccess(___('listing.bulk-delete.success', ['modelTitle' => $this->modelTitle]));
-        }
-
-        return $this->respondWithError(___('listing.bulk-delete.error', ['modelTitle' => $this->modelTitle]));
     }
 }
