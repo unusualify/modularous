@@ -85,7 +85,7 @@
           </template>
         </ue-title>
         <div :class="[
-          'flex-1-0 d-flex ga-1',
+          'flex-1-0 d-flex align-start ga-2',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
             || (hasAdditionalSection && $vuetify.display.mdAndDown)
             || (formEventSchema && formEventSchema.length && model)
@@ -103,7 +103,7 @@
             @update:modelValue="updateLocale($event)"
             selected-class="bg-primary"
             mandatory
-            class="mt-n2 pl-2"
+            class="mt-n2 pt-2"
           >
             <v-chip
               v-for="language in languages"

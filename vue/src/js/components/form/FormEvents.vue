@@ -63,10 +63,16 @@ defineOptions({
     >
       <template v-slot:activator="tooltipActivatorScope">
         <v-switch v-if="event.type === 'switch'"
-          v-bind="{...$lodash.omit(event, 'label'), ...props}"
+          v-bind="{...$lodash.omit(event, 'labe'), ...props}"
           hide-details
           :modelValue="input[event.name] ?? event.default ?? false"
           @update:modelValue="updateValue(event.name, $event)"
+          density="compact"
+          class="mx-1"
+          :center-affix="false"
+          :indent-details="false"
+          direction="horizontal"
+          :inline="true"
         />
         <ue-recursive-stuff v-else-if="event.viewOnlyComponent"
           :configuration="event.viewOnlyComponent"
@@ -92,6 +98,7 @@ defineOptions({
               variant="outlined"
               append-icon="mdi-chevron-down"
               v-bind="menuActivatorScope.props"
+              density="compact"
             >
               {{ getEventActiveLabel(event) }}
             </v-btn>
