@@ -14,8 +14,8 @@ Modularity (Modularous) is a Laravel package that provides a modular admin panel
 | [Architecture](./architecture) | System overview, request flow, schema flow, core classes |
 | [Hydrates](./hydrates) | Backend → frontend schema transformation (input types) |
 | [Repositories](./repositories) | Data access layer, lifecycle, Logic traits |
-| [Backend](./backend) | Controllers, Console commands, Entities, Services |
-| [Frontend](./frontend) | Vue structure, form/table flow, hooks, store |
+| [Backend](./backend/overview) | Controllers, Console commands, Entities, Services |
+| [Frontend](./frontend/overview) | Vue structure, form/table flow, hooks, store |
 | [Config](./config) | Configuration layers (merges, defers, publishes) |
 | [Modules](./modules) | Module vs route activation, structure |
 | [API](./api) | Common patterns and use cases |
@@ -45,4 +45,4 @@ Modularity (Modularous) is a Laravel package that provides a modular admin panel
 
 ## For Contributors
 
-See [AGENTS.md](https://github.com/unusualify/modularity/blob/main/AGENTS.md) for package development rules, patterns, and conventions.
+See [AGENTS.md](https://github.com/unusualify/modularous/blob/main/AGENTS.md) for package development rules, patterns, and conventions.

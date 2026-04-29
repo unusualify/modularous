@@ -5,7 +5,7 @@ sidebarTitle: Pinia Migration
 
 # Pinia Migration Path
 
-Modularity currently uses Vuex 4. For new projects, Pinia is the recommended state management library for Vue 3.
+Modularous currently uses Vuex 4. For new projects, Pinia is the recommended state management library for Vue 3.
 
 ## Current State
 
@@ -45,4 +45,4 @@ const { isInertia } = storeToRefs(configStore)
 
 ## Target Version
 
-Pinia migration is planned for Modularity v4.x. No timeline set.
+Pinia migration is planned for Modularous v4.x. No timeline set.

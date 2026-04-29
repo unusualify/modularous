@@ -5,7 +5,7 @@ sidebarTitle: Features Pattern
 
 # Features Pattern
 
-Modularity features use a **triple pattern**: Entity trait + Repository trait + Hydrate. Understanding this pattern helps when adding or customizing features.
+Modularous features use a **triple pattern**: Entity trait + Repository trait + Hydrate. Understanding this pattern helps when adding or customizing features.
 
 ## Pattern Overview
 
@@ -79,7 +79,7 @@ Some features compose others:
 
 ## See Also
 
-- [Module Features Overview](/guide/module-features/) — Feature matrix and quick reference
+- [Module Features Overview](/guide/module-features/overview) — Feature matrix and quick reference
 - [Hydrates](/system-reference/hydrates) — Schema transformation
 - [Repositories](/system-reference/repositories) — Lifecycle and traits
 - [Entities](/system-reference/entities) — Entity traits list

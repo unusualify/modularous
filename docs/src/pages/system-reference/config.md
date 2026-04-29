@@ -5,7 +5,7 @@ sidebarTitle: Config
 
 # Configuration System
 
-Modularity uses a layered configuration system. Understanding the layers helps when customizing or debugging.
+Modularous uses a layered configuration system. Understanding the layers helps when customizing or debugging.
 
 ## Configuration Layers
 
@@ -57,7 +57,7 @@ Core package settings: app_url, admin paths, theme, enabled features, etc.
 **Config**: `modularity.currency_provider`  
 **Env**: `MODULARITY_CURRENCY_PROVIDER`
 
-Optional FQCN of a class implementing `CurrencyProviderInterface`. When null, Modularity uses `SystemPricingCurrencyProvider` if the SystemPricing module is present, else `NullCurrencyProvider`.
+Optional FQCN of a class implementing `CurrencyProviderInterface`. When null, Modularous uses `SystemPricingCurrencyProvider` if the SystemPricing module is present, else `NullCurrencyProvider`.
 
 ## Paths
 
