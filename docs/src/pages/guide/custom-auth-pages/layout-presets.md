@@ -1,5 +1,5 @@
 ---
-sidebarPos: 5
+sidebarPos: 6
 sidebarTitle: Layout Presets
 ---
 
