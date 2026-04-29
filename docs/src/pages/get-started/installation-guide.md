@@ -3,43 +3,43 @@ sidebarPos: 3
 ---
 
 
-# Modularity Setup
-This document will discuss about installation and required configurations for installation of the package.
+# Modularous Setup
+This document will discuss installation and required configurations for the package.
 
 ## Pre-requisites
 The modules package requires **PHP XXX** or higher and also requires **Laravel 10** or higher.
 
-## Creating a Modularity Project
+## Creating a Modularous Project
 
-### Using Modularity-Laravel Boilerplate
+### Using Modularous-Laravel Boilerplate
 
-Modularity provides a Laravel boilerplate that all the pre-required files such as config files, environment file and etc published, and the folder structure is built as Modularity does. In order to create a modularity-laravel project following ``shell``  command can be used:
+Modularous provides a Laravel boilerplate that all the pre-required files such as config files, environment file and etc published, and the folder structure is built as Modularous does. In order to create a Modularous-laravel project following ``shell``  command can be used:
 
 After `cd` to your preferred directory for your project,
 
 ```sh
-$ composer create-project unusualify/modularity-laravel your-project-name
+$ composer create-project unusualify/Modularous-laravel your-project-name
 ```
 ::: tip
-After the setup is done, you can customize the config files and follow the intallation steps with `Only Database Operations`. Please proceed with 
+After the setup is done, you can customize the config files and follow the installation steps with `Only Database Operations`. Please proceed with 
 [Installation Wizard](#installation-wizard)
 :::
 
 ### Using Default Laravel Project
 
-1.  **Intalling Modularity**
+1.  **Installing Modularous**
 
 After creating a default Laravel project, cd to your project folder
 ```sh
 $ cd your-project-folder
 ```
-To install Modularity via Composer, run the following shell command:
+To install Modularous via Composer, run the following shell command:
 ```sh
 $ composer require unusualify/modularity
 ```
 After the installation of the package is done run:
 ```sh
-$ php artisan vendor:publish --provider='Unusualify\\Modularity\\LaravelServiceProvider'
+$ php artisan vendor:publish --provider='Unusualify\\Modularous\\LaravelServiceProvider'
 ```
 This will publish the package's configuration files
 <br/><br/>
@@ -47,8 +47,8 @@ This will publish the package's configuration files
 
 ## Environment File Configuration
 
-::: warning
-Configuration for many variable is ``must`` to construct your Vue & Laravel app with your project configuration before [Installation](#installation-wizard)
+::: tip
+Configuration for many variables is ``must`` to construct your Vue & Laravel app with your project configuration before [Installation](#installation-wizard)
 :::
 
 
@@ -59,7 +59,7 @@ ADMIN_APP_URL=
 ADMIN_APP_PATH=DESIRED_ADMIN_APP_PATH
 ADMIN_ROUTE_NAME_PREFIX=DESIRED_ADMIN_ROUTE_NAME_PREFIX
 ```
-As mentioned, modularity aims to construct your administration panel user interface while you building your project's backend application. Given key-value pairs corresponds to 
+As mentioned, modularous aims to construct your administration panel user interface while building your project's backend application. Given key-value pairs corresponds to 
 * Your administration panel domain name
 * Your admin route path as ``'yourdomain.com/admin'`` if ``ADMIN_APP_URL`` key is not set
 * Your route naming prefixes for administration routes like `admin.password`
@@ -79,10 +79,10 @@ The default Laravel database environment configuration must be done before insta
 ```sh
 # Laravel Development Variables
 MEDIA_LIBRARY_ENDPOINT_TYPE=local
-MEDIA_LIBRARY_IMAGE_SERVICE=Unusualify\Modularity\Services\MediaLibrary\Local
+MEDIA_LIBRARY_IMAGE_SERVICE=Unusualify\Modularous\Services\MediaLibrary\Local
 MEDIA_LIBRARY_LOCAL_PATH=uploads
 ```
-Shown key-value pairs is aims to point out the media library constructed in the `Modularity` package. For now, they are not customizable.
+Shown key-value pairs aim to point out the media library constructed in the `Modularous` package. For now, they are not customizable.
 
 ```sh
 ACTIVITY_LOGGER_DB_CONNECTION=mysql
@@ -91,7 +91,7 @@ Default system logger configuration. Again, it is not customizable for now.
 ```sh
 DEFAULT_USER_PASSWORD=DESIRED_DEFAULT_USER_PASSWORD
 ```
-You can set your client-users default password. It will be set as fallback password if its not set while creating user.
+You can set your client-users default password. It will be set as fallback password if it's not set while creating user.
 
 **Vue Development Variables**
 ```sh
@@ -104,10 +104,10 @@ VUE_DEV_PROXY=
 ```
 Admin panel application user interface is highly customizable through module configs. Also you can create your own custom `Vue` components in order to use in user interface. For further information see [Vue Component Sayfası] . In summary,
 * A custom theme can be constructed, its name should be defined with `VUE_APP_THEME`
-* Vue app locale language and fallback language should be setted
-* Vue dev port should be setted, can be same as the locale port
+* Vue app locale language and fallback language should be set
+* Vue dev port should be set, can be same as the locale port
 * Vue dev host can be your domain-name like `mytestapp.com`
-* Proxy should be setted if it is in undergo like `http://nginx`
+* Proxy should be set if it is in undergo like `http://nginx`
   
 
 ::: tip
@@ -116,15 +116,15 @@ You can do further custom configuration through ``config`` files which are store
 
 
 ## Installation Wizard
-Modularity ships with a command line installation wizard that will help on scaffolding a basic project. After installation via Composer, wizard can be started by running:
+Modularous ships with a command line installation wizard that will help on scaffolding a basic project. After installation via Composer, wizard can be started by running:
 ```sh
 $ php artisan modularity:install
 ```
 Wizard will be processing with simple questions to construct projects core configurations.
 ```
 Installment process consists of two(2) main operations.
-    1. Publishing Config Files: Modularity Config files manages heavily table names, jwt configurations and etc.User should customize them after publishing in order to customize table names and other opeartions
-    2. Database Operations and Creating Super Admin. DO NOT select this option if you have not published vendor files to theproject. This option will only dealing with db operations
+    1. Publishing Config Files: Modularous Config files manages heavily table names, jwt configurations and etc. User should customize them after publishing in order to customize table names and other operations
+    2. Database Operations and Creating Super Admin. DO NOT select this option if you have not published vendor files to the project. This option will only dealing with db operations
     3. Complete Installment with default configurations (√ suggested)
                  
 
@@ -135,12 +135,12 @@ Installment process consists of two(2) main operations.
  └──────────────────────────────────────────────────────────────┘
 ```
 ::: info Installation Options
-A Modularity Project heavily depends on the configration files that will be published under your-project/config directory. Modularity comes with a series of default configuration, however they can be customized before Database Operations
+A Modularous Project heavily depends on the configuration files that will be published under your-project/config directory. Modularous comes with a series of default configuration, however they can be customized before Database Operations
 
 :::
 
 ::: tip Customization
-This page will be continue with the complete installment option with the default configrations. See [Config Customization] to inspect other options 
+This page will be continue with the complete installment option with the default configurations. See [Config Customization] to inspect other options 
 :::
 
 Starting installation with the `Complete Installment` option will,
@@ -149,7 +149,7 @@ Starting installation with the `Complete Installment` option will,
 - Seed default data for the system modules
 automatically after publishing default assets, views and configuration files to your project. 
 
-For the last step, intallation process includes creating a super-admin account
+For the last step, installation process includes creating a super-admin account
 ```
          Creating super-admin account
 
@@ -173,11 +173,11 @@ You can either select the default settings or type your custom e-mail and passwo
 :::
 
 ::: details Creating Super Admin
-Creating one or more super-admin account with custom e-mail and password is avaliable. See [Creating Super Admin]
+Creating one or more super-admin account with custom e-mail and password is available. See [Creating Super Admin]
 :::
 
 ## File Structure
-A `Modularity Module` is similar to a Laravel package. It has its own, configs, controllers, migrations and etc. This file structure aims to writing modular applications and have more organized project to work with. 
+A `Modularous Module` is similar to a Laravel package. It has its own, configs, controllers, migrations and etc. This file structure aims to writing modular applications and have more organized project to work with. 
 
 Assuming installment is done and a test module `Testify` is created
 ```
