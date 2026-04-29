@@ -1,12 +1,13 @@
 ---
-# sidebarPos: 3
+sidebarPos: 2
+sidebarTitle: Tabs
 ---
 # Tabs <Badge type="tip" text="^0.10.0" />
 
 The `ue-tabs` component combines **v-tabs** and **v-tabs-window** components as a one component. You must pass items prop into the component for generating component tab structure.
 
 ## Usage
-It has 'items' prop as object, every keys meet a tab, every values fill the tab-windows.
+It has 'items' prop as object, every key meets a tab, every value fills the tab-windows.
 ``` php
   @php
     $items = [

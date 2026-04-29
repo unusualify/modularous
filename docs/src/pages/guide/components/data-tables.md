@@ -1,12 +1,11 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 sidebarPos: 1
-
+sidebarTitle: Data Tables
 ---
 
 # Data Tables
 
-The data table component is used for displaying registered data in your index pages. Despite tabular user-interface is auto constructed while related route generation process, most listing functionalities are can be customized.
+The data table component is used for displaying registered data in your index pages. Despite tabular user-interface is auto constructed while related route generation process, most listing functionalities can be customized.
 
 ::: info Customization
 
@@ -16,17 +15,17 @@ Table functionalities and user-interface is highly customizable. In order to cus
 
 ::: tip See Also
 
-For the table flow (useTable, store/api/datatable), see [Frontend — Table Flow](/system-reference/frontend#table-flow).
+For the table flow (useTable, store/api/datatable), see [Frontend — Table Flow](/system-reference/frontend/overview#table-flow).
 
 :::
 ## Table Component Defaults
 
-In default, Modularity package automatically generates an default table user-interface with default table functionalities like `create new button`, `filtering`, `pagination` and `an embeded create-edit form` based on served functionalities of route itself and `user's permission`. Furthermore, based on registered data properties and user's permissions, item actions like `delete`, `restore` will be placed. 
+In default, Modularous package automatically generates a default table user-interface with default table functionalities like `create new button`, `filtering`, `pagination` and `an embeded create-edit form` based on served functionalities of route itself and `user's permission`. Furthermore, based on registered data properties and user's permissions, item actions like `delete`, `restore` will be placed. 
 
-It is avaliable to serve desired user-interface and user-experience on each data table via related module config files. Go your module's `config.php` and customize `table_options` key-value pairs to observe change.
+It is available to serve desired user-interface and user-experience on each data table via related module config files. Go your module's `config.php` and customize `table_options` key-value pairs to observe change.
 
 ## Table and Related Component Props
-Following table will show customizable key-value pairs, their description and default values. In order to observe better, you can visit blablabla
+Following table will show customizable key-value pairs, their description and default values. In order to observe better, you can visit the [module config reference](/get-started/creating-modules) and change the values in your module's `config.php`.
 
 #### `embeddedForm`
 
@@ -68,14 +67,14 @@ Visual serving option of the item actions like `delete`,`edit` inline or with a 
 <br/>
 
 #### `tableClasses` 
-Applies extra css classes to data table. Also, modularity serves some default css classes that can be used.
+Applies extra css classes to data table. Also, Modularous serves some default css classes that can be used.
 
 - `Input Type:` `String`
 - `Variance`: `No Variance`
 - `default`: `elevation-2`
   
 ::: tip Table Style Classes
-Utility classes served under [VuetifyJS-Utility Classes](https://vuetifyjs.com/en/styles/borders/#sass-variables) can be observed and be used to construct customized data-table. Also modularity serves pre-defined styles which are `zebra-stripes`, `free-form`, `grid-form`.
+Utility classes served under [VuetifyJS-Utility Classes](https://vuetifyjs.com/en/styles/borders/#sass-variables) can be observed and be used to construct customized data-table. Also Modularous serves pre-defined styles which are `zebra-stripes`, `free-form`, `grid-form`.
 :::
 
 <br/>
@@ -141,7 +140,7 @@ Shows the column with checkboxes for selecting items in the list. Bulk actions c
 
 
 #### `addBtnOptions`
-[Vuetify's default Button Component](https://vuetifyjs.com/en/components/buttons/#usage) is used to construct create button user-interface and some functionality. It can be customize the props vuetify serves and some extra props modularity serves.
+[Vuetify's default Button Component](https://vuetifyjs.com/en/components/buttons/#usage) is used to construct create button user-interface and some functionality. It can customize the props vuetify serves and some extra props Modularous serves.
 
 
 - `Input Type: Array`
@@ -162,7 +161,7 @@ Shows the column with checkboxes for selecting items in the list. Bulk actions c
 <br/>
 
 #### `filterBtnOptions`
-[Vuetify's default Button Component](https://vuetifyjs.com/en/components/buttons/#usage) is used to construct filter button user-interface and some functionality. It can be customize the props vuetify button serves and some extra props modularity serves.
+[Vuetify's default Button Component](https://vuetifyjs.com/en/components/buttons/#usage) is used to construct filter button user-interface and some functionality. It can customize the props vuetify button serves and some extra props Modularous serves.
 
 
 - `Input Type: Array`
@@ -181,7 +180,7 @@ Shows the column with checkboxes for selecting items in the list. Bulk actions c
 ```
 
 ::: warning Button Props
-All props served under [Vuetify.js Button API Page](https://vuetifyjs.com/en/api/v-btn/#links) are avaliable to use for filter and create button of tabular user-interface.
+All props served under [Vuetify.js Button API Page](https://vuetifyjs.com/en/api/v-btn/#links) are available to use for filter and create button of tabular user-interface.
 :::
 
 <br/>
@@ -197,7 +196,7 @@ Controls the number of items to display on each page.
 
 #### `paginationOptions`
 
-Pagination options controls pagination functionalities and pagination user-interface placed on the table footer. This version of modularity serves three different pagination options which are, `default`, `vuePagination`, and `infiniteScroll`.
+Pagination options controls pagination functionalities and pagination user-interface placed on the table footer. This version of Modularous serves three different pagination options which are, `default`, `vuePagination`, and `infiniteScroll`.
 
 - `Input Type:` `Array`
 - `default: with default option`
@@ -219,7 +218,7 @@ Pagination options controls pagination functionalities and pagination user-inter
   ```
 
   ::: info Pagination Options
-  There are three different pagination options `default`, `vuePagination`, and `infiniteScroll` Modularity serves.
+  There are three different pagination options `default`, `vuePagination`, and `infiniteScroll` Modularous serves.
   :::
 
   ::: tip Default Pagination
