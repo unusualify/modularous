@@ -1,6 +1,6 @@
 ---
 outline: deep
-sidebarPos: 8
+sidebarPos: 4
 ---
 
 # Chatable

@@ -1,13 +1,13 @@
 ---
-sidebarPos: 0
-sidebarTitle: Module Features Overview
+sidebarPos: 1
+sidebarTitle: Overview
 ---
 
 # Module Features Overview
 
-Modularity module features follow a **triple pattern**: Entity trait + Repository trait + Hydrate. Each layer handles a specific concern.
+Modularous module features follow a **triple pattern**: Entity trait + Repository trait + Hydrate. Each layer handles a specific concern.
 
-See [Features Pattern](/system-reference/features) for the full pattern explanation. For generics (Allowable, Relationships, Files and Media, etc.), see [Generics](/guide/generics/).
+See [Features Pattern](/system-reference/features) for the full pattern explanation. For generics (Allowable, Relationships, Files and Media, etc.), see [Generics](/guide/generics/overview).
 
 | Layer | Location | Purpose |
 |-------|----------|---------|
