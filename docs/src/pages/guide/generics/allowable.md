@@ -1,11 +1,11 @@
 ---
 outline: deep
-sidebarPos: 6
+sidebarPos: 2
 ---
 
 # Allowable
 
-`Modularity` provides an `Allowable` trait that automatically handles role-based access control for arrays and collections. This trait integrates seamlessly with Laravel's authentication system to filter items based on user roles and permissions, ensuring only authorized content is displayed to users.
+`Modularous` provides an `Allowable` trait that automatically handles role-based access control for arrays and collections. This trait integrates seamlessly with Laravel's authentication system to filter items based on user roles and permissions, ensuring only authorized content is displayed to users.
 
 ## How It Works
 
