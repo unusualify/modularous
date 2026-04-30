@@ -29,6 +29,8 @@ use Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig;
 use Unusualify\Modularity\Http\ViewComposers\Urls;
 use Unusualify\Modularity\Logging\ModularityLogHandler;
 use Unusualify\Modularity\Modularity;
+use Unusualify\Modularity\Services\BulkCsv\BulkCsvImportOrchestrator;
+use Unusualify\Modularity\Services\BulkCsv\BulkImportService;
 use Unusualify\Modularity\Services\CacheRelationshipGraph;
 use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
 use Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
@@ -218,6 +220,10 @@ class BaseServiceProvider extends ServiceProvider
         $this->app->singleton('migration.backup', function (Application $app) {
             return new MigrationBackup;
         });
+
+        $this->app->singleton(BulkCsvImportOrchestrator::class);
+
+        $this->app->singleton(BulkImportService::class);
 
         $this->app->singleton('modularity.redirect', function (Application $app) {
             return new RedirectService;
