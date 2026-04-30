@@ -253,7 +253,7 @@ class Module extends NwidartModule
     /**
      * Determine whether the current module route activated.
      */
-    public function isEnabledRoute($route): bool
+    public function isEnabledRoute(string $route): bool
     {
         return $this->moduleActivator->hasStatus($route, true);
     }
@@ -696,7 +696,7 @@ class Module extends NwidartModule
     {
         $user = Auth::guard(Modularity::getAuthGuardName())->user();
 
-        if(! $user) {
+        if (! $user) {
             return false;
         }
 
