@@ -80,14 +80,16 @@ trait IsSingular
 
     public function scopeVisible($query)
     {
-        $query->where(function ($query) {
-            $query->whereNull("{$this->getTable()}.content->published_start_date")
-                ->orWhere("{$this->getTable()}.content->published_start_date", '<=', Carbon::now());
+        $now = Carbon::now();
+
+        $query->where(function ($query) use ($now) {
+            $query->whereNull("{$this->getTable()}.content->publish_start_date")
+                ->orWhere("{$this->getTable()}.content->publish_start_date", '<=', $now);
         });
 
-        $query->where(function ($query) {
-            $query->whereNull("{$this->getTable()}.content->published_end_date")
-                ->orWhere("{$this->getTable()}.content->published_end_date", '>=', Carbon::now());
+        $query->where(function ($query) use ($now) {
+            $query->whereNull("{$this->getTable()}.content->publish_end_date")
+                ->orWhere("{$this->getTable()}.content->publish_end_date", '>=', $now);
         });
 
         return $query;
