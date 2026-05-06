@@ -121,6 +121,10 @@ trait FilesTrait
     private function attachFileSpecsFromRows($object, array $rows, string $role, string $locale): void
     {
         $this->collectPivotSpecsForFileRows($object, $rows, $role, $locale)->each(function ($file) use ($object) {
+            if (! File::withTrashed()->whereKey($file['file_id'])->exists()) {
+                return;
+            }
+
             $object->files()->attach($file['file_id'], Arr::except($file, ['file_id', 'id']));
             $this->mustTouchEloquentModel();
         });
