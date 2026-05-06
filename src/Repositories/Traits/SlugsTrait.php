@@ -13,9 +13,9 @@ trait SlugsTrait
     protected bool $pendingBypassRevisionSlugsTrait = true;
 
     /**
-     * Skip {@see HasSlug}'s automatic {@see setSlugs()} on {@see Model::saved} when the incoming
-     * payload did not include any slug source attribute (or explicit `slugs`), so unrelated updates
-     * do not rewrite the slug table or stringify object payloads.
+     * Skip {@see HasSlug}'s automatic {@see setSlugs()} on {@see Model::saved} when the client posts explicit
+     * per-locale slug payloads (see `$fields['slugs']`) or when {@see prepareFieldsBeforeSaveSlugsTrait} merged
+     * slug input from nested request shapes. Otherwise {@see setSlugs()} may still run from {@see $slugAttributes}.
      */
     public function beforeSaveSlugsTrait(Model $object, array $fields): void
     {
@@ -31,8 +31,12 @@ trait SlugsTrait
      */
     protected function shouldSkipAutomaticSlugSyncOnSave(Model $object, array $fields): bool
     {
-        if (isset($fields['slugs']) && is_array($fields['slugs'])) {
-            return false;
+        if ($this->requestArrayContainsEditorSlugPayload($fields['slugs'] ?? null)) {
+            return true;
+        }
+
+        if ($this->requestArrayContainsEditorSlugPayload($fields['translations']['slugs'] ?? null)) {
+            return true;
         }
 
         foreach ($object->getSlugAttributes() as $attr) {
@@ -49,8 +53,28 @@ trait SlugsTrait
     }
 
     /**
-     * Map per-locale slug attribute strings into {@see afterSaveSlugsTrait}'s `slugs` key.
-     * Runs after {@see TranslationsTrait::prepareFieldsBeforeSaveTranslationsTrait} when repository uses both traits.
+     * @param  mixed  $slugByLocale
+     */
+    protected function requestArrayContainsEditorSlugPayload(mixed $slugByLocale): bool
+    {
+        if (! is_array($slugByLocale)) {
+            return false;
+        }
+
+        foreach (getLocales() as $locale) {
+            if ($this->slugLocalePayloadIsEditorProvided($slugByLocale[$locale] ?? null)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Canonical slug payloads for {@see afterSaveSlugsTrait} live under `$fields['slugs'][locale]`.
+     * Never copy {@see HasSlug::$slugAttributes} (derivation sources) into `$fields['slugs']`; those inform
+     * {@see HasSlug::setSlugs()} on save when no explicit slug input is posted.
+     * Only merges alternate request shapes into `$fields['slugs']` (translations layout / per-locale bucket).
      *
      * @param Model $object
      * @param array $fields
@@ -62,28 +86,92 @@ trait SlugsTrait
             return $fields;
         }
 
-        $slugAttributes = $object->getSlugAttributes();
-
-        if ($slugAttributes === []) {
+        if ($object->getSlugAttributes() === []) {
             return $fields;
         }
 
+        $fields['slugs'] = isset($fields['slugs']) && is_array($fields['slugs']) ? $fields['slugs'] : [];
+
         foreach (getLocales() as $locale) {
-            foreach ($slugAttributes as $attr) {
-                $slugPayload = $fields[$locale][$attr] ?? null;
-                $hasSlugPayload = $slugPayload !== null && $slugPayload !== '';
-                if (is_array($slugPayload)) {
-                    $hasSlugPayload = isset($slugPayload['slug']) && $slugPayload['slug'] !== '';
-                }
-                if ($hasSlugPayload) {
-                    $fields['slugs'][$locale] = $slugPayload;
+            if ($this->slugInputPayloadIsPresent($fields['slugs'][$locale] ?? null)) {
+                continue;
+            }
+
+            $fromTranslationsNested = $fields['translations']['slugs'][$locale] ?? null;
+            $fromLocaleBucket = isset($fields[$locale]) && is_array($fields[$locale])
+                ? ($fields[$locale]['slugs'] ?? null)
+                : null;
+
+            foreach ([$fromTranslationsNested, $fromLocaleBucket] as $candidate) {
+                if ($this->slugInputPayloadIsPresent($candidate)) {
+                    $fields['slugs'][$locale] = $candidate;
 
                     break;
                 }
             }
         }
 
+        if ($this->mergedSlugPayloadRequestsExplicitManagement($fields)) {
+            $object->modularitySkipAutomaticSlugSync = true;
+        }
+
         return $fields;
+    }
+
+    /**
+     * After merge, at least one locale carries slug input the editor controls (non-empty slug and/or explicit `active`).
+     */
+    protected function mergedSlugPayloadRequestsExplicitManagement(array $fields): bool
+    {
+        if (! isset($fields['slugs']) || ! is_array($fields['slugs'])) {
+            return false;
+        }
+
+        foreach (getLocales() as $locale) {
+            if ($this->slugLocalePayloadIsEditorProvided($fields['slugs'][$locale] ?? null)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * True when this locale's slug bucket should run {@see afterSaveSlugsTrait} and should not be treated as empty.
+     */
+    protected function slugLocalePayloadIsEditorProvided(mixed $payload): bool
+    {
+        if ($payload === null || $payload === '') {
+            return false;
+        }
+
+        if (is_array($payload)) {
+            $hasSlug = array_key_exists('slug', $payload)
+                && $payload['slug'] !== null
+                && $payload['slug'] !== '';
+
+            return $hasSlug || array_key_exists('active', $payload);
+        }
+
+        return true;
+    }
+
+    /**
+     * Used when merging alternate request shapes into `$fields['slugs']` (slug text must be non-empty).
+     *
+     * @param mixed $payload
+     */
+    protected function slugInputPayloadIsPresent(mixed $payload): bool
+    {
+        if ($payload === null || $payload === '') {
+            return false;
+        }
+
+        if (is_array($payload)) {
+            return array_key_exists('slug', $payload) && $payload['slug'] !== null && $payload['slug'] !== '';
+        }
+
+        return true;
     }
 
     /**
@@ -95,16 +183,29 @@ trait SlugsTrait
     {
         if (property_exists($this->model, 'slugAttributes')) {
             foreach (getLocales() as $locale) {
-                if (isset($fields['slugs']) && isset($fields['slugs'][$locale]) && ! empty($fields['slugs'][$locale])) {
+                if (
+                    isset($fields['slugs'][$locale])
+                    && $this->slugLocalePayloadIsEditorProvided($fields['slugs'][$locale])
+                ) {
                     $slugValue = $fields['slugs'][$locale];
                     $isArray = is_array($slugValue);
                     $object->disableLocaleSlugs($locale);
                     $currentSlug = [];
-                    $currentSlug['slug'] = $isArray ? $slugValue['slug'] : $slugValue;
+                    $currentSlug['slug'] = $isArray ? ($slugValue['slug'] ?? '') : $slugValue;
                     $currentSlug['locale'] = $locale;
-                    $currentSlug['active'] = ($this->model->isTranslatable() && isset($object->translations) && count($object->translations) > 0 && ! ($isArray && isset($slugValue['active'])))
+                    $slugPayloadCanForceActive =
+                        $this->model->isTranslatable()
+                        && method_exists($object, 'slugPrimaryAttributeIsTranslated')
+                        && $object->slugPrimaryAttributeIsTranslated()
+                        && isset($object->translations)
+                        && count($object->translations) > 0
+                        && ! ($isArray && array_key_exists('active', $slugValue));
+
+                    $currentSlug['active'] = $slugPayloadCanForceActive
                         ? true
-                        : ($isArray && isset($slugValue['active']) ? (bool) $slugValue['active'] : true);
+                        : ($isArray && array_key_exists('active', $slugValue)
+                            ? $object->normalizeSlugActiveRequestValue($slugValue['active'])
+                            : true);
                     $currentSlug = $this->getSlugParameters($object, $fields, $currentSlug);
 
                     $object->updateOrNewSlug($currentSlug);
@@ -152,18 +253,17 @@ trait SlugsTrait
 
         $object->loadMissing('slugs');
 
-        if ($object->slugs === null) {
+        if ($object->slugs === null || $object->slugs->isEmpty()) {
             return $fields;
         }
 
-        foreach ($slugAttributes as $attr) {
-            foreach ($object->slugs as $slug) {
-                if ($slug->active || $object->slugs->where('locale', $slug->locale)->where('active', true)->count() === 0) {
-                    $fields['translations'][$attr][$slug->locale] = [
-                        'slug' => $slug->slug,
-                        'active' => (bool) $slug->active,
-                    ];
-                }
+        foreach ($object->slugs as $slug) {
+            $hasOtherActiveForLocale = $object->slugs->where('locale', $slug->locale)->where('active', true)->isNotEmpty();
+            if ($slug->active || ! $hasOtherActiveForLocale) {
+                $fields['slugs'][$slug->locale] = [
+                    'slug' => $slug->slug,
+                    'active' => (bool) $slug->active,
+                ];
             }
         }
 

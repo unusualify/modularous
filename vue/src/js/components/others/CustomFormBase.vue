@@ -241,6 +241,7 @@
                 <!-- END LIST -->
 
                 <v-input-locale v-else-if="obj.schema.translated"
+                  :translatedProps="obj.schema.translatedProps ?? []"
                   :type="mapTypeToComponent(obj.schema.type)"
                   :attributes="obj.schema"
                   :obj="obj"

@@ -109,6 +109,71 @@ class SlugInputValidationService
     }
 
     /**
+     * Propose a unique slug for admin inputs: normalize like {@see HasSlug}, then validate with {@see validateModelSlug}
+     * (including uniqueness + optional registry checks in CMS). On conflict, tries {@code base-2}, {@code base-3}, …
+     *
+     * @return array{slug: string, normalized: string, suffixed: bool}
+     */
+    public function proposeUniqueSlug(
+        string $moduleName,
+        string $routeName,
+        string $source,
+        ?string $locale = null,
+        bool $localeScoped = true,
+        ?int $excludeId = null,
+    ): array {
+        $modelClass = $this->resolveModelClass($moduleName, $routeName);
+
+        return $this->proposeUniqueSlugForModel($modelClass, $source, $locale, $localeScoped, $excludeId);
+    }
+
+    /**
+     * @param class-string<\Illuminate\Database\Eloquent\Model> $modelClass
+     * @return array{slug: string, normalized: string, suffixed: bool}
+     */
+    public function proposeUniqueSlugForModel(
+        string $modelClass,
+        string $source,
+        ?string $locale = null,
+        bool $localeScoped = true,
+        ?int $excludeId = null,
+    ): array {
+        if (! in_array(HasSlug::class, class_uses_recursive($modelClass), true)) {
+            throw new InvalidArgumentException(__('This entity does not support slug validation.'));
+        }
+
+        /** @var \Illuminate\Database\Eloquent\Model $model */
+        $model = new $modelClass;
+        $locale = $locale ?? app()->getLocale();
+        $trimmedSource = trim($source);
+
+        if ($trimmedSource === '') {
+            throw new InvalidArgumentException(__('Enter a title or source text to generate a slug.'));
+        }
+
+        $base = $this->normalizeSlugForModel($model, $trimmedSource, $locale);
+        if ($base === '') {
+            throw new InvalidArgumentException(__('The slug field is required.'));
+        }
+
+        for ($attempt = 0; $attempt < 500; $attempt++) {
+            $candidate = $attempt === 0 ? $base : $base . '-' . ($attempt + 1);
+            $result = $this->validateModelSlug($modelClass, $candidate, $locale, $localeScoped, $excludeId);
+            if (($result['valid'] ?? false) === true) {
+                $normalized = (string) ($result['normalized'] ?? $candidate);
+
+                return [
+                    'slug' => $normalized,
+                    'normalized' => $normalized,
+                    'suffixed' => $attempt > 0,
+                ];
+            }
+        }
+
+        throw new InvalidArgumentException(__('Could not find an available slug.'));
+    }
+
+    /**
      * Match {@see HasSlug} slug generation for the given locale.
      */
     protected function normalizeSlugForModel($model, string $raw, string $locale): string

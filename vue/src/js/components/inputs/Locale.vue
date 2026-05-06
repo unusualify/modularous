@@ -4,11 +4,14 @@
       <template v-for="language in languages" :key="language.value">
         <component
           v-bind:is="`${type}`"
-          v-bind="attributesPerLang[`${language.value}`]"
+          v-bind="$lodash.omit(attributesPerLang[`${language.value}`], ['class'])"
           :obj="obj"
-          :class="[language.value === currentLocale.value || isCustomForm ? '' : 'd-none']"
-          @update:modelValue="modelUpdated($event, language.value)"
           :localeKey="language.value"
+          :class="[
+            attributesPerLang[`${language.value}`].class ?? '',
+            language.value === currentLocale.value || isCustomForm ? '' : 'd-none'
+          ]"
+          @update:modelValue="modelUpdated($event, language.value)"
           >
           <template v-slot:appendx>
             <v-chip v-if="languages.length > 1" @click="updateLocale(currentLocale)">
@@ -104,6 +107,12 @@ export default {
       default: function () {
         return {}
       }
+    },
+    translatedProps: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   watch: {
@@ -176,6 +185,14 @@ export default {
           attributes.modelValue = this.input[language.value]
         } else if (attributes.default) {
           // attributes.modelValue = attributes.default
+        }
+
+        attributes['originalProps'] = {}
+        if (this.translatedProps.length > 0) {
+          this.translatedProps.forEach(prop => {
+            attributes['originalProps'][prop] = attributes[prop] ?? null
+            attributes[prop] = attributes[prop]?.[language.value] ?? null
+          })
         }
 
         localeAttributes[language.value] = attributes
