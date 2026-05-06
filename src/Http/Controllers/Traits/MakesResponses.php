@@ -96,6 +96,15 @@ trait MakesResponses
         ));
     }
 
+    protected function handleResponse($response)
+    {
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $response = $this->$method($response);
+        }
+
+        return $response;
+    }
+
     /**
      * @param string $message
      * @return JsonResponse
@@ -111,11 +120,11 @@ trait MakesResponses
      */
     protected function respondWithRedirect($redirectUrl, $attributes = [])
     {
-        return Response::json([
+        return $this->handleResponse(Response::json([
             'redirect' => $redirectUrl,
             'redirector' => $redirectUrl,
             ...$attributes,
-        ]);
+        ]));
     }
 
     /**
@@ -134,10 +143,10 @@ trait MakesResponses
      */
     protected function respondWithJson($message, $variant, $attributes = [])
     {
-        return Response::json([
+        return $this->handleResponse(Response::json([
             ...$attributes,
             'message' => $message,
             'variant' => $variant,
-        ]);
+        ]));
     }
 }
