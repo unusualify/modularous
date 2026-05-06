@@ -4,9 +4,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularity\Entities\Enums\RevisionStatus;
 use Unusualify\Modularity\Facades\ValidationException;
 use Unusualify\Modularity\Facades\Modularity;
@@ -43,63 +41,31 @@ trait RevisionsTrait
 
     protected bool $passAfterSavePaymentTrait = false;
 
-    /**
-     * Overrides {@see \Unusualify\Modularity\Repositories\Repository::update} so pending-only workflow
-     * can persist a revision row and skip subject fill/save without changing Repository.
-     *
-     * @param mixed $id
-     * @param array<string, mixed> $fields
-     */
     public function update($id, $fields, $schema = null, $options = [])
     {
         $this->setSchema($schema);
-
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        return DB::transaction(function () use ($id, $fields, $options) {
-            LogBatch::startBatch();
+        if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
+            $object = $this->model->single();
+        } else {
+            $object = $this->model->findOrFail($id);
+        }
 
-            if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
-                $object = $this->model->single();
-            } else {
-                $object = $this->model->findOrFail($id);
-            }
-
+        if ($this->shouldQueuePendingRevisionOnly($object, $fields)) {
             $this->beforeSave($object, $fields);
 
-            $fields = $this->prepareFieldsBeforeSave($object, $fields);
+            $preparedFields = $this->prepareFieldsBeforeSave($object, $fields);
 
-            if (
-                $this->shouldQueuePendingRevisionOnly($object, $fields)
-                && $this->processPendingRevisionSubmission($object, $fields)
-            ) {
-                LogBatch::endBatch();
-
+            if ($this->processPendingRevisionSubmission($object, $preparedFields)) {
                 $object = $this->touchEloquentModel($object->fresh());
-
                 $this->dispatchEvent($object, 'update');
 
                 return true;
             }
+        }
 
-            $object->fill(Arr::except($fields, $this->getReservedFields()));
-
-            if (method_exists($object, 'preventDependentWarming')) {
-                $object = $object->preventDependentWarming(isset($options['preventDependentWarming']) && $options['preventDependentWarming']);
-            }
-
-            $object->save();
-
-            $this->afterSave($object, $fields);
-
-            LogBatch::endBatch();
-
-            $object = $this->touchEloquentModel($object);
-
-            $this->dispatchEvent($object, 'update');
-
-            return $object->wasChanged();
-        }, 3);
+        return parent::update($id, $fields, $schema, $options);
     }
 
     public function beforeSaveRevisionsTrait($object, $fields): void
