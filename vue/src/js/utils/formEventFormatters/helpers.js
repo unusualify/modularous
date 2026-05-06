@@ -91,7 +91,11 @@ export default {
       let dataSet = []
       let notation = __wildcard_change(setPropFormat, handlerValue)
 
-      dataSet = __data_get(handlerSchema, notation, null)
+      if(notation.match(/^(modelValue|model)$/g)){
+        dataSet = handlerValue
+      } else {
+        dataSet = __data_get(handlerSchema, notation, null)
+      }
 
       if(Array.isArray(dataSet) && (dataSet.length > 0)){
         newValue = dataSet.shift()

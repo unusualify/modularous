@@ -10,7 +10,8 @@ import filters from '@/utils/filters'
 import FormEventFormatters from './formEventFormatters'
 
 const nonRunEventsOnCreate = [
-  'formatClearModel'
+  'formatClearModel',
+  'formatUpdate',
 ]
 
 export const setSchemaInputField = (schema, value) => {
@@ -138,7 +139,7 @@ export const handleEvents = ( model, schema, input, valueChanged = false) => {
   }
 }
 
-export const handleMultiFormEvents = ( models, schemas, input, index, preview = []) => {
+export const handleMultiFormEvents = ( models, schemas, input, index, preview = [], valueChanged = true) => {
   const handlerName = input.name
   const handlerSchema = schemas[index][handlerName] ?? _.get(schemas, `[${index}].${handlerName}`)
   const handlerValue = models[index][handlerName] ?? _.get(models, `[${index}].${handlerName}`)
@@ -150,8 +151,13 @@ export const handleMultiFormEvents = ( models, schemas, input, index, preview = 
     events.forEach(event => {
       let args = event.split(':')
       let methodName = args.shift()
+      let runnable = true
 
-      if(typeof FormEventFormatters[methodName] !== 'undefined')
+      if (nonRunEventsOnCreate.includes(methodName) && !valueChanged) {
+        runnable = false
+      }
+
+      if (runnable && typeof FormEventFormatters[methodName] !== 'undefined')
         FormEventFormatters?.[methodName](args, models, schemas, input, index, preview)
 
     })
