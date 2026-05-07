@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'cancel' => 'Cancel',
+    'confirm' => 'Confirm',
+
     'assignment' => [
         'task-to-assignee-by-assigner' => 'to {assigneeName} &mdash; by {assignerName}',
     ],
@@ -53,6 +56,39 @@ return [
         'reject-confirm-body' => 'The pending proposal will be discarded. Published content will stay as it is.',
         'status-pending' => 'Pending approval',
         'status-rejected' => 'Rejected',
+    ],
+
+    'bulk' => [
+        'headline' => 'Import / export',
+        'intro' => 'Upload a CSV file. Dry-run validates only; commit writes in a single transaction.',
+        'columns' => 'Expected columns',
+        'column' => 'Column',
+        'csv_headers' => 'CSV headers',
+        'required' => 'Required',
+        'csv_file' => 'CSV file',
+        'choose_csv' => 'Choose CSV',
+        'dry_run' => 'Dry-run (preview)',
+        'dry_run_ok' => 'Dry-run OK',
+        'dry_run_failed' => 'Dry-run failed',
+        'import_completed' => 'Import completed',
+        'import_failed' => 'Import failed',
+        'request_failed' => 'Request failed',
+        'commit' => 'Commit import',
+        'export' => 'Download export (CSV)',
+        'result' => 'Result',
+        'created' => 'Created',
+        'updated' => 'Updated',
+        'valid_rows' => 'Valid rows',
+        'confirm_title' => 'Commit import?',
+        'confirm_body' => 'All rows must pass validation. The import runs in a single database transaction.',
+        'preview_line' => 'Line',
+        'preview_ok' => 'OK',
+        'preview_action' => 'Action',
+        'preview_locale' => 'Locale',
+        'preview_from' => 'From',
+        'preview_to' => 'To',
+        'preview_errors' => 'Errors',
+        'preview_warnings' => 'Warnings',
     ],
 
     'notifications' => [

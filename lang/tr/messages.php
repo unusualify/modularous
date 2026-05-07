@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'cancel' => 'İptal',
+    'confirm' => 'Onayla',
+
     'revision' => [
         'source-date-tooltip' => 'Bu tarih, geri yüklemenin yapıldığı önceki revizyonun tarihidir (bu sürümden önceki anlık görüntü).',
         'restore-blocked-pending' => 'Başka bir revizyon onay beklerken eski bir sürüme geri dönülemez.',
@@ -43,6 +46,46 @@ return [
     'invalid-company' => 'Şirket detayları doldurulmak zorundadır!',
     'password-saved' => 'Şifre başarıyla kaydedildi!',
     'profile-update-success' => 'Profiliniz başarıyla güncellendi!',
+    'bulk' => [
+        'headline' => 'İçe / dışa aktar',
+        'intro' => 'Bir CSV yükleyin. Önizleme yalnızca doğrular; kayıt tek veritabanı işleminde yazılır.',
+        'columns' => 'Beklenen sütunlar',
+        'column' => 'Sütun',
+        'csv_headers' => 'CSV başlıkları',
+        'required' => 'Zorunlu',
+        'csv_file' => 'CSV dosyası',
+        'choose_csv' => 'CSV seç',
+        'dry_run' => 'Önizleme (dry-run)',
+        'dry_run_ok' => 'Önizleme tamam',
+        'dry_run_failed' => 'Önizleme başarısız',
+        'import_completed' => 'İçe aktarma tamamlandı',
+        'import_failed' => 'İçe aktarma başarısız',
+        'request_failed' => 'İstek başarısız',
+        'commit' => 'İçe aktarımı uygula',
+        'export' => 'Dışa aktar (CSV indir)',
+        'result' => 'Sonuç',
+        'created' => 'Oluşturulan',
+        'updated' => 'Güncellenen',
+        'valid_rows' => 'Geçerli satır',
+        'confirm_title' => 'İçe aktarılsın mı?',
+        'confirm_body' => 'Tüm satırlar doğrulamadan geçmelidir. İçe aktarma tek bir veritabanı işleminde çalışır.',
+        'preview_line' => 'Satır',
+        'preview_ok' => 'Tamam',
+        'preview_action' => 'İşlem',
+        'preview_locale' => 'Dil',
+        'preview_from' => 'Kaynak',
+        'preview_to' => 'Hedef',
+        'preview_errors' => 'Hatalar',
+        'preview_warnings' => 'Uyarılar',
+        'cms' => [
+            'redirect' => [
+                'intro' => 'Zorunlu: dil, kaynak yol, hedef yol. İsteğe bağlı: durum kodu (301–308), etkin (0/1).',
+                'headline' => 'Yönlendirme içe / dışa aktarma',
+                'browser_title' => 'Yönlendirme içe / dışa aktarma',
+            ],
+        ],
+    ],
+
     'notifications' => [
         'mark-read-success' => 'Bildirimler okundu olarak işaretlendi.',
     ],
