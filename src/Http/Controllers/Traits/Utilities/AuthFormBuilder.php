@@ -116,6 +116,7 @@ trait AuthFormBuilder
                 'class' => 'my-2 custom-auth-button',
                 'color' => 'grey-lighten-1',
                 'density' => 'default',
+                'block' => true,
             ],
         ];
     }
