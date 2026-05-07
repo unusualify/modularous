@@ -1,0 +1,180 @@
+<?php
+
+namespace Modules\Cms\Http\Controllers\Traits;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
+use Modules\Cms\Entities\Concerns\HasParentSegment;
+use Unusualify\Modularity\Entities\Traits\HasSlug;
+use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Support\ModularityFlashWarnings;
+
+
+trait ManageCms
+{
+    protected $fieldsPermissions = [];
+
+    /**
+     * @return void
+     */
+    protected function __beforeConstructManageCms($app, $request)
+    {
+        if (modularityConfig('security.enabled', false)) {
+            $this->fieldsPermissions = [
+                'canonical_url' => modularityConfig('security.critical_field_permissions.canonical_url', 'page_edit'),
+                'robots_index' => modularityConfig('security.critical_field_permissions.robots_index', 'page_edit'),
+                'robots_follow' => modularityConfig('security.critical_field_permissions.robots_follow', 'page_edit'),
+            ];
+        }
+    }
+
+    protected function handleResponseManageCms($response)
+    {
+        $repo = $this->repository;
+        $warnings = is_object($repo) && method_exists($repo, 'pullCmsAdminWarnings')
+            ? $repo->pullCmsAdminWarnings()
+            : [];
+
+        if ($warnings === []) {
+            return $response;
+        }
+
+        if ($response instanceof JsonResponse) {
+            $data = $response->getData(true);
+            if (is_array($data)) {
+                $existing = $data['warnings'] ?? [];
+                $data['warnings'] = array_values(array_merge(
+                    is_array($existing) ? $existing : [],
+                    $warnings
+                ));
+                $response->setData($data);
+            }
+
+            return $response;
+        }
+
+        if ($response instanceof RedirectResponse) {
+            ModularityFlashWarnings::merge($warnings);
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * Metadata for minting a signed public preview URL (any submodule with {@see HasParentSegment} + CMS front stack).
+     *
+     * @return array{fetchUrl: string, expiresInMinutes: int}|null
+     */
+    protected function signedPublicPreviewFormPayload($itemId): ?array
+    {
+        if ($itemId === null || $itemId === '') {
+            return null;
+        }
+
+        if (! modularityConfig('cms_routing.signed_preview.enabled', true)) {
+            return null;
+        }
+
+        if (! class_exists(\Modules\Cms\Services\CmsSignedPreviewTargetResolver::class)) {
+            return null;
+        }
+
+        $model = $this->repository->getModel();
+        if (! classHasTrait($model, HasParentSegment::class)) {
+            return null;
+        }
+
+        $target = app(\Modules\Cms\Services\CmsSignedPreviewTargetResolver::class)
+            ->resolve((string) $this->moduleName, (string) $this->routeName);
+        if ($target === null) {
+            return null;
+        }
+
+        $cmsModule = Collection::make(Modularity::allEnabled())->first(
+            fn ($m) => studlyName($m->getName()) === 'Cms'
+        );
+        if ($cmsModule === null) {
+            return null;
+        }
+
+        $mintRouteKey = $cmsModule->panelRouteNamePrefix() . '.signed_public_preview.mint';
+        if (! Route::has($mintRouteKey)) {
+            return null;
+        }
+
+        return [
+            'fetchUrl' => route($mintRouteKey, [
+                'module' => $this->moduleName,
+                'route' => $this->routeName,
+                'id' => $itemId,
+            ], false),
+            'expiresInMinutes' => app(\Modules\Cms\Services\CmsSignedPreviewUrlGenerator::class)->ttlMinutes(),
+        ];
+    }
+
+    /**
+     * Public site URLs for the edited item (per locale), for the admin form permalink row.
+     *
+     * @return list<array{locale: string, path: string, url: string}>|null
+     */
+    protected function localizedPublicPermalinksForFormItem($item): ?array
+    {
+        if (! is_object($item) || $item->getKey() === null) {
+            return null;
+        }
+
+        if (! modularityConfig('cms_routing.public_pages_enabled', true)) {
+            return null;
+        }
+
+        $modelClass = get_class($item);
+
+        if (! classHasTrait($modelClass, HasParentSegment::class)
+          || ! (classHasTrait($modelClass, HasSlug::class) || classHasTrait($modelClass, IsSingular::class))
+        ) {
+            return null;
+        }
+
+        if (! class_exists(\Modules\Cms\Services\CmsUrlRouteRegistry::class)) {
+            return null;
+        }
+
+        $registry = app(\Modules\Cms\Services\CmsUrlRouteRegistry::class);
+
+        if (! $registry->tableReady()) {
+            return null;
+        }
+
+        $byLocale = $registry->publicPagePathsByLocale($item);
+
+        if ($byLocale === []) {
+            return null;
+        }
+
+        $out = [];
+
+        foreach ($byLocale as $locale => $path) {
+            $locale = (string) $locale;
+            $path = (string) $path;
+
+            if (trim($path) === '') {
+                continue;
+            }
+
+            $browserPath = \Modules\Cms\Support\CmsFrontPath::publicBrowserPathForLocaleAndRegistryPath($locale, $path);
+
+            $out[] = [
+                'locale' => $locale,
+                'path' => $browserPath,
+                'url' => \Modules\Cms\Support\CmsPublicSiteUrl::absoluteUrlForPath($browserPath),
+            ];
+        }
+
+        return $out === [] ? null : $out;
+    }
+
+}

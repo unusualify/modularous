@@ -34,4 +34,16 @@ return [
     'email_verification_tokens' => 'um_email_verification_tokens',
     'countries' => 'um_countries',
     'country_translations' => 'um_country_translations',
+
+    'cms_pages' => 'um_cms_pages',
+    'cms_page_translations' => 'um_cms_page_translations',
+    'cms_pages_revisions' => 'um_cms_pages_revisions',
+    'cms_redirects' => 'um_cms_redirects',
+    'cms_site_settings' => 'um_cms_site_settings',
+    'cms_search_indexes' => 'um_cms_search_indexes',
+    'cms_page_slugs' => 'um_cms_page_slugs',
+    'cms_url_routes' => 'um_cms_url_routes',
+    'cms_parent_segment_bindings' => 'um_cms_parent_segment_bindings',
+    'cms_sitemaps' => 'um_cms_sitemaps',
+    'cms_sitemapables' => 'um_cms_sitemapables',
 ];

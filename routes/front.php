@@ -47,6 +47,9 @@ Route::group(['prefix' => 'api'], function () {
     });
 });
 
-Route::get('/', function (Request $request) {
-    return redirect()->route(Route::hasAdmin('login.form'));
-})->name('modularity.home');
+if (!modularityConfig('cms.enabled')) {
+    Route::get('/', function (Request $request) {
+        return redirect()->route(Route::hasAdmin('login.form'));
+    })->name('modularity.home');
+}
+

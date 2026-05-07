@@ -3,7 +3,6 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Unusualify\Modularity\Facades\Modularity;
@@ -175,6 +174,8 @@ trait ManageUtilities
                 'revisions' => $this->routeHasTrait('revisions') && $item ? $item->revisionsArray() : [],
                 'restoreUrl' => Route::has($restoreRouteName) && $itemId ? moduleRoute($this->moduleName, $this->routePrefix, 'restoreRevision', [$itemId]) : null,
                 'previewUrl' => Route::has($previewRouteName) && $itemId ? moduleRoute($this->moduleName, $this->routePrefix, 'preview', [$itemId]) : null,
+                'localizedPublicPermalinks' => $this->localizedPublicPermalinksForFormItem($item),
+                'signedPublicPreview' => $this->signedPublicPreviewFormPayload($itemId),
             ], $formAttributes),
             'endpoints' => [
                 ($isEditing ? 'update' : 'store') => $this->getFormUrl($itemId),

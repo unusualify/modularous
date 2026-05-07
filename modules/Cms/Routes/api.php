@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Modules\Cms\Http\Controllers\API\CmsRoutingMetaController;
+use Modules\Cms\Http\Controllers\API\ParentSegmentController;
+use Modules\Cms\Http\Controllers\API\PromotionController;
+use Modules\Cms\Http\Controllers\RedirectController;
+
+Route::middleware(['api.auth', ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares()])->group(function () {
+    $promotionStepUpMiddleware = (modularityConfig('cms_features.register_middlewares', true) && modularityConfig('security.enabled', false))
+        ? 'modularity.security.step_up:promotion.execute'
+        : null;
+
+    $redirectBulkStepUpMiddleware = (modularityConfig('cms_features.register_middlewares', true) && modularityConfig('security.enabled', false))
+        ? 'modularity.security.step_up:redirect.bulk_import'
+        : null;
+
+    Route::prefix('cms')->name('cms.')->group(function () use ($promotionStepUpMiddleware, $redirectBulkStepUpMiddleware) {
+        Route::get('routing-meta', CmsRoutingMetaController::class)->name('routingMeta');
+
+        Route::apiResource('parent-segments', ParentSegmentController::class)->only(['index', 'store', 'update', 'destroy']);
+
+        $dryRunRoute = Route::post('promotion/dry-run', [PromotionController::class, 'dryRun'])
+            ->name('promotion.dryRun');
+
+        $executeRoute = Route::post('promotion/execute', [PromotionController::class, 'execute'])
+            ->name('promotion.execute');
+
+        if ($promotionStepUpMiddleware) {
+            $dryRunRoute->middleware($promotionStepUpMiddleware);
+            $executeRoute->middleware($promotionStepUpMiddleware);
+        }
+
+        $redirectBulkDryRun = Route::post('redirects/bulk/dry-run', [RedirectController::class, 'bulkSheetDryRun'])
+            ->name('redirects.bulk.dryRun');
+
+        $redirectBulkCommit = Route::post('redirects/bulk/commit', [RedirectController::class, 'bulkSheetCommit'])
+            ->name('redirects.bulk.commit');
+
+        if ($redirectBulkStepUpMiddleware) {
+            $redirectBulkDryRun->middleware($redirectBulkStepUpMiddleware);
+            $redirectBulkCommit->middleware($redirectBulkStepUpMiddleware);
+        }
+
+        Route::get('redirects/bulk/export', [RedirectController::class, 'bulkSheetExport'])
+            ->name('redirects.bulk.export');
+    });
+});
