@@ -53,3 +53,6 @@ export { default as useUser } from './useUser'
 
 export { default as useSvg } from './useSvg'
 export { default as useRandKey } from './useRandKey'
+
+export { default as useStepUpAwareJsonPost } from './useStepUpAwareJsonPost'
+export { useSignedPublicPreview } from './useSignedPublicPreview'

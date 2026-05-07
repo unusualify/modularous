@@ -180,6 +180,21 @@ export const makeFormProps = propsFactory({
     type: Boolean,
     default: false
   },
+  /**
+   * CMS public page permalinks (locale + absolute URL). When set, Form shows links under the title.
+   * @see localizedPublicPermalinksForFormItem in ManageUtilities (HasParentSegment + HasSlug + Page until a CMS submodule trait exists).
+   */
+  localizedPublicPermalinks: {
+    type: Array,
+    default: null,
+  },
+  /**
+   * CMS signed public preview: { fetchUrl, expiresInMinutes } from ManageUtilities (HasParentSegment submodules).
+   */
+  signedPublicPreview: {
+    type: Object,
+    default: null,
+  },
 })
 
 export default function useForm(props, context) {
@@ -633,6 +648,27 @@ export default function useForm(props, context) {
     },
     updatedCustomFormBaseModelValue: (value) => {
       model.value = value
+    },
+    /**
+     * Merge Laravel-style dotted keys into server error map (e.g. translated `field.locale`).
+     * Triggers the same `formErrors` → `setSchemaErrors` path as backend validation.
+     */
+    mergeFormFieldErrors: (partial) => {
+      if (!partial || typeof partial !== 'object') {
+        return
+      }
+      formErrors.value = { ...formErrors.value, ...partial }
+    },
+    clearFormFieldErrorKey: (dotKey) => {
+      if (!dotKey) {
+        return
+      }
+      const next = { ...formErrors.value }
+      delete next[dotKey]
+      formErrors.value = next
+    },
+    resetFieldSchemaErrors: (fieldKey) => {
+      resetSchemaError(fieldKey)
     },
   })
 

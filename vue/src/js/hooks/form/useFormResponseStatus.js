@@ -1,10 +1,13 @@
 // hooks/useFormResponseStatus.js
+import { useI18n } from 'vue-i18n'
 import useStepUpChallenge from './useStepUpChallenge'
 import useResponseAlert from './useResponseAlert'
 import { useAlert } from '@/hooks'
+import { joinFlashWarningMessages } from '@/utils/flashWarnings'
 
 export default function useFormResponseStatus() {
   const { openStepUpChallenge } = useStepUpChallenge()
+  const { t } = useI18n({ useScope: 'global' })
   const { open422MessageAlert } = useResponseAlert()
   const { openAlert } = useAlert()
 
@@ -12,7 +15,7 @@ export default function useFormResponseStatus() {
     428: ({ response, onRetry, setLoading, phase }) => {
       const modalProps = phase === 'success'
         ? { noActions: true }
-        : { title: response?.data?.step_up?.title ?? 'Verification required' }
+        : { title: response?.data?.step_up?.title ?? t('messages.step_up_verification_required', 'Verification required') }
 
       const handled = openStepUpChallenge(response, { onVerified: onRetry, modalProps })
       if (handled && phase === 'success' && typeof setLoading === 'function') {
@@ -25,7 +28,7 @@ export default function useFormResponseStatus() {
       const has422MessageAlert = open422MessageAlert(response)
 
       return {
-        handled: has422MessageAlert,
+        handled: false,
         meta: { has422MessageAlert }
       }
     }
@@ -74,6 +77,12 @@ export default function useFormResponseStatus() {
     } else if (Object.prototype.hasOwnProperty.call(response.data, 'variant')) {
       setServerValid(false)
       openAlert({ message: response.data.message, variant: response.data.variant })
+    }
+
+    // Same semantics as Inertia flash.warnings (single alert, messages joined).
+    const warningText = joinFlashWarningMessages(response.data.warnings)
+    if (warningText) {
+      openAlert({ message: warningText, variant: 'warning' })
     }
 
     if (props.clearOnSaved) {

@@ -5,10 +5,10 @@
         type="h5"
         weight="bold"
         justify="center"
-        :text="stepUp.title || 'Verification required'"
+        :text="stepUp.title || t('messages.step_up_verification_required', 'Verification required')"
       />
       <div class="text-body-2 text-medium-emphasis mt-2">
-        {{ stepUp.description || 'Please enter the verification code sent to your email.' }}
+        {{ stepUp.description || t('messages.step_up_description_default', 'Please enter the verification code sent to your email.') }}
       </div>
     </div>
 
@@ -16,7 +16,7 @@
       :model-value="model"
       :schema="schema"
       :action-url="stepUp.verifyUrl"
-      :button-text="stepUp.buttonText || 'Verify'"
+      :button-text="stepUp.buttonText || t('messages.step_up_verify', 'Verify')"
       :has-submit="true"
       :no-validation="true"
       :no-title="true"
@@ -32,7 +32,7 @@
         :loading="resending"
         @click="resendCode"
       >
-        {{ stepUp.resendText || 'Resend code' }}
+        {{ stepUp.resendText || t('messages.step_up_resend_code', 'Resend code') }}
       </v-btn>
     </div>
   </div>
@@ -40,7 +40,10 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
+
+const { t } = useI18n({ useScope: 'global' })
 
 const props = defineProps({
   stepUp: {
@@ -59,7 +62,7 @@ const schema = computed(() => ({
   [otpField.value]: {
     type: 'otp-input',
     name: otpField.value,
-    label: 'Verification Code',
+    label: t('messages.step_up_otp_label', 'Verification code'),
     default: '',
     length: props.stepUp.otpLength || 6,
     rules: 'required',
@@ -90,12 +93,12 @@ const resendCode = async () => {
     })
 
     window.vm.config.globalProperties.$notif({
-      message: response?.data?.message ?? 'A new verification code has been sent.',
+      message: response?.data?.message ?? t('messages.step_up_resend_success', 'A new verification code has been sent.'),
       variant: response?.data?.variant ?? 'success'
     })
   } catch (error) {
     window.vm.config.globalProperties.$notif({
-      message: error?.response?.data?.message ?? 'The verification code could not be resent.',
+      message: error?.response?.data?.message ?? t('messages.step_up_resend_failed', 'The verification code could not be resent.'),
       variant: error?.response?.data?.variant ?? 'warning'
     })
   } finally {

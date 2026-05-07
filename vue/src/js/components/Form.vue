@@ -22,6 +22,7 @@
         scrollable ? 'flex-grow-0' : '',
         'd-flex flex-row pb-2'
       ]">
+        <div class="d-flex flex-column flex-1-1-100 min-width-0">
         <ue-title v-if="!noTitle && title"
           padding="a-0"
           align="start"
@@ -84,6 +85,13 @@
             </div>
           </template>
         </ue-title>
+        <FormPublicLinks
+          :localized-public-permalinks="localizedPublicPermalinks"
+          :languages="languages"
+          :signed-public-preview="signedPublicPreview"
+          :is-editing="isEditing"
+        />
+        </div>
         <div :class="[
           'flex-1-0 d-flex align-start ga-2',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
@@ -296,7 +304,7 @@
                   :form-actions-active="formActionsActive"
                   @action-complete="$emit('actionComplete', $event)"
                 >
-                 
+
                   <template #right-top>
                     <slot name="right.top" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                   </template>
@@ -420,13 +428,13 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useForm, makeFormProps } from '@/hooks/form'
 import { cloneDeep, omit, isObject } from 'lodash-es'
-import { getActiveContentLocale } from '@/utils/locale'
 import FormActions from './form/FormActions.vue'
+import FormPublicLinks from './form/FormPublicLinks.vue'
 import FormEvents from './form/FormEvents.vue'
 import FormSecondaryInputs from './form/FormSecondaryInputs.vue'
 
@@ -504,6 +512,7 @@ export default {
     FormActions,
     FormEvents,
     FormSecondaryInputs,
+    FormPublicLinks,
     AdditionalSectionContent,
   },
   emits: [
@@ -522,7 +531,10 @@ export default {
       // use function syntax so that we can access `this`
       return {
         manualValidation: computed(() => this.manualValidation),
-        submitForm: computed(() => this.submit)
+        submitForm: computed(() => this.submit),
+        mergeFormFieldErrors: computed(() => this.mergeFormFieldErrors),
+        clearFormFieldErrorKey: computed(() => this.clearFormFieldErrorKey),
+        resetFieldSchemaErrors: computed(() => this.resetFieldSchemaErrors),
       }
   },
   setup(props, context) {
@@ -637,97 +649,14 @@ export default {
       || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
     )
 
-    const previewDialogActive = ref(false)
-
-    // -------------------------------------------------------------------------
-    // Responsive viewport preview
-    // -------------------------------------------------------------------------
-    const VIEWPORTS = [
-      { key: 'desktop', icon: 'mdi-monitor',   label: 'Desktop (1278px)', width: 1278, iconSize: 'default' },
-      { key: 'laptop',  icon: 'mdi-laptop',    label: 'Laptop (1024px)',  width: 1024, iconSize: 'default' },
-      { key: 'tablet',  icon: 'mdi-tablet',    label: 'Tablet (768px)',   width: 768,  iconSize: 'small'   },
-      { key: 'mobile',  icon: 'mdi-cellphone', label: 'Mobile (320px)',   width: 320,  iconSize: 'x-small' },
-    ]
-
-    const previewViewport = ref('desktop')
-
-    const previewFrameStyle = computed(() => {
-      const vp = VIEWPORTS.find(v => v.key === previewViewport.value) ?? VIEWPORTS[0]
-      return {
-        maxWidth: `${vp.width}px`,
-        width: '100%',
-        margin: '32px auto',
-        borderRadius: '8px',
-        backgroundColor: '#ffffff',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
-        padding: '24px',
-        transition: 'max-width 0.3s ease',
-        minHeight: 'calc(100vh - 112px)',
-      }
-    })
-
-    const buildPreviewFields = (data) => {
-      const fields = []
-      const schema = useFormInstance.chunkedRawSchema.value
-      if (!schema || !data) return fields
-
-      const activeLocale = getActiveContentLocale(store)
-
-      for (const key in schema) {
-        const input = schema[key]
-        if (input.type === 'switch' || input.noSubmit || input.isEvent) continue
-
-        const label = input.label || input.name || key
-        let value = data[key]
-
-        if (input.type === 'select' && input.items && value != null) {
-          const items = input.items
-          if (Array.isArray(value)) {
-            value = value.map(v => {
-              const item = items.find(i => i.value === v || i.id === v)
-              return item ? (item.text || item.name || item.title || v) : v
-            }).join(', ')
-          } else {
-            const item = items.find(i => i.value === value || i.id === value)
-            value = item ? (item.text || item.name || item.title || value) : value
-          }
-        } else if (Array.isArray(value)) {
-          value = value.join(', ')
-        } else if (isObject(value)) {
-          value = activeLocale && value[activeLocale] ? value[activeLocale] : Object.values(value).filter(Boolean).join(', ')
-        }
-
-        fields.push({ name: key, label, value: value ?? '' })
-      }
-      return fields
-    }
-
-    const previewFields = computed(() => buildPreviewFields(useFormInstance.model.value))
-    const restorePreviewFields = computed(() => buildPreviewFields(useFormInstance.restorePreviewData.value))
-
-    const handlePreview = () => {
-      if (props.previewUrl) {
-        window.open(props.previewUrl, '_blank')
-      } else {
-        previewViewport.value = 'desktop'
-        previewDialogActive.value = true
-      }
-    }
-
     return {
       ...useFormInstance,
+      t,
       formClasses,
       formSlots,
       titleOptions,
       titleSerialized,
       hasRightSlotContent,
-      previewDialogActive,
-      previewFields,
-      restorePreviewFields,
-      handlePreview,
-      VIEWPORTS,
-      previewViewport,
-      previewFrameStyle,
     }
   }
 }
