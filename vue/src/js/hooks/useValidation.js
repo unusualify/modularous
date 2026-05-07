@@ -24,7 +24,13 @@ export default function useValidation (props) {
 
   const ruleMethods = reactive({
     minRule: (l, msg) => v => (!!v && (typeof v === 'string' ? v.trim().length : v.length) >= l) || msg || `${t('validation.min_label')} ${l} ${Array.isArray(v) ? t('validation.selections') : t('validation.characters')}`,
-    maxRule: (l, msg) => v => (!v || v.length <= l) || msg || `${t('validation.max_label')} ${l} ${Array.isArray(v) ? t('validation.selections') : t('validation.characters')}`,
+    maxRule: (l, msg) => v => {
+      if(Array.isArray(v)) {
+        return v.length <= l || msg || t('validation.max.array', { max: l });
+      }
+
+      return !v || v.length <= l || msg || t('validation.max.string', { max: l });
+    },
     nameRule: (msg) => v => {
       if (!v) return true;
       const trimmed = v.trim().replace(/\s+/g, ' ');
@@ -116,25 +122,25 @@ export default function useValidation (props) {
     requiredRule: (type ='classic',  minOrExact = 1, max, msg) => v => {
       switch(type) {
         case 'classic':
-          return !!v || msg || t('validation.required_simple');
+          return !!v || msg || t('validation.required', { attribute: '' });
         case 'array':
         case 'object':
+          minOrExact = _.toNumber(minOrExact)
           max = _.toNumber(max)
           max = _.isNaN(max) ? -1 : max;
+
           let $msg = ((minOrExact == max || max < 0)
-            ? t('Requires exactly {numberOfItems} items', { numberOfItems: minOrExact })
-            : t('Requires at least {numberOfItems} items', { numberOfItems: minOrExact }) + ((max != Infinity  && max != undefined) ? ', and maximum of: {max}' : ''));
-            // : t('Requires at least {numberOfItems}${((max != Infinity  && max != undefined) ? \', and maximum of:\' + max : \'\')}) elements', { numberOfItems: minOrExact, max: max }));
-          // let $msg = ((max != Infinity) ? ', maximum:' + max : '');
+            ? t('validation.required_exact', minOrExact > 1 ? { count: minOrExact } : 1)
+            : t('validation.required_at_least', minOrExact > 1 ? { count: minOrExact } : 1) + ((max != Infinity  && max != undefined) ? ' ' + t('validation.required_maximum', { count: max }) : ''));
+
           if(Array.isArray(v)) {
             return v.length >= minOrExact && ( max < 0 || v.length <= max) || msg || $msg;
-          }
-          else if(isObject(v)) {
+          } else if(isObject(v)) {
             return  Object.keys(v).length >= minOrExact &&  (max < 0 || Object.keys(v).length <= max) || msg || $msg;
           }
 
           if(v == null) {
-            return msg || t('validation.must_select_at_least_one_item');
+            return msg || t('validation.required');
           }
 
           return 'dev error: nsupported value type';
