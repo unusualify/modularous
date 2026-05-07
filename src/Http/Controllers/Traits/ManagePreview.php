@@ -3,21 +3,23 @@
 namespace Unusualify\Modularity\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Modules\Cms\Http\Controllers\Traits\ResolvesPublicPresentationView;
 use Unusualify\Modularity\Services\MessageStage;
 
 trait ManagePreview
 {
+    use ResolvesPublicPresentationView;
+
     protected function addMiddlewarePermissionsManagePreview()
     {
-        if($this->module && $this->routeHasTrait('revisions')) {
+        if ($this->module && $this->routeHasTrait('revisions')) {
             $permissions = [
-                'REVISION_RESTORE' => [ 'only' => ['restoreRevision']],
-                'REVISION_APPROVE' => [ 'only' => ['approveRevision']],
-                'REVISION_REJECT' => [ 'only' => ['rejectRevision']],
+                'REVISION_RESTORE' => ['only' => ['restoreRevision']],
+                'REVISION_APPROVE' => ['only' => ['approveRevision']],
+                'REVISION_REJECT' => ['only' => ['rejectRevision']],
             ];
 
             foreach ($permissions as $permission => $options) {
@@ -25,13 +27,33 @@ trait ManagePreview
             }
         }
     }
+
     public function previewData($item)
     {
         return [];
     }
 
+    /**
+     * Apply locale before {@see preview} / {@see previewForRevision} so hydration and Blade use the same language.
+     * Query: activeLanguage (preferred) or locale.
+     */
+    protected function applyPreviewRequestLocale(): void
+    {
+        if ($this->request->filled('activeLanguage')) {
+            App::setLocale((string) $this->request->get('activeLanguage'));
+
+            return;
+        }
+
+        if ($this->request->filled('locale')) {
+            App::setLocale((string) $this->request->get('locale'));
+        }
+    }
+
     public function showView($id)
     {
+        $this->applyPreviewRequestLocale();
+
         if ($this->request->has('revisionId')) {
             $item = $this->repository->previewForRevision($id, $this->request->get('revisionId'), $this->formSchema);
         } else {
@@ -39,13 +61,7 @@ trait ManagePreview
             $item = $this->repository->preview($id, $formRequest->all());
         }
 
-        if ($this->request->has('activeLanguage')) {
-            App::setLocale($this->request->get('activeLanguage'));
-        }
-
-        $previewView = $this->previewView ?? (Config::get('modularity.frontend.views_path', 'site') . '.' . Str::singular(
-            $this->moduleName
-        ));
+        $previewView = $this->presentationViewName();
 
         return View::exists($previewView) ? View::make(
             $previewView,
@@ -59,7 +75,7 @@ trait ManagePreview
 
     public function listRevisions($id)
     {
-        if(! $this->routeHasTrait('revisions')) {
+        if (! $this->routeHasTrait('revisions')) {
             return $this->respondWithError(__('Revisions are not enabled for this route.'));
         }
 
@@ -150,5 +166,4 @@ trait ManagePreview
             'form_fields' => $this->repository->getFormFields($item, $this->getPreviousRouteSchema()),
         ]);
     }
-
 }
