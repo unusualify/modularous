@@ -12,9 +12,21 @@ trait HasSlug
 {
     private $nb_variation_slug = 3;
 
+    /**
+     * When true, {@see saved} skips {@see setSlugs()} (e.g. explicit `slugs` payload via repository).
+     * Not persisted. Set on each repository {@see beforeSaveSlugsTrait} run; intentionally left sticky through
+     * subsequent {@see saved} fires in the same request (e.g. translation saves), so slug rows are not rebuilt
+     * from {@see slugAttributes} after the editor-controlled payload was processed.
+     */
+    public bool $modularitySkipAutomaticSlugSync = false;
+
     protected static function bootHasSlug()
     {
         static::saved(function ($model) {
+            if ($model->modularitySkipAutomaticSlugSync) {
+                return;
+            }
+
             $model->setSlugs();
         });
 
@@ -129,24 +141,32 @@ trait HasSlug
     {
         $slugParams = $this->normalizeSlugParamsPayload($slugParams);
 
+        $targetActive = array_key_exists('active', $slugParams)
+            ? $this->normalizeSlugActiveRequestValue($slugParams['active'])
+            : true;
+        $slugParams['active'] = $targetActive;
+
         if (in_array($slugParams['locale'], modularityConfig('slug_utf8_languages', []))) {
             $slugParams['slug'] = $this->getUtf8Slug($slugParams['slug']);
         } else {
             $slugParams['slug'] = Str::slug($slugParams['slug']);
         }
 
-        // active old slug if already existing or create a new one
         if (
             (($oldSlug = $this->getExistingSlug($slugParams)) != null)
             && ($restoring ? $slugParams['slug'] === $this->suffixSlugIfExisting($slugParams) : true)
         ) {
-            if (! $oldSlug->active && ($slugParams['active'] ?? false)) {
-                $this->getSlugModelClass()::where('id', $oldSlug->id)->update(['active' => 1]);
-                $this->disableLocaleSlugs($oldSlug->locale, $oldSlug->id);
+            // Always persist requested `active` for an existing slug row (previously only re-activation ran).
+            $this->getSlugModelClass()::where('id', $oldSlug->id)->update(['active' => $targetActive ? 1 : 0]);
+
+            if ($targetActive) {
+                $this->disableLocaleSlugs($slugParams['locale'], $oldSlug->id);
             }
-        } else {
-            $this->addOneSlug($slugParams);
+
+            return;
         }
+
+        $this->addOneSlug($slugParams);
     }
 
     /**
@@ -284,10 +304,43 @@ trait HasSlug
     }
 
     /**
+     * Coerce slug `active` from request / JSON / model (bool, 0/1, `"false"` string, etc.).
+     * Note: `(bool) 'false'` is true in PHP; this avoids that trap.
+     */
+    public function normalizeSlugActiveRequestValue(mixed $value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return ((int) $value) !== 0;
+        }
+
+        if ($value === null || $value === '') {
+            return false;
+        }
+
+        if (is_string($value)) {
+            $v = strtolower(trim($value));
+            if (in_array($v, ['0', 'false', 'off', 'no', 'inactive', 'disabled'], true)) {
+                return false;
+            }
+            if (in_array($v, ['1', 'true', 'on', 'yes', 'active', 'enabled'], true)) {
+                return true;
+            }
+        }
+
+        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        return $filtered ?? (bool) $value;
+    }
+
+    /**
      * Translation / model attribute used as slug source may be a legacy string or
      * `['slug' => string, 'active' => bool]` from the admin form.
      *
-     * @param  mixed  $value
+     * @param mixed $value
      * @return array{slug: string, active: bool}
      */
     protected function normalizeSlugSourceValue($value): array
@@ -297,8 +350,18 @@ trait HasSlug
 
             return [
                 'slug' => $slug === null || $slug === '' ? '' : (string) $slug,
-                'active' => ! array_key_exists('active', $value) ? true : (bool) $value['active'],
+                'active' => ! array_key_exists('active', $value) ? true : $this->normalizeSlugActiveRequestValue($value['active']),
             ];
+        }
+
+        if (is_string($value)) {
+            $trim = trim($value);
+            if ($trim !== '' && ($trim[0] === '{' || $trim[0] === '[')) {
+                $decoded = json_decode($value, true);
+                if (is_array($decoded) && array_key_exists('slug', $decoded)) {
+                    return $this->normalizeSlugSourceValue($decoded);
+                }
+            }
         }
 
         if ($value === null || $value === '') {
@@ -314,7 +377,7 @@ trait HasSlug
     /**
      * Defensive unwrap when {@see updateOrNewSlug} receives a nested slug payload.
      *
-     * @param  array<string, mixed>  $slugParams
+     * @param array<string, mixed> $slugParams
      * @return array<string, mixed>
      */
     protected function normalizeSlugParamsPayload(array $slugParams): array
@@ -323,11 +386,42 @@ trait HasSlug
             $nested = $slugParams['slug'];
             $slugParams['slug'] = $nested['slug'] === null || $nested['slug'] === '' ? '' : (string) $nested['slug'];
             if (array_key_exists('active', $nested)) {
-                $slugParams['active'] = (bool) $nested['active'];
+                $slugParams['active'] = $this->normalizeSlugActiveRequestValue($nested['active']);
             }
         }
 
         return $slugParams;
+    }
+
+    /**
+     * Whether `$attribute` is stored on translation rows (Astrotomic) rather than on the owner model.
+     */
+    public function slugAttributeIsTranslated(string $attribute): bool
+    {
+        if ($attribute === '') {
+            return false;
+        }
+
+        if (! method_exists($this, 'getTranslatedAttributes')) {
+            return false;
+        }
+
+        return in_array($attribute, $this->getTranslatedAttributes(), true);
+    }
+
+    /**
+     * Whether the primary slug source column ({@see $slugAttributes} first entry) lives on translation rows.
+     */
+    public function slugPrimaryAttributeIsTranslated(): bool
+    {
+        $slugAttributes = $this->getSlugAttributes();
+        $primary = $slugAttributes[0] ?? null;
+
+        if ($primary === null) {
+            return false;
+        }
+
+        return $this->slugAttributeIsTranslated($primary);
     }
 
     /**
@@ -336,7 +430,15 @@ trait HasSlug
      */
     public function getSlugParams($locale = null)
     {
-        if (count(getLocales()) === 1 || ! (isset($this->translations) && count($this->translations) > 0)) {
+        // Use translation rows only when the slug source attribute is translated; otherwise a model can be
+        // HasTranslation while slug lives on the parent (e.g. Page.slug_segment) and iterating translations would
+        // repeat the same parent value once per locale and blur owner vs translation responsibility.
+        if (
+            count(getLocales()) === 1
+            || ! isset($this->translations)
+            || count($this->translations) < 1
+            || ! $this->slugPrimaryAttributeIsTranslated()
+        ) {
             $slugParams = $this->getSingleSlugParams($locale);
             if ($slugParams != null && ! empty($slugParams)) {
                 return $slugParams;
@@ -384,6 +486,12 @@ trait HasSlug
         return $locale == null ? $slugParams : null;
     }
 
+    /**
+     * Model properties used to derive URL slugs (first entry is the main source; the rest are dependency columns
+     * merged into slug rows). Not the canonical `slugs` request/editor payload from the slug input.
+     *
+     * @return list<string>
+     */
     public function getSlugAttributes()
     {
         return $this->slugAttributes ?? [];
