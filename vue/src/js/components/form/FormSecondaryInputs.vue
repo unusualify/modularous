@@ -35,6 +35,7 @@ const schema = computed(() => {
     inputField.col = {
       cols: 12,
     }
+    inputField.hideDetails = 'auto'
     acc[key] = inputField
     return acc
   }, {})
