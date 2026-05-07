@@ -129,10 +129,12 @@ class TranslationsTraitTest extends RepositoryTestCase
         $a = $this->repository->create([
             'name' => 'A',
             'title' => ['en' => 'Hello', 'tr' => 'Merhaba'],
+            'active' => ['en' => true, 'tr' => true],
         ]);
         $b = $this->repository->create([
             'name' => 'B',
             'title' => ['en' => 'World', 'tr' => 'Dünya'],
+            'active' => ['en' => true, 'tr' => true],
         ]);
 
         // Insert translations

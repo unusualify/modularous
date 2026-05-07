@@ -31,7 +31,7 @@ class HasRevisionsTest extends ModelTestCase
             $table->id();
             $table->unsignedBigInteger('test_hr_article_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('source_revision_id')->nullable();
+            $table->unsignedBigInteger('source_id')->nullable();
             $table->text('payload')->nullable();
             $table->timestamps();
         });
@@ -116,6 +116,8 @@ class HasRevisionsTest extends ModelTestCase
         $this->assertArrayHasKey('datetime', $array[0]);
         $this->assertArrayHasKey('label', $array[0]);
         $this->assertArrayHasKey('source_label', $array[0]);
+        $this->assertArrayHasKey('is_restored', $array[0]);
+        $this->assertArrayHasKey('source_datetime', $array[0]);
     }
 
     public function test_revisions_array_assigns_version_labels_newest_first(): void
@@ -158,12 +160,14 @@ class HasRevisionsTest extends ModelTestCase
         TestHrArticleRevision::create([
             'test_hr_article_id' => $article->id,
             'payload' => json_encode(['title' => 'Original']),
-            'source_revision_id' => null,
+            'source_id' => null,
         ]);
 
         $array = $article->revisionsArray();
 
         $this->assertNull($array[0]['source_label']);
+        $this->assertFalse($array[0]['is_restored']);
+        $this->assertNull($array[0]['source_datetime']);
     }
 
     public function test_revisions_array_source_label_reflects_source_version(): void
@@ -177,11 +181,11 @@ class HasRevisionsTest extends ModelTestCase
             'updated_at' => now()->subMinutes(10),
         ]);
 
-        // V2 is a restore of V1, so source_revision_id = V1's id
+        // V2 is a restore of V1, so source_id = V1's id
         TestHrArticleRevision::create([
             'test_hr_article_id' => $article->id,
             'payload' => json_encode(['title' => 'Restored from V1']),
-            'source_revision_id' => $v1->id,
+            'source_id' => $v1->id,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -190,8 +194,11 @@ class HasRevisionsTest extends ModelTestCase
 
         // V2 (index 0, newest) should have source_label 'V1'
         $this->assertEquals('V1', $array[0]['source_label']);
+        $this->assertTrue($array[0]['is_restored']);
+        $this->assertNotNull($array[0]['source_datetime']);
         // V1 (index 1, oldest) should have no source_label
         $this->assertNull($array[1]['source_label']);
+        $this->assertFalse($array[1]['is_restored']);
     }
 
     // -------------------------------------------------------------------------
@@ -294,7 +301,9 @@ class TestHrArticle extends Model
     use HasRevisions;
 
     protected $table = 'test_hr_articles';
+
     protected $fillable = ['title'];
+
     protected $revisionModel = TestHrArticleRevision::class;
 }
 
@@ -307,5 +316,6 @@ class TestHrArticleRevision extends Revision
     // the parent Revision constructor's foreign-key auto-append (which fires
     // only when count($fillable) == 3).
     protected $fillable = [];
+
     protected $guarded = [];
 }

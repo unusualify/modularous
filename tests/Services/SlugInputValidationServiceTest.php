@@ -17,4 +17,12 @@ class SlugInputValidationServiceTest extends TestCase
         $this->assertFalse($result['valid']);
         $this->assertNotEmpty($result['message']);
     }
+
+    public function test_propose_rejects_model_without_has_slug_trait(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $service = app(SlugInputValidationService::class);
+        $service->proposeUniqueSlugForModel(TestModel::class, 'hello-world', 'en', true, null);
+    }
 }
