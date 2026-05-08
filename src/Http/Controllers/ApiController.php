@@ -7,15 +7,15 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiAuthentication;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiFiltering;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiPagination;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiRateLimiting;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiRelationships;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiResponses;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiSorting;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiValidation;
-use Unusualify\Modularity\Http\Controllers\Traits\ApiVersioning;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiAuthentication;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiFiltering;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiPagination;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiRateLimiting;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiRelationships;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiResponses;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiSorting;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiValidation;
+use Unusualify\Modularity\Http\Controllers\Traits\API\ApiVersioning;
 
 abstract class ApiController extends CoreController
 {

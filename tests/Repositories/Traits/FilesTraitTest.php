@@ -129,8 +129,11 @@ class FilesTraitTest extends RepositoryTestCase
         // Act: update triggers FilesTrait afterSave to sync pivot and attach
         $this->repository->update($model->id, $fields, $schema);
 
-        // Assert: pivot attached
-        $this->assertTrue($model->fresh()->files->contains('id', $file->id));
+        // Assert: pivot matches payload exactly (previous attachment for file-2 removed)
+        $fresh = $model->fresh();
+        $this->assertTrue($fresh->files->contains('id', $file->id));
+        $this->assertFalse($fresh->files->contains('id', $file2->id));
+        $this->assertCount(1, $fresh->files);
     }
 
     public function test_detach_files_when_payload_omits_role_after_previous_attachment()
@@ -334,6 +337,39 @@ class FilesTraitTest extends RepositoryTestCase
         $this->assertArrayHasKey('tr', $fields['file-2']);
         $this->assertCount(0, $fields['file-2']['en']);
         $this->assertCount(0, $fields['file-2']['tr']);
+    }
+
+    public function test_hydrate_files_trait_keeps_persisted_files_when_file_role_missing_from_payload()
+    {
+        $file = LibraryFile::create([
+            'uuid' => 'uploads/folder/file-persist.pdf',
+            'filename' => 'file-persist.pdf',
+            'size' => 100,
+        ]);
+
+        $model = $this->repository->create(['name' => 'Has File']);
+        $model->files()->attach($file->id, [
+            'role' => 'file-1',
+            'locale' => config('app.locale', 'en'),
+        ]);
+
+        $schema = [
+            'file-1' => [
+                'type' => 'input-file',
+                'name' => 'file-1',
+                'translated' => false,
+            ],
+        ];
+
+        $this->repository->setColumns($this->repository->chunkInputs($schema));
+
+        $hydrated = $this->repository->hydrate($model->fresh(), [
+            'name' => 'preview-without-file-inputs',
+        ]);
+
+        $this->assertTrue($hydrated->relationLoaded('files'));
+        $this->assertSame(1, $hydrated->files->count());
+        $this->assertTrue($hydrated->files->contains('id', $file->id));
     }
 }
 

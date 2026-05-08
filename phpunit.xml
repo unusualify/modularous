@@ -14,6 +14,7 @@
         <exclude>tests/Console</exclude>
         <!-- <exclude>tests/Facades</exclude> -->
         <exclude>tests/Generated</exclude>
+        <exclude>tests/Docs</exclude>
     </testsuite>
   </testsuites>
   <php>

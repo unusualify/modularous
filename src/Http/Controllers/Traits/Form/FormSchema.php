@@ -18,6 +18,20 @@ trait FormSchema
     use Allowable;
 
     /**
+     * Relation count to eager load for the form view.
+     *
+     * @var array
+     */
+    protected $formWithCount = [];
+
+    /**
+     * formSchema
+     *
+     * @var array
+     */
+    protected $formSchema;
+
+    /**
      * @var array
      */
     protected $inputTypes = [];
@@ -96,8 +110,6 @@ trait FormSchema
      */
     protected function getSchemaInput($input, $inputs = [])
     {
-        // $default_input = collect(Config::get(modularityBaseKey() . '.default_input'))->mapWithKeys(function($v, $k){return is_numeric($k) ? [$v => true] : [$k => $v];});
-        // $default_input = $this->configureInput(array_to_object(Config::get(modularityBaseKey() . '.default_input')));
         $default_input = (array) Config::get(modularityBaseKey() . '.default_input');
         $input = transform_closure_values($input, forceArray: true);
 
@@ -123,12 +135,6 @@ trait FormSchema
         }
 
         return (bool) $name ? [$name => $_input] : [];
-
-        return isset($name)
-            // ? [ $input->name => $default_input->union( $this->configureInput($input) ) ]
-            // ? [ $input['name'] => array_merge_recursive_preserve( $default_input, $this->configureInput($input) ) ]
-            ? [$hydrated['name'] => $this->configureInput(array_merge_recursive_preserve($default_input, $hydrated))]
-            : (in_array($type, ['title', 'divider']) ? [$type . '_' . uniqid() => $hydrated] : []);
     }
 
     /**
@@ -784,11 +790,11 @@ trait FormSchema
                 }
 
                 $methodName = array_shift($args);
-                // [$methodName, $formattedInput, $parentColumnName] = array_pad(explode(':',$pattern), 3, null);
+                $targetInputName = array_shift($args);
                 $changers = [];
+
                 switch ($methodName) {
                     case 'permalinkPrefix': // 'permalinkPrefix:slug',
-                        $inputToFormat = array_shift($args);
                         if (isset($input['repository'])) {
                             foreach ($this->getConfigFieldsByRoute('inputs') as $key => $_input) {
                                 if (isset($_input->ext) && in_array(explode(':', $_input->ext)[0], ['permalink'])) {
@@ -796,18 +802,16 @@ trait FormSchema
                                 }
                             }
                         } else {
-                            $events[] = 'formatPermalinkPrefix:' . $inputToFormat . ':' . $this->getSnakeCase($this->getRouteName());
+                            $events[] = 'formatPermalinkPrefix:' . $targetInputName . ':' . $this->getSnakeCase($this->getRouteName());
                         }
 
                         break;
                     case 'lock': // 'lock:url:url'
-                        $inputToFormat = array_shift($args);
                         $parentColumnName = array_shift($args);
-                        $events[] = "formatLock:{$inputToFormat}:{$parentColumnName}";
+                        $events[] = "formatLock:{$targetInputName}:{$parentColumnName}";
 
                         break;
                     case 'permalink': // 'permalink:slug',
-                        $inputToFormat = array_shift($args);
                         $permalinkPrefix = getHost() . '/';
                         $permalinkPrefixFormat = getHost() . '/';
                         foreach ($inputs as $_input) {
@@ -840,11 +844,10 @@ trait FormSchema
                             'readonly' => true,
                         ]);
                         unset($input['ext']);
-                        $events[] = 'formatPermalink:' . $inputToFormat;
+                        $events[] = 'formatPermalink:' . $targetInputName;
 
                         break;
                     case 'filter': // 'filter:{target_input_name}:{target_prop_name}:{followed_key_name}'
-                        $inputToFormat = array_shift($args);
                         $targetPropName = array_shift($args) ?? 'inputs';
 
                         $filterEndpoint = $input['filterEndpoint'] ?? null;
@@ -878,81 +881,78 @@ trait FormSchema
                                 $input['filterEndpoint'] = $filterEndpoint;
                             }
 
-                            $events[] = 'formatFilter:' . implode(':', [$inputToFormat, $targetPropName, ...$args]);
+                            $events[] = 'formatFilter:' . implode(':', [$targetInputName, $targetPropName, ...$args]);
                         }
 
                         break;
                     case 'preview': //
-                        $inputToFormat = array_shift($args) ?? '';
                         $previewFieldPatterns = array_shift($args) ?? null;
 
                         if ($previewFieldPatterns) {
                             $previewFieldPatterns = ':' . $previewFieldPatterns;
                         }
 
-                        if ($inputToFormat) {
-                            $events[] = "formatPreview:{$inputToFormat}{$previewFieldPatterns}";
+                        if ($targetInputName) {
+                            $events[] = "formatPreview:{$targetInputName}{$previewFieldPatterns}";
                         }
 
                         break;
                     case 'set': //
-                        $inputToFormat = array_shift($args) ?? '';
-                        $inputPropToFormat = array_shift($args) ?? null;
-                        $setProp = array_shift($args) ?? "items.*.{$inputPropToFormat}";
+                    case 'update': // same args as set; frontend runs formatUpdate only when valueChanged (not on initial model hydrate)
+                        $targetPropName = array_shift($args) ?? null;
+                        $setProp = array_shift($args) ?? "items.*.{$targetPropName}";
                         $modelNotation = array_shift($args) ?? null;
                         $changers = [
                             'wrap_location' => [
                                 'default',
-                                $inputPropToFormat, // schema
+                                $targetPropName, // schema
                             ],
                         ];
-                        if ($inputToFormat && $inputPropToFormat) {
-                            $events[] = "formatSet:{$inputToFormat}:{$inputPropToFormat}:{$setProp}:{$modelNotation}";
+
+                        $eventName = 'format' . studlyName($methodName);
+                        if ($targetInputName && $targetPropName) {
+
+                            $events[] = implode(':', [$eventName, $targetInputName, $targetPropName, $setProp, ...($modelNotation ?  [modelNotation] : [])]);
                         }
 
                         break;
                     case 'clearModel': //
-                        $inputToFormat = array_shift($args) ?? '';
 
-                        if ($inputToFormat) {
-                            $events[] = "formatClearModel:{$inputToFormat}";
+                        if ($targetInputName) {
+                            $events[] = "formatClearModel:{$targetInputName}";
                         }
 
                         break;
                     case 'resetItems': //
-                        $inputToFormat = array_shift($args) ?? '';
 
-                        if ($inputToFormat) {
-                            $events[] = "formatResetItems:{$inputToFormat}";
+                        if ($targetInputName) {
+                            $events[] = "formatResetItems:{$targetInputName}";
                         }
 
                         break;
                     case 'prependSchema': //
-                        $inputToFormat = array_shift($args) ?? '';
                         $prependKey = array_shift($args) ?? null;
                         $setterSchemaKey = array_shift($args) ?? null;
                         $orderKey = array_shift($args) ?? 'false';
 
-                        if ($inputToFormat && $prependKey && $setterSchemaKey) {
-                            $events[] = "formatPrependSchema:{$inputToFormat}:{$prependKey}:{$setterSchemaKey}:{$orderKey}";
+                        if ($targetInputName && $prependKey && $setterSchemaKey) {
+                            $events[] = "formatPrependSchema:{$targetInputName}:{$prependKey}:{$setterSchemaKey}:{$orderKey}";
                         }
 
                         break;
                     case 'removeValue': //
-                        $inputToFormat = array_shift($args) ?? '';
 
-                        if ($inputToFormat) {
-                            $events[] = "formatRemoveValue:{$inputToFormat}";
+                        if ($targetInputName) {
+                            $events[] = "formatRemoveValue:{$targetInputName}";
                         }
 
                         break;
                     case 'toggleInput': // to toggle d-none class and rawRules
-                        $inputToFormat = array_shift($args) ?? '';
                         $toggleValue = array_shift($args) ?? 'toggleValue';
                         $toggleLevel = array_shift($args) ?? -1;
 
-                        if ($inputToFormat) {
-                            $events[] = "formatToggleInput:{$inputToFormat}:{$toggleValue}:{$toggleLevel}";
+                        if ($targetInputName) {
+                            $events[] = "formatToggleInput:{$targetInputName}:{$toggleValue}:{$toggleLevel}";
                         }
 
                         break;
@@ -963,13 +963,8 @@ trait FormSchema
             }
 
             if (! empty($events)) {
-                $data = (array) ($data ?? $input);
                 try {
-                    // code...
-                    // if($input['name'] == 'packageCountry'){
-                    //     dd($data, $events, explode('|', $data['event'] ?? ''));
-                    // }
-                    $data['event'] = implode('|', array_unique(array_merge($events, isset($data['event']) ? explode('|', $data['event']) : [])));
+                    $input['event'] = implode('|', array_unique(array_merge($events, isset($data['event']) ? explode('|', $data['event']) : [])));
                 } catch (\Throwable $th) {
                     dd($events, $data, $th, $this->config);
                 }

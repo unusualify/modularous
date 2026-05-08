@@ -13,35 +13,38 @@ trait TableBulkActions
     {
         $actions = [];
 
-        if ($this->getIndexOption('delete')) {
-            $actions[] = [
-                'name' => 'bulkDelete',
-                'can' => $this->permissionPrefix(Permission::DELETE->value),
-                'icon' => '$delete',
-                // 'color' => 'red darken-2',
-                'color' => 'primary',
-            ];
+        if($this->module) {            
+            if ($this->getIndexOption('delete')) {
+                $actions[] = [
+                    'name' => 'bulkDelete',
+                    'can' => $this->module->generatePermissionMiddlewareDefinition(Permission::DELETE->value, $this->routeName),
+                    'icon' => '$delete',
+                    // 'color' => 'red darken-2',
+                    'color' => 'primary',
+                ];
+            }
+    
+            if ($this->getIndexOption('forceDelete')) {
+                $actions[] = [
+                    'name' => 'bulkForceDelete',
+                    'icon' => '$delete',
+                    'can' => 'forceDelete',
+                    // 'color' => 'red darken-2',
+                    'color' => 'red',
+                ];
+            }
+    
+            if ($this->getIndexOption('restore')) {
+                $actions[] = [
+                    'name' => 'bulkRestore',
+                    'icon' => '$restore',
+                    'can' => 'restore',
+                    // 'color' => 'red darken-2',
+                    'color' => 'green',
+                ];
+            }
         }
 
-        if ($this->getIndexOption('forceDelete')) {
-            $actions[] = [
-                'name' => 'bulkForceDelete',
-                'icon' => '$delete',
-                'can' => 'forceDelete',
-                // 'color' => 'red darken-2',
-                'color' => 'red',
-            ];
-        }
-
-        if ($this->getIndexOption('restore')) {
-            $actions[] = [
-                'name' => 'bulkRestore',
-                'icon' => '$restore',
-                'can' => 'restore',
-                // 'color' => 'red darken-2',
-                'color' => 'green',
-            ];
-        }
 
         return $actions;
     }

@@ -7,14 +7,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Modules\Cms\Http\Controllers\Traits\ManageCms;
+use Unusualify\Modularity\Http\Controllers\Traits\ManageBulkSheet;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageIndexAjax;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
+use Unusualify\Modularity\Http\Controllers\Traits\ManagePreview;
 use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
 use Unusualify\Modularity\Http\Controllers\Traits\ManageTranslations;
@@ -23,7 +25,15 @@ use Unusualify\Modularity\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
-    use ManageIndexAjax, ManagePrevious, ManageUtilities, ManageSingleton, ManageInertia, ManageTranslations;
+    use ManageBulkSheet,
+        ManageIndexAjax,
+        ManagePrevious,
+        ManageUtilities,
+        ManageSingleton,
+        ManageInertia,
+        ManageTranslations,
+        ManagePreview,
+        ManageCms;
 
     /**
      * @var string
@@ -50,25 +60,9 @@ abstract class BaseController extends PanelController
 
     protected function getViewPrefix(): ?string
     {
-        $module_prefix = Str::snake($this->moduleName);
+        $prefix = $this->presentationViewPrefix();
 
-        $route_prefix = Str::snake($this->routeName);
-
-        // dd($module_prefix, $route_prefix);
-
-        return "$module_prefix::$route_prefix";
-
-        $prefix = "admin.$this->moduleName";
-
-        if (view()->exists("$prefix.form")) {
-            return $prefix;
-        }
-
-        // try {
-        //     return TwillCapsules::getCapsuleForModel($this->modelName)->getViewPrefix();
-        // } catch (NoCapsuleFoundException $e) {
-        //     return null;
-        // }
+        return $prefix !== '' ? $prefix : null;
     }
 
     public function preload()
@@ -308,6 +302,7 @@ abstract class BaseController extends PanelController
 
         if ($this->isSingleton) {
             $item = $this->repository->getModel()->single();
+            $id = $this->getItemIdentifier($item);
         } else {
             $item = $this->repository->getById($id);
         }
@@ -323,6 +318,7 @@ abstract class BaseController extends PanelController
             $formRequest = $this->validateFormRequest();
 
             $this->repository->update($id, $formRequest->all(), $this->getPreviousRouteSchema());
+            $item = $this->repository->getById($id);
 
             // $this->handleActionEvent($item, __FUNCTION__);
 
@@ -368,9 +364,7 @@ abstract class BaseController extends PanelController
             ]);
 
             if ($this->routeHasTrait('revisions')) {
-                return Response::json([
-                    'message' => $message,
-                    'variant' => MessageStage::SUCCESS,
+                return $this->respondWithSuccess($message, [
                     'revisions' => $item->revisionsArray(),
                 ]);
             }

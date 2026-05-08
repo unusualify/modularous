@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Json;
 use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Modules\Cms\Entities\Concerns\HasParentSegment;
 use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
 
 class Modularity extends FileRepository
@@ -746,5 +747,70 @@ class Modularity extends FileRepository
         }
 
         return false;
+    }
+
+    /**
+     * Options for admin selects: each enabled module route that exposes an Eloquent model.
+     * Value is the model FQCN; title is "{moduleName} - {routeName}" (display only).
+     *
+     * When {@code $onlyParentSegmentModels} is true, only routes whose model uses {@see HasParentSegment} are listed.
+     *
+     * @return list<array{value: string, title: string}>
+     */
+    public function getModuleRouteModelSelectItems(bool $onlyParentSegmentModels = false): array
+    {
+        $out = [];
+        foreach ($this->all() as $module) {
+            $moduleName = $module->getName();
+            foreach ($module->getRawRouteConfigs(null, true) as $routeConfig) {
+                if (empty($routeConfig['name'])) {
+                    continue;
+                }
+                $routeName = $routeConfig['name'];
+                try {
+                    $fqcn = $module->getModel($routeName, false);
+                } catch (\Throwable) {
+                    continue;
+                }
+                if (! is_string($fqcn) || ! class_exists($fqcn)) {
+                    continue;
+                }
+                if ($onlyParentSegmentModels && ! classHasTrait($fqcn, HasParentSegment::class)) {
+                    continue;
+                }
+                $out[] = [
+                    'value' => $fqcn,
+                    'title' => $moduleName . ' - ' . $routeName,
+                ];
+            }
+        }
+
+        usort($out, fn ($a, $b) => strcmp($a['title'], $b['title']));
+
+        return $out;
+    }
+
+    /**
+     * Resolve "ModuleName::RouteName" for a module route model class, if registered in any module config.
+     */
+    public function resolveTargetModuleRouteForModelClass(string $modelClass): ?string
+    {
+        foreach ($this->all() as $module) {
+            foreach ($module->getRawRouteConfigs(null, true) as $routeConfig) {
+                if (empty($routeConfig['name'])) {
+                    continue;
+                }
+                try {
+                    $fqcn = $module->getModel($routeConfig['name'], false);
+                } catch (\Throwable) {
+                    continue;
+                }
+                if ($fqcn === $modelClass) {
+                    return $module->getName() . '::' . $routeConfig['name'];
+                }
+            }
+        }
+
+        return null;
     }
 }

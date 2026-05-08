@@ -2,9 +2,9 @@
 
 namespace Unusualify\Modularity\Tests\Traits;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
-use Unusualify\Modularity\Facades\ModularityFinder;
+use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Module;
 use Unusualify\Modularity\Tests\TestCase;
 use Unusualify\Modularity\Traits\ManageTraits;
 
@@ -28,11 +28,6 @@ class ManageTraitsTest extends TestCase
             public function getRouteName()
             {
                 return 'TestRoute';
-            }
-
-            public function getModule()
-            {
-                return null;
             }
         };
     }
@@ -95,16 +90,12 @@ class ManageTraitsTest extends TestCase
     /** @test */
     public function it_can_resolve_model()
     {
-        ModularityFinder::shouldReceive('getRouteRepository')
-            ->with('TestRoute')
-            ->andReturn('TestRepository');
+        $module = \Mockery::mock(Module::class);
+        $module->shouldReceive('hasRoute')->with('TestRoute')->andReturn(true);
+        $module->shouldReceive('getModel')->with('TestRoute')->once()->andReturn('TestModel');
 
-        $repo = \Mockery::mock('TestRepository');
-        $repo->shouldReceive('getModel')->andReturn('TestModel');
-
-        App::shouldReceive('make')
-            ->with('TestRepository')
-            ->andReturn($repo);
+        // isModuleRouteClass() and getModule() each call Modularity::find() with the same name.
+        Modularity::shouldReceive('find')->with('TestModule')->andReturn($module);
 
         $this->assertEquals('TestModel', $this->target->model());
     }

@@ -1,5 +1,6 @@
 ---
-# sidebarPos: 3
+sidebarPos: 3
+sidebarTitle: Tab Groups
 ---
 # Tab Groups <Badge type="tip" text="^0.10.0" />
 

@@ -195,7 +195,7 @@ if (! function_exists('moduleRoute')) {
             $routeName .= "{$snakeName}";
         }
         // dd($snakeName, $parameters);
-        if (preg_match('/edit|show|update|destroy|duplicate|restoreRevision|preview/', $action) && ! array_key_exists($snakeName, $parameters) && ! $singleton) {
+        if (preg_match('/edit|show|update|destroy|duplicate|restoreRevision|approveRevision|rejectRevision|preview/', $action) && ! array_key_exists($snakeName, $parameters) && ! $singleton) {
             $parameters[$snakeName] = ':id';
             // dd(
             //     $routeName,

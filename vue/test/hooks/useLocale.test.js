@@ -1,9 +1,10 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { createStore } from 'vuex'
 import { defineComponent, h } from 'vue'
 import { mount } from '@vue/test-utils'
 import useLocale from '../../src/js/hooks/useLocale.js'
 import languageModule from '../../src/js/store/modules/language.js'
+import { LANGUAGE } from '../../src/js/store/mutations/index.js'
 
 function createStoreWithLanguage(overrides = {}) {
   const languageState = {
@@ -73,11 +74,11 @@ describe('useLocale', () => {
     expect(wrapper.vm.dirLocale).toBe('rtl')
   })
 
-  test('updateLocale commits SWITCH_LANG', async () => {
+  test('updateLocale commits UPDATE_LANG', async () => {
     const store = createStoreWithLanguage()
     const spy = vi.spyOn(store, 'commit')
     const wrapper = await factory(store)
-    wrapper.vm.updateLocale({ value: 'en' })
-    expect(spy).toHaveBeenCalledWith(expect.any(String), { oldValue: { value: 'en' } })
+    wrapper.vm.updateLocale('en')
+    expect(spy).toHaveBeenCalledWith(LANGUAGE.UPDATE_LANG, 'en')
   })
 })

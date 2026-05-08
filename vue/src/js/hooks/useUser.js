@@ -12,19 +12,19 @@ export default function useUser() {
       return store.getters.isGuest ?? true
     }),
     isSuperAdmin: computed(() => {
-      return Authorization.isSuperAdmin ?? false
+      return store.getters.isSuperAdmin ?? false
     }),
     isClient: computed(() => {
-      return Authorization.isClient ?? false
+      return store.getters.isClient ?? false
     }),
     timezone: computed(() => {
-      return store.state.user.timezone ?? 'Europe/London'
+      return store.state.user?.timezone ?? 'Europe/London'
     }),
     validCompany: computed(() => {
-      return store.state.user.valid_company ?? false
+      return store.state.user?.valid_company ?? false
     }),
     showBillingBanner: computed(() => {
-      return store.state.user.profile.show_billing_banner ?? false
+      return store.state.user?.profile?.show_billing_banner ?? false
     })
   })
 

@@ -19,7 +19,8 @@ use Unusualify\Modularity\Traits\ManageNames;
  * Output types: input-assignment, input-browser, input-chat, input-checklist, input-checklist-group,
  * input-comparison-table, input-date, input-file, input-filepond, input-filepond-avatar, input-form-tabs,
  * input-image, input-payment-service, input-price, input-process, input-radio-group, input-repeater,
- * input-select-scroll, input-spread, input-tag, input-tagger. Also: select, group (JsonHydrate).
+ * input-select-scroll, input-spread, input-tag, input-tagger. Also: select, group (JsonHydrate),
+ * module-route-model (ModuleRouteModelHydrate → select of module routes / model FQCNs).
  */
 abstract class InputHydrate
 {
@@ -183,7 +184,7 @@ abstract class InputHydrate
 
         $this->input = $this->hydrateRules();
 
-        $this->input = Arr::except($this->input, ['route', 'model', 'repository', 'cascades', 'connector']);
+        $this->input = Arr::except($this->input, ['route', 'model', 'repository', 'cascades', 'connector', 'onlyParentSegmentModels']);
 
         return $this->input;
     }
@@ -485,5 +486,21 @@ abstract class InputHydrate
     public function __toString()
     {
         return $this->render();
+    }
+
+    /**
+     * Add translated props to input
+     *
+     * @param array &$input
+     * @param array|string $props <string> comma separated props or array of props
+     * @return void
+     */
+    public function addTranslatedProps(&$input, array|string $props)
+    {
+        $props = is_string($props) ? explode(',', $props) : $props;
+        $input['translatedProps'] = array_unique(array_merge([
+            ...($input['translatedProps'] ?? []),
+            ...$props,
+        ]));
     }
 }

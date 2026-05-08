@@ -262,6 +262,8 @@
         :readonly="groupContext"
         :disabled="groupContext"
         @update:model-value="(v) => !groupContext && itemAction(item, 'switch', v, col.key)"
+
+        v-bind="col?.formatter[1] ?? {}"
       >
         <template v-slot:label />
       </v-switch>

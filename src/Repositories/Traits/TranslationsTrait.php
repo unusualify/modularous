@@ -77,9 +77,8 @@ trait TranslationsTrait
 
                     $activeField = $shouldPublishFirstLanguage || (isset($submittedLanguage) ? $submittedLanguage['published'] : false);
 
-                    $fields[$locale] = [
-                        'active' => $activeField,
-                    ] + $attributes->mapWithKeys(function ($attribute) use (&$fields, $locale, $localesCount, $index, $translationsFields) {
+
+                    $fields[$locale] = $attributes->mapWithKeys(function ($attribute) use (&$fields, $locale, $localesCount, $index, $translationsFields) {
                         $attributeValue = $fields[$attribute] ?? $translationsFields[$attribute] ?? null;
 
                         // if we are at the last locale,
@@ -88,11 +87,15 @@ trait TranslationsTrait
                             unset($fields[$attribute]);
                         }
 
+                        $perLocale = isset($attributeValue[$locale]) ? $attributeValue[$locale] : null;
+                        $perLocale = $this->normalizeSlugPayloadForTranslationColumn($attribute, $perLocale);
+
                         return [
-                            // $attribute => ($attributeValue[$locale] ?? null),
-                            $attribute => ($attributeValue[$locale] ?? $attributeValue ?? null),
+                            $attribute => $perLocale,
                         ];
-                    })->toArray();
+                    })->toArray() + [
+                        'active' => $activeField,
+                    ];
                 }
             }
 
@@ -104,14 +107,38 @@ trait TranslationsTrait
     }
 
     /**
+     * Slug input (manageActive) submits `{ slug: string, active: bool }` per locale; translation rows store only the slug string.
+     */
+    protected function normalizeSlugPayloadForTranslationColumn(string $attribute, mixed $value): mixed
+    {
+        if (! is_array($value) || ! array_key_exists('slug', $value)) {
+            return $value;
+        }
+
+        if (! method_exists($this->model, 'getSlugAttributes')) {
+            return $value;
+        }
+
+        if (! in_array($attribute, $this->model->getSlugAttributes(), true)) {
+            return $value;
+        }
+
+        $slug = $value['slug'];
+
+        return $slug === null || $slug === '' ? '' : (string) $slug;
+    }
+
+    /**
      * @param Model $object
      * @param array $fields
      * @return array
      */
     public function getFormFieldsTranslationsTrait($object, $fields)
     {
-        unset($fields['translations']);
         $translatedAttributes = $object->getTranslatedAttributes();
+
+        unset($fields['translations']);
+
         if ($object->translations != null && $translatedAttributes != null) {
             foreach ($object->translations as $translation) {
                 foreach ($translatedAttributes as $attribute) {
@@ -201,6 +228,36 @@ trait TranslationsTrait
                     ->select($table . '.*');
 
                 unset($orders['locale']);
+            }
+        }
+    }
+
+    /**
+     * After save, re-enable timestamps and touch the parent model
+     * only when a translation row really changed (ignoring auto-timestamp
+     * columns that the translation table may carry).
+     *
+     * @param \Illuminate\Database\Eloquent\Model $object
+     * @param array $fields
+     * @return void
+     */
+    public function afterSaveTranslationsTrait($object, $fields)
+    {
+        if (! $this->model->isTranslatable()) {
+            return;
+        }
+
+        if ($object->relationLoaded('translations')) {
+            $timestampKeys = ['updated_at', 'created_at', 'deleted_at'];
+
+            foreach ($object->translations as $translation) {
+                $changedKeys = array_keys($translation->getChanges());
+                $meaningfulChanges = array_diff($changedKeys, $timestampKeys);
+
+                if (! empty($meaningfulChanges)) {
+                    $this->letEloquentModelBeTouched(true);
+                    break;
+                }
             }
         }
     }

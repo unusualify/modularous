@@ -3,9 +3,7 @@
 namespace Unusualify\Modularity\Traits;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
-use Unusualify\Modularity\Facades\ModularityFinder;
 
 trait ManageTraits
 {
@@ -121,9 +119,11 @@ trait ManageTraits
 
     public function model()
     {
-        $routeName = $this->getRouteName();
+        if (! $this->isModuleRouteClass()) {
+            return null;
+        }
 
-        return ($routeName && $repositoryClass = ModularityFinder::getRouteRepository($routeName)) ? App::make($repositoryClass)?->getModel() : null;
+        return $this->getModule()?->getModel($this->getRouteName()) ?? null;
     }
 
     public function prepareFieldsBeforeSaveManageTraits($object, $fields)

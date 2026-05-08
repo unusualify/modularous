@@ -134,7 +134,24 @@
             />
           </template>
         </template>
-        <span>{{ action.tooltip ?? action.label }}</span>
+        <span>
+          <template v-if="action.tooltipItems?.length">
+            <div class="text-caption mb-1 font-weight-medium">
+              {{ action.tooltip ?? action.label }}
+            </div>
+            <ul class="text-caption ps-3 mb-0">
+              <li
+                v-for="(f, i) in action.tooltipItems"
+                :key="i"
+              >
+                {{ f.label }}
+              </li>
+            </ul>
+          </template>
+          <template v-else>
+            {{ action.tooltip ?? action.label }}
+          </template>
+        </span>
       </v-tooltip>
     </template>
     <slot name="append"></slot>

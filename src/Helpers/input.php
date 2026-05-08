@@ -310,26 +310,20 @@ if (! function_exists('hydrate_input_extension')) {
 
                         break;
                     case 'set': //
-                        $inputToFormat = array_shift($args) ?? '';
+                    case 'update': // same args as set; frontend runs formatUpdate only when valueChanged (not on initial model hydrate)
+                        $targetInputName = array_shift($args) ?? '';
                         $inputPropToFormat = array_shift($args) ?? null;
                         $setProp = array_shift($args) ?? "items.*.{$inputPropToFormat}";
-                        // dd(
-                        //     $inputToFormat,
-                        //     $inputPropToFormat,
-                        //     $setProp,
-                        //     $inputs
-                        // );
+
+                        $eventName = 'format' . studlyName($methodName);
                         $changers = [
                             'wrap_location' => [
                                 'default',
                                 $inputPropToFormat, // schema
                             ],
                         ];
-                        if ($inputToFormat && $inputPropToFormat) {
-                            if ($inputToFormat == '3.content.schema.wrap-content.schema.1_content') {
-                                // dump($inputToFormat, $inputPropToFormat, $setProp);
-                            }
-                            $events[] = "formatSet:{$inputToFormat}:{$inputPropToFormat}:{$setProp}";
+                        if ($targetInputName && $targetPropName) {
+                            $events[] = implode(':', [$eventName, $targetInputName, $targetPropName, $setProp, ...($modelNotation ?  [modelNotation] : [])]);
                         }
 
                         break;

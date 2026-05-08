@@ -118,7 +118,10 @@ describe('TableFormatterCell', () => {
     expect(bind.configuration.elements).toBe(shorten(pre, 5))
   })
 
-  test('group header + shorten on mobile caps at 10 chars', async () => {
+  /** Must match TableFormatterCell.vue MOBILE_SHORTEN_MAX_CHARS */
+  const MOBILE_SHORTEN_MAX = 15
+
+  test('group header + shorten on mobile caps at MOBILE_SHORTEN_MAX_CHARS', async () => {
     const long = 'x'.repeat(60)
     const wrapper = mount(FormatterHarness, {
       global: {
@@ -138,10 +141,10 @@ describe('TableFormatterCell', () => {
     })
     const cell = wrapper.findComponent(TableFormatterCell)
     const bind = cell.vm.recursiveFormatterVBind
-    expect(bind.configuration.elements).toBe(shorten(long, 10))
+    expect(bind.configuration.elements).toBe(shorten(long, MOBILE_SHORTEN_MAX))
   })
 
-  test('non-group mobile shorten caps pre-maxChars and formatter second arg at 10', async () => {
+  test('non-group mobile shorten caps pre-maxChars and formatter second arg at MOBILE_SHORTEN_MAX_CHARS', async () => {
     const long = 'y'.repeat(60)
     const wrapper = mount(FormatterHarness, {
       global: {
@@ -162,11 +165,11 @@ describe('TableFormatterCell', () => {
     })
     const cell = wrapper.findComponent(TableFormatterCell)
     const bind = cell.vm.recursiveFormatterVBind
-    const pre = shorten(long, 10)
-    expect(bind.configuration.elements).toBe(shorten(pre, 10))
+    const pre = shorten(long, MOBILE_SHORTEN_MAX)
+    expect(bind.configuration.elements).toBe(shorten(pre, MOBILE_SHORTEN_MAX))
   })
 
-  test('edit + shorten (isFormatting) on mobile caps shorten() arg at 10', async () => {
+  test('edit + shorten (isFormatting) on mobile caps shorten() arg at MOBILE_SHORTEN_MAX_CHARS', async () => {
     const long = 'z'.repeat(60)
     const wrapper = mount(EditActivateHarness, {
       global: {
@@ -184,8 +187,8 @@ describe('TableFormatterCell', () => {
       }
     })
     const cell = wrapper.findComponent(TableFormatterCell)
-    expect(cell.vm.colFormatterForShortenPass).toEqual(['shorten', 10])
+    expect(cell.vm.colFormatterForShortenPass).toEqual(['shorten', MOBILE_SHORTEN_MAX])
     const out = cell.vm.handleFormatter(cell.vm.colFormatterForShortenPass, long)
-    expect(out.configuration.elements).toBe(shorten(long, 10))
+    expect(out.configuration.elements).toBe(shorten(long, MOBILE_SHORTEN_MAX))
   })
 })

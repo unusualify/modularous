@@ -4,6 +4,8 @@
 import { reactive, toRefs, computed, watch } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import { useStore } from 'vuex'
+import cloneDeep from 'lodash-es/cloneDeep'
+import isEqual from 'lodash-es/isEqual'
 import { mapGetters } from '@/utils/mapStore'
 
 import { MEDIA_LIBRARY } from '@/store/mutations/index'
@@ -143,14 +145,23 @@ export default function useFile (props, context) {
     if (store.state.mediaLibrary.isInserted && states.mediableActive) {
       states.mediableActive = false
       store.commit(MEDIA_LIBRARY.UPDATE_IS_INSERTED, false)
-      states.input = newValue
+      const next = Array.isArray(newValue) ? cloneDeep(newValue) : (newValue ?? [])
+      if (!isEqual(next, states.input)) {
+        states.input = next
+      }
     }
   }, { deep: true })
-  watch(() => states.input, (value, oldValue) => {
+  watch(() => states.input, (value) => {
+    const mv = modelValue.value ?? []
+    const v = value ?? []
+    if (isEqual(v, Array.isArray(mv) ? mv : [])) return
     inputHook.updateModelValue.value(value)
   }, { deep: true })
-  watch(() => modelValue.value, (value, oldValue) => {
-    states.input = value
+  watch(() => modelValue.value, (value) => {
+    const normalized = value ?? []
+    const next = Array.isArray(normalized) ? normalized : []
+    if (isEqual(states.input, next)) return
+    states.input = cloneDeep(next)
   }, { deep: true })
   // expose managed state as return value
   return {

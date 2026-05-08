@@ -1,7 +1,6 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 sidebarPos: 4
-
+sidebarTitle: Creating Modules
 ---
 # Creating a Module
 
@@ -16,7 +15,7 @@ Running this command will create the module with empty module structure with a c
 Creating module and a module options are similar while default option of the creating a module is generating a plain folder structure for the given module name.
 :::
 ::: info
-Creating module and route options are similar if default option is not used and parent domain entity is created. Options will be explain under creating route header
+Creating module and route options are similar if default option is not used and parent domain entity is created. Options will be explained under creating route header
 :::
 
 **Config File**
@@ -37,15 +36,42 @@ return [
 ];
 
 ```
-where you can configure your modules `headline` presenting on sidebar, whether the module route will be generated with system_prefix or base_prefix. ``Routes`` key will contain all your route configrations generated. Them can be customized in future.
+where you can configure your modules `headline` presenting on sidebar, whether the module route will be generated with system_prefix or base_prefix. ``Routes`` key will contain all your route configurations generated. They can be customized in future.
 
 ::: tip
-Config file can be customized in many ways, see [Module Config](/)
+Config file can be customized in many ways.
 :::
 <br/>
 
 **File module.json**
 
+Every module contains a `module.json` manifest at its root. The framework scans this file to discover, register, and boot the module. A generated manifest looks like this:
+
+```json
+{
+    "name": "Authentication",
+    "alias": "authentication",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [],
+    "files": []
+}
+```
+
+| Key | Type | Description |
+|:----|:-----|:------------|
+| `name` | string | The canonical module name. Must match the folder name exactly. |
+| `alias` | string | Snake-case or kebab-case identifier used internally for route prefixes and cache keys. |
+| `description` | string | Optional human-readable summary of the module's purpose. |
+| `keywords` | array | Tags associated with the module (informational only). |
+| `priority` | integer | Load order relative to other modules. Higher values load first. Defaults to `0`. |
+| `providers` | array | Fully-qualified class names of additional service providers to register alongside the module's default provider. |
+| `files` | array | Extra files to autoload when the module boots. |
+
+::: tip
+You rarely need to edit `module.json` by hand. The `modularity:make:module` and `modularity:make:route` commands keep it up to date automatically.
+:::
 
 ## Creating Routes
 Creating a route is highly customizable using command options, simplest way to create a route with default schema and relationship options is:
@@ -59,7 +85,7 @@ As mentioned, config.php file underneath the module folder can and should be use
 
 
 ::: tip IMPORTANT
-This documentation will include brief explanation of the technical information about create route command. For further presentation about Modularity Know-how please see [Examples]
+This documentation will include brief explanation of the technical information about create route command. For further presentation about Modularous Know-how please see [Examples]
 :::
 
 ## Artisan Command Options
@@ -68,22 +94,22 @@ This documentation will include brief explanation of the technical information a
 #### `--schema`
 Use this option to define your model's database schema. It will automatically configure your migration files. 
 #### `--relationships`
-Relationships option should not be confict with migration relationships. Database migrations should be set on the `--schema` option. On the other hand, `--relationship` options will be used to define model relationship methods like `Polymorphic Relationships` where you need a pivot or any other external database table to define relationships. See [Example Page]
+Relationships option should not conflict with migration relationships. Database migrations should be set on the `--schema` option. On the other hand, `--relationship` options will be used to define model relationship methods like `Polymorphic Relationships` where you need a pivot or any other external database table to define relationships. See [Example Page]
 #### `--rules`
-Rules options will be used to define CRUD form validations for both backend and front-end validation scripts. 
+Rules options will be used to define CRUD form validations for both backend and frontend validation scripts. 
 #### `--no-migrate`
 Default route generation automatically runs migrations. You can skip migration with this option.
 #### `--force`
 Force the operation to run when the route files already exist. Use this option to override the route files with new options.
 
 ## Defining Model Schema
-Model schema is where you define your enties' attributes (columns) and these attributes' types and modifiers. Modularity schema builder contains all availiable column types and column modifiers in Laravel Framework
+Model schema is where you define your entities attributes (columns) and these attributes types and modifiers. Modularous schema builder contains all available column types and column modifiers in Laravel Framework
 
-( See [Availiable Laravel Column Types](https://laravel.com/docs/11.x/migrations#available-column-types){target="_self"} -  [Available Laravel Column Modifiers](https://laravel.com/docs/11.x/migrations#column-modifiers){target="_self"} )
+( See [Available Laravel Column Types](https://laravel.com/docs/migrations#available-column-types){target="_self"} -  [Available Laravel Column Modifiers](https://laravel.com/docs/migrations#column-modifiers){target="_self"} )
 
 ::: danger Relationships
 
-Defining relation type attributes are different in Unusualify/Modularity. Please see [Defining Relationships](#defining-relations-between-routes)
+Defining relation type attributes are different in Unusualify/Modularous. Please see [Defining Relations Between Routes](#defining-relations-between-routes)
 
 :::
 
@@ -91,7 +117,7 @@ Defining relation type attributes are different in Unusualify/Modularity. Please
 
 **Defining a series of attributes**
 
-When defining a series of entity attributes, desired schema should be typed between double quotes `"`, columnTypes should be seperated by colons `:` and lastly attributes should be seperated by commas `,` if exist.
+When defining a series of entity attributes, desired schema should be typed between double quotes `"`, columnTypes should be separated by colons `:` and lastly attributes should be separated by commas `,` if exist.
 
 ```sh
 $ php artisan modularity:make:route ModuleName RouteName --schema="attributeName:columnType#1:columnType#2,attributeName#2:...columnType#:..columnModifiers#"
@@ -99,12 +125,12 @@ $ php artisan modularity:make:route ModuleName RouteName --schema="attributeName
 Running this command will generate your model's 
  - `controller`, with source methods
  - `migration` files with defined columns
- - `routes`,
+ - `routes`
  - `entity` with fillable array,
  - `request` with default methods
  - `repository`
  - `index` and `form` blade components with default configuration
- - also module config file will be overriden with route properties 
+ - also module config file will be overridden with route properties 
   
 ::: tip Module Config.php
 Module config file is where user interface, CRUD form schema and etc. can be customized. Please see [Module Config]
@@ -120,7 +146,7 @@ $ php artisan modularity:make:route Authentication User --schema="name:string,em
 
 ## **Defining relations between routes**
 
-In Laravel migrations, only `foreignId` and `morphs` column types can be used to define relationsips between models. In Modularity, `reverse relationship method names` can be used as an attribute while creating route. 
+In Laravel migrations, only `foreignId` and `morphs` column types can be used to define relationships between models. In Modularous, `reverse relationship method names` can be used as an attribute while creating route. 
 
 ::: warning Reverse Relations
 Since creating route command will automatically create all of the required files and running migrations, it is suggested to follow `reverse relationship` path to define relation between models
@@ -146,13 +172,13 @@ cars
 
 Following the given example, creating user route:
 ```sh
-$ php artisan modularity:make:route Aparment Citizen --schema="name:string,citizen_id:integer:unique"
+$ php artisan modularity:make:route Apartment Citizen --schema="name:string,citizen_id:integer:unique"
 ```
 `Citizen` route is now generated with all required files. Next, we can create `Car` route with `belongsTo` relationship related column(s) and model method(s) with the following artisan command:
 ```sh
-$ php artisan modularity:make:route Aparment Car --schema="model:string,plate:string:unique,citizen:belongsTo"
+$ php artisan modularity:make:route Apartment Car --schema="model:string,plate:string:unique,citizen:belongsTo"
 ```
-Runnings these couple of commands, will also create relationship related model methods as:
+Running these couple of commands, will also create relationship related model methods as:
 ```php
 
 // Citizen.php
@@ -175,11 +201,11 @@ $table->foreignId('testify_id')->constrained->onUpdate('cascade')->onDelete('cas
 
 
 ::: tip Relationship Summary
-While defining direct relationships that will affect migration and database tables, `--schema` option should be used. On the other hand, with un-direct relations like `many-to-many` and `through` relations you need to use `--relationships` option. This option will set required pivot table and required model methods without altering migration files.
+While defining direct relationships that will affect migration and database tables, `--schema` option should be used. On the other hand, with undirect relations like `many-to-many` and `through` relations you need to use `--relationships` option. This option will set required pivot table and required model methods without altering migration files.
 :::
 
 ### Available Relationship Methods
-For this version of `Unusualify/Modularity`, available relationship methods can be defined are:
+For this version of `Unusualify/Modularous`, available relationship methods can be defined are:
 | Reverse Relationship| Relationship|
 |:--------------------|------------:|
 | belongsTo           | hasMany     |
@@ -188,5 +214,5 @@ For this version of `Unusualify/Modularity`, available relationship methods can 
 | hasOneThrough           | hasOneThrough      |
 
 ::: info ToMany Relationship Usage
-Since * to many relations provides the same functionality with the * to one relations, `Unusualify/Modularity` serves only * to many relationship methods and migrations. Cases with * to one relationship usage, it can be supplied with request validations.
+Since * to many relations provides the same functionality with the * to one relations, `Unusualify/Modularous` serves only * to many relationship methods and migrations. Cases with * to one relationship usage, it can be supplied with request validations.
 :::

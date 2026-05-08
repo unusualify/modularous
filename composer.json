@@ -49,6 +49,7 @@
         "laravel/telescope": "^5.20",
         "laravel/ui": "^4.6",
         "league/glide-symfony": "^2.1",
+        "mcamara/laravel-localization": "^2.0",
         "nwidart/laravel-modules": "^11.0",
         "oguzhanbukcuoglu/laravel-translation": "^11.0",
         "oobook/manage-eloquent": "^1.2",

@@ -1,6 +1,6 @@
 ---
 outline: deep
-sidebarPos: 7
+sidebarPos: 2
 ---
 
 # Assignable

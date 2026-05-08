@@ -5,44 +5,45 @@
 -->
 <template>
   <v-row
-    :id="ctx.id"
-    v-bind="ctx.getRow"
-    v-resize.quiet="ctx.onResize"
+    :id="id"
+    v-bind="getRow"
+    v-resize.quiet="onResize"
   >
-    <slot :name="ctx.getFormTopSlot()" :id="ctx.id" />
-    <template v-for="(obj, index) in ctx.flatCombinedArraySorted" :key="index">
+    <slot :name="getFormTopSlot()" :id="id" />
+
+    <template v-for="(obj, index) in flatCombinedArraySorted" :key="index">
       <v-tooltip
         :disabled="!obj.schema.tooltip"
-        v-bind="ctx.getShorthandTooltip(obj.schema.tooltip)"
+        v-bind="getShorthandTooltip(obj.schema.tooltip)"
       >
         <template v-slot:activator="{ props: tooltipProps }">
           <v-col
             v-show="!obj.schema.hidden"
             :key="index"
             v-bind="{
-              ...ctx.getGridAttributes(obj),
+              ...getGridAttributes(obj),
               ...tooltipProps
             }"
-            v-intersect="(isIntersecting, entries, observer) => ctx.onIntersect(isIntersecting, entries, observer, obj)"
+            v-intersect="(isIntersecting, entries, observer) => onIntersect(isIntersecting, entries, observer, obj)"
             v-touch="{
-              left: () => ctx.onSwipe('left', obj),
-              right: () => ctx.onSwipe('right', obj),
-              up: () => ctx.onSwipe('up', obj),
-              down: () => ctx.onSwipe('down', obj)
+              left: () => onSwipe('left', obj),
+              right: () => onSwipe('right', obj),
+              up: () => onSwipe('up', obj),
+              down: () => onSwipe('down', obj)
             }"
-            v-click-outside="(event) => ctx.onClickOutside(event, obj)"
-            :class="ctx.getClassName(obj)"
+            v-click-outside="(event) => onClickOutside(event, obj)"
+            :class="getClassName(obj)"
             :draggable="obj.schema.drag"
-            @mouseenter="ctx.onEvent($event, obj)"
-            @mouseleave="ctx.onEvent($event, obj)"
-            @dragstart="ctx.dragstart($event, obj)"
-            @dragover="ctx.dragover($event, obj)"
-            @drop="ctx.drop($event, obj)"
+            @mouseenter="onEvent($event, obj)"
+            @mouseleave="onEvent($event, obj)"
+            @dragstart="dragstart($event, obj)"
+            @dragover="dragover($event, obj)"
+            @drop="drop($event, obj)"
           >
-            <slot :name="ctx.getTypeTopSlot(obj)" v-bind="{ obj, index, id: ctx.id }" />
-            <slot :name="ctx.getKeyTopSlot(obj)" v-bind="{ obj, index, id: ctx.id }" />
-            <slot :name="ctx.getTypeItemSlot(obj)" v-bind="{ obj, index, id: ctx.id }">
-              <slot :name="ctx.getKeyItemSlot(obj)" v-bind="{ obj, index, id: ctx.id }">
+            <slot :name="getTypeTopSlot(obj)" v-bind="{ obj, index, id: id }" />
+            <slot :name="getKeyTopSlot(obj)" v-bind="{ obj, index, id: id }" />
+            <slot :name="getTypeItemSlot(obj)" v-bind="{ obj, index, id: id }">
+              <slot :name="getKeyItemSlot(obj)" v-bind="{ obj, index, id: id }">
                 <FormBaseField
                   :obj="obj"
                   :ctx="ctx"
@@ -50,29 +51,29 @@
                   :form-item="formItem"
                 >
                   <template v-for="(_, name) in $slots" #[name]="slotData">
-                    <slot :name="name" v-bind="{ obj, index, id: ctx.id, ...slotData }" />
+                    <slot :name="name" v-bind="{ obj, index, id: id, ...slotData }" />
                   </template>
                 </FormBaseField>
               </slot>
             </slot>
-            <slot :name="ctx.getTypeBottomSlot(obj)" v-bind="{ obj, index, id: ctx.id }" />
-            <slot :name="ctx.getKeyBottomSlot(obj)" v-bind="{ obj, index, id: ctx.id }" />
+            <slot :name="getTypeBottomSlot(obj)" v-bind="{ obj, index, id: id }" />
+            <slot :name="getKeyBottomSlot(obj)" v-bind="{ obj, index, id: id }" />
           </v-col>
         </template>
-        <slot :name="ctx.getTooltipSlot()" v-bind="{ obj, index, id: ctx.id }">
-          <span>{{ ctx.getShorthandTooltipLabel(obj.schema.tooltip) }}</span>
+        <slot :name="getTooltipSlot()" v-bind="{ obj, index, id: id }">
+          <span>{{ getShorthandTooltipLabel(obj.schema.tooltip) }}</span>
         </slot>
-        <slot :name="ctx.getKeyTooltipSlot(obj)" v-bind="{ obj, index, id: ctx.id }" />
+        <slot :name="getKeyTooltipSlot(obj)" v-bind="{ obj, index, id: id }" />
       </v-tooltip>
       <v-spacer v-if="obj.schema.spacer" :key="`s-${index}`" />
     </template>
-    <slot :name="ctx.getFormBottomSlot()" :id="ctx.id" />
+    <slot :name="getFormBottomSlot()" :id="id" />
   </v-row>
 </template>
 
 <script>
 import { useSlots, onBeforeMount, watch } from 'vue'
-import useFormBaseLogic from '@/hooks/useFormBaseLogic'
+import useFormBaseLogic from '@/hooks/form/useFormBaseLogic'
 import FormBaseField from './FormBaseField.vue'
 
 const defaultID = 'form-base'
@@ -117,7 +118,10 @@ export default {
       { deep: true }
     )
 
-    return { ctx }
+    return {
+        ...ctx,
+        ctx
+    }
   }
 }
 </script>

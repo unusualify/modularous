@@ -6,6 +6,7 @@ import axios from 'axios'
 import {
   isViewOnlyInput,
   isFormEventInput,
+  isSecondaryInput,
   getTranslationInputsCount,
   getTranslationInputs,
   flattenGroupSchema,
@@ -33,10 +34,13 @@ const numberable = 'number-input'
 // const isMediableTypes = 'input-file|input-image'
 // const isMediableFields = 'files|medias'
 
-export const getSchema = (inputs, model = null, isEditing = false) => {
+export const getSchema = (inputs, model = null, isEditing = false, editingEntityId = null) => {
+  const entityId = editingEntityId ?? (__isset(model) && __isset(model.id) ? model.id : null)
+
   let _inputs = _.omitBy(inputs, (value, key) => {
     return Object.prototype.hasOwnProperty.call(value, 'slotable')
       || isFormEventInput(value, model)
+      || isSecondaryInput(value, model)
       || isViewOnlyInput(value)
   })
 
@@ -111,7 +115,14 @@ export const getSchema = (inputs, model = null, isEditing = false) => {
     }
 
     if (__isset(input) && __isset(input.schema) && ['wrap', 'group', 'repeater', 'input-repeater'].includes(input.type)) {
-      input.schema = getSchema(input.schema, input.type === 'wrap' ? model : model[key], isEditing);
+      input.schema = getSchema(input.schema, input.type === 'wrap' ? model : model[key], isEditing, entityId);
+    }
+
+    if (isEditing && entityId != null && entityId !== '') {
+      const slugTypes = ['input-slug', 'slug']
+      if (slugTypes.includes(input.type)) {
+        input.excludeId = entityId
+      }
     }
 
     input.creatable = isCreatable
@@ -154,13 +165,35 @@ export const getModel = (inputs, item = null, rootState = null) => {
 
     if (isArrayable.includes(input.type)) _default = []
 
+    const slugTypes = ['input-slug', 'slug']
+    const slugObjectDefault = { slug: '', active: true }
+    if (
+      slugTypes.includes(input.type)
+      && isTranslated
+      && input.manageActive !== false
+    ) {
+      _default = slugObjectDefault
+    }
+
     _default = Object.prototype.hasOwnProperty.call(input, 'default') ? input.default : _default
 
     if (input.type == 'group') _default = getModel(input.schema, item ?? input.default)
 
     if (isTranslated) {
+      const baseDefault = _default
       _default = _.reduce(languages, function (acc, language, k) {
-        acc[language] = _default
+        if (
+          slugTypes.includes(input.type)
+          && input.manageActive !== false
+          && baseDefault
+          && typeof baseDefault === 'object'
+          && !Array.isArray(baseDefault)
+          && Object.prototype.hasOwnProperty.call(baseDefault, 'slug')
+        ) {
+          acc[language] = { ...baseDefault }
+        } else {
+          acc[language] = baseDefault
+        }
         return acc
       }, {})
     }
@@ -263,6 +296,26 @@ export const getFormEventSchema = (inputs, model = null, isEditing = false) => {
 
     let res = handleItemConditions(input.conditions, model, input)
     if(res !== false){
+      acc.push(res)
+    }
+
+    return acc
+  }, [])
+}
+
+export const getSecondaryInputs = (inputs, model = null, isEditing = false) => {
+  return _.reduce(inputs, (acc, input) => {
+    if (!isSecondaryInput(input, model))
+      return acc
+
+    if (isEditing && __isset(input.editable) && (input.editable === false || input.editable === 'hidden'))
+      return acc
+
+    if (!isEditing && __isset(input.creatable) && (input.creatable === false || input.creatable === 'hidden'))
+      return acc
+
+    let res = handleItemConditions(input.conditions, model, input)
+    if (res !== false) {
       acc.push(res)
     }
 

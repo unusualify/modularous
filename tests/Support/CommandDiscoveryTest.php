@@ -69,6 +69,7 @@ class CommandDiscoveryTest extends TestCase
         $this->assertNotEmpty($commands);
         $this->assertContains('Unusualify\Modularity\Console\Make\MakeModuleCommand', $commands);
         $this->assertContains('Unusualify\Modularity\Console\Make\MakeRouteCommand', $commands);
+        $this->assertContains('Unusualify\Modularity\Console\Make\MakeCmsControllerCommand', $commands);
     }
 
     /** @test */

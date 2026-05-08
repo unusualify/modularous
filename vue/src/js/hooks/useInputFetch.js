@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 
+import { get } from 'lodash-es'
+
 import { makeSelectProps } from '@/hooks/utils/useSelect.js'
 import { usePagination, makePaginationProps } from '@/hooks/utils/usePagination.js'
 
@@ -9,6 +11,18 @@ import { usePagination, makePaginationProps } from '@/hooks/utils/usePagination.
 export const makeInputFetchProps = propsFactory({
   ...makeSelectProps(),
   ...makePaginationProps(),
+  lastPageKey: {
+    type: String,
+    default: 'resource.last_page'
+  },
+  currentPageKey: {
+    type: String,
+    default: 'resource.current_page'
+  },
+  dataKey: {
+    type: String,
+    default: 'resource.data'
+  }
 })
 
 export default function useInputFetch(props, context) {
@@ -45,16 +59,16 @@ export default function useInputFetch(props, context) {
             if(response.status == 200){
 
               if(activeLastPage.value < 0)
-                activeLastPage.value = response.data.resource.last_page
+                activeLastPage.value = get(response.data, props.lastPageKey, 1)
 
               if(search.value == ''){
-                appendElements(response.data.resource.data ?? []);
+                appendElements(get(response.data, props.dataKey) ?? []);
               }else{
-                setElements(response.data.resource.data ?? [])
+                setElements(get(response.data, props.dataKey) ?? [])
               }
               // page.value++;
 
-              setActivePage(response.data.resource.current_page)
+              setActivePage(get(response.data, props.currentPageKey, 1))
 
               if(!!context.input.value){
                 let searchContinue = false;
@@ -103,6 +117,18 @@ export default function useInputFetch(props, context) {
                     key: 'sourceLoading',
                     value: false
                   },
+                  {
+                    key: 'items',
+                    value: elements.value
+                  },
+                  {
+                    key: 'lastPage',
+                    value: activeLastPage.value
+                  },
+                  {
+                    key: 'page',
+                    value: activePage.value
+                  }
                 ])
               }
 

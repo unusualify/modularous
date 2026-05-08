@@ -1,0 +1,17 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Modules\Cms\Http\Controllers\Front\CmsController;
+
+/**
+ * CMS public front controller (invokable). Resolution: {@see CmsController::resolvePublicItem()}.
+ *
+ * View: `{module::route}.custom` from {@see $moduleName} / {@see $routeName} (e.g. cms::page.custom).
+ */
+final class $CLASS$ extends CmsController
+{
+    protected $moduleName = '$MODULE_STUDLY$';
+
+    protected $routeName = '$ROUTE_STUDLY$';
+}

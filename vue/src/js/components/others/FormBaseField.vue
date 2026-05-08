@@ -257,6 +257,7 @@
     v-else-if="obj.schema.translated"
     :type="ctx.mapTypeToComponent(obj.schema.type)"
     :attributes="obj.schema"
+    :obj="obj"
     :model-value="ctx.setValue(obj)"
     @update:model-value="ctx.onInput($event, obj)"
   />

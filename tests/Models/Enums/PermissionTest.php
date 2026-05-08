@@ -22,6 +22,9 @@ class PermissionTest extends TestCase
             'BULKDELETE' => 'bulkDelete',
             'BULKFORCEDELETE' => 'bulkForceDelete',
             'BULKRESTORE' => 'bulkRestore',
+            'REVISION_APPROVE' => 'revisionApprove',
+            'REVISION_REJECT' => 'revisionReject',
+            'REVISION_RESTORE' => 'revisionRestore',
             'ACTIVITY' => 'activity',
             'SHOW' => 'show',
         ];
@@ -35,13 +38,13 @@ class PermissionTest extends TestCase
     public function test_all_cases_exist()
     {
         $cases = Permission::cases();
-        $this->assertCount(14, $cases);
+        $this->assertCount(17, $cases);
 
         $caseValues = array_map(fn ($case) => $case->value, $cases);
         $expectedValues = [
             'create', 'view', 'edit', 'delete', 'forceDelete', 'restore',
             'duplicate', 'reorder', 'bulk', 'bulkDelete', 'bulkForceDelete',
-            'bulkRestore', 'activity', 'show',
+            'bulkRestore', 'activity', 'show', 'revisionApprove', 'revisionReject', 'revisionRestore',
         ];
 
         foreach ($expectedValues as $value) {

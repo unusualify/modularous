@@ -30,6 +30,21 @@ return [
                 'icon' => '$header',
             ],
             ...Navigation::modulesMenu(),
+            // '_cms_promotion' => [
+            //     'name' => 'CMS promotion',
+            //     'icon' => 'mdi-rocket-launch-outline',
+            //     'route_name' => 'admin.system.cms.promotion.tool',
+            // ],
+            // '_cms_site_seo' => [
+            //     'name' => 'Site SEO',
+            //     'icon' => 'mdi-robot-outline',
+            //     'route_name' => 'admin.system.cms.siteSeo.tool',
+            // ],
+            // '_cms_sitemap' => [
+            //     'name' => 'Sitemap',
+            //     'icon' => 'mdi-sitemap',
+            //     'route_name' => 'admin.system.cms.sitemap.index',
+            // ],
             '_system_settings' => [
                 'name' => 'System Settings',
                 'icon' => '$header',

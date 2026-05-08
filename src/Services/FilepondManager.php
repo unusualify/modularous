@@ -68,15 +68,12 @@ class FilepondManager
 
     public function previewFile($folder)
     {
-        // dd($folder);
         if (Storage::exists($this->file_path . '/' . $folder)) {
             $path = Storage::files($this->file_path . '/' . $folder)[0];
         } else {
             $tmp_file = TemporaryFilepond::where('folder_name', $folder)->first();
             $path = $this->tmp_file_path . $tmp_file->folder_name . '/' . $tmp_file->file_name;
         }
-
-        // dd($path);
 
         $storagePath = Storage::path($path);
 
@@ -85,25 +82,60 @@ class FilepondManager
         }
 
         $fileType = pathinfo($storagePath, PATHINFO_EXTENSION);
+        $fileType = strtolower((string) $fileType);
 
         if (in_array($fileType, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'])) {
-            $image = Image::make($storagePath);
+            try {
+                $image = Image::make($storagePath);
 
-            return $image->response($image->mime());
-        } else {
-            $mimeType = mime_content_type($storagePath);
-
-            return response()->file($storagePath, [
-                'Content-Type' => $mimeType,
-            ]);
+                return $image->response($image->mime());
+            } catch (\Throwable $th) {
+                // Fallback for formats that the active image driver cannot decode (e.g. HEIC).
+            }
         }
 
-        $image = Image::make($storagePath);
+        $mimeType = (string) mime_content_type($storagePath);
 
-        return $image
-            ->response($image->mime());
-        // ->resize(300, 200)
-        // ->response('jpg', 70);
+        if (in_array($fileType, ['heic', 'heif']) || in_array($mimeType, ['image/heic', 'image/heif', 'image/heic-sequence', 'image/heif-sequence'])) {
+            $jpegBinary = $this->convertHeicToJpeg($storagePath);
+
+            if ($jpegBinary !== null) {
+                return response($jpegBinary, 200, [
+                    'Content-Type' => 'image/jpeg',
+                    'Content-Disposition' => 'inline; filename="' . pathinfo($storagePath, PATHINFO_FILENAME) . '.jpg"',
+                ]);
+            }
+        }
+
+        return response()->file($storagePath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($storagePath) . '"',
+        ]);
+    }
+
+    private function convertHeicToJpeg(string $storagePath): ?string
+    {
+        $imagickClass = 'Imagick';
+
+        if (! class_exists($imagickClass)) {
+            return null;
+        }
+
+        try {
+            $imagick = new $imagickClass();
+            $imagick->readImage($storagePath);
+            $imagick->setImageFormat('jpeg');
+            $imagick->setImageCompressionQuality(90);
+
+            $jpegBinary = $imagick->getImagesBlob();
+
+            $imagick->clear();
+            $imagick->destroy();
+
+            return $jpegBinary;
+        } catch (\Throwable $th) {
+            return null;
+        }
     }
 
     public function persistFile(TemporaryFilepond $temp_filepond, Model $model, $role = null, $locale = null)
@@ -343,7 +375,7 @@ class FilepondManager
             $tmp_file = TemporaryFilepond::where('folder_name', $uuid)->first();
 
             if ($tmp_file) {
-                $path = $this->tmp_file_path . $tmp_file->folder_name . '/' . $tmp_file->file_name;
+                $path = $this->tmp_file_path . $tmp_file->folder_name;
             }
         }
 
@@ -361,7 +393,10 @@ class FilepondManager
         $path = $this->getStoragePath($uuid);
 
         if ($path) {
-            return Storage::files($path)[0];
+            $files = Storage::files($path);
+            if (count($files) > 0) {
+                return $files[0];
+            }
         }
 
         return null;

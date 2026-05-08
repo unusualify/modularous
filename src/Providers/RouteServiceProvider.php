@@ -8,10 +8,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
+use Unusualify\Modularity\Contracts\CanBulkSheet;
 use Unusualify\Modularity\Facades\HostRoutingRegistrar;
 use Unusualify\Modularity\Facades\Modularity;
 use Unusualify\Modularity\Facades\ModularityRoutes;
 use Unusualify\Modularity\Http\Controllers\GlideController;
+use Unusualify\Modularity\Module;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -353,7 +355,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::macro('additionalRoutes', function ($url, $routeName, $options) {
 
-            $customRoutes = $defaults = [
+            $defaults = [
                 'reorder',
                 // 'publish',
                 // 'bulkPublish',
@@ -361,7 +363,11 @@ class RouteServiceProvider extends ServiceProvider
                 // 'feature',
                 // 'preview',
                 // 'bulkFeature',
-                // 'restoreRevision',
+                'showView',
+                'listRevisions',
+                'restoreRevision',
+                'approveRevision',
+                'rejectRevision',
 
                 'restore',
                 'bulkRestore',
@@ -377,31 +383,92 @@ class RouteServiceProvider extends ServiceProvider
                 'createAssignment',
             ];
 
-            $controllerClass = "{$routeName}Controller";
-            $snakeCase = snakeCase($routeName);
-            // if (isset($options['only'])) {
-            //     $customRoutes = array_intersect(
-            //         $defaults,
-            //         (array) $options['only']
-            //     );
-            // } elseif (isset($options['except'])) {
-            //     $customRoutes = array_diff(
-            //         $defaults,
-            //         (array) $options['except']
-            //     );
-            // }
-            foreach ($customRoutes as $customRoute) {
-                $customRouteKebab = kebabCase($customRoute);
-                $routeSlug = "{$url}/{$customRouteKebab}";
+            $customRoutes = $defaults;
 
+            $groupStack = Route::getGroupStack();
+            $namespace = $groupStack[count($groupStack) - 1]['namespace'] ?? null;
+            $controllerClass = null;
+            if ($namespace && class_exists("{$namespace}\\{$routeName}Controller")) {
+                $controllerClass = app()->make("{$namespace}\\{$routeName}Controller");
+            }
+
+            $bulkSheetStepUpMiddleware = null;
+            if ($controllerClass instanceof CanBulkSheet) {
+                try {
+                    if ($controllerClass instanceof CanBulkSheet) {
+                        $customRoutes = array_merge($customRoutes, [
+                            'bulkSheetTool',
+                            'bulkSheetDryRun',
+                            'bulkSheetCommit',
+                            'bulkSheetExport',
+                        ]);
+                        $ability = $controllerClass->bulkSheetStepUpAbility();
+                        if (
+                            $ability !== null && $ability !== ''
+                            && modularityConfig('cms_features.register_middlewares', true)
+                            && modularityConfig('security.enabled', false)
+                        ) {
+                            $bulkSheetStepUpMiddleware = 'modularity.security.step_up:' . $ability;
+                        }
+                    }
+                } catch (\Throwable) {
+                    // Submodule may omit this controller; skip bulk sheet routes.
+                }
+            }
+
+            $controllerName = "{$routeName}Controller";
+            $snakeCase = snakeCase($routeName);
+
+            foreach ($customRoutes as $customRoute) {
                 $mapping = [
                     // 'as' => $customRoutePrefix . ".{$customRoute}",
                     'as' => $options['as'] . ".{$customRoute}",
-                    'uses' => "{$controllerClass}@{$customRoute}",
+                    'uses' => "{$controllerName}@{$customRoute}",
                 ];
 
-                if ($customRoute === 'assignments') {
-                    Route::get("{$url}/{{$snakeCase}}/assignments", $mapping);
+                if ($controllerClass instanceof CanBulkSheet && in_array($customRoute, [
+                    'bulkSheetTool',
+                    'bulkSheetDryRun',
+                    'bulkSheetCommit',
+                    'bulkSheetExport',
+                ], true)) {
+                    $names = $controllerClass->bulkSheetWebRouteNames();
+                    $asKey = match ($customRoute) {
+                        'bulkSheetTool' => $names['tool'],
+                        'bulkSheetDryRun' => $names['dryRun'],
+                        'bulkSheetCommit' => $names['commit'],
+                        'bulkSheetExport' => $names['export'],
+                        default => $customRoute,
+                    };
+                    $mapping['as'] = $options['as'] . '.' . $asKey;
+
+                    if ($customRoute === 'bulkSheetTool') {
+                        Route::get("{$url}/bulk", $mapping);
+                    } elseif ($customRoute === 'bulkSheetDryRun') {
+                        $r = Route::post("{$url}/bulk/dry-run", $mapping);
+                        if ($bulkSheetStepUpMiddleware !== null) {
+                            $r->middleware($bulkSheetStepUpMiddleware);
+                        }
+                    } elseif ($customRoute === 'bulkSheetCommit') {
+                        $r = Route::post("{$url}/bulk/commit", $mapping);
+                        if ($bulkSheetStepUpMiddleware !== null) {
+                            $r->middleware($bulkSheetStepUpMiddleware);
+                        }
+                    } elseif ($customRoute === 'bulkSheetExport') {
+                        Route::get("{$url}/bulk/export", $mapping);
+                    }
+                }
+
+                if (! $controllerClass || ! method_exists($controllerClass, $customRoute)) {
+                    continue;
+                }
+
+                $customRouteKebab = kebabCase($customRoute);
+                $routeSlug = "{$url}/{$customRouteKebab}";
+
+                if (in_array($customRoute, ['assignments', 'listRevisions'])) {
+                    // dd($customRoute, $routeSlug, $mapping, $url, $snakeCase);
+                    Route::get("{$url}/{{$snakeCase}}/{$customRouteKebab}", $mapping);
                 }
 
                 if ($customRoute === 'createAssignment') {
@@ -429,11 +496,7 @@ class RouteServiceProvider extends ServiceProvider
                     Route::put($routeSlug, $mapping);
                 }
 
-                if (in_array($customRoute, ['duplicate'])) {
-                    Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
-                }
-
-                if (in_array($customRoute, ['preview'])) {
+                if (in_array($customRoute, ['duplicate', 'preview', 'showView', 'restoreRevision', 'approveRevision', 'rejectRevision'])) {
                     Route::put($routeSlug . "/{{$snakeCase}}", $mapping);
                 }
 
@@ -447,7 +510,6 @@ class RouteServiceProvider extends ServiceProvider
                         'bulkForceDelete',
                     ])
                 ) {
-
                     Route::post($routeSlug, $mapping);
                 }
 

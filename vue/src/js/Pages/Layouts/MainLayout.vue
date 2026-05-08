@@ -1,8 +1,11 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { usePage, Head } from '@inertiajs/vue3'
+import { useAlert } from '@/hooks'
+import { joinFlashWarningMessages } from '@/utils/flashWarnings'
 
 const page = usePage()
+const { openAlert } = useAlert()
 
 const loading = ref(true)
 
@@ -34,6 +37,20 @@ onMounted(() => {
     loading.value = false
   }, 700)
 })
+
+function showFlashWarnings(warnings) {
+  const text = joinFlashWarningMessages(warnings)
+  if (!text) {
+    return
+  }
+  openAlert({ message: text, variant: 'warning' })
+}
+
+watch(
+  () => page.props.flash?.warnings,
+  (warnings) => showFlashWarnings(warnings),
+  { immediate: true },
+)
 
 defineOptions({
   name: 'MainLayout',

@@ -1,6 +1,6 @@
 ---
 outline: deep
-sidebarPos: 12
+sidebarPos: 10
 ---
 
 # Repeaters

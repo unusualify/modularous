@@ -213,8 +213,29 @@ trait MethodTransformers
     public function afterSave($object, $fields)
     {
         foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            if ($this->shouldBypassAfterSaveHook($method)) {
+                continue;
+            }
+
             $this->$method($object, $fields);
         }
+    }
+
+    /**
+     * When RevisionsTrait::bypassAfterSaves sets passAfterSave* (after opt-in via each trait’s
+     * pendingBypassRevision*), that hook is skipped. Naming: afterSaveFooTrait → passAfterSaveFooTrait.
+     *
+     * @see traitsMethods()
+     */
+    protected function shouldBypassAfterSaveHook(string $method): bool
+    {
+        if (! str_starts_with($method, 'afterSave')) {
+            return false;
+        }
+
+        $passProperty = preg_replace('/^after/', 'passAfter', $method);
+
+        return property_exists($this, $passProperty) && $this->{$passProperty} === true;
     }
 
     /**

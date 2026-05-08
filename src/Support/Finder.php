@@ -91,7 +91,7 @@ class Finder
             }
 
             foreach ($this->getClasses($entityPath) as $_class) {
-                if (get_class_short_name(App::make($_class)) === $this->getStudlyName($routeName)) {
+                if ($this->classBasename($_class) === $this->getStudlyName($routeName)) {
                     $class = $_class;
 
                     break 2;
@@ -161,7 +161,7 @@ class Finder
                 continue;
             }
             foreach ($this->getClasses($path) as $_class) {
-                if (get_class_short_name(App::make($_class)) === $this->getStudlyName($routeName) . 'Repository') {
+                if ($this->classBasename($_class) === $this->getStudlyName($routeName) . 'Repository') {
                     $class = $_class;
 
                     break 2;
@@ -254,5 +254,14 @@ class Finder
     {
         return $this->getAllModels()
             ->filter(fn ($model) => in_array($trait, class_uses_recursive($model)))->values()->toArray();
+    }
+
+    /**
+     * Unqualified class name without resolving from the container (avoids
+     * instantiating unrelated repositories/models while scanning).
+     */
+    private function classBasename(string $class): string
+    {
+        return basename(str_replace('\\', '/', $class));
     }
 }

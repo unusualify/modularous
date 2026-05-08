@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Unusualify\Modularity\Http\Controllers\Utility\SlugInputGenerateController;
+use Unusualify\Modularity\Http\Controllers\Utility\SlugInputValidationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::post('inputs/slug/validate', SlugInputValidationController::class)
+    ->name('inputs.slug.validate');
+
+Route::post('inputs/slug/generate', SlugInputGenerateController::class)
+    ->name('inputs.slug.generate');
 
 // Route::group(['as' => 'api.', 'namespace' => 'API'], function(){
 //     Route::apiResource('languages', LanguageController::class, ['only' => 'index']);

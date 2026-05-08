@@ -7,12 +7,12 @@ import { sidebarConfig } from './sidebar-config.mjs'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   ...shared,
-  description: "Modularity Docs",
+  description: "Modularous Docs",
   themeConfig: {
     ...navConfig,
     ...sidebarConfig,
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/unusualify/modularity' },
+      { icon: 'github', link: 'https://github.com/unusualify/modularous' },
     ],
 
   },

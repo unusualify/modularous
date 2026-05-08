@@ -1,6 +1,27 @@
 <?php
 
 return [
+    'cms' => [
+        'page' => [
+            'name' => 'Page | Pages | {n} Page',
+        ],
+        'redirect' => [
+            'name' => 'Redirect | Redirects | {n} Redirect',
+
+            'intro' => 'Required: locale, from path, to path. Optional: status code (301–308), active (0/1).',
+            'headline' => 'Redirect import / export',
+            'browser_title' => 'Redirect import / export',
+        ],
+        'parent_segment' => [
+            'name' => 'Parent Segment | Parent Segments | {n} Parent Segment',
+        ],
+        'sitemap' => [
+            'name' => 'Sitemap | Sitemap | {n} Sitemap',
+        ],
+        'site_setting' => [
+            'name' => 'Site Setting | Site Settings | {n} Site Setting',
+        ],
+    ],
     'system_notification' => [
         'my_notification' => [
             'name' => 'My Notification | My Notifications | {n} My Notification',
@@ -58,6 +79,12 @@ return [
         ],
         'user' => [
             'name' => 'User | Users | {n} Users',
+        ],
+        'capability' => [
+            'name' => 'Capability | Capabilities | {n} Capabilities',
+        ],
+        'capability_route' => [
+            'name' => 'Capability Route | Capability Routes | {n} Capability Routes',
         ],
     ],
     'system_utility' => [

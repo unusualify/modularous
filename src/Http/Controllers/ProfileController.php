@@ -51,21 +51,6 @@ class ProfileController extends BaseController
             $request
         );
 
-        // dd(
-        //     "can:{$this->permissionPrefix(Permission::VIEW->value)}",
-        //     "can:{$this->permissionPrefix(Permission::EDIT->value)}",
-        //     $this->middleware,
-        //     get_class_methods($this),
-        //     $this
-        // );
-        $this->removeMiddleware("can:{$this->permissionPrefix(Permission::VIEW->value)}");
-        $this->removeMiddleware("can:{$this->permissionPrefix(Permission::EDIT->value)}");
-        // dd(
-        //     $this->middleware
-        // );
-        // $this->removeMiddleware("can:{$this->permissionPrefix()}_". Permission::VIEW->value);
-        // $this->middleware('can:dashboard', ['only' => ['index']]);
-
     }
 
     public function edit($id = null, $submoduleId = null)
