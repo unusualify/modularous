@@ -12,7 +12,8 @@ class Imgix implements ImageServiceInterface
     use ImageServiceDefaults;
 
     /**
-     * @var UrlBuilder
+     * @var UrlBuilder|null Null when `IMGIX_SOURCE_HOST` is missing —
+     * see the constructor for why we don't fatally throw in that case.
      */
     private $urlBuilder;
 
@@ -25,8 +26,23 @@ class Imgix implements ImageServiceInterface
     {
         $this->config = $config;
 
+        // The Imgix UrlBuilder rejects null/empty domains with
+        // `InvalidArgumentException: UrlBuilder must be passed a string
+        // domain`. Until recently this was thrown during model
+        // serialisation (e.g. PaymentService::button_logo_url accessor),
+        // taking out every index/show endpoint that touched a model with
+        // image accessors when `IMGIX_SOURCE_HOST` was missing. Skip
+        // constructing the builder in that case; `getUrl` and friends
+        // return '' instead of fatally throwing.
+        $sourceHost = $this->config->get(modularityBaseKey() . '.imgix.source_host');
+        if (! is_string($sourceHost) || $sourceHost === '') {
+            $this->urlBuilder = null;
+
+            return;
+        }
+
         $urlBuilder = new UrlBuilder(
-            $this->config->get(modularityBaseKey() . '.imgix.source_host'),
+            $sourceHost,
             $this->config->get(modularityBaseKey() . '.imgix.use_https'),
             '',
             false
@@ -45,6 +61,10 @@ class Imgix implements ImageServiceInterface
      */
     public function getUrl($id, array $params = [])
     {
+        if ($this->urlBuilder === null) {
+            return '';
+        }
+
         $defaultParams = $this->config->get(modularityBaseKey() . '.imgix.default_params');
         $addParamsToSvgs = modularityConfig('imgix.add_params_to_svgs', false);
 
@@ -126,6 +146,10 @@ class Imgix implements ImageServiceInterface
      */
     public function getRawUrl($id)
     {
+        if ($this->urlBuilder === null) {
+            return '';
+        }
+
         return $this->urlBuilder->createURL($id);
     }
 
@@ -135,6 +159,10 @@ class Imgix implements ImageServiceInterface
      */
     public function getDimensions($id)
     {
+        if ($this->urlBuilder === null) {
+            return ['width' => 0, 'height' => 0];
+        }
+
         $url = $this->urlBuilder->createURL($id, ['fm' => 'json']);
 
         try {
