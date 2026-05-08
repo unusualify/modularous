@@ -92,11 +92,38 @@ export default defineConfig(({ command, mode }) => {
   let appDir = fileURLToPath(new URL(`${LARAVEL_ROOT_LEVEL}`, import.meta.url))
   const publicDir = 'public'
 
+  // Vite >= 5.0.5 (CVE-2025-31125) replaced the loose CORS default with a
+  // narrow allow-list that only covers `localhost`/`127.0.0.1`/`[::1]`. Setting
+  // `headers: { 'Access-Control-Allow-Origin': '*' }` does NOT bypass that
+  // allow-list — Vite's CORS middleware writes its own header and ignores us.
+  //
+  // We must use `server.cors`. Crucially the value below must be a `RegExp`
+  // (or array containing one), not a plain string — Vite's CORS impl returns
+  // a fixed value for strings (no reflection), but reflects the actual
+  // request origin (with `Vary: Origin`) for regex/array, which is what
+  // multi-subdomain dev (laravel.test, admin.laravel.test, …) needs.
+  //
+  // The allowed root domain is derived from APP_URL so any subdomain of
+  // your app — plus the usual loopback hosts — is permitted automatically.
+  const APP_URL = ENV.APP_URL || 'http://laravel.test'
+  const appHostname = (() => {
+    try { return new URL(APP_URL).hostname } catch { return 'laravel.test' }
+  })()
+  // "admin.laravel.test" -> "laravel.test"; "laravel.test" -> "laravel.test"
+  const rootDomain = appHostname.split('.').slice(-2).join('.') || appHostname
+  const escapedRoot = rootDomain.replace(/\./g, '\\.')
+  const corsOriginRegex = new RegExp(
+    `^https?://([^/]+\\.)?(${escapedRoot}|localhost|127\\.0\\.0\\.1)(:\\d+)?$`
+  )
+
   const server = {
     host: '0.0.0.0',
     port: VUE_DEV_PORT,
     strictPort: true,
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    cors: {
+      origin: corsOriginRegex,
+      credentials: true,
+    },
     watch: {
       usePolling: true
       // aggregateTimeout: 1000,
@@ -269,11 +296,30 @@ export default defineConfig(({ command, mode }) => {
     },
     css: {
       preprocessorOptions: {
+        // Sass deprecation noise mostly originates from Vuetify's internal
+        // styles (e.g. `if()` legacy syntax, `@import`, `lighten()` etc.),
+        // which we cannot patch from this side. `quietDeps` silences any
+        // deprecation whose call site is inside `node_modules`. The explicit
+        // `silenceDeprecations` list covers warnings that surface from our
+        // own files because of `additionalData` injection or because Vite is
+        // still using the legacy Sass JS API.
+        // Drop entries from `silenceDeprecations` once the underlying issue
+        // is addressed so genuinely actionable warnings can resurface.
         scss: {
           additionalData: `
             @use "styles/themes/${APP_THEME_FOLDER}/_additional.scss" as *;
           `,
-
+          quietDeps: true,
+          silenceDeprecations: [
+            'legacy-js-api',
+            'import',
+            'global-builtin',
+            'color-functions',
+            'slash-div',
+            'if-function',
+            'null-alpha',
+            'function-units',
+          ],
           sassOptions: {
             outputStyle: isProduction ? 'compressed' : 'expanded'
           }
@@ -282,6 +328,17 @@ export default defineConfig(({ command, mode }) => {
           additionalData: `
             @use "styles/themes/${APP_THEME_FOLDER}/_additional.scss" as *
           `,
+          quietDeps: true,
+          silenceDeprecations: [
+            'legacy-js-api',
+            'import',
+            'global-builtin',
+            'color-functions',
+            'slash-div',
+            'if-function',
+            'null-alpha',
+            'function-units',
+          ],
           sassOptions: {
             outputStyle: isProduction ? 'compressed' : 'expanded'
           }
