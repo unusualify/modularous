@@ -22,7 +22,7 @@
     "@kugatsu/vuenotification": "^1.1.4",
     "@revolut/checkout": "^1.1.23",
     "@rollup/plugin-commonjs": "^25.0.7",
-    "awesome-phonenumber": "^7.8.0",
+    "awesome-phonenumber": "^2.73.0",
     "axios": "^1.16.0",
     "cropperjs": "^1.5.13",
     "date-fns": "^4.1.0",
