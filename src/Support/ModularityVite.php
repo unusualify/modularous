@@ -58,9 +58,16 @@ class ModularityVite extends Vite
         $buildDirectory ??= $this->buildDirectory;
 
         if ($this->isRunningHot()) {
+            // @spiriit/vite-plugin-svg-spritemap v2.3.x changed the virtual module ID
+            // from "/@vite-plugin-svg-spritemap/client" (v2.2.x) to
+            // "/@vite-plugin-svg-spritemap/client{route}", where {route} defaults to
+            // "__spritemap". If the plugin is configured with a custom `route`, this
+            // suffix must match. Override via VITE_SPRITEMAP_ROUTE in .env if needed.
+            $spritemapRoute = env('VITE_SPRITEMAP_ROUTE', '__spritemap');
+
             return new HtmlString(
                 $entrypoints
-                    ->prepend('@vite-plugin-svg-spritemap/client')
+                    ->prepend('@vite-plugin-svg-spritemap/client' . $spritemapRoute)
                     ->prepend('@vite/client')
                     ->map(fn ($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
                     ->join('')
