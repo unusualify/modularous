@@ -60,16 +60,14 @@ class Payment extends \Unusualify\Payable\Models\Payment
 
     protected static function booted(): void
     {
-        static::addGlobalScope('price_currency_iso_4217', function (Builder $builder) {
-            $pricesTable = (new Price)->getTable();
+        static::addGlobalScope('currency_iso_4217', function (Builder $builder) {
             $currenciesTable = (new Currency)->getTable();
             $paymentTable = (new static)->getTable();
 
             $builder->addSelect([
-                'price_currency_iso_4217' => Currency::query()
+                'currency_iso_4217' => Currency::query()
                     ->select($currenciesTable . '.iso_4217')
-                    ->join($pricesTable, $pricesTable . '.currency_id', '=', $currenciesTable . '.id')
-                    ->whereColumn($pricesTable . '.id', $paymentTable . '.price_id')
+                    ->whereColumn($currenciesTable . '.id', $paymentTable . '.currency_id')
                     ->limit(1),
             ]);
         });
@@ -168,7 +166,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return Attribute::make(
             get: function () {
-                return PriceService::formatAmount($this->amount, new \Money\Currency($this->price_currency_iso_4217 ?? $this->currency->iso_4217));
+                return PriceService::formatAmount($this->amount, new \Money\Currency($this->currency_iso_4217 ?? $this->currency->iso_4217));
             },
         );
     }
