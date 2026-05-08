@@ -29,8 +29,16 @@ export default function useLocale (props = {}) {
     store.commit(LANGUAGE.UPDATE_LANG, value)
   }
 
+  // `_locale` is intentionally NOT returned. Vue 3 reserves keys starting
+  // with `_` or `$` in setup() return objects (and composables that get
+  // spread into setup() returns). Exposing `_locale` triggered:
+  //   "setup() return property "_locale" should not start with "$" or "_"
+  //    which are reserved prefixes for Vue internals."
+  // The ref is used internally by `hasLocale` and `isLocaleRTL` above; no
+  // external consumer reads it (verified via grep). If a consumer ever needs
+  // direct access, expose it under a non-prefixed alias such as
+  // `localeRef` or `currentLocaleProp` — never with a leading underscore.
   return {
-    _locale,
     currentLocale,
     languages,
     hasLocale,
