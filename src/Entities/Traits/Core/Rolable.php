@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
-use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 
 trait Rolable
@@ -31,22 +30,26 @@ trait Rolable
      */
     public function rolesMetaRelation(): BelongsToMany
     {
+        $teams = config('permission.teams');
         $rolesTable = config('permission.table_names.roles');
+        $columnNames = config('permission.column_names');
+        $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
+
         $relation = $this->morphToMany(
             config('permission.models.role'),
             'model',
             config('permission.table_names.model_has_roles'),
             config('permission.column_names.model_morph_key'),
-            PermissionRegistrar::$pivotRole
+            $pivotRole
         )->select("{$rolesTable}.id", "{$rolesTable}.name", "{$rolesTable}.title");
 
-        if (! PermissionRegistrar::$teams) {
+        if (! $teams) {
             return $relation;
         }
 
-        return $relation->wherePivot(PermissionRegistrar::$teamsKey, getPermissionsTeamId())
-            ->where(function ($q) use ($rolesTable) {
-                $teamField = "{$rolesTable}." . PermissionRegistrar::$teamsKey;
+        return $relation->wherePivot($teams, getPermissionsTeamId())
+            ->where(function ($q) use ($rolesTable, $columnNames) {
+                $teamField = "{$rolesTable}." . $columnNames['team_foreign_key'];
                 $q->whereNull($teamField)->orWhere($teamField, getPermissionsTeamId());
             });
     }
