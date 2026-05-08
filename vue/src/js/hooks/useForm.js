@@ -343,7 +343,8 @@ export default function useForm(props, context) {
 
       const formData = getSubmitFormData(rawSchema.value, states.model, store._state.data)
 
-      const method = Object.prototype.hasOwnProperty.call(formData, 'id') ? 'put' : 'post'
+      const method = (props.isEditing) || Object.prototype.hasOwnProperty.call(formData, 'id')
+        ? 'put' : 'post'
 
       api[method](props.actionUrl, formData,
         (response) => {
