@@ -118,9 +118,9 @@ class Modularity extends FileRepository
     /**
      * {@inheritdoc}
      */
-    protected function createModule(...$args)
+    protected function createModule(Container $app, string $name, string $path): Module
     {
-        return new Module(...$args);
+        return new Module($app, $name, $path);
     }
 
     /**
@@ -148,7 +148,7 @@ class Modularity extends FileRepository
      *
      * @return array
      */
-    public function scan()
+    public function scan(): array
     {
         $paths = $this->getScanPaths();
 
@@ -161,7 +161,7 @@ class Modularity extends FileRepository
             foreach ($manifests as $manifest) {
                 $name = Json::make($manifest)->get('name');
 
-                $modules[$name] = $this->createModule($this->app, $name, dirname($manifest));
+                $modules[strtolower($name)] = $this->createModule($this->app, $name, dirname($manifest));
             }
         }
 
@@ -225,7 +225,9 @@ class Modularity extends FileRepository
     {
         app('cache')->forget($this->config('cache.key'));
 
-        $this->activator->flushCache(); // for modules_statuses.json cache
+        if (method_exists($this->activator, 'flushCache')) {
+            $this->activator->flushCache(); // for modules_statuses.json cache
+        }
     }
 
     /**
@@ -260,7 +262,7 @@ class Modularity extends FileRepository
         /** @var Module $module */
         foreach ($this->all() as $name => $module) {
             if ($this->activator->hasStatus($module, $status)) {
-                $modules[$name] = $module;
+                $modules[strtolower($name)] = $module;
             }
         }
 

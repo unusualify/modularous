@@ -41,7 +41,13 @@ class FileLoader extends LaravelFileLoader
         return $groups;
     }
 
-    public function addPath(array|string $path)
+    /**
+     * Add a path to the file loader.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function addPath($path)
     {
         $this->paths = array_merge($this->paths, is_string($path) ? [$path] : $path);
     }

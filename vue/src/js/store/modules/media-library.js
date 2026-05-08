@@ -248,7 +248,11 @@ const mutations = {
     if (newValue && newValue !== '') state.type = newValue
   },
   [MEDIA_LIBRARY.RESET_MEDIA_TYPE] (state) {
-    state.type = state.types[0].value
+    // `state.types` is hydrated from the backend payload and can be empty
+    // on screens that don't ship media-library config (e.g. utility lists
+    // like Countries). Fall back to the existing `state.type` rather than
+    // throwing on `undefined.value`.
+    state.type = state.types[0]?.value ?? state.type
   },
   [MEDIA_LIBRARY.UPDATE_MEDIA_MAX] (state, newValue) {
     state.max = Math.max(0, newValue)

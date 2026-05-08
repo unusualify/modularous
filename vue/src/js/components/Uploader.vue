@@ -18,9 +18,15 @@ import sanitizeFilename from '@/utils/sanitizeFilename.js'
 export default {
   name: 'A17Uploader',
   props: {
+    // Comes from ModalMedia as `:type="currentTypeObject"`, which is briefly
+    // undefined while the Vuex media-library store hydrates (Inertia v3
+    // bootstrap timing). Default to `null` so the validator doesn't fire;
+    // the runtime is already defensive — `uploaderConfig` uses optional
+    // chaining and `initUploader` bails when `uploaderConfig` is falsy, with
+    // a `type` watcher that re-runs init once a real object arrives.
     type: {
       type: Object,
-      required: true
+      default: null
     }
   },
   data: function () {
@@ -30,19 +36,36 @@ export default {
   },
   computed: {
     uploaderConfig: function () {
-      return this.type.uploaderConfig
+      // `type` is passed in from ModalMedia as `currentTypeObject`, which is
+      // undefined while the Vuex media-library store is still hydrating
+      // (Inertia v3 page-bootstrap timing). Return undefined and let
+      // initUploader bail; the `type` watcher re-invokes init once the
+      // store fills in.
+      return this.type?.uploaderConfig
     },
     uploaderValidation: function () {
-      const extensions = this.uploaderConfig.allowedExtensions
+      const extensions = this.uploaderConfig?.allowedExtensions || []
       return {
         allowedExtensions: extensions,
-        acceptFiles: '.' + extensions.join(', .'),
+        acceptFiles: extensions.length ? '.' + extensions.join(', .') : '',
         stopOnFirstInvalidFile: false
       }
     }
   },
   methods: {
     initUploader: function () {
+      // Guard: `type` may not be hydrated yet on first mounted() tick. The
+      // `uploaderConfig` watcher re-invokes this once the store fills in.
+      if (!this.uploaderConfig) {
+        // Surface this — otherwise the "Add new" button is just an inert
+        // <div> (Fine Uploader mounts a hidden <input> on top of that
+        // element only after init succeeds), and clicks silently no-op.
+        console.warn('[Uploader] init skipped: uploaderConfig not ready', {
+          hasType: !!this.type,
+          typeValue: this.type?.value
+        })
+        return
+      }
       const buttonEl = this.$refs.uploaderBrowseButton
       const sharedConfig = {
         debug: true,
@@ -157,6 +180,16 @@ export default {
               }
             }
           })
+
+      // Flush any files dropped before the store finished hydrating. The
+      // dropzone fires `processingDroppedFilesComplete` regardless of init
+      // state, so we buffer in `_onProcessingDroppedFilesComplete` and add
+      // them here once an uploader instance actually exists.
+      if (this._pendingDropFiles && this._pendingDropFiles.length) {
+        const pending = this._pendingDropFiles
+        this._pendingDropFiles = []
+        this._uploader.methods.addFiles(pending)
+      }
     },
     replaceMedia: function (id) {
       this.media_to_replace_id = id
@@ -285,12 +318,33 @@ export default {
       console.error(errorCode, errorData)
     },
     _onProcessingDroppedFilesComplete (files) {
+      // The dropzone is wired up in `mounted()` regardless of whether
+      // `initUploader` succeeded — `uploaderConfig` may still be falsy on
+      // the first tick (Vuex media-library store hydrating). If a user
+      // drops files in that window, `_uploader` is undefined. Try to init
+      // now (covers late hydration); if the uploader still isn't ready,
+      // queue the files so they get added by `initUploader` once it runs
+      // via the `type` watcher.
+      if (!this._uploader) {
+        this.initUploader()
+      }
+      if (!this._uploader) {
+        this._pendingDropFiles = (this._pendingDropFiles || []).concat(files)
+        return
+      }
       this._uploader.methods.addFiles(files)
     }
   },
   watch: {
-    type: function () {
-      if (this._uploader) {
+    // Re-run init whenever the prerequisite for init becomes available or
+    // changes. Watching `uploaderConfig` (not just `type`) is important:
+    // `type` can already be a truthy object at mount while
+    // `type.uploaderConfig` is still hydrating from the Vuex store. In
+    // that scenario watching `type` would never refire (same reference)
+    // and the "Add new" button would stay inert because Fine Uploader
+    // mounts its hidden <input> only after init succeeds.
+    uploaderConfig: function (newConfig) {
+      if (newConfig) {
         this.initUploader()
       }
     }

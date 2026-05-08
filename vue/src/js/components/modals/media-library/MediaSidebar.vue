@@ -223,9 +223,14 @@ export default {
       type: Boolean,
       default: false
     },
+    // Comes from ModalMedia as `:type="currentTypeObject"`. While the Vuex
+    // media-library store is hydrating (Inertia v3 timing), `currentTypeObject`
+    // is briefly undefined. Default to an empty object so template reads like
+    // `type.tagsEndpoint` and `this.type.value === 'image'` resolve to
+    // undefined / false instead of throwing or tripping the Boolean validator.
     type: {
       type: Object,
-      required: true
+      default: () => ({})
     },
     extraMetadatas: {
       type: Array,

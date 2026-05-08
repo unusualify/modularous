@@ -13,13 +13,6 @@ use Nwidart\Modules\Module;
 class ModularityActivator implements ActivatorInterface
 {
     /**
-     * Laravel cache instance
-     *
-     * @var CacheManager
-     */
-    private $cache;
-
-    /**
      * Laravel Filesystem instance
      *
      * @var Filesystem
@@ -32,16 +25,6 @@ class ModularityActivator implements ActivatorInterface
      * @var Config
      */
     private $config;
-
-    /**
-     * @var string
-     */
-    private $cacheKey;
-
-    /**
-     * @var string
-     */
-    private $cacheLifetime;
 
     /**
      * Array of modules activation statuses
@@ -59,13 +42,10 @@ class ModularityActivator implements ActivatorInterface
 
     public function __construct(Container $app)
     {
-        $this->cache = $app['cache'];
         $this->files = $app['files'];
         $this->config = $app['config'];
         $this->statusesFile = $this->config('statuses-file');
-        $this->cacheKey = $this->config('cache-key');
-        $this->cacheLifetime = $this->config('cache-lifetime');
-        $this->modulesStatuses = $this->getModulesStatuses();
+        $this->modulesStatuses = $this->readJson();
     }
 
     /**
@@ -85,7 +65,6 @@ class ModularityActivator implements ActivatorInterface
             $this->files->delete($this->statusesFile);
         }
         $this->modulesStatuses = [];
-        $this->flushCache();
     }
 
     /**
@@ -107,15 +86,16 @@ class ModularityActivator implements ActivatorInterface
     /**
      * {@inheritDoc}
      */
-    public function hasStatus(Module $module, bool $status): bool
+    public function hasStatus(Module|string $module, bool $status): bool
     {
-        $statuses = $this->getModulesStatuses();
+        $moduleName = $module instanceof Module ? $module->getName() : $module;
+        $statuses = $this->readJson();
 
-        if (! isset($statuses[$module->getName()])) {
+        if (! isset($statuses[$moduleName])) {
             return $status === false;
         }
 
-        return $statuses[$module->getName()] === $status;
+        return $statuses[$moduleName] === $status;
     }
 
     /**
@@ -133,7 +113,6 @@ class ModularityActivator implements ActivatorInterface
     {
         $this->modulesStatuses[$name] = $status;
         $this->writeJson();
-        $this->flushCache();
     }
 
     /**
@@ -141,7 +120,7 @@ class ModularityActivator implements ActivatorInterface
      */
     public function delete(Module $module): void
     {
-        $statuses = $this->getModulesStatuses();
+        $statuses = $this->readJson();
 
         if (! isset($statuses[$module->getName()])) {
             return;
@@ -150,7 +129,6 @@ class ModularityActivator implements ActivatorInterface
         unset($statuses[$module->getName()]);
         $this->modulesStatuses = $statuses;
         $this->writeJson();
-        $this->flushCache();
     }
 
     /**
@@ -176,23 +154,6 @@ class ModularityActivator implements ActivatorInterface
     }
 
     /**
-     * Get modules statuses, either from the cache or from
-     * the json statuses file if the cache is disabled.
-     *
-     * @throws FileNotFoundException
-     */
-    public function getModulesStatuses(): array
-    {
-        if (! $this->config->get('modules.cache.enabled')) {
-            return $this->readJson();
-        }
-
-        return $this->cache->store($this->config->get('modules.cache.driver'))->remember($this->cacheKey, $this->cacheLifetime, function () {
-            return $this->readJson();
-        });
-    }
-
-    /**
      * Reads a config parameter under the 'activators.file' key
      *
      * @return mixed
@@ -200,13 +161,5 @@ class ModularityActivator implements ActivatorInterface
     private function config(string $key, $default = null)
     {
         return $this->config->get('modules.activators.modularity.' . $key, $default);
-    }
-
-    /**
-     * Flushes the modules activation statuses cache
-     */
-    public function flushCache(): void
-    {
-        $this->cache->store($this->config->get('modules.cache.driver'))->forget($this->cacheKey);
     }
 }

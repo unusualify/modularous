@@ -2,6 +2,16 @@
 import { ref, watch } from 'vue';
 import { useInput, makeInputProps, makeInputEmits, makeFilepondProps } from '@/hooks';
 
+// This component renders a fragment (two sibling root elements: the avatar
+// wrapper div and the v-input-filepond), so Vue can't auto-inherit fall-
+// through attrs onto a single root. Combined with form-schema passing many
+// Vuetify input attrs we don't declare (`placeholder`, `errorMessages`,
+// `prependIcon`, etc.), this triggers the "Extraneous non-props attributes"
+// warning. We disable auto-inherit and forward `$attrs` explicitly to the
+// underlying filepond input below — that is the element those attrs are
+// actually meant for.
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps({
   disabled: {
     type: Boolean,
@@ -76,6 +86,7 @@ const deactivateLoading = () => {
     </div>
   </div>
   <v-input-filepond
+    v-bind="$attrs"
     ref="FilepondRef"
     v-model="Input.input.value"
     class="v-input-filepond-avatar"

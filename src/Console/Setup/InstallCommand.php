@@ -91,8 +91,9 @@ class InstallCommand extends BaseCommand
         $dbOperations = [
             'checkDbConnection',
             'makeMigrations',
-            'seedData',
+            'seedSourceData',
             'createSuperAdmin',
+            'seedUtilityData',
         ];
         $vendorOperations = [
             'publishConfig',
@@ -239,7 +240,11 @@ class InstallCommand extends BaseCommand
     private function makeMigrations()
     {
         info("\t Making required migrations");
-        $this->call('migrate');
+        // $this->call('migrate');
+        $code = $this->call('migrate', ['--force' => true]);
+        if ($code !== 0) {
+            throw new \RuntimeException('migrate failed — aborting installation.');
+        }
 
     }
 
@@ -249,11 +254,19 @@ class InstallCommand extends BaseCommand
      *  - DefaultRolesSeeder
      *  - DefaultPermissionsSeeder
      * */
-    private function seedData()
+    private function seedSourceData()
     {
         info("\tSeeding required data");
         $this->call('db:seed', [
-            '--class' => 'Unusualify\Modularity\Database\Seeders\DefaultDatabaseSeeder',
+            '--class' => 'Unusualify\Modularity\Database\Seeders\DefaultDatabaseSourceSeeder',
+        ]);
+    }
+
+    private function seedUtilityData()
+    {
+        info("\tSeeding required data");
+        $this->call('db:seed', [
+            '--class' => 'Unusualify\Modularity\Database\Seeders\DefaultDatabaseUtilitySeeder',
         ]);
     }
 }

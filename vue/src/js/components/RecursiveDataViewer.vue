@@ -83,8 +83,13 @@
     name: 'ue-recursive-data-viewer',
     props: {
       data: {
+        // `null` is intentionally accepted: the component recurses into
+        // every property of an object, including nullable columns like
+        // `deleted_at`. Vue 3 skips type-checking when a non-required prop
+        // receives null/undefined, so dropping `required` here removes the
+        // warning without weakening the contract for the root caller.
         type: [Array, Object, String, Number, Boolean],
-        required: true
+        default: null
       },
       allArrayItemsClosed: {
         type: Boolean,

@@ -14,7 +14,13 @@
     <!-- Style sheets-->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet" />
-    <link href="{{ asset(mix($cssFile, 'vendor/telescope')) }}" rel="stylesheet" type="text/css">
+    {{-- `$cssFile` was once shared by Telescope's controller alongside a
+         `mix-manifest.json` shipped under public/vendor/telescope. Newer
+         Telescope releases drop both and expose `Telescope::css()` /
+         `Telescope::js()` (vendor/laravel/telescope/src/Telescope.php:816,
+         842) which emit the right tags inline — no $cssFile, no mix
+         manifest, no asset publish required. --}}
+    {!! Laravel\Telescope\Telescope::css() !!}
 </head>
 <body>
 
@@ -236,11 +242,11 @@
     </div>
 </div>
 
-<!-- Global Telescope Object -->
-<script>
-    window.Telescope = @json($telescopeScriptVariables);
-</script>
-
-<script src="{{ asset(mix('app.js', 'vendor/telescope')) }}"></script>
+{{-- `Telescope::js()` already inlines `window.Telescope = …` from the
+     bundled script. The legacy `<script>` block that read
+     `$telescopeScriptVariables` is gone in modern releases — and the
+     controller no longer shares that variable, so leaving it produced
+     `Undefined variable $telescopeScriptVariables`. --}}
+{!! Laravel\Telescope\Telescope::js() !!}
 </body>
 </html>

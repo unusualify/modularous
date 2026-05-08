@@ -13,11 +13,21 @@ class DefaultCountrySeeder extends Seeder
      */
     public function run(): void
     {
+        $table = (new Country)->getTable();          // 'um_countries'
+
+        if (! Schema::hasTable($table)) {
+            $this->command?->warn("Skipping DefaultCountrySeeder — {$table} does not exist.");
+            return;
+        }
         Schema::disableForeignKeyConstraints();
 
         config(['translatable.locales' => ['en', 'tr']]);
 
-        Country::truncate();
+        // Country::truncate();
+        Country::query()->delete();                  // safer than truncate with FKs
+        // …existing insert loop…
+        Schema::enableForeignKeyConstraints();
+
         $countries = [
             ['id' => 1, 'code' => 'AF', 'en' => ['name' => 'Afghanistan'], 'tr' => ['name' => 'Afganistan'], 'phone_code' => 93],
             ['id' => 2, 'code' => 'AL', 'en' => ['name' => 'Albania'], 'tr' => ['name' => 'Arnavutluk'], 'phone_code' => 355],

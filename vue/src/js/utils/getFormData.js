@@ -62,7 +62,19 @@ export const getSchema = (inputs, model = null, isEditing = false, editingEntity
       key = input.name
     }
 
-    input.col.class = input._originalClass || input.col?.class || [];
+    // Normalize `col`. Backend configs may declare it as an object
+    // ({ cols, lg, class, ... }), a Vuetify breakpoint shorthand
+    // (string/number like '12' or 12), or omit it entirely. Downstream
+    // we always read/write properties on it (col.class, …), so coerce
+    // before the first mutation to avoid "Cannot create property 'class'
+    // on string '12'".
+    if (input.col === null || input.col === undefined) {
+      input.col = {}
+    } else if (__isString(input.col) || typeof input.col === 'number') {
+      input.col = { cols: input.col }
+    }
+
+    input.col.class = input._originalClass || input.col.class || [];
     input._originalClass = input.col.class || [];
 
     input.disabled = __isset(input._originalDisabled)

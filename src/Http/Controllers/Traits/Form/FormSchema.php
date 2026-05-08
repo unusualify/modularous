@@ -667,6 +667,17 @@ trait FormSchema
             $input['_moduleName'] = $targetModuleName;
             $input['_routeName'] = $routeName;
 
+            // `spread` inputs only need module/route metadata — see
+            // SpreadHydrate which reads `_moduleName` / `_routeName` and
+            // ignores `endpoint`. The legacy `Module:Route` (no
+            // `|type:action` suffix) form would otherwise default to
+            // `uri:index` below, calling `getRouteActionUrl(..., 'index')`
+            // and throwing for entities that have no registered index
+            // route (panel/singleton entities — e.g. SystemSetting:General).
+            if (($input['type'] ?? null) === 'spread') {
+                return;
+            }
+
             switch ($targetType) {
                 case 'uri':
                     $input['endpoint'] = $targetModule->getRouteActionUrl($routeName, empty($types) ? 'index' : array_shift($types));

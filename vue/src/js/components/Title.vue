@@ -59,7 +59,14 @@ const props = defineProps({
   align: {
     type: String,
     default: 'start',
-    validator: (value) => ['start', 'center', 'end'].includes(value)
+    // Accept both flexbox tokens (start/center/end) and the CSS
+    // text-align aliases (left/center/right) that callers commonly
+    // pass — config-driven `<ue-title>` previews in module configs
+    // (e.g. SystemPayment) sometimes spell `align="left"` when they
+    // mean `align-self: flex-start`. The aliases are normalised to
+    // start/end inside `titleClasses` so the emitted CSS class stays
+    // a real Vuetify utility.
+    validator: (value) => ['start', 'center', 'end', 'left', 'right'].includes(value)
   },
   textPosition: {
     type: String,
@@ -84,6 +91,11 @@ const props = defineProps({
   },
 });
 
+// Map text-align style tokens to flexbox tokens so callers that pass
+// `align="left" | "right"` still produce a real `align-start | align-end`
+// utility class instead of a dead `align-left`.
+const ALIGN_ALIAS = { left: 'start', right: 'end' }
+
 const titleClasses = computed(() => [
   'ue-title',
   `text-${props.type}`,
@@ -94,7 +106,7 @@ const titleClasses = computed(() => [
   props.padding ? `p${props.padding}` : '',
   props.margin ? `m${props.margin}` : '',
   `text-${props.textPosition}`,
-  `align-${props.align}`,
+  `align-${ALIGN_ALIAS[props.align] ?? props.align}`,
   `justify-${props.justify}`
 ]);
 

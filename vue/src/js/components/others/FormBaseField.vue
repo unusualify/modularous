@@ -319,11 +319,11 @@
 </template>
 
 <script>
-import { VTreeview } from 'vuetify/labs/VTreeview'
+// import { VTreeview } from 'vuetify/labs/VTreeview'
 
 export default {
   name: 'FormBaseField',
-  components: { vTreeview: VTreeview },
+  // components: { vTreeview: VTreeview },
   props: {
     obj: { type: Object, required: true },
     ctx: { type: Object, required: true },

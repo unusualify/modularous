@@ -38,8 +38,19 @@ export default function useFormatter (props, context, headers = null) {
 
   const methods = reactive({
     dateFormatter: function (value, datetimeFormat = 'long') {
+      // `new Date(value)` returns an `Invalid Date` (NaN time) for inputs the
+      // outer null/empty guard misses — malformed strings, MySQL zero dates
+      // ('0000-00-00 00:00:00'), Numbers that aren't real timestamps, etc.
+      // vue-i18n's `d()` (and date-fns 4's `format()`) both `throw RangeError`
+      // on invalid dates. Guard here so a single bad row in a list (e.g. a
+      // null `updated_at` on the countries table) doesn't break the whole
+      // formatter pipeline.
+      const date = value instanceof Date ? value : new Date(value)
+      if (isNaN(date.getTime())) {
+        return { configuration: methods.makeText('') }
+      }
       return {
-        configuration: methods.makeText(d(new Date(value), datetimeFormat))
+        configuration: methods.makeText(d(date, datetimeFormat))
       }
     },
     chipFormatter: function (value, attributes = {}) {

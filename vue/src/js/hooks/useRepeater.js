@@ -19,8 +19,14 @@ import { ALERT } from '@/store/mutations'
 export const makeRepeaterProps = propsFactory({
   ...makeInputProps(),
   modelValue: {
-    type: Array,
-    default: []
+    // The component natively handles both shapes: when `asObject:true`
+    // (and `isUnique` + `uniqueField` are set) `useRepeater` keys the
+    // model by `uniqueField` (see lines 167, 210, 226, 228), so the
+    // parent legitimately passes an Object — e.g. PaymentCurrency's
+    // `default_vat_rates` field. The validator was Array-only,
+    // tripping a Vue warn for that exact case.
+    type: [Array, Object],
+    default: () => []
   },
   max: {
     type: Number,
