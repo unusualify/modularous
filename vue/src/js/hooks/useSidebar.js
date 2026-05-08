@@ -52,7 +52,11 @@ export default function useSidebar () {
       return xlAndUp.value ? 320 : (state.options?.width || 264)
     }),
     railWidth: computed(() => state.options?.railWidth ?? 56),
-    hideIcons: computed(() => !state.rail && state.options?.hideIcons),
+    // `&&` returns the last operand, not a Boolean — so when
+    // `state.options.hideIcons` is undefined this used to evaluate to
+    // `undefined`, tripping the `Boolean` prop validator on
+    // SidebarContent / SidebarDrawerContent. `!!` forces a real boolean.
+    hideIcons: computed(() => !state.rail && !!state.options?.hideIcons),
     expandHover: computed(() =>
       state.options?.expandHover ?? (state.options?.fullyHidden ? 'hidden' : 'mini')
     ),
@@ -70,7 +74,7 @@ export default function useSidebar () {
       return value && lgAndUp.value
     }),
     hasRail: computed(() => state.options?.rail),
-    isHoverable: computed(() => (lgAndUp.value || state.rail) && state.options?.expandOnHover),
+    isHoverable: computed(() => (lgAndUp.value || state.rail) && !!state.options?.expandOnHover),
     sidebarPinned: computed(() => store.state.config.uiPreferences?.sidebar?.pinned ?? false),
     // mini: drawer in layout (persistent) so v-main narrows. hidden+pinned: layout sidebar only on lg+.
     effectivePersistent: computed(() =>
