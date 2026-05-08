@@ -75,6 +75,11 @@ final class LaravelServiceProvider extends ServiceProvider
         ], 'views');
 
         $this->publishes([
+            __DIR__ . '/../../../vendor/oguzhanbukcuoglu/laravel-translation/public/assets' => public_path('vendor/translation'),
+        ], 'views');
+
+
+        $this->publishes([
             __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/modularity/auth'),
         ], 'modularity-auth-views');
 
