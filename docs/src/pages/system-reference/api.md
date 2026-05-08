@@ -50,7 +50,7 @@ See [Hydrates](./hydrates#adding-a-new-input) for full flow (PHP Hydrate + Vue c
 
 ## Route Generation
 
-Use `php artisan modularity:make:route` to scaffold routes, migrations, controllers, repositories from module config. See [make:route](/guide/commands/Generators/make-route).
+Use `php artisan modularity:make:route` to scaffold routes, migrations, controllers, repositories from module config. See [make:route](/guide/console/generators/make-route).
 
 ## Currency Provider
 

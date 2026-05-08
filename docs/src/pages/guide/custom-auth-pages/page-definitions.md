@@ -1,5 +1,5 @@
 ---
-sidebarPos: 6
+sidebarPos: 7
 sidebarTitle: Page Definitions
 ---
 

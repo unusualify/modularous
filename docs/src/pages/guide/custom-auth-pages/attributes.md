@@ -1,5 +1,5 @@
 ---
-sidebarPos: 3
+sidebarPos: 2
 sidebarTitle: Attributes & Custom Props
 ---
 

@@ -1,11 +1,11 @@
 ---
-sidebarPos: 1
+sidebarPos: 5
 sidebarTitle: Custom Auth Pages
 ---
 
 # Custom Auth Pages
 
-Modularity provides a flexible authentication system that you can fully customize without modifying package code. All auth pages (login, register, forgot password, etc.) are driven by configuration files.
+Modularous provides a flexible authentication system that you can fully customize without modifying package code. All auth pages (login, register, forgot password, etc.) are driven by configuration files.
 
 ## Overview
 
