@@ -246,7 +246,11 @@ export default {
       })
     },
     endpoint: function () {
-      return this.currentTypeObject.endpoint
+      // `types` is hydrated from window.<APP_NAME>.STORE.medias.types which may
+      // not be populated yet when this modal is created (Inertia v3 changed the
+      // page bootstrap timing). Return undefined and let reloadGrid bail; the
+      // watcher below re-runs the load once the store is ready.
+      return this.currentTypeObject?.endpoint
     },
     modalTitle: function () {
       if (this.connector) {
@@ -305,9 +309,13 @@ export default {
           label: "Filter by tags",
           items: this.tags,
           variant: "outlined",
-          clearable: "true",
-          chips: "true",
-          col: "12"
+          // These were string literals ("true", "12") which Vuetify and
+          // VFormBase reject — booleans expect Boolean, and `col` must be
+          // an object/number (string '12' broke getFormData when it tried
+          // to set col.class on a primitive).
+          clearable: true,
+          chips: true,
+          col: { cols: 12 },
         },
         // clearBtn: {
         //   type: "btn",
@@ -335,6 +343,13 @@ export default {
     },
     page: function (newPage) {
       this.sharedFilterState.page = newPage;
+    },
+    // If `types` was not hydrated yet during created(), reloadGrid bailed out.
+    // Re-run it as soon as a real endpoint becomes available.
+    endpoint: function (newEndpoint, oldEndpoint) {
+      if (newEndpoint && !oldEndpoint && !this.gridLoaded) {
+        this.reloadGrid()
+      }
     }
   },
   methods: {
@@ -539,6 +554,11 @@ export default {
     },
     reloadGrid: function () {
       if(this.isGuest){
+        return
+      }
+      // Guard: types may not be hydrated yet on first created() tick. The
+      // `endpoint` watcher re-invokes this once the store fills in.
+      if (!this.endpoint) {
         return
       }
       const self = this;
