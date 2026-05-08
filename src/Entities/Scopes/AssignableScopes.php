@@ -91,7 +91,7 @@ trait AssignableScopes
         $modelClass = get_class($this);
         $modelHasRolesTable = config('permission.table_names.model_has_roles');
         $modelMorphKey = config('permission.column_names.model_morph_key');
-        $rolePivotKey = PermissionRegistrar::$pivotRole;
+        $rolePivotKey = app(PermissionRegistrar::class)->pivotRole;
 
         $query->whereExists(function ($subQuery) use ($assignmentTable, $modelTable, $modelClass, $userClass, $userRoleIds, $modelHasRolesTable, $modelMorphKey, $rolePivotKey) {
             $subQuery->select(\DB::raw(1))
