@@ -27,7 +27,7 @@ trait HandlesUnauthenticatedInertiaAndAjax
         try {
             $response = parent::handle($request, $next, ...$guards);
         } catch (AuthenticationException $e) {
-            $loginUrl = $e->redirectTo() ?? $this->fallbackLoginUrlForUnauthenticated();
+            $loginUrl = $e->redirectTo($request) ?? $this->fallbackLoginUrlForUnauthenticated();
 
             if ($request->header('X-Inertia')) {
                 return response('', 409)->withHeaders([
