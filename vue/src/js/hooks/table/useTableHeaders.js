@@ -56,8 +56,24 @@ export default function useTableHeaders(props) {
   }
 
   let unvisibleHeaders = getUnvisibleHeaders()
+
+  // Vuetify's `fixed` column prop is strictly `Boolean`. Some backends serialize
+  // it as `'end'` / `'start'` / `'true'` (mimicking other libraries that pin to
+  // a specific edge), which trips Vue's prop-type validator. Coerce here at the
+  // ingestion boundary so downstream components always see a clean boolean.
+  // The string values still encode intent ("pin this column"), so they collapse
+  // to `true`. Edge-side pinning is handled separately via the
+  // `fixedLastColumn` prop + the `ue-datatable--fixed-last-column` CSS class.
+  const normalizeHeader = (h) => {
+    if (h && typeof h.fixed === 'string') {
+      const v = h.fixed.toLowerCase()
+      return { ...h, fixed: v === 'end' || v === 'start' || v === 'true' }
+    }
+    return h
+  }
+
   // Initialize headers
-  const rawHeaders = props.columns ?? []
+  const rawHeaders = (props.columns ?? []).map(normalizeHeader)
   const headers = ref(rawHeaders.filter(h => !unvisibleHeaders.includes(h.key)))
   const headersModel = ref(_.cloneDeep(rawHeaders.map(h => ({...h, visible: !unvisibleHeaders.includes(h.key) ? true : false}))))
 
