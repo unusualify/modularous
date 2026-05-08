@@ -83,7 +83,7 @@ class MakeInputHydrateCommand extends BaseCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of theme to be created.'],
+            ['name', InputArgument::REQUIRED, 'The name of input to be created.'],
         ];
     }
 

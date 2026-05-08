@@ -9,7 +9,8 @@
       ref="VForm"
       :action="actionUrl"
       method="POST"
-      v-model="validModel"
+      :modelValue="validModel"
+      @update:modelValue="updateFormValid"
       @submit="submit"
       :class="formClasses"
       >
@@ -21,6 +22,7 @@
         scrollable ? 'flex-grow-0' : '',
         'd-flex flex-row pb-2'
       ]">
+        <div class="d-flex flex-column flex-1-1-100 min-width-0">
         <ue-title v-if="!noTitle && title"
           padding="a-0"
           align="start"
@@ -83,8 +85,15 @@
             </div>
           </template>
         </ue-title>
+        <FormPublicLinks
+          :localized-public-permalinks="localizedPublicPermalinks"
+          :languages="languages"
+          :signed-public-preview="signedPublicPreview"
+          :is-editing="isEditing"
+        />
+        </div>
         <div :class="[
-          'flex-1-0 d-flex ga-1',
+          'flex-1-0 d-flex align-start ga-2',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
             || (hasAdditionalSection && $vuetify.display.mdAndDown)
             || (formEventSchema && formEventSchema.length && model)
@@ -102,7 +111,7 @@
             @update:modelValue="updateLocale($event)"
             selected-class="bg-primary"
             mandatory
-            class="mt-n2 pl-2"
+            class="mt-n2 pt-2"
           >
             <v-chip
               v-for="language in languages"
@@ -134,7 +143,7 @@
 
       <!-- Scrollable Content Section -->
       <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
-        <div :class="['w-100 d-flex', scrollable ? 'overflow-y-auto pr-3' : '']"
+        <div :class="['w-100 d-flex align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
         >
           <div class="flex-grow-1 px-1">
             <!-- Top Form Actions -->
@@ -276,19 +285,26 @@
                 $vuetify.display.smAndDown ? 'd-none' : 'd-flex flex-column',
               ]"
               :style="{
-                ...(rightSlotWidth ? {width: `${rightSlotWidth}px`} : {}),
+                width: `${rightSlotWidth || rightSlotMinWidth || 300}px`,
                 ...(rightSlotMinWidth ? {minWidth: `${rightSlotMinWidth}px`} : {}),
                 ...(rightSlotMaxWidth ? {maxWidth: `${rightSlotMaxWidth}px`} : {})
               }"
             >
+              <FormSecondaryInputs v-if="secondaryInputs && secondaryInputs.length && model"
+                :inputs="secondaryInputs"
+                v-model="model"
+                :form-item="formItem"
+              />
               <slot name="right" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}">
                 <AdditionalSectionContent
+                  v-if="hasRightSlotContent"
                   :actions-position="actionsPosition"
                   :form-item="formItem"
                   :actions="actions"
                   :form-actions-active="formActionsActive"
                   @action-complete="$emit('actionComplete', $event)"
                 >
+
                   <template #right-top>
                     <slot name="right.top" v-bind="{isEditing, item: formItem, schema: inputSchema, chunkedRawSchema}"></slot>
                   </template>
@@ -316,8 +332,14 @@
                 </v-btn>
               </v-card-title>
               <v-card-text>
+                <FormSecondaryInputs v-if="secondaryInputs && secondaryInputs.length && model"
+                  :inputs="secondaryInputs"
+                  v-model="model"
+                  :form-item="formItem"
+                />
                 <slot name="right" v-bind="{item: formItem, schema: inputSchema, chunkedRawSchema}">
                   <AdditionalSectionContent
+                    v-if="hasRightSlotContent"
                     :actions-position="actionsPosition"
                     :is-editing="isEditing"
                     :form-item="formItem"
@@ -409,10 +431,12 @@
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { useForm, makeFormProps } from '@/hooks'
+import { useForm, makeFormProps } from '@/hooks/form'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from './form/FormActions.vue'
+import FormPublicLinks from './form/FormPublicLinks.vue'
 import FormEvents from './form/FormEvents.vue'
+import FormSecondaryInputs from './form/FormSecondaryInputs.vue'
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -487,7 +511,9 @@ export default {
   components: {
     FormActions,
     FormEvents,
-    AdditionalSectionContent
+    FormSecondaryInputs,
+    FormPublicLinks,
+    AdditionalSectionContent,
   },
   emits: [
     'update:valid',
@@ -505,13 +531,16 @@ export default {
       // use function syntax so that we can access `this`
       return {
         manualValidation: computed(() => this.manualValidation),
-        submitForm: computed(() => this.submit)
+        submitForm: computed(() => this.submit),
+        mergeFormFieldErrors: computed(() => this.mergeFormFieldErrors),
+        clearFormFieldErrorKey: computed(() => this.clearFormFieldErrorKey),
+        resetFieldSchemaErrors: computed(() => this.resetFieldSchemaErrors),
       }
   },
   setup(props, context) {
     const store = useStore()
     const useFormInstance = useForm(props, context)
-    const { t, te, locale } = useI18n({ useScope: 'global' })
+    const { t, te } = useI18n({ useScope: 'global' })
     // const i18n = useI18n()
 
     const formClasses = computed(() => [
@@ -605,33 +634,6 @@ export default {
         : title
     })
 
-    const formColumnAttrs = computed(() => {
-      return props.hasStickyFrame
-        ? {
-            cols: '12',
-            sm: '12',
-            md: '12',
-            lg: '8',
-            xl: '6',
-            'order-lg': '0',
-            'order-xl': '0'
-          }
-        : {
-            cols: '12'
-          }
-    })
-
-    const stickyColumnAttrs = computed(() => {
-      return {
-        cols: '12',
-        sm: '12',
-        md: '12',
-        lg: '4',
-        xl: '6',
-        'order-lg': '1',
-        'order-xl': '1'
-      }
-    })
 
     onMounted(() => {
       let timezoneInput = document.getElementById('timezone_session')
@@ -640,14 +642,21 @@ export default {
       }
     })
 
+    const hasRightSlotContent = computed(() =>
+      context.slots['right.top']
+      || context.slots['right.middle']
+      || context.slots['right.bottom']
+      || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
+    )
+
     return {
       ...useFormInstance,
+      t,
       formClasses,
       formSlots,
       titleOptions,
-      titleSerialized
-      // formColumnAttrs,
-      // stickyColumnAttrs
+      titleSerialized,
+      hasRightSlotContent,
     }
   }
 }

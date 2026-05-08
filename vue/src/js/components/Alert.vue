@@ -23,8 +23,10 @@
         />
       </v-btn>
     </template>
-    <!-- {{ text }} -->
-    <div v-html="text"/>
+    <div
+      class="ue-alert-snackbar__text"
+      v-html="text"
+    />
   </v-snackbar>
 </template>
 
@@ -107,3 +109,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* Preserve \n from joined flash messages; plain HTML collapses newlines. */
+  .ue-alert-snackbar__text {
+    white-space: pre-line;
+    word-break: break-word;
+  }
+</style>

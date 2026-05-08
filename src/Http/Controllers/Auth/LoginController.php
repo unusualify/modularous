@@ -14,18 +14,18 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\View\View;
-use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
-use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
-use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
-use PragmaRX\Google2FA\Google2FA;
-use Unusualify\Modularity\Entities\User;
 use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularity\Http\Controllers\Traits\Utilities\EnforcesMfaSetupOnLogin;
+use Unusualify\Modularity\Http\Controllers\Traits\Utilities\HandlesMfaAuthentication;
 use Unusualify\Modularity\Http\Controllers\Traits\Utilities\HandlesOAuth;
 use Unusualify\Modularity\Services\MessageStage;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers, HandlesOAuth;
+    use AuthenticatesUsers {
+        login as protected defaultPasswordLogin;
+    }
+    use EnforcesMfaSetupOnLogin, HandlesMfaAuthentication, HandlesOAuth;
 
     /**
      * @var AuthManager
@@ -67,7 +67,20 @@ class LoginController extends Controller
 
     public function showForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData('login'));
+        $pageKey = $this->shouldUseMfaLoginFlow()
+            ? $this->mfaLoginPageKey()
+            : 'login';
+
+        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData($pageKey));
+    }
+
+    public function login(Request $request)
+    {
+        if ($this->shouldUseMfaLoginFlow()) {
+            return $this->handleMfaLoginRequest($request);
+        }
+
+        return $this->defaultPasswordLogin($request);
     }
 
     /**
@@ -75,7 +88,14 @@ class LoginController extends Controller
      */
     public function showLogin2FaForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.2fa');
+        if (! $this->isMfaEnabled()) {
+            return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData('login'));
+        }
+
+        return $this->viewFactory->make(
+            modularityBaseKey() . '::auth.login',
+            $this->buildAuthViewData($this->mfaChallengePageKey())
+        );
     }
 
     /**
@@ -103,18 +123,12 @@ class LoginController extends Controller
 
     protected function afterAuthentication(Request $request, $user)
     {
-        // dd('here',$user->google_2fa_secret && $user->google_2fa_enabled);
+        if ($mfaResponse = $this->enforceMfaSetupOnLogin($request, $user)) {
+            return $mfaResponse;
+        }
 
-        if ($user->google_2fa_secret && $user->google_2fa_enabled) {
-            $this->guard()->logout();
-
-            $request->session()->put('2fa:user:id', $user->id);
-
-            return $request->wantsJson()
-                ? new JsonResponse([
-                    'redirector' => $this->redirector->to(route(Route::hasAdmin('admin.login-2fa.form')))->getTargetUrl(),
-                ])
-                : $this->redirector->to(route(Route::hasAdmin('admin.login-2fa.form')));
+        if ($mfaChallenge = $this->startMfaChallenge($request, $user)) {
+            return $mfaChallenge;
         }
 
         $previousRouteName = previous_route_name();
@@ -140,35 +154,23 @@ class LoginController extends Controller
 
     }
 
-    /**
-     * @return RedirectResponse
-     *
-     * @throws IncompatibleWithGoogleAuthenticatorException
-     * @throws InvalidCharactersException
-     * @throws SecretKeyTooShortException
-     */
     public function login2Fa(Request $request)
     {
-        $userId = $request->session()->get('2fa:user:id');
-
-        $user = User::findOrFail($userId);
-
-        $valid = (new Google2FA)->verifyKey(
-            $user->google_2fa_secret,
-            $request->input('verify-code')
-        );
-
-        if ($valid) {
-            $this->authManager->guard(Modularity::getAuthGuardName())->loginUsingId($userId);
-
-            $request->session()->pull('2fa:user:id');
-
-            return $this->redirector->intended($this->redirectTo);
+        if (! $this->isMfaEnabled()) {
+            return $this->redirector->to(route(Route::hasAdmin('login.form')));
         }
 
-        return $this->redirector->to(route(Route::hasAdmin('admin.login-2fa.form')))->withErrors([
-            'error' => 'Your one time password is invalid.',
-        ]);
+        $user = $this->resolveMfaUserFromSession($request);
+
+        if (! $user) {
+            return $this->mfaFailureResponse($request, 'Your MFA session has expired. Please login again.');
+        }
+
+        if (! $this->validateMfaOtp($user, $request)) {
+            return $this->mfaFailureResponse($request, 'Your one time password is invalid.');
+        }
+
+        return $this->completeMfaLogin($request, $user);
     }
 
     public function redirectTo()
@@ -184,11 +186,15 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse(Request $request)
     {
         if ($request->wantsJson()) {
-            return new JsonResponse([
+            $errors = [
                 $this->username() => [trans('auth.failed')],
+            ];
+
+            return new JsonResponse([
+                'errors' => $errors,
                 'message' => __('auth.failed'),
                 'variant' => MessageStage::WARNING,
-            ], 200);
+            ], 422);
         }
 
         throw ValidationException::withMessages([

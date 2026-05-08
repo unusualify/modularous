@@ -19,6 +19,12 @@ trait PaymentTrait
     use PricesTrait;
 
     /**
+     * When true, {@see RevisionsTrait::bypassAfterSaves} may set `passAfterSavePaymentTrait` during pending-only
+     * revision saves so {@see afterSavePaymentTrait} is skipped.
+     */
+    protected bool $pendingBypassRevisionPaymentTrait = true;
+
+    /**
      * paymentTraitRelationName
      *
      * @var undefined

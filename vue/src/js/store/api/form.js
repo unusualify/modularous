@@ -5,6 +5,27 @@ import {
 
 const component = 'FORM'
 
+const withCsrfToken = (data = {}) => {
+  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+  if (!token) return data
+
+  if (data instanceof FormData) {
+    if (!data.has('_token')) {
+      data.append('_token', token)
+    }
+    return data
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    return {
+      ...data,
+      _token: data._token || token
+    }
+  }
+
+  return data
+}
+
 export default {
   get (endpoint, callback, errorCallback) {
     axios.get(endpoint).then(function (resp) {
@@ -20,7 +41,7 @@ export default {
   },
   post (endpoint, data, callback, errorCallback) {
     axios.post(endpoint, data, {
-      validateStatus: status => (status >= 200 && status < 300) || status === 422
+      validateStatus: status => (status >= 200 && status < 300) || status === 422 || status === 403 || status === 419 || status === 428
     }).then(function (resp) {
       if (callback && typeof callback === 'function') callback(resp)
     }).catch(function (err) {
@@ -36,7 +57,7 @@ export default {
   },
   put (endpoint, data, callback, errorCallback) {
     axios.put(endpoint, data, {
-      validateStatus: status => (status >= 200 && status < 300) || status === 422
+      validateStatus: status => (status >= 200 && status < 300) || status === 422 || status === 403 || status === 419 || status === 428
     }).then(function (resp) {
       if (callback && typeof callback === 'function') callback(resp)
     }).catch(function (err) {

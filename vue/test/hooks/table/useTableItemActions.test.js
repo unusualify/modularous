@@ -65,9 +65,12 @@ beforeEach(() => {
 
 function createStoreStub() {
   return createStore({
-    state: {},
+    state: {
+      ambient: { isHot: false, appName: '', appEnv: '' },
+      config: { isInertia: false, isRequestInProgress: false },
+    },
     getters: { userProfile: () => ({}) },
-    mutations: {}
+    mutations: {},
   })
 }
 
@@ -287,7 +290,7 @@ describe('useTableItemActions', () => {
     const store = createStoreStub()
     const wrapper = await factory(store, { editOnModal: false })
     wrapper.vm.itemAction({ id: 42, name: 'Test' }, 'edit')
-    expect(window.open).toHaveBeenCalledWith('/api/posts/42/edit', '_self')
+    expect(window.open).toHaveBeenCalledWith('/api/posts/42/edit', '_blank')
   })
 
   test('itemAction edit without editOnModal and no edit endpoint logs error', async () => {

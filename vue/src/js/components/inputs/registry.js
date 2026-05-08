@@ -55,6 +55,7 @@ const hydrateTypeMap = {
   'input-radio-group': 'VInputRadioGroup',
   'input-repeater': 'VInputRepeater',
   'input-select-scroll': 'VInputSelectScroll',
+  'input-slug': 'VInputSlug',
   'input-spread': 'VInputSpread',
   'input-tag': 'VInputTag',
   'input-tagger': 'VInputTagger'

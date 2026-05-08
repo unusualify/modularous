@@ -16,14 +16,12 @@ use Unusualify\Modularity\Contracts\ModuleableInterface;
 use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
 use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
 use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\HasPresenter;
 use Unusualify\Modularity\Entities\Traits\IsTranslatable;
 use Unusualify\Modularity\Traits\Traitify;
 
 abstract class Model extends LaravelModel implements CacheableInterface, ModuleableInterface, TaggableInterface
 {
-    use HasPresenter,
-        IsTranslatable,
+    use IsTranslatable,
         ModelHelpers,
         SoftDeletes,
         TaggableTrait,

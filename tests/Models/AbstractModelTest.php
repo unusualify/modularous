@@ -91,7 +91,6 @@ class AbstractModelTest extends ModelTestCase
     {
         $traits = class_uses_recursive($this->model);
 
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasPresenter', $traits);
         $this->assertContains('Unusualify\Modularity\Entities\Traits\IsTranslatable', $traits);
         $this->assertContains('Unusualify\Modularity\Entities\Traits\Core\ModelHelpers', $traits);
         $this->assertContains('Illuminate\Database\Eloquent\SoftDeletes', $traits);

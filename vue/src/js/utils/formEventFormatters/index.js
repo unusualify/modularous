@@ -10,6 +10,7 @@ import formatPreview from './formatPreview'
 import formatRemoveValue from './formatRemoveValue'
 import formatResetItems from './formatResetItems'
 import formatSet from './formatSet'
+import formatUpdate from './formatUpdate'
 import formatToggleInput from './formatToggleInput'
 
 export default {
@@ -23,5 +24,6 @@ export default {
   formatRemoveValue,
   formatResetItems,
   formatSet,
+  formatUpdate,
   formatToggleInput,
 }

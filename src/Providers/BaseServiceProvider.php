@@ -29,6 +29,8 @@ use Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig;
 use Unusualify\Modularity\Http\ViewComposers\Urls;
 use Unusualify\Modularity\Logging\ModularityLogHandler;
 use Unusualify\Modularity\Modularity;
+use Unusualify\Modularity\Services\BulkCsv\BulkCsvImportOrchestrator;
+use Unusualify\Modularity\Services\BulkCsv\BulkImportService;
 use Unusualify\Modularity\Services\CacheRelationshipGraph;
 use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
 use Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
@@ -44,6 +46,7 @@ use Unusualify\Modularity\Support\FileLoader;
 use Unusualify\Modularity\Support\HostRouteRegistrar;
 use Unusualify\Modularity\Support\HostRouting;
 use Unusualify\Modularity\Translation\Translator;
+use Unusualify\Modularity\Validation\Validator as ModularityValidator;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -219,6 +222,10 @@ class BaseServiceProvider extends ServiceProvider
             return new MigrationBackup;
         });
 
+        $this->app->singleton(BulkCsvImportOrchestrator::class);
+
+        $this->app->singleton(BulkImportService::class);
+
         $this->app->singleton('modularity.redirect', function (Application $app) {
             return new RedirectService;
         });
@@ -241,6 +248,8 @@ class BaseServiceProvider extends ServiceProvider
         $this->app->register(TelescopeServiceProvider::class);
 
         $this->registerTranslationService();
+
+        $this->registerValidationFactoryResolver();
     }
 
     /**
@@ -346,6 +355,18 @@ class BaseServiceProvider extends ServiceProvider
             $trans->setFallback($app['config']['app.fallback_locale']);
 
             return $trans;
+        });
+    }
+
+    /**
+     * Use a Validator that normalizes {placeholder} lines to :placeholder before Laravel replaces values.
+     */
+    public function registerValidationFactoryResolver(): void
+    {
+        $this->callAfterResolving('validator', function ($factory) {
+            $factory->resolver(function ($translator, $data, $rules, $messages, $attributes) {
+                return new ModularityValidator($translator, $data, $rules, $messages, $attributes);
+            });
         });
     }
 

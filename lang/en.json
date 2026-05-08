@@ -127,5 +127,30 @@
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
     "You can easily monitor the entire process by following the notifications.": "You can easily monitor the entire process by following the notifications.",
     "Your Request Has Been Sent Successfully": "Your Request Has Been Sent Successfully",
+    "messages": {
+        "success": "Completed Successfully!",
+        "info": "Completed!",
+        "warning": "There is a warning!",
+        "error": "There is an error!",
+        "promotion_disabled_hint": "CMS promotion is turned off. Set MODULARITY_CMS_PROMOTION_ENABLED=true in the environment and clear config cache.",
+        "promotion_scope": "Scope",
+        "promotion_dry_run": "Dry-run (preview)",
+        "promotion_execute": "Execute",
+        "promotion_last_result": "Last response",
+        "promotion_confirm_title": "Run promotion execute?",
+        "promotion_confirm_body": "This will flush Modularity cache when not in dry-run mode. Data is not copied between environments.",
+        "promotion_intro": "Preview counts for the current database (dry-run). Execute flushes the Modularity cache; it does not sync data between servers.",
+        "site_seo_db_disabled": "Database-backed site SEO is disabled (MODULARITY_CMS_SEO_ROBOTS_USE_SITE_SETTINGS=false). The editor shows the env fallback; saving is ignored until this is enabled.",
+        "site_seo_robots_title": "Global robots.txt",
+        "site_seo_robots_label": "Body",
+        "site_seo_intro": "This text is served at GET /robots.txt (when the route is enabled). Clearing the field and saving reverts to the environment default.",
+        "step_up_verification_required": "Verification required",
+        "step_up_description_default": "Please enter the verification code sent to your email.",
+        "step_up_verify": "Verify",
+        "step_up_resend_code": "Resend code",
+        "step_up_otp_label": "Verification code",
+        "step_up_resend_success": "A new verification code has been sent.",
+        "step_up_resend_failed": "The verification code could not be resent."
+    },
     "YY": "YY"
-  }
+}

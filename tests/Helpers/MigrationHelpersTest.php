@@ -30,7 +30,7 @@ class MigrationHelpersTest extends TestCase
         $columns = Schema::getColumns('product_extras');
         $publishedColumn = collect($columns)->firstWhere('name', 'published');
         // $this->assertEquals(false, $publishedColumn['default']);
-        $this->assertEquals("'0'", $publishedColumn['default']);
+        $this->assertEquals("'1'", $publishedColumn['default']);
     }
 
     /**
@@ -516,20 +516,25 @@ class MigrationHelpersTest extends TestCase
             ->getDoctrineSchemaManager()
             ->listTableForeignKeys('product_revisions');
 
-        $this->assertCount(2, $foreignKeys);
+        $this->assertCount(3, $foreignKeys);
 
         // Sort for consistent testing
         usort($foreignKeys, function ($a, $b) {
             return strcmp($a->getLocalColumns()[0], $b->getLocalColumns()[0]);
         });
 
+        // Check approved_by foreign key
+        $this->assertEquals('approved_by', $foreignKeys[0]->getLocalColumns()[0]);
+        $this->assertEquals('um_users', $foreignKeys[0]->getForeignTableName());
+        $this->assertEquals('id', $foreignKeys[0]->getForeignColumns()[0]);
+
         // Check product_id foreign key
-        $this->assertEquals('product_id', $foreignKeys[0]->getLocalColumns()[0]);
-        $this->assertEquals('products', $foreignKeys[0]->getForeignTableName());
+        $this->assertEquals('product_id', $foreignKeys[1]->getLocalColumns()[0]);
+        $this->assertEquals('products', $foreignKeys[1]->getForeignTableName());
 
         // Check user_id foreign key
-        $this->assertEquals('user_id', $foreignKeys[1]->getLocalColumns()[0]);
-        $this->assertEquals('um_users', $foreignKeys[1]->getForeignTableName());
+        $this->assertEquals('user_id', $foreignKeys[2]->getLocalColumns()[0]);
+        $this->assertEquals('um_users', $foreignKeys[2]->getForeignTableName());
     }
 
     /**

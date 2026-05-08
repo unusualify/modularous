@@ -4,6 +4,8 @@
 import { reactive, toRefs, computed, watch } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 import { useStore } from 'vuex'
+import cloneDeep from 'lodash-es/cloneDeep'
+import isEqual from 'lodash-es/isEqual'
 import { isset } from '@/utils/helpers'
 import { mapGetters } from '@/utils/mapStore'
 
@@ -108,6 +110,11 @@ export default function useImage (props, context) {
   const getters = mapGetters()
   const { t } = useI18n({ useScope: 'global' })
 
+  /** Matches UPDATE_MEDIA_CONNECTOR / openMediaLibrary(name) — medias are stored under this key */
+  const mediaStoreKey = computed(() =>
+    (props.mediaContext && String(props.mediaContext).length > 0) ? props.mediaContext : props.name
+  )
+
   const states = reactive({
     mediableActive: true,
 
@@ -115,8 +122,9 @@ export default function useImage (props, context) {
     addLabel: computed(() => t('ADD', {item: props.itemLabel})),
     items: computed({
       get: () => {
-        if (store.state.mediaLibrary.selected.hasOwnProperty(props.name)) {
-          return store.state.mediaLibrary.selected[props.name] || []
+        const key = mediaStoreKey.value
+        if (store.state.mediaLibrary.selected.hasOwnProperty(key)) {
+          return store.state.mediaLibrary.selected[key] || []
         } else {
           return []
         }
@@ -178,18 +186,27 @@ export default function useImage (props, context) {
       // })
     }
   })
-  watch(() => store.state.mediaLibrary.selected[props.name], (newValue, oldValue) => {
-    if (isset(store.state.mediaLibrary.selected[props.name]) && store.state.mediaLibrary.isInserted && states.mediableActive) {
+  watch(() => store.state.mediaLibrary.selected[mediaStoreKey.value], (newValue, oldValue) => {
+    if (isset(store.state.mediaLibrary.selected[mediaStoreKey.value]) && store.state.mediaLibrary.isInserted && states.mediableActive) {
       states.mediableActive = false
       store.commit(MEDIA_LIBRARY.UPDATE_IS_INSERTED, false)
-      states.input = newValue
+      const next = Array.isArray(newValue) ? cloneDeep(newValue) : (newValue ?? [])
+      if (!isEqual(next, states.input)) {
+        states.input = next
+      }
     }
   }, { deep: true })
-  watch(() => states.input, (newValue, oldValue) => {
-    inputHook.updateModelValue.value(newValue)
+  watch(() => states.input, (value) => {
+    const mv = modelValue.value ?? []
+    const v = value ?? []
+    if (isEqual(v, Array.isArray(mv) ? mv : [])) return
+    inputHook.updateModelValue.value(value)
   }, { deep: true })
-  watch(() => modelValue.value, (newValue, oldValue) => {
-    states.input = newValue
+  watch(() => modelValue.value, (value) => {
+    const normalized = value ?? []
+    const next = Array.isArray(normalized) ? normalized : []
+    if (isEqual(states.input, next)) return
+    states.input = cloneDeep(next)
   }, { deep: true })
 
   watch(() => states.error, (newValue, oldValue) => {

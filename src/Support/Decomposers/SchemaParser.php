@@ -111,13 +111,26 @@ class SchemaParser extends Parser
             if (@trait_exists($modelTrait)) {
                 $this->traits[$key] = get_class_short_name($modelTrait);
                 $this->traitNamespaces[$key] = $modelTrait;
-            } else {
+            } else if(@trait_exists("{$this->baseNamespace}\\Entities\\Traits\\{$modelTrait}")) {
                 $this->traits[$key] = $modelTrait;
                 $this->traitNamespaces[$key] = "{$this->baseNamespace}\\Entities\\Traits\\{$modelTrait}";
             }
 
-            $this->repositoryTraits[$key] = isset($object['repository']) ? $object['repository'] : '';
-            $this->repositoryTraitNamespaces[$key] = isset($object['repository']) ? "{$this->baseNamespace}\\Repositories\\Traits\\{$object['repository']}" : '';
+            $repositoryTrait = '';
+            $repositoryTraitNamespace = '';
+
+            if(isset($object['repository'])) {
+                if(@trait_exists($object['repository'])) {
+                    $repositoryTrait = get_class_short_name($object['repository']);
+                    $repositoryTraitNamespace = $object['repository'];
+                } else if(@trait_exists("{$this->baseNamespace}\\Repositories\\Traits\\{$object['repository']}")) {
+                    $repositoryTrait = $object['repository'];
+                    $repositoryTraitNamespace = "{$this->baseNamespace}\\Repositories\\Traits\\{$object['repository']}";
+                }
+            }
+
+            $this->repositoryTraits[$key] = $repositoryTrait;
+            $this->repositoryTraitNamespaces[$key] = $repositoryTraitNamespace;
 
             if (array_key_exists('implementations', $object)) {
                 $this->interfaces[$key] = Collection::make($object['implementations'])->map(function ($interface) {
@@ -131,6 +144,7 @@ class SchemaParser extends Parser
                 $this->interfaceNamespaces[$key] = [];
             }
         }
+
         $this->relationshipKeys[] = 'belongsToMany';
         $this->relationshipKeys[] = 'hasOne';
         $this->relationshipKeys[] = 'hasMany';

@@ -17,6 +17,12 @@ trait Relationships
     use CheckSnapshot,
         ResolveConnector;
 
+    /**
+     * When true, {@see \Unusualify\Modularity\Repositories\Traits\RevisionsTrait::bypassAfterSaves} may set
+     * `passAfterSaveRelationships` during pending-only revision saves so {@see afterSaveRelationships} is skipped.
+     */
+    protected bool $pendingBypassRevisionRelationships = true;
+
     public $exceptRelations = [];
 
     /**

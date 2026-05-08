@@ -10,10 +10,11 @@ trait FormPageUtility
      * @param int|null $id
      * @return Model
      */
-    public function getRepositoryItem($id = null, $withoutDefaultScopes = false)
+    public function getRepositoryItem(&$id = null, $withoutDefaultScopes = false)
     {
         if ($this->isSingleton) {
             $item = $this->repository->getModel()->single();
+            $id = $item->id;
         } elseif ($id) {
             // Generate scopes for authorization
             $scopes = $withoutDefaultScopes ? [] : $this->filterScope($this->nestedParentScopes());

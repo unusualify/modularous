@@ -9,15 +9,15 @@ import { getModel } from '@/utils/getFormData'
 import { getTranslationLanguages } from '@/utils/locale'
 
 export default async function formatSet(args, model, schema, input, index = null, preview = []) {
-  const inputNotation = formatHelpers.getInputToFormat(args, model, schema, index)
+  const targetInputNotation = formatHelpers.getInputToFormat(args, model, schema, index)
   const languages = getTranslationLanguages()
 
-  if (!inputNotation)
+  if (!targetInputNotation)
     return
 
-  const inputToFormat = inputNotation
-  const inputPropToFormat = args.shift()
-  const setterNotation = `${inputNotation}.${inputPropToFormat}`
+  const targetInputName = targetInputNotation
+  const targetPropName = args.shift()
+  const setterNotation = `${targetInputName}.${targetPropName}`
   const setPropFormat = args.shift() // items.*.schema
 
   let { handlerName, handlerSchema, handlerValue } = formatHelpers.handlers(input, model, index)
@@ -30,10 +30,10 @@ export default async function formatSet(args, model, schema, input, index = null
     let newValue = formatHelpers.getNewValue(setPropFormat, handlerValue, handlerSchema)
 
     if (newValue !== undefined && newValue !== null) {
-      let matches = inputPropToFormat.match(/^(modelValue|model)$/g)
+      let matches = targetPropName.match(/^(modelValue|model)$/g)
 
       if (matches) { // setting modelValue
-        let targetInput = _.get(schema, inputToFormat)
+        let targetInput = _.get(schema, targetInputNotation)
 
         if (targetInput == undefined || targetInput == null) {
           return
@@ -99,8 +99,8 @@ export default async function formatSet(args, model, schema, input, index = null
         }
 
         _.set(schema, setterNotation, newValue)
-        if (inputPropToFormat.match(/schema/)) {
-          _.set(schema, `${inputNotation}.default`, getModel(newValue))
+        if (targetPropName.match(/schema/)) {
+          _.set(schema, `${targetInputNotation}.default`, getModel(newValue))
         }
       }
     }

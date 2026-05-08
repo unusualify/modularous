@@ -127,4 +127,34 @@ return [
             'description' => 'Would you like to make this module a singleton?',
         ],
     ],
+    'addCmr' => [
+        'model' => \Modules\Cms\Entities\Concerns\IsCmr::class,
+        'repository' => \Modules\Cms\Repositories\Traits\CmrTrait::class,
+        'question' => 'Do you need to add content module route (CMR) feature on this module route?',
+        'command_option' => [
+            'shortcut' => null,
+            'input_type' => InputOption::VALUE_NONE,
+            'description' => 'Do you need to add content module route (CMR) feature on this module route?',
+        ],
+    ],
+    'addParentSegment' => [
+        'model' => \Modules\Cms\Entities\Concerns\HasParentSegment::class,
+        'repository' => \Modules\Cms\Repositories\Traits\ParentSegmentTrait::class,
+        'question' => 'Do you need to add parent segment feature on this module route?',
+        'command_option' => [
+            'shortcut' => null,
+            'input_type' => InputOption::VALUE_NONE,
+            'description' => 'Do you need to add parent segment feature on this module route?',
+        ],
+    ],
+    'addPublishable' => [
+        'model' => \Unusualify\Modularity\Entities\Traits\Publishable::class,
+        'repository' => \Unusualify\Modularity\Repositories\Traits\PublishableTrait::class,
+        'question' => 'Do you need to add publishable feature on this module route?',
+        'command_option' => [
+            'shortcut' => null,
+            'input_type' => InputOption::VALUE_NONE,
+            'description' => 'Do you need to add publishable feature on this module route?',
+        ],
+    ],
 ];

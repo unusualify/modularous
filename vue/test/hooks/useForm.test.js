@@ -69,7 +69,14 @@ vi.mock('@/store/api/form.js', () => ({
 
 function createStoreStub() {
   const store = createStore({
-    state: { form: { errors: {}, editedItem: {} } },
+    state: {
+      form: { errors: {}, editedItem: {} },
+      user: {
+        timezone: 'Europe/London',
+        valid_company: false,
+        profile: { show_billing_banner: false },
+      },
+    },
     getters: {},
     mutations: {
       setLanguages: () => {},

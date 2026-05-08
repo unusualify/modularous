@@ -85,7 +85,10 @@ export default {
       const i = typeof index === 'number' ? index : -1
       const inputVal = fileApi.input?.value ?? fileApi.input ?? []
       baseOpen(max, n, i, Array.isArray(inputVal) ? inputVal : [])
-      nextTick(() => { fileApi.mediableActive = true })
+      nextTick(() => {
+        // mediableActive is a ref from toRefs; assign .value so reactive state updates
+        fileApi.mediableActive.value = true
+      })
     }
     return {
       ...fileApi,

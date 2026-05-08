@@ -24,6 +24,10 @@ trait SpreadableTrait
 
     protected function beforeSaveSpreadableTrait($object, $fields)
     {
+        if (method_exists($this, 'shouldQueuePendingRevisionOnly') && $this->shouldQueuePendingRevisionOnly($object, $fields)) {
+            return;
+        }
+
         // Get the spreadable model instance
         $spreadableModel = $object->spreadable()->first();
 

@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
+use Unusualify\Modularity\Support\PublishableMetadata;
+use Unusualify\Modularity\Support\TranslatableMetadata;
 
 if (! function_exists('modularityIncrementsMethod')) {
     /**
@@ -54,15 +56,7 @@ if (! function_exists('createDefaultExtraTableFields')) {
      */
     function createDefaultExtraTableFields($table, $softDeletes = true, $published = true, $publishDates = false, $visibility = false)
     {
-
-        if ($published) {
-            $table->boolean('published')->default(false);
-        }
-
-        if ($publishDates) {
-            $table->timestamp('publish_start_date')->nullable();
-            $table->timestamp('publish_end_date')->nullable();
-        }
+        PublishableMetadata::addColumns($table, $published, $publishDates);
 
         if ($visibility) {
             $table->boolean('public')->default(true);
@@ -137,7 +131,7 @@ if (! function_exists('createDefaultSlugsTableFields')) {
         $table->timestamps();
         $table->string('slug');
         $table->string('locale', 7)->index();
-        $table->boolean('active');
+        $table->boolean('active')->default(true);
         $table->foreign("{$tableNameSingular}_id", "fk_{$tableNameSingular}_slugs_{$tableNameSingular}_id")->references('id')->on($tableNamePlural)->onDelete('CASCADE')->onUpdate('NO ACTION');
     }
 }
@@ -234,6 +228,9 @@ if (! function_exists('createDefaultMorphPivotTableFields')) {
 
 if (! function_exists('createDefaultRevisionsTableFields')) {
     /**
+     * Standard revision table: payload, optional lineage (source_id), and workflow columns (status, approved_at, approved_by).
+     * Pending state is represented by the latest row’s status only — no column on the subject model.
+     *
      * @param Blueprint $table
      * @param string $tableNameSingular
      * @param string|null $tableNamePlural
@@ -248,10 +245,30 @@ if (! function_exists('createDefaultRevisionsTableFields')) {
         $table->{modularityIncrementsMethod()}('id');
         $table->{modularityIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
         $table->{modularityIntegerMethod()}('user_id')->unsigned()->nullable();
+        $table->unsignedBigInteger('source_id')->nullable();
+
+        $table->string('status', 32)->default('approved');
+        $table->timestamp('approved_at')->nullable();
+        $table->{modularityIntegerMethod()}('approved_by')->unsigned()->nullable();
 
         $table->timestamps();
         $table->json('payload');
         $table->foreign("{$tableNameSingular}_id")->references('id')->on("{$tableNamePlural}")->onDelete('cascade');
         $table->foreign('user_id')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
+        $table->foreign('approved_by')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
+    }
+}
+
+if (! function_exists('createTranslatableMetadataFields')) {
+    /**
+     * Translatable metadata (SEO, canonical, robots, sitemap flag) columns for {@code *_translations} tables.
+     *
+     * Mirrors {@see TranslatableMetadata::TRANSLATED_ATTRIBUTES}; use with {@see \Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata}.
+     *
+     * @param bool $withSitemapInclude When false, omits sitemap_include (not recommended for new modules).
+     */
+    function createTranslatableMetadataFields(Blueprint $table, bool $withSitemapInclude = true): void
+    {
+        TranslatableMetadata::addColumns($table, $withSitemapInclude);
     }
 }

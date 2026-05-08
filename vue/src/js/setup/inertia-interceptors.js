@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/vue3'
 import store from '@/store'
 import { CONFIG } from '@/store/mutations'
-import { USER } from '@/store/mutations'
+import { redirectToLoginFullPage } from '@/utils/authRedirect'
 
 /**
  * Setup Inertia request interceptors
@@ -53,9 +53,9 @@ export function setupInertiaInterceptors() {
 function handleInertiaSuccessResponse(visit) {
   // console.log('Inertia success response:', visit)
 
-  // Handle authentication redirects
+  // 401 JSON (e.g. misconfigured guard) — full-page login; normal Inertia auth uses 409 from Inertia::location()
   if (visit.response?.status === 401) {
-    store.commit(USER.OPEN_LOGIN_MODAL)
+    redirectToLoginFullPage()
   }
 
   // Handle CSRF token mismatch
@@ -79,7 +79,7 @@ function handleInertiaErrorResponse(errorDetail) {
 
   // Handle authentication errors
   if (errorDetail.response?.status === 401) {
-    // store.commit(USER.OPEN_LOGIN_MODAL)
+    redirectToLoginFullPage()
   }
 
   // Handle validation errors

@@ -2,6 +2,8 @@
 
 namespace Unusualify\Modularity\Entities\Enums;
 
+use Illuminate\Support\Str;
+
 enum Permission: string
 {
     // case DASHBOARD = 'dashboard';
@@ -17,6 +19,9 @@ enum Permission: string
     case BULKDELETE = 'bulkDelete';
     case BULKFORCEDELETE = 'bulkForceDelete';
     case BULKRESTORE = 'bulkRestore';
+    case REVISION_APPROVE = 'revisionApprove';
+    case REVISION_REJECT = 'revisionReject';
+    case REVISION_RESTORE = 'revisionRestore';
 
     case ACTIVITY = 'activity';
     case SHOW = 'show';
@@ -30,5 +35,15 @@ enum Permission: string
         }
 
         return null;
+    }
+
+    public static function generatePermissionName($permission, $routeName)
+    {
+        return Str::kebab($routeName) . '_' . static::get($permission);
+    }
+
+    public static function generatePermissionMiddlewareDefinition($permission, $routeName)
+    {
+        return 'can:' . self::generatePermissionName($permission, $routeName);
     }
 }

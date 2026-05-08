@@ -33,7 +33,6 @@ class DashboardController extends BaseController
             $request
         );
 
-        $this->removeMiddleware("can:{$this->permissionPrefix()}_" . Permission::VIEW->value);
         $this->middleware('can:dashboard', ['only' => ['index']]);
     }
 

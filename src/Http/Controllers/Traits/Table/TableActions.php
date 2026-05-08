@@ -55,6 +55,10 @@ trait TableActions
         }
 
         $this->tableActions = array_merge_recursive_preserve($tableActions, $this->tableActions ?? []);
+
+        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+            $this->{$method}();
+        }
     }
 
     public function getTableActions(): array

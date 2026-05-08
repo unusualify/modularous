@@ -5,6 +5,7 @@ namespace Unusualify\Modularity\Repositories\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularity\Entities\Repeater;
 
 /**
  * This trait is used for repeaters that may or may not have files or images in them.
@@ -40,6 +41,103 @@ trait RepeatersTrait
         }, []);
 
         return $columns;
+    }
+
+    /**
+     * Preview / {@see \Unusualify\Modularity\Repositories\Traits\RevisionsTrait::previewForRevision}: populate `repeaters`
+     * from the revision payload so presenters and forms see the same shape as after a normal load.
+     *
+     * @param  Model  $object
+     * @param  array<string, mixed>  $fields
+     * @return Model
+     */
+    public function hydrateRepeatersTrait($object, $fields)
+    {
+        if ($this->shouldIgnoreFieldBeforeSave('repeaters')) {
+            return $object;
+        }
+
+        if (! classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') || ! method_exists($object, 'repeaters')) {
+            return $object;
+        }
+
+        $object->setRelation('repeaters', $this->buildPreviewRepeatersRelation($object, $fields));
+
+        return $object;
+    }
+
+    /**
+     * Mirrors {@see afterSaveRepeatersTrait} field resolution so one {@see Repeater} row exists per role/locale
+     * with `content` taken from the payload (unsaved models for preview).
+     *
+     * @param  array<string, mixed>  $fields
+     */
+    private function buildPreviewRepeatersRelation(Model $object, array $fields): Collection
+    {
+        $out = Collection::make();
+        $schema = $this->getRawInputs();
+        $systemLocales = getLocales();
+        $fallbackLocale = app()->getFallbackLocale();
+
+        foreach ($this->getRepeaterInputs($schema) as $input) {
+            $name = $input['name'];
+            $isTranslated = $input['translated'] ?? false;
+
+            if (! isset($fields[$name]) || ! is_array($fields[$name])) {
+                continue;
+            }
+
+            $intersectLocales = array_intersect(array_keys($fields[$name]), $systemLocales);
+            $localized = count($intersectLocales) > 1;
+            $existLocale = $localized ? ($intersectLocales[0] ?? null) : null;
+
+            if ($isTranslated) {
+                foreach ($systemLocales as $systemLocale) {
+                    $content = $fields[$name];
+                    if ($localized) {
+                        $content = isset($fields[$name][$systemLocale])
+                            ? $fields[$name][$systemLocale]
+                            : ($existLocale ? ($fields[$name][$existLocale] ?? []) : []);
+                    }
+                    if (! is_array($content)) {
+                        $content = [];
+                    }
+
+                    $out->push($this->makePreviewRepeaterRow($object, $name, $systemLocale, $content));
+                }
+            } else {
+                $payload = $fields[$name];
+                if ($localized) {
+                    $payload = isset($fields[$name][$fallbackLocale])
+                        ? $fields[$name][$fallbackLocale]
+                        : ($existLocale ? ($fields[$name][$existLocale] ?? []) : []);
+                }
+                if (! is_array($payload)) {
+                    $payload = [];
+                }
+
+                $out->push($this->makePreviewRepeaterRow($object, $name, $fallbackLocale, $payload));
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $content
+     */
+    private function makePreviewRepeaterRow(Model $object, string $role, string $locale, array $content): Repeater
+    {
+        $repeater = new Repeater([
+            'role' => $role,
+            'locale' => $locale,
+            'content' => $content,
+            'repeatable_id' => $object->getKey(),
+            'repeatable_type' => $object->getMorphClass(),
+        ]);
+        $repeater->exists = false;
+
+        return $repeater;
     }
 
     /**

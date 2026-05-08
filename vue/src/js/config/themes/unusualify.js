@@ -32,15 +32,15 @@ export default {
     // accent: '#8c9eff',
 
     //vuetify colors
-    primary: '#dd60B4',            // R:39  G:160 B:180
-    'primary-lighten-1': '#4DBBC6', // R:77  G:187 B:198
-    'primary-lighten-2': '#74CED7', // R:116 G:206 B:215
-    'primary-lighten-3': '#AFE2E7', // R:175 G:226 B:231
-    'primary-lighten-4': '#F5FAFC', // R:245 G:250 B:252
-    'primary-darken-1': '#00758D',  // R:0   G:117 B:141
-    'primary-darken-2': '#00566A',  // R:0   G:86  B:106
-    'primary-darken-3': '#01404F',  // R:1   G:64  B:79
-    'primary-accent': '#DEF5FA',    // R:222 G:245 B:250
+    primary: '#8d60a3',            // R:39  G:160 B:180
+    'primary-lighten-1': '#905ea8', // R:77  G:187 B:198
+    'primary-lighten-2': '#965db0', // R:116 G:206 B:215
+    'primary-lighten-3': '#a664c4', // R:175 G:226 B:231
+    'primary-lighten-4': '#b96edb', // R:245 G:250 B:252
+    'primary-darken-1': '#745782',  // R:0   G:117 B:141
+    'primary-darken-2': '#695175',  // R:0   G:86  B:106
+    'primary-darken-3': '#5a4863',  // R:1   G:64  B:79
+    'primary-accent': '#E5D6EF',    // R:222 G:245 B:250
 
     'on-primary': '#FFFFFF',
     // 'on-primary-lighten-1': '#FFFFFF', // R:77  G:187 B:198

@@ -22,6 +22,7 @@ return [
     'admin_route_name_prefix' => env('ADMIN_ROUTE_NAME_PREFIX', 'admin'),
     'app_theme' => env('VUE_APP_THEME', 'unusualify'),
     'available_user_locales' => explode(',', env('MODULARITY_AVAILABLE_USER_LOCALES', 'en')),
+    'default_register_role' => env('MODULARITY_DEFAULT_REGISTER_ROLE', 'client-manager'),
 
     'version' => '1.0.0',
     'auth_login_redirect_path' => '/',

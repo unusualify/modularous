@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -82,6 +83,7 @@ trait AuthFormBuilder
                 'class' => 'mt-5 mb-2 custom-auth-button',
                 'color' => 'grey-lighten-1',
                 'density' => 'default',
+                'block' => true,
             ],
             'slots' => [
                 'prepend' => [
@@ -114,6 +116,7 @@ trait AuthFormBuilder
                 'class' => 'my-2 custom-auth-button',
                 'color' => 'grey-lighten-1',
                 'density' => 'default',
+                'block' => true,
             ],
         ];
     }
@@ -301,13 +304,13 @@ trait AuthFormBuilder
 
         return array_merge([
             'attributes' => $attributes,
-            'formAttributes' => $formAttributes,
+            'formAttributes' => array_merge_recursive_preserve($formAttributes, $overrides['formAttributes'] ?? []),
             'formSlots' => $formSlots,
             'slots' => $slots,
             'pageTitle' => $pageTitle,
             'endpoints' => $overrides['endpoints'] ?? new \stdClass,
             'formStore' => $overrides['formStore'] ?? new \stdClass,
-        ], $overrides);
+        ], Arr::except($overrides, ['formAttributes']));
     }
 
     /**
@@ -322,6 +325,24 @@ trait AuthFormBuilder
                 'options' => $this->authFormOptionSlot(
                     __('authentication.forgot-password'),
                     route('admin.password.reset.link')
+                ),
+            ],
+            'login_mfa_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('authentication.create-an-account'),
+                    route(Route::hasAdmin('register.email_form'))
+                ),
+            ],
+            'login_2fa_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('authentication.back-to-login'),
+                    route(Route::hasAdmin('login.form'))
+                ),
+            ],
+            'step_up_options' => [
+                'options' => $this->authFormOptionSlot(
+                    __('Resend verification code'),
+                    route(Route::hasAdmin('step-up.resend'))
                 ),
             ],
             'have_account' => $this->haveAccountOptionSlot(),
@@ -388,6 +409,11 @@ trait AuthFormBuilder
                 'bottom' => $this->authBottomSlots([
                     $this->oauthGoogleButtonSlot('sign-in'),
                     $this->createAccountButtonSlot(),
+                ]),
+            ],
+            'login_mfa_bottom' => [
+                'bottom' => $this->authBottomSlots([
+                    $this->oauthGoogleButtonSlot('sign-in'),
                 ]),
             ],
             'register_bottom' => [

@@ -14,16 +14,28 @@ use Illuminate\Support\Facades\Route;
 */
 
 if (modularityConfig('enabled.users-management')) {
+    $securityEnabled = (bool) modularityConfig('security.enabled', false);
+    $authMfaEnabled = (bool) modularityConfig('security.mfa.enabled', false);
+    $loginMiddlewares = $securityEnabled
+        ? ['throttle:' . modularityConfig('security.throttle.login', '8,1')]
+        : [];
+    $login2faMiddlewares = $authMfaEnabled
+        ? ['throttle:' . modularityConfig('security.mfa.throttle', modularityConfig('security.throttle.login_2fa', '6,1'))]
+        : [];
+
 
     Route::get('register', 'RegisterController@showForm')->name('register.form');
     Route::post('register', 'RegisterController@register')->name('register');
 
     Route::get('login', 'LoginController@showForm')->name('login.form');
-    Route::post('login', 'LoginController@login')->name('login');
+    Route::post('login', 'LoginController@login')->middleware($loginMiddlewares)->name('login');
     Route::post('logout', 'LoginController@logout')->name('logout');
 
     Route::get('login/2fa', 'LoginController@showLogin2FaForm')->name('login-2fa.form');
-    Route::post('login/2fa', 'LoginController@login2Fa')->name('login-2fa');
+    Route::post('login/2fa', 'LoginController@login2Fa')->middleware($login2faMiddlewares)->name('login-2fa');
+    Route::get('step-up', 'StepUpController@showForm')->name('step-up.form');
+    Route::match(['get', 'post'], 'step-up/resend', 'StepUpController@resend')->middleware($login2faMiddlewares)->name('step-up.resend');
+    Route::post('step-up/verify', 'StepUpController@verify')->middleware($login2faMiddlewares)->name('step-up.verify');
 
     Route::get('login/oauth', 'LoginController@showPasswordForm')->name('login.oauth.showPasswordForm');
     Route::post('login/oauth', 'LoginController@linkProvider')->name('login.oauth.linkProvider');

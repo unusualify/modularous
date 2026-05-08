@@ -94,7 +94,10 @@ class ImagesTraitTest extends RepositoryTestCase
 
         $this->repository->update($model->id, $fields, $schema);
 
-        $this->assertTrue($model->fresh()->medias->contains('id', $media->id));
+        $fresh = $model->fresh();
+        $this->assertTrue($fresh->medias->contains('id', $media->id));
+        $this->assertFalse($fresh->medias->contains('id', $media2->id));
+        $this->assertCount(1, $fresh->medias);
     }
 
     public function test_detach_media_when_payload_omits_role_after_previous_attachment()

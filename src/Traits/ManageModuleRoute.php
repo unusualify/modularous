@@ -9,9 +9,25 @@ trait ManageModuleRoute
 {
     use Moduleable;
 
-    protected ?Module $module = null;
+    // protected ?Module $module = null;
 
     protected ?array $routeConfig = [];
+
+    public function isModuleRouteClass()
+    {
+        $moduleName = $this->getModuleName();
+        $routeName = $this->getRouteName();
+
+        if (! $moduleName || ! $routeName) {
+            return false;
+        }
+
+        if (! Modularity::find($moduleName)?->hasRoute($routeName)) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @deprecated use Moduleable::getModuleName() instead
@@ -38,13 +54,7 @@ trait ManageModuleRoute
      */
     public function getModule()
     {
-        if ($this->module) {
-            return $this->module;
-        }
-
-        $this->module = Modularity::find($this->getModuleName());
-
-        return $this->module;
+        return Modularity::find($this->getModuleName());
     }
 
     /**

@@ -90,6 +90,54 @@ class SlugsTraitTest extends RepositoryTestCase
         $this->assertEquals('custom-slug', $activeSlug->slug);
     }
 
+    public function test_after_save_slug_payload_active_false_persists_including_string_false(): void
+    {
+        config(['translatable.locales' => ['en']]);
+
+        $object = $this->repository->create([
+            'name' => 'Active False Test',
+            'is_active' => true,
+        ]);
+
+        $this->repository->update($object->id, [
+            'slugs' => ['en' => ['slug' => 'active-false-test', 'active' => false]],
+        ]);
+
+        $object->refresh();
+        $row = $object->slugs->where('slug', 'active-false-test')->where('locale', 'en')->first();
+        $this->assertNotNull($row);
+        $this->assertFalse((bool) $row->active);
+
+        $this->repository->update($object->id, [
+            'slugs' => ['en' => ['slug' => 'active-false-test', 'active' => 'false']],
+        ]);
+
+        $object->refresh();
+        $row = $object->slugs->where('slug', 'active-false-test')->where('locale', 'en')->first();
+        $this->assertNotNull($row);
+        $this->assertFalse((bool) $row->active);
+    }
+
+    public function test_update_without_slug_source_fields_does_not_run_automatic_set_slugs(): void
+    {
+        config(['translatable.locales' => ['en']]);
+
+        $object = $this->repository->create([
+            'name' => 'Initial Name',
+            'is_active' => true,
+        ]);
+
+        $countAfterCreate = $object->slugs()->count();
+
+        $this->repository->update($object->id, [
+            'is_active' => false,
+        ]);
+
+        $object->refresh();
+        $this->assertCount($countAfterCreate, $object->slugs);
+        $this->assertEquals('initial-name', $object->slugs->where('active', true)->first()->slug);
+    }
+
     public function test_after_save_slugs_trait_disables_old_slugs_when_new_one_created(): void
     {
         config(['translatable.locales' => ['en']]);
@@ -162,9 +210,11 @@ class SlugsTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($object);
 
-        $this->assertArrayHasKey('translations', $fields);
-        $this->assertArrayHasKey('slug', $fields['translations']);
-        $this->assertEquals('form-field-test', $fields['translations']['slug']['en']);
+        $this->assertArrayHasKey('slugs', $fields);
+        $this->assertEquals([
+            'slug' => 'form-field-test',
+            'active' => true,
+        ], $fields['slugs']['en']);
     }
 
     public function test_get_form_fields_slugs_trait_returns_slugs_for_multiple_locales(): void
@@ -178,9 +228,15 @@ class SlugsTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($object);
 
-        $this->assertArrayHasKey('slug', $fields['translations']);
-        $this->assertEquals('multi-locale-test', $fields['translations']['slug']['en']);
-        $this->assertEquals('multi-locale-test', $fields['translations']['slug']['tr']);
+        $this->assertArrayHasKey('slugs', $fields);
+        $this->assertEquals([
+            'slug' => 'multi-locale-test',
+            'active' => true,
+        ], $fields['slugs']['en']);
+        $this->assertEquals([
+            'slug' => 'multi-locale-test',
+            'active' => true,
+        ], $fields['slugs']['tr']);
     }
 
     public function test_get_slug_parameters_returns_base_slug_params(): void
@@ -607,7 +663,7 @@ class SlugsTraitTest extends RepositoryTestCase
         $this->assertEquals('original-slug', $activeSlug->slug);
     }
 
-    public function test_get_form_fields_removes_slugs_key(): void
+    public function test_get_form_fields_populates_slugs_not_slug_source_attributes(): void
     {
         config(['translatable.locales' => ['en']]);
 
@@ -618,10 +674,11 @@ class SlugsTraitTest extends RepositoryTestCase
 
         $fields = $this->repository->getFormFields($object);
 
-        // The raw 'slugs' key should be removed and replaced with translations.slug
-        $this->assertArrayNotHasKey('slugs', $fields);
-        $this->assertArrayHasKey('translations', $fields);
-        $this->assertArrayHasKey('slug', $fields['translations']);
+        // URL slug data is under `slugs` (dedicated input), never merged into slug source attributes (e.g. `name`).
+        $this->assertArrayHasKey('slugs', $fields);
+        $this->assertArrayHasKey('en', $fields['slugs']);
+        $this->assertEquals('fields-test', $fields['slugs']['en']['slug'] ?? null);
+        $this->assertArrayNotHasKey('name', $fields['translations'] ?? []);
     }
 }
 

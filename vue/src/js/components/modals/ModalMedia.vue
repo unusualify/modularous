@@ -555,6 +555,7 @@ export default {
             this.mediaItems.push(item)
           }
         })
+
         this.maxPage = resp.data.maxPage || 1
         let regularArray = resp.data.tags.map(({label, ...rest}) => ({
           title: label,

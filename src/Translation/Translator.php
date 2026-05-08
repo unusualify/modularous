@@ -16,27 +16,11 @@ class Translator extends IlluminateTranslator
 
     public function getTranslations()
     {
-        $locale = 'tr';
         $group = '*';
-        $namespace = '*';
-        $lines = $this->loader->load($locale, $group, $namespace);
-
         $groups = $this->loader->getGroups();
-
-        // dd(
-        //     $this,
-        //     $this->loader->namespaces(),
-        //     $this->loader->jsonPaths(),
-        //     $this->loader->getGroups(),
-        //     // $this->loader->load($locale, 'validation', '*'),
-        //     $this->localeArray($locale),
-        //     getLocales(),
-        //     get_class_methods($this),
-        // );
 
         $translations = [];
         foreach (getLocales() as $locale) {
-            $group = '*';
             $translation = $this->loader->load($locale, '*', '*');
 
             foreach ($groups as $group) {

@@ -11,7 +11,7 @@ export default function useMediaLibrary (props = {}) {
 
   const openMediaLibrary = (max = 1, name = props.name, index = -1, initialItems = null) => {
     store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_CONNECTOR, name)
-    store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_TYPE, props.type ?? 'image')
+    store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_TYPE, props.mediaType ?? 'image')
     store.commit(MEDIA_LIBRARY.UPDATE_REPLACE_INDEX, index)
     store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MAX, max)
     store.commit(MEDIA_LIBRARY.UPDATE_MEDIA_MODE, true)

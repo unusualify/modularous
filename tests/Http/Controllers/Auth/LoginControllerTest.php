@@ -102,8 +102,10 @@ class LoginControllerTest extends AuthTestCase
         $response = $method->invoke($this->controller, $request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(422, $response->getStatusCode());
         $data = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('email', $data);
+        $this->assertArrayHasKey('errors', $data);
+        $this->assertArrayHasKey('email', $data['errors']);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('variant', $data);
     }
@@ -155,6 +157,9 @@ class LoginControllerTest extends AuthTestCase
     /** @test */
     public function it_redirects_to_2fa_form_when_user_has_2fa_enabled(): void
     {
+        config()->set('modularity.security.mfa.enabled', true);
+        config()->set('modularity.security.mfa.provider', 'google_totp');
+
         $user = (object) [
             'id' => 1,
             'google_2fa_secret' => 'secret',
@@ -179,6 +184,9 @@ class LoginControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_json_with_redirector_when_authenticated_with_2fa_and_requesting_json(): void
     {
+        config()->set('modularity.security.mfa.enabled', true);
+        config()->set('modularity.security.mfa.provider', 'google_totp');
+
         $user = (object) [
             'id' => 1,
             'google_2fa_secret' => 'secret',

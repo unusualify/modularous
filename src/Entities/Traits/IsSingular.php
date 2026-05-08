@@ -2,6 +2,7 @@
 
 namespace Unusualify\Modularity\Entities\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Unusualify\Modularity\Entities\Scopes\SingularScope;
@@ -75,6 +76,23 @@ trait IsSingular
     public function isPublished()
     {
         return (bool) ($this->published ?? $this->content['published'] ?? true);
+    }
+
+    public function scopeVisible($query)
+    {
+        $now = Carbon::now();
+
+        $query->where(function ($query) use ($now) {
+            $query->whereNull("{$this->getTable()}.content->publish_start_date")
+                ->orWhere("{$this->getTable()}.content->publish_start_date", '<=', $now);
+        });
+
+        $query->where(function ($query) use ($now) {
+            $query->whereNull("{$this->getTable()}.content->publish_end_date")
+                ->orWhere("{$this->getTable()}.content->publish_end_date", '>=', $now);
+        });
+
+        return $query;
     }
 
     final public function getTable()
