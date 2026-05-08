@@ -120,21 +120,25 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function rolesMetaRelation(): BelongsToMany
     {
         $rolesTable = config('permission.table_names.roles');
+        $registrar = app(PermissionRegistrar::class);
+
         $relation = $this->morphToMany(
             config('permission.models.role'),
             'model',
             config('permission.table_names.model_has_roles'),
             config('permission.column_names.model_morph_key'),
-            PermissionRegistrar::$pivotRole
+            $registrar->pivotRole
         )->select("{$rolesTable}.id", "{$rolesTable}.name", "{$rolesTable}.title");
 
-        if (! PermissionRegistrar::$teams) {
+        if (! $registrar->teams) {
             return $relation;
         }
 
-        return $relation->wherePivot(PermissionRegistrar::$teamsKey, getPermissionsTeamId())
-            ->where(function ($q) use ($rolesTable) {
-                $teamField = "{$rolesTable}." . PermissionRegistrar::$teamsKey;
+        $teamsKey = $registrar->teamsKey;
+        $teamField = "{$rolesTable}.{$teamsKey}";
+
+        return $relation->wherePivot($teamsKey, getPermissionsTeamId())
+            ->where(function ($q) use ($teamField) {
                 $q->whereNull($teamField)->orWhere($teamField, getPermissionsTeamId());
             });
     }
