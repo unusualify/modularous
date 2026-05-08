@@ -58,13 +58,21 @@ export default {
       type: Boolean,
       default: false
     },
+    // `page`, `type`, `filterModel` and `tags` are declared but currently
+    // unused inside this component (no `props.<name>` references in template
+    // or methods). They were `required: true`, which forced every consumer
+    // — like ModalMedia — to pass values that wouldn't be read anyway and
+    // produced "Missing required prop" warnings when they weren't passed.
+    // Kept here as optional with safe defaults to preserve the public API in
+    // case a future refactor wires them up; remove if you confirm no external
+    // consumer relies on their presence.
     page: {
       type: Number,
-      required: true
+      default: 1
     },
     type: {
       type: String,
-      required: true
+      default: ''
     },
     tags: {
       type: Array,
@@ -76,10 +84,13 @@ export default {
     },
     filterModel: {
       type: Object,
-      required: true
+      default: () => ({})
     },
+    // `Object || Array` short-circuits to `Object` at evaluation time —
+    // intent was likely "either Object or Array". Use the array form Vue
+    // expects for union types.
     schema: {
-      type: Object || Array,
+      type: [Object, Array],
       required: true
     }
   },
