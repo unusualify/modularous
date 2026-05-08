@@ -49,7 +49,13 @@ class Translator extends IlluminateTranslator
         return $translations;
     }
 
-    public function addPath(array|string $path)
+    /**
+     * Add a path to the translator.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function addPath($path)
     {
         $this->loader->addPath($path);
     }
