@@ -5,7 +5,7 @@ sidebarTitle: Architecture
 
 # Architecture
 
-Modularity is a modular Laravel admin package with Vue/Vuetify and Inertia. It uses the Repository pattern, config-driven forms/tables, and a Hydrate system to transform module config into frontend schema.
+Modularous is a modular Laravel admin package with Vue/Vuetify and Inertia. It uses the Repository pattern, config-driven forms/tables, and a Hydrate system to transform module config into frontend schema.
 
 ## Directory Structure
 
@@ -96,7 +96,7 @@ flowchart LR
 ```
 LaravelServiceProvider (publish config, assets, views)
         ↓
-BaseServiceProvider (register Modularity, bindings, commands, migrations)
+BaseServiceProvider (register Modularous, bindings, commands, migrations)
         ↓
 RouteServiceProvider (map system routes, module routes, auth routes)
 ```

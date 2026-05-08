@@ -5,18 +5,48 @@ sidebarTitle: Entities
 
 # Entities
 
-Modularity entities (models) use traits for feature composition. All models extend `Unusualify\Modularity\Models\Model`.
+Modularous entities (models) use traits for feature composition. All models extend `Unusualify\Modularity\Entities\Model`.
+
+For detailed documentation on each model, see the [Entities reference](/system-reference/backend/entities/overview).
 
 ## Base Classes
 
 | Class | Purpose |
 |-------|---------|
-| **Model** | Base Eloquent model |
-| **Singleton** | Singleton pattern for single-record models |
+| [**Model**](/system-reference/backend/entities/model) | Base Eloquent model — soft-deletes, tagging, caching, presenter |
+| [**Revision**](/system-reference/backend/entities/revision) | Abstract base for revision-tracking models |
+| [**Singleton**](/system-reference/backend/entities/singleton) | Singleton pattern for single-record models |
 
 ## Core Models
 
-User, UserOauth, Profile, Company, Setting, Tag, Tagged, Media, File, Filepond, TemporaryFilepond, Block, Repeater, RelatedItem, Revision, Process, ProcessHistory, Chat, ChatMessage, Assignment, Authorization, CreatorRecord, Feature, State, Stateable, Spread
+| Model | Purpose |
+|-------|---------|
+| [User](/system-reference/backend/entities/user) | Authenticatable user with roles, OAuth, API tokens |
+| [UserOauth](/system-reference/backend/entities/user-oauth) | OAuth provider link record |
+| [Profile](/system-reference/backend/entities/profile) | Extended user profile data |
+| [Company](/system-reference/backend/entities/company) | Organisation/company record with billing info |
+| [File](/system-reference/backend/entities/file) | Uploaded file record (non-image) |
+| [Media](/system-reference/backend/entities/media) | Image record with dimensions, alt text, captions |
+| [Filepond](/system-reference/backend/entities/filepond) | Permanent Filepond upload record |
+| [TemporaryFilepond](/system-reference/backend/entities/temporary-filepond) | Temporary upload before form submission |
+| [Block](/system-reference/backend/entities/block) | Content block with nested children |
+| [Repeater](/system-reference/backend/entities/repeater) | Repeatable content via morph relation |
+| [Tag](/system-reference/backend/entities/tag) | Tag with locale support |
+| [Tagged](/system-reference/backend/entities/tagged) | Taggable pivot record |
+| [Process](/system-reference/backend/entities/process) | State-machine workflow instance |
+| [ProcessHistory](/system-reference/backend/entities/process-history) | Process status change audit trail |
+| [Assignment](/system-reference/backend/entities/assignment) | Task assignment with status and due dates |
+| [Authorization](/system-reference/backend/entities/authorization) | Authorizable relationship pivot |
+| [CreatorRecord](/system-reference/backend/entities/creator-record) | Creator tracking record |
+| [State](/system-reference/backend/entities/state) | Translatable state definition |
+| [Stateable](/system-reference/backend/entities/stateable) | Morph pivot linking state to model |
+| [Spread](/system-reference/backend/entities/spread) | Dynamic JSON data via morph relation |
+| [Setting](/system-reference/backend/entities/setting) | Key-value settings with translations |
+| [Chat](/system-reference/backend/entities/chat) | Chat room attached via morph relation |
+| [ChatMessage](/system-reference/backend/entities/chat-message) | Individual chat message |
+| [Feature](/system-reference/backend/entities/feature) | Featured/starred content for buckets |
+| [RelatedItem](/system-reference/backend/entities/related-item) | Polymorphic related content pivot |
+| [NestedsetCollection](/system-reference/backend/entities/nestedset-collection) | Extended nested-set tree collection |
 
 ## Entity Traits
 

@@ -233,6 +233,36 @@ trait TranslationsTrait
     }
 
     /**
+     * After save, re-enable timestamps and touch the parent model
+     * only when a translation row really changed (ignoring auto-timestamp
+     * columns that the translation table may carry).
+     *
+     * @param \Illuminate\Database\Eloquent\Model $object
+     * @param array $fields
+     * @return void
+     */
+    public function afterSaveTranslationsTrait($object, $fields)
+    {
+        if (! $this->model->isTranslatable()) {
+            return;
+        }
+
+        if ($object->relationLoaded('translations')) {
+            $timestampKeys = ['updated_at', 'created_at', 'deleted_at'];
+
+            foreach ($object->translations as $translation) {
+                $changedKeys = array_keys($translation->getChanges());
+                $meaningfulChanges = array_diff($changedKeys, $timestampKeys);
+
+                if (! empty($meaningfulChanges)) {
+                    $this->letEloquentModelBeTouched(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * @return array
      */
     public function getPublishedScopesTranslationsTrait()

@@ -1,11 +1,11 @@
 ---
 outline: deep
-sidebarPos: 6
+sidebarPos: 5
 ---
 
 # Responsive Visibility
 
-`Modularity` provides a `ResponsiveVisibility` trait that automatically handles responsive display classes for arrays and collections. This trait integrates seamlessly with Vuetify's responsive utility classes to control when UI elements are shown or hidden based on screen size breakpoints.
+`Modularous` provides a `ResponsiveVisibility` trait that automatically handles responsive display classes for arrays and collections. This trait integrates seamlessly with Vuetify's responsive utility classes to control when UI elements are shown or hidden based on screen size breakpoints.
 
 ## How It Works
 

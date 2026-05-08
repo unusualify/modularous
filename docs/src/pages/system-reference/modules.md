@@ -7,13 +7,15 @@ sidebarTitle: Modules
 
 ## Module vs Route Activation
 
-Modularity has two activation concepts:
+Modularous has two activation concepts:
 
 1. **Module enable/disable**: Via Nwidart's activator (e.g. `modules_statuses.json` or database). Controls whether a module is loaded at all.
 
 2. **Route enable/disable**: Via `ModuleActivator` and per-module `routes_statuses.json`. Controls which routes within an enabled module are registered.
 
 A module can be enabled but have specific routes disabled (e.g. hide the create route).
+
+See [Backend · Activators](/system-reference/backend/activators/overview) for class-level details of `ModularityActivator` and `ModuleActivator`.
 
 ## Module Discovery
 
@@ -57,4 +59,4 @@ Standard route actions (Module::$routeActionLists): restore, forceDelete, duplic
 
 Use `php artisan modularity:route:enable` and `modularity:route:disable` to toggle routes. Status is stored in `modules/{ModuleName}/routes_statuses.json`.
 
-See [route:enable](/guide/commands/route-enable) and [route:disable](/guide/commands/route-disable).
+See [route:enable](/guide/console/module/route-enable) and [route:disable](/guide/console/module/route-disable).
