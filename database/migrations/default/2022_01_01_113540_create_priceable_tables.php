@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->unsignedFloat('rate');
+            $table->decimal('rate', 5, 2)->unsigned();
             $table->timestamps();
             $table->softDeletes();
         });
