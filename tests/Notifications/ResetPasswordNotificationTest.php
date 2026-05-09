@@ -102,7 +102,14 @@ class ResetPasswordNotificationTest extends TestCase
         $property->setAccessible(true);
         $property->setValue(null);
 
-        Config::shouldReceive('get')->andReturn('TestApp');
+        // Sadece app.name için mock'la, gerisi gerçek config'e gitsin
+        Config::shouldReceive('get')
+            ->with('app.name')
+            ->andReturn('TestApp');
+
+        Config::shouldReceive('get')
+            ->withAnyArgs()
+            ->passthru();
 
         $greetingCalled = false;
         Lang::shouldReceive('get')
