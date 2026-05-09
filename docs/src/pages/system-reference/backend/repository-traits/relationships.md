@@ -11,7 +11,7 @@ These traits handle the repository-side persistence and form hydration for assig
 
 ## AssignmentTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\AssignmentTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\AssignmentTrait`
 
 Manages assignment-related form field hydration, default query filtering, and data table filter tabs. Uses the `Allowable` trait internally for role-based permission checks on filter visibility.
 
@@ -57,7 +57,7 @@ The "Completed Assignments" and "Pending Assignments" tabs are only visible to u
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+use Unusualify\Modularous\Repositories\Traits\AssignmentTrait;
 
 class TaskRepository extends Repository
 {
@@ -71,7 +71,7 @@ $repo->getAssignments($taskId);
 
 ## AuthorizableTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\AuthorizableTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\AuthorizableTrait`
 
 Hydrates authorization record data into form fields and provides authorized/unauthorized filter tabs.
 
@@ -94,7 +94,7 @@ Hydrates authorization record data into form fields and provides authorized/unau
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\AuthorizableTrait;
+use Unusualify\Modularous\Repositories\Traits\AuthorizableTrait;
 
 class ReportRepository extends Repository
 {
@@ -106,7 +106,7 @@ class ReportRepository extends Repository
 
 ## CreatorTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\CreatorTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\CreatorTrait`
 
 Applies creator-based access scoping on index queries, hydrates the `custom_creator_id` form field, and prepends a creator input to the form schema.
 
@@ -127,7 +127,7 @@ Applies creator-based access scoping on index queries, hydrates the `custom_crea
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+use Unusualify\Modularous\Repositories\Traits\CreatorTrait;
 
 class ArticleRepository extends Repository
 {

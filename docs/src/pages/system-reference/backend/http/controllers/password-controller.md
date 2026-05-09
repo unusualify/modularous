@@ -6,10 +6,10 @@ sidebarTitle: PasswordController
 # PasswordController
 
 **File**: `src/Http/Controllers/PasswordController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Controller`  
 **Traits**: `ManageUtilities`, `MakesResponses`, `ResetsPasswords`  
-**Middleware**: `modularity.guest`
+**Middleware**: `modularous.guest`
 
 Handles two distinct password flows: the **forgot-password reset** flow (user already has an account) and the **first-time password generation** flow (new user completing registration).
 
@@ -19,7 +19,7 @@ Handles two distinct password flows: the **forgot-password reset** flow (user al
 public function __construct()
 ```
 
-Applies the `modularity.guest` middleware to all actions — only unauthenticated users may access these routes.
+Applies the `modularous.guest` middleware to all actions — only unauthenticated users may access these routes.
 
 ## Methods
 
@@ -35,7 +35,7 @@ Validates the submitted password (with confirmation) and calls `resetPassword()`
 
 On success:
 - Marks the user's email as verified.
-- Logs the user in via the modularity guard.
+- Logs the user in via the modularous guard.
 - Returns JSON for Inertia requests or redirects for traditional requests.
 
 ### `broker(): PasswordBroker`
@@ -44,7 +44,7 @@ Returns the Laravel password broker configured for Modularous.
 
 ### `guard(): StatefulGuard`
 
-Returns the modularity authentication guard.
+Returns the modularous authentication guard.
 
 ### `resetPassword($user, string $password): void`
 

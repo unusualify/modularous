@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Support\Decomposers;
+namespace Unusualify\Modularous\Support\Decomposers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Nwidart\Modules\Support\Migrations\SchemaParser as Parser;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Support\Finder;
-use Unusualify\Modularity\Traits\ManageNames;
-use Unusualify\Modularity\Traits\RelationshipMap;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Support\Finder;
+use Unusualify\Modularous\Traits\ManageNames;
+use Unusualify\Modularous\Traits\RelationshipMap;
 
 class SchemaParser extends Parser
 {
@@ -48,7 +48,7 @@ class SchemaParser extends Parser
     protected $traitNamespaces = [
         'soft_delete' => 'Illuminate\Database\Eloquent\SoftDeletes',
         'has_factory' => 'Illuminate\Database\Eloquent\Factories\HasFactory',
-        'model_helpers' => 'Unusualify\Modularity\Entities\Traits\Core\ModelHelpers',
+        'model_helpers' => 'Unusualify\Modularous\Entities\Traits\Core\ModelHelpers',
     ];
 
     protected $traits = [
@@ -89,22 +89,22 @@ class SchemaParser extends Parser
 
         $this->useDefaults = $useDefaults;
 
-        $this->relationshipParametersMap = modularityConfig('laravel-relationship-map', []);
+        $this->relationshipParametersMap = modularousConfig('laravel-relationship-map', []);
         $this->model = $model;
 
         if ($this->useDefaults) {
-            $this->defaultInputs = modularityConfig('schemas.default_inputs', []);
-            $this->defaultPreHeaders = modularityConfig('schemas.default_pre_headers', []);
+            $this->defaultInputs = modularousConfig('schemas.default_inputs', []);
+            $this->defaultPreHeaders = modularousConfig('schemas.default_pre_headers', []);
         }
 
-        $this->defaultPostHeaders = modularityConfig('schemas.default_post_headers', []);
+        $this->defaultPostHeaders = modularousConfig('schemas.default_post_headers', []);
 
-        $this->defaultHeaderFormat = modularityConfig('default_header', []);
+        $this->defaultHeaderFormat = modularousConfig('default_header', []);
 
-        // $this->baseNamespace = Config::get(modularityBaseKey() . '.namespace')."\\".Config::get(modularityBaseKey() . '.name');
-        $this->baseNamespace = modularityConfig('namespace');
+        // $this->baseNamespace = Config::get(modularousBaseKey() . '.namespace')."\\".Config::get(modularousBaseKey() . '.name');
+        $this->baseNamespace = modularousConfig('namespace');
 
-        $traits = modularityConfig('traits', []);
+        $traits = modularousConfig('traits', []);
 
         foreach ($traits as $key => $object) {
             $modelTrait = $object['model'];

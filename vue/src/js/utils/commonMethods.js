@@ -91,8 +91,8 @@ export default {
     return isRequestInProgress.value
   },
   $trans: function (key, defaultValue) {
-    return this.$lodash.get(window[import.meta.env.VUE_APP_NAME]?.modularityLocalization.lang, key, defaultValue)
-    // return get(window[import.meta.env.VUE_APP_NAME].modularityLocalization.lang, key, defaultValue)
+    return this.$lodash.get(window[import.meta.env.VUE_APP_NAME]?.modularousLocalization.lang, key, defaultValue)
+    // return get(window[import.meta.env.VUE_APP_NAME].modularousLocalization.lang, key, defaultValue)
   },
   $changeLocale: function (locale) {
     // this.$i18n.locale = locale

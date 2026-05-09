@@ -66,7 +66,7 @@ The `elements` key is only present when child components have been added.
 ## Example
 
 ```php
-use Unusualify\Modularity\Services\View\UComponent;
+use Unusualify\Modularous\Services\View\UComponent;
 
 $form = UComponent::makeUeForm(['model' => 'user'])
     ->addChildren(

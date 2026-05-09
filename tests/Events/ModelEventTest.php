@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Events;
+namespace Unusualify\Modularous\Tests\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Events\ModelEvent;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Traits\Core\ChangeRelationships;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Events\ModelEvent;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ModelEventTest extends ModelTestCase
 {
@@ -123,23 +123,23 @@ class ModelEventTest extends ModelTestCase
 
         $broadcastAs = $event->broadcastAs();
 
-        // Should convert TestModelEvent to 'modularity.test.model'
-        $this->assertEquals('modularity.test.model', $broadcastAs);
+        // Should convert TestModelEvent to 'modularous.test.model'
+        $this->assertEquals('modularous.test.model', $broadcastAs);
     }
 
     public function test_broadcast_as_with_different_event_class_names()
     {
         // Test with UserCreatedEvent
         $userEvent = new UserCreatedEvent($this->testModel);
-        $this->assertEquals('modularity.user.created', $userEvent->broadcastAs());
+        $this->assertEquals('modularous.user.created', $userEvent->broadcastAs());
 
         // Test with ProductUpdatedEvent
         $productEvent = new ProductUpdatedEvent($this->testModel);
-        $this->assertEquals('modularity.product.updated', $productEvent->broadcastAs());
+        $this->assertEquals('modularous.product.updated', $productEvent->broadcastAs());
 
         // Test with OrderDeletedEvent
         $orderEvent = new OrderDeletedEvent($this->testModel);
-        $this->assertEquals('modularity.order.deleted', $orderEvent->broadcastAs());
+        $this->assertEquals('modularous.order.deleted', $orderEvent->broadcastAs());
     }
 
     public function test_broadcast_as_removes_event_suffix()
@@ -147,7 +147,7 @@ class ModelEventTest extends ModelTestCase
         $eventWithSuffix = new TestModelEventWithSuffix($this->testModel);
 
         // Should remove '_event' suffix and convert to snake_case
-        $this->assertEquals('modularity.test.model.with.suffix', $eventWithSuffix->broadcastAs());
+        $this->assertEquals('modularous.test.model.with.suffix', $eventWithSuffix->broadcastAs());
     }
 
     public function test_model_type_with_different_model_classes()
@@ -219,7 +219,7 @@ class ModelEventTest extends ModelTestCase
         $this->assertTrue($event->broadcastWhen());
 
         // Test broadcast name
-        $this->assertEquals('modularity.test.broadcasting.model', $event->broadcastAs());
+        $this->assertEquals('modularous.test.broadcasting.model', $event->broadcastAs());
     }
 
     public function test_event_with_null_model_id()
@@ -273,11 +273,11 @@ class ModelEventTest extends ModelTestCase
     {
         // Test with single word class name
         $singleWordEvent = new TestEvent($this->testModel);
-        $this->assertEquals('modularity.test', $singleWordEvent->broadcastAs());
+        $this->assertEquals('modularous.test', $singleWordEvent->broadcastAs());
 
         // Test with class name ending in Event
         $eventEndingEvent = new TestEndingEvent($this->testModel);
-        $this->assertEquals('modularity.test.ending', $eventEndingEvent->broadcastAs());
+        $this->assertEquals('modularous.test.ending', $eventEndingEvent->broadcastAs());
     }
 
     public function test_get_user_returns_null()
@@ -290,7 +290,7 @@ class ModelEventTest extends ModelTestCase
     {
         $role = Role::create([
             'name' => 'Admin',
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         $user = User::create([
@@ -346,7 +346,7 @@ class ModelEventTest extends ModelTestCase
 }
 
 // Test model classes
-class TestModel extends \Unusualify\Modularity\Entities\Model
+class TestModel extends \Unusualify\Modularous\Entities\Model
 {
     use ChangeRelationships, HasStateable;
 

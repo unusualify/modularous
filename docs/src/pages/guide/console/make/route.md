@@ -7,7 +7,7 @@ sidebarTitle: make:route
 
 > Add a new route to an existing module
 
-**Signature**: `modularity:make:route`
+**Signature**: `modularous:make:route`
 
 **Aliases**: `m:m:r`, `u:m:r`, `unusual:make:route`
 
@@ -24,7 +24,7 @@ sidebarTitle: make:route
 ## Usage
 
 ```
-modularity:make:route [options] <module> <route>
+modularous:make:route [options] <module> <route>
 ```
 
 ### Arguments
@@ -64,13 +64,13 @@ modularity:make:route [options] <module> <route>
 ### Minimal route
 
 ```bash
-php artisan modularity:make:route Blog Post
+php artisan modularous:make:route Blog Post
 ```
 
 ### Route with schema and rules
 
 ```bash
-php artisan modularity:make:route Blog Post \
+php artisan modularous:make:route Blog Post \
     --schema="title:string,body:text,published_at:timestamp:nullable" \
     --rules="title:required|string|max:255,body:required|string"
 ```
@@ -78,13 +78,13 @@ php artisan modularity:make:route Blog Post \
 ### Route with translation and media
 
 ```bash
-php artisan modularity:make:route Blog Post --addTranslation --addMedia
+php artisan modularous:make:route Blog Post --addTranslation --addMedia
 ```
 
 ### Route using an existing model (no new model/migration)
 
 ```bash
-php artisan modularity:make:route Shop Order \
+php artisan modularous:make:route Shop Order \
     --custom-model="App\Models\Order" \
     --no-migration \
     --no-defaults
@@ -93,7 +93,7 @@ php artisan modularity:make:route Shop Order \
 ### Preview output without writing
 
 ```bash
-php artisan modularity:make:route Blog Post --test
+php artisan modularous:make:route Blog Post --test
 ```
 
 ---

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\MakesResponses;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageUtilities;
+use Unusualify\Modularous\Services\MessageStage;
 
 class PasswordController extends Controller
 {
@@ -26,12 +26,12 @@ class PasswordController extends Controller
     {
         parent::__construct();
 
-        $this->middleware('modularity.guest');
+        $this->middleware('modularous.guest');
     }
 
     public function broker()
     {
-        return Password::broker(Modularity::getAuthProviderName());
+        return Password::broker(Modularous::getAuthProviderName());
     }
 
     /**
@@ -41,7 +41,7 @@ class PasswordController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard(Modularity::getAuthGuardName());
+        return Auth::guard(Modularous::getAuthGuardName());
     }
 
     /**
@@ -96,7 +96,7 @@ class PasswordController extends Controller
 
         $resetPasswordSchema = getFormDraft('reset_password_form');
 
-        return view(modularityBaseKey() . '::auth.passwords.reset', [
+        return view(modularousBaseKey() . '::auth.passwords.reset', [
             'attributes' => [
                 'noSecondSection' => true,
             ],

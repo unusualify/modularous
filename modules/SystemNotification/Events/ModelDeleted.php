@@ -5,7 +5,7 @@ namespace Modules\SystemNotification\Events;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 
 class ModelDeleted extends ModelEvent
 {

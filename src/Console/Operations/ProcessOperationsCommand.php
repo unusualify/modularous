@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Operations;
+namespace Unusualify\Modularous\Console\Operations;
 
 use Illuminate\Support\Facades\Artisan;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class ProcessOperationsCommand extends BaseCommand
 {
@@ -14,7 +14,7 @@ class ProcessOperationsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:operations:process
+    protected $signature = 'modularous:operations:process
         {--s|sync : run sync operations}
         {--a|async : run async operations}
         {--queue= : run queue operations}
@@ -31,7 +31,7 @@ class ProcessOperationsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Process Modularity Operations';
+    protected $description = 'Process Modularous Operations';
 
     /**
      * Create a new command instance.
@@ -59,8 +59,8 @@ class ProcessOperationsCommand extends BaseCommand
 
         $operationArguments = [
             '--tag' => $local
-                ? ['modularity:local']
-                : ['modularity'],
+                ? ['modularous:local']
+                : ['modularous'],
         ];
 
         if ($sync) {
@@ -81,11 +81,11 @@ class ProcessOperationsCommand extends BaseCommand
             $operationArguments['--isolated'] = true;
         }
 
-        $this->info($local ? 'Running Modularity local operations' : 'Running Modularity production operations');
+        $this->info($local ? 'Running Modularous local operations' : 'Running Modularous production operations');
 
         Artisan::call('operations:process', $operationArguments, $this->output);
 
-        $this->info('Modularity operations processed successfully as ' . ($local ? 'local' : 'production'));
+        $this->info('Modularous operations processed successfully as ' . ($local ? 'local' : 'production'));
 
         return 0;
     }

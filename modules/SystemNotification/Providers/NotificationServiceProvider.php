@@ -18,7 +18,7 @@ use Modules\SystemNotification\Events\StateableUpdated;
 use Modules\SystemNotification\Listeners\AssignableListener;
 use Modules\SystemNotification\Listeners\ModelForceDeletedListener;
 use Modules\SystemNotification\Listeners\ModelListener;
-use Modules\SystemNotification\Listeners\ModularityNotificationSentListener;
+use Modules\SystemNotification\Listeners\ModularousNotificationSentListener;
 use Modules\SystemNotification\Listeners\PaymentListener;
 use Modules\SystemNotification\Listeners\StateableListener;
 use Throwable;
@@ -80,7 +80,7 @@ class NotificationServiceProvider extends ServiceProvider
 
         Event::listen(
             NotificationSent::class,
-            ModularityNotificationSentListener::class
+            ModularousNotificationSentListener::class
         );
 
         // Event::listen(

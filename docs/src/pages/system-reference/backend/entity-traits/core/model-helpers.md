@@ -5,7 +5,7 @@ sidebarTitle: ModelHelpers
 
 # Core\ModelHelpers
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\ModelHelpers`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\ModelHelpers`
 
 The master composition trait. Composes `ManageEloquent`, `ManageModuleRoute`, `HasScopes`, `LogsActivity`, and `ChangeRelationships` into a single `use` statement. Most Modularous modules include this via `ModelHelpers`.
 
@@ -73,7 +73,7 @@ $article->numberOfImages();     // → $article->images()->count()
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 
 class Article extends Model
 {

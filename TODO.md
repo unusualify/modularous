@@ -1,6 +1,6 @@
-# Modularity TODO's
+# Modularous TODO's
 
-Modularity System Base Module
+Modularous System Base Module
 
 <!-- [![Upgrade](https://img.shields.io/badge/description-upgrade-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![Bug](https://img.shields.io/badge/bug-red.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
@@ -46,7 +46,7 @@ Modularity System Base Module
 ### Localization GUI ✔️️
 
 - [x] composer joedixon/laravel-translation adding and configuration
-    - [x] adapting json files into unusualify/modularity lang/*.json files ⏳
+    - [x] adapting json files into unusualify/modularous lang/*.json files ⏳
     - [x] adapting translation group/single groundwork
     - [x] chokidar watcher for base_path('lang') files
 

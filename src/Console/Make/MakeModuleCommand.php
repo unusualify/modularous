@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 // use Illuminate\Console\Command as Console;
-use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Exceptions\ModularousSystemPathException;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MakeModuleCommand extends BaseCommand
 {
@@ -16,7 +16,7 @@ class MakeModuleCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:module
+    protected $signature = 'modularous:make:module
         {module : The name of the module}
         {--schema= : The specified migration schema table}
         {--rules= : The specified validation rules for FormRequest}
@@ -71,22 +71,22 @@ class MakeModuleCommand extends BaseCommand
     {
         if ($this->option('system')) {
             try {
-                Modularity::setSystemModulesPath();
+                Modularous::setSystemModulesPath();
 
-            } catch (ModularitySystemPathException $e) {
-                $this->error('You cannot create system module because of modularity production');
+            } catch (ModularousSystemPathException $e) {
+                $this->error('You cannot create system module because of modularous production');
 
                 return 0;
             }
         }
 
-        Modularity::disableCache();
+        Modularous::disableCache();
 
         if ($this->option('just-stubs')) {
-            $module = Modularity::find($this->argument('module'));
+            $module = Modularous::find($this->argument('module'));
 
             foreach ($module->getRoutes() as $key => $routeName) {
-                $this->call('modularity:make:stubs', [
+                $this->call('modularous:make:stubs', [
                     'module' => $module->getName(),
                     'route' => $routeName,
                     '--fix' => true,
@@ -99,8 +99,8 @@ class MakeModuleCommand extends BaseCommand
 
         }
 
-        $traits = activeModularityTraits($this->options());
-        // foreach(getModularityTraits() as $_trait){
+        $traits = activeModularousTraits($this->options());
+        // foreach(getModularousTraits() as $_trait){
         //     $this->responses[$_trait] = $this->checkOption($_trait);
         // }
 
@@ -113,7 +113,7 @@ class MakeModuleCommand extends BaseCommand
             '--plain' => true,
         ]);
 
-        $this->call('modularity:make:route', [
+        $this->call('modularous:make:route', [
             'module' => $this->argument('module'),
             'route' => $this->argument('module'),
         ]
@@ -131,7 +131,7 @@ class MakeModuleCommand extends BaseCommand
             + ['--test' => $this->option('test')]
         );
 
-        Modularity::clearCache();
+        Modularous::clearCache();
 
         return 0;
     }

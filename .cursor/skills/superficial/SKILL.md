@@ -1,6 +1,6 @@
 ---
 name: superficial
-description: "This rule provides standards for superficial code of Modularity"
+description: "This rule provides standards for superficial code of Modularous"
 ---
 
 You are assisting a senior software developer working on a Laravel + Vue/Vuetify modular toolkit.

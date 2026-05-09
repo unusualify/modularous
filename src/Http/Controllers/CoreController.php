@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,16 +13,16 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Contracts\ModuleableInterface;
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
-use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Facades\HostRoutingRegistrar;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Services\MessageStage;
-use Unusualify\Modularity\Traits\ManageModuleRoute;
-use Unusualify\Modularity\Traits\ManageNames;
-use Unusualify\Modularity\Traits\ManageTraits;
-use Unusualify\Modularity\Traits\Moduleable;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Facades\Filepond;
+use Unusualify\Modularous\Facades\HostRoutingRegistrar;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Services\MessageStage;
+use Unusualify\Modularous\Traits\ManageModuleRoute;
+use Unusualify\Modularous\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageTraits;
+use Unusualify\Modularous\Traits\Moduleable;
 
 abstract class CoreController extends LaravelController implements ModuleableInterface
 {
@@ -72,7 +72,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
     {
         $this->app = $app;
 
-        $this->baseKey = modularityBaseKey();
+        $this->baseKey = modularousBaseKey();
         $this->request = $request;
 
         $this->moduleName = $this->getModuleName();
@@ -201,7 +201,7 @@ abstract class CoreController extends LaravelController implements ModuleableInt
 
         return array_to_object($this->module ? $this->module->getRawConfig() : []);
 
-        // return array_to_object(Config::get(modularityBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
+        // return array_to_object(Config::get(modularousBaseKey() . '.system_modules.' . $snakeCase) ?: Config::get($snakeCase)) ?? $this->module->getRawConfig();
     }
 
     protected function getConfigFieldsByRoute($fieldName, $default = null)
@@ -245,13 +245,13 @@ abstract class CoreController extends LaravelController implements ModuleableInt
 
     protected function routeArguments()
     {
-        // $hostRoutingArguments = @class_exists('Unusualify\Modularity\Facades\HostRouting')
-        //     ? \Unusualify\Modularity\Facades\HostRouting::getRouteArguments()
+        // $hostRoutingArguments = @class_exists('Unusualify\Modularous\Facades\HostRouting')
+        //     ? \Unusualify\Modularous\Facades\HostRouting::getRouteArguments()
         //     : [];
         // return $this->request->route()
         //     ? array_merge($this->request->route()->parameters(), $hostRoutingArguments)
         //     : [];
-        $hostRoutingArguments = @class_exists('Unusualify\Modularity\Facades\HostRoutingRegistrar')
+        $hostRoutingArguments = @class_exists('Unusualify\Modularous\Facades\HostRoutingRegistrar')
                                 ? HostRoutingRegistrar::getRouteArguments()
                                 : [];
 

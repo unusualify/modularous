@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
@@ -8,16 +8,16 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
-use Unusualify\Modularity\Facades\HostRoutingRegistrar;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityRoutes;
-use Unusualify\Modularity\Http\Controllers\GlideController;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Facades\HostRoutingRegistrar;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousRoutes;
+use Unusualify\Modularous\Http\Controllers\GlideController;
+use Unusualify\Modularous\Module;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected $namespace = 'Unusualify\Modularity\Http\Controllers';
+    protected $namespace = 'Unusualify\Modularous\Http\Controllers';
 
     /**
      * Bootstraps the package services.
@@ -43,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map(Router $router)
     {
 
-        ModularityRoutes::configureRoutePatterns();
+        ModularousRoutes::configureRoutePatterns();
 
         $this->mapSystemRoutes(
             $router
@@ -58,7 +58,7 @@ class RouteServiceProvider extends ServiceProvider
         $router,
         $supportSubdomainRouting = false
     ) {
-        $groupOptions = ModularityRoutes::groupOptions();
+        $groupOptions = ModularousRoutes::groupOptions();
 
         $router->group(
             [
@@ -73,7 +73,7 @@ class RouteServiceProvider extends ServiceProvider
                             [
                                 'middleware' => [
                                     'web',
-                                    ...ModularityRoutes::defaultMiddlewares(),
+                                    ...ModularousRoutes::defaultMiddlewares(),
                                     ...($supportSubdomainRouting ? ['supportSubdomainRouting'] : []),
                                 ],
                                 'namespace' => 'Auth',
@@ -86,14 +86,14 @@ class RouteServiceProvider extends ServiceProvider
                         // internal auth web routes
                         $router->group(
                             [
-                                // 'domain' => modularityConfig('admin_app_url'),
-                                'domain' => Modularity::getAdminAppUrl(),
+                                // 'domain' => modularousConfig('admin_app_url'),
+                                'domain' => Modularous::getAdminAppUrl(),
                             ],
                             function ($router) {
 
                                 $router->group(
                                     [
-                                        'middleware' => ModularityRoutes::webPanelMiddlewares(),
+                                        'middleware' => ModularousRoutes::webPanelMiddlewares(),
                                     ],
                                     function ($router) {
                                         require __DIR__ . '/../../routes/web.php';
@@ -108,7 +108,7 @@ class RouteServiceProvider extends ServiceProvider
                             [
                                 'prefix' => 'api',
                                 'middleware' => [
-                                    ...ModularityRoutes::webPanelMiddlewares(),
+                                    ...ModularousRoutes::webPanelMiddlewares(),
                                     ...($supportSubdomainRouting ? ['supportSubdomainRouting'] : []),
                                 ],
                             ],
@@ -120,7 +120,7 @@ class RouteServiceProvider extends ServiceProvider
                         // if ($supportSubdomainRouting) {
                         //     $router->group(
                         //         [
-                        //             'domain' => modularityConfig('admin_app_subdomain', 'admin') .
+                        //             'domain' => modularousConfig('admin_app_subdomain', 'admin') .
                         //             '.{subdomain}.' .
                         //             config('app.url'),
                         //         ],
@@ -144,12 +144,12 @@ class RouteServiceProvider extends ServiceProvider
         );
 
         if (
-            modularityConfig('media_library.image_service') ===
-            'Unusualify\Modularity\Services\MediaLibrary\Glide'
+            modularousConfig('media_library.image_service') ===
+            'Unusualify\Modularous\Services\MediaLibrary\Glide'
         ) {
             $router
                 ->get(
-                    '/' . modularityConfig('glide.base_path') . '/{path}',
+                    '/' . modularousConfig('glide.base_path') . '/{path}',
                     GlideController::class
                 )
                 ->where('path', '.*');
@@ -160,22 +160,22 @@ class RouteServiceProvider extends ServiceProvider
         $router,
         $supportSubdomainRouting = false
     ) {
-        $groupOptions = ModularityRoutes::groupOptions();
+        $groupOptions = ModularousRoutes::groupOptions();
         $controller_namespace = GenerateConfigReader::read('controller')->getNamespace();
         $front_controller_namespace = $controller_namespace . '\\Front';
         $routes_folder = GenerateConfigReader::read('routes')->getPath();
 
-        $apiGroupOptions = ModularityRoutes::getApiGroupOptions();
+        $apiGroupOptions = ModularousRoutes::getApiGroupOptions();
         $apiController_namespace = GenerateConfigReader::read('controller')->getNamespace();
         $api_controller_namespace = $apiController_namespace . '\\API';
 
-        foreach (Modularity::allEnabled() as $module) {
+        foreach (Modularous::allEnabled() as $module) {
             $_groupOptions = [
                 'prefix' => $module->fullPrefix(),
                 'as' => $module->panelRouteNamePrefix() . '.',
             ];
             // $_groupOptions['prefix'] = $module->fullPrefix();
-            ModularityRoutes::registerRoutes(
+            ModularousRoutes::registerRoutes(
                 $router,
                 [...$_groupOptions, ...(Arr::only($groupOptions, ['domain']))],
                 ['web'], // $middlewares,
@@ -183,7 +183,7 @@ class RouteServiceProvider extends ServiceProvider
                 $module->getDirectoryPath("{$routes_folder}/web.php"),
                 true
             );
-            // ModularityRoutes::registerRoutes(
+            // ModularousRoutes::registerRoutes(
             //     $router,
             //     $_groupOptions,
             //     ['api'], // $middlewares,
@@ -191,7 +191,7 @@ class RouteServiceProvider extends ServiceProvider
             //     $module->getDirectoryPath("{$routes_folder}/api.php"),
             //     true
             // );
-            ModularityRoutes::registerRoutes(
+            ModularousRoutes::registerRoutes(
                 $router,
                 [
                     'domain' => config('app.url'),
@@ -205,7 +205,7 @@ class RouteServiceProvider extends ServiceProvider
             $router->group([
                 ...$groupOptions,
                 ...[
-                    'middleware' => ModularityRoutes::webPanelMiddlewares(),
+                    'middleware' => ModularousRoutes::webPanelMiddlewares(),
                     'namespace' => $module->getClassNamespace("{$controller_namespace}"),
                 ],
             ],
@@ -217,7 +217,7 @@ class RouteServiceProvider extends ServiceProvider
             $router->group([
                 ...[
                     'domain' => config('app.url'),
-                    'middleware' => ModularityRoutes::webMiddlewares(),
+                    'middleware' => ModularousRoutes::webMiddlewares(),
                     'namespace' => $module->getClassNamespace("{$front_controller_namespace}"),
                 ],
             ],
@@ -228,9 +228,9 @@ class RouteServiceProvider extends ServiceProvider
 
             // Public API routes (no authentication)
             if (file_exists($module->getDirectoryPath("{$routes_folder}/public-api.php"))) {
-                ModularityRoutes::registerRoutes(
+                ModularousRoutes::registerRoutes(
                     $router,
-                    ModularityRoutes::getPublicApiGroupOptions(),
+                    ModularousRoutes::getPublicApiGroupOptions(),
                     [],
                     $module->getClassNamespace("{$api_controller_namespace}"),
                     $module->getDirectoryPath("{$routes_folder}/public-api.php"),
@@ -239,9 +239,9 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             if (file_exists($module->getDirectoryPath("{$routes_folder}/api.php"))) {
-                ModularityRoutes::registerRoutes(
+                ModularousRoutes::registerRoutes(
                     $router,
-                    ModularityRoutes::getAuthApiGroupOptions(),
+                    ModularousRoutes::getAuthApiGroupOptions(),
                     [],
                     $module->getClassNamespace("{$api_controller_namespace}"),
                     $module->getDirectoryPath("{$routes_folder}/api.php"),
@@ -251,11 +251,11 @@ class RouteServiceProvider extends ServiceProvider
 
             // API routes
             $apiGroupOptions = [
-                'prefix' => ModularityRoutes::getApiPrefix(),
+                'prefix' => ModularousRoutes::getApiPrefix(),
                 'as' => 'api.',
-                // 'middleware' => ModularityRoutes::getApiMiddlewares(),
+                // 'middleware' => ModularousRoutes::getApiMiddlewares(),
             ];
-            // $apiGroupOptions = ModularityRoutes::getAuthApiGroupOptions();
+            // $apiGroupOptions = ModularousRoutes::getAuthApiGroupOptions();
 
             // Module-specific API routes with macro
             $router->group([
@@ -275,7 +275,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     private function bootRouteMiddlewares(Router $router)
     {
-        ModularityRoutes::generateRouteMiddlewares();
+        ModularousRoutes::generateRouteMiddlewares();
     }
 
     /**
@@ -346,11 +346,11 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::macro('moduleRoutes', function ($module, $options = []) {
-            ModularityRoutes::registerModuleRoutes($module, $options, 'admin');
+            ModularousRoutes::registerModuleRoutes($module, $options, 'admin');
         });
 
         Route::macro('moduleFrontRoutes', function ($module, $options = []) {
-            ModularityRoutes::registerModuleRoutes($module, $options, 'front');
+            ModularousRoutes::registerModuleRoutes($module, $options, 'front');
         });
 
         Route::macro('additionalRoutes', function ($url, $routeName, $options) {
@@ -405,10 +405,10 @@ class RouteServiceProvider extends ServiceProvider
                         $ability = $controllerClass->bulkSheetStepUpAbility();
                         if (
                             $ability !== null && $ability !== ''
-                            && modularityConfig('cms_features.register_middlewares', true)
-                            && modularityConfig('security.enabled', false)
+                            && modularousConfig('cms_features.register_middlewares', true)
+                            && modularousConfig('security.enabled', false)
                         ) {
-                            $bulkSheetStepUpMiddleware = 'modularity.security.step_up:' . $ability;
+                            $bulkSheetStepUpMiddleware = 'modularous.security.step_up:' . $ability;
                         }
                     }
                 } catch (\Throwable) {
@@ -519,11 +519,11 @@ class RouteServiceProvider extends ServiceProvider
 
         // API Route Macros
         Route::macro('moduleApiRoutes', function ($module, $options = []) {
-            ModularityRoutes::registerModuleRoutes($module, $options, 'api');
+            ModularousRoutes::registerModuleRoutes($module, $options, 'api');
         });
 
         Route::macro('apiAdditionalRoutes', function ($url, $routeName, $options, $customRoutes = null) {
-            $customRoutes = $customRoutes ?? ModularityRoutes::getCustomApiRoutes();
+            $customRoutes = $customRoutes ?? ModularousRoutes::getCustomApiRoutes();
 
             $controllerClass = "{$routeName}Controller";
             $snakeCase = snakeCase($routeName);

@@ -32,14 +32,14 @@ The default file name and directory can be overridden per command with `--clover
 
 ```bash
 php artisan test --coverage-clover=storage/app/clover.xml
-php artisan modularity:coverage:analyze        # quick per-file summary
-php artisan modularity:coverage:report         # JSON / markdown / HTML rendering
+php artisan modularous:coverage:analyze        # quick per-file summary
+php artisan modularous:coverage:report         # JSON / markdown / HTML rendering
 ```
 
 ### Gate a pull request on coverage
 
 ```bash
-php artisan modularity:coverage:pr:check --threshold=80 --base=main
+php artisan modularous:coverage:pr:check --threshold=80 --base=main
 ```
 
 Fails with a non-zero exit code when PR coverage drops below the threshold — wire it into CI.
@@ -47,7 +47,7 @@ Fails with a non-zero exit code when PR coverage drops below the threshold — w
 ### Scaffold missing tests (optionally AI-assisted)
 
 ```bash
-php artisan modularity:coverage:generate-tests
+php artisan modularous:coverage:generate-tests
 ```
 
 Creates PHPUnit/Pest test stubs for uncovered methods. When an AI provider is configured, `--ai` fills in assertions; otherwise the stubs are empty scaffolds.
@@ -55,7 +55,7 @@ Creates PHPUnit/Pest test stubs for uncovered methods. When an AI provider is co
 ### Watch coverage during TDD
 
 ```bash
-php artisan modularity:coverage:watch
+php artisan modularous:coverage:watch
 ```
 
 Polls the Clover file and prints a diff whenever coverage changes — run alongside your test runner for fast feedback.

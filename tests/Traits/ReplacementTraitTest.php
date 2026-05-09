@@ -1,26 +1,26 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\ReplacementTrait;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\ReplacementTrait;
 
 class ReplacementTraitTest extends TestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        Config::set('modularity.stubs.files', ['file1', 'file2']);
-        Config::set('modularity.stubs.replacements', [
+        Config::set('modularous.stubs.files', ['file1', 'file2']);
+        Config::set('modularous.stubs.replacements', [
             'json' => ['NAME', 'LOWER_NAME', 'PROVIDER_NAMESPACE'],
             'php' => ['NAME'],
             'unknown_stub' => ['KEY'],
         ]);
         Config::set('modules.namespace', 'Modules');
-        Config::set('modularity.composer.vendor', 'acme');
-        Config::set('modularity.composer.author.name', 'Jane Doe');
-        Config::set('modularity.composer.author.email', 'jane@example.com');
+        Config::set('modularous.composer.vendor', 'acme');
+        Config::set('modularous.composer.author.name', 'Jane Doe');
+        Config::set('modularous.composer.author.email', 'jane@example.com');
     }
 
     protected function createTester(): object
@@ -111,7 +111,7 @@ class ReplacementTraitTest extends TestCase
 
     public function test_get_replacement_adds_provider_namespace_for_composer_stub()
     {
-        Config::set('modularity.stubs.replacements', [
+        Config::set('modularous.stubs.replacements', [
             'composer' => ['NAME'],
         ]);
         $tester = $this->createTester();
@@ -162,7 +162,7 @@ class ReplacementTraitTest extends TestCase
     {
         $tester = $this->createTester();
         $tester->setName('TestModule');
-        Config::set('modularity.stubs.replacements', ['json' => ['LOWER_NAME', 'STUDLY_NAME']]);
+        Config::set('modularous.stubs.replacements', ['json' => ['LOWER_NAME', 'STUDLY_NAME']]);
 
         $contents = $tester->getStubContentsPublic('json');
         $this->assertIsString($contents);

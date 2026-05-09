@@ -5,9 +5,9 @@ sidebarTitle: HostRoutingRegistrar
 
 # HostRoutingRegistrar
 
-**Facade**: `Unusualify\Modularity\Facades\HostRoutingRegistrar`  
+**Facade**: `Unusualify\Modularous\Facades\HostRoutingRegistrar`  
 **Accessor**: `unusualify.hostRouting`  
-**Underlying**: `Unusualify\Modularity\Support\HostRouting`
+**Underlying**: `Unusualify\Modularous\Support\HostRouting`
 
 Manages the registration of host-based routes — adding, removing, and clearing host → action mappings. Companion to `HostRouting` (which handles introspection of the current request).
 
@@ -24,7 +24,7 @@ Manages the registration of host-based routes — adding, removing, and clearing
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\HostRoutingRegistrar;
+use Unusualify\Modularous\Facades\HostRoutingRegistrar;
 
 // In a service provider
 HostRoutingRegistrar::addRoute('tenant1.app.test', TenantController::class);

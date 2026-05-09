@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Hydrates\Inputs\ProcessHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Hydrates\Inputs\ProcessHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ProcessHydrateTest extends TestCase
 {
@@ -36,7 +36,7 @@ class ProcessHydrateTest extends TestCase
 
         $moduleMock = \Mockery::mock();
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 

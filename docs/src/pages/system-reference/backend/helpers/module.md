@@ -13,16 +13,16 @@ Module context, configuration, permission, and debug helpers. This is the larges
 
 Functions that resolve the "current module" by tracing the PHP call stack.
 
-### `modularityBaseKey`
+### `modularousBaseKey`
 
 ```php
-modularityBaseKey(string $notation = null): string
+modularousBaseKey(string $notation = null): string
 ```
 
-Returns the root config key for Modularous (default: `modularity`). If `MODULARITY_BASE_NAME` is set in `.env`, it is used instead. Optional `$notation` is appended with a `.` separator.
+Returns the root config key for Modularous (default: `modularous`). If `MODULAROUS_BASE_NAME` is set in `.env`, it is used instead. Optional `$notation` is appended with a `.` separator.
 
 ```php
-modularityBaseKey('locale'); // → 'modularity.locale'
+modularousBaseKey('locale'); // → 'modularous.locale'
 ```
 
 ---
@@ -33,7 +33,7 @@ modularityBaseKey('locale'); // → 'modularity.locale'
 curtModule(string $file = null): Module
 ```
 
-Resolves and returns the current module instance by tracing the file path in the call stack to extract a module name, then calling `Modularity::find()`.
+Resolves and returns the current module instance by tracing the file path in the call stack to extract a module name, then calling `Modularous::find()`.
 
 ---
 
@@ -43,7 +43,7 @@ Resolves and returns the current module instance by tracing the file path in the
 curtModuleName(string $file = null): string
 ```
 
-Extracts the module name from the call stack by matching the `Modules/{ModuleName}` pattern. Throws `ModularityException` if it cannot be determined.
+Extracts the module name from the call stack by matching the `Modules/{ModuleName}` pattern. Throws `ModularousException` if it cannot be determined.
 
 ---
 
@@ -107,14 +107,14 @@ moduleRoute(
 ): string
 ```
 
-Generates a full URL for a module route. Automatically appends `:id` for edit/show/update/destroy/duplicate actions on non-singleton resources. Throws `ModularityException` with full context on route generation failure.
+Generates a full URL for a module route. Automatically appends `:id` for edit/show/update/destroy/duplicate actions on non-singleton resources. Throws `ModularousException` with full context on route generation failure.
 
 ---
 
-### `modularityRoute`
+### `modularousRoute`
 
 ```php
-modularityRoute(
+modularousRoute(
     string $route,
     string $prefix,
     string $action = '',
@@ -129,27 +129,27 @@ Similar to `moduleRoute` but for Modularous built-in routes (not module-specific
 
 ## Trait Options
 
-### `getModularityTraits` / `activeModularityTraits` / `modularityTraitOptions`
+### `getModularousTraits` / `activeModularousTraits` / `modularousTraitOptions`
 
 ```php
-getModularityTraits(): array
-activeModularityTraits(array $traitOptions): Collection
-modularityTraitOptions(bool $asSignature = false): array|string
+getModularousTraits(): array
+activeModularousTraits(array $traitOptions): Collection
+modularousTraitOptions(bool $asSignature = false): array|string
 ```
 
-Read the registered trait list from `modularity.traits` config. `modularityTraitOptions` can return either a plain array or a formatted Symfony `InputOption` signature string for `make:*` commands.
+Read the registered trait list from `modularous.traits` config. `modularousTraitOptions` can return either a plain array or a formatted Symfony `InputOption` signature string for `make:*` commands.
 
 ---
 
 ## Configuration
 
-### `modularityConfig`
+### `modularousConfig`
 
 ```php
-modularityConfig(string $notation = null, mixed $default = ''): mixed
+modularousConfig(string $notation = null, mixed $default = ''): mixed
 ```
 
-Shorthand for `config(modularityBaseKey($notation), $default)`. The most-used helper across the entire codebase.
+Shorthand for `config(modularousBaseKey($notation), $default)`. The most-used helper across the entire codebase.
 
 ---
 
@@ -234,7 +234,7 @@ benchmark(
 ): mixed
 ```
 
-Wraps `$callback` with timing. Logs to the `modularity-benchmark` channel:
+Wraps `$callback` with timing. Logs to the `modularous-benchmark` channel:
 - At `emergency` level if elapsed exceeds `benchmark_emergency_time` config (default 1000ms)
 - At `debug` level if `benchmark_log_level` is `'debug'`
 

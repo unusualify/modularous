@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +10,7 @@ use Modules\Cms\Entities\UrlRoute;
 use Modules\Cms\Localization\TranslatableCmsLocalizationAdapter;
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsVisitorRedirectResolver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 final class CmsVisitorRedirectResolverImplicitLocaleActivePathTest extends TestCase
 {
@@ -25,8 +25,8 @@ final class CmsVisitorRedirectResolverImplicitLocaleActivePathTest extends TestC
     public function test_implicit_path_not_active_when_only_non_fallback_locale_row_exists_slugless_on(): void
     {
         $this->app['config']->set('translatable.fallback_locale', 'en');
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'tr');
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment', true);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'tr');
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment', true);
 
         $canonical = app(CanonicalUrlResolverInterface::class);
         $localization = new TranslatableCmsLocalizationAdapter($canonical);
@@ -47,8 +47,8 @@ final class CmsVisitorRedirectResolverImplicitLocaleActivePathTest extends TestC
     public function test_implicit_path_active_for_fallback_locale_row_when_slugless_on(): void
     {
         $this->app['config']->set('translatable.fallback_locale', 'en');
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'tr');
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment', true);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'tr');
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment', true);
 
         $canonical = app(CanonicalUrlResolverInterface::class);
         $localization = new TranslatableCmsLocalizationAdapter($canonical);
@@ -68,8 +68,8 @@ final class CmsVisitorRedirectResolverImplicitLocaleActivePathTest extends TestC
     public function test_implicit_path_only_matches_cms_default_locale_when_slugless_off(): void
     {
         $this->app['config']->set('translatable.fallback_locale', 'en');
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'tr');
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment', false);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'tr');
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment', false);
 
         $canonical = app(CanonicalUrlResolverInterface::class);
         $localization = new TranslatableCmsLocalizationAdapter($canonical);
@@ -98,7 +98,7 @@ final class CmsVisitorRedirectResolverImplicitLocaleActivePathTest extends TestC
 
     protected function createUrlRoutesTable(): void
     {
-        $t = modularityConfig('tables.cms_url_routes', 'um_cms_url_routes');
+        $t = modularousConfig('tables.cms_url_routes', 'um_cms_url_routes');
         Schema::dropIfExists($t);
         Schema::create($t, function (Blueprint $table): void {
             $table->id();

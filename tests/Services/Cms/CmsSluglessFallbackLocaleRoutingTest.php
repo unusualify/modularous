@@ -1,21 +1,21 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Localization\TranslatableCmsLocalizationAdapter;
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsVisitorRedirectResolver;
 use Modules\Cms\Support\CmsSluglessFallbackLocale;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsSluglessFallbackLocaleRoutingTest extends TestCase
 {
     public function test_implicit_path_uses_fallback_chain_when_slugless_toggle_on(): void
     {
         $this->app['config']->set('translatable.fallback_locale', 'en');
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'tr');
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment', true);
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment_locale', null);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'tr');
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment', true);
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment_locale', null);
 
         $canonical = new CanonicalUrlResolver;
         $localization = new TranslatableCmsLocalizationAdapter($canonical);
@@ -32,8 +32,8 @@ class CmsSluglessFallbackLocaleRoutingTest extends TestCase
     public function test_implicit_path_uses_cms_default_locale_when_slugless_toggle_off(): void
     {
         $this->app['config']->set('translatable.fallback_locale', 'en');
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'tr');
-        $this->app['config']->set('modularity.cms_routing.fallback_locale_optional_path_segment', false);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'tr');
+        $this->app['config']->set('modularous.cms_routing.fallback_locale_optional_path_segment', false);
 
         $canonical = new CanonicalUrlResolver;
         $localization = new TranslatableCmsLocalizationAdapter($canonical);

@@ -9,7 +9,7 @@ sidebarTitle: Migrate
 
 ## Command Information
 
-- **Signature:** `modularity:migrate {module}`
+- **Signature:** `modularous:migrate {module}`
 - **Category:** Database
 
 ## Arguments
@@ -25,8 +25,8 @@ Resolves the module by name and calls Laravel's `migrate` command pointing at `M
 ## Examples
 
 ```bash
-php artisan modularity:migrate Blog
-php artisan modularity:migrate Shop
+php artisan modularous:migrate Blog
+php artisan modularous:migrate Shop
 ```
 
 ## Related

@@ -7,7 +7,7 @@ use Modules\Cms\Contracts\CmsLocalizationContract;
 use Modules\Cms\Support\CmsFrontPath;
 
 /**
- * Fallback driver: {@see getLocales()} / {@code config('translatable.locales')} + {@see modularityConfig('cms_routing.*')}.
+ * Fallback driver: {@see getLocales()} / {@code config('translatable.locales')} + {@see modularousConfig('cms_routing.*')}.
  * Does not require mcamara.
  */
 final class TranslatableCmsLocalizationAdapter implements CmsLocalizationContract
@@ -23,7 +23,7 @@ final class TranslatableCmsLocalizationAdapter implements CmsLocalizationContrac
 
     public function pathSegmentLocales(): array
     {
-        $configured = modularityConfig('cms_routing.path_segment_locales');
+        $configured = modularousConfig('cms_routing.path_segment_locales');
         if (is_array($configured) && $configured !== []) {
             return $this->sortedLongestFirst(array_values(array_unique(array_filter(array_map('strval', $configured)))));
         }
@@ -48,12 +48,12 @@ final class TranslatableCmsLocalizationAdapter implements CmsLocalizationContrac
 
     public function defaultLocale(): string
     {
-        return (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
+        return (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
     }
 
     public function hideDefaultLocaleInUrl(): bool
     {
-        return (bool) modularityConfig('cms_routing.hide_default_locale_segment', false);
+        return (bool) modularousConfig('cms_routing.hide_default_locale_segment', false);
     }
 
     public function localizeUrl(?string $url = null, ?string $locale = null): string

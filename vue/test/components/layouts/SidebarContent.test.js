@@ -1,9 +1,9 @@
 import { describe, expect, test, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SidebarContent from '@/components/layouts/SidebarContent.vue'
-import createModularityVuetify from '@/plugins/vuetify'
+import createModularousVuetify from '@/plugins/vuetify'
 
-const vuetify = createModularityVuetify()
+const vuetify = createModularousVuetify()
 
 beforeEach(() => {
   Object.defineProperty(window, 'innerWidth', { value: 1920, writable: true })

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\SelectHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\SelectHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SelectHydrateTest extends TestCase
 {

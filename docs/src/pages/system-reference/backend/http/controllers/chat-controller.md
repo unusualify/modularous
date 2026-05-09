@@ -6,7 +6,7 @@ sidebarTitle: ChatController
 # ChatController
 
 **File**: `src/Http/Controllers/ChatController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `App\Http\Controllers\Controller`
 
 Handles chat messages, attachments, and pinned messages for a `Chat` model instance. Supports both paginated fetching and time-based queries for real-time catch-up.

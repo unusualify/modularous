@@ -4,8 +4,8 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:operation <name> [--self] [--path[=PATH]] [-t|--tag[=TAG]] [--async] [--queue[=QUEUE]]`
-- **Aliases:** `modularity:operations:make`, `modularity:create:operation`, `mod:c:operation`
+- **Signature:** `modularous:make:operation <name> [--self] [--path[=PATH]] [-t|--tag[=TAG]] [--async] [--queue[=QUEUE]]`
+- **Aliases:** `modularous:operations:make`, `modularous:create:operation`, `mod:c:operation`
 - **Category:** Generators
 
 > **Requires:** [`timokoerber/laravel-one-time-operations`](https://github.com/TimoKoerber/laravel-one-time-operations) package.
@@ -15,37 +15,37 @@
 ### Create an operation in the default operations directory
 
 ```bash
-php artisan modularity:make:operation SeedNewPermissions
+php artisan modularous:make:operation SeedNewPermissions
 ```
 
 ### Create an operation with a custom tag
 
 ```bash
-php artisan modularity:make:operation SeedNewPermissions --tag=permissions
+php artisan modularous:make:operation SeedNewPermissions --tag=permissions
 ```
 
 ### Create an asynchronous operation on a specific queue
 
 ```bash
-php artisan modularity:make:operation SeedNewPermissions --async --queue=operations
+php artisan modularous:make:operation SeedNewPermissions --async --queue=operations
 ```
 
 ### Create an operation at a custom path
 
 ```bash
-php artisan modularity:make:operation SeedNewPermissions --path=database/operations
+php artisan modularous:make:operation SeedNewPermissions --path=database/operations
 ```
 
-`modularity:make:operation`
+`modularous:make:operation`
 ---------------------------
 
 Scaffolds a new one-time operation file using the `timokoerber/laravel-one-time-operations` package. The generated filename includes a timestamp prefix and an `_operation` suffix (e.g. `2026_04_10_120000_seed_new_permissions_operation.php`). The default output directory is read from `config('one-time-operations.directory')`, typically `operations/`.
 
 ### Usage
 
-* `modularity:make:operation <name> [--self] [--path[=PATH]] [-t|--tag[=TAG]] [--async] [--queue[=QUEUE]]`
-* `modularity:operations:make <name>`
-* `modularity:create:operation <name>`
+* `modularous:make:operation <name> [--self] [--path[=PATH]] [-t|--tag[=TAG]] [--async] [--queue[=QUEUE]]`
+* `modularous:operations:make <name>`
+* `modularous:create:operation <name>`
 * `mod:c:operation <name>`
 
 ### Arguments
@@ -62,7 +62,7 @@ The name of the operation.
 
 #### `--self`
 
-Create the operation inside the Modularous package source (`operations/`). Tags it as `modularity` automatically. Dev use only.
+Create the operation inside the Modularous package source (`operations/`). Tags it as `modularous` automatically. Dev use only.
 
 * Accept value: no
 * Is value required: no

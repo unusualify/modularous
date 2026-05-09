@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:module [--schema [SCHEMA]] [--rules [RULES]] [--relationships [RELATIONSHIPS]] [-f|--force] [--no-migrate] [--no-defaults] [--no-migration] [--custom-model [CUSTOM-MODEL]] [--table-name [TABLE-NAME]] [--notAsk] [--all] [--just-stubs] [--stubs-only [STUBS-ONLY]] [--stubs-except [STUBS-EXCEPT]] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module>`
+- **Signature:** `modularous:make:module [--schema [SCHEMA]] [--rules [RULES]] [--relationships [RELATIONSHIPS]] [-f|--force] [--no-migrate] [--no-defaults] [--no-migration] [--custom-model [CUSTOM-MODEL]] [--table-name [TABLE-NAME]] [--notAsk] [--all] [--just-stubs] [--stubs-only [STUBS-ONLY]] [--stubs-except [STUBS-EXCEPT]] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module>`
 - **Category:** Generators
 
 
@@ -13,157 +13,157 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:module MODULE
+php artisan modularous:make:module MODULE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:make:module --schema=SCHEMA
+php artisan modularous:make:module --schema=SCHEMA
 ```
 
 ```bash
-php artisan modularity:make:module --rules=RULES
+php artisan modularous:make:module --rules=RULES
 ```
 
 ```bash
-php artisan modularity:make:module --relationships=RELATIONSHIPS
-```
-
-```bash
-# Using shortcut
-php artisan modularity:make:module -f
-
-# Using full option name
-php artisan modularity:make:module --force
-```
-
-```bash
-php artisan modularity:make:module --no-migrate
-```
-
-```bash
-php artisan modularity:make:module --no-defaults
-```
-
-```bash
-php artisan modularity:make:module --no-migration
-```
-
-```bash
-php artisan modularity:make:module --custom-model=CUSTOM-MODEL
-```
-
-```bash
-php artisan modularity:make:module --table-name=TABLE-NAME
-```
-
-```bash
-php artisan modularity:make:module --notAsk
-```
-
-```bash
-php artisan modularity:make:module --all
-```
-
-```bash
-php artisan modularity:make:module --just-stubs
-```
-
-```bash
-php artisan modularity:make:module --stubs-only=STUBS-ONLY
-```
-
-```bash
-php artisan modularity:make:module --stubs-except=STUBS-EXCEPT
+php artisan modularous:make:module --relationships=RELATIONSHIPS
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -T
+php artisan modularous:make:module -f
 
 # Using full option name
-php artisan modularity:make:module --addTranslation
+php artisan modularous:make:module --force
+```
+
+```bash
+php artisan modularous:make:module --no-migrate
+```
+
+```bash
+php artisan modularous:make:module --no-defaults
+```
+
+```bash
+php artisan modularous:make:module --no-migration
+```
+
+```bash
+php artisan modularous:make:module --custom-model=CUSTOM-MODEL
+```
+
+```bash
+php artisan modularous:make:module --table-name=TABLE-NAME
+```
+
+```bash
+php artisan modularous:make:module --notAsk
+```
+
+```bash
+php artisan modularous:make:module --all
+```
+
+```bash
+php artisan modularous:make:module --just-stubs
+```
+
+```bash
+php artisan modularous:make:module --stubs-only=STUBS-ONLY
+```
+
+```bash
+php artisan modularous:make:module --stubs-except=STUBS-EXCEPT
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -M
+php artisan modularous:make:module -T
 
 # Using full option name
-php artisan modularity:make:module --addMedia
+php artisan modularous:make:module --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -F
+php artisan modularous:make:module -M
 
 # Using full option name
-php artisan modularity:make:module --addFile
+php artisan modularous:make:module --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -P
+php artisan modularous:make:module -F
 
 # Using full option name
-php artisan modularity:make:module --addPosition
+php artisan modularous:make:module --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -S
+php artisan modularous:make:module -P
 
 # Using full option name
-php artisan modularity:make:module --addSlug
-```
-
-```bash
-php artisan modularity:make:module --addPrice
+php artisan modularous:make:module --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -A
+php artisan modularous:make:module -S
 
 # Using full option name
-php artisan modularity:make:module --addAuthorized
+php artisan modularous:make:module --addSlug
+```
+
+```bash
+php artisan modularous:make:module --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -FP
+php artisan modularous:make:module -A
 
 # Using full option name
-php artisan modularity:make:module --addFilepond
-```
-
-```bash
-php artisan modularity:make:module --addUuid
+php artisan modularous:make:module --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:module -SS
+php artisan modularous:make:module -FP
 
 # Using full option name
-php artisan modularity:make:module --addSnapshot
+php artisan modularous:make:module --addFilepond
+```
+
+```bash
+php artisan modularous:make:module --addUuid
+```
+
+```bash
+# Using shortcut
+php artisan modularous:make:module -SS
+
+# Using full option name
+php artisan modularous:make:module --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:module MODULE
+php artisan modularous:make:module MODULE
 ```
 
-`modularity:make:module`
+`modularous:make:module`
 ------------------------
 
 Create a module
 
 ### Usage
 
-* `modularity:make:module [--schema [SCHEMA]] [--rules [RULES]] [--relationships [RELATIONSHIPS]] [-f|--force] [--no-migrate] [--no-defaults] [--no-migration] [--custom-model [CUSTOM-MODEL]] [--table-name [TABLE-NAME]] [--notAsk] [--all] [--just-stubs] [--stubs-only [STUBS-ONLY]] [--stubs-except [STUBS-EXCEPT]] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module>`
+* `modularous:make:module [--schema [SCHEMA]] [--rules [RULES]] [--relationships [RELATIONSHIPS]] [-f|--force] [--no-migrate] [--no-defaults] [--no-migration] [--custom-model [CUSTOM-MODEL]] [--table-name [TABLE-NAME]] [--notAsk] [--all] [--just-stubs] [--stubs-only [STUBS-ONLY]] [--stubs-except [STUBS-EXCEPT]] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module>`
 * `m:m:m`
 * `unusual:make:module`
 

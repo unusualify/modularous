@@ -4,31 +4,31 @@ return [
     /**
      * GET /sitemap.xml serves committed XML from cache ({@see \Modules\Cms\Services\CmsSitemapCacheService}).
      */
-    'route_enabled' => env('MODULARITY_CMS_SITEMAP_ROUTE_ENABLED', true),
+    'route_enabled' => env('MODULAROUS_CMS_SITEMAP_ROUTE_ENABLED', true),
 
     /**
      * Cache key (prefixed with Laravel's cache store prefix) for the committed sitemap body.
      */
-    'cache_key' => env('MODULARITY_CMS_SITEMAP_CACHE_KEY', 'modularity_cms_sitemap.committed_v1'),
+    'cache_key' => env('MODULAROUS_CMS_SITEMAP_CACHE_KEY', 'modularous_cms_sitemap.committed_v1'),
 
     /**
      * When no committed build exists yet, optionally run a build synchronously on the first public request
      * (avoids an empty index). Default false: serve an empty but valid <urlset> until a rebuild/commit.
      */
-    'build_on_cache_miss' => env('MODULARITY_CMS_SITEMAP_BUILD_ON_MISS', false),
+    'build_on_cache_miss' => env('MODULAROUS_CMS_SITEMAP_BUILD_ON_MISS', false),
 
     /**
      * Default {@see \Modules\Cms\Entities\Sitemap} row (migration seeds id = 1, slug = default).
      */
-    'default_sitemap_id' => (int) env('MODULARITY_CMS_SITEMAP_DEFAULT_ID', 1),
+    'default_sitemap_id' => (int) env('MODULAROUS_CMS_SITEMAP_DEFAULT_ID', 1),
 
     /**
      * Default XML sitemap `changefreq` / `priority` when no per-model row in `cms_sitemapables`.
      * {@see \Modules\Cms\Services\CmsSitemapBuildService}
      */
     'defaults' => [
-        'changefreq' => env('MODULARITY_CMS_SITEMAP_DEFAULT_CHANGEFREQ', 'weekly'),
-        'priority' => (float) env('MODULARITY_CMS_SITEMAP_DEFAULT_PRIORITY', 0.5),
+        'changefreq' => env('MODULAROUS_CMS_SITEMAP_DEFAULT_CHANGEFREQ', 'weekly'),
+        'priority' => (float) env('MODULAROUS_CMS_SITEMAP_DEFAULT_PRIORITY', 0.5),
     ],
 
     /**
@@ -44,7 +44,7 @@ return [
      */
     'panel' => [
         'step_up_ability' => [
-            'commit' => env('MODULARITY_CMS_SITEMAP_PANEL_STEP_UP_COMMIT', 'sitemap.commit'),
+            'commit' => env('MODULAROUS_CMS_SITEMAP_PANEL_STEP_UP_COMMIT', 'sitemap.commit'),
         ],
     ],
 ];

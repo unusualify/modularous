@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class MediaTest extends ModelTestCase
 {
@@ -34,7 +34,7 @@ class MediaTest extends ModelTestCase
     public function test_get_table_media()
     {
         $media = new Media;
-        $this->assertEquals(modularityConfig('tables.medias', 'um_medias'), $media->getTable());
+        $this->assertEquals(modularousConfig('tables.medias', 'um_medias'), $media->getTable());
     }
 
     public function test_fillable_attributes()
@@ -65,7 +65,7 @@ class MediaTest extends ModelTestCase
     public function test_extra_metadatas_fields()
     {
         $this->assertNotContains('test_field', $this->media->getFillable());
-        config(['modularity.media_library.extra_metadatas_fields' => [
+        config(['modularous.media_library.extra_metadatas_fields' => [
             'test_field' => [
                 'name' => 'test_field',
                 'type' => 'text',
@@ -75,7 +75,7 @@ class MediaTest extends ModelTestCase
         $media = Media::find($this->media->id);
         $this->assertContains('test_field', $media->getFillable());
 
-        config(['modularity.media_library.translatable_metadatas_fields' => [
+        config(['modularous.media_library.translatable_metadatas_fields' => [
             'test_field',
         ]]);
         $media = Media::find($this->media->id);
@@ -104,7 +104,7 @@ class MediaTest extends ModelTestCase
     public function test_can_delete_safely_when_has_mediables()
     {
         // Insert a mediable record
-        DB::table(modularityConfig('tables.mediables'))->insert([
+        DB::table(modularousConfig('tables.mediables'))->insert([
             'media_id' => $this->media->id,
             'mediable_id' => 1,
             'mediable_type' => 'test_type',
@@ -122,7 +122,7 @@ class MediaTest extends ModelTestCase
         $this->assertFalse($this->media->isReferenced());
 
         // Add a reference
-        DB::table(modularityConfig('tables.mediables'))->insert([
+        DB::table(modularousConfig('tables.mediables'))->insert([
             'media_id' => $this->media->id,
             'mediable_id' => 1,
             'mediable_type' => 'test_type',
@@ -141,7 +141,7 @@ class MediaTest extends ModelTestCase
         $usedMedia = Media::factory()->create();
 
         // Make the media used by adding a mediable record
-        DB::table(modularityConfig('tables.mediables'))->insert([
+        DB::table(modularousConfig('tables.mediables'))->insert([
             'media_id' => $usedMedia->id,
             'mediable_id' => 1,
             'mediable_type' => 'test_type',
@@ -161,7 +161,7 @@ class MediaTest extends ModelTestCase
     {
         $this->media->setTags(['test-tag']);
 
-        config(['modularity.media_library.extra_metadatas_fields' => [
+        config(['modularous.media_library.extra_metadatas_fields' => [
             'test_field' => [
                 'name' => 'test_field',
                 'type' => 'text',
@@ -206,7 +206,7 @@ class MediaTest extends ModelTestCase
     public function test_replace_media()
     {
         // Create a referenced media
-        DB::table(modularityConfig('tables.mediables'))->insert([
+        DB::table(modularousConfig('tables.mediables'))->insert([
             'media_id' => $this->media->id,
             'mediable_id' => 1,
             'mediable_type' => 'test_type',
@@ -226,7 +226,7 @@ class MediaTest extends ModelTestCase
 
         $this->media->replace($newData);
 
-        $mediable = DB::table(modularityConfig('tables.mediables'))
+        $mediable = DB::table(modularousConfig('tables.mediables'))
             ->where('media_id', $this->media->id)
             ->first();
 
@@ -240,11 +240,11 @@ class MediaTest extends ModelTestCase
     {
         // Test successful deletion when no references
         $this->assertTrue($this->media->delete());
-        $this->assertSoftDeleted(modularityConfig('tables.medias'), ['id' => $this->media->id]);
+        $this->assertSoftDeleted(modularousConfig('tables.medias'), ['id' => $this->media->id]);
 
         // Test failed deletion when referenced
         $referencedMedia = Media::factory()->create();
-        DB::table(modularityConfig('tables.mediables'))->insert([
+        DB::table(modularousConfig('tables.mediables'))->insert([
             'media_id' => $referencedMedia->id,
             'mediable_id' => 1,
             'mediable_type' => 'test_type',
@@ -254,14 +254,14 @@ class MediaTest extends ModelTestCase
         ]);
 
         $this->assertFalse($referencedMedia->delete());
-        $this->assertDatabaseHas(modularityConfig('tables.medias'), ['id' => $referencedMedia->id]);
+        $this->assertDatabaseHas(modularousConfig('tables.medias'), ['id' => $referencedMedia->id]);
     }
 
     public function test_force_delete_media()
     {
         // Test successful deletion when no references
         $this->assertTrue($this->media->forceDelete());
-        $this->assertDatabaseMissing(modularityConfig('tables.medias'), ['id' => $this->media->id]);
+        $this->assertDatabaseMissing(modularousConfig('tables.medias'), ['id' => $this->media->id]);
     }
 
     public function test_has_timestamps()

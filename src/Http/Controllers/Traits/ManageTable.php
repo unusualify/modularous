@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Entities\Traits\HasPosition;
+use Unusualify\Modularous\Entities\Traits\HasPosition;
 
 trait ManageTable
 {
@@ -38,7 +38,7 @@ trait ManageTable
          */
         $this->setupDefaultFilters();
 
-        $this->defaultTableAttributes = (array) Config::get(modularityBaseKey() . '.default_table_attributes');
+        $this->defaultTableAttributes = (array) Config::get(modularousBaseKey() . '.default_table_attributes');
 
         $this->tableAttributes = array_merge_recursive_preserve($this->getTableAttributes(), $this->tableAttributes ?? []);
 

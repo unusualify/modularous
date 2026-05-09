@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
 
 class Post extends Model
 {

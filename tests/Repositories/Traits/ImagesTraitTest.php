@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class ImagesTraitTest extends RepositoryTestCase
 {

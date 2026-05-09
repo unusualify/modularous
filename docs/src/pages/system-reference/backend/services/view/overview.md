@@ -16,7 +16,7 @@ The View namespace provides PHP-side builders for constructing Vue component sch
 | [UComponent](/system-reference/backend/services/view/u-component) | Fluent builder for a single Vue component schema array | [→](/system-reference/backend/services/view/u-component) |
 | [UWidget](/system-reference/backend/services/view/u-widget) | Extends `UComponent`; wires Connector data into dashboard widget schemas | [→](/system-reference/backend/services/view/u-widget) |
 | [UWrapper](/system-reference/backend/services/view/u-wrapper) | Static factory for grid-based layout wrappers (`v-row` / `v-col`) | [→](/system-reference/backend/services/view/u-wrapper) |
-| [ModularityNavigation](/system-reference/backend/services/view/modularity-navigation) | Builds sidebar navigation arrays with permissions, badges, and active states | [→](/system-reference/backend/services/view/modularity-navigation) |
+| [ModularousNavigation](/system-reference/backend/services/view/modularous-navigation) | Builds sidebar navigation arrays with permissions, badges, and active states | [→](/system-reference/backend/services/view/modularous-navigation) |
 
 ## Rendering Model
 

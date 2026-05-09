@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Entities\Casts;
+namespace Unusualify\Modularous\Entities\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;

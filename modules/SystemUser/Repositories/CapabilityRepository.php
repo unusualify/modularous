@@ -3,7 +3,7 @@
 namespace Modules\SystemUser\Repositories;
 
 use Modules\SystemUser\Entities\Capability;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class CapabilityRepository extends Repository
 {

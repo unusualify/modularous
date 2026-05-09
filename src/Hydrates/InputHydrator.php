@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates;
+namespace Unusualify\Modularous\Hydrates;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
@@ -18,7 +18,7 @@ class InputHydrator
     {
         $input = $this->input;
         if (isset($input['type'])) {
-            $hydrateClass = "Unusualify\Modularity\Hydrates\Inputs\\" . studlyName($input['type']) . 'Hydrate';
+            $hydrateClass = "Unusualify\Modularous\Hydrates\Inputs\\" . studlyName($input['type']) . 'Hydrate';
             $skipQueries = $this->skipQueries ?? (Request::ajax() && ! Request::inertia());
 
             if (@class_exists($hydrateClass)) {

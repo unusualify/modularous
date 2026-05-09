@@ -2,7 +2,7 @@
 
 namespace Modules\Cms\Http\Requests;
 
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 /**
  * Panel JSON POST to upsert {@see \Modules\Cms\Entities\CmsSitemapableItem} (per public page / urlable).

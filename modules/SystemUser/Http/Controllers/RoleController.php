@@ -5,7 +5,7 @@ namespace Modules\SystemUser\Http\Controllers;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class RoleController extends BaseController
 {

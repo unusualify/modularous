@@ -3,7 +3,7 @@
 namespace Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class Sitemap extends Model
 {
@@ -13,7 +13,7 @@ class Sitemap extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_sitemaps', 'um_cms_sitemaps');
+        return modularousConfig('tables.cms_sitemaps', 'um_cms_sitemaps');
     }
 
     /**

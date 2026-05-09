@@ -5,7 +5,7 @@ sidebarTitle: FilesUploaderConfig
 
 # FilesUploaderConfig
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\FilesUploaderConfig`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\FilesUploaderConfig`  
 **Source**: `src/Http/ViewComposers/FilesUploaderConfig.php`
 
 Builds and injects the file-library upload configuration object into every view. The frontend file uploader (Filepond or equivalent) reads `$filesUploaderConfig` to know where and how to upload files.
@@ -44,7 +44,7 @@ Builds and injects the file-library upload configuration object into every view.
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'file_library' => [
     'disk'               => 'local',
     'endpoint_type'      => 'local',    // 'local' | 's3' | 'azure'

@@ -115,7 +115,7 @@ Extends `FeatureNotification`.
 | `$newState` | The state the model transitioned **to** |
 | `$oldState` | The state the model transitioned **from** |
 
-**Default channels:** configurable via `config('modularity.notifications.StateableUpdatedNotification.channels')`  
+**Default channels:** configurable via `config('modularous.notifications.StateableUpdatedNotification.channels')`  
 **Mail subject:** `"{Model Headline} Status Changed"`  
 **Mail body:** `"The status of the {headline} '{title}' has been changed to {state}."`  
 **HTML body:** appends `$model->state_formatted` to the plain-text message
@@ -163,7 +163,7 @@ new TaskAssignedToAuthorizableNotification($model)
 ```
 
 Extends `FeatureNotification`.  
-**Default channels:** `database,mail` (read from `config('modularity.notifications.authorizable.channels', 'database,mail')`)
+**Default channels:** `database,mail` (read from `config('modularous.notifications.authorizable.channels', 'database,mail')`)
 
 ---
 
@@ -263,7 +263,7 @@ FeatureNotification::createModelTitleField(
 ### Per-class channel configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'notifications' => [
     \Modules\SystemNotification\Notifications\ModelCreatedNotification::class => [
         'channels' => 'mail,database',

@@ -1,7 +1,7 @@
-MODULARITY PACKAGE DEVELOPMENT RULES
+MODULAROUS PACKAGE DEVELOPMENT RULES
 
 Context: Laravel package development (not module development)
-Repository: unusualify/modularity
+Repository: unusualify/modularous
 
 WORK IN:
 - src/ (package source)

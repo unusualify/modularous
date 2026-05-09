@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Traits\Cache\Cacheable;
-use Unusualify\Modularity\Traits\Cache\HasUserAwareCache;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Traits\Cache\Cacheable;
+use Unusualify\Modularous\Traits\Cache\HasUserAwareCache;
 
 trait CacheableTrait
 {
@@ -141,7 +141,7 @@ trait CacheableTrait
         $exceptIds
     ) {
         // Check if already cached (simple check without relation tags)
-        $cached = ModularityCache::get($cacheKey, null, $module, $routeName);
+        $cached = ModularousCache::get($cacheKey, null, $module, $routeName);
 
         if ($cached !== null) {
             return $cached;
@@ -158,7 +158,7 @@ trait CacheableTrait
         $relations = $this->extractRelationIdsFromCollection($collection);
 
         // Cache with relationship tags
-        ModularityCache::putWithRelations($cacheKey, $result, $ttl, $module, $routeName, $relations);
+        ModularousCache::putWithRelations($cacheKey, $result, $ttl, $module, $routeName, $relations);
 
         return $result;
     }
@@ -180,7 +180,7 @@ trait CacheableTrait
         $useDefaultScopes
     ) {
         // Check if already cached
-        $cached = ModularityCache::get($cacheKey, null, $module, $routeName);
+        $cached = ModularousCache::get($cacheKey, null, $module, $routeName);
 
         if ($cached !== null) {
             return $cached;
@@ -194,7 +194,7 @@ trait CacheableTrait
             $relations = $this->extractRelationIds($record);
 
             // Cache with relationship tags
-            ModularityCache::putWithRelations($cacheKey, $record, $ttl, $module, $routeName, $relations);
+            ModularousCache::putWithRelations($cacheKey, $record, $ttl, $module, $routeName, $relations);
         }
 
         return $record;
@@ -211,7 +211,7 @@ trait CacheableTrait
      * @param array $lazy
      * @param array $scopes
      * @param bool $useDefaultScopes
-     * @return \Unusualify\Modularity\Models\Model
+     * @return \Unusualify\Modularous\Models\Model
      */
     public function getByIdCached($id, $with = [], $withCount = [], $lazy = [], $scopes = [], $useDefaultScopes = false)
     {
@@ -221,7 +221,7 @@ trait CacheableTrait
 
         $module = $this->getCacheModuleName();
         $routeName = $this->getCacheModuleRouteName();
-        $ttl = ModularityCache::getTtl('record', $module, $routeName);
+        $ttl = ModularousCache::getTtl('record', $module, $routeName);
 
         // For records with scopes, include user context
         $needsUserContext = ! empty($scopes) && $this->shouldUseUserAwareCache();
@@ -240,7 +240,7 @@ trait CacheableTrait
                 $params = $this->addUserContext($params);
             }
 
-            $cacheKey = ModularityCache::generateCacheKey($module, $routeName, 'record', $params);
+            $cacheKey = ModularousCache::generateCacheKey($module, $routeName, 'record', $params);
         } else {
             $cacheKey = $this->generateTypeCacheKey('record', ['id' => $id]);
         }
@@ -250,7 +250,7 @@ trait CacheableTrait
             return $this->rememberRecordWithRelations($cacheKey, $ttl, $module, $routeName, $id, $with, $withCount, $lazy, $scopes, $useDefaultScopes);
         }
 
-        return ModularityCache::remember(
+        return ModularousCache::remember(
             $cacheKey,
             'record',
             $ttl,
@@ -265,7 +265,7 @@ trait CacheableTrait
     //  */
     // public function invalidateCache(): void
     // {
-    //     ModularityCache::invalidateModuleRoute($this->getCacheModuleName(), $this->getCacheModuleRouteName());
+    //     ModularousCache::invalidateModuleRoute($this->getCacheModuleName(), $this->getCacheModuleRouteName());
     // }
 
     // /**
@@ -273,7 +273,7 @@ trait CacheableTrait
     //  */
     // public function invalidateCountCache(): void
     // {
-    //     ModularityCache::invalidateCountCaches($this->getCacheModuleName(), $this->getCacheModuleRouteName());
+    //     ModularousCache::invalidateCountCaches($this->getCacheModuleName(), $this->getCacheModuleRouteName());
     // }
 
     // /**
@@ -281,7 +281,7 @@ trait CacheableTrait
     //  */
     // public function invalidateIndexCache(): void
     // {
-    //     ModularityCache::invalidateIndexCaches($this->getCacheModuleName(), $this->getCacheModuleRouteName());
+    //     ModularousCache::invalidateIndexCaches($this->getCacheModuleName(), $this->getCacheModuleRouteName());
     // }
 
     // /**
@@ -292,6 +292,6 @@ trait CacheableTrait
     //     $module = $this->getCacheModuleName();
     //     $routeName = $this->getCacheModuleRouteName();
     //     $cacheKey = $this->generateTypeCacheKey('record', ['id' => $id]);
-    //     ModularityCache::forget($cacheKey, $module, $routeName);
+    //     ModularousCache::forget($cacheKey, $module, $routeName);
     // }
 }

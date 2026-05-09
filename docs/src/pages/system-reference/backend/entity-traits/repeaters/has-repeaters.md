@@ -5,7 +5,7 @@ sidebarTitle: HasRepeaters
 
 # HasRepeaters
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasRepeaters`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasRepeaters`
 
 Enables nested "repeater" blocks on a model. Each repeater block is its own `Repeater` model instance that can carry images (`HasImages`), files (`HasFiles`), Filepond uploads (`HasFileponds`), and prices (`HasPriceable`). These four traits are automatically composed onto the `Repeater` model — no configuration required.
 
@@ -56,7 +56,7 @@ Returns `Repeater` records filtered by optional `role` and `locale`.
 ### Basic setup
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
 
 class Article extends Model
 {

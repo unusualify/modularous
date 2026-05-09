@@ -5,7 +5,7 @@ sidebarTitle: HasPosition
 
 # HasPosition
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasPosition`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasPosition`
 
 Manages an integer `position` column for drag-and-drop ordering. Automatically assigns a position on creation and provides a static helper for reordering.
 
@@ -38,7 +38,7 @@ Manages an integer `position` column for drag-and-drop ordering. Automatically a
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasPosition;
+use Unusualify\Modularous\Entities\Traits\HasPosition;
 
 class MenuItem extends Model
 {

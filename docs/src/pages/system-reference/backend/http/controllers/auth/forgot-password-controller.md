@@ -6,7 +6,7 @@ sidebarTitle: ForgotPasswordController
 # ForgotPasswordController
 
 **File**: `src/Http/Controllers/Auth/ForgotPasswordController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`  
 **Traits**: `SendsPasswordResetEmails`
 
@@ -16,7 +16,7 @@ Sends password reset emails using Laravel's built-in password broker. The user e
 
 ### `broker(): PasswordBroker`
 
-Returns the password broker configured for the Modularous auth provider via `Modularity::getAuthProviderName()`.
+Returns the password broker configured for the Modularous auth provider via `Modularous::getAuthProviderName()`.
 
 ### `showLinkRequestForm(): View`
 

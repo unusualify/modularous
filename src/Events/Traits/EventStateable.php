@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Events\Traits;
+namespace Unusualify\Modularous\Events\Traits;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
 
 trait EventStateable
 {

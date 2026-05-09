@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\TwillCapsules;
+use Unusualify\Modularous\Facades\TwillCapsules;
 
 trait HasSlug
 {
@@ -18,12 +18,12 @@ trait HasSlug
      * subsequent {@see saved} fires in the same request (e.g. translation saves), so slug rows are not rebuilt
      * from {@see slugAttributes} after the editor-controlled payload was processed.
      */
-    public bool $modularitySkipAutomaticSlugSync = false;
+    public bool $modularousSkipAutomaticSlugSync = false;
 
     protected static function bootHasSlug()
     {
         static::saved(function ($model) {
-            if ($model->modularitySkipAutomaticSlugSync) {
+            if ($model->modularousSkipAutomaticSlugSync) {
                 return;
             }
 
@@ -146,7 +146,7 @@ trait HasSlug
             : true;
         $slugParams['active'] = $targetActive;
 
-        if (in_array($slugParams['locale'], modularityConfig('slug_utf8_languages', []))) {
+        if (in_array($slugParams['locale'], modularousConfig('slug_utf8_languages', []))) {
             $slugParams['slug'] = $this->getUtf8Slug($slugParams['slug']);
         } else {
             $slugParams['slug'] = Str::slug($slugParams['slug']);

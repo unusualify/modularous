@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository as Config;
@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\View\View;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\EnforcesMfaSetupOnLogin;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\HandlesMfaAuthentication;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\HandlesOAuth;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\EnforcesMfaSetupOnLogin;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\HandlesMfaAuthentication;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\HandlesOAuth;
+use Unusualify\Modularous\Services\MessageStage;
 
 class LoginController extends Controller
 {
@@ -52,7 +52,7 @@ class LoginController extends Controller
         $this->viewFactory = $viewFactory;
         $this->config = $config;
 
-        $this->redirectTo = modularityConfig('auth_login_redirect_path', '/');
+        $this->redirectTo = modularousConfig('auth_login_redirect_path', '/');
     }
 
     protected function guestMiddlewareExcept(): array
@@ -62,7 +62,7 @@ class LoginController extends Controller
 
     protected function guard()
     {
-        return $this->authManager->guard(Modularity::getAuthGuardName());
+        return $this->authManager->guard(Modularous::getAuthGuardName());
     }
 
     public function showForm()
@@ -71,7 +71,7 @@ class LoginController extends Controller
             ? $this->mfaLoginPageKey()
             : 'login';
 
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData($pageKey));
+        return $this->viewFactory->make(modularousBaseKey() . '::auth.login', $this->buildAuthViewData($pageKey));
     }
 
     public function login(Request $request)
@@ -89,11 +89,11 @@ class LoginController extends Controller
     public function showLogin2FaForm()
     {
         if (! $this->isMfaEnabled()) {
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $this->buildAuthViewData('login'));
+            return $this->viewFactory->make(modularousBaseKey() . '::auth.login', $this->buildAuthViewData('login'));
         }
 
         return $this->viewFactory->make(
-            modularityBaseKey() . '::auth.login',
+            modularousBaseKey() . '::auth.login',
             $this->buildAuthViewData($this->mfaChallengePageKey())
         );
     }

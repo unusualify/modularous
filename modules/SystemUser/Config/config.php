@@ -1045,9 +1045,9 @@ return [
                     'type' => 'text',
                     'name' => 'guard_name',
                     'label' => 'Guard Name',
-                    'placeholder' => 'modularity',
+                    'placeholder' => 'modularous',
                     '_tooltip' => 'Enter the guard name',
-                    'default' => 'modularity',
+                    'default' => 'modularous',
                     'col' => [
                         'cols' => 10,
                         'sm' => 10,
@@ -1146,7 +1146,7 @@ return [
                     'name' => 'guard_name',
                     'label' => 'Guard Name',
                     'placeholder' => 'web',
-                    'default' => 'modularity',
+                    'default' => 'modularous',
                     'col' => [
                         'cols' => 12,
                         'sm' => 8,

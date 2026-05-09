@@ -7,18 +7,18 @@ sidebarGroupTitle: Activators
 # Activators
 
 **Directory**: `src/Activators/`  
-**Namespace**: `Unusualify\Modularity\Activators`
+**Namespace**: `Unusualify\Modularous\Activators`
 
 Activators persist and resolve enable/disable state. Modularous uses two activator layers:
 
-- **Module activator** (`ModularityActivator`) controls whether a module is enabled at all.
+- **Module activator** (`ModularousActivator`) controls whether a module is enabled at all.
 - **Route activator** (`ModuleActivator`) controls whether specific route actions inside a module are enabled.
 
 ## Classes
 
 | Class | Purpose | Page |
 |-------|---------|------|
-| `ModularityActivator` | Stores and resolves module-level statuses (`enabled` / `disabled`) via JSON + cache | [ModularityActivator →](./modularity-activator) |
+| `ModularousActivator` | Stores and resolves module-level statuses (`enabled` / `disabled`) via JSON + cache | [ModularousActivator →](./modularous-activator) |
 | `ModuleActivator` | Stores and resolves route-level statuses per module (`routes_statuses.json`) | [ModuleActivator →](./module-activator) |
 
 ## Activation Model

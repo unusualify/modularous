@@ -9,8 +9,8 @@ sidebarTitle: Create Feature
 
 ## Command Information
 
-- **Signature:** `modularity:make:feature [name?]`
-- **Aliases:** `modularity:create:feature`, `mod:c:feature`
+- **Signature:** `modularous:make:feature [name?]`
+- **Aliases:** `modularous:create:feature`, `mod:c:feature`
 - **Category:** Generators
 
 ## Arguments
@@ -22,8 +22,8 @@ sidebarTitle: Create Feature
 ## What It Does
 
 Asks (via interactive prompts) whether to create:
-- A **repository trait** — delegates to `modularity:make:repository:trait`
-- A **model trait** — delegates to `modularity:make:model:trait`
+- A **repository trait** — delegates to `modularous:make:repository:trait`
+- A **model trait** — delegates to `modularous:make:model:trait`
 
 Both are generated with the same StudlyCase name. Use this when a new feature requires behaviour spread across the model and repository layers.
 
@@ -31,10 +31,10 @@ Both are generated with the same StudlyCase name. Use this when a new feature re
 
 ```bash
 # Interactive — prompts for name and which traits to create
-php artisan modularity:make:feature
+php artisan modularous:make:feature
 
 # Provide the name upfront
-php artisan modularity:make:feature HasAnalytics
+php artisan modularous:make:feature HasAnalytics
 ```
 
 ## Related

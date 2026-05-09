@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Facades\ModularityFinder;
-use Unusualify\Modularity\Facades\ModularityLog;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Traits\CheckSnapshot;
-use Unusualify\Modularity\Traits\ResolveConnector;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Facades\ModularousFinder;
+use Unusualify\Modularous\Facades\ModularousLog;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Traits\CheckSnapshot;
+use Unusualify\Modularous\Traits\ResolveConnector;
 
 trait Relationships
 {
@@ -18,7 +18,7 @@ trait Relationships
         ResolveConnector;
 
     /**
-     * When true, {@see \Unusualify\Modularity\Repositories\Traits\RevisionsTrait::bypassAfterSaves} may set
+     * When true, {@see \Unusualify\Modularous\Repositories\Traits\RevisionsTrait::bypassAfterSaves} may set
      * `passAfterSaveRelationships` during pending-only revision saves so {@see afterSaveRelationships} is skipped.
      */
     protected bool $pendingBypassRevisionRelationships = true;
@@ -91,7 +91,7 @@ trait Relationships
                         $mustTouchEloquentModel = true;
                     }
                 } catch (\Throwable $th) {
-                    ModularityLog::critical('Error syncing belongsToMany relationship on afterSaveRelationships', [
+                    ModularousLog::critical('Error syncing belongsToMany relationship on afterSaveRelationships', [
                         'repository' => get_class($this),
                         'relationName' => $relation,
                         'error' => $th->getMessage(),
@@ -109,7 +109,7 @@ trait Relationships
                 $relation = $object->{$relationName}();
                 $relatedLocalKey = $relation->getLocalKeyName(); // id
                 $foreignKey = $relation->getForeignKeyName(); // parent_name_id
-                $repository = ModularityFinder::getRouteRepository(Str::singular($relationName), asClass: true);
+                $repository = ModularousFinder::getRouteRepository(Str::singular($relationName), asClass: true);
                 $hasRepository = (bool) $repository && $repository instanceof Repository;
 
                 if (isset($fields[$relationName])) {
@@ -146,7 +146,7 @@ trait Relationships
                                 }
 
                             } elseif (is_numeric($data)) {
-                                ModularityLog::critical('Found numeric data in hasMany relationship on afterSaveRelationships', [
+                                ModularousLog::critical('Found numeric data in hasMany relationship on afterSaveRelationships', [
                                     'relationName' => $relationName,
                                     'data' => $data,
                                     'idsDeleted' => $idsDeleted,
@@ -174,7 +174,7 @@ trait Relationships
 
         foreach ($this->getMorphManyRelations() as $relationName) {
             // PricesTrait is a special case, we don't want to update prices when morphMany relations are updated
-            if (classHasTrait($this, 'Unusualify\Modularity\Repositories\Traits\PricesTrait') && in_array($relationName, $this->getColumns('Unusualify\Modularity\Repositories\Traits\PricesTrait'))) {
+            if (classHasTrait($this, 'Unusualify\Modularous\Repositories\Traits\PricesTrait') && in_array($relationName, $this->getColumns('Unusualify\Modularous\Repositories\Traits\PricesTrait'))) {
                 continue;
             }
             if (isset($fields[$relationName]) && $fields[$relationName] && $relationName != 'tags') {
@@ -343,7 +343,7 @@ trait Relationships
 
         foreach ($schema ?? [] as $input) {
             if (isset($input['ext']) && $input['ext'] == 'relationship') {
-                $repository = ModularityFinder::getRouteRepository(Str::studly(Str::singular($input['name'])), asClass: true);
+                $repository = ModularousFinder::getRouteRepository(Str::studly(Str::singular($input['name'])), asClass: true);
                 $relationshipName = $input['relationship'] ?? $input['name'];
                 $records = $object->{$relationshipName};
                 $appends = $input['relationshipAppends'] ?? [];

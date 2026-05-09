@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
 use Illuminate\Support\Facades\Lang;
-use Unusualify\Modularity\Hydrates\HeaderHydrator;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\HeaderHydrator;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ColumnHelpersTest extends TestCase
 {

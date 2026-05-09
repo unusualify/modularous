@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 /**
  * BroadcastManager
  *
- * This service is responsible for extracting dynamic broadcast configuration from Modularity
+ * This service is responsible for extracting dynamic broadcast configuration from Modularous
  * events based on a given model. It instantiates event classes (which extend the common ModelEvent)
  * and groups their broadcast channel names (from broadcastOn) together with the events (from broadcastAs).
  *

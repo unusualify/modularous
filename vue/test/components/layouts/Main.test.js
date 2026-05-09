@@ -2,11 +2,11 @@ import { describe, expect, test } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createStore } from 'vuex'
 import Main from '@/components/layouts/Main.vue'
-import createModularityVuetify from '@/plugins/vuetify'
+import createModularousVuetify from '@/plugins/vuetify'
 import mediaLibraryModule from '@/store/modules/media-library'
 import i18n from '@/config/i18n'
 
-const vuetify = createModularityVuetify()
+const vuetify = createModularousVuetify()
 
 function createTestStore() {
   return createStore({

@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $authorizedsTable = modularousConfig('tables.authorizeds', 'modularous_authorizeds');
+        $usersTable = modularousConfig('tables.users', 'um_users');
+
+        if (! Schema::hasTable($authorizedsTable)) {
+            Schema::create($authorizedsTable, function (Blueprint $table) use ($usersTable) {
+                $table->{modularousIncrementsMethod()}('id');
+                $table->{modularousIntegerMethod()}('user_id')->unsigned();
+                $table->foreign('user_id', "fk_{$usersTable}_authorized_id")
+                    ->references('id')
+                    ->on($usersTable)
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+                $table->uuidMorphs('authorizedable');
+                // $table->string('authorizedable_type')->nullable(); // MODEL CLASS
+                // $table->string('authorizedable_id')->nullable(); // ID of model to be authorized
+            });
+        }
+
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $authorizedsTable = modularousConfig('tables.authorizeds', 'modularous_authorizeds');
+
+        Schema::dropIfExists($authorizedsTable);
+    }
+};

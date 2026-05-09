@@ -5,7 +5,7 @@ sidebarTitle: QueryBuilder
 
 # QueryBuilder
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\QueryBuilder`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\QueryBuilder`
 
 The primary data-retrieval layer used by every `Repository`. Provides paginated listing, single-record lookup, multi-ID fetching, column-value filtering, and a flexible flat-list helper. Composes `MethodTransformers` (for caching and filter delegation) and `SerializeModel` (for cache serialisation).
 

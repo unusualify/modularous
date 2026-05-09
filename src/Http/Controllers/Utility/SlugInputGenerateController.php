@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use InvalidArgumentException;
-use Unusualify\Modularity\Services\SlugInputValidationService;
+use Unusualify\Modularous\Services\SlugInputValidationService;
 
 /**
  * POST body: module, route, source (title-like string), locale?, locale_scoped?, exclude_id?

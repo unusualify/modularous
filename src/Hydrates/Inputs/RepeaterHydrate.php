@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Services\Connector;
+use Unusualify\Modularous\Services\Connector;
 
 class RepeaterHydrate extends InputHydrate
 {

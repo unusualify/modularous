@@ -7,9 +7,9 @@ sidebarTitle: make:theme:folder
 
 > Scaffold a custom theme working folder
 
-**Signature**: `modularity:make:theme:folder`
+**Signature**: `modularous:make:theme:folder`
 
-**Alias**: `modularity:create:theme`
+**Alias**: `modularous:create:theme`
 
 **Category**: Make
 
@@ -17,14 +17,14 @@ sidebarTitle: make:theme:folder
 
 ## Description
 
-Creates a new theme working directory at `resources/vendor/modularity/themes/{name}/` by copying the Sass and JS files from an existing built-in theme. The copied files serve as a starting point; edit them freely before promoting the theme with [`make:theme`](./theme).
+Creates a new theme working directory at `resources/vendor/modularous/themes/{name}/` by copying the Sass and JS files from an existing built-in theme. The copied files serve as a starting point; edit them freely before promoting the theme with [`make:theme`](./theme).
 
 ---
 
 ## Usage
 
 ```
-modularity:make:theme:folder [options] <name>
+modularous:make:theme:folder [options] <name>
 ```
 
 ### Arguments
@@ -47,13 +47,13 @@ modularity:make:theme:folder [options] <name>
 ### Interactive (prompts for base theme)
 
 ```bash
-php artisan modularity:make:theme:folder mytheme
+php artisan modularous:make:theme:folder mytheme
 ```
 
 ### With explicit base theme
 
 ```bash
-php artisan modularity:make:theme:folder mytheme --extend=unusualify
+php artisan modularous:make:theme:folder mytheme --extend=unusualify
 ```
 
 ---
@@ -61,7 +61,7 @@ php artisan modularity:make:theme:folder mytheme --extend=unusualify
 ## Output
 
 ```
-resources/vendor/modularity/themes/mytheme/
+resources/vendor/modularous/themes/mytheme/
 ├── sass/       (copied from built-in theme)
 └── mytheme.js  (copied from built-in theme)
 ```
@@ -71,7 +71,7 @@ resources/vendor/modularity/themes/mytheme/
 ## Workflow
 
 1. Run `make:theme:folder` to scaffold the working directory
-2. Edit `resources/vendor/modularity/themes/{name}/` to customize
+2. Edit `resources/vendor/modularous/themes/{name}/` to customize
 3. Run [`make:theme`](./theme) to promote the custom theme to the built-in set
 
 ---

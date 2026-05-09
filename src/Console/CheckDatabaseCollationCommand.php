@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class CheckDatabaseCollationCommand extends Command
 {
-    protected $signature = 'modularity:db:check-collation {table}';
+    protected $signature = 'modularous:db:check-collation {table}';
 
     protected $description = 'Check database and connection collations';
 

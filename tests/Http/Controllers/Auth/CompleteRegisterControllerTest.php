@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\View\View;
@@ -13,9 +13,9 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Mockery;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Http\Controllers\Auth\CompleteRegisterController;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Http\Controllers\Auth\CompleteRegisterController;
 
 class CompleteRegisterControllerTest extends AuthTestCase
 {

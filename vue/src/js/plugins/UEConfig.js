@@ -21,7 +21,7 @@ import { MEDIA_LIBRARY } from '@/store/mutations'
 
 // Add-ons
 // import vuetify from '@/plugins/vuetify'
-import createModularityVuetify from '@/plugins/vuetify'
+import createModularousVuetify from '@/plugins/vuetify'
 import broadcasting from '@/plugins/broadcasting'
 import ModalService from '@/plugins/modalService'
 // Store
@@ -78,7 +78,7 @@ export default {
     loadLocaleMessages(i18n, window[import.meta.env.VUE_APP_NAME]?.ENDPOINTS.languages ?? '')
     moment.locale(store.state.user.locale)
 
-    const vuetify = createModularityVuetify({
+    const vuetify = createModularousVuetify({
       locale: {
         adapter: createVueI18nAdapter({ i18n, useI18n }),
       }

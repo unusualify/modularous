@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Unusualify\Modularity\Services\CurrencyExchangeService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\CurrencyExchangeService;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CurrencyExchangeServiceTest extends TestCase
 {
@@ -16,10 +16,10 @@ class CurrencyExchangeServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.services.currency_exchange.endpoint', 'http://api.test/latest');
-        Config::set('modularity.services.currency_exchange.api_key', 'test-key');
-        Config::set('modularity.services.currency_exchange.parameters', ['apiKey' => 'apikey', 'baseCurrency' => 'base_currency']);
-        Config::set('modularity.services.currency_exchange.rates_key', 'data');
+        Config::set('modularous.services.currency_exchange.endpoint', 'http://api.test/latest');
+        Config::set('modularous.services.currency_exchange.api_key', 'test-key');
+        Config::set('modularous.services.currency_exchange.parameters', ['apiKey' => 'apikey', 'baseCurrency' => 'base_currency']);
+        Config::set('modularous.services.currency_exchange.rates_key', 'data');
 
         $this->service = new CurrencyExchangeService;
     }

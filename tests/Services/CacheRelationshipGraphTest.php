@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Services\CacheRelationshipGraph;
-use Unusualify\Modularity\Tests\TestModulesCase;
+use Unusualify\Modularous\Services\CacheRelationshipGraph;
+use Unusualify\Modularous\Tests\TestModulesCase;
 
 class CacheRelationshipGraphTest extends TestModulesCase
 {
@@ -16,18 +16,18 @@ class CacheRelationshipGraphTest extends TestModulesCase
         parent::setUp();
 
         // Enable the graph feature
-        Config::set('modularity.cache.graph.enabled', true);
-        Config::set('modularity.cache.graph.ttl', 3600);
+        Config::set('modularous.cache.graph.enabled', true);
+        Config::set('modularous.cache.graph.ttl', 3600);
 
         // Clear any cached graph
-        Cache::forget('modularity:cache:relationship_graph');
+        Cache::forget('modularous:cache:relationship_graph');
 
         $this->service = new CacheRelationshipGraph;
     }
 
     protected function tearDown(): void
     {
-        Cache::forget('modularity:cache:relationship_graph');
+        Cache::forget('modularous:cache:relationship_graph');
 
         parent::tearDown();
     }
@@ -37,7 +37,7 @@ class CacheRelationshipGraphTest extends TestModulesCase
     {
         $this->assertTrue($this->service->isEnabled());
 
-        Config::set('modularity.cache.graph.enabled', false);
+        Config::set('modularous.cache.graph.enabled', false);
         $disabledService = new CacheRelationshipGraph;
         $this->assertFalse($disabledService->isEnabled());
     }
@@ -45,7 +45,7 @@ class CacheRelationshipGraphTest extends TestModulesCase
     /** @test */
     public function it_returns_empty_array_when_disabled()
     {
-        Config::set('modularity.cache.graph.enabled', false);
+        Config::set('modularous.cache.graph.enabled', false);
         $service = new CacheRelationshipGraph;
 
         $this->assertEquals([], $service->getAffectedModuleRoutes('App\\Models\\User'));
@@ -101,7 +101,7 @@ class CacheRelationshipGraphTest extends TestModulesCase
     /** @test */
     public function it_returns_empty_graph_structure_when_disabled()
     {
-        Config::set('modularity.cache.graph.enabled', false);
+        Config::set('modularous.cache.graph.enabled', false);
         $service = new CacheRelationshipGraph;
 
         $graph = $service->getGraph();
@@ -260,7 +260,7 @@ class CacheRelationshipGraphTest extends TestModulesCase
     /** @test */
     public function it_caches_graph_with_configured_ttl()
     {
-        Config::set('modularity.cache.graph.ttl', 7200);
+        Config::set('modularous.cache.graph.ttl', 7200);
         $service = new CacheRelationshipGraph;
 
         $stats = $service->getStats();
@@ -276,7 +276,7 @@ class CacheRelationshipGraphTest extends TestModulesCase
         $this->assertTrue($this->service->isCached());
 
         // Clear cache manually to simulate cache expiration
-        Cache::forget('modularity:cache:relationship_graph');
+        Cache::forget('modularous:cache:relationship_graph');
 
         // Rebuild should detect missing cache and rebuild
         $graph2 = $this->service->rebuildGraph();

@@ -7,9 +7,9 @@ sidebarTitle: make:model:trait
 
 > Create a reusable entity trait
 
-**Signature**: `modularity:make:model:trait`
+**Signature**: `modularous:make:model:trait`
 
-**Aliases**: `modularity:create:model:trait`, `mod:c:model:trait`
+**Aliases**: `modularous:create:model:trait`, `mod:c:model:trait`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Creates a skeleton PHP trait in the Modularous vendor `src/Entities/Traits/` dir
 ## Usage
 
 ```
-modularity:make:model:trait <name>
+modularous:make:model:trait <name>
 ```
 
 ### Arguments
@@ -38,12 +38,12 @@ modularity:make:model:trait <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:model:trait Taggable
+php artisan modularous:make:model:trait Taggable
 # → src/Entities/Traits/HasTaggable.php
 ```
 
 ```bash
-php artisan modularity:make:model:trait PriceRange
+php artisan modularous:make:model:trait PriceRange
 # → src/Entities/Traits/HasPriceRange.php
 ```
 
@@ -60,7 +60,7 @@ php artisan modularity:make:model:trait PriceRange
 ## Notes
 
 - This command writes to the Modularous **vendor** path, not a module. Use it when creating reusable traits that span multiple modules.
-- The trait is not registered anywhere automatically — add it to `config/modularity.php` traits list to make it available in `make:model`.
+- The trait is not registered anywhere automatically — add it to `config/modularous.php` traits list to make it available in `make:model`.
 
 ---
 

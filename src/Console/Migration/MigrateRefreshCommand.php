@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Migration;
+namespace Unusualify\Modularous\Console\Migration;
 
 use Illuminate\Console\Command;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MigrateRefreshCommand extends Command
 {
@@ -14,7 +14,7 @@ class MigrateRefreshCommand extends Command
      *
      * @var string
      */
-    protected $name = 'modularity:migrate:refresh';
+    protected $name = 'modularous:migrate:refresh';
 
     /**
      * The console command description.
@@ -29,13 +29,13 @@ class MigrateRefreshCommand extends Command
     public function handle(): int
     {
         /** @var Module $module */
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         try {
-            $this->call('modularity:migrate:rollback', [
+            $this->call('modularous:migrate:rollback', [
                 'module' => $module->getName(),
             ]);
-            $this->call('modularity:migrate', [
+            $this->call('modularous:migrate', [
                 'module' => $module->getName(),
             ]);
 

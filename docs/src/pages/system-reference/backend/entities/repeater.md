@@ -6,20 +6,20 @@ sidebarTitle: Repeater
 # Repeater
 
 **File**: `src/Entities/Repeater.php`
-**Namespace**: `Unusualify\Modularity\Entities`
+**Namespace**: `Unusualify\Modularous\Entities`
 **Extends**: `Model`
 
 Eloquent model that persists the rows created by the `HasRepeaters` trait. Each row represents one item in a repeater field (e.g., one FAQ entry, one team member). Extends the Modularous `Model` base class and supports soft deletes.
 
 ## Database Table
 
-Configurable via `modularityConfig('tables.repeaters', 'modularity_repeaters')`. Defaults to `modularity_repeaters`.
+Configurable via `modularousConfig('tables.repeaters', 'modularous_repeaters')`. Defaults to `modularous_repeaters`.
 
 ### Columns
 
 | Column | Type | Nullable | Description |
 |--------|------|----------|-------------|
-| `id` | UUID / auto-increment | No | Primary key (type follows `modularityIncrementsMethod()`) |
+| `id` | UUID / auto-increment | No | Primary key (type follows `modularousIncrementsMethod()`) |
 | `repeatable_type` | string (UUID morphs) | No | Class of the owning model |
 | `repeatable_id` | UUID | No | ID of the owning model |
 | `content` | JSON | No | All field values for this repeater item |
@@ -54,7 +54,7 @@ The table name is resolved at runtime:
 ```php
 public function getTable(): string
 {
-    return modularityConfig('tables.repeaters', parent::getTable());
+    return modularousConfig('tables.repeaters', parent::getTable());
 }
 ```
 
@@ -114,7 +114,7 @@ For translated fields (`translated: true` in the schema), values are nested by l
 | Rendering | Via PHP/Inertia (frontend handles layout) | Via Blade views (`renderBlocks()`) |
 | Media | Not built-in | `HasFiles`, `HasImages` on the Block model |
 | Locale | Stored as column (`locale`) | Stored inside `content` JSON per field |
-| Table | `modularity_repeaters` (configurable) | `twill_blocks` (configurable) |
+| Table | `modularous_repeaters` (configurable) | `twill_blocks` (configurable) |
 
 ## Related
 

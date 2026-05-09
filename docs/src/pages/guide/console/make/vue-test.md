@@ -7,9 +7,9 @@ sidebarTitle: make:vue:test
 
 > Create a Vitest/Jest test file for a Vue feature or component
 
-**Signature**: `modularity:make:vue:test`
+**Signature**: `modularous:make:vue:test`
 
-**Aliases**: `modularity:create:vue:test`, `mod:c:vue:test`
+**Aliases**: `modularous:create:vue:test`, `mod:c:vue:test`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Scaffolds a Vitest or Jest test file via `VueTestGenerator`. Both the test name 
 ## Usage
 
 ```
-modularity:make:vue:test [options] [<name>] [<type>]
+modularous:make:vue:test [options] [<name>] [<type>]
 ```
 
 ### Arguments
@@ -48,26 +48,26 @@ modularity:make:vue:test [options] [<name>] [<type>]
 ### Fully interactive
 
 ```bash
-php artisan modularity:make:vue:test
+php artisan modularous:make:vue:test
 # Prompts: test name, test type
 ```
 
 ### Component test with explicit name
 
 ```bash
-php artisan modularity:make:vue:test VInputColorPicker component
+php artisan modularous:make:vue:test VInputColorPicker component
 ```
 
 ### Composable test
 
 ```bash
-php artisan modularity:make:vue:test UseTagSelector composable
+php artisan modularous:make:vue:test UseTagSelector composable
 ```
 
 ### Component from a subdirectory
 
 ```bash
-php artisan modularity:make:vue:test VInputColorPicker component --importDir=inputs
+php artisan modularous:make:vue:test VInputColorPicker component --importDir=inputs
 ```
 
 ---

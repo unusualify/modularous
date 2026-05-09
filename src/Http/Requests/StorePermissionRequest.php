@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Requests;
+namespace Unusualify\Modularous\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

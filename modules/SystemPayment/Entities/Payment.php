@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Facades\PriceService;
-use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Traits\Core\HasCaching;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 use Unusualify\Payable\Payable;
 
 class Payment extends \Unusualify\Payable\Models\Payment
@@ -257,7 +257,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return Attribute::make(
             get: function () {
-                $t = $this->parameters->modularity ?? [];
+                $t = $this->parameters->modularous ?? [];
 
                 $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
 

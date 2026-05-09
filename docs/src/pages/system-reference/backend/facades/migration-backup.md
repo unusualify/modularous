@@ -5,9 +5,9 @@ sidebarTitle: MigrationBackup
 
 # MigrationBackup
 
-**Facade**: `Unusualify\Modularity\Facades\MigrationBackup`  
+**Facade**: `Unusualify\Modularous\Facades\MigrationBackup`  
 **Accessor**: `migration.backup`  
-**Underlying**: `Unusualify\Modularity\Services\MigrationBackupService`
+**Underlying**: `Unusualify\Modularous\Services\MigrationBackupService`
 
 Temporarily backs up and restores table data around destructive migration operations (e.g. dropping and recreating a table). Stores the backup in the cache to survive the migration run.
 
@@ -24,7 +24,7 @@ Temporarily backs up and restores table data around destructive migration operat
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\MigrationBackup;
+use Unusualify\Modularous\Facades\MigrationBackup;
 
 // In a migration
 public function up()

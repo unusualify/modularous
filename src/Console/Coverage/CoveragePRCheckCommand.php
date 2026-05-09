@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Coverage;
+namespace Unusualify\Modularous\Console\Coverage;
 
 use Illuminate\Console\Command;
-use Unusualify\Modularity\Facades\Coverage;
+use Unusualify\Modularous\Facades\Coverage;
 
 /**
  * Check PR coverage requirements
@@ -28,8 +28,8 @@ class CoveragePRCheckCommand extends Command
             $branch = $this->option('branch');
             $threshold = (float) $this->option('threshold');
 
-            $cloverName = $this->option('cloverName') ?? config('modularity-coverage.clover_name');
-            $cloverDir = $this->option('cloverDir') ?? config('modularity-coverage.clover_dir');
+            $cloverName = $this->option('cloverName') ?? config('modularous-coverage.clover_name');
+            $cloverDir = $this->option('cloverDir') ?? config('modularous-coverage.clover_dir');
             $cloverPath = concatenate_path($cloverDir, $cloverName);
 
             $results = Coverage::make($cloverDir, $cloverName)

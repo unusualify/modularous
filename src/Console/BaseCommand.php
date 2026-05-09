@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
@@ -10,9 +10,9 @@ use Nwidart\Modules\Exceptions\FileAlreadyExistException;
 use Nwidart\Modules\Generators\FileGenerator;
 use Nwidart\Modules\Module;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Support\Decomposers\SchemaParser;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Support\Decomposers\SchemaParser;
+use Unusualify\Modularous\Traits\ManageNames;
 
 use function Laravel\Prompts\confirm;
 
@@ -54,12 +54,12 @@ abstract class BaseCommand extends Command implements PromptsForMissingInput
     public function __construct()
     {
         if ($this->signature && $this->useTraitOptions) {
-            $this->signature .= ' ' . modularityTraitOptions(asSignature: true);
+            $this->signature .= ' ' . modularousTraitOptions(asSignature: true);
         }
 
         parent::__construct();
 
-        $this->configBaseKey = Str::snake(env('MODULARITY_BASE_NAME', 'Modularity'));
+        $this->configBaseKey = Str::snake(env('MODULAROUS_BASE_NAME', 'Modularous'));
         Stub::setBasePath(rtrim($this->baseConfig('stubs.path', dirname(__FILE__) . '/stubs'), '/'));
     }
 
@@ -213,7 +213,7 @@ abstract class BaseCommand extends Command implements PromptsForMissingInput
 
     protected function checkSelfOption()
     {
-        if ($this->hasOption('self') && $this->option('self') && Modularity::isProduction()) {
+        if ($this->hasOption('self') && $this->option('self') && Modularous::isProduction()) {
             $this->components->error('Self option is not available in production.');
 
             return E_ERROR;

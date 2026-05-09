@@ -1,21 +1,21 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Entities\SiteSetting;
 use Modules\Cms\Http\Controllers\Front\RobotsTxtController;
 use Modules\Cms\Repositories\SiteSettingRepository;
 use Modules\Cms\Services\CmsSiteSeoSettingsService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsSiteSeoSettingsServiceTest extends TestCase
 {
     public function test_resolved_prefers_persisted_value_when_use_site_settings(): void
     {
         config([
-            'modularity.cms_seo.robots.use_site_settings' => true,
-            'modularity.cms_seo.robots.global_robots_txt' => 'User-agent: *\nAllow: /',
-            'modularity.cms_seo.robots.site_setting' => [
+            'modularous.cms_seo.robots.use_site_settings' => true,
+            'modularous.cms_seo.robots.global_robots_txt' => 'User-agent: *\nAllow: /',
+            'modularous.cms_seo.robots.site_setting' => [
                 'group_key' => 'seo',
                 'key' => 'global_robots_txt',
                 'locale' => '*',
@@ -43,8 +43,8 @@ class CmsSiteSeoSettingsServiceTest extends TestCase
     public function test_resolved_body_static_accepts_injected_service(): void
     {
         config([
-            'modularity.cms_seo.robots.use_site_settings' => true,
-            'modularity.cms_seo.robots.site_setting' => [
+            'modularous.cms_seo.robots.use_site_settings' => true,
+            'modularous.cms_seo.robots.site_setting' => [
                 'group_key' => 'seo',
                 'key' => 'global_robots_txt',
                 'locale' => '*',
@@ -55,7 +55,7 @@ class CmsSiteSeoSettingsServiceTest extends TestCase
         $repo->method('findScoped')->willReturn(null);
 
         $service = new CmsSiteSeoSettingsService($repo);
-        config(['modularity.cms_seo.robots.global_robots_txt' => 'User-agent: *\nDisallow: /cfg']);
+        config(['modularous.cms_seo.robots.global_robots_txt' => 'User-agent: *\nDisallow: /cfg']);
 
         $body = RobotsTxtController::resolvedBody($service);
 

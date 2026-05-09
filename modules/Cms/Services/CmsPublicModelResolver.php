@@ -29,7 +29,7 @@ final class CmsPublicModelResolver
     /**
      * Resolves a published model of any class that appears in {@see UrlRoute} and passes
      * {@see \Modules\Cms\Support\CmsParentSegmentRegistryGate} ({@code ParentSegment} row + {@link HasParentSegment}
-     * or {@link \Unusualify\Modularity\Entities\Traits\IsSingular}). Singleton entities still use the concrete class as
+     * or {@link \Unusualify\Modularous\Entities\Traits\IsSingular}). Singleton entities still use the concrete class as
      * {@code urlable_type} while rows live on the singletons table. Powers {@see \Modules\Cms\Http\Controllers\Front\CmsPublicFrontController}.
      */
     public function resolveForParentSegmentRegistry(Request $request, ?string $urlRouteKind = null): ?Model
@@ -61,7 +61,7 @@ final class CmsPublicModelResolver
      */
     public function resolve(Request $request, string $modelClass, string $urlRouteKind): ?Model
     {
-        if (! modularityConfig('cms_routing.public_pages_enabled', true)) {
+        if (! modularousConfig('cms_routing.public_pages_enabled', true)) {
             return null;
         }
 
@@ -89,7 +89,7 @@ final class CmsPublicModelResolver
      */
     private function findPublicUrlRouteRow(Request $request, string $urlRouteKind): ?UrlRoute
     {
-        if (! modularityConfig('cms_routing.public_pages_enabled', true)) {
+        if (! modularousConfig('cms_routing.public_pages_enabled', true)) {
             return null;
         }
 

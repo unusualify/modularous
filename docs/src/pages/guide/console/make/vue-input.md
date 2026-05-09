@@ -7,9 +7,9 @@ sidebarTitle: make:vue:input
 
 > Create a Vue single-file input component
 
-**Signature**: `modularity:make:vue:input`
+**Signature**: `modularous:make:vue:input`
 
-**Aliases**: `modularity:create:vue:input`, `mod:c:vue:input`
+**Aliases**: `modularous:create:vue:input`, `mod:c:vue:input`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Scaffolds a Vue `.vue` file for a custom form input type in the Modularous vendo
 ## Usage
 
 ```
-modularity:make:vue:input <name>
+modularous:make:vue:input <name>
 ```
 
 ### Arguments
@@ -38,13 +38,13 @@ modularity:make:vue:input <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:vue:input ColorPicker
+php artisan modularous:make:vue:input ColorPicker
 # → vue/src/js/components/inputs/ColorPicker.vue
 # Component name attribute: v-input-color-picker
 ```
 
 ```bash
-php artisan modularity:make:vue:input RichText
+php artisan modularous:make:vue:input RichText
 # → vue/src/js/components/inputs/RichText.vue
 # Component name attribute: v-input-rich-text
 ```

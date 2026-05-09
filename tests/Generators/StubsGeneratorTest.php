@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Generators;
+namespace Unusualify\Modularous\Tests\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
-use Unusualify\Modularity\Generators\StubsGenerator;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Generators\StubsGenerator;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
 
 class StubsGeneratorTest extends TestCase
 {
@@ -109,7 +109,7 @@ class StubsGeneratorTest extends TestCase
         $this->module->shouldReceive('getRawRouteConfig')->with('TestStubs')->andReturn([]);
         $this->module->shouldReceive('getPath')->andReturn('/tmp/module');
 
-        $this->config->shouldReceive('get')->with('modularity.stubs.files')->andReturn(['stub' => 'file.php']);
+        $this->config->shouldReceive('get')->with('modularous.stubs.files')->andReturn(['stub' => 'file.php']);
         $this->filesystem->shouldReceive('isDirectory')->andReturn(true);
         $this->filesystem->shouldReceive('put')->atLeast()->once();
 
@@ -143,7 +143,7 @@ class StubsGeneratorTest extends TestCase
 
         $this->module->shouldReceive('getRawRouteConfig')->with('TestStubs')->andReturn(['existing' => 'config']);
         $this->module->shouldReceive('getPath')->andReturn('/tmp/module');
-        $this->config->shouldReceive('get')->with('modularity.stubs.files')->andReturn(['stub' => 'file.php']);
+        $this->config->shouldReceive('get')->with('modularous.stubs.files')->andReturn(['stub' => 'file.php']);
         $this->filesystem->shouldReceive('isDirectory')->andReturn(true);
         $this->filesystem->shouldReceive('put')->atLeast()->once();
         $this->console->shouldReceive('info');

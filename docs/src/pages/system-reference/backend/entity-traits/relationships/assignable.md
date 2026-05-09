@@ -5,7 +5,7 @@ sidebarTitle: Assignable
 
 # Assignable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Assignable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Assignable`
 
 Tracks user/role assignments for a model via `Assignment` morph records. Includes `AssignableScopes` for filtering by assignment status. Deletes or force-deletes assignments in sync with the parent model's deletion.
 
@@ -55,7 +55,7 @@ Provided by `AssignableScopes`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Assignable;
+use Unusualify\Modularous\Entities\Traits\Assignable;
 
 class Task extends Model
 {

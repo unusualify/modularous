@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\SystemNotification\Events\AuthorizableCreated;
@@ -50,6 +50,6 @@ class Authorization extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.authorizations', 'modularity_authorizations');
+        return modularousConfig('tables.authorizations', 'modularous_authorizations');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -8,10 +8,10 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Repeater;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Repeater;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasRepeatersTest extends ModelTestCase
 {
@@ -39,7 +39,7 @@ class HasRepeatersTest extends ModelTestCase
     public function test_model_uses_has_repeaters_trait()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasRepeaters', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasRepeaters', $traits);
     }
 
     public function test_has_repeaters_uses_required_traits()
@@ -47,10 +47,10 @@ class HasRepeatersTest extends ModelTestCase
         $traits = class_uses_recursive($this->model);
 
         // HasRepeaters trait should use these other traits
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasFiles', $traits);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasImages', $traits);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasPriceable', $traits);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasFileponds', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasFiles', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasImages', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasPriceable', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasFileponds', $traits);
     }
 
     public function test_repeaters_relationship_exists()

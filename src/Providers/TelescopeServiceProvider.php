@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;

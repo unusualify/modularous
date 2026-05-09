@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Services\FileLibrary\FileService;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Services\FileLibrary\FileService;
 
 trait HasFiles
 {
@@ -16,9 +16,9 @@ trait HasFiles
         return $this->morphToMany(
             File::class,
             'fileable',
-            modularityConfig('tables.fileables')
+            modularousConfig('tables.fileables')
         )->withPivot(['role', 'locale'])
-            ->withTimestamps()->orderBy(modularityConfig('tables.fileables') . '.id', 'asc');
+            ->withTimestamps()->orderBy(modularousConfig('tables.fileables') . '.id', 'asc');
     }
 
     private function findFile($role, $locale)

@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Module;
 
 class CacheWarmCommand extends BaseCommand
 {
@@ -16,7 +16,7 @@ class CacheWarmCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:cache:warm
+    protected $signature = 'modularous:cache:warm
                             {module? : The module name to warm cache for}
                             {routeName? : The route name to warm cache for}
                             {--logChannel= : Log the cache warming process}
@@ -33,7 +33,7 @@ class CacheWarmCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Warm modularity caches for all or specific modules';
+    protected $description = 'Warm modularous caches for all or specific modules';
 
     /**
      * Create a new command instance.
@@ -57,21 +57,21 @@ class CacheWarmCommand extends BaseCommand
         $routeName = $this->argument('routeName');
 
         // Check if caching is enabled
-        if (! ModularityCache::isEnabled()) {
-            $this->warn('MODULARITY: Caching is disabled.');
+        if (! ModularousCache::isEnabled()) {
+            $this->warn('MODULAROUS: Caching is disabled.');
 
             return 1;
         }
 
         if ($moduleName) {
-            $module = Modularity::find($moduleName);
+            $module = Modularous::find($moduleName);
             if (! $module) {
                 $this->error("Module '{$moduleName}' not found.");
 
                 return 1;
             }
 
-            if (! ModularityCache::isEnabled($module->getName())) {
+            if (! ModularousCache::isEnabled($module->getName())) {
                 $this->warn("{$module->getName()}: Caching is disabled");
 
                 return 1;
@@ -81,12 +81,12 @@ class CacheWarmCommand extends BaseCommand
                 $this->warmModuleCache($module, $routeName);
             } else {
                 collect($module->getRouteNames())->each(function ($routeName) use ($module) {
-                    if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
+                    if (! ModularousCache::isEnabled($module->getName(), $routeName)) {
                         $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Caching is disabled", verbosity: 'v');
 
                         return;
                     }
-                    if (ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
+                    if (ModularousCache::isEnabled($module->getName(), $routeName, 'counts')) {
                         $this->warmModuleCounts($module, $routeName);
                     } else {
                         $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Counts cache is disabled", verbosity: 'v');
@@ -123,7 +123,7 @@ class CacheWarmCommand extends BaseCommand
     protected function warmModuleCache(string $moduleName, string $routeName): void
     {
         // Try to find the module
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
 
         if (! $module) {
             $this->error("Module '{$moduleName}' not found.");
@@ -131,13 +131,13 @@ class CacheWarmCommand extends BaseCommand
             return;
         }
 
-        if (! ModularityCache::isEnabled($module->getName())) {
+        if (! ModularousCache::isEnabled($module->getName())) {
             $this->warn("{$moduleName}: Caching is disabled");
 
             return;
         }
 
-        if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
+        if (! ModularousCache::isEnabled($module->getName(), $routeName)) {
             $this->line("  <fg=yellow>⚠</> {$moduleName} -> {$routeName}: Caching is disabled");
 
             return;
@@ -226,8 +226,8 @@ class CacheWarmCommand extends BaseCommand
         try {
             $type = $this->getType();
             // Try to find and instantiate the repository for this module
-            $cacheFormItem = ModularityCache::isEnabled($module->getName(), $routeName, 'formItem');
-            $cacheFormattedItem = ModularityCache::isEnabled($module->getName(), $routeName, 'formattedItem');
+            $cacheFormItem = ModularousCache::isEnabled($module->getName(), $routeName, 'formItem');
+            $cacheFormattedItem = ModularousCache::isEnabled($module->getName(), $routeName, 'formattedItem');
 
             if ($cacheFormItem) {
                 $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Warming form item cache", verbosity: 'vv');
@@ -310,7 +310,7 @@ class CacheWarmCommand extends BaseCommand
      */
     protected function warmAllModulesCache(): void
     {
-        $modules = Modularity::allEnabled();
+        $modules = Modularous::allEnabled();
 
         if (count($modules) === 0) {
             $this->warn('No enabled modules found.');
@@ -324,7 +324,7 @@ class CacheWarmCommand extends BaseCommand
         foreach ($modules as $module) {
             $moduleName = $module->getStudlyName();
 
-            if (! ModularityCache::isEnabled($module->getName())) {
+            if (! ModularousCache::isEnabled($module->getName())) {
                 $this->line("  <fg=yellow>⚠</> {$module->getName()}: Caching is disabled", verbosity: 'v');
 
                 continue;
@@ -332,7 +332,7 @@ class CacheWarmCommand extends BaseCommand
             $this->line("  <fg=green>✓</> {$moduleName}: Processing", verbosity: 'v');
 
             foreach ($module->getRouteNames() as $routeName) {
-                if (! ModularityCache::isEnabled($module->getName(), $routeName)) {
+                if (! ModularousCache::isEnabled($module->getName(), $routeName)) {
                     $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Caching is disabled", verbosity: 'v');
 
                     continue;
@@ -340,7 +340,7 @@ class CacheWarmCommand extends BaseCommand
                     $this->line("  <fg=green>✓</> {$module->getName()} -> {$routeName}: Caching is enabled", verbosity: 'v');
                 }
 
-                if (ModularityCache::isEnabled($module->getName(), $routeName, 'counts')) {
+                if (ModularousCache::isEnabled($module->getName(), $routeName, 'counts')) {
                     $this->warmModuleCounts($module, $routeName);
                 } else {
                     $this->line("  <fg=yellow>⚠</> {$module->getName()} -> {$routeName}: Counts cache is disabled", verbosity: 'v');

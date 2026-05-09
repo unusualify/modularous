@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
 use Illuminate\Console\Command;
-use Unusualify\Modularity\Facades\RelationshipGraph;
+use Unusualify\Modularous\Facades\RelationshipGraph;
 
 class CacheGraphCommand extends Command
 {
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'modularity:cache:graph
+    protected $signature = 'modularous:cache:graph
                             {action=show : Action to perform: show, rebuild, stats, analyze}
                             {--module= : Show graph for a specific module}
                             {--model= : Analyze impact for a specific model/table}
@@ -19,7 +19,7 @@ class CacheGraphCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Manage the modularity cache relationship graph';
+    protected $description = 'Manage the modularous cache relationship graph';
 
     /**
      * Execute the console command.
@@ -28,7 +28,7 @@ class CacheGraphCommand extends Command
     {
         if (! RelationshipGraph::isEnabled()) {
             $this->warn('⚠️  Cache relationship graph is disabled.');
-            $this->line('Enable it by setting MODULARITY_RESOURCE_CACHE_GRAPH_ENABLED=true');
+            $this->line('Enable it by setting MODULAROUS_RESOURCE_CACHE_GRAPH_ENABLED=true');
 
             return 1;
         }
@@ -265,7 +265,7 @@ class CacheGraphCommand extends Command
             $this->line('This could mean:');
             $this->line('  1. The model/table is not related to any cached module routes');
             $this->line('  2. The model name is incorrect');
-            $this->line('  3. The relationship graph needs rebuilding: php artisan modularity:cache:graph rebuild');
+            $this->line('  3. The relationship graph needs rebuilding: php artisan modularous:cache:graph rebuild');
 
             return 0;
         }

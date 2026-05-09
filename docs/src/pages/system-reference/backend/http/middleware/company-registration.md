@@ -6,8 +6,8 @@ sidebarTitle: CompanyRegistrationMiddleware
 # CompanyRegistrationMiddleware
 
 **File**: `src/Http/Middleware/CompanyRegistrationMiddleware.php`  
-**Alias**: `modularity.company.registration`  
-**Part of**: `modularity.panel` group
+**Alias**: `modularous.company.registration`  
+**Part of**: `modularous.panel` group
 
 Guards panel routes that require the authenticated user to have a valid company record. Currently a stub — the enforcement logic is commented out pending the company validation feature.
 
@@ -40,5 +40,5 @@ When activated, this will:
 
 ## Notes
 
-- The middleware is already registered in the `modularity.panel` group and will enforce the company check automatically once the logic is uncommented.
+- The middleware is already registered in the `modularous.panel` group and will enforce the company check automatically once the logic is uncommented.
 - `validCompany` is expected to be a computed attribute or relationship check on the User model.

@@ -1,15 +1,15 @@
 <?php
 
-use Unusualify\Modularity\Activators\FileActivator;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Http\Controllers\BaseController;
-use Unusualify\Modularity\Http\Requests\Request;
-use Unusualify\Modularity\Notifications\EmailVerification;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Activators\FileActivator;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Requests\Request;
+use Unusualify\Modularous\Notifications\EmailVerification;
+use Unusualify\Modularous\Repositories\Repository;
 
 return [
-    'namespace' => 'Unusualify\\Modularity',
-    'name' => env('MODULARITY_BASE_NAME', 'Modularity'),
+    'namespace' => 'Unusualify\\Modularous',
+    'name' => env('MODULAROUS_BASE_NAME', 'Modularous'),
 
     'system_prefix' => 'system',
 
@@ -21,52 +21,52 @@ return [
     'admin_app_path' => env('ADMIN_APP_PATH', ''),
     'admin_route_name_prefix' => env('ADMIN_ROUTE_NAME_PREFIX', 'admin'),
     'app_theme' => env('VUE_APP_THEME', 'unusualify'),
-    'available_user_locales' => explode(',', env('MODULARITY_AVAILABLE_USER_LOCALES', 'en')),
-    'default_register_role' => env('MODULARITY_DEFAULT_REGISTER_ROLE', 'client-manager'),
+    'available_user_locales' => explode(',', env('MODULAROUS_AVAILABLE_USER_LOCALES', 'en')),
+    'default_register_role' => env('MODULAROUS_DEFAULT_REGISTER_ROLE', 'client-manager'),
 
     'version' => '1.0.0',
     'auth_login_redirect_path' => '/',
     // 'is_development' => env('UNUSUAL_DEV', false),
     // 'development_url' => 'http://' . env('UNUSUAL_DEV_URL', 'localhost:8080'),
     // 'public_dir' => env('UNUSUAL_ASSETS_DIR', 'unusual'),
-    'vendor_dir' => 'vendor/unusualify/modularity',
+    'vendor_dir' => 'vendor/unusualify/modularous',
 
-    'custom_components_resource_path' => 'vendor/modularity/js/components',
+    'custom_components_resource_path' => 'vendor/modularous/js/components',
     // 'vendor_components_resource_path' => 'assets/vendor/js/components',
-    'enabled_currencies' => explode(',', env('MODULARITY_ACTIVE_CURRENCIES', 'USD,EUR,TRY')),
+    'enabled_currencies' => explode(',', env('MODULAROUS_ACTIVE_CURRENCIES', 'USD,EUR,TRY')),
 
     /**
      * Optional custom currency provider class implementing CurrencyProviderInterface.
      * When null, SystemPricingCurrencyProvider is used if available, else NullCurrencyProvider.
      */
-    'currency_provider' => env('MODULARITY_CURRENCY_PROVIDER', null),
+    'currency_provider' => env('MODULAROUS_CURRENCY_PROVIDER', null),
 
     'manifest' => 'unusual-manifest.json',
-    'js_namespace' => env('VUE_APP_NAME', 'MODULARITY'),
+    'js_namespace' => env('VUE_APP_NAME', 'MODULAROUS'),
     'build_timeout' => 300,
     'use_big_integers_on_migrations' => true,
-    'use_collation_for_search' => env('MODULARITY_USE_COLLATION_FOR_SEARCH', false),
+    'use_collation_for_search' => env('MODULAROUS_USE_COLLATION_FOR_SEARCH', false),
 
-    'use_inertia' => env('MODULARITY_USE_INERTIA', true),
-    'include_transaction_fee' => env('MODULARITY_INCLUDE_TRANSACTION_FEE', false),
-    'use_country_based_vat_rates' => env('MODULARITY_USE_COUNTRY_BASED_VAT_RATES', false),
-    'use_language_based_prices' => env('MODULARITY_USE_LANGUAGE_BASED_PRICES', false),
-    'use_format_item_eager' => env('MODULARITY_USE_FORMAT_ITEM_EAGER', false),
+    'use_inertia' => env('MODULAROUS_USE_INERTIA', true),
+    'include_transaction_fee' => env('MODULAROUS_INCLUDE_TRANSACTION_FEE', false),
+    'use_country_based_vat_rates' => env('MODULAROUS_USE_COUNTRY_BASED_VAT_RATES', false),
+    'use_language_based_prices' => env('MODULAROUS_USE_LANGUAGE_BASED_PRICES', false),
+    'use_format_item_eager' => env('MODULAROUS_USE_FORMAT_ITEM_EAGER', false),
     'language_currencies' => [],
-    'hide_description_for_language_based_prices' => env('MODULARITY_HIDE_DESCRIPTION_FOR_LANGUAGE_BASED_PRICES', false),
-    'disable_billing_banner' => env('MODULARITY_DISABLE_BILLING_BANNER', false),
-    'lock_company_edit' => env('MODULARITY_LOCK_COMPANY_EDIT', true),
+    'hide_description_for_language_based_prices' => env('MODULAROUS_HIDE_DESCRIPTION_FOR_LANGUAGE_BASED_PRICES', false),
+    'disable_billing_banner' => env('MODULAROUS_DISABLE_BILLING_BANNER', false),
+    'lock_company_edit' => env('MODULAROUS_LOCK_COMPANY_EDIT', true),
 
     'locale' => 'en',
     'fallback_locale' => 'en',
     'timezone' => 'Europe/London',
 
-    'log_dir' => storage_path('logs/modularity'),
-    'email_verified_register' => env('MODULARITY_EMAIL_VERIFIED_REGISTER', true),
-    'benchmark_enabled' => env('MODULARITY_BENCHMARK_ENABLED', false),
-    'benchmark_log_level' => env('MODULARITY_BENCHMARK_LOG_LEVEL', null),
-    'benchmark_log_file' => env('MODULARITY_BENCHMARK_LOG_FILE', 'modularity-benchmark.log'),
-    'benchmark_emergency_time' => env('MODULARITY_BENCHMARK_EMERGENCY_TIME', 1000), // in milliseconds
+    'log_dir' => storage_path('logs/modularous'),
+    'email_verified_register' => env('MODULAROUS_EMAIL_VERIFIED_REGISTER', true),
+    'benchmark_enabled' => env('MODULAROUS_BENCHMARK_ENABLED', false),
+    'benchmark_log_level' => env('MODULAROUS_BENCHMARK_LOG_LEVEL', null),
+    'benchmark_log_file' => env('MODULAROUS_BENCHMARK_LOG_FILE', 'modularous-benchmark.log'),
+    'benchmark_emergency_time' => env('MODULAROUS_BENCHMARK_EMERGENCY_TIME', 1000), // in milliseconds
 
     'base_model' => Model::class,
     'base_repository' => Repository::class,

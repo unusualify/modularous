@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Module;
+namespace Unusualify\Modularous\Console\Module;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class RouteDisableCommand extends Command
 {
@@ -13,7 +13,7 @@ class RouteDisableCommand extends Command
      *
      * @var string
      */
-    protected $name = 'modularity:route:disable';
+    protected $name = 'modularous:route:disable';
 
     /**
      * The console command description.
@@ -28,7 +28,7 @@ class RouteDisableCommand extends Command
     public function handle(): int
     {
         /** @var Module $module */
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         $module->setModuleActivator($this->argument('module'));
 

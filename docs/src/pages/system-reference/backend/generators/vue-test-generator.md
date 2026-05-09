@@ -5,7 +5,7 @@ sidebarTitle: VueTestGenerator
 
 # VueTestGenerator
 
-**Class**: `Unusualify\Modularity\Generators\VueTestGenerator`  
+**Class**: `Unusualify\Modularous\Generators\VueTestGenerator`  
 **Source**: `src/Generators/VueTestGenerator.php`  
 **Extends**: [`Generator`](./generator)
 
@@ -25,7 +25,7 @@ Scaffolds a Vitest/Jest test file for a Vue frontend artefact. Supports four tes
 All Vue test files are written to the package's `vue/test` directory:
 
 ```
-get_modularity_vendor_path('vue/test')/{target_dir}/{kebab-name}.test.js
+get_modularous_vendor_path('vue/test')/{target_dir}/{kebab-name}.test.js
 ```
 
 ## Properties

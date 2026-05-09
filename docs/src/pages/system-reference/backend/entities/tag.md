@@ -6,7 +6,7 @@ sidebarTitle: Tag
 # Tag
 
 **File**: `src/Entities/Tag.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Cartalyst\Tags\IlluminateTag`
 
 Tag model extending Cartalyst's tag package with locale support. Tags are shared across models but scoped by namespace and locale.
@@ -27,7 +27,7 @@ Uses [Tagged](./tagged) as the pivot model (`$taggedModel`).
 
 ## Table
 
-Resolved from `modularity.tables.tags`.
+Resolved from `modularous.tables.tags`.
 
 ## Related
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Setup;
+namespace Unusualify\Modularous\Console\Setup;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
@@ -19,14 +19,14 @@ class InstallCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:install';
+    protected $name = 'modularous:install';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install modularity into your Laravel application';
+    protected $description = 'Install modularous into your Laravel application';
 
     /**
      * @var Filesystem
@@ -54,7 +54,7 @@ class InstallCommand extends BaseCommand
             // ['vendor-publish', '--vp', InputOption::VALUE_NONE, 'Only publish vendor assets, configurations and views'],
             ['db-process', '--db', InputOption::VALUE_NONE, 'Only handle database configuration processes'],
             // ['complete installment', '--complete', InputOption::VALUE_NONE, 'Complete default installment options'],
-        ], modularityTraitOptions());
+        ], modularousTraitOptions());
     }
 
     /**
@@ -69,7 +69,7 @@ class InstallCommand extends BaseCommand
         if ($this->option('db-process') == null) {
             info(
                 'Installment process consists of two(2) main operations.
-                1. Publishing Config Files: Modularity Config files manages heavily table names, jwt configurations and etc.User should customize them after publishing in order to customize table names and other opeartions
+                1. Publishing Config Files: Modularous Config files manages heavily table names, jwt configurations and etc.User should customize them after publishing in order to customize table names and other opeartions
                 2. Database Operations and Creating Super Admin. DO NOT select this option if you have not published vendor files to theproject. This option will only dealing with db operations
                 3. Complete Installment with default configurations (√ suggested)
                 ');
@@ -132,7 +132,7 @@ class InstallCommand extends BaseCommand
         if ($operationType == 'vp') {
             $this->newLine();
             info('Vendor publish is done √. Config files can be customized now');
-            warning('Run php artisan modularity:install --db to run installation with db operations');
+            warning('Run php artisan modularous:install --db to run installation with db operations');
         }
         info('Process is done.');
 
@@ -149,7 +149,7 @@ class InstallCommand extends BaseCommand
         info("\t Creating super-admin account");
 
         if (! $this->option('no-interaction')) {
-            $this->call('modularity:create:superadmin', [
+            $this->call('modularous:create:superadmin', [
                 '--default' => $this->option('default'),
             ]);
         }
@@ -165,7 +165,7 @@ class InstallCommand extends BaseCommand
         info("\t Publishing config files");
 
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
+            '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
             '--tag' => 'config',
         ]);
     }
@@ -180,8 +180,8 @@ class InstallCommand extends BaseCommand
         info("\t Publishing default assets");
 
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
-            '--tag' => 'modularity-assets',
+            '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
+            '--tag' => 'modularous-assets',
         ]);
     }
 
@@ -191,7 +191,7 @@ class InstallCommand extends BaseCommand
         info("\t Publishing default views");
 
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
+            '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
             '--tag' => 'views',
         ]);
     }
@@ -202,7 +202,7 @@ class InstallCommand extends BaseCommand
         info("\t Publishing default langs");
 
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
+            '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
             '--tag' => 'lang',
         ]);
     }
@@ -225,7 +225,7 @@ class InstallCommand extends BaseCommand
                 throw new \RuntimeException('Database creation cancelled.');
             }
 
-            $this->call('modularity:create:database');
+            $this->call('modularous:create:database');
             info("\t Database created successfully");
 
             if (! database_exists()) {
@@ -258,7 +258,7 @@ class InstallCommand extends BaseCommand
     {
         info("\tSeeding required data");
         $this->call('db:seed', [
-            '--class' => 'Unusualify\Modularity\Database\Seeders\DefaultDatabaseSourceSeeder',
+            '--class' => 'Unusualify\Modularous\Database\Seeders\DefaultDatabaseSourceSeeder',
         ]);
     }
 
@@ -266,7 +266,7 @@ class InstallCommand extends BaseCommand
     {
         info("\tSeeding required data");
         $this->call('db:seed', [
-            '--class' => 'Unusualify\Modularity\Database\Seeders\DefaultDatabaseUtilitySeeder',
+            '--class' => 'Unusualify\Modularous\Database\Seeders\DefaultDatabaseUtilitySeeder',
         ]);
     }
 }

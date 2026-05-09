@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\View;
+namespace Unusualify\Modularous\View;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;
@@ -40,7 +40,7 @@ class Table extends Component
      */
     public function render()
     {
-        $baseKey = $this->baseKey ?? modularityBaseKey();
+        $baseKey = $this->baseKey ?? modularousBaseKey();
 
         return view("{$baseKey}::components.table");
     }

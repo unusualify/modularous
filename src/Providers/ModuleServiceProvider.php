@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Blade;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class ModuleServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -36,9 +36,9 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
         $lang_folder = GenerateConfigReader::read('lang')->getPath();
         $component_class_namespace = GenerateConfigReader::read('component-class')->getNamespace();
 
-        // dd(config('modularity'));
-        // dd(Modularity::allEnabled(), Modularity::all());
-        foreach (Modularity::allEnabled() as $module) {
+        // dd(config('modularous'));
+        // dd(Modularous::allEnabled(), Modularous::all());
+        foreach (Modularous::allEnabled() as $module) {
 
             $module_name = $module->getName();
 
@@ -87,7 +87,7 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
 
             // Add lang paths to merge with laravel translations
             /**
-             * Unusualify\Modularity\Translation\Translator::class instance is $this->app['translator']
+             * Unusualify\Modularous\Translation\Translator::class instance is $this->app['translator']
              */
             // $this->app['translator']->addPath($module->getDirectoryPath($lang_folder));
 

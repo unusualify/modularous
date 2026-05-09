@@ -3,7 +3,7 @@
 namespace Modules\SystemNotification\Repositories;
 
 use Modules\SystemNotification\Entities\Notification;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class NotificationRepository extends Repository
 {

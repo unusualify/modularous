@@ -1,19 +1,19 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class TranslationsTraitTest extends RepositoryTestCase
 {
@@ -69,7 +69,7 @@ class TranslationsTraitTest extends RepositoryTestCase
         ];
 
         $this->repository->setColumns($schema);
-        $columns = $this->repository->getColumns('Unusualify\Modularity\Repositories\Traits\TranslationsTrait');
+        $columns = $this->repository->getColumns('Unusualify\Modularous\Repositories\Traits\TranslationsTrait');
 
         $this->assertContains('title', $columns);
         $this->assertContains('active', $columns);

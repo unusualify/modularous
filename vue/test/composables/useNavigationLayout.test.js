@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import { createStore } from 'vuex'
 import useNavigationLayout from '../../src/js/hooks/useNavigationLayout'
-import createModularityVuetify from '../../src/js/plugins/vuetify'
+import createModularousVuetify from '../../src/js/plugins/vuetify'
 
-const vuetify = createModularityVuetify()
+const vuetify = createModularousVuetify()
 
 function createTestStore() {
   return createStore({

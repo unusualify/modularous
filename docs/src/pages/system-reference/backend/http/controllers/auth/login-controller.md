@@ -6,7 +6,7 @@ sidebarTitle: LoginController
 # LoginController
 
 **File**: `src/Http/Controllers/Auth/LoginController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`  
 **Traits**: `AuthenticatesUsers`, `HandlesOAuth`
 
@@ -24,7 +24,7 @@ public function __construct(
 )
 ```
 
-Sets up authentication manager, encrypter, redirector, and view factory. Configures `$redirectTo` from `modularity.auth_login_redirect_path`.
+Sets up authentication manager, encrypter, redirector, and view factory. Configures `$redirectTo` from `modularous.auth_login_redirect_path`.
 
 ## Properties
 
@@ -74,7 +74,7 @@ Returns a JSON error response with the `auth.failed` translation message for AJA
 
 ## Guest Middleware
 
-The `logout` action is excluded from the `modularity.guest` middleware via `guestMiddlewareExcept()`, allowing authenticated users to access the logout route.
+The `logout` action is excluded from the `modularous.guest` middleware via `guestMiddlewareExcept()`, allowing authenticated users to access the logout route.
 
 ## OAuth Flow
 

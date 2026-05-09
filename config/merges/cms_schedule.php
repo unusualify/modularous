@@ -9,22 +9,22 @@ return [
      *
      * Host apps should register the scheduler (see {@code docs/CONFIG.md} “CMS publish window schedule”).
      */
-    'enabled' => env('MODULARITY_CMS_SCHEDULE_ENABLED', true),
+    'enabled' => env('MODULAROUS_CMS_SCHEDULE_ENABLED', true),
 
     /**
      * When true, {@see \Modules\Cms\Providers\CmsServiceProvider} registers
      * {@see \Modules\Cms\Jobs\ScanCmsPublishWindowBoundariesJob} with Laravel's schedule (opt-in to avoid surprise cron work).
      */
-    'register_with_laravel_schedule' => env('MODULARITY_CMS_SCHEDULE_REGISTER', false),
+    'register_with_laravel_schedule' => env('MODULAROUS_CMS_SCHEDULE_REGISTER', false),
 
     /** How often the scan runs when registered with the schedule. */
-    'frequency' => env('MODULARITY_CMS_SCHEDULE_FREQUENCY', 'everyFiveMinutes'),
+    'frequency' => env('MODULAROUS_CMS_SCHEDULE_FREQUENCY', 'everyFiveMinutes'),
 
     /**
      * Look back window (minutes): rows whose {@code publish_*} timestamp fell in (now - window, now] are considered to have
      * just crossed the boundary. Should be ≥ scheduler interval to avoid gaps.
      */
-    'boundary_window_minutes' => max(1, (int) env('MODULARITY_CMS_SCHEDULE_BOUNDARY_WINDOW', 6)),
+    'boundary_window_minutes' => max(1, (int) env('MODULAROUS_CMS_SCHEDULE_BOUNDARY_WINDOW', 6)),
 
     /**
      * Eloquent models scanned for {@code publish_start_date} / {@code publish_end_date} (columns optional per table).
@@ -33,7 +33,7 @@ return [
      * @var list<class-string<\Illuminate\Database\Eloquent\Model>>
      */
     'publish_window_models' => (static function (): array {
-        $raw = env('MODULARITY_CMS_PUBLISH_WINDOW_MODELS');
+        $raw = env('MODULAROUS_CMS_PUBLISH_WINDOW_MODELS');
         if (! is_string($raw) || $raw === '') {
             return [Page::class];
         }
@@ -42,14 +42,14 @@ return [
     })(),
 
     /** Log one info line per boundary event when true. */
-    'log_events' => env('MODULARITY_CMS_SCHEDULE_LOG', false),
+    'log_events' => env('MODULAROUS_CMS_SCHEDULE_LOG', false),
 
     /**
      * Optional cache tag names to flush when any boundary is detected (Redis taggable cache only; ignored otherwise).
      *
      * @var list<string>|null
      */
-    'cache_flush_tags' => env('MODULARITY_CMS_SCHEDULE_CACHE_TAGS') !== null && env('MODULARITY_CMS_SCHEDULE_CACHE_TAGS') !== ''
-        ? array_values(array_filter(array_map('trim', explode(',', (string) env('MODULARITY_CMS_SCHEDULE_CACHE_TAGS')))))
+    'cache_flush_tags' => env('MODULAROUS_CMS_SCHEDULE_CACHE_TAGS') !== null && env('MODULAROUS_CMS_SCHEDULE_CACHE_TAGS') !== ''
+        ? array_values(array_filter(array_map('trim', explode(',', (string) env('MODULAROUS_CMS_SCHEDULE_CACHE_TAGS')))))
         : null,
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\ViewComposers;
+namespace Unusualify\Modularous\Http\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 namespace Modules\SystemPricing\Entities;
 
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 
 class Currency extends \Oobook\Priceable\Models\Currency
 {
@@ -17,6 +17,6 @@ class Currency extends \Oobook\Priceable\Models\Currency
 
     public function scopeEnabled($query)
     {
-        return $query->whereIn('iso_4217', modularityConfig('enabled_currencies'));
+        return $query->whereIn('iso_4217', modularousConfig('enabled_currencies'));
     }
 }

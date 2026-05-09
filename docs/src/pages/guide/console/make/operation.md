@@ -7,9 +7,9 @@ sidebarTitle: make:operation
 
 > Create a one-time operation file
 
-**Signature**: `modularity:make:operation`
+**Signature**: `modularous:make:operation`
 
-**Aliases**: `modularity:create:operation`, `mod:c:operation`, `modularity:operations:make`
+**Aliases**: `modularous:create:operation`, `mod:c:operation`, `modularous:operations:make`
 
 **Category**: Make
 
@@ -17,14 +17,14 @@ sidebarTitle: make:operation
 
 ## Description
 
-Generates a timestamped one-time operation file for [timokoerber/laravel-one-time-operations](https://github.com/timokoerber/laravel-one-time-operations). Operation files are run exactly once via the operations pipeline. Use `--self` to create a Modularous-internal operation (tagged `modularity`) in the vendor `operations/` folder.
+Generates a timestamped one-time operation file for [timokoerber/laravel-one-time-operations](https://github.com/timokoerber/laravel-one-time-operations). Operation files are run exactly once via the operations pipeline. Use `--self` to create a Modularous-internal operation (tagged `modularous`) in the vendor `operations/` folder.
 
 ---
 
 ## Usage
 
 ```
-modularity:make:operation [options] <name>
+modularous:make:operation [options] <name>
 ```
 
 ### Arguments
@@ -37,7 +37,7 @@ modularity:make:operation [options] <name>
 
 | Option | Short | Description |
 |--------|-------|-------------|
-| `--self` | | Write to Modularous vendor `operations/` and tag as `modularity` |
+| `--self` | | Write to Modularous vendor `operations/` and tag as `modularous` |
 | `--path=` | | Custom output directory (default: `config('one-time-operations.directory')`) |
 | `--tag=` | `-t` | Tag string for the operation |
 | `--async` | | Mark the operation as asynchronous |
@@ -50,14 +50,14 @@ modularity:make:operation [options] <name>
 ### Standard one-time operation
 
 ```bash
-php artisan modularity:make:operation SeedNewPermissions
+php artisan modularous:make:operation SeedNewPermissions
 # → operations/2026_04_28_120000_seed_new_permissions_operation.php
 ```
 
 ### Tagged async operation on a custom queue
 
 ```bash
-php artisan modularity:make:operation BackfillPostSlugs \
+php artisan modularous:make:operation BackfillPostSlugs \
     --tag=backfill \
     --async \
     --queue=high-priority
@@ -66,8 +66,8 @@ php artisan modularity:make:operation BackfillPostSlugs \
 ### Internal Modularous operation
 
 ```bash
-php artisan modularity:make:operation AddDefaultSettings --self
-# → src/operations/2026_04_28_120000_modularity_add_default_settings_operation.php
+php artisan modularous:make:operation AddDefaultSettings --self
+# → src/operations/2026_04_28_120000_modularous_add_default_settings_operation.php
 ```
 
 ---

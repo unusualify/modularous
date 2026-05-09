@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use Astrotomic\Translatable\TranslatableServiceProvider;
 use Illuminate\Foundation\Application;
@@ -8,11 +8,11 @@ use JoeDixon\Translation\TranslationServiceProvider;
 use Modules\SystemPayment\Entities\Payment;
 use Nwidart\Modules\LaravelModulesServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
-use Unusualify\Modularity\Activators\ModularityActivator;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Entities\Observers\PriceableObserver;
-use Unusualify\Modularity\LaravelServiceProvider;
-use Unusualify\Modularity\Providers\ModularityProvider;
+use Unusualify\Modularous\Activators\ModularousActivator;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Observers\PriceableObserver;
+use Unusualify\Modularous\LaravelServiceProvider;
+use Unusualify\Modularous\Providers\ModularousProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -42,7 +42,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         return [
             LaravelModulesServiceProvider::class,
             LaravelServiceProvider::class,
-            ModularityProvider::class,
+            ModularousProvider::class,
             PermissionServiceProvider::class,
             \Oobook\Priceable\LaravelServiceProvider::class,
             TranslationServiceProvider::class,
@@ -87,16 +87,16 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             'provider' => ['path' => 'Providers', 'generate' => true],
         ];
 
-        $modularityGeneratorPaths = array_merge(config('modules.paths.generator'), $generatorPaths, [
+        $modularousGeneratorPaths = array_merge(config('modules.paths.generator'), $generatorPaths, [
             'route-controller' => ['path' => 'Http/Controllers', 'generate' => true],
             'route-request' => ['path' => 'Http/Requests', 'generate' => true],
             'route-resource' => ['path' => 'Transformers', 'generate' => true],
         ]);
 
-        $app['config']->set('modules.paths.generator', $modularityGeneratorPaths);
-        $app['config']->set('modularity.paths.generator', $modularityGeneratorPaths);
-        $app['config']->set('modularity.base_key', 'modularity');
-        $app['config']->set('modularity.stubs.path', realpath(__DIR__ . '/../src/Console/stubs'));
+        $app['config']->set('modules.paths.generator', $modularousGeneratorPaths);
+        $app['config']->set('modularous.paths.generator', $modularousGeneratorPaths);
+        $app['config']->set('modularous.base_key', 'modularous');
+        $app['config']->set('modularous.stubs.path', realpath(__DIR__ . '/../src/Console/stubs'));
 
         $statusesFile = 'modules_statuses.json';
         if (getenv('TEST_TOKEN')) {
@@ -114,22 +114,22 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             'SystemUser' => false,
             'SystemUtility' => false,
         ]));
-        $app['config']->set('modules.activators.modularity', [
-            'class' => ModularityActivator::class,
+        $app['config']->set('modules.activators.modularous', [
+            'class' => ModularousActivator::class,
             'statuses-file' => $statusFilePath,
-            'cache-key' => 'modularity.activator.installed',
+            'cache-key' => 'modularous.activator.installed',
             'cache-lifetime' => 604800,
         ]);
 
-        $app['config']->set('modules.activator', 'modularity');
+        $app['config']->set('modules.activator', 'modularous');
 
-        $app['config']->set('modularity.app_url', 'http://localhost');
-        $app['config']->set('modularity.admin_app_url', '');
-        $app['config']->set('modularity.admin_app_path', 'admin');
-        $app['config']->set('modularity.admin_route_name_prefix', 'admin');
+        $app['config']->set('modularous.app_url', 'http://localhost');
+        $app['config']->set('modularous.admin_app_url', '');
+        $app['config']->set('modularous.admin_app_path', 'admin');
+        $app['config']->set('modularous.admin_route_name_prefix', 'admin');
 
-        $app['config']->set('modularity.media_library.image_service', "Unusualify\Modularity\Services\MediaLibrary\Local");
-        $app['config']->set('modularity.file_library.file_service', "Unusualify\Modularity\Services\FileLibrary\Disk");
+        $app['config']->set('modularous.media_library.image_service', "Unusualify\Modularous\Services\MediaLibrary\Local");
+        $app['config']->set('modularous.file_library.file_service', "Unusualify\Modularous\Services\FileLibrary\Disk");
 
         $app['config']->set([
             'priceable.observers.price' => PriceableObserver::class,
@@ -146,7 +146,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             'payable.model' => Payment::class,
             'payable.status_enum' => PaymentStatus::class,
             'payable.additional_fillable' => ['payment_service_id', 'price_id', 'currency_id'],
-            // 'payable.middleware' => ['web.auth', 'modularity.panel'],
+            // 'payable.middleware' => ['web.auth', 'modularous.panel'],
         ]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -28,6 +28,6 @@ class Feature extends BaseModel
 
     public function getTable()
     {
-        return modularityConfig('features_table', 'twill_features');
+        return modularousConfig('features_table', 'twill_features');
     }
 }

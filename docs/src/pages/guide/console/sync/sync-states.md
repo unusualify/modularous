@@ -9,7 +9,7 @@ sidebarTitle: Sync States
 
 ## Command Information
 
-- **Signature:** `modularity:sync:states [<model>]`
+- **Signature:** `modularous:sync:states [<model>]`
 - **Category:** Sync
 
 ## Examples
@@ -17,23 +17,23 @@ sidebarTitle: Sync States
 ### Interactive — select a model from a prompt
 
 ```bash
-php artisan modularity:sync:states
+php artisan modularous:sync:states
 ```
 
 ### Sync states for a specific model class
 
 ```bash
-php artisan modularity:sync:states "App\Models\Order"
+php artisan modularous:sync:states "App\Models\Order"
 ```
 
-`modularity:sync:states`
+`modularous:sync:states`
 ------------------------
 
 Finds all models that use the `HasStateable` trait and syncs their state definitions to the database. When no `model` argument is given, an interactive prompt lets you pick from all discovered stateable models. New states are created and reported; existing states are left unchanged.
 
 ### Usage
 
-* `modularity:sync:states [<model>]`
+* `modularous:sync:states [<model>]`
 
 ### Arguments
 

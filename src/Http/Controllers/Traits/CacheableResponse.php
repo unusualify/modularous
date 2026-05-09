@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Traits\Cache\Cacheable;
-use Unusualify\Modularity\Traits\SerializeModel;
+use Unusualify\Modularous\Traits\Cache\Cacheable;
+use Unusualify\Modularous\Traits\SerializeModel;
 
 trait CacheableResponse
 {

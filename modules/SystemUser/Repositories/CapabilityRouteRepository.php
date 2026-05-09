@@ -3,7 +3,7 @@
 namespace Modules\SystemUser\Repositories;
 
 use Modules\SystemUser\Entities\CapabilityRoute;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class CapabilityRouteRepository extends Repository
 {

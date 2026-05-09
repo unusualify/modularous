@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Http\Middleware;
+namespace Unusualify\Modularous\Tests\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Mockery;
-use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Middleware\NavigationMiddleware;
+use Unusualify\Modularous\Tests\TestCase;
 
 class NavigationMiddlewareTest extends TestCase
 {
@@ -45,7 +45,7 @@ class NavigationMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function it_shares_navigation_config_with_modularity_layouts()
+    public function it_shares_navigation_config_with_modularous_layouts()
     {
         $request = Mockery::mock(Request::class);
 

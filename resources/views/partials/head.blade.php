@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="robots" content="noindex,nofollow" />
 
-    <title> {{ $pageTitle ?? \Unusualify\Modularity\Facades\Modularity::pageTitle() }}</title>
+    <title> {{ $pageTitle ?? \Unusualify\Modularous\Facades\Modularous::pageTitle() }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @stack('head_css')

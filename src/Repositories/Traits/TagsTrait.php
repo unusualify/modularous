@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Models\Model;
+use Unusualify\Modularous\Models\Model;
 
 trait TagsTrait
 {

@@ -7,7 +7,7 @@ use Modules\Cms\Routing\CmsFrontRouteRegistrar;
 
 /**
  * Absolute URLs for the public CMS front (admin-safe): uses the same host resolution as
- * {@see CmsFrontRouteRegistrar::resolvePublicFrontRouteDomain()} plus {@see modularityConfig('cms_routing.canonical_host')},
+ * {@see CmsFrontRouteRegistrar::resolvePublicFrontRouteDomain()} plus {@see modularousConfig('cms_routing.canonical_host')},
  * so panel requests do not rewrite permalinks to the admin {@code APP_URL} host.
  */
 final class CmsPublicSiteUrl
@@ -17,12 +17,12 @@ final class CmsPublicSiteUrl
      */
     public static function resolvePublicSiteHost(): string
     {
-        $explicit = trim((string) modularityConfig('cms_routing.public_front_route_domain', ''));
+        $explicit = trim((string) modularousConfig('cms_routing.public_front_route_domain', ''));
         if ($explicit !== '') {
             return $explicit;
         }
 
-        $canonical = trim((string) modularityConfig('cms_routing.canonical_host', ''));
+        $canonical = trim((string) modularousConfig('cms_routing.canonical_host', ''));
         if ($canonical !== '') {
             return $canonical;
         }

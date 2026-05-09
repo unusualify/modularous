@@ -5,20 +5,20 @@ sidebarTitle: Localization
 
 # Localization
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\Localization`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\Localization`  
 **Source**: `src/Http/ViewComposers/Localization.php`
 
-Injects the full Modularous locale and language configuration into every view as `$modularityLocalization`. The frontend i18n layer reads this object to initialise locale settings, available languages, and translation strings without a separate API call.
+Injects the full Modularous locale and language configuration into every view as `$modularousLocalization`. The frontend i18n layer reads this object to initialise locale settings, available languages, and translation strings without a separate API call.
 
 ## Injected Variable
 
 | Variable | Type | Description |
 |----------|------|-------------|
-| `modularityLocalization` | `array` | Full locale configuration returned by `get_modularity_localization_config()` |
+| `modularousLocalization` | `array` | Full locale configuration returned by `get_modularous_localization_config()` |
 
 ## Data Shape
 
-The shape of `$modularityLocalization` is determined by the `get_modularity_localization_config()` helper, which typically returns:
+The shape of `$modularousLocalization` is determined by the `get_modularous_localization_config()` helper, which typically returns:
 
 | Key | Description |
 |-----|-------------|
@@ -31,14 +31,14 @@ The shape of `$modularityLocalization` is determined by the `get_modularity_loca
 
 ```blade
 {{-- Available as a Blade variable --}}
-@json($modularityLocalization)
+@json($modularousLocalization)
 ```
 
 ```js
 // Inertia (shared props)
-const { modularityLocalization } = usePage().props
+const { modularousLocalization } = usePage().props
 
-const { locale, locales, translations } = modularityLocalization
+const { locale, locales, translations } = modularousLocalization
 ```
 
 ## Configuration
@@ -46,7 +46,7 @@ const { locale, locales, translations } = modularityLocalization
 Locale settings are controlled via the Modularous config and Laravel's `app.locale`:
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'locales' => [
     ['value' => 'en', 'label' => 'English'],
     ['value' => 'tr', 'label' => 'Türkçe'],

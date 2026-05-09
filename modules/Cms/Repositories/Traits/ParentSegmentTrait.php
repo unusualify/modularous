@@ -4,8 +4,8 @@ namespace Modules\Cms\Repositories\Traits;
 
 
 /**
- * CMS: repositories whose {@see \Unusualify\Modularity\Repositories\Repository::getModel()} uses
- * {@see \Unusualify\Modularity\Entities\Traits\IsCmr} (content module route) and thus {@see HasParentSegment}.
+ * CMS: repositories whose {@see \Unusualify\Modularous\Repositories\Repository::getModel()} uses
+ * {@see \Unusualify\Modularous\Entities\Traits\IsCmr} (content module route) and thus {@see HasParentSegment}.
  *
  * Enables parent-segment-aware tooling (hydrate selects, slug validation hooks) without hard-coding model classes.
  * Optional {@see $cmsAdminWarningsBuffer} / {@see pullCmsAdminWarnings()} support non-blocking panel hints after save

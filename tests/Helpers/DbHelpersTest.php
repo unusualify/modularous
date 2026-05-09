@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
 use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class DbHelpersTest extends TestCase
 {

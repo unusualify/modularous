@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Facades\RelationshipGraph;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Facades\RelationshipGraph;
 
 class CacheStatsCommand extends BaseCommand
 {
@@ -13,7 +13,7 @@ class CacheStatsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:cache:stats
+    protected $signature = 'modularous:cache:stats
                             {module? : The module name to show stats for}
                             {--keys : Show individual cache keys}
                             {--deps : Show cache dependencies}
@@ -24,7 +24,7 @@ class CacheStatsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Show modularity cache statistics';
+    protected $description = 'Show modularous cache statistics';
 
     /**
      * Create a new command instance.
@@ -45,23 +45,23 @@ class CacheStatsCommand extends BaseCommand
         $showGraph = $this->option('graph');
 
         // Check if caching is enabled
-        $this->info('Modularity Cache Status');
+        $this->info('Modularous Cache Status');
         $this->line('========================');
         $this->newLine();
 
-        $this->line('Enabled: ' . (ModularityCache::isEnabled() ? '<fg=green>Yes</>' : '<fg=red>No</>'));
-        $this->line('Driver: ' . ModularityCache::getDriver());
-        $this->line('Prefix: ' . ModularityCache::getPrefix());
-        $this->line('Tags Support: ' . (ModularityCache::usesTags() ? '<fg=green>Yes</>' : '<fg=yellow>No</>'));
+        $this->line('Enabled: ' . (ModularousCache::isEnabled() ? '<fg=green>Yes</>' : '<fg=red>No</>'));
+        $this->line('Driver: ' . ModularousCache::getDriver());
+        $this->line('Prefix: ' . ModularousCache::getPrefix());
+        $this->line('Tags Support: ' . (ModularousCache::usesTags() ? '<fg=green>Yes</>' : '<fg=yellow>No</>'));
 
         $this->newLine();
 
         // Get TTL settings
         $this->info('TTL Settings (seconds):');
-        $this->line('  - Counts: ' . ModularityCache::getTtl('counts'));
-        $this->line('  - Index: ' . ModularityCache::getTtl('index'));
-        $this->line('  - Record: ' . ModularityCache::getTtl('record'));
-        $this->line('  - Response: ' . ModularityCache::getTtl('response:json'));
+        $this->line('  - Counts: ' . ModularousCache::getTtl('counts'));
+        $this->line('  - Index: ' . ModularousCache::getTtl('index'));
+        $this->line('  - Record: ' . ModularousCache::getTtl('record'));
+        $this->line('  - Response: ' . ModularousCache::getTtl('response:json'));
 
         $this->newLine();
 
@@ -76,7 +76,7 @@ class CacheStatsCommand extends BaseCommand
         }
 
         // Get cache statistics
-        $stats = ModularityCache::getStats($module);
+        $stats = ModularousCache::getStats($module);
 
         if (isset($stats['error'])) {
             $this->error('Error fetching stats: ' . $stats['error']);
@@ -116,7 +116,7 @@ class CacheStatsCommand extends BaseCommand
 
         if (! RelationshipGraph::isEnabled()) {
             $this->line('  <fg=yellow>Graph is disabled</>');
-            $this->line('  Enable with MODULARITY_RESOURCE_CACHE_GRAPH_ENABLED=true');
+            $this->line('  Enable with MODULAROUS_RESOURCE_CACHE_GRAPH_ENABLED=true');
             $this->newLine();
 
             return;
@@ -144,7 +144,7 @@ class CacheStatsCommand extends BaseCommand
         }
 
         $this->newLine();
-        $this->line('<fg=gray>Run `php artisan modularity:cache:graph stats` for full details</>');
+        $this->line('<fg=gray>Run `php artisan modularous:cache:graph stats` for full details</>');
         $this->newLine();
     }
 
@@ -153,13 +153,13 @@ class CacheStatsCommand extends BaseCommand
      */
     protected function showDependencies(): void
     {
-        $dependencies = config('modularity.cache.dependencies', []);
+        $dependencies = config('modularous.cache.dependencies', []);
 
         $this->info('Cache Dependencies (Manual Config):');
 
         if (empty($dependencies)) {
             $this->line('  <fg=yellow>No manual dependencies configured</>');
-            $this->line('  Configure in config/modularity.cache.dependencies');
+            $this->line('  Configure in config/modularous.cache.dependencies');
         } else {
             foreach ($dependencies as $model => $modules) {
                 $moduleList = implode(', ', $modules);

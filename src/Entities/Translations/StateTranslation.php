@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Translations;
+namespace Unusualify\Modularous\Entities\Translations;
 
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class StateTranslation extends Model
 {
@@ -14,6 +14,6 @@ class StateTranslation extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.state_translations', 'um_state_translations');
+        return modularousConfig('tables.state_translations', 'um_state_translations');
     }
 }

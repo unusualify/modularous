@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
 
 trait AssignmentScopes
 {

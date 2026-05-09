@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Kalnoy\Nestedset\Collection as BaseNestedsetCollection;
 use Kalnoy\Nestedset\NodeTrait;

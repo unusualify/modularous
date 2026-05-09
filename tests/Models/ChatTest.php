@@ -1,18 +1,18 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\ChatMessage;
-use Unusualify\Modularity\Entities\Filepond;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\Filepond;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ChatTest extends ModelTestCase
 {
@@ -21,7 +21,7 @@ class ChatTest extends ModelTestCase
     public function test_get_table_chat()
     {
         $chat = new Chat;
-        $this->assertEquals(modularityConfig('tables.chats', 'um_chats'), $chat->getTable());
+        $this->assertEquals(modularousConfig('tables.chats', 'um_chats'), $chat->getTable());
     }
 
     public function test_fillable_attributes()
@@ -225,7 +225,7 @@ class ChatTest extends ModelTestCase
 
         $chat->delete();
 
-        $this->assertSoftDeleted(modularityConfig('tables.chats', 'um_chats'), ['id' => $chat->id]);
+        $this->assertSoftDeleted(modularousConfig('tables.chats', 'um_chats'), ['id' => $chat->id]);
         $this->assertCount(0, Chat::all());
         $this->assertCount(1, Chat::withTrashed()->get());
     }

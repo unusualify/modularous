@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Interfaces;
+namespace Unusualify\Modularous\Entities\Interfaces;
 
 use Illuminate\Database\Eloquent\Builder;
 

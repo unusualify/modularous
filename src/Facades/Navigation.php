@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,6 +8,6 @@ class Navigation extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'modularity.navigation';
+        return 'modularous.navigation';
     }
 }

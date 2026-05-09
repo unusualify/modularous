@@ -9,8 +9,8 @@ sidebarTitle: Flush Filepond
 
 ## Command Information
 
-- **Signature:** `modularity:flush:filepond [<days>]`
-- **Alias:** `modularity:filepond:flush`
+- **Signature:** `modularous:flush:filepond [<days>]`
+- **Alias:** `modularous:filepond:flush`
 - **Category:** Flush
 
 ## Examples
@@ -18,30 +18,30 @@ sidebarTitle: Flush Filepond
 ### Flush filepond files older than 7 days (default)
 
 ```bash
-php artisan modularity:flush:filepond
+php artisan modularous:flush:filepond
 ```
 
 ### Flush filepond files older than 3 days
 
 ```bash
-php artisan modularity:flush:filepond 3
+php artisan modularous:flush:filepond 3
 ```
 
 ### Flush all filepond files (0 days)
 
 ```bash
-php artisan modularity:flush:filepond 0
+php artisan modularous:flush:filepond 0
 ```
 
-`modularity:flush:filepond`
+`modularous:flush:filepond`
 ---------------------------
 
 Deletes temporary FilePond upload files that are older than the specified number of days, then clears empty FilePond staging folders. Useful as a scheduled task to prevent disk bloat from abandoned uploads.
 
 ### Usage
 
-* `modularity:flush:filepond [<days>]`
-* `modularity:filepond:flush [<days>]`
+* `modularous:flush:filepond [<days>]`
+* `modularous:filepond:flush [<days>]`
 
 ### Arguments
 

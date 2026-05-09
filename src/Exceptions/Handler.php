@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Exceptions;
+namespace Unusualify\Modularous\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Middleware\AuthorizationMiddleware;
-use Unusualify\Modularity\Http\Middleware\LanguageMiddleware;
-use Unusualify\Modularity\Http\Middleware\NavigationMiddleware;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Middleware\AuthorizationMiddleware;
+use Unusualify\Modularous\Http\Middleware\LanguageMiddleware;
+use Unusualify\Modularous\Http\Middleware\NavigationMiddleware;
 
 class Handler extends ExceptionHandler
 {
@@ -22,16 +22,16 @@ class Handler extends ExceptionHandler
     {
         $statusCode = $e->getStatusCode();
 
-        $isAuthenticated = Auth::guard(Modularity::getAuthGuardName())->check();
+        $isAuthenticated = Auth::guard(Modularous::getAuthGuardName())->check();
 
         // For 404 errors, manually attempt authentication since middleware didn't run
         if (! $isAuthenticated && $statusCode === 404) {
-            $isAuthenticated = $this->attemptModularityAuthentication();
+            $isAuthenticated = $this->attemptModularousAuthentication();
         }
 
         if (in_array($statusCode, [404, 403, 500]) && $isAuthenticated) {
-            // Return custom error view for modularity authenticated users
-            $view = modularityBaseKey() . "::errors.{$statusCode}";
+            // Return custom error view for modularous authenticated users
+            $view = modularousBaseKey() . "::errors.{$statusCode}";
 
             if (view()->exists($view)) {
                 return $view;
@@ -43,18 +43,18 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Manually attempt modularity authentication by checking cookies
+     * Manually attempt modularous authentication by checking cookies
      */
-    protected function attemptModularityAuthentication(): bool
+    protected function attemptModularousAuthentication(): bool
     {
         try {
             // Check if user is already authenticated (for 403/500 cases where middleware ran)
-            $guard = Auth::guard('modularity');
+            $guard = Auth::guard('modularous');
             if ($guard->check()) {
                 return true;
             }
 
-            // For 404 errors, check if any session files contain modularity authentication data
+            // For 404 errors, check if any session files contain modularous authentication data
             $sessionDir = storage_path('framework/sessions');
             if (is_dir($sessionDir)) {
                 $files = scandir($sessionDir);
@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
                     return $file !== '.' && $file !== '..' && $file !== '.gitignore';
                 });
 
-                // Check each session file for modularity authentication
+                // Check each session file for modularous authentication
                 foreach ($sessionFiles as $sessionFile) {
                     $userData = $this->getUserDataFromSession($sessionFile);
                     if ($userData) {
@@ -78,9 +78,9 @@ class Handler extends ExceptionHandler
                         Auth::setUser($userData);
 
                         // Run the actual middleware pipeline
-                        $this->runModularityMiddleware();
+                        $this->runModularousMiddleware();
 
-                        Log::info('Successfully set modularity user and ran middleware:', ['file' => $sessionFile, 'user_id' => $userData->id]);
+                        Log::info('Successfully set modularous user and ran middleware:', ['file' => $sessionFile, 'user_id' => $userData->id]);
 
                         return true;
                     }
@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
             }
 
             // Also check for remember token cookies
-            $rememberTokenCookieName = 'remember_' . Modularity::getAuthGuardName();
+            $rememberTokenCookieName = 'remember_' . Modularous::getAuthGuardName();
             if (request()->hasCookie($rememberTokenCookieName)) {
                 Log::info('Found remember token cookie');
 
@@ -98,16 +98,16 @@ class Handler extends ExceptionHandler
             return false;
 
         } catch (\Exception $e) {
-            Log::error('Error in attemptModularityAuthentication: ' . $e->getMessage());
+            Log::error('Error in attemptModularousAuthentication: ' . $e->getMessage());
 
             return false;
         }
     }
 
     /**
-     * Run the actual modularity middleware pipeline
+     * Run the actual modularous middleware pipeline
      */
-    protected function runModularityMiddleware(): void
+    protected function runModularousMiddleware(): void
     {
         try {
             $middleware = [
@@ -128,7 +128,7 @@ class Handler extends ExceptionHandler
             // Execute the pipeline
 
         } catch (\Exception $e) {
-            Log::error('Error running modularity middleware: ' . $e->getMessage());
+            Log::error('Error running modularous middleware: ' . $e->getMessage());
         }
     }
 
@@ -150,9 +150,9 @@ class Handler extends ExceptionHandler
 
                 if ($unserializedData !== false) {
                     // Check if the session contains authentication data
-                    // Look for the modularity guard session key
+                    // Look for the modularous guard session key
                     $userClass = User::class;
-                    $loginKey = 'login_modularity_' . sha1($userClass);
+                    $loginKey = 'login_modularous_' . sha1($userClass);
 
                     // Check if session data contains the login key
                     if (array_key_exists($loginKey, $unserializedData)) {
@@ -167,9 +167,9 @@ class Handler extends ExceptionHandler
                 }
 
                 // Fallback to string search if unserialization fails
-                if (str_contains($sessionData, 'login_modularity_')) {
+                if (str_contains($sessionData, 'login_modularous_')) {
                     // Try to extract user ID from string
-                    preg_match('/login_modularity_[a-f0-9]+";i:(\d+);/', $sessionData, $matches);
+                    preg_match('/login_modularous_[a-f0-9]+";i:(\d+);/', $sessionData, $matches);
                     if (isset($matches[1])) {
                         $userId = $matches[1];
                         $user = User::find($userId);

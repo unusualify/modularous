@@ -5,7 +5,7 @@ sidebarTitle: HasRevisions
 
 # Secondary\HasRevisions
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Secondary\HasRevisions`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Secondary\HasRevisions`
 
 Stores an ordered revision history as a `HasMany` relationship. Revision records are automatically resolved from the module's `Revisions/` namespace or from the active Twill capsule.
 
@@ -47,7 +47,7 @@ The trait resolves the revision model in this order:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Secondary\HasRevisions;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasRevisions;
 
 class Article extends Model
 {

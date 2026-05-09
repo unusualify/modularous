@@ -80,7 +80,7 @@
               "files": [
                 {
                   "path": "README.md",
-                  "content": "# Modularity AI\n\nUpdated documentation for local workflow testing.\n"
+                  "content": "# Modularous AI\n\nUpdated documentation for local workflow testing.\n"
                 },
                 {
                   "path": ".github/workflows/tests.yml",

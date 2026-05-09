@@ -7,7 +7,7 @@ sidebarTitle: make:module
 
 > Bootstrap a complete module
 
-**Signature**: `modularity:make:module`
+**Signature**: `modularous:make:module`
 
 **Aliases**: `m:m:m`, `unusual:make:module`
 
@@ -24,7 +24,7 @@ sidebarTitle: make:module
 ## Usage
 
 ```
-modularity:make:module [options] <module>
+modularous:make:module [options] <module>
 ```
 
 ### Arguments
@@ -76,19 +76,19 @@ modularity:make:module [options] <module>
 ### Minimal module
 
 ```bash
-php artisan modularity:make:module Blog
+php artisan modularous:make:module Blog
 ```
 
 ### Module with schema and translation
 
 ```bash
-php artisan modularity:make:module Blog --schema="title:string,body:text" --addTranslation
+php artisan modularous:make:module Blog --schema="title:string,body:text" --addTranslation
 ```
 
 ### Module with all options set non-interactively
 
 ```bash
-php artisan modularity:make:module Shop \
+php artisan modularous:make:module Shop \
     --schema="name:string,price:decimal:8,2" \
     --rules="name:required|string,price:required|numeric" \
     --addTranslation \
@@ -100,13 +100,13 @@ php artisan modularity:make:module Shop \
 ### Re-generate stubs only for an existing module
 
 ```bash
-php artisan modularity:make:module Blog --just-stubs --stubs-except=migration
+php artisan modularous:make:module Blog --just-stubs --stubs-except=migration
 ```
 
 ### Preview without writing files
 
 ```bash
-php artisan modularity:make:module Blog --test
+php artisan modularous:make:module Blog --test
 ```
 
 ---

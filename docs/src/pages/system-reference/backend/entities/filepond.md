@@ -6,7 +6,7 @@ sidebarTitle: Filepond
 # Filepond
 
 **File**: `src/Entities/Filepond.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`
 
 Represents a permanent Filepond file upload attached to a model via a polymorphic relationship. Dispatches notification events on create, update, and delete lifecycle hooks.

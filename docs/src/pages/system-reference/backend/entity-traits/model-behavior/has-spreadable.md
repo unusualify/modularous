@@ -5,7 +5,7 @@ sidebarTitle: HasSpreadable
 
 # HasSpreadable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasSpreadable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasSpreadable`
 
 Stores arbitrary non-column attributes in a JSON `Spread` morph record, surfacing them as native model properties via `__get` / `__call` magic. Useful when you need dynamic, schema-free attributes without adding database columns.
 
@@ -60,7 +60,7 @@ Registers `spreadable_exists` via `addGlobalScopesHasSpreadable()`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 
 class Product extends Model
 {

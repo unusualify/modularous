@@ -18,10 +18,10 @@ Laravel Echo treats names **without** a leading dot as class strings (`App\Event
 
 ```js
 // Wrong — Echo looks for a class, never matches
-channel.listen('modularity.model.created', handler)
+channel.listen('modularous.model.created', handler)
 
 // Correct — matches broadcastAs() output
-channel.listen('.modularity.model.created', handler)
+channel.listen('.modularous.model.created', handler)
 ```
 
 ### Does the event actually reach Reverb?
@@ -198,8 +198,8 @@ try {
 `$event->hasStateable` is `false` when the model does not use the `HasStateable` trait, or when the trait's state query fails silently. Verify:
 
 ```php
-use function Unusualify\Modularity\classHasTrait;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use function Unusualify\Modularous\classHasTrait;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
 
 classHasTrait($order, HasStateable::class); // must be true
 ```

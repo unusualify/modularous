@@ -7,7 +7,7 @@ use Modules\Cms\Entities\CmsSitemapableItem;
 use Modules\Cms\Entities\Sitemap;
 use Modules\Cms\Services\CmsSitemapBuildService;
 use Modules\Cms\Services\CmsSitemapCacheService;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 /**
  * CMS sitemap: panel dry-run / commit, backed by {@see CmsSitemapBuildService} + {@see CmsSitemapCacheService}.
@@ -78,7 +78,7 @@ class SitemapRepository extends Repository
             abort(422, 'Invalid sitemapable type.');
         }
 
-        $sitemapId = (int) modularityConfig('cms_sitemap.default_sitemap_id', 1);
+        $sitemapId = (int) modularousConfig('cms_sitemap.default_sitemap_id', 1);
 
         $row = CmsSitemapableItem::query()->updateOrCreate(
             [

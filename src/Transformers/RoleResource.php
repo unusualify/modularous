@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Transformers;
+namespace Unusualify\Modularous\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

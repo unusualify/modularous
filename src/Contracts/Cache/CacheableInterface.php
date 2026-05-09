@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Contracts\Cache;
+namespace Unusualify\Modularous\Contracts\Cache;
 
-use Unusualify\Modularity\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
 
 interface CacheableInterface extends ModuleableInterface
 {

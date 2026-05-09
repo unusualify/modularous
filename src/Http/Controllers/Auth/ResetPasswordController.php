@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\JsonResponse;
@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
 
 class ResetPasswordController extends Controller
 {
@@ -23,7 +23,7 @@ class ResetPasswordController extends Controller
 
     public function broker()
     {
-        return Password::broker(Modularity::getAuthProviderName());
+        return Password::broker(Modularous::getAuthProviderName());
     }
 
     /**
@@ -65,7 +65,7 @@ class ResetPasswordController extends Controller
                 ],
             ]);
 
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.reset')->with($viewData);
+            return $this->viewFactory->make(modularousBaseKey() . '::auth.passwords.reset')->with($viewData);
         }
 
         return $this->redirector->to(route('admin.password.reset.link'))->withErrors([
@@ -83,7 +83,7 @@ class ResetPasswordController extends Controller
 
         // we don't call exists on the Password repository here because we don't want to expire the token for welcome emails
         if ($user) {
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.reset')->with([
+            return $this->viewFactory->make(modularousBaseKey() . '::auth.passwords.reset')->with([
                 'token' => $token,
                 'email' => $user->email,
                 'welcome' => true,
@@ -102,11 +102,11 @@ class ResetPasswordController extends Controller
      * https://github.com/laravel/framework/pull/16850
      *
      * @param string $token
-     * @return \Unusualify\Modularity\Models\User|null
+     * @return \Unusualify\Modularous\Models\User|null
      */
     protected function getUserFromToken($token)
     {
-        $clearToken = DB::table($this->config->get('auth.passwords.' . Modularity::getAuthProviderName() . '.table', 'password_resets'))->where('token', $token)->first();
+        $clearToken = DB::table($this->config->get('auth.passwords.' . Modularous::getAuthProviderName() . '.table', 'password_resets'))->where('token', $token)->first();
 
         if ($clearToken) {
             return User::where('email', $clearToken->email)->first();
@@ -133,7 +133,7 @@ class ResetPasswordController extends Controller
 
     public function success()
     {
-        return view(modularityBaseKey() . '::auth.success', [
+        return view(modularousBaseKey() . '::auth.success', [
             'taskState' => [
                 'status' => 'success',
                 'title' => __('authentication.password-sent'),

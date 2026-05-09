@@ -8,7 +8,7 @@ sidebarTitle: Payment Service
 The `payment-service` input type renders `VInputPaymentService`, a full payment selector that displays available payment methods (credit card, transfer, external gateways), handles currency selection, VAT calculation, discount percentages, and transaction fee display. It integrates with the `SystemPayment` module.
 
 > [!IMPORTANT]
-> This component requires the `SystemPayment` and `SystemPricing` modules to be installed and the `modularity.default_payment_service` config key to be set.
+> This component requires the `SystemPayment` and `SystemPricing` modules to be installed and the `modularous.default_payment_service` config key to be set.
 
 ## Hydrate
 
@@ -42,9 +42,9 @@ The hydrate:
 | `itemValue` | `'id'` | Field used as the payment service value |
 | `itemTitle` | `'name'` | Field displayed for each payment service |
 | `default` | `[]` | No pre-selected service |
-| `default_payment_service` | config value | From `modularity.default_payment_service` |
-| `useCountryBasedVatRates` | config value | From `Modularity::shouldUseCountryBasedVatRates()` |
-| `includeTransactionFee` | config value | From `Modularity::shouldIncludeTransactionFee()` |
+| `default_payment_service` | config value | From `modularous.default_payment_service` |
+| `useCountryBasedVatRates` | config value | From `Modularous::shouldUseCountryBasedVatRates()` |
+| `includeTransactionFee` | config value | From `Modularous::shouldIncludeTransactionFee()` |
 
 ## See Also
 

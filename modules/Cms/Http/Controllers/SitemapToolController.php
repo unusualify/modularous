@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 /**
  * @deprecated Prefer {@see SitemapController} and {@code modules/Cms/Resources/assets/Pages/Sitemap/Index.vue} (module Inertia index with row table; same panel JSON endpoints).
@@ -27,7 +27,7 @@ class SitemapToolController extends BaseController
 
     public function __invoke(Request $request): Response
     {
-        $pageTitle = __('Sitemap') . ' - ' . Modularity::pageTitle();
+        $pageTitle = __('Sitemap') . ' - ' . Modularous::pageTitle();
         $headerTitle = __('Sitemap');
 
         $data = [
@@ -61,7 +61,7 @@ class SitemapToolController extends BaseController
      */
     protected function sitemapNavigationWithBreadcrumbs(): array
     {
-        $navigation = get_modularity_navigation_config();
+        $navigation = get_modularous_navigation_config();
 
         $pageIndexRoute = $this->module->panelRouteNamePrefix() . '.page.index';
         $cmsCrumb = [

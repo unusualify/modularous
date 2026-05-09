@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 abstract class FeatureNotification extends Notification implements ShouldQueue
 {
@@ -163,16 +163,16 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     public function viaConnections(): array
     {
         return [
-            'mail' => modularityConfig('notifications.mail_connection'),
-            'database' => modularityConfig('notifications.database_connection'),
+            'mail' => modularousConfig('notifications.mail_connection'),
+            'database' => modularousConfig('notifications.database_connection'),
         ];
     }
 
     public function viaQueues(): array
     {
         return [
-            'mail' => modularityConfig('notifications.mail_queue'),
-            'database' => modularityConfig('notifications.database_queue'),
+            'mail' => modularousConfig('notifications.mail_queue'),
+            'database' => modularousConfig('notifications.database_queue'),
         ];
     }
 
@@ -206,7 +206,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
     {
         $class = static::class;
 
-        $channels = config("modularity.notifications.{$class}.channels", null);
+        $channels = config("modularous.notifications.{$class}.channels", null);
 
         if ($channels !== null && is_string($channels)) {
             return $this->getValidChannels(explode(',', $channels));
@@ -550,11 +550,11 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
         $routeName = method_exists($model, 'getRouteName') ? $model->getRouteName() : null;
 
         if ($moduleName && $routeName) {
-            $module = Modularity::find($moduleName);
+            $module = Modularous::find($moduleName);
 
             $routeConfig = $module->getRouteConfig($routeName);
 
-            $defaultEditOnModal = config('modularity.default_table_attributes.editOnModal', true);
+            $defaultEditOnModal = config('modularous.default_table_attributes.editOnModal', true);
 
             $editOnModal = data_get($routeConfig, 'table_options.editOnModal', $defaultEditOnModal);
 
@@ -736,7 +736,7 @@ abstract class FeatureNotification extends Notification implements ShouldQueue
      */
     public function failed(?\Throwable $exception): void
     {
-        Log::channel('modularity-notification-failure')->error(static::class . ' failed: ' . $exception->getMessage(), [
+        Log::channel('modularous-notification-failure')->error(static::class . ' failed: ' . $exception->getMessage(), [
             'exception' => $exception,
         ]);
     }

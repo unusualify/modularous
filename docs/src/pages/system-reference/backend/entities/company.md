@@ -6,7 +6,7 @@ sidebarTitle: Company
 # Company
 
 **File**: `src/Entities/Company.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`  
 **Traits**: `HasFactory`, `HasSpreadable`
 

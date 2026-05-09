@@ -13,13 +13,13 @@ Modularous fires four events during the user registration and verification flow.
 HTTP POST /register
         │
         ▼
-  ModularityUserRegistering   ← fired before user is created
+  ModularousUserRegistering   ← fired before user is created
         │
         ▼
   [user record created]
         │
         ▼
-  ModularityUserRegistered    ← fired after user is created
+  ModularousUserRegistered    ← fired after user is created
         │
         ├─ standard flow ──► (done)
         │
@@ -32,14 +32,14 @@ Separately, when a user requests email verification:
 POST /email/verify
         │
         ▼
-  ModularityUserVerification  ← fired on verification request
+  ModularousUserVerification  ← fired on verification request
 ```
 
 ---
 
-## ModularityUserRegistering
+## ModularousUserRegistering
 
-`Unusualify\Modularity\Events\ModularityUserRegistering`
+`Unusualify\Modularous\Events\ModularousUserRegistering`
 
 Fired just before a new user is persisted. Use this event to validate or enrich the registration request before the record is written.
 
@@ -64,7 +64,7 @@ public function __construct(public $request, bool $isOauth = false)
 ### Example Listener
 
 ```php
-public function handle(ModularityUserRegistering $event): void
+public function handle(ModularousUserRegistering $event): void
 {
     if ($event->isOauth()) {
         // OAuth pre-registration logic
@@ -77,9 +77,9 @@ public function handle(ModularityUserRegistering $event): void
 
 ---
 
-## ModularityUserRegistered
+## ModularousUserRegistered
 
-`Unusualify\Modularity\Events\ModularityUserRegistered`
+`Unusualify\Modularous\Events\ModularousUserRegistered`
 
 Fired immediately after the user record is created. Use this event to send welcome emails, assign default roles, create related records, etc.
 
@@ -105,7 +105,7 @@ public function __construct($user, Request $request, bool $isOauth = false)
 ### Example Listener
 
 ```php
-public function handle(ModularityUserRegistered $event): void
+public function handle(ModularousUserRegistered $event): void
 {
     $user = $event->user;
 
@@ -121,9 +121,9 @@ public function handle(ModularityUserRegistered $event): void
 
 ---
 
-## ModularityUserVerification
+## ModularousUserVerification
 
-`Unusualify\Modularity\Events\ModularityUserVerification`
+`Unusualify\Modularous\Events\ModularousUserVerification`
 
 Fired when a user initiates email verification. Use this event to log verification attempts or trigger secondary verification flows.
 
@@ -142,7 +142,7 @@ public function __construct(public $request)
 ### Example Listener
 
 ```php
-public function handle(ModularityUserVerification $event): void
+public function handle(ModularousUserVerification $event): void
 {
     // Log or audit the verification attempt
     logger('Verification initiated from IP: ' . $event->request->ip());
@@ -153,7 +153,7 @@ public function handle(ModularityUserVerification $event): void
 
 ## VerifiedEmailRegister
 
-`Unusualify\Modularity\Events\VerifiedEmailRegister`
+`Unusualify\Modularous\Events\VerifiedEmailRegister`
 
 Fired after a user completes the verified-email registration path (i.e., the user confirmed ownership of their email address during sign-up).
 
@@ -186,15 +186,15 @@ public function handle(VerifiedEmailRegister $event): void
 Wire up listeners in your module's `EventServiceProvider` (or the application's `App\Providers\EventServiceProvider`):
 
 ```php
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Events\ModularityUserRegistered;
-use Unusualify\Modularity\Events\ModularityUserVerification;
-use Unusualify\Modularity\Events\VerifiedEmailRegister;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Events\ModularousUserRegistered;
+use Unusualify\Modularous\Events\ModularousUserVerification;
+use Unusualify\Modularous\Events\VerifiedEmailRegister;
 
 protected $listen = [
-    ModularityUserRegistering::class  => [YourPreRegisterListener::class],
-    ModularityUserRegistered::class   => [YourPostRegisterListener::class],
-    ModularityUserVerification::class => [YourVerificationListener::class],
+    ModularousUserRegistering::class  => [YourPreRegisterListener::class],
+    ModularousUserRegistered::class   => [YourPostRegisterListener::class],
+    ModularousUserVerification::class => [YourVerificationListener::class],
     VerifiedEmailRegister::class      => [YourVerifiedRegisterListener::class],
 ];
 ```

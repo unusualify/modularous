@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class PaymentServiceHydrate extends InputHydrate
 {
@@ -32,10 +32,10 @@ class PaymentServiceHydrate extends InputHydrate
         $input = $this->input;
         $input['type'] = 'input-payment-service';
 
-        $input['default_payment_service'] = config('modularity.default_payment_service');
+        $input['default_payment_service'] = config('modularous.default_payment_service');
         $input['currencyConversionEndpoint'] = route('currency.convert');
 
-        $input['useCountryBasedVatRates'] = Modularity::shouldUseCountryBasedVatRates();
+        $input['useCountryBasedVatRates'] = Modularous::shouldUseCountryBasedVatRates();
 
         if ($input['useCountryBasedVatRates']) {
             if (! $this->skipQueries) {
@@ -53,7 +53,7 @@ class PaymentServiceHydrate extends InputHydrate
                     ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
                     ->with('paymentServices', 'paymentService');
 
-                if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->is_client && ($user->validCompany)) {
+                if (Auth::guard('modularous')->check() && ($user = Auth::guard('modularous')->user()) && $user->is_client && ($user->validCompany)) {
                     if ($user->company->isCorporateCompany) {
                         $query = $query->defaultCorporatePaymentCurrency();
                     } else {
@@ -130,7 +130,7 @@ class PaymentServiceHydrate extends InputHydrate
 
         $input['currencyCardTypes'] = $mappedData;
 
-        $input['transferFormSchema'] = modularity_format_inputs([
+        $input['transferFormSchema'] = modularous_format_inputs([
             [
                 'type' => 'hidden',
                 'name' => 'price_id',
@@ -162,7 +162,7 @@ class PaymentServiceHydrate extends InputHydrate
             ],
         ]);
 
-        $input['includeTransactionFee'] = Modularity::shouldIncludeTransactionFee();
+        $input['includeTransactionFee'] = Modularous::shouldIncludeTransactionFee();
 
         $input['paymentUrl'] = Route::has('admin.system.system_payment.pay')
             ? route('admin.system.system_payment.pay')

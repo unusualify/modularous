@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Flush;
+namespace Unusualify\Modularous\Console\Flush;
 
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class FlushCommand extends BaseCommand
 {
@@ -14,7 +14,7 @@ class FlushCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:flush';
+    protected $signature = 'modularous:flush';
 
     protected $aliases = [];
 
@@ -23,7 +23,7 @@ class FlushCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Flush Modularity caches';
+    protected $description = 'Flush Modularous caches';
 
     /**
      * Create a new command instance.
@@ -43,11 +43,11 @@ class FlushCommand extends BaseCommand
     public function handle(): int
     {
         // handle command
-        Modularity::clearCache();
+        Modularous::clearCache();
 
-        $this->call('modularity:cache:versions');
+        $this->call('modularous:cache:versions');
 
-        $this->info('Modularity caches flushed');
+        $this->info('Modularous caches flushed');
 
         return 0;
     }

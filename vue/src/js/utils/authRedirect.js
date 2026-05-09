@@ -23,8 +23,8 @@ export function resolveLoginUrl () {
     return window[ns].STORE.user.loginRoute
   }
 
-  if (typeof window !== 'undefined' && window.MODULARITY?.STORE?.user?.loginRoute) {
-    return window.MODULARITY.STORE.user.loginRoute
+  if (typeof window !== 'undefined' && window.MODULAROUS?.STORE?.user?.loginRoute) {
+    return window.MODULAROUS.STORE.user.loginRoute
   }
 
   const fromStore = store.state.user?.loginRoute

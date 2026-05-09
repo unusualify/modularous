@@ -3,8 +3,8 @@
 namespace Modules\SystemPayment\Repositories;
 
 use Modules\SystemPayment\Entities\CardType;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
 
 class CardTypeRepository extends Repository
 {

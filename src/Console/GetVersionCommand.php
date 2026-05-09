@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 class GetVersionCommand extends BaseCommand
 {
@@ -9,7 +9,7 @@ class GetVersionCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:get:version
+    protected $signature = 'modularous:get:version
         {--p|package= : The package}';
 
     protected $aliases = [

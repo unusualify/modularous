@@ -15,7 +15,7 @@ return [
                 'value' => $locale,
                 'label' => getLabelFromLocale($locale, true),
             ];
-        }, modularityConfig('available_user_locales', ['en'])),
+        }, modularousConfig('available_user_locales', ['en'])),
         'rules' => 'sometimes:required',
     ],
     '_timezone' => [

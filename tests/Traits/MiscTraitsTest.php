@@ -1,18 +1,18 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Console\Output\OutputInterface;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\CheckSnapshot;
-use Unusualify\Modularity\Traits\Pretending;
-use Unusualify\Modularity\Traits\ReplacementTrait;
-use Unusualify\Modularity\Traits\SerializeModel;
-use Unusualify\Modularity\Traits\Traitify;
-use Unusualify\Modularity\Traits\Verbosity;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\CheckSnapshot;
+use Unusualify\Modularous\Traits\Pretending;
+use Unusualify\Modularous\Traits\ReplacementTrait;
+use Unusualify\Modularous\Traits\SerializeModel;
+use Unusualify\Modularous\Traits\Traitify;
+use Unusualify\Modularous\Traits\Verbosity;
 
 class MiscTraitsTest extends TestCase
 {
@@ -149,8 +149,8 @@ class MiscTraitsTest extends TestCase
     /** @test */
     public function it_can_use_replacement_trait()
     {
-        Config::set('modularity.stubs.files', ['file1', 'file2']);
-        Config::set('modularity.stubs.replacements', ['json' => ['NAME', 'LOWER_NAME']]);
+        Config::set('modularous.stubs.files', ['file1', 'file2']);
+        Config::set('modularous.stubs.replacements', ['json' => ['NAME', 'LOWER_NAME']]);
 
         $tester = new class
         {

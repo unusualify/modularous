@@ -1,14 +1,14 @@
-<p align="center"><a href="https://modularity.unusualify.com" target="_blank"><img src="./modularity.png" width="200" alt="Modulariy Logo"></a></p>
+<p align="center"><a href="https://modularous.unusualify.com" target="_blank"><img src="./modularous.png" width="200" alt="Modularous Logo"></a></p>
 
 <p align="center">
-<a href="https://packagist.org/packages/unusualify/modularity"><img src="https://img.shields.io/packagist/dt/unusualify/modularity" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/unusualify/modularity"><img src="https://img.shields.io/packagist/v/unusualify/modularity" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/unusualify/modularity"><img src="https://img.shields.io/packagist/l/unusualify/modularity" alt="License"></a>
+<a href="https://packagist.org/packages/unusualify/modularous"><img src="https://img.shields.io/packagist/dt/unusualify/modularous" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/unusualify/modularous"><img src="https://img.shields.io/packagist/v/unusualify/modularous" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/unusualify/modularous"><img src="https://img.shields.io/packagist/l/unusualify/modularous" alt="License"></a>
 </p>
 
 ## Requirements
 
-All major requirements of Modularity listed as following: 
+All major requirements of Modularous listed as following: 
 
 <div class="overflow-auto">
 
@@ -20,11 +20,11 @@ All major requirements of Modularity listed as following:
 </div>
 
 
-## About Modularity
+## About Modularous
 
-Modularity is a Laravel and Vuetify powered, developer toolkit that aims to improve developer experience on conducting full stack development process. On Laravel side, the modularity manages your large scale projects using modules, where a module similar to a single Laravel project, having some views, controllers or models. With the abilities of Vuetify.js, the modularity presents various of dynamic, configurable UI components to auto-construct a CRM for your project.
+Modularous is a Laravel and Vuetify powered, developer toolkit that aims to improve developer experience on conducting full stack development process. On Laravel side, the modularous manages your large scale projects using modules, where a module similar to a single Laravel project, having some views, controllers or models. With the abilities of Vuetify.js, the modularous presents various of dynamic, configurable UI components to auto-construct a CRM for your project.
 
-<!-- Modularity takes the pain out of development by easing common tasks used in many web projects, such as:
+<!-- Modularous takes the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://unusualify.com/modularous/docs/routing).
 - [Powerful dependency injection container](https://unusualify.com/modularous/docs/container).
@@ -34,13 +34,13 @@ Modularity is a Laravel and Vuetify powered, developer toolkit that aims to impr
 - [Robust background job processing](https://unusualify.com/modularous/docs/queues).
 - [Real-time event broadcasting](https://unusualify.com/modularous/docs/broadcasting). -->
 
-## Learning Modularity
+## Learning Modularous
 
-Modularity has the most extensive and thorough [documentation](https://modularity.unusualify.com).
+Modularous has the most extensive and thorough [documentation](https://modularous.unusualify.com).
 
 ## Contributing
 
-Thank you for considering contributing to the Modularity toolkit! The contribution guide can be found in the [Modularity documentation](https://modularity.unusualify.com/contributions).
+Thank you for considering contributing to the Modularous toolkit! The contribution guide can be found in the [Modularous documentation](https://modularous.unusualify.com/contributions).
 
 <!-- ## Code of Conduct
 

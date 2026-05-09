@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:create:database [--connection[=CONNECTION]]`
+- **Signature:** `modularous:create:database [--connection[=CONNECTION]]`
 - **Category:** Setup
 
 ## Examples
@@ -12,17 +12,17 @@
 ### Create the default database
 
 ```bash
-php artisan modularity:create:database
+php artisan modularous:create:database
 ```
 
 ### Create a database on a specific connection
 
 ```bash
-php artisan modularity:create:database --connection=mysql
-php artisan modularity:create:database --connection=pgsql
+php artisan modularous:create:database --connection=mysql
+php artisan modularous:create:database --connection=pgsql
 ```
 
-`modularity:create:database`
+`modularous:create:database`
 -----------------------------
 
 Creates the database defined in the given connection config if it does not already exist. The database name, host, port, charset, and collation are all read from `config('database.connections.<connection>')`. Useful in CI pipelines and initial setup scripts where the database may not yet exist.
@@ -38,7 +38,7 @@ Creates the database defined in the given connection config if it does not alrea
 
 ### Usage
 
-* `modularity:create:database [--connection[=CONNECTION]]`
+* `modularous:create:database [--connection[=CONNECTION]]`
 
 ### Options
 

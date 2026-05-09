@@ -7,7 +7,7 @@ on:
 jobs:
   create_branch:
     runs-on: ubuntu-latest
-    if: github.event.project_card.project_name == 'modularity'
+    if: github.event.project_card.project_name == 'modularous'
     steps:
       - name: Get Issue Details
         id: issue

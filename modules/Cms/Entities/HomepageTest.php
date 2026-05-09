@@ -3,11 +3,11 @@
 namespace Modules\Cms\Entities;
 
 use Modules\Cms\Entities\Concerns\IsCmr;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
-use Unusualify\Modularity\Entities\Traits\Publishable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Traits\Publishable;
 
 class HomepageTest extends Model
 {

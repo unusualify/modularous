@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Module;
+namespace Unusualify\Modularous\Console\Module;
 
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class RemoveModuleCommand extends BaseCommand
 {
@@ -12,7 +12,7 @@ class RemoveModuleCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:remove:module {module}';
+    protected $signature = 'modularous:remove:module {module}';
 
     /**
      * The console command description.
@@ -34,19 +34,19 @@ class RemoveModuleCommand extends BaseCommand
      */
     public function handle(): int
     {
-        Modularity::disableCache();
+        Modularous::disableCache();
 
         $moduleName = $this->argument('module');
 
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
 
         // $this->call('optimize:clear');
 
-        $this->call('modularity:migrate:rollback', [
+        $this->call('modularous:migrate:rollback', [
             'module' => $moduleName,
         ]);
 
-        Modularity::deleteModule($moduleName);
+        Modularous::deleteModule($moduleName);
 
         $this->info("Module [{$moduleName}] removed completely!");
 

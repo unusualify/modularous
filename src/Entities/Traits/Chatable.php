@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use Modules\SystemNotification\Events\UnreadChatMessage;
 use Modules\SystemNotification\Notifications\ChatableUnreadNotification;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\ChatMessage;
-use Unusualify\Modularity\Entities\CreatorRecord;
-use Unusualify\Modularity\Entities\Scopes\ChatableScopes;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\CreatorRecord;
+use Unusualify\Modularous\Entities\Scopes\ChatableScopes;
 
 trait Chatable
 {
@@ -204,13 +204,13 @@ trait Chatable
             UnreadChatMessage::dispatch($latestChatMessage);
 
             $chatableCreator = null;
-            if (in_array('Unusualify\Modularity\Entities\Traits\HasCreator', class_uses_recursive($this))) {
+            if (in_array('Unusualify\Modularous\Entities\Traits\HasCreator', class_uses_recursive($this))) {
                 $chatableCreator = $this->creator;
             }
 
             $messageCreator = $latestChatMessage->creator;
 
-            $chatableAuthorizedUser = in_array('Unusualify\Modularity\Entities\Traits\HasAuthorizable', class_uses_recursive($this))
+            $chatableAuthorizedUser = in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive($this))
                 ? ($this->is_authorized ? $this->authorizedUser : null)
                 : null;
 

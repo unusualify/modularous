@@ -10,9 +10,9 @@ Flush runtime state — caches, FilePond temporary uploads, and sessions. These 
 
 | Command | Signature | Description |
 |---------|-----------|-------------|
-| [flush](./flush) | `modularity:flush` | Flush all Modularous caches |
-| [flush:filepond](./flush-filepond) | `modularity:flush:filepond` | Delete orphaned FilePond temporary files |
-| [flush:sessions](./flush-sessions) | `modularity:flush:sessions` | Clear session data (supports multiple drivers) |
+| [flush](./flush) | `modularous:flush` | Flush all Modularous caches |
+| [flush:filepond](./flush-filepond) | `modularous:flush:filepond` | Delete orphaned FilePond temporary files |
+| [flush:sessions](./flush-sessions) | `modularous:flush:sessions` | Clear session data (supports multiple drivers) |
 
 ## Common Workflows
 
@@ -21,8 +21,8 @@ Flush runtime state — caches, FilePond temporary uploads, and sessions. These 
 Add to your scheduler (`app/Console/Kernel.php` or `routes/console.php`):
 
 ```php
-Schedule::command('modularity:flush:filepond')->daily();
-Schedule::command('modularity:flush:sessions')->weekly();
+Schedule::command('modularous:flush:filepond')->daily();
+Schedule::command('modularous:flush:sessions')->weekly();
 ```
 
 FilePond leaves temporary upload chunks when users abandon forms — clear them daily. Sessions usually self-expire but can accumulate in the `file` driver.
@@ -30,8 +30,8 @@ FilePond leaves temporary upload chunks when users abandon forms — clear them 
 ### After clearing data during local dev
 
 ```bash
-php artisan modularity:flush
-php artisan modularity:flush:filepond
+php artisan modularous:flush
+php artisan modularous:flush:filepond
 ```
 
 Resets caches and removes abandoned upload chunks so the UI is in a clean state.
@@ -39,7 +39,7 @@ Resets caches and removes abandoned upload chunks so the UI is in a clean state.
 ### Force logout everyone
 
 ```bash
-php artisan modularity:flush:sessions
+php artisan modularous:flush:sessions
 ```
 
 Useful after a security-sensitive change (role permissions, auth config). All active sessions are invalidated; users must log in again.

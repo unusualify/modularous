@@ -1,4 +1,4 @@
-@extends($MODULARITY_VIEW_NAMESPACE . '::layouts.master')
+@extends($MODULAROUS_VIEW_NAMESPACE . '::layouts.master')
 
 @section('appTypeClass', 'body--listing')
 
@@ -12,7 +12,7 @@
                     status-code="403"
                     status-text="Access Forbidden"
                     description="You don't have permission to access this resource."
-                    alert-text="This action is restricted for modularity authenticated users."
+                    alert-text="This action is restricted for modularous authenticated users."
                     alert="warning"
                 >
                 </ue-error-card>
@@ -23,7 +23,7 @@
 
 @push('head_last_js')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-free.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-free.js'])
     }}
 @endpush
 

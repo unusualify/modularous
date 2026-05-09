@@ -5,7 +5,7 @@ sidebarTitle: Schema
 
 # Schema
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\Schema`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\Schema`
 
 Manages the active input schema for a repository operation and provides helpers to chunk inputs into flat arrays. Composes `ManageTraits`.
 

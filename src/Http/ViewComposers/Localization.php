@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\ViewComposers;
+namespace Unusualify\Modularous\Http\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 
@@ -20,6 +20,6 @@ class Localization
      */
     public function compose(View $view)
     {
-        $view->with(['modularityLocalization' => get_modularity_localization_config()]);
+        $view->with(['modularousLocalization' => get_modularous_localization_config()]);
     }
 }

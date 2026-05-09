@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Services\MessageStage;
 
 class TagController extends Controller
 {

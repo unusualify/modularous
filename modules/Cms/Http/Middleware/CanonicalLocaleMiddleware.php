@@ -14,7 +14,7 @@ class CanonicalLocaleMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (! modularityConfig('cms_routing.redirect_to_canonical', false)) {
+        if (! modularousConfig('cms_routing.redirect_to_canonical', false)) {
             return $next($request);
         }
 

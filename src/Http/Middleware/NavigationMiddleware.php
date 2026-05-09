@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -16,10 +16,10 @@ class NavigationMiddleware
     public function handle($request, Closure $next)
     {
         view()->composer([
-            modularityBaseKey() . '::layouts.*',
+            modularousBaseKey() . '::layouts.*',
             'translation::layout',
         ], function ($view) {
-            $view->with('navigation', get_modularity_navigation_config());
+            $view->with('navigation', get_modularous_navigation_config());
         });
 
         return $next($request);

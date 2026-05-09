@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
@@ -12,11 +12,11 @@ use Inertia\Inertia;
 use Modules\SystemUser\Http\Requests\CompanyRequest;
 use Modules\SystemUser\Repositories\CompanyRepository;
 use Modules\SystemUser\Repositories\UserRepository;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
-use Unusualify\Modularity\Services\View\UComponent;
-use Unusualify\Modularity\Services\View\UWrapper;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageUtilities;
+use Unusualify\Modularous\Services\View\UComponent;
+use Unusualify\Modularous\Services\View\UWrapper;
 
 class ProfileController extends BaseController
 {
@@ -179,7 +179,7 @@ class ProfileController extends BaseController
             $company = $this->companyRepository->getById($company->id);
             $companyFields = $this->companyRepository->getFormFields($company, $companySchema);
 
-            $lockCompanyEdit = config('modularity.lock_company_edit') && $user->validCompany;
+            $lockCompanyEdit = config('modularous.lock_company_edit') && $user->validCompany;
             if ($lockCompanyEdit) {
                 $companySchema = array_map(function ($item) {
                     $item['noSubmit'] = false;
@@ -237,7 +237,7 @@ class ProfileController extends BaseController
         // dd($data);
         $endpoints = $this->getUrls();
 
-        $pageTitle = __('Profile Settings') . ' - ' . Modularity::pageTitle();
+        $pageTitle = __('Profile Settings') . ' - ' . Modularous::pageTitle();
         $headerTitle = __('My Profile');
 
         if ($this->shouldUseInertia()) {
@@ -304,7 +304,7 @@ class ProfileController extends BaseController
             return response()->json($data);
         }
 
-        return view('modularity::layouts.profile', $data);
+        return view('modularous::layouts.profile', $data);
     }
 
     /**

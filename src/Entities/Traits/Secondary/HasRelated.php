@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Secondary;
+namespace Unusualify\Modularous\Entities\Traits\Secondary;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\RelatedItem;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\RelatedItem;
 
 trait HasRelated
 {

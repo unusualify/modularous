@@ -24,7 +24,7 @@ class CmsSiteSeoSettingsService
         $default = "User-agent: *\nAllow: /";
         $raw = null;
 
-        if (modularityConfig('cms_seo.robots.use_site_settings', true)) {
+        if (modularousConfig('cms_seo.robots.use_site_settings', true)) {
             $persisted = $this->persistedGlobalRobotsTxt();
             if ($persisted !== null) {
                 $raw = trim($persisted);
@@ -35,7 +35,7 @@ class CmsSiteSeoSettingsService
         }
 
         if ($raw === null) {
-            $raw = trim((string) modularityConfig('cms_seo.robots.global_robots_txt', $default));
+            $raw = trim((string) modularousConfig('cms_seo.robots.global_robots_txt', $default));
         }
 
         if ($raw === '') {
@@ -67,7 +67,7 @@ class CmsSiteSeoSettingsService
         }
 
         $default = "User-agent: *\nAllow: /";
-        $raw = trim((string) modularityConfig('cms_seo.robots.global_robots_txt', $default));
+        $raw = trim((string) modularousConfig('cms_seo.robots.global_robots_txt', $default));
         if ($raw === '') {
             $raw = trim($default);
         }
@@ -86,7 +86,7 @@ class CmsSiteSeoSettingsService
      */
     protected function robotsSettingKeys(): array
     {
-        $cfg = (array) modularityConfig('cms_seo.robots.site_setting', []);
+        $cfg = (array) modularousConfig('cms_seo.robots.site_setting', []);
 
         return [
             (string) ($cfg['group_key'] ?? 'seo'),

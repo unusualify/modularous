@@ -5,9 +5,9 @@ sidebarTitle: HasCacheDependents
 
 # Core\HasCacheDependents
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\HasCacheDependents`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\HasCacheDependents`
 
-Defines which other model types should have their caches invalidated when this model changes. Merges three sources in priority order: the `RelationshipGraph` (automatic discovery), the model's `$cacheDependents` property, and the `modularity.cache.dependencies` config.
+Defines which other model types should have their caches invalidated when this model changes. Merges three sources in priority order: the `RelationshipGraph` (automatic discovery), the model's `$cacheDependents` property, and the `modularous.cache.dependencies` config.
 
 Used alongside `HasCaching` — `HasCaching` triggers invalidation, `HasCacheDependents` defines the scope.
 
@@ -29,7 +29,7 @@ Used alongside `HasCaching` — `HasCaching` triggers invalidation, `HasCacheDep
 
 1. **Relationship graph** — auto-discovered via `RelationshipGraph::getAffectedModules($modelClass)`
 2. **Property** — `protected array $cacheDependents = [...]` on the model
-3. **Config** — `config('modularity.cache.dependencies.{ModelClass}')` (full class name key)
+3. **Config** — `config('modularous.cache.dependencies.{ModelClass}')` (full class name key)
 
 ---
 
@@ -44,7 +44,7 @@ class Company extends Model
     protected array $cacheDependents = ['press_release', 'invoice'];
 }
 
-// Option 2: Config file (config/modularity.php)
+// Option 2: Config file (config/modularous.php)
 'cache' => [
     'dependencies' => [
         \App\Models\Company::class => ['press_release'],

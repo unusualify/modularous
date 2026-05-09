@@ -6,11 +6,11 @@ sidebarTitle: Auth\Controller
 # Auth\Controller
 
 **File**: `src/Http/Controllers/Auth/Controller.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
-**Extends**: `Unusualify\Modularity\Http\Controllers\Controller`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
+**Extends**: `Unusualify\Modularous\Http\Controllers\Controller`  
 **Traits**: `AuthFormBuilder`, `ManageUtilities`
 
-Base controller for all authentication workflows (login, registration, password reset). Applies the `modularity.guest` middleware so that authenticated users are redirected away from auth pages, and provides shared utilities for guard resolution and redirect paths.
+Base controller for all authentication workflows (login, registration, password reset). Applies the `modularous.guest` middleware so that authenticated users are redirected away from auth pages, and provides shared utilities for guard resolution and redirect paths.
 
 ## Constructor
 
@@ -24,8 +24,8 @@ public function __construct(
 
 1. Calls the parent `Controller::__construct()`.
 2. Resolves `Config`, `Redirector`, and `ViewFactory` from the container (or uses injected instances).
-3. Sets `$redirectTo` from `modularity.auth_login_redirect_path` config.
-4. Applies `modularity.guest` middleware, excluding actions returned by `guestMiddlewareExcept()`.
+3. Sets `$redirectTo` from `modularous.auth_login_redirect_path` config.
+4. Applies `modularous.guest` middleware, excluding actions returned by `guestMiddlewareExcept()`.
 
 ## Properties
 
@@ -40,13 +40,13 @@ public function __construct(
 
 ### `guestMiddlewareExcept(): array`
 
-Returns an array of method names that should be excluded from the `modularity.guest` middleware. Override in subclasses to allow authenticated users to access specific actions (e.g. `LoginController` excludes `logout`).
+Returns an array of method names that should be excluded from the `modularous.guest` middleware. Override in subclasses to allow authenticated users to access specific actions (e.g. `LoginController` excludes `logout`).
 
 Default implementation returns an empty array.
 
 ### `guard()`
 
-Returns the authentication guard configured for Modularous via `Modularity::getAuthGuardName()`.
+Returns the authentication guard configured for Modularous via `Modularous::getAuthGuardName()`.
 
 ### `redirectPath(): string`
 

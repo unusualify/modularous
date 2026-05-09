@@ -9,8 +9,8 @@ sidebarTitle: Create Test Laravel
 
 ## Command Information
 
-- **Signature:** `modularity:make:laravel:test {module} {test} [--unit]`
-- **Aliases:** `modularity:create:laravel:test`
+- **Signature:** `modularous:make:laravel:test {module} {test} [--unit]`
+- **Aliases:** `modularous:create:laravel:test`
 - **Category:** Generators
 
 ## Arguments
@@ -30,10 +30,10 @@ sidebarTitle: Create Test Laravel
 
 ```bash
 # Generate a feature test
-php artisan modularity:make:laravel:test Blog PostCreationTest
+php artisan modularous:make:laravel:test Blog PostCreationTest
 
 # Generate a unit test
-php artisan modularity:make:laravel:test Blog PostSlugTest --unit
+php artisan modularous:make:laravel:test Blog PostSlugTest --unit
 ```
 
 ## Output

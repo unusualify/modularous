@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\MediaLibrary;
+namespace Unusualify\Modularous\Services\MediaLibrary;
 
 trait ImageServiceDefaults
 {
@@ -13,11 +13,11 @@ trait ImageServiceDefaults
 
     public function getSocialFallbackUrl(): string
     {
-        if ($id = modularityConfig('seo.image_default_id')) {
+        if ($id = modularousConfig('seo.image_default_id')) {
             return $this->getSocialUrl($id);
         }
 
-        return modularityConfig('seo.image_local_fallback');
+        return modularousConfig('seo.image_local_fallback');
     }
 
     public function getTransparentFallbackUrl(): string

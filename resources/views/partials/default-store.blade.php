@@ -1,11 +1,11 @@
-window['{{ modularityConfig('js_namespace') }}'] = {
-    version: '{{ modularityConfig('version') }}',
-    LOCALE: '{{ modularityConfig('locale') }}',
-    modularityLocalization: {!! json_encode($modularityLocalization) !!},
+window['{{ modularousConfig('js_namespace') }}'] = {
+    version: '{{ modularousConfig('version') }}',
+    LOCALE: '{{ modularousConfig('locale') }}',
+    modularousLocalization: {!! json_encode($modularousLocalization) !!},
 
     STORE: {
         ambient: {
-            isHot: @json(ModularityVite::useHotFile(public_path('modularity.hot'))->isRunningHot()),
+            isHot: @json(ModularousVite::useHotFile(public_path('modularous.hot'))->isRunningHot()),
             appName: '{{ env('APP_NAME') }}',
             appEmail: '{{ env('APP_EMAIL') }}',
             appEnv: '{{ env('APP_ENV') }}',
@@ -23,8 +23,8 @@ window['{{ modularityConfig('js_namespace') }}'] = {
         medias: {
             types: [],
             config: {
-                useWysiwyg: {{ modularityConfig('media_library.media_caption_use_wysiwyg') ? 'true' : 'false' }},
-                wysiwygOptions: {!! json_encode(modularityConfig('media_library.media_caption_wysiwyg_options')) !!}
+                useWysiwyg: {{ modularousConfig('media_library.media_caption_use_wysiwyg') ? 'true' : 'false' }},
+                wysiwygOptions: {!! json_encode(modularousConfig('media_library.media_caption_wysiwyg_options')) !!}
             }
         },
     }

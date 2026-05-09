@@ -9,7 +9,7 @@ sidebarTitle: Route Enable
 
 ## Command Information
 
-- **Signature:** `modularity:route:enable {module} {route}`
+- **Signature:** `modularous:route:enable {module} {route}`
 - **Category:** Module
 
 ## Arguments
@@ -28,8 +28,8 @@ Once enabled, the route is registered with the router on the next request.
 ## Examples
 
 ```bash
-php artisan modularity:route:enable Blog posts
-php artisan modularity:route:enable Shop api-products
+php artisan modularous:route:enable Blog posts
+php artisan modularous:route:enable Shop api-products
 ```
 
 ## Related

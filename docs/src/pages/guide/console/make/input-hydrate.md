@@ -7,9 +7,9 @@ sidebarTitle: make:input:hydrate
 
 > Create a PHP Hydrate class for a Vue input component
 
-**Signature**: `modularity:make:input:hydrate`
+**Signature**: `modularous:make:input:hydrate`
 
-**Aliases**: `modularity:create:input:hydrate`, `mod:c:input:hydrate`
+**Aliases**: `modularous:create:input:hydrate`, `mod:c:input:hydrate`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Creates an Input Hydrate class in `src/Hydrates/Inputs/`. Hydrate classes are re
 ## Usage
 
 ```
-modularity:make:input:hydrate <name>
+modularous:make:input:hydrate <name>
 ```
 
 ### Arguments
@@ -38,12 +38,12 @@ modularity:make:input:hydrate <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:input:hydrate ColorPicker
+php artisan modularous:make:input:hydrate ColorPicker
 # → src/Hydrates/Inputs/ColorPickerHydrate.php
 ```
 
 ```bash
-php artisan modularity:make:input:hydrate rich-text
+php artisan modularous:make:input:hydrate rich-text
 # → src/Hydrates/Inputs/RichTextHydrate.php
 ```
 

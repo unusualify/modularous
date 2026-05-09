@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -37,6 +37,6 @@ class Repeater extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.repeaters', parent::getTable());
+        return modularousConfig('tables.repeaters', parent::getTable());
     }
 }

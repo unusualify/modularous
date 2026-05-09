@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
-use Unusualify\Modularity\Entities\Observers\CacheObserver;
-use Unusualify\Modularity\Traits\Cache\Cacheable;
+use Unusualify\Modularous\Entities\Observers\CacheObserver;
+use Unusualify\Modularous\Traits\Cache\Cacheable;
 
 /**
  * Trait HasCaching

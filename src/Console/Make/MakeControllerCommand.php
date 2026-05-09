@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MakeControllerCommand extends BaseCommand
 {
@@ -17,7 +17,7 @@ class MakeControllerCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:controller';
+    protected $name = 'modularous:make:controller';
 
     /**
      * The console command description.
@@ -70,7 +70,7 @@ class MakeControllerCommand extends BaseCommand
     {
         $name = $this->argument('name');
 
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
             'NAMESPACE' => $this->getClassNamespace($module),
@@ -88,7 +88,7 @@ class MakeControllerCommand extends BaseCommand
      */
     protected function getDestinationFilePath()
     {
-        $path = Modularity::getModulePath($this->getModuleName());
+        $path = Modularous::getModulePath($this->getModuleName());
 
         $controllerPath = new GeneratorPath($this->baseConfig('paths.generator.route-controller'));
 

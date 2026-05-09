@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class MakeVueInputCommand extends BaseCommand
 {
@@ -15,12 +15,12 @@ class MakeVueInputCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:vue:input
+    protected $signature = 'modularous:make:vue:input
         {name : The name of the component to be created.}';
 
     protected $aliases = [
         'mod:c:vue:input',
-        'modularity:create:vue:input',
+        'modularous:create:vue:input',
     ];
 
     /**
@@ -61,7 +61,7 @@ class MakeVueInputCommand extends BaseCommand
         $componentName = studlyName($name);
         $componentKebabName = 'v-input-' . kebabCase($name);
 
-        $path = get_modularity_vendor_path("vue/src/js/components/inputs/{$componentName}.vue");
+        $path = get_modularous_vendor_path("vue/src/js/components/inputs/{$componentName}.vue");
 
         if (! file_exists($path)) {
             $content = (string) new Stub('/input-component.vue', ['name' => $componentKebabName]);

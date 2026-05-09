@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $emailVerificationTokensTable = modularityConfig('tables.email_verification_tokens', 'um_email_verification_tokens');
+        $emailVerificationTokensTable = modularousConfig('tables.email_verification_tokens', 'um_email_verification_tokens');
 
         Schema::create($emailVerificationTokensTable, function (Blueprint $table) {
             $table->string('email')->primary();
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $emailVerificationTokensTable = modularityConfig('tables.email_verification_tokens', 'um_email_verification_tokens');
+        $emailVerificationTokensTable = modularousConfig('tables.email_verification_tokens', 'um_email_verification_tokens');
         Schema::dropIfExists($emailVerificationTokensTable);
     }
 };

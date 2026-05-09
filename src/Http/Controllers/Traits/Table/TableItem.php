@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
@@ -20,7 +20,7 @@ trait TableItem
     protected $identifierColumnKey = 'id';
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $item
+     * @param \Unusualify\Modularous\Models\Model $item
      * @return int|string
      */
     protected function getItemIdentifier($item)
@@ -300,7 +300,7 @@ trait TableItem
         ) {
             $tableColumns[] = [
                 'name' => 'thumbnail',
-                'label' => modularityTrans("$this->baseKey::lang.listing.columns.thumbnail"),
+                'label' => modularousTrans("$this->baseKey::lang.listing.columns.thumbnail"),
                 'visible' => $visibleColumns ? in_array('thumbnail', $visibleColumns) : true,
                 'optional' => true,
                 'sortable' => false,
@@ -311,7 +311,7 @@ trait TableItem
         if ($this->getIndexOption('feature')) {
             $tableColumns[] = [
                 'name' => 'featured',
-                'label' => modularityTrans("$this->baseKey::lang.listing.columns.featured"),
+                'label' => modularousTrans("$this->baseKey::lang.listing.columns.featured"),
                 'visible' => true,
                 'optional' => false,
                 'sortable' => false,
@@ -320,7 +320,7 @@ trait TableItem
         if ($this->getIndexOption('publish')) {
             $tableColumns[] = [
                 'name' => 'published',
-                'label' => modularityTrans("$this->baseKey::lang.listing.columns.published"),
+                'label' => modularousTrans("$this->baseKey::lang.listing.columns.published"),
                 'visible' => true,
                 'optional' => false,
                 'sortable' => false,
@@ -329,7 +329,7 @@ trait TableItem
 
         $tableColumns[] = [
             'name' => 'name',
-            'label' => $indexColumnCopy[$this->titleColumnKey]['title'] ?? modularityTrans("$this->baseKey::lang.listing.columns.name"),
+            'label' => $indexColumnCopy[$this->titleColumnKey]['title'] ?? modularousTrans("$this->baseKey::lang.listing.columns.name"),
             'visible' => true,
             'optional' => false,
             'sortable' => $this->getIndexOption('reorder') ? false : ($indexColumnCopy[$this->titleColumnKey]['sort'] ?? false),
@@ -363,7 +363,7 @@ trait TableItem
         if ($this->getIndexOption('includeScheduledInList') && $this->repository->isFillable('publish_start_date')) {
             $tableColumns[] = [
                 'name' => 'publish_start_date',
-                'label' => modularityTrans("$this->baseKey::lang.listing.columns.published"),
+                'label' => modularousTrans("$this->baseKey::lang.listing.columns.published"),
                 'visible' => true,
                 'optional' => true,
                 'sortable' => true,
@@ -373,7 +373,7 @@ trait TableItem
         if ($this->routeHasTrait('translations') && count(getLocales()) > 1) {
             $tableColumns[] = [
                 'name' => 'languages',
-                'label' => modularityTrans("$this->baseKey::lang.listing.languages"),
+                'label' => modularousTrans("$this->baseKey::lang.listing.languages"),
                 'visible' => $visibleColumns ? in_array('languages', $visibleColumns) : true,
                 'optional' => true,
                 'sortable' => false,
@@ -384,7 +384,7 @@ trait TableItem
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $item
+     * @param \Unusualify\Modularous\Models\Model $item
      * @param bool $translated
      * @param array $schema
      * @return array
@@ -472,7 +472,7 @@ trait TableItem
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $item
+     * @param \Unusualify\Modularous\Models\Model $item
      * @return array
      */
     public function getFormattedIndexItem($item)

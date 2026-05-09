@@ -13,7 +13,7 @@ Practical patterns for consuming `CurrencyProviderInterface` and the `CurrencyEx
 Always check `isAvailable()` before rendering a currency picker or price-converting UI. When the SystemPricing module is not installed, the fallback provider returns empty data — you want the UI to degrade gracefully instead of showing an empty `<select>`.
 
 ```php
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 $provider = app(CurrencyProviderInterface::class);
 
@@ -53,7 +53,7 @@ $id     = $currency->id;
 $name   = $currency->name ?? $currency->symbol ?? 'USD';
 ```
 
-Result is **cached for 1 hour** by `SystemPricingCurrencyProvider`. To bust the cache after editing a currency, call `Cache::forget("currency_by_iso_4217_USD")` or clear the `modularity` cache (`php artisan modularity:cache:clear`).
+Result is **cached for 1 hour** by `SystemPricingCurrencyProvider`. To bust the cache after editing a currency, call `Cache::forget("currency_by_iso_4217_USD")` or clear the `modularous` cache (`php artisan modularous:cache:clear`).
 
 ## 3. Populate a form select
 
@@ -77,7 +77,7 @@ When `services.currency_exchange.active` is `true`, the select contains **only t
 `CurrencyExchangeService` hits the configured exchange API and caches the full rates table for 1 hour.
 
 ```php
-use Unusualify\Modularity\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\CurrencyExchange;
 
 $priceEur = 99.00;
 $priceUsd = CurrencyExchange::convertTo($priceEur, 'USD');       // rounded, 2 dp
@@ -134,7 +134,7 @@ You rarely call the provider directly in this flow — just configure the flag. 
 `CurrencyProviderInterface` is a contract, so tests can bind a stub:
 
 ```php
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 class FakeCurrencyProvider implements CurrencyProviderInterface
 {

@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\Cache\Cacheable;
-use Unusualify\Modularity\Traits\Cache\CacheKeyGenerators;
-use Unusualify\Modularity\Traits\Cache\HasUserAwareCache;
-use Unusualify\Modularity\Traits\Cache\WarmupCache;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\Cache\Cacheable;
+use Unusualify\Modularous\Traits\Cache\CacheKeyGenerators;
+use Unusualify\Modularous\Traits\Cache\HasUserAwareCache;
+use Unusualify\Modularous\Traits\Cache\WarmupCache;
 
 class CacheTraitsTest extends TestCase
 {
@@ -32,7 +32,7 @@ class CacheTraitsTest extends TestCase
             }
         };
 
-        ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', null)->andReturn(true);
+        ModularousCache::shouldReceive('isEnabled')->with('Blog', 'Post', null)->andReturn(true);
         $this->assertTrue($tester->shouldUseCache());
 
         $tester->withoutCache();
@@ -68,7 +68,7 @@ class CacheTraitsTest extends TestCase
         $user->shouldReceive('getAuthIdentifier')->andReturn(123);
         Auth::shouldReceive('user')->andReturn($user);
 
-        ModularityCache::shouldReceive('generateCacheKey')->with('Blog', 'Post', 'index', ['_user' => 'u123'])->andReturn('blog:post:index:u123');
+        ModularousCache::shouldReceive('generateCacheKey')->with('Blog', 'Post', 'index', ['_user' => 'u123'])->andReturn('blog:post:index:u123');
 
         $key = $tester->generateTypeCacheKey('index', []);
         $this->assertEquals('blog:post:index:u123', $key);
@@ -135,7 +135,7 @@ class CacheTraitsTest extends TestCase
             }
         };
 
-        ModularityCache::shouldReceive('generateCacheKey')
+        ModularousCache::shouldReceive('generateCacheKey')
             ->with('Blog', 'Post', 'record', ['id' => 42])
             ->once()
             ->andReturn('blog:post:record:42');
@@ -161,7 +161,7 @@ class CacheTraitsTest extends TestCase
             }
         };
 
-        ModularityCache::shouldReceive('generateCacheKey')
+        ModularousCache::shouldReceive('generateCacheKey')
             ->with('Blog', 'Post', 'formattedItem:99', [])
             ->andReturn('blog:post:formattedItem:99');
 
@@ -187,7 +187,7 @@ class CacheTraitsTest extends TestCase
             }
         };
 
-        ModularityCache::shouldReceive('generateCacheKey')
+        ModularousCache::shouldReceive('generateCacheKey')
             ->with('Blog', 'Post', 'formItem:5', [])
             ->andReturn('blog:post:formItem:5');
 
@@ -329,19 +329,19 @@ class CacheTraitsTest extends TestCase
             use WarmupCache;
         };
 
-        $mockController = \Mockery::mock(\Unusualify\Modularity\Http\Controllers\BaseController::class);
-        $mockRepo = \Mockery::mock(\Unusualify\Modularity\Repositories\Repository::class);
+        $mockController = \Mockery::mock(\Unusualify\Modularous\Http\Controllers\BaseController::class);
+        $mockRepo = \Mockery::mock(\Unusualify\Modularous\Repositories\Repository::class);
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(false);
         $mockController->shouldReceive('getRepository')->andReturn($mockRepo);
         $mockController->shouldReceive('preload')->once();
         $mockController->shouldReceive('getMainCountsList')->andReturn([]);
 
-        $mockModule = \Mockery::mock(\Unusualify\Modularity\Module::class);
+        $mockModule = \Mockery::mock(\Unusualify\Modularous\Module::class);
         $mockModule->shouldReceive('getRoute')->with('Post')->andReturn(true);
         $mockModule->shouldReceive('getController')->with('Post')->andReturn($mockController);
 
-        Modularity::shouldReceive('find')->with('Blog')->andReturn($mockModule);
-        ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'counts')->andReturn(true);
+        Modularous::shouldReceive('find')->with('Blog')->andReturn($mockModule);
+        ModularousCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'counts')->andReturn(true);
 
         $tester->warmupModuleRouteCacheCounts('Blog', 'Post');
     }
@@ -354,8 +354,8 @@ class CacheTraitsTest extends TestCase
             use WarmupCache;
         };
 
-        $mockController = \Mockery::mock(\Unusualify\Modularity\Http\Controllers\BaseController::class);
-        $mockRepo = \Mockery::mock(\Unusualify\Modularity\Repositories\Repository::class);
+        $mockController = \Mockery::mock(\Unusualify\Modularous\Http\Controllers\BaseController::class);
+        $mockRepo = \Mockery::mock(\Unusualify\Modularous\Repositories\Repository::class);
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(false);
         $mockController->shouldReceive('getRepository')->andReturn($mockRepo);
         $mockController->shouldReceive('preload')->once();
@@ -370,14 +370,14 @@ class CacheTraitsTest extends TestCase
         $mockController->shouldReceive('getFormattedIndexItem')->once();
         $mockController->shouldReceive('getFormItem')->once();
 
-        $mockModule = \Mockery::mock(\Unusualify\Modularity\Module::class);
+        $mockModule = \Mockery::mock(\Unusualify\Modularous\Module::class);
         $mockModule->shouldReceive('getRoute')->with('Post')->andReturn(true);
         $mockModule->shouldReceive('getController')->with('Post')->andReturn($mockController);
 
-        Modularity::shouldReceive('find')->with('Blog')->andReturn($mockModule);
-        ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'counts')->andReturn(true);
-        ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'formItem')->andReturn(true);
-        ModularityCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'formattedItem')->andReturn(true);
+        Modularous::shouldReceive('find')->with('Blog')->andReturn($mockModule);
+        ModularousCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'counts')->andReturn(true);
+        ModularousCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'formItem')->andReturn(true);
+        ModularousCache::shouldReceive('isEnabled')->with('Blog', 'Post', 'formattedItem')->andReturn(true);
 
         $tester->warmupModuleRouteCache('Blog', 'Post', 100);
     }

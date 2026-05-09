@@ -6,7 +6,7 @@ sidebarTitle: File
 # File
 
 **File**: `src/Entities/File.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`  
 **Traits**: `HasFactory`, `HasCreator`
 

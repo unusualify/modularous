@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use TestModules\TestModule\Entities\Item;
-use Unusualify\Modularity\Exceptions\ModuleNotFoundException;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Tests\TestModulesCase;
+use Unusualify\Modularous\Exceptions\ModuleNotFoundException;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Tests\TestModulesCase;
 
 class ConnectorTest extends TestModulesCase
 {

@@ -3,8 +3,8 @@
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 use Unusualify\Payable\Services\Paypal\Str;
 
 if (! function_exists('init_connector')) {
@@ -39,7 +39,7 @@ if (! function_exists('find_module_and_route')) {
         $routeName = Str::studly(array_pop($names));
         $targetModuleName = Str::studly(array_pop($names));
 
-        $targetModule = Modularity::findOrFail($targetModuleName);
+        $targetModule = Modularous::findOrFail($targetModuleName);
 
         // dd($events);
         return [

@@ -5,7 +5,7 @@ sidebarTitle: LaravelTestGenerator
 
 # LaravelTestGenerator
 
-**Class**: `Unusualify\Modularity\Generators\LaravelTestGenerator`  
+**Class**: `Unusualify\Modularous\Generators\LaravelTestGenerator`  
 **Source**: `src/Generators/LaravelTestGenerator.php`  
 **Extends**: [`Generator`](./generator)
 
@@ -23,7 +23,7 @@ Scaffolds a PHPUnit test file (Unit or Feature) for Modularous backend code. Mir
 All PHP test files are written to the package's `src/Tests` directory:
 
 ```
-get_modularity_vendor_path('src/Tests')/{target_dir}/{kebab-name}.php
+get_modularous_vendor_path('src/Tests')/{target_dir}/{kebab-name}.php
 ```
 
 ## Properties

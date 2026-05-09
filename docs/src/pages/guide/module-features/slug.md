@@ -16,8 +16,8 @@ Add the `HasSlug` trait to your model:
 
 namespace Modules\Page\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
 
 class Page extends Model
 {
@@ -60,8 +60,8 @@ Add `SlugsTrait` to your repository:
 
 namespace Modules\Page\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\SlugsTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\SlugsTrait;
 
 class PageRepository extends Repository
 {

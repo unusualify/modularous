@@ -14,7 +14,7 @@ The central Inertia middleware that establishes the root Blade view and populate
 ## Root View
 
 ```php
-protected $rootView = 'modularity::layouts.app-inertia';
+protected $rootView = 'modularous::layouts.app-inertia';
 ```
 
 ## Shared Props

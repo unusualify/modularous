@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
@@ -10,9 +10,9 @@ use Spatie\Activitylog\Facades\LogBatch;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Traits\ManageModuleRoute;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Traits\ManageModuleRoute;
 
 trait ModelHelpers
 {

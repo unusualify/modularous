@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\Uploader;
+namespace Unusualify\Modularous\Services\Uploader;
 
 use DateTime;
 use DateTimeZone;

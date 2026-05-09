@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Contracts;
+namespace Unusualify\Modularous\Contracts;
 
-use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
+use Unusualify\Modularous\Services\Currency\NullCurrencyProvider;
 
 /**
  * Contract for resolving currency data. Implementations may be provided by

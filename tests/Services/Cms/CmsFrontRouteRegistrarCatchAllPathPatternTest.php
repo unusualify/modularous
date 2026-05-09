@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Routing\CmsFrontRouteRegistrar;
 use ReflectionMethod;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 final class CmsFrontRouteRegistrarCatchAllPathPatternTest extends TestCase
 {
     public function test_signed_preview_prefix_is_blocked_from_path_param_when_enabled(): void
     {
-        $this->app['config']->set('modularity.cms_routing.signed_preview.enabled', true);
-        $this->app['config']->set('modularity.cms_routing.signed_preview.path_prefix', 'cms/preview');
+        $this->app['config']->set('modularous.cms_routing.signed_preview.enabled', true);
+        $this->app['config']->set('modularous.cms_routing.signed_preview.path_prefix', 'cms/preview');
 
         $pattern = self::reflectCatchAllPattern();
         $re = '#' . str_replace('#', '\\#', $pattern) . '#';
@@ -25,8 +25,8 @@ final class CmsFrontRouteRegistrarCatchAllPathPatternTest extends TestCase
 
     public function test_extra_exclude_prefix_from_config_blocks_path(): void
     {
-        $this->app['config']->set('modularity.cms_routing.signed_preview.enabled', false);
-        $this->app['config']->set('modularity.cms_routing.public_front_catch_all_exclude_path_prefixes', ['internal/widget']);
+        $this->app['config']->set('modularous.cms_routing.signed_preview.enabled', false);
+        $this->app['config']->set('modularous.cms_routing.public_front_catch_all_exclude_path_prefixes', ['internal/widget']);
 
         $pattern = self::reflectCatchAllPattern();
         $re = '#' . str_replace('#', '\\#', $pattern) . '#';

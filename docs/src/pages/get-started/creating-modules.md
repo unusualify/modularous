@@ -7,7 +7,7 @@ sidebarTitle: Creating Modules
 Creating a plain module is simple and straightforward.
 
 ```sh
-$ php artisan modularity:make:module YourModuleName
+$ php artisan modularous:make:module YourModuleName
 ```
 Running this command will create the module with empty module structure with a config.php file where you can configure and customize your module's user interface, CRUD form schema and etc.
 
@@ -70,13 +70,13 @@ Every module contains a `module.json` manifest at its root. The framework scans 
 | `files` | array | Extra files to autoload when the module boots. |
 
 ::: tip
-You rarely need to edit `module.json` by hand. The `modularity:make:module` and `modularity:make:route` commands keep it up to date automatically.
+You rarely need to edit `module.json` by hand. The `modularous:make:module` and `modularous:make:route` commands keep it up to date automatically.
 :::
 
 ## Creating Routes
 Creating a route is highly customizable using command options, simplest way to create a route with default schema and relationship options is:
 ```sh
-$ php artisan modularity:make:route YourModuleName YourRouteName --options*
+$ php artisan modularous:make:route YourModuleName YourRouteName --options*
 ```
 This will automatically create route with its `Controllers` `Entity` `Migration File` `Repository` `Request` `Resource` and also its route files like `web.php` and default ``index`` and ``form`` blade components.
 ::: tip Customization and Config File
@@ -120,7 +120,7 @@ Defining relation type attributes are different in Unusualify/Modularous. Please
 When defining a series of entity attributes, desired schema should be typed between double quotes `"`, columnTypes should be separated by colons `:` and lastly attributes should be separated by commas `,` if exist.
 
 ```sh
-$ php artisan modularity:make:route ModuleName RouteName --schema="attributeName:columnType#1:columnType#2,attributeName#2:...columnType#:..columnModifiers#"
+$ php artisan modularous:make:route ModuleName RouteName --schema="attributeName:columnType#1:columnType#2,attributeName#2:...columnType#:..columnModifiers#"
 ```
 Running this command will generate your model's 
  - `controller`, with source methods
@@ -138,7 +138,7 @@ Module config file is where user interface, CRUD form schema and etc. can be cus
 
 For an example, assume building a user entity with string name and string, unique email address underneath the Authentication module:
 ```sh
-$ php artisan modularity:make:route Authentication User --schema="name:string,email:string:unique"
+$ php artisan modularous:make:route Authentication User --schema="name:string,email:string:unique"
 ```
 
 
@@ -172,11 +172,11 @@ cars
 
 Following the given example, creating user route:
 ```sh
-$ php artisan modularity:make:route Apartment Citizen --schema="name:string,citizen_id:integer:unique"
+$ php artisan modularous:make:route Apartment Citizen --schema="name:string,citizen_id:integer:unique"
 ```
 `Citizen` route is now generated with all required files. Next, we can create `Car` route with `belongsTo` relationship related column(s) and model method(s) with the following artisan command:
 ```sh
-$ php artisan modularity:make:route Apartment Car --schema="model:string,plate:string:unique,citizen:belongsTo"
+$ php artisan modularous:make:route Apartment Car --schema="model:string,plate:string:unique,citizen:belongsTo"
 ```
 Running these couple of commands, will also create relationship related model methods as:
 ```php

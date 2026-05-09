@@ -7,7 +7,7 @@ use Modules\Cms\Http\Controllers\SignedPublicPreviewMintController;
 use Modules\Cms\Http\Controllers\SitemapController;
 use Modules\Cms\Http\Controllers\SiteSeoSettingsController;
 use Modules\Cms\Http\Controllers\SiteSeoToolController;
-use Unusualify\Modularity\Facades\ModularityRoutes;
+use Unusualify\Modularous\Facades\ModularousRoutes;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +20,8 @@ use Unusualify\Modularity\Facades\ModularityRoutes;
 |
 */
 
-Route::middleware(ModularityRoutes::webPanelMiddlewares())->group(function () {
-    if (modularityConfig('cms_routing.signed_preview.enabled', true)) {
+Route::middleware(ModularousRoutes::webPanelMiddlewares())->group(function () {
+    if (modularousConfig('cms_routing.signed_preview.enabled', true)) {
         Route::get('signed-public-preview/{module}/{route}/{id}', SignedPublicPreviewMintController::class)
             ->where([
                 'module' => '[A-Za-z][A-Za-z0-9]*',
@@ -40,24 +40,24 @@ Route::middleware(ModularityRoutes::webPanelMiddlewares())->group(function () {
     Route::get('site-seo', SiteSeoToolController::class)
         ->name('siteSeo.tool');
 
-    $stepUpEnabled = modularityConfig('cms_features.register_middlewares', true) && modularityConfig('security.enabled', false);
+    $stepUpEnabled = modularousConfig('cms_features.register_middlewares', true) && modularousConfig('security.enabled', false);
 
     $promotionStepUpMiddleware = $stepUpEnabled
-        ? 'modularity.security.step_up:promotion.execute'
+        ? 'modularous.security.step_up:promotion.execute'
         : null;
 
     $redirectBulkStepUpMiddleware = $stepUpEnabled
-        ? 'modularity.security.step_up:redirect.bulk_import'
+        ? 'modularous.security.step_up:redirect.bulk_import'
         : null;
 
     $siteSeoStepUpMiddleware = $stepUpEnabled
-        ? 'modularity.security.step_up:site_seo.edit'
+        ? 'modularous.security.step_up:site_seo.edit'
         : null;
 
     // SİTEMAP PANEL STEP-UP MIDDLEWARE
-    $sitemapCommitAbility = (string) modularityConfig('cms_sitemap.panel.step_up_ability.commit', 'sitemap.commit');
+    $sitemapCommitAbility = (string) modularousConfig('cms_sitemap.panel.step_up_ability.commit', 'sitemap.commit');
     $sitemapCommitStepUpMiddleware = $stepUpEnabled
-        ? 'modularity.security.step_up:' . $sitemapCommitAbility
+        ? 'modularous.security.step_up:' . $sitemapCommitAbility
         : null;
 
     $siteSeoSave = Route::post('site-seo', [SiteSeoSettingsController::class, 'update'])

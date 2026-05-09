@@ -2,7 +2,7 @@
 
 namespace Modules\SystemNotification\Http\Requests;
 
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class NotificationRequest extends Request
 {

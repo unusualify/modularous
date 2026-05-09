@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class MakeInputHydrateCommand extends BaseCommand
 {
@@ -14,11 +14,11 @@ class MakeInputHydrateCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:input:hydrate';
+    protected $name = 'modularous:make:input:hydrate';
 
     protected $aliases = [
         'mod:c:input:hydrate',
-        'modularity:create:input:hydrate',
+        'modularous:create:input:hydrate',
     ];
 
     /**
@@ -58,7 +58,7 @@ class MakeInputHydrateCommand extends BaseCommand
 
         $className = "{$studlyName}Hydrate";
 
-        $path = get_modularity_vendor_path("src/Hydrates/Inputs/{$className}.php");
+        $path = get_modularous_vendor_path("src/Hydrates/Inputs/{$className}.php");
 
         if (! file_exists($path)) {
             $content = (string) new Stub('/input-hydrate.stub', ['name' => $className]);

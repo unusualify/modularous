@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class Finder
 {
@@ -79,12 +79,12 @@ class Finder
         $class = '';
 
         // dd(
-        //     Modularity::allEnabled(),
+        //     Modularous::allEnabled(),
         //     glob( base_path( config('modules.namespace')).'/*'),
         //     config('modules.scan')
         // );
 
-        foreach (Modularity::allEnabled() as $key => $module) {
+        foreach (Modularous::allEnabled() as $key => $module) {
             $entityPath = $module->getDirectoryPath('Entities');
             if (! file_exists($entityPath)) {
                 continue;
@@ -155,7 +155,7 @@ class Finder
     {
         $class = '';
 
-        foreach (Modularity::allEnabled() as $key => $module) {
+        foreach (Modularous::allEnabled() as $key => $module) {
             $path = $module->getDirectoryPath('Repositories');
             if (! file_exists($path)) {
                 continue;

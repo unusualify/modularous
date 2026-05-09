@@ -7,7 +7,7 @@ sidebarTitle: make:listener
 
 > Create a Laravel Listener class
 
-**Signature**: `modularity:make:listener`
+**Signature**: `modularous:make:listener`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Interactive wizard that generates a Laravel Listener class. Scans all concrete e
 ## Usage
 
 ```
-modularity:make:listener [options] <name> [<module>]
+modularous:make:listener [options] <name> [<module>]
 ```
 
 ### Arguments
@@ -48,21 +48,21 @@ modularity:make:listener [options] <name> [<module>]
 ### Basic listener for a module
 
 ```bash
-php artisan modularity:make:listener SendPostPublishedNotification Blog
+php artisan modularous:make:listener SendPostPublishedNotification Blog
 # Prompts: select the event to listen to
 ```
 
 ### Queued listener
 
 ```bash
-php artisan modularity:make:listener SendWelcomeEmail --should-queue
+php artisan modularous:make:listener SendWelcomeEmail --should-queue
 # Prompts: event, queue connection, queue name, delay (seconds), tries count
 ```
 
 ### App-level listener
 
 ```bash
-php artisan modularity:make:listener LogOrderShipped
+php artisan modularous:make:listener LogOrderShipped
 ```
 
 ---

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,17 +14,17 @@ use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemUser\Entities\Role;
 use Oobook\Snapshot\Traits\HasSnapshot;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\Traits\HasPayment;
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Repositories\Traits\PaymentTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\TemporaryFilepond;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasPayment;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Repositories\Traits\PaymentTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class PaymentTraitTest extends RepositoryTestCase
 {
@@ -228,8 +228,8 @@ class PaymentTraitTest extends RepositoryTestCase
             'status' => PaymentStatus::COMPLETED,
 
             'amount' => 100,
-            'modularity' => [
-                'previous_url' => 'https://www.modularity.test',
+            'modularous' => [
+                'previous_url' => 'https://www.modularous.test',
                 'datetime' => now()->format('Y-m-d H:i:s'),
                 'original_raw_amount' => $price->discounted_raw_amount,
                 'original_total_amount' => $price->total_amount,
@@ -272,11 +272,11 @@ class PaymentTraitTest extends RepositoryTestCase
         $role = Role::firstOrCreate([
             'name' => 'admin',
         ], [
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
         $user->assignRole($role);
 
-        $this->actingAs($user, 'modularity');
+        $this->actingAs($user, 'modularous');
 
         $item = Item::create([
             'name' => 'Test Payment Item',
@@ -377,10 +377,10 @@ class PaymentTraitTest extends RepositoryTestCase
         $role = Role::firstOrCreate([
             'name' => 'admin',
         ], [
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
         $user->assignRole($role);
-        $this->actingAs($user, 'modularity');
+        $this->actingAs($user, 'modularous');
 
         $item = Item::create([
             'name' => 'Test Payment Item',
@@ -516,7 +516,7 @@ class CopyProduct extends Model
     ];
 }
 
-class HasPaymentTestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class HasPaymentTestModel extends \Unusualify\Modularous\Tests\Repositories\TestModel
 {
     use HasPayment;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Validation;
+namespace Unusualify\Modularous\Validation;
 
 use Illuminate\Validation\Validator as IlluminateValidator;
 
 /**
- * Aligns validation message placeholders with Modularity's Translator:
+ * Aligns validation message placeholders with Modularous's Translator:
  * lang lines may use curly placeholders while Laravel's Validator only replaces colon placeholders.
  */
 class Validator extends IlluminateValidator

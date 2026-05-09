@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Services\BulkCsv;
+namespace Unusualify\Modularous\Services\BulkCsv;
 
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
 
 /**
  * Shared CSV parsing and dry-run / commit / export orchestration for {@see CanBulkSheet} controllers.

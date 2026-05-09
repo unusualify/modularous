@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Scopes\SingularScope;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Scopes\SingularScope;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait IsSingular
 {
@@ -97,6 +97,6 @@ trait IsSingular
 
     final public function getTable()
     {
-        return Modularity::config('tables.singletons', 'modularity_singletons');
+        return Modularous::config('tables.singletons', 'modularous_singletons');
     }
 }

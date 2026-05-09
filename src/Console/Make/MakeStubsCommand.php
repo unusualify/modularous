@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Generators\StubsGenerator;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Generators\StubsGenerator;
 
 class MakeStubsCommand extends BaseCommand
 {
@@ -15,7 +15,7 @@ class MakeStubsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:stubs';
+    protected $name = 'modularous:make:stubs';
 
     /**
      * The console command description.

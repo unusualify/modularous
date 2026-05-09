@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\Security;
+namespace Unusualify\Modularous\Services\Security;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Schema;
 
 class SecurityService
 {
-    protected const CACHE_KEY_CAPABILITIES_MAP = 'modularity.security.capabilities.map';
+    protected const CACHE_KEY_CAPABILITIES_MAP = 'modularous.security.capabilities.map';
 
-    protected const CACHE_KEY_REQUIRED_STEP_UP_CAPABILITIES = 'modularity.security.capabilities.step_up.required';
+    protected const CACHE_KEY_REQUIRED_STEP_UP_CAPABILITIES = 'modularous.security.capabilities.step_up.required';
 
-    protected const CACHE_KEY_ROUTE_STEP_UP_CAPABILITIES = 'modularity.security.capabilities.step_up.routes';
+    protected const CACHE_KEY_ROUTE_STEP_UP_CAPABILITIES = 'modularous.security.capabilities.step_up.routes';
 
     protected const CACHE_TTL_SECONDS = 3600;
 
     private function config(string $key, $default = null)
     {
-        return modularityConfig("security.{$key}", $default);
+        return modularousConfig("security.{$key}", $default);
     }
 
     public function getCapabilities(): array
@@ -199,8 +199,8 @@ class SecurityService
             return false;
         }
 
-        $allowedRoles = (array) modularityConfig('cms_promotion.approval.roles', []);
-        $allowedEmails = (array) modularityConfig('cms_promotion.approval.emails', []);
+        $allowedRoles = (array) modularousConfig('cms_promotion.approval.roles', []);
+        $allowedEmails = (array) modularousConfig('cms_promotion.approval.emails', []);
 
         foreach ($allowedRoles as $role) {
             if ($this->userHasRole($user, (string) $role)) {

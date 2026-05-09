@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -16,7 +16,7 @@ class MakeVueTestCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:vue:test
+    protected $signature = 'modularous:make:vue:test
         {name? : The name of test will be used.}
         {type? : The type of test.}
         {--importDir : The subfolder for importing.}
@@ -24,7 +24,7 @@ class MakeVueTestCommand extends BaseCommand
 
     protected $aliases = [
         'mod:c:vue:test',
-        'modularity:create:vue:test',
+        'modularous:create:vue:test',
     ];
 
     /**
@@ -50,7 +50,7 @@ class MakeVueTestCommand extends BaseCommand
             $test_name = $this->getStudlyName(text('What is the test name?'));
         }
 
-        $vueTestGenerator = $this->laravel->make('Unusualify\Modularity\Generators\VueTestGenerator', ['name' => $test_name]);
+        $vueTestGenerator = $this->laravel->make('Unusualify\Modularous\Generators\VueTestGenerator', ['name' => $test_name]);
 
         if (! $test_type) {
             $test_type = select(

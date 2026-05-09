@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:setup:development [<branch>]`
+- **Signature:** `modularous:setup:development [<branch>]`
 - **Category:** Setup
 
 
@@ -13,18 +13,18 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:setup:development BRANCH
+php artisan modularous:setup:development BRANCH
 ```
 
 
-`modularity:setup:development`
+`modularous:setup:development`
 ------------------------------
 
 Setup modularous development on local
 
 ### Usage
 
-* `modularity:setup:development [<branch>]`
+* `modularous:setup:development [<branch>]`
 
 Setup modularous development on local
 

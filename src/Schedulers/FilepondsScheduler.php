@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Schedulers;
+namespace Unusualify\Modularous\Schedulers;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Facades\Filepond;
 
 class FilepondsScheduler extends Command
 {
@@ -13,7 +13,7 @@ class FilepondsScheduler extends Command
      *
      * @var string
      */
-    protected $signature = 'modularity:fileponds:scheduler
+    protected $signature = 'modularous:fileponds:scheduler
         {--days=7 : The number of days to keep temporary fileponds}
     ';
 
@@ -47,8 +47,8 @@ class FilepondsScheduler extends Command
         Filepond::clearFolders();
 
         Log::channel('scheduler')
-            ->info("Modularity: Deleted {$temporaryFileponds->count()} expired temporary fileponds in last {$days} days");
+            ->info("Modularous: Deleted {$temporaryFileponds->count()} expired temporary fileponds in last {$days} days");
 
-        // $this->info(now()->format('Y-m-d H:i:s') . ' - Modularity: Temporary fileponds cleaned');
+        // $this->info(now()->format('Y-m-d H:i:s') . ' - Modularous: Temporary fileponds cleaned');
     }
 }

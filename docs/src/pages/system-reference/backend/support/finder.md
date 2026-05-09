@@ -5,7 +5,7 @@ sidebarTitle: Finder
 
 # Finder
 
-`Unusualify\Modularity\Support\Finder`
+`Unusualify\Modularous\Support\Finder`
 
 Resolves Eloquent model and repository FQCN by table name, route name, or trait. Searches all enabled modules as well as the host application's `app/Models` and `app/Repositories` directories. Also accessible via the `UFinder` facade.
 
@@ -54,7 +54,7 @@ Return all model FQCNs whose short name matches `$routeName` — useful when mul
 Return all Eloquent model FQCNs in the project that use the given trait.
 
 ```php
-$models = UFinder::getModelsWithTrait(\Unusualify\Modularity\Traits\HasPayment::class);
+$models = UFinder::getModelsWithTrait(\Unusualify\Modularous\Traits\HasPayment::class);
 ```
 
 ### `getAllModels(): Collection`
@@ -68,7 +68,7 @@ Use `composer/class-map-generator` to list all classes defined under the given d
 ## Facade
 
 ```php
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularous\Facades\UFinder;
 
 $model = UFinder::getRouteModel('products');
 ```

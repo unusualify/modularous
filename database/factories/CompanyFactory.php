@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Factories;
+namespace Unusualify\Modularous\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Unusualify\Modularity\Entities\Company;
+use Unusualify\Modularous\Entities\Company;
 
 class CompanyFactory extends Factory
 {

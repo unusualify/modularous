@@ -34,7 +34,7 @@ Add any attribute in `auth_pages.attributes` or `pages.[key].attributes`. The pa
 ### Example: Global Attributes
 
 ```php
-// modularity/auth_pages.php
+// modularous/auth_pages.php
 return [
     'attributes' => [
         'bannerDescription' => __('authentication.banner-description'),

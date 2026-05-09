@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 if (! function_exists('get_installed_composer')) {
     function get_installed_composer()
@@ -36,45 +36,45 @@ if (! function_exists('get_package_installed_version')) {
     }
 }
 
-if (! function_exists('is_modularity_development')) {
-    function is_modularity_development()
+if (! function_exists('is_modularous_development')) {
+    function is_modularous_development()
     {
-        return Modularity::isDevelopment();
+        return Modularous::isDevelopment();
     }
 }
 
-if (! function_exists('is_modularity_production')) {
-    function is_modularity_production()
+if (! function_exists('is_modularous_production')) {
+    function is_modularous_production()
     {
-        return Modularity::isProduction();
+        return Modularous::isProduction();
     }
 }
 
-if (! function_exists('get_modularity_vendor_dir')) {
-    function get_modularity_vendor_dir($dir = null)
+if (! function_exists('get_modularous_vendor_dir')) {
+    function get_modularous_vendor_dir($dir = null)
     {
-        return Modularity::getVendorDir($dir);
+        return Modularous::getVendorDir($dir);
     }
 }
 
-if (! function_exists('get_modularity_vendor_path')) {
-    function get_modularity_vendor_path($dir = null)
+if (! function_exists('get_modularous_vendor_path')) {
+    function get_modularous_vendor_path($dir = null)
     {
-        return Modularity::getVendorPath($dir);
+        return Modularous::getVendorPath($dir);
     }
 }
 
-if (! function_exists('get_modularity_src_path')) {
-    function get_modularity_src_path($dir = null)
+if (! function_exists('get_modularous_src_path')) {
+    function get_modularous_src_path($dir = null)
     {
-        return Modularity::getVendorPath(concatenate_path('src', $dir));
+        return Modularous::getVendorPath(concatenate_path('src', $dir));
     }
 }
 
-if (! function_exists('modularity_path')) {
-    function modularity_path($path = null)
+if (! function_exists('modularous_path')) {
+    function modularous_path($path = null)
     {
-        return Modularity::getVendorPath($path);
+        return Modularous::getVendorPath($path);
     }
 }
 
@@ -84,7 +84,7 @@ if (! function_exists('get_package_version')) {
         $tag = trim(shell_exec('cd ' . base_path() . ' && git describe --tags --abbrev=0'));
 
         if ($package) {
-            if ($package === 'unusualify/modularous' && Modularity::isDevelopment()) {
+            if ($package === 'unusualify/modularous' && Modularous::isDevelopment()) {
                 return 'development';
             }
 

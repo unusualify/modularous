@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Seeders;
+namespace Unusualify\Modularous\Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

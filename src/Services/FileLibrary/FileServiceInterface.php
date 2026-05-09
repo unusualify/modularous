@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\FileLibrary;
+namespace Unusualify\Modularous\Services\FileLibrary;
 
 interface FileServiceInterface
 {

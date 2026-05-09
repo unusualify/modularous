@@ -7,7 +7,7 @@ sidebarTitle: make:model
 
 > Create an Eloquent model for a module
 
-**Signature**: `modularity:make:model`
+**Signature**: `modularous:make:model`
 
 **Alias**: `mod:m:model`
 
@@ -24,7 +24,7 @@ Generates an Eloquent model class with optional trait composition, relationship 
 ## Usage
 
 ```
-modularity:make:model [options] <model> [<module>]
+modularous:make:model [options] <model> [<module>]
 ```
 
 ### Arguments
@@ -72,13 +72,13 @@ modularity:make:model [options] <model> [<module>]
 ### Basic model for a module
 
 ```bash
-php artisan modularity:make:model Post Blog
+php artisan modularous:make:model Post Blog
 ```
 
 ### Model with fillable and soft-delete
 
 ```bash
-php artisan modularity:make:model Post Blog \
+php artisan modularous:make:model Post Blog \
     --fillable="title,body,published_at" \
     --soft-delete
 ```
@@ -86,19 +86,19 @@ php artisan modularity:make:model Post Blog \
 ### Translatable model with media
 
 ```bash
-php artisan modularity:make:model Post Blog --addTranslation --addMedia
+php artisan modularous:make:model Post Blog --addTranslation --addMedia
 ```
 
 ### Standalone model in app/Models (no module)
 
 ```bash
-php artisan modularity:make:model Article
+php artisan modularous:make:model Article
 ```
 
 ### Preview without writing
 
 ```bash
-php artisan modularity:make:model Post Blog --test
+php artisan modularous:make:model Post Blog --test
 ```
 
 ---

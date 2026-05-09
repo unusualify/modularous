@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 
 class ModelCreated extends ModelEvent implements ShouldDispatchAfterCommit
 {

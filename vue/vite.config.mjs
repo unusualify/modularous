@@ -5,7 +5,7 @@ import Vue from '@vitejs/plugin-vue'
 import Inspect from 'vite-plugin-inspect'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import VitePluginSvgSpritemap from '@spiriit/vite-plugin-svg-spritemap'
-import Modularity, {isCustomTheme} from './vite-plugin-modularity'
+import Modularous, {isCustomTheme} from './vite-plugin-modularous'
 
 // Utilities
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from 'vite'
@@ -68,7 +68,7 @@ export default defineConfig(({ command, mode }) => {
   const isLocal = mode === 'local'
   const isDevelopment = mode === 'development'
 
-  const compressMode = ['production', 'staging', 'modularity'].includes(mode) ? 'compressed' : 'expanded'
+  const compressMode = ['production', 'staging', 'modularous'].includes(mode) ? 'compressed' : 'expanded'
 
   const vendorDir = ENV.VENDOR_DIR || 'vendor/unusualify/modularous'
   const APP_THEME = ENV.VUE_APP_THEME || 'unusualify'
@@ -83,10 +83,10 @@ export default defineConfig(({ command, mode }) => {
   const inputDir = fileURLToPath(new URL(`${srcDir}/js`, import.meta.url))
   const inputPattern = fileURLToPath(new URL(`${inputDir}/core-*.js`, import.meta.url))
 
-  const base = '/vendor/modularity'
+  const base = '/vendor/modularous'
   const assetsDir = 'assets'
 
-  const outDir = 'dist/modularity'
+  const outDir = 'dist/modularous'
   // const outDir = fileURLToPath(new URL(`${LARAVEL_ROOT_LEVEL}/public${base}`, import.meta.url))
   const targetDir = fileURLToPath(new URL(`${LARAVEL_ROOT_LEVEL}/public`, import.meta.url))
   let appDir = fileURLToPath(new URL(`${LARAVEL_ROOT_LEVEL}`, import.meta.url))
@@ -171,7 +171,7 @@ export default defineConfig(({ command, mode }) => {
     base,
     publicDir,
     plugins: [
-      Modularity({
+      Modularous({
         publicDirectory: targetDir,
         refresh: true,
         theme: APP_THEME
@@ -233,7 +233,7 @@ export default defineConfig(({ command, mode }) => {
 
       // commonjsOptions: { transformMixedEsModules: true }, // Change
 
-      manifest: 'modularity-manifest.json',
+      manifest: 'modularous-manifest.json',
       cssCodeSplit: true,
       outDir,
       emptyOutDir: true,

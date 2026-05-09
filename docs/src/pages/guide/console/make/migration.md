@@ -7,7 +7,7 @@ sidebarTitle: make:migration
 
 > Create a database migration file
 
-**Signature**: `modularity:make:migration`
+**Signature**: `modularous:make:migration`
 
 **Alias**: `mod:m:migration`
 
@@ -24,7 +24,7 @@ Generates a timestamped migration file for a module or the host app. Supports al
 ## Usage
 
 ```
-modularity:make:migration [options] <name> [<module>]
+modularous:make:migration [options] <name> [<module>]
 ```
 
 ### Arguments
@@ -59,21 +59,21 @@ modularity:make:migration [options] <name> [<module>]
 ### Create table migration
 
 ```bash
-php artisan modularity:make:migration create_posts_table Blog \
+php artisan modularous:make:migration create_posts_table Blog \
     --fields="title:string,body:text,published_at:timestamp:nullable"
 ```
 
 ### Add column to existing table
 
 ```bash
-php artisan modularity:make:migration add_status_to_posts_table Blog \
+php artisan modularous:make:migration add_status_to_posts_table Blog \
     --fields="status:string"
 ```
 
 ### Pivot table (BelongsToMany)
 
 ```bash
-php artisan modularity:make:migration create_blog_post_tag_table Blog \
+php artisan modularous:make:migration create_blog_post_tag_table Blog \
     --relational=BelongsToMany \
     --route=post \
     --fields="tag_id:unsignedBigInteger"
@@ -82,14 +82,14 @@ php artisan modularity:make:migration create_blog_post_tag_table Blog \
 ### Morph pivot table
 
 ```bash
-php artisan modularity:make:migration create_taggables_table Blog \
+php artisan modularous:make:migration create_taggables_table Blog \
     --relational=MorphedByMany
 ```
 
 ### Migration with translation table
 
 ```bash
-php artisan modularity:make:migration create_posts_table Blog \
+php artisan modularous:make:migration create_posts_table Blog \
     --fields="title:string,body:text" \
     --addTranslation
 ```
@@ -97,7 +97,7 @@ php artisan modularity:make:migration create_posts_table Blog \
 ### Plain migration (empty up/down)
 
 ```bash
-php artisan modularity:make:migration add_indexes_to_posts_table Blog --plain
+php artisan modularous:make:migration add_indexes_to_posts_table Blog --plain
 ```
 
 ---

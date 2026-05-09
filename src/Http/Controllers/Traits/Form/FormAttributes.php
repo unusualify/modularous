@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Form;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Form;
 
 use Illuminate\Support\Collection;
 

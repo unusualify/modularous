@@ -1,6 +1,6 @@
 # Console Commands — Structure & Conventions
 
-This document describes the Modularity console command architecture, naming conventions, and rules for adding or modifying commands.
+This document describes the Modularous console command architecture, naming conventions, and rules for adding or modifying commands.
 
 ## Architecture Overview
 
@@ -71,22 +71,22 @@ Commands are **auto-discovered** via `CommandDiscovery::discover()` in `BaseServ
 
 | Signature | Class |
 |-----------|-------|
-| `modularity:make:module` | `MakeModuleCommand` |
-| `modularity:cache:clear` | `CacheClearCommand` |
-| `modularity:route:disable` | `RouteDisableCommand` |
-| `modularity:create:database` | `CreateDatabaseCommand` |
+| `modularous:make:module` | `MakeModuleCommand` |
+| `modularous:cache:clear` | `CacheClearCommand` |
+| `modularous:route:disable` | `RouteDisableCommand` |
+| `modularous:create:database` | `CreateDatabaseCommand` |
 
 ### Rule 2: Semantic Namespaces
 
 | Namespace | Meaning | Example |
 |-----------|---------|---------|
-| `modularity:make:*` | Scaffold/generate files | `make:module`, `make:controller` |
-| `modularity:create:*` | Create runtime records (DB, users) | `create:superadmin`, `create:database` |
-| `modularity:cache:*` | Cache operations | `cache:clear`, `cache:warm` |
-| `modularity:migrate:*` | Migration operations | `migrate`, `migrate:refresh` |
-| `modularity:flush:*` | Flush/clear runtime data | `flush:sessions` |
-| `modularity:route:*` | Route enable/disable | `route:disable` |
-| `modularity:sync:*` | Sync data | `sync:translations` |
+| `modularous:make:*` | Scaffold/generate files | `make:module`, `make:controller` |
+| `modularous:create:*` | Create runtime records (DB, users) | `create:superadmin`, `create:database` |
+| `modularous:cache:*` | Cache operations | `cache:clear`, `cache:warm` |
+| `modularous:migrate:*` | Migration operations | `migrate`, `migrate:refresh` |
+| `modularous:flush:*` | Flush/clear runtime data | `flush:sessions` |
+| `modularous:route:*` | Route enable/disable | `route:disable` |
+| `modularous:sync:*` | Sync data | `sync:translations` |
 
 ### Rule 3: Command Suffix
 
@@ -95,7 +95,7 @@ All command classes MUST end with `Command` (e.g. `InstallCommand`, not `Install
 ## Adding a New Command
 
 1. **Choose the correct folder** based on the command's purpose.
-2. **Name the class** according to the signature (e.g. `modularity:my:action` → `MyActionCommand`).
+2. **Name the class** according to the signature (e.g. `modularous:my:action` → `MyActionCommand`).
 3. **Extend** `BaseCommand` (or `Illuminate\Console\Command` if BaseCommand is not needed).
 4. **Place the file** in the appropriate folder — discovery will pick it up automatically.
 5. **Add tests** in `tests/Support/CommandDiscoveryTest.php` if it should be explicitly asserted.
@@ -109,7 +109,7 @@ All command classes MUST end with `Command` (e.g. `InstallCommand`, not `Install
 ## BaseCommand
 
 - **Location:** `src/Console/BaseCommand.php`
-- **Use:** For commands that need Modularity-specific behavior (trait options, config, etc.).
+- **Use:** For commands that need Modularous-specific behavior (trait options, config, etc.).
 - **Alternative:** Use `Illuminate\Console\Command` for simple commands.
 
 ## Backward Compatibility
@@ -118,7 +118,7 @@ When renaming commands, add the old signature as an **alias**:
 
 ```php
 protected $aliases = [
-    'modularity:old:signature',
+    'modularous:old:signature',
 ];
 ```
 

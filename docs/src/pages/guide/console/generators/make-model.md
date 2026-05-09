@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:model [--fillable [FILLABLE]] [--relationships [RELATIONSHIPS]] [--override-model [OVERRIDE-MODEL]] [-f|--force] [--notAsk] [--no-defaults] [-s|--soft-delete] [--has-factory] [--all] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <model> [<module>]`
+- **Signature:** `modularous:make:model [--fillable [FILLABLE]] [--relationships [RELATIONSHIPS]] [--override-model [OVERRIDE-MODEL]] [-f|--force] [--notAsk] [--no-defaults] [-s|--soft-delete] [--has-factory] [--all] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <model> [<module>]`
 - **Category:** Generators
 
 
@@ -13,145 +13,145 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:model MODEL MODULE
+php artisan modularous:make:model MODEL MODULE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:make:model --fillable=FILLABLE
+php artisan modularous:make:model --fillable=FILLABLE
 ```
 
 ```bash
-php artisan modularity:make:model --relationships=RELATIONSHIPS
+php artisan modularous:make:model --relationships=RELATIONSHIPS
 ```
 
 ```bash
-php artisan modularity:make:model --override-model=OVERRIDE-MODEL
-```
-
-```bash
-# Using shortcut
-php artisan modularity:make:model -f
-
-# Using full option name
-php artisan modularity:make:model --force
-```
-
-```bash
-php artisan modularity:make:model --notAsk
-```
-
-```bash
-php artisan modularity:make:model --no-defaults
+php artisan modularous:make:model --override-model=OVERRIDE-MODEL
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -s
+php artisan modularous:make:model -f
 
 # Using full option name
-php artisan modularity:make:model --soft-delete
+php artisan modularous:make:model --force
 ```
 
 ```bash
-php artisan modularity:make:model --has-factory
+php artisan modularous:make:model --notAsk
 ```
 
 ```bash
-php artisan modularity:make:model --all
-```
-
-```bash
-php artisan modularity:make:model --test
+php artisan modularous:make:model --no-defaults
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -T
+php artisan modularous:make:model -s
 
 # Using full option name
-php artisan modularity:make:model --addTranslation
+php artisan modularous:make:model --soft-delete
+```
+
+```bash
+php artisan modularous:make:model --has-factory
+```
+
+```bash
+php artisan modularous:make:model --all
+```
+
+```bash
+php artisan modularous:make:model --test
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -M
+php artisan modularous:make:model -T
 
 # Using full option name
-php artisan modularity:make:model --addMedia
+php artisan modularous:make:model --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -F
+php artisan modularous:make:model -M
 
 # Using full option name
-php artisan modularity:make:model --addFile
+php artisan modularous:make:model --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -P
+php artisan modularous:make:model -F
 
 # Using full option name
-php artisan modularity:make:model --addPosition
+php artisan modularous:make:model --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -S
+php artisan modularous:make:model -P
 
 # Using full option name
-php artisan modularity:make:model --addSlug
-```
-
-```bash
-php artisan modularity:make:model --addPrice
+php artisan modularous:make:model --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -A
+php artisan modularous:make:model -S
 
 # Using full option name
-php artisan modularity:make:model --addAuthorized
+php artisan modularous:make:model --addSlug
+```
+
+```bash
+php artisan modularous:make:model --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -FP
+php artisan modularous:make:model -A
 
 # Using full option name
-php artisan modularity:make:model --addFilepond
-```
-
-```bash
-php artisan modularity:make:model --addUuid
+php artisan modularous:make:model --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:model -SS
+php artisan modularous:make:model -FP
 
 # Using full option name
-php artisan modularity:make:model --addSnapshot
+php artisan modularous:make:model --addFilepond
+```
+
+```bash
+php artisan modularous:make:model --addUuid
+```
+
+```bash
+# Using shortcut
+php artisan modularous:make:model -SS
+
+# Using full option name
+php artisan modularous:make:model --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:model MODEL
+php artisan modularous:make:model MODEL
 ```
 
-`modularity:make:model`
+`modularous:make:model`
 -----------------------
 
 Create a new model for the specified module.
 
 ### Usage
 
-* `modularity:make:model [--fillable [FILLABLE]] [--relationships [RELATIONSHIPS]] [--override-model [OVERRIDE-MODEL]] [-f|--force] [--notAsk] [--no-defaults] [-s|--soft-delete] [--has-factory] [--all] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <model> [<module>]`
+* `modularous:make:model [--fillable [FILLABLE]] [--relationships [RELATIONSHIPS]] [--override-model [OVERRIDE-MODEL]] [-f|--force] [--notAsk] [--no-defaults] [-s|--soft-delete] [--has-factory] [--all] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <model> [<module>]`
 * `mod:m:model`
 
 Create a new model for the specified module.

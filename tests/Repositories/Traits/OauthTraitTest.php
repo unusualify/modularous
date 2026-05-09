@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Entities\UserOauth;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\OauthTrait;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Entities\UserOauth;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\OauthTrait;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class OauthTraitTest extends RepositoryTestCase
 {

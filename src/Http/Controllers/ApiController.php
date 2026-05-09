@@ -1,21 +1,21 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiAuthentication;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiFiltering;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiPagination;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiRateLimiting;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiRelationships;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiResponses;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiSorting;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiValidation;
-use Unusualify\Modularity\Http\Controllers\Traits\API\ApiVersioning;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiAuthentication;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiFiltering;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiPagination;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiRateLimiting;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiRelationships;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiResponses;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiSorting;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiValidation;
+use Unusualify\Modularous\Http\Controllers\Traits\API\ApiVersioning;
 
 abstract class ApiController extends CoreController
 {

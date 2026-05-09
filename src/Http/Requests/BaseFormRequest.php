@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Requests;
+namespace Unusualify\Modularous\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

@@ -7,9 +7,9 @@ sidebarTitle: make:repository:trait
 
 > Create a reusable repository trait
 
-**Signature**: `modularity:make:repository:trait`
+**Signature**: `modularous:make:repository:trait`
 
-**Aliases**: `modularity:create:repository:trait`, `mod:c:repo:trait`
+**Aliases**: `modularous:create:repository:trait`, `mod:c:repo:trait`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Creates a skeleton PHP trait in the Modularous vendor `src/Repositories/Traits/`
 ## Usage
 
 ```
-modularity:make:repository:trait <name>
+modularous:make:repository:trait <name>
 ```
 
 ### Arguments
@@ -38,12 +38,12 @@ modularity:make:repository:trait <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:repository:trait HasTagging
+php artisan modularous:make:repository:trait HasTagging
 # → src/Repositories/Traits/HasTaggingTrait.php
 ```
 
 ```bash
-php artisan modularity:make:repository:trait Filterable
+php artisan modularous:make:repository:trait Filterable
 # → src/Repositories/Traits/FilterableTrait.php
 ```
 
@@ -59,7 +59,7 @@ php artisan modularity:make:repository:trait Filterable
 
 ## Notes
 
-- Writes to the Modularous **vendor** path. Register the trait in `config/modularity.php` to make it available in `make:repository`.
+- Writes to the Modularous **vendor** path. Register the trait in `config/modularous.php` to make it available in `make:repository`.
 
 ---
 

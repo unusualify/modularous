@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Enums\RevisionStatus;
+use Unusualify\Modularous\Entities\Enums\RevisionStatus;
 
 abstract class Revision extends BaseModel
 {

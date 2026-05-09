@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -21,7 +21,7 @@ trait ReplacementTrait
      */
     public function getFiles()
     {
-        return Config::get(modularityBaseKey() . '.stubs.files');
+        return Config::get(modularousBaseKey() . '.stubs.files');
     }
 
     /**
@@ -41,7 +41,7 @@ trait ReplacementTrait
      */
     public function getReplacements()
     {
-        return Config::get(modularityBaseKey() . '.stubs.replacements');
+        return Config::get(modularousBaseKey() . '.stubs.replacements');
     }
 
     /**
@@ -157,7 +157,7 @@ trait ReplacementTrait
      */
     protected function getVendorReplacement()
     {
-        return modularityConfig('composer.vendor');
+        return modularousConfig('composer.vendor');
     }
 
     /**
@@ -177,7 +177,7 @@ trait ReplacementTrait
      */
     protected function getAuthorReplacement()
     {
-        return modularityConfig('composer.author.name');
+        return modularousConfig('composer.author.name');
     }
 
     /**
@@ -187,6 +187,6 @@ trait ReplacementTrait
      */
     protected function getAuthorEmailReplacement()
     {
-        return modularityConfig('composer.author.email');
+        return modularousConfig('composer.author.email');
     }
 }

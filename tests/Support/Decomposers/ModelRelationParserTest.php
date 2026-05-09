@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support\Decomposers;
+namespace Unusualify\Modularous\Tests\Support\Decomposers;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Support\Decomposers\ModelRelationParser;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Support\Decomposers\ModelRelationParser;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ModelRelationParserTest extends TestCase
 {
@@ -16,7 +16,7 @@ class ModelRelationParserTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.laravel-relationship-map', [
+        Config::set('modularous.laravel-relationship-map', [
             'belongsTo' => [
                 'related' => ['position' => 0, 'required' => true],
                 'foreignKey' => ['position' => 1, 'required' => false],
@@ -42,7 +42,7 @@ class ModelRelationParserTest extends TestCase
         UFinder::shouldReceive('getPossibleModels')->andReturnUsing(function ($str) {
             return ['App\\Models\\' . ucfirst($str)];
         });
-        Modularity::shouldReceive('getModels')->andReturn([]);
+        Modularous::shouldReceive('getModels')->andReturn([]);
     }
 
     /** @test */

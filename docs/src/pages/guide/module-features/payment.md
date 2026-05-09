@@ -16,8 +16,8 @@ This trait defines a relationship between a model and its price information by l
 
 namespace Modules\Package\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasPayment;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasPayment;
 
 class PackageCountry extends Model
 {
@@ -42,8 +42,8 @@ This trait creates a single price for all related model records under the same r
 
 namespace Modules\Package\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\PaymentTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\PaymentTrait;
 
 class PackageCountryRepository extends Repository
 {

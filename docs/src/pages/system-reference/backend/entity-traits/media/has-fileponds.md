@@ -5,7 +5,7 @@ sidebarTitle: HasFileponds
 
 # HasFileponds
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasFileponds`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasFileponds`
 
 Tracks Filepond temporary file uploads associated with a model. Uses `Core\ChangeRelationships` internally to flag which Filepond collections changed during a save cycle so downstream listeners (e.g., `FilepondManager`) can process or clean up uploads.
 
@@ -58,7 +58,7 @@ If `$filepondableClass` is set on the model, the morph source is proxied through
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class Article extends Model
 {

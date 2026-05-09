@@ -33,7 +33,7 @@ enum MessageStage: string
 ## Usage
 
 ```php
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Services\MessageStage;
 
 // In a controller — flash a typed message
 session()->flash('message', [

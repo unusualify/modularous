@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -9,7 +9,7 @@ use Modules\Cms\Entities\HomepageTest;
 use Modules\Cms\Entities\Page;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Support\ParentSegmentBindingValidator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ParentSegmentBindingValidatorTest extends TestCase
 {
@@ -17,7 +17,7 @@ class ParentSegmentBindingValidatorTest extends TestCase
     {
         parent::setUp();
 
-        $bindings = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $bindings = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
 
         Schema::dropIfExists($bindings);
         Schema::create($bindings, function (Blueprint $table): void {

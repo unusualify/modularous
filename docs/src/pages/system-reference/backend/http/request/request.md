@@ -6,9 +6,9 @@ sidebarTitle: Request
 # Request (abstract)
 
 **File**: `src/Http/Requests/Request.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: `Illuminate\Foundation\Http\FormRequest`
-**Uses**: `Unusualify\Modularity\Traits\ManageTraits`
+**Uses**: `Unusualify\Modularous\Traits\ManageTraits`
 
 An abstract model-aware form request that knows how to merge validation rules across translated attributes and inject model-scoped helpers. Intended as the base class for any request that validates payloads destined for a Modularous Eloquent model.
 

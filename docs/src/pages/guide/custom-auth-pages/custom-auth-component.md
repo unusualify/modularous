@@ -12,12 +12,12 @@ Use a custom Auth component when you need app-specific layouts (split layout, ba
 1. **Publish the Auth component** (if not already):
 
 ```bash
-php artisan vendor:publish --tag=modularity-auth-legacy
+php artisan vendor:publish --tag=modularous-auth-legacy
 ```
 
-This copies `Auth.vue` to `resources/vendor/modularity/js/components/Auth.vue`.
+This copies `Auth.vue` to `resources/vendor/modularous/js/components/Auth.vue`.
 
-2. **Set component name** in `modularity/auth_pages.php`:
+2. **Set component name** in `modularous/auth_pages.php`:
 
 ```php
 return [
@@ -33,7 +33,7 @@ return [
 3. **Build assets** so the custom component is included:
 
 ```bash
-php artisan modularity:build
+php artisan modularous:build
 ```
 
 ## Custom Auth Structure
@@ -100,13 +100,13 @@ Your custom Auth.vue receives:
 
 ## Reading Config in Vue
 
-Auth components can read `window.__MODULARITY_AUTH_CONFIG__` (or `window.MODULARITY?.AUTH_COMPONENT`) for:
+Auth components can read `window.__MODULAROUS_AUTH_CONFIG__` (or `window.MODULAROUS?.AUTH_COMPONENT`) for:
 
 - `formWidth` — form width by breakpoint
 - `dividerText` — divider label
 - `layout`, `banner` — class overrides
 
 ```js
-const config = window.__MODULARITY_AUTH_CONFIG__ || {}
+const config = window.__MODULAROUS_AUTH_CONFIG__ || {}
 const width = config.formWidth?.[breakpoint] ?? '450px'
 ```

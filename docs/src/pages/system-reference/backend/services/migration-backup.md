@@ -6,7 +6,7 @@ sidebarTitle: MigrationBackup
 # MigrationBackup
 
 **File**: `src/Services/MigrationBackup.php`  
-**Facade**: `Unusualify\Modularity\Facades\MigrationBackup`
+**Facade**: `Unusualify\Modularous\Facades\MigrationBackup`
 
 Provides data-safe migration helpers that snapshot table data and schema to the Laravel cache before running destructive migrations, then restore rows if a rollback is needed.
 
@@ -32,7 +32,7 @@ Supports **MySQL**, **PostgreSQL**, and **SQLite**. All cache keys are namespace
 ## Usage in Migrations
 
 ```php
-use Unusualify\Modularity\Services\MigrationBackup;
+use Unusualify\Modularous\Services\MigrationBackup;
 
 class AddSkuToProductsTable extends Migration
 {

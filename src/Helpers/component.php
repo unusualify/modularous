@@ -1,9 +1,9 @@
 <?php
 
-use Unusualify\Modularity\View\Component;
+use Unusualify\Modularous\View\Component;
 
-if (! function_exists('modularity_response_modal_body_component')) {
-    function modularity_response_modal_body_component($color, $icon, string $title, string $description, $redirector = null, array $modalProps = [])
+if (! function_exists('modularous_response_modal_body_component')) {
+    function modularous_response_modal_body_component($color, $icon, string $title, string $description, $redirector = null, array $modalProps = [])
     {
         return Component::makeDiv()
             ->setElements([
@@ -43,21 +43,21 @@ if (! function_exists('modularity_response_modal_body_component')) {
     }
 }
 
-if (! function_exists('modularity_modal_service')) {
-    function modularity_modal_service(string $color, string $icon, string $title, string $description, array $modalProps = [])
+if (! function_exists('modularous_modal_service')) {
+    function modularous_modal_service(string $color, string $icon, string $title, string $description, array $modalProps = [])
     {
         return [
             'component' => 'ue-recursive-stuff',
             'props' => [
-                'configuration' => modularity_response_modal_body_component($color, $icon, $title, $description, $modalProps),
+                'configuration' => modularous_response_modal_body_component($color, $icon, $title, $description, $modalProps),
             ],
             'modalProps' => $modalProps,
         ];
     }
 }
 
-if (! function_exists('modularity_modal_service_form')) {
-    function modularity_modal_service_form($schema, $actionUrl, $buttonText, array $model = [], array $modalProps = [], $formProps = [])
+if (! function_exists('modularous_modal_service_form')) {
+    function modularous_modal_service_form($schema, $actionUrl, $buttonText, array $model = [], array $modalProps = [], $formProps = [])
     {
         return [
             'component' => 'ue-recursive-stuff',
@@ -81,21 +81,21 @@ if (! function_exists('modularity_modal_service_form')) {
     }
 }
 
-if (! function_exists('modularity_new_modal_service')) {
-    function modularity_new_modal_service(string $color, string $icon, string $title, string $description, array $modalProps = [])
+if (! function_exists('modularous_new_modal_service')) {
+    function modularous_new_modal_service(string $color, string $icon, string $title, string $description, array $modalProps = [])
     {
         return [
             'component' => 'ue-recursive-stuff',
             'props' => [
-                'configuration' => modularity_new_response_modal_body_component($color, $icon, $title, $description, $modalProps),
+                'configuration' => modularous_new_response_modal_body_component($color, $icon, $title, $description, $modalProps),
             ],
             'modalProps' => $modalProps,
         ];
     }
 }
 
-if (! function_exists('modularity_new_response_modal_body_component')) {
-    function modularity_new_response_modal_body_component($color, $icon, string $title, string $description, $redirector = null, array $modalProps = [])
+if (! function_exists('modularous_new_response_modal_body_component')) {
+    function modularous_new_response_modal_body_component($color, $icon, string $title, string $description, $redirector = null, array $modalProps = [])
     {
         return Component::makeDiv()
             ->setElements([

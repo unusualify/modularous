@@ -5,7 +5,7 @@ sidebarTitle: HasRelated
 
 # Secondary\HasRelated
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Secondary\HasRelated`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Secondary\HasRelated`
 
 Links related content via a `RelatedItem` morph-many pivot. Supports named "browser" contexts so a model can have multiple independent related-item groups (e.g., `related_articles`, `similar_products`).
 
@@ -34,7 +34,7 @@ public function relatedItems(): MorphMany   // → RelatedItem records
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Secondary\HasRelated;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasRelated;
 
 class Article extends Model
 {

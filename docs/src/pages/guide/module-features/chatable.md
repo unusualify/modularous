@@ -16,8 +16,8 @@ Add the `Chatable` trait to your model:
 
 namespace Modules\Ticket\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\Chatable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\Chatable;
 
 class Ticket extends Model
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class BuildCommand extends BaseCommand
 {
@@ -13,7 +13,7 @@ class BuildCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:build
+    protected $signature = 'modularous:build
         {--noInstall : No install npm packages}
         {--hot : Hot Reload}
         {--w|watch : Watcher for dev}
@@ -25,7 +25,7 @@ class BuildCommand extends BaseCommand
         {--theme= : Custom theme name if was worked on}';
 
     protected $aliases = [
-        'build:modularity',
+        'build:modularous',
     ];
 
     /**
@@ -33,7 +33,7 @@ class BuildCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Build the Modularity assets with custom Vue components';
+    protected $description = 'Build the Modularous assets with custom Vue components';
 
     /**
      * @var Filesystem
@@ -102,21 +102,21 @@ class BuildCommand extends BaseCommand
             sleep(1);
         }
 
-        if (! file_exists(resource_path(modularityConfig('custom_components_resource_path', 'vendor/modularity/js/components')))) {
+        if (! file_exists(resource_path(modularousConfig('custom_components_resource_path', 'vendor/modularous/js/components')))) {
             $this->call('vendor:publish', [
-                '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
+                '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
                 '--tag' => 'custom-components',
                 '--force' => true,
             ]);
         }
 
-        if (! file_exists(resource_path('vendor/modularity/js/entries'))) {
-            $this->filesystem->makeDirectory(resource_path('vendor/modularity/js/entries'));
+        if (! file_exists(resource_path('vendor/modularous/js/entries'))) {
+            $this->filesystem->makeDirectory(resource_path('vendor/modularous/js/entries'));
         }
 
-        if (! file_exists(resource_path('vendor/modularity/themes'))) {
-            $this->filesystem->makeDirectory(resource_path('vendor/modularity/themes'));
-            $this->filesystem->put(resource_path('vendor/modularity/themes/.keep'), '');
+        if (! file_exists(resource_path('vendor/modularous/themes'))) {
+            $this->filesystem->makeDirectory(resource_path('vendor/modularous/themes'));
+            $this->filesystem->put(resource_path('vendor/modularous/themes/.keep'), '');
         }
 
         $this->info('');
@@ -130,10 +130,10 @@ class BuildCommand extends BaseCommand
         $progressBar->setMessage("Building assets started...\n\n");
         $progressBar->advance();
 
-        // $resource_path = resource_path('vendor/modularity/js/components/*.vue');
+        // $resource_path = resource_path('vendor/modularous/js/components/*.vue');
 
         if ($this->option('hot')) {
-            // $this->startWatcher( $resource_path, 'php artisan modularity:build --copyOnly');
+            // $this->startWatcher( $resource_path, 'php artisan modularous:build --copyOnly');
             $this->startWatchers();
 
             // $this->runVueProcess(['npm', 'run', 'serve', '--', "--mode={$mode}", "--port={$this->getDevPort()}"], true);
@@ -142,7 +142,7 @@ class BuildCommand extends BaseCommand
                 'VUE_IS_CUSTOM_BUILD' => 'true',
             ]);
         } elseif ($this->option('watch')) {
-            // $this->startWatcher( $resource_path, 'php artisan modularity:build --copyOnly');
+            // $this->startWatcher( $resource_path, 'php artisan modularous:build --copyOnly');
             $this->startWatchers();
 
             $this->runVueProcess(['npm', 'run', 'watch'], true);
@@ -154,7 +154,7 @@ class BuildCommand extends BaseCommand
             $this->info('');
             $progressBar->setMessage("Publishing assets...\n\n");
             $progressBar->advance();
-            $this->call('modularity:refresh');
+            $this->call('modularous:refresh');
 
             $this->info('');
             $progressBar->setMessage("Done. \n\n");
@@ -184,7 +184,7 @@ class BuildCommand extends BaseCommand
             return;
         }
 
-        $chokidarPath = get_modularity_vendor_path('vue') . '/node_modules/.bin/chokidar';
+        $chokidarPath = get_modularous_vendor_path('vue') . '/node_modules/.bin/chokidar';
         $chokidarCommand = [$chokidarPath, $pattern, '-c', $command];
 
         if ($this->filesystem->exists($chokidarPath)) {
@@ -199,7 +199,7 @@ class BuildCommand extends BaseCommand
             }
         } else {
             $this->warn("The `chokidar-cli` package was not found. It is required to watch custom blocks & components in development. You can install it by running:\n");
-            $this->warn("    php artisan modularity:dev\n");
+            $this->warn("    php artisan modularous:dev\n");
             $this->warn("without the `--noInstall` option.\n");
             sleep(2);
         }
@@ -207,22 +207,22 @@ class BuildCommand extends BaseCommand
 
     private function startWatchers()
     {
-        $resource_path = resource_path('vendor/modularity/js/components/*.vue');
-        $moduleResourcePaths = Modularity::getModulesPath('**/Resources/assets/Pages/**/*.vue');
+        $resource_path = resource_path('vendor/modularous/js/components/*.vue');
+        $moduleResourcePaths = Modularous::getModulesPath('**/Resources/assets/Pages/**/*.vue');
 
-        $this->startWatcher($resource_path, 'php artisan modularity:build --copyComponents');
-        $this->startWatcher($moduleResourcePaths, 'php artisan modularity:build --copyInertiaPages');
+        $this->startWatcher($resource_path, 'php artisan modularous:build --copyComponents');
+        $this->startWatcher($moduleResourcePaths, 'php artisan modularous:build --copyInertiaPages');
 
-        $builtinThemes = builtInModularityThemes();
-        $customThemes = customModularityThemes();
+        $builtinThemes = builtInModularousThemes();
+        $customThemes = customModularousThemes();
         $theme = env('VUE_APP_THEME', 'unusualify');
 
         if (! array_key_exists($theme, $builtinThemes->toArray()) && array_key_exists($theme, $customThemes->toArray())) {
-            $path = resource_path('vendor/modularity/themes/' . $theme . '/sass/*');
-            $this->startWatcher($path, "php artisan modularity:build --copyTheme --theme='{$theme}'");
+            $path = resource_path('vendor/modularous/themes/' . $theme . '/sass/*');
+            $this->startWatcher($path, "php artisan modularous:build --copyTheme --theme='{$theme}'");
 
-            $path = resource_path('vendor/modularity/themes/' . "$theme/$theme.js");
-            $this->startWatcher($path, "php artisan modularity:build --copyThemeScript --theme='{$theme}'");
+            $path = resource_path('vendor/modularous/themes/' . "$theme/$theme.js");
+            $this->startWatcher($path, "php artisan modularous:build --copyThemeScript --theme='{$theme}'");
         }
 
     }
@@ -234,7 +234,7 @@ class BuildCommand extends BaseCommand
     {
         $hasZiggy = file_exists(base_path('vendor/tightenco/ziggy/dist/index.esm.js')) || file_exists(base_path('vendor/tightenco/ziggy/dist/vue.m.js'));
 
-        $process = new Process($command, get_modularity_vendor_path('vue'), [
+        $process = new Process($command, get_modularous_vendor_path('vue'), [
             ...$env,
         ]);
         $process->setTty(Process::isTtySupported());
@@ -242,7 +242,7 @@ class BuildCommand extends BaseCommand
         // Add environment variables
         $process->setEnv([
             'BASE_PATH' => base_path(),
-            'VENDOR_DIR' => Modularity::getVendorDir(),
+            'VENDOR_DIR' => Modularous::getVendorDir(),
             'VUE_HAS_ZIGGY' => $hasZiggy ? 'true' : 'false',
             ...$env,
         ]);
@@ -264,8 +264,8 @@ class BuildCommand extends BaseCommand
         $this->copyVueComponents();
         $this->copyInertiaPages();
 
-        $builtinThemes = builtInModularityThemes();
-        $customThemes = customModularityThemes();
+        $builtinThemes = builtInModularousThemes();
+        $customThemes = customModularousThemes();
         $theme = env('VUE_APP_THEME', 'unusualify');
 
         if (array_key_exists($theme, $customThemes->toArray())) {
@@ -283,8 +283,8 @@ class BuildCommand extends BaseCommand
     {
         $this->info('Copying custom components...');
 
-        $localCustomComponentsPath = resource_path(modularityConfig('custom_components_resource_path', 'vendor/modularity/js/components'));
-        $vueCustomComponentsPath = get_modularity_vendor_path('vue/src/js/components/customs');
+        $localCustomComponentsPath = resource_path(modularousConfig('custom_components_resource_path', 'vendor/modularous/js/components'));
+        $vueCustomComponentsPath = get_modularous_vendor_path('vue/src/js/components/customs');
 
         $this->copyDirectory($localCustomComponentsPath, $vueCustomComponentsPath, clean: true);
 
@@ -301,10 +301,10 @@ class BuildCommand extends BaseCommand
     private function copyInertiaPages()
     {
         $this->info('Copying custom Inertia pages...');
-        // $localPagesPath = resource_path(modularityConfig('custom_pages_resource_path', 'vendor/modularity/js/pages'));
-        $localPagesPath = resource_path('vendor/modularity/js/Pages');
-        // $vuePagesPath = get_modularity_vendor_path('vue/src/js/Pages/customs');
-        $vuePagesPath = Modularity::getVendorPath('vue/src/js/Pages/customs');
+        // $localPagesPath = resource_path(modularousConfig('custom_pages_resource_path', 'vendor/modularous/js/pages'));
+        $localPagesPath = resource_path('vendor/modularous/js/Pages');
+        // $vuePagesPath = get_modularous_vendor_path('vue/src/js/Pages/customs');
+        $vuePagesPath = Modularous::getVendorPath('vue/src/js/Pages/customs');
 
         // Create customs directory if it doesn't exist
         if (! is_dir($vuePagesPath)) {
@@ -331,7 +331,7 @@ class BuildCommand extends BaseCommand
         $this->info('Copying module-specific Inertia pages...');
 
         $modulesPath = base_path('modules');
-        $vuePagesPath = get_modularity_vendor_path('vue/src/js/Pages');
+        $vuePagesPath = get_modularous_vendor_path('vue/src/js/Pages');
 
         if (! is_dir($modulesPath)) {
             $this->warn('Modules directory not found: ' . $modulesPath);
@@ -339,7 +339,7 @@ class BuildCommand extends BaseCommand
             return 0;
         }
 
-        foreach (Modularity::all() as $module) {
+        foreach (Modularous::all() as $module) {
             $moduleName = $module->getName();
 
             foreach ($module->getRouteNames() as $moduleRouteName) {
@@ -367,8 +367,8 @@ class BuildCommand extends BaseCommand
     {
         $this->info('Copying custom theme files...');
 
-        $sources = resource_path('vendor/modularity/themes/' . $theme . '/sass');
-        $targetPath = get_modularity_vendor_path('vue/src/sass/themes/customs/' . $theme);
+        $sources = resource_path('vendor/modularous/themes/' . $theme . '/sass');
+        $targetPath = get_modularous_vendor_path('vue/src/sass/themes/customs/' . $theme);
 
         $this->copyDirectory($sources, $targetPath);
 
@@ -384,8 +384,8 @@ class BuildCommand extends BaseCommand
     {
         $this->info('Copying custom theme script...');
 
-        $source = resource_path('vendor/modularity/themes/' . "{$theme}/{$theme}.js");
-        $targetPath = get_modularity_vendor_path('vue/src/js/config/themes/customs/' . $theme . '.js');
+        $source = resource_path('vendor/modularous/themes/' . "{$theme}/{$theme}.js");
+        $targetPath = get_modularous_vendor_path('vue/src/js/config/themes/customs/' . $theme . '.js');
 
         $this->copyFile($source, $targetPath);
 

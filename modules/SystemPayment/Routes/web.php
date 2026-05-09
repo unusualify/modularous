@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Http\Controllers\PriceController;
-use Unusualify\Modularity\Facades\ModularityRoutes;
+use Unusualify\Modularous\Facades\ModularousRoutes;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +16,11 @@ use Unusualify\Modularity\Facades\ModularityRoutes;
 | Now create something great!
 |
 */
-Route::middleware(['web.auth', ...ModularityRoutes::defaultMiddlewares()])->group(function () {
+Route::middleware(['web.auth', ...ModularousRoutes::defaultMiddlewares()])->group(function () {
 
-    Route::middleware((ModularityRoutes::defaultPanelMiddlewares()))->group(function () {});
+    Route::middleware((ModularousRoutes::defaultPanelMiddlewares()))->group(function () {});
 
-    Route::middleware(modularityConfig('payment_middlewares', []))->group(function () {
+    Route::middleware(modularousConfig('payment_middlewares', []))->group(function () {
         Route::controller(PriceController::class)->group(function () {
             Route::post('/pay', 'pay')->name('pay');
             Route::post('/checkout', 'checkout')->name('checkout');

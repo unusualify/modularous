@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ComposerHelpersTest extends TestCase
 {
@@ -32,36 +32,36 @@ class ComposerHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_is_modularity_development_returns_boolean()
+    public function test_is_modularous_development_returns_boolean()
     {
-        // Don't mock - test the actual function which calls Modularity facade
-        $result = is_modularity_development();
+        // Don't mock - test the actual function which calls Modularous facade
+        $result = is_modularous_development();
 
         $this->assertIsBool($result);
     }
 
     /** @test */
-    public function test_is_modularity_production_returns_boolean()
+    public function test_is_modularous_production_returns_boolean()
     {
-        // Don't mock - test the actual function which calls Modularity facade
-        $result = is_modularity_production();
+        // Don't mock - test the actual function which calls Modularous facade
+        $result = is_modularous_production();
 
         $this->assertIsBool($result);
     }
 
     /** @test */
-    public function test_get_modularity_vendor_dir_returns_path()
+    public function test_get_modularous_vendor_dir_returns_path()
     {
-        $result = get_modularity_vendor_dir();
+        $result = get_modularous_vendor_dir();
 
         // Result should be a string path
         $this->assertIsString($result);
     }
 
     /** @test */
-    public function test_get_modularity_vendor_dir_with_subdirectory()
+    public function test_get_modularous_vendor_dir_with_subdirectory()
     {
-        $result = get_modularity_vendor_dir('vue');
+        $result = get_modularous_vendor_dir('vue');
 
         // Result should contain the subdirectory
         $this->assertIsString($result);
@@ -69,18 +69,18 @@ class ComposerHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_get_modularity_vendor_path_returns_path()
+    public function test_get_modularous_vendor_path_returns_path()
     {
-        $result = get_modularity_vendor_path();
+        $result = get_modularous_vendor_path();
 
         // Result should be a string path
         $this->assertIsString($result);
     }
 
     /** @test */
-    public function test_get_modularity_src_path_returns_src_path()
+    public function test_get_modularous_src_path_returns_src_path()
     {
-        $result = get_modularity_src_path();
+        $result = get_modularous_src_path();
 
         // Result should contain 'src'
         $this->assertIsString($result);
@@ -88,9 +88,9 @@ class ComposerHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_path_returns_path()
+    public function test_modularous_path_returns_path()
     {
-        $result = modularity_path('config');
+        $result = modularous_path('config');
 
         // Result should contain 'config'
         $this->assertIsString($result);
@@ -98,7 +98,7 @@ class ComposerHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_get_package_version_returns_development_for_modularity_dev()
+    public function test_get_package_version_returns_development_for_modularous_dev()
     {
         $result = get_package_version('unusualify/modularous');
 

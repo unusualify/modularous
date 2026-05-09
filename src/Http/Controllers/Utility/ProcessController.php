@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Process;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Process;
+use Unusualify\Modularous\Facades\Modularous;
 
 class ProcessController extends Controller
 {
@@ -41,7 +41,7 @@ class ProcessController extends Controller
 
         if (method_exists($processableModel, 'moduleName') && method_exists($processableModel, 'routeName')) {
 
-            $module = Modularity::find($processableModel->getModuleName());
+            $module = Modularous::find($processableModel->getModuleName());
             $repository = App::make($module->getRouteClass($processableModel->getRouteName(), 'repository'));
 
             $processableFields = [];
@@ -78,7 +78,7 @@ class ProcessController extends Controller
             $process->processable->setProcessStatus($request->get('status'), $request->get('reason') ?? null);
             $process->processable->touch();
         } elseif (method_exists($processableModel, 'moduleName') && method_exists($processableModel, 'routeName')) {
-            $module = Modularity::find($processableModel->getModuleName());
+            $module = Modularous::find($processableModel->getModuleName());
             $schema = $module->getRouteInputs($processableModel->getRouteName());
             $repository = App::make($module->getRouteClass($processableModel->getRouteName(), 'repository'));
 

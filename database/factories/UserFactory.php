@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Factories;
+namespace Unusualify\Modularous\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Entities\User;
 
 /**
  * @extends Factory<\App\Models\User>

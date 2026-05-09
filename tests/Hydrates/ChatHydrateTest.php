@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\ChatHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\ChatHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ChatHydrateTest extends TestCase
 {

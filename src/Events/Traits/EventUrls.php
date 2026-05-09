@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Events\Traits;
+namespace Unusualify\Modularous\Events\Traits;
 
 trait EventUrls
 {

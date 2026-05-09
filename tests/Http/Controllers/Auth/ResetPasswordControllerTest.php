@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Mockery;
-use Unusualify\Modularity\Http\Controllers\Auth\ResetPasswordController;
+use Unusualify\Modularous\Http\Controllers\Auth\ResetPasswordController;
 
 /**
  * Testable controller that allows overriding getUserFromToken for success-path tests.

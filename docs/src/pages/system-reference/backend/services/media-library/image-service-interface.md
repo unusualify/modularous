@@ -54,7 +54,7 @@ interface ImageServiceInterface
 ## Implementing a Custom Driver
 
 ```php
-use Unusualify\Modularity\Services\MediaLibrary\ImageServiceInterface;
+use Unusualify\Modularous\Services\MediaLibrary\ImageServiceInterface;
 
 class CloudflareImages implements ImageServiceInterface
 {

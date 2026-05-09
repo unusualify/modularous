@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Support\RegexReplacement;
+use Unusualify\Modularous\Support\RegexReplacement;
 
 class ReplaceRegexCommand extends BaseCommand
 {
@@ -15,7 +15,7 @@ class ReplaceRegexCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:replace:regex
+    protected $signature = 'modularous:replace:regex
         {path : The path to the files}
         {pattern : The pattern to replace}
         {data : The data to replace}

@@ -15,7 +15,7 @@ Modularous provides a flexible authentication system that you can fully customiz
 
 ## Quick Start
 
-1. Create `modularity/auth_pages.php` in your app (or merge into `config/modularity.php`).
+1. Create `modularous/auth_pages.php` in your app (or merge into `config/modularous.php`).
 2. Add `attributes` for banner content, redirect buttons, etc.
 3. Optionally use a custom auth component: publish `Auth.vue` and set `component_name` to `ue-custom-auth`.
 

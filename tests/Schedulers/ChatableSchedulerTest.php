@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Schedulers;
+namespace Unusualify\Modularous\Tests\Schedulers;
 
 use Illuminate\Support\Facades\Log;
-use Unusualify\Modularity\Entities\Traits\Chatable;
-use Unusualify\Modularity\Facades\ModularityFinder;
-use Unusualify\Modularity\Schedulers\ChatableScheduler;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Traits\Chatable;
+use Unusualify\Modularous\Facades\ModularousFinder;
+use Unusualify\Modularous\Schedulers\ChatableScheduler;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ChatableSchedulerTest extends TestCase
 {
@@ -23,7 +23,7 @@ class ChatableSchedulerTest extends TestCase
     {
         $scheduler = new ChatableScheduler;
 
-        $this->assertEquals('modularity:scheduler:chatable', $scheduler->getName());
+        $this->assertEquals('modularous:scheduler:chatable', $scheduler->getName());
     }
 
     /** @test */
@@ -46,7 +46,7 @@ class ChatableSchedulerTest extends TestCase
             ->once()
             ->andReturn($mockQueryBuilder);
 
-        ModularityFinder::shouldReceive('getModelsWithTrait')
+        ModularousFinder::shouldReceive('getModelsWithTrait')
             ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel]);
@@ -86,7 +86,7 @@ class ChatableSchedulerTest extends TestCase
             ->once()
             ->andReturn($mockQueryBuilder);
 
-        ModularityFinder::shouldReceive('getModelsWithTrait')
+        ModularousFinder::shouldReceive('getModelsWithTrait')
             ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel]);
@@ -123,7 +123,7 @@ class ChatableSchedulerTest extends TestCase
             ->once()
             ->andReturn($mockQueryBuilder2);
 
-        ModularityFinder::shouldReceive('getModelsWithTrait')
+        ModularousFinder::shouldReceive('getModelsWithTrait')
             ->with(Chatable::class)
             ->once()
             ->andReturn([$mockModel1, $mockModel2]);
@@ -139,7 +139,7 @@ class ChatableSchedulerTest extends TestCase
     {
         $exception = new \Exception('Test error message');
 
-        ModularityFinder::shouldReceive('getModelsWithTrait')
+        ModularousFinder::shouldReceive('getModelsWithTrait')
             ->with(Chatable::class)
             ->once()
             ->andThrow($exception);
@@ -150,7 +150,7 @@ class ChatableSchedulerTest extends TestCase
             ->andReturnSelf();
 
         Log::shouldReceive('error')
-            ->with('Modularity: Chatable scheduler error', \Mockery::on(function ($context) {
+            ->with('Modularous: Chatable scheduler error', \Mockery::on(function ($context) {
                 return isset($context['error'])
                     && $context['error'] === 'Test error message'
                     && isset($context['trace'])
@@ -170,7 +170,7 @@ class ChatableSchedulerTest extends TestCase
     {
         $error = new \Error('Test error');
 
-        ModularityFinder::shouldReceive('getModelsWithTrait')
+        ModularousFinder::shouldReceive('getModelsWithTrait')
             ->with(Chatable::class)
             ->once()
             ->andThrow($error);
@@ -181,7 +181,7 @@ class ChatableSchedulerTest extends TestCase
             ->andReturnSelf();
 
         Log::shouldReceive('error')
-            ->with('Modularity: Chatable scheduler error', \Mockery::type('array'))
+            ->with('Modularous: Chatable scheduler error', \Mockery::type('array'))
             ->once();
 
         $scheduler = new ChatableScheduler;

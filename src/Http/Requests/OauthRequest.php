@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Requests;
+namespace Unusualify\Modularous\Http\Requests;
 
 use Illuminate\Validation\Rule;
 
@@ -27,7 +27,7 @@ class OauthRequest extends Request
      */
     public function rules()
     {
-        $providers = array_keys(modularityConfig('oauth.providers', []));
+        $providers = array_keys(modularousConfig('oauth.providers', []));
 
         return [
             'provider' => [
@@ -41,7 +41,7 @@ class OauthRequest extends Request
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route(config('modularity.admin_route_name_prefix') . '.loginHandleCallbackProvider', ['provider' => $provider]);
+        return $url->route(config('modularous.admin_route_name_prefix') . '.loginHandleCallbackProvider', ['provider' => $provider]);
 
     }
 }

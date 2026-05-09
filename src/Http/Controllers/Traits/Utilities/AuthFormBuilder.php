@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
  * Provides reusable methods for building auth form view data.
  * Reduces duplication across Login, Register, ForgotPassword, and ResetPassword controllers.
  *
- * View data structure is config-driven via config('modularity.auth_pages').
+ * View data structure is config-driven via config('modularous.auth_pages').
  * Override auth_pages in your app config to customize UI without touching controllers.
  */
 trait AuthFormBuilder
@@ -103,7 +103,7 @@ trait AuthFormBuilder
      */
     protected function createAccountButtonSlot(): array
     {
-        $registerRoute = modularityConfig('email_verified_register')
+        $registerRoute = modularousConfig('email_verified_register')
             ? Route::hasAdmin('register.email_form')
             : Route::hasAdmin('register.form');
 
@@ -245,7 +245,7 @@ trait AuthFormBuilder
      */
     protected function buildAuthViewData(string $pageKey, array $overrides = []): array
     {
-        $config = modularityConfig('auth_pages', []);
+        $config = modularousConfig('auth_pages', []);
         $pageConfig = $config['pages'][$pageKey] ?? [];
         $layoutConfig = $config['layout'] ?? [];
         $layoutPresets = $config['layoutPresets'] ?? [];
@@ -256,7 +256,7 @@ trait AuthFormBuilder
         $attributes = array_merge(
             $layoutConfig,
             $layoutPreset,
-            modularityConfig('auth_pages.attributes', []),
+            modularousConfig('auth_pages.attributes', []),
             $pageConfig['attributes'] ?? [],
             $overrides['attributes'] ?? []
         );
@@ -264,8 +264,8 @@ trait AuthFormBuilder
         $attributes['logoSymbol'] ??= $layoutConfig['logoSymbol'] ?? 'main-logo-dark';
         $attributes['logoLightSymbol'] ??= $layoutConfig['logoLightSymbol'] ?? 'main-logo-light';
 
-        if (! isset($attributes['redirectUrl']) && Route::has(modularityConfig('auth_guest_route'))) {
-            $attributes['redirectUrl'] = route(modularityConfig('auth_guest_route'));
+        if (! isset($attributes['redirectUrl']) && Route::has(modularousConfig('auth_guest_route'))) {
+            $attributes['redirectUrl'] = route(modularousConfig('auth_guest_route'));
         }
 
         $formDraft = $pageConfig['formDraft'] ?? null;

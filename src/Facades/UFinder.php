@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Support\Finder;
+use Unusualify\Modularous\Support\Finder;
 
 /**
  * @method static string|false getModel(string $table)
@@ -14,7 +14,7 @@ use Unusualify\Modularity\Support\Finder;
  * @method static array getClasses(string $path)
  * @method static \Illuminate\Support\Collection getAllModels()
  *
- * @deprecated Use \Unusualify\Modularity\Facades\ModularityFinder instead
+ * @deprecated Use \Unusualify\Modularous\Facades\ModularousFinder instead
  * @see Finder
  */
 class UFinder extends Facade

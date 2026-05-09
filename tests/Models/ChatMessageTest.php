@@ -1,18 +1,18 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\ChatMessage;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Scopes\ChatMessageScopes;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Scopes\ChatMessageScopes;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ChatMessageTest extends ModelTestCase
 {
@@ -21,7 +21,7 @@ class ChatMessageTest extends ModelTestCase
     public function test_get_table_chat_message()
     {
         $chatMessage = new ChatMessage;
-        $this->assertEquals(modularityConfig('tables.chat_messages', 'um_chat_messages'), $chatMessage->getTable());
+        $this->assertEquals(modularousConfig('tables.chat_messages', 'um_chat_messages'), $chatMessage->getTable());
     }
 
     public function test_fillable_attributes()
@@ -259,7 +259,7 @@ class ChatMessageTest extends ModelTestCase
 
         $chatMessage->delete();
 
-        $this->assertSoftDeleted(modularityConfig('tables.chat_messages', 'um_chat_messages'), ['id' => $chatMessage->id]);
+        $this->assertSoftDeleted(modularousConfig('tables.chat_messages', 'um_chat_messages'), ['id' => $chatMessage->id]);
         $this->assertCount(0, ChatMessage::all());
         $this->assertCount(1, ChatMessage::withTrashed()->get());
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
-use Unusualify\Modularity\Services\Connector;
+use Unusualify\Modularous\Services\Connector;
 
 trait ResolveConnector
 {

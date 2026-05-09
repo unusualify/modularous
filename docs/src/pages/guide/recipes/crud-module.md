@@ -12,13 +12,13 @@ outline: deep
 
 ## Prerequisites
 
-- You have Modularous installed and can run `php artisan modularity:list`.
+- You have Modularous installed and can run `php artisan modularous:list`.
 - You have a module in mind — we'll use **`Billing`** and an entity called **`Invoice`** for this recipe.
 
 ## 1. Scaffold the module
 
 ```bash
-php artisan modularity:make:module Billing invoices \
+php artisan modularous:make:module Billing invoices \
   --fields="number:string,total:decimal,issued_at:datetime" \
   --traits="HasSlug" \
   --test
@@ -39,7 +39,7 @@ See [make:module](/guide/console/generators/make-module) for every flag.
 ## 2. Run the migration
 
 ```bash
-php artisan modularity:migrate
+php artisan modularous:migrate
 ```
 
 ## 3. Register the sidebar entry
@@ -62,7 +62,7 @@ Role filtering uses the [Allowable](/guide/generics/allowable) generic.
 ## 4. Create permissions
 
 ```bash
-php artisan modularity:create:route:permissions Billing invoices
+php artisan modularous:create:route:permissions Billing invoices
 ```
 
 This generates Spatie permission records for `index / create / update / destroy` and attaches them to the default admin role.
@@ -90,7 +90,7 @@ See [Hydrates](/system-reference/hydrates) for the schema contract and [Form Inp
 ## 6. Warm caches
 
 ```bash
-php artisan modularity:cache:warm Billing
+php artisan modularous:cache:warm Billing
 ```
 
 ## 7. Verify
@@ -105,7 +105,7 @@ php artisan modularity:cache:warm Billing
 ### Add a relationship
 
 ```bash
-php artisan modularity:make:route Billing invoices \
+php artisan modularous:make:route Billing invoices \
   --relationships="Customer:belongsTo"
 ```
 

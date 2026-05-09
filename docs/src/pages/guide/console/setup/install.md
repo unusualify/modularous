@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:install [-d|--default] [-db|--db-process] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot]`
+- **Signature:** `modularous:install [-d|--default] [-db|--db-process] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot]`
 - **Category:** Setup
 
 
@@ -13,108 +13,108 @@
 ### Basic Usage
 
 ```bash
-php artisan modularity:install
+php artisan modularous:install
 ```
 
 ### With Options
 
 ```bash
 # Using shortcut
-php artisan modularity:install -d
+php artisan modularous:install -d
 
 # Using full option name
-php artisan modularity:install --default
+php artisan modularous:install --default
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -db
+php artisan modularous:install -db
 
 # Using full option name
-php artisan modularity:install --db-process
+php artisan modularous:install --db-process
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -T
+php artisan modularous:install -T
 
 # Using full option name
-php artisan modularity:install --addTranslation
+php artisan modularous:install --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -M
+php artisan modularous:install -M
 
 # Using full option name
-php artisan modularity:install --addMedia
+php artisan modularous:install --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -F
+php artisan modularous:install -F
 
 # Using full option name
-php artisan modularity:install --addFile
+php artisan modularous:install --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -P
+php artisan modularous:install -P
 
 # Using full option name
-php artisan modularity:install --addPosition
+php artisan modularous:install --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -S
+php artisan modularous:install -S
 
 # Using full option name
-php artisan modularity:install --addSlug
+php artisan modularous:install --addSlug
 ```
 
 ```bash
-php artisan modularity:install --addPrice
+php artisan modularous:install --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -A
+php artisan modularous:install -A
 
 # Using full option name
-php artisan modularity:install --addAuthorized
+php artisan modularous:install --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -FP
+php artisan modularous:install -FP
 
 # Using full option name
-php artisan modularity:install --addFilepond
+php artisan modularous:install --addFilepond
 ```
 
 ```bash
-php artisan modularity:install --addUuid
+php artisan modularous:install --addUuid
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:install -SS
+php artisan modularous:install -SS
 
 # Using full option name
-php artisan modularity:install --addSnapshot
+php artisan modularous:install --addSnapshot
 ```
 
 
-`modularity:install`
+`modularous:install`
 --------------------
 
 Install unusual-modularous into your Laravel application
 
 ### Usage
 
-* `modularity:install [-d|--default] [-db|--db-process] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot]`
+* `modularous:install [-d|--default] [-db|--db-process] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot]`
 
 Install unusual-modularous into your Laravel application
 

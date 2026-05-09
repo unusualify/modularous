@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Factory as ViewFactory;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Controller as BaseController;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\AuthFormBuilder;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Controller as BaseController;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageUtilities;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\AuthFormBuilder;
 
 class Controller extends BaseController
 {
@@ -35,10 +35,10 @@ class Controller extends BaseController
         $this->config = $config ?? app(Config::class);
         $this->redirector = $redirector ?? app(Redirector::class);
         $this->viewFactory = $viewFactory ?? app(ViewFactory::class);
-        $this->redirectTo = modularityConfig('auth_login_redirect_path', '/');
+        $this->redirectTo = modularousConfig('auth_login_redirect_path', '/');
 
         $except = $this->guestMiddlewareExcept();
-        $this->middleware('modularity.guest', $except ? ['except' => $except] : []);
+        $this->middleware('modularous.guest', $except ? ['except' => $except] : []);
     }
 
     /**
@@ -56,7 +56,7 @@ class Controller extends BaseController
      */
     protected function guard()
     {
-        return Auth::guard(Modularity::getAuthGuardName());
+        return Auth::guard(Modularous::getAuthGuardName());
     }
 
     /**

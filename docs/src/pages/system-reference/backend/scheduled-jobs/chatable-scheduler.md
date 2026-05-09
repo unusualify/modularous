@@ -5,14 +5,14 @@ sidebarTitle: ChatableScheduler
 
 # ChatableScheduler
 
-`Unusualify\Modularity\Schedulers\ChatableScheduler`
+`Unusualify\Modularous\Schedulers\ChatableScheduler`
 
 Artisan command that polls every minute for unread chat messages and dispatches `ChatableUnreadNotification` to the relevant parties. It is the heartbeat of the in-app chat notification system.
 
 ## Signature
 
 ```
-modularity:scheduler:chatable
+modularous:scheduler:chatable
 ```
 
 No options or arguments.
@@ -21,7 +21,7 @@ No options or arguments.
 
 On each run the command:
 
-1. **Discovers all `Chatable` models** via `ModularityFinder::getModelsWithTrait(Chatable::class)` — this returns every Eloquent model in the application that uses the `Chatable` trait.
+1. **Discovers all `Chatable` models** via `ModularousFinder::getModelsWithTrait(Chatable::class)` — this returns every Eloquent model in the application that uses the `Chatable` trait.
 
 2. **For each model class**, queries instances that have an actionable unread message using the `hasNotifiableMessage` scope (in chunks of 100).
 
@@ -29,7 +29,7 @@ On each run the command:
 
 ## The `hasNotifiableMessage` Scope
 
-`Unusualify\Modularity\Entities\Scopes\ChatableScopes::scopeHasNotifiableMessage`
+`Unusualify\Modularous\Entities\Scopes\ChatableScopes::scopeHasNotifiableMessage`
 
 Finds model instances where the **latest chat message**:
 - is **not read** (`is_read = false`)
@@ -99,7 +99,7 @@ class Order extends Model
 Registered as `->everyMinute()` in `BaseServiceProvider`:
 
 ```php
-$schedule->command('modularity:scheduler:chatable')->everyMinute();
+$schedule->command('modularous:scheduler:chatable')->everyMinute();
 ```
 
 Running every minute ensures the notification is sent as close to the interval boundary as possible without requiring a separate queue worker for polling.
@@ -107,7 +107,7 @@ Running every minute ensures the notification is sent as close to the interval b
 ## Manual Usage
 
 ```bash
-php artisan modularity:scheduler:chatable
+php artisan modularous:scheduler:chatable
 ```
 
 Useful for testing the notification pipeline or recovering from a scheduler outage.
@@ -120,7 +120,7 @@ The entire `handle()` body is wrapped in a `try/catch`:
 try {
     // discovery + chunked processing
 } catch (\Throwable $th) {
-    Log::channel('scheduler')->error('Modularity: Chatable scheduler error', [
+    Log::channel('scheduler')->error('Modularous: Chatable scheduler error', [
         'error' => $th->getMessage(),
         'trace' => $th->getTraceAsString(),
     ]);

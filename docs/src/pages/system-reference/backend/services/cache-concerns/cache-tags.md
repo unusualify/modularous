@@ -12,7 +12,7 @@ sidebarTitle: CacheTags
 ## Tag Hierarchy
 
 ```
-{prefix}                                  ← global tag (all modularity caches)
+{prefix}                                  ← global tag (all modularous caches)
 {prefix}:{Module}                         ← module tag (all routes in this module)
 {prefix}:{Module}:{Route}                 ← route tag (one specific route/submodule)
 {prefix}:rel:{ModelName}:{id}             ← relation tag (caches referencing this record)
@@ -33,18 +33,18 @@ sidebarTitle: CacheTags
 ```php
 // All tags when writing a route-scoped cache entry
 $tags = $this->getModuleRouteTags('Orders', 'order');
-// ['modularity', 'modularity:Orders', 'modularity:Orders:Order']
+// ['modularous', 'modularous:Orders', 'modularous:Orders:Order']
 
 // Only route tag when doing a narrow invalidation
 $tags = $this->getModuleRouteTags('Orders', 'order', onlyRoute: true);
-// ['modularity:Orders:Order']
+// ['modularous:Orders:Order']
 
 // Relation tags for a belongs-to-many write
 $tags = $this->generateRelationTags(['Company' => 5, 'Tag' => [1, 3]]);
-// ['modularity:rel:Company:5', 'modularity:rel:Tag:1', 'modularity:rel:Tag:3']
+// ['modularous:rel:Company:5', 'modularous:rel:Tag:1', 'modularous:rel:Tag:3']
 ```
 
 ## Notes
 
 - Module and route names are converted to StudlyCase via `Str::studly()` before generating tags, so `orders` and `Orders` produce the same tag.
-- The `getPrefix()` abstract method must be implemented by the consuming class (returns `'modularity'` in `ModularityCacheService`).
+- The `getPrefix()` abstract method must be implemented by the consuming class (returns `'modularous'` in `ModularousCacheService`).

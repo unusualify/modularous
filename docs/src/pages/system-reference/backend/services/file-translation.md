@@ -6,10 +6,10 @@ sidebarTitle: FileTranslation
 # FileTranslation
 
 **File**: `src/Services/FileTranslation.php`
-**Namespace**: `Unusualify\Modularity\Services`
+**Namespace**: `Unusualify\Modularous\Services`
 **Extends**: `JoeDixon\Translation\Drivers\File`
 
-Concrete file-based translation driver used by Modularous. Adds **cross-path sync** on top of the upstream `File` driver — comparing translation files in two different directories and copying missing keys from one to the other. Powers the [`modularity:sync:translations`](/guide/console/sync/sync-translations) Artisan command, which pushes the package's bundled language files into the host application's `lang/` directory.
+Concrete file-based translation driver used by Modularous. Adds **cross-path sync** on top of the upstream `File` driver — comparing translation files in two different directories and copying missing keys from one to the other. Powers the [`modularous:sync:translations`](/guide/console/sync/sync-translations) Artisan command, which pushes the package's bundled language files into the host application's `lang/` directory.
 
 Its transitive parent, [`Translation`](./translation), supplies scanning and source-locale merge utilities; this class focuses on file I/O and diff.
 
@@ -88,7 +88,7 @@ End-to-end sync for every language. Returns a stats array:
 ]
 ```
 
-This is the method called by `modularity:sync:translations`.
+This is the method called by `modularous:sync:translations`.
 
 ## Internal Sync Helpers
 
@@ -132,5 +132,5 @@ Splits the namespaced group on `::`, ensures the vendor language directory exist
 ## Related
 
 - [Translation](./translation) — abstract base class (scanning, source-locale merge, `add()`)
-- [`modularity:sync:translations`](/guide/console/sync/sync-translations) — command that drives `syncAllMissingKeys()`
+- [`modularous:sync:translations`](/guide/console/sync/sync-translations) — command that drives `syncAllMissingKeys()`
 - [FileLoader](../support/file-loader) — multi-path translation loader that reads files written by this driver

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SourcesHelpersTest extends TestCase
 {
@@ -66,7 +66,7 @@ class SourcesHelpersTest extends TestCase
     /** @test */
     public function test_get_form_draft_basic()
     {
-        Config::set('modularity.form_drafts.test_form', [
+        Config::set('modularous.form_drafts.test_form', [
             'field1' => [
                 'type' => 'text',
                 'label' => 'Field 1',
@@ -98,7 +98,7 @@ class SourcesHelpersTest extends TestCase
     /** @test */
     public function test_get_form_draft_with_overwrites()
     {
-        Config::set('modularity.form_drafts.test_form', [
+        Config::set('modularous.form_drafts.test_form', [
             'field1' => [
                 'type' => 'text',
                 'label' => 'Field 1',
@@ -146,7 +146,7 @@ class SourcesHelpersTest extends TestCase
     /** @test */
     public function test_get_form_draft_with_excludes()
     {
-        Config::set('modularity.form_drafts.test_form', [
+        Config::set('modularous.form_drafts.test_form', [
             'field1' => 'value1',
             'field2' => 'value2',
             'field3' => 'value3',
@@ -163,51 +163,51 @@ class SourcesHelpersTest extends TestCase
     /** @test */
     public function test_admin_route_name_prefix()
     {
-        Config::set('modularity.admin_route_name_prefix', 'admin');
+        Config::set('modularous.admin_route_name_prefix', 'admin');
         $this->assertEquals('admin', adminRouteNamePrefix());
 
-        Config::set('modularity.admin_route_name_prefix', '.admin.');
+        Config::set('modularous.admin_route_name_prefix', '.admin.');
         $this->assertEquals('admin', adminRouteNamePrefix());
     }
 
     /** @test */
     public function test_admin_url_prefix()
     {
-        Config::set('modularity.admin_app_url', '');
-        Config::set('modularity.admin_app_path', 'admin');
+        Config::set('modularous.admin_app_url', '');
+        Config::set('modularous.admin_app_path', 'admin');
         $this->assertEquals('admin', adminUrlPrefix());
 
-        Config::set('modularity.admin_app_url', 'https://admin.example.com');
+        Config::set('modularous.admin_app_url', 'https://admin.example.com');
         $this->assertFalse(adminUrlPrefix());
     }
 
     /** @test */
     public function test_system_url_prefix()
     {
-        Config::set('modularity.system_prefix', 'system-settings');
+        Config::set('modularous.system_prefix', 'system-settings');
         $this->assertEquals('system-settings', systemUrlPrefix());
     }
 
     /** @test */
     public function test_system_route_name_prefix()
     {
-        Config::set('modularity.system_prefix', 'system-settings');
+        Config::set('modularous.system_prefix', 'system-settings');
         $this->assertEquals('system_settings', systemRouteNamePrefix());
     }
 
     /** @test */
-    public function test_built_in_modularity_themes()
+    public function test_built_in_modularous_themes()
     {
         $mockThemes = [
-            '/path/to/vendor/modularity/vue/src/sass/themes/default',
-            '/path/to/vendor/modularity/vue/src/sass/themes/dark',
+            '/path/to/vendor/modularous/vue/src/sass/themes/default',
+            '/path/to/vendor/modularous/vue/src/sass/themes/dark',
         ];
 
         File::shouldReceive('isDirectory')->andReturn(true);
-        File::shouldReceive('glob')->with(Modularity::getVendorPath('vue/src/sass/themes') . '/*', GLOB_ONLYDIR)
+        File::shouldReceive('glob')->with(Modularous::getVendorPath('vue/src/sass/themes') . '/*', GLOB_ONLYDIR)
             ->andReturn($mockThemes);
 
-        $themes = builtInModularityThemes();
+        $themes = builtInModularousThemes();
 
         $this->assertEquals([
             'default' => 'Default',
@@ -216,15 +216,15 @@ class SourcesHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_custom_modularity_themes()
+    public function test_custom_modularous_themes()
     {
         $mockThemes = [
-            resource_path('vendor/modularity/themes/custom1'),
-            resource_path('vendor/modularity/themes/custom2'),
+            resource_path('vendor/modularous/themes/custom1'),
+            resource_path('vendor/modularous/themes/custom2'),
         ];
 
         File::shouldReceive('isDirectory')->andReturn(true);
-        File::shouldReceive('glob')->with(resource_path('vendor/modularity/themes/*'), GLOB_ONLYDIR)
+        File::shouldReceive('glob')->with(resource_path('vendor/modularous/themes/*'), GLOB_ONLYDIR)
             ->andReturn($mockThemes);
 
         // File::shouldReceive('isDirectory')
@@ -232,7 +232,7 @@ class SourcesHelpersTest extends TestCase
         //         return in_array($path, $mockThemes);
         //     });
 
-        $themes = customModularityThemes();
+        $themes = customModularousThemes();
 
         $this->assertEquals([
             'custom1' => 'Custom1',
@@ -260,11 +260,11 @@ class SourcesHelpersTest extends TestCase
             ->andReturnSelf();
 
         Cache::shouldReceive('has')
-            ->with('modularity-languages')
+            ->with('modularous-languages')
             ->andReturn(false);
 
         Cache::shouldReceive('set')
-            ->with('modularity-languages', json_encode($translations), 600)
+            ->with('modularous-languages', json_encode($translations), 600)
             ->once();
 
         $result = get_translations();
@@ -276,7 +276,7 @@ class SourcesHelpersTest extends TestCase
     public function test_clear_translations()
     {
         Cache::shouldReceive('forget')
-            ->with('modularity-languages')
+            ->with('modularous-languages')
             ->once();
 
         clear_translations();

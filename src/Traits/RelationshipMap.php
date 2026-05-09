@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
 use Astrotomic\Translatable\Traits\Relationship;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularous\Exceptions\ModularousException;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\UFinder;
 
 use function Laravel\Prompts\select;
 
@@ -78,7 +78,7 @@ trait RelationshipMap
                     'relationshipName' => $relationshipName,
                 ]);
 
-                throw new ModularityException(
+                throw new ModularousException(
                     "Missing required argument '{$n}' for relationship '{$relationshipName}' on '{$name}'."
                 );
             } else {
@@ -678,7 +678,7 @@ trait RelationshipMap
 
     public function getModelClass(string $str, $relationship = null)
     {
-        $possibles = array_unique(array_merge(UFinder::getPossibleModels($str), Modularity::getModels($str)), SORT_REGULAR);
+        $possibles = array_unique(array_merge(UFinder::getPossibleModels($str), Modularous::getModels($str)), SORT_REGULAR);
 
         $class = $this->getStudlyName($str);
 

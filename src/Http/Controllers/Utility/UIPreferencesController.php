@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
+use Unusualify\Modularous\Http\Controllers\Traits\MakesResponses;
 
 /**
  * Handles user UI preferences (navigation, sidebar, topbar, etc.).
@@ -30,7 +30,7 @@ class UIPreferencesController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        $user = Auth::guard('modularity')->user();
+        $user = Auth::guard('modularous')->user();
 
         if (! $user) {
             return response()->json(['message' => 'Unauthenticated'], 401);

@@ -5,7 +5,7 @@ sidebarTitle: Chatable
 
 # Chatable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Chatable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Chatable`
 
 Gives every model its own `Chat` thread with full message history, read status tracking, unread counts, and notification dispatch. Uses `ChatableScopes` for query filtering.
 
@@ -73,7 +73,7 @@ public function unreadChatMessagesFromCreator(): HasManyThrough
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Chatable;
+use Unusualify\Modularous\Entities\Traits\Chatable;
 
 class Order extends Model
 {

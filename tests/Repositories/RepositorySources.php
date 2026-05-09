@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;

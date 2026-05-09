@@ -7,7 +7,7 @@ sidebarTitle: make:controller:api
 
 > Create a REST API controller for a module
 
-**Signature**: `modularity:make:controller:api`
+**Signature**: `modularous:make:controller:api`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Generates an API controller in the module's `Http/Controllers/API/` path. The st
 ## Usage
 
 ```
-modularity:make:controller:api <module> <name>
+modularous:make:controller:api <module> <name>
 ```
 
 ### Arguments
@@ -37,7 +37,7 @@ modularity:make:controller:api <module> <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:controller:api Blog Post
+php artisan modularous:make:controller:api Blog Post
 # → Blog/Http/Controllers/API/PostController.php
 ```
 

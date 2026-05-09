@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\MediaLibrary;
+namespace Unusualify\Modularous\Services\MediaLibrary;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Arr;
@@ -34,7 +34,7 @@ class Imgix implements ImageServiceInterface
         // image accessors when `IMGIX_SOURCE_HOST` was missing. Skip
         // constructing the builder in that case; `getUrl` and friends
         // return '' instead of fatally throwing.
-        $sourceHost = $this->config->get(modularityBaseKey() . '.imgix.source_host');
+        $sourceHost = $this->config->get(modularousBaseKey() . '.imgix.source_host');
         if (! is_string($sourceHost) || $sourceHost === '') {
             $this->urlBuilder = null;
 
@@ -43,13 +43,13 @@ class Imgix implements ImageServiceInterface
 
         $urlBuilder = new UrlBuilder(
             $sourceHost,
-            $this->config->get(modularityBaseKey() . '.imgix.use_https'),
+            $this->config->get(modularousBaseKey() . '.imgix.use_https'),
             '',
             false
         );
 
-        if ($this->config->get(modularityBaseKey() . '.imgix.use_signed_urls')) {
-            $urlBuilder->setSignKey($this->config->get(modularityBaseKey() . '.imgix.sign_key'));
+        if ($this->config->get(modularousBaseKey() . '.imgix.use_signed_urls')) {
+            $urlBuilder->setSignKey($this->config->get(modularousBaseKey() . '.imgix.sign_key'));
         }
 
         $this->urlBuilder = $urlBuilder;
@@ -65,8 +65,8 @@ class Imgix implements ImageServiceInterface
             return '';
         }
 
-        $defaultParams = $this->config->get(modularityBaseKey() . '.imgix.default_params');
-        $addParamsToSvgs = modularityConfig('imgix.add_params_to_svgs', false);
+        $defaultParams = $this->config->get(modularousBaseKey() . '.imgix.default_params');
+        $addParamsToSvgs = modularousConfig('imgix.add_params_to_svgs', false);
 
         if (! $addParamsToSvgs && Str::endsWith($id, '.svg')) {
             return $this->urlBuilder->createURL($id);
@@ -101,7 +101,7 @@ class Imgix implements ImageServiceInterface
      */
     public function getLQIPUrl($id, array $params = [])
     {
-        $defaultParams = $this->config->get(modularityBaseKey() . '.imgix.lqip_default_params');
+        $defaultParams = $this->config->get(modularousBaseKey() . '.imgix.lqip_default_params');
 
         $cropParams = Arr::has($params, $this->cropParamsKeys) ? $this->getCrop($params) : [];
 
@@ -116,7 +116,7 @@ class Imgix implements ImageServiceInterface
      */
     public function getSocialUrl($id, array $params = [])
     {
-        $defaultParams = $this->config->get(modularityBaseKey() . '.imgix.social_default_params');
+        $defaultParams = $this->config->get(modularousBaseKey() . '.imgix.social_default_params');
 
         $cropParams = Arr::has($params, $this->cropParamsKeys) ? $this->getCrop($params) : [];
 
@@ -131,7 +131,7 @@ class Imgix implements ImageServiceInterface
      */
     public function getCmsUrl($id, array $params = [])
     {
-        $defaultParams = $this->config->get(modularityBaseKey() . '.imgix.cms_default_params');
+        $defaultParams = $this->config->get(modularousBaseKey() . '.imgix.cms_default_params');
 
         $cropParams = Arr::has($params, $this->cropParamsKeys) ? $this->getCrop($params) : [];
 

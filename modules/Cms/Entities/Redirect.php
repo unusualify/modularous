@@ -2,7 +2,7 @@
 
 namespace Modules\Cms\Entities;
 
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class Redirect extends Model
 {
@@ -21,6 +21,6 @@ class Redirect extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_redirects', 'um_cms_redirects');
+        return modularousConfig('tables.cms_redirects', 'um_cms_redirects');
     }
 }

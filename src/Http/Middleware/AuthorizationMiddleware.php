@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
@@ -20,15 +20,15 @@ class AuthorizationMiddleware
 
     public function handle($request, Closure $next)
     {
-        view()->composer(modularityBaseKey() . '::layouts.master', function ($view) {
+        view()->composer(modularousBaseKey() . '::layouts.master', function ($view) {
             $user = auth()->user();
             $userRepository = app()->make(UserRepository::class);
-            $profileShortcutSchema = modularity_format_inputs(getFormDraft('profile_shortcut'));
+            $profileShortcutSchema = modularous_format_inputs(getFormDraft('profile_shortcut'));
             $profileShortcutModel = $userRepository->getFormFields($user, $profileShortcutSchema);
-            $loginShortcutSchema = modularity_format_inputs(getFormDraft('login_shortcut'));
+            $loginShortcutSchema = modularous_format_inputs(getFormDraft('login_shortcut'));
 
             $view->with(array_merge($view->getData(), [
-                'authorization' => get_modularity_authorization_config(),
+                'authorization' => get_modularous_authorization_config(),
                 'profileShortcutSchema' => $profileShortcutSchema,
                 'profileShortcutModel' => $profileShortcutModel,
                 'loginShortcutModel' => [],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -8,11 +8,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Modules\SystemNotification\Events\ProcessHistoryCreated;
 use Modules\SystemNotification\Events\ProcessHistoryUpdated;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Entities\Process;
-use Unusualify\Modularity\Entities\ProcessHistory;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Process;
+use Unusualify\Modularous\Entities\ProcessHistory;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ProcessHistoryTest extends ModelTestCase
 {
@@ -21,7 +21,7 @@ class ProcessHistoryTest extends ModelTestCase
     public function test_get_table_process_history()
     {
         $processHistory = new ProcessHistory;
-        $this->assertEquals(modularityConfig('tables.process_histories', 'm_process_histories'), $processHistory->getTable());
+        $this->assertEquals(modularousConfig('tables.process_histories', 'm_process_histories'), $processHistory->getTable());
     }
 
     public function test_fillable_attributes()

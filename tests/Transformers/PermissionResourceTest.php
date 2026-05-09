@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Transformers;
+namespace Unusualify\Modularous\Tests\Transformers;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Transformers\PermissionResource;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Transformers\PermissionResource;
 
 class PermissionResourceTest extends TestCase
 {

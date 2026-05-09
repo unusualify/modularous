@@ -4,16 +4,16 @@ namespace Modules\Cms\Repositories;
 
 use Modules\Cms\Entities\Page;
 use Modules\Cms\Repositories\Traits\CmrTrait;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
-use Unusualify\Modularity\Repositories\Traits\FilesTrait;
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
-use Unusualify\Modularity\Repositories\Traits\PublishableTrait;
-use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
-use Unusualify\Modularity\Repositories\Traits\RevisionsTrait;
-use Unusualify\Modularity\Repositories\Traits\SlugsTrait;
-use Unusualify\Modularity\Repositories\Traits\TranslatableMetadataTrait;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilesTrait;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Repositories\Traits\PublishableTrait;
+use Unusualify\Modularous\Repositories\Traits\RepeatersTrait;
+use Unusualify\Modularous\Repositories\Traits\RevisionsTrait;
+use Unusualify\Modularous\Repositories\Traits\SlugsTrait;
+use Unusualify\Modularous\Repositories\Traits\TranslatableMetadataTrait;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
 
 class PageRepository extends Repository
 {

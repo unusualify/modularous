@@ -6,7 +6,7 @@ sidebarTitle: CreatorRecord
 # CreatorRecord
 
 **File**: `src/Entities/CreatorRecord.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Records the creator of a model instance. Used by the `HasCreator` trait to track which user (and auth guard) created a given record. Timestamps are disabled.
@@ -33,7 +33,7 @@ The user/entity who created the model.
 
 ## Table
 
-Resolved from `modularity.tables.creator_records`, defaults to `um_creator_records`.
+Resolved from `modularous.tables.creator_records`, defaults to `um_creator_records`.
 
 ## Related
 

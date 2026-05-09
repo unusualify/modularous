@@ -5,7 +5,7 @@ namespace Modules\Cms\Services\Concerns;
 use Modules\Cms\Contracts\PublicUrlRegistryContract;
 
 /**
- * Extends {@see \Unusualify\Modularity\Services\SlugInputValidationService} with optional checks against
+ * Extends {@see \Unusualify\Modularous\Services\SlugInputValidationService} with optional checks against
  * {@see Modules\Cms\Contracts\PublicUrlRegistryContract}: nested path warnings + hard collision on exact locale/path.
  *
  * Subclasses override {@see slugModelsUsingPublicUrlRegistry()}, path building, and message/config hooks.
@@ -130,7 +130,7 @@ trait ExtendsSlugValidationWithPublicUrlRegistry
     }
 
     /**
-     * Override when {@see nestedPublicUrlRegistryWarnings()} is used (e.g. modularity config flag).
+     * Override when {@see nestedPublicUrlRegistryWarnings()} is used (e.g. modularous config flag).
      */
     protected function nestedPublicUrlRegistryWarningsEnabled(): bool
     {

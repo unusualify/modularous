@@ -10,7 +10,7 @@ use Modules\Cms\Services\CmsUrlRouteRegistry;
  * Keeps {@see \Modules\Cms\Entities\UrlRoute} in sync for the **repository's own model** (any page-like entity with slugs).
  * Composes {@see PublicUrlRegistrySyncDispatchTrait}; handlers key off {@see $this->model}'s class — no per-entity static maps.
  *
- * Basename sorts after {@see \Unusualify\Modularity\Repositories\Traits\TranslationsTrait} so slug + translation rows are persisted first.
+ * Basename sorts after {@see \Unusualify\Modularous\Repositories\Traits\TranslationsTrait} so slug + translation rows are persisted first.
  */
 trait UrlRouteRegistrySyncTrait
 {

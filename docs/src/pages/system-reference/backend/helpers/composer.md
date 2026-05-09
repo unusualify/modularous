@@ -27,67 +27,67 @@ Reads and decodes `vendor/composer/installed.json`, returning the full installed
 get_package_installed_version(string $package): string|null
 ```
 
-Searches the installed Composer packages for `$package` (e.g. `unusualify/modularity`) and returns its installed version string, or `null` if not found.
+Searches the installed Composer packages for `$package` (e.g. `unusualify/modularous`) and returns its installed version string, or `null` if not found.
 
 ---
 
-### `is_modularity_development`
+### `is_modularous_development`
 
 ```php
-is_modularity_development(): bool
+is_modularous_development(): bool
 ```
 
-Returns `true` when the `unusualify/modularity` package source type is `path` (i.e. it is loaded from a local path repository, as in a development monorepo setup).
+Returns `true` when the `unusualify/modularous` package source type is `path` (i.e. it is loaded from a local path repository, as in a development monorepo setup).
 
 ---
 
-### `is_modularity_production`
+### `is_modularous_production`
 
 ```php
-is_modularity_production(): bool
+is_modularous_production(): bool
 ```
 
-Returns `true` when `is_modularity_development()` is `false` — i.e. the package is installed from Packagist or a VCS source.
+Returns `true` when `is_modularous_development()` is `false` — i.e. the package is installed from Packagist or a VCS source.
 
 ---
 
-### `get_modularity_vendor_dir`
+### `get_modularous_vendor_dir`
 
 ```php
-get_modularity_vendor_dir(): string
+get_modularous_vendor_dir(): string
 ```
 
 Returns the absolute path to the Composer vendor directory (e.g. `/var/www/vendor`).
 
 ---
 
-### `get_modularity_vendor_path`
+### `get_modularous_vendor_path`
 
 ```php
-get_modularity_vendor_path(string $path = ''): string
+get_modularous_vendor_path(string $path = ''): string
 ```
 
-Appends `$path` to the vendor directory: `vendor/unusualify/modularity/{$path}`.
+Appends `$path` to the vendor directory: `vendor/unusualify/modularous/{$path}`.
 
 ---
 
-### `get_modularity_src_path`
+### `get_modularous_src_path`
 
 ```php
-get_modularity_src_path(string $path = ''): string
+get_modularous_src_path(string $path = ''): string
 ```
 
-Returns the path to the `src/` directory inside the package: `vendor/unusualify/modularity/src/{$path}`.
+Returns the path to the `src/` directory inside the package: `vendor/unusualify/modularous/src/{$path}`.
 
 ---
 
-### `modularity_path`
+### `modularous_path`
 
 ```php
-modularity_path(string $path = ''): string
+modularous_path(string $path = ''): string
 ```
 
-Alias for `get_modularity_vendor_path()`. Preferred shorthand in most internal callers.
+Alias for `get_modularous_vendor_path()`. Preferred shorthand in most internal callers.
 
 ---
 

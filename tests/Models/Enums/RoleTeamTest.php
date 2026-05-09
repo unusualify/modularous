@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Enums;
+namespace Unusualify\Modularous\Tests\Models\Enums;
 
-use Unusualify\Modularity\Entities\Enums\RoleTeam;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Enums\RoleTeam;
+use Unusualify\Modularous\Tests\TestCase;
 
 class RoleTeamTest extends TestCase
 {

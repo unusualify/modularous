@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Contracts\View\View;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Http\Controllers\Auth\PreRegisterController;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Http\Controllers\Auth\PreRegisterController;
+use Unusualify\Modularous\Tests\TestCase;
 
 class PreRegisterControllerTest extends TestCase
 {
@@ -18,19 +18,19 @@ class PreRegisterControllerTest extends TestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app['config']->set('modularity.enabled.users-management', true);
+        $app['config']->set('modularous.enabled.users-management', true);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        config(['auth.providers.modularity_users' => [
+        config(['auth.providers.modularous_users' => [
             'driver' => 'eloquent',
             'model' => User::class,
         ]]);
         config(['auth.passwords.register_verified_users' => [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'um_email_verification_tokens',
             'expire' => 60,
             'throttle' => 60,

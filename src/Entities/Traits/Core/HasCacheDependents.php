@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
-use Unusualify\Modularity\Facades\RelationshipGraph;
+use Unusualify\Modularous\Facades\RelationshipGraph;
 
 /**
  * Trait HasCacheDependents
@@ -14,7 +14,7 @@ use Unusualify\Modularity\Facades\RelationshipGraph;
  * 1. Relationship graph (automatic discovery from getEloquentRelationships)
  * 2. Property $cacheDependents defined in the model
  * 3. Method getCacheDependents() override in the model
- * 4. Global config: modularity.cache.dependencies.{ModelName}
+ * 4. Global config: modularous.cache.dependencies.{ModelName}
  *
  * Example: Company model is displayed in PressRelease lists.
  * When Company is updated, PressRelease cache should be invalidated.
@@ -81,7 +81,7 @@ trait HasCacheDependents
      */
     protected function getConfigDefinedDependents(string $modelClass): array
     {
-        $dependencies = config('modularity.cache.dependencies', []);
+        $dependencies = config('modularous.cache.dependencies', []);
 
         if (empty($dependencies) || ! isset($dependencies[$modelClass])) {
             return [];

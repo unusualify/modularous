@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class MakeModelTraitCommand extends BaseCommand
 {
@@ -16,11 +16,11 @@ class MakeModelTraitCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:model:trait {name}';
+    protected $signature = 'modularous:make:model:trait {name}';
 
     protected $aliases = [
         'mod:c:model:trait',
-        'modularity:create:model:trait',
+        'modularous:create:model:trait',
     ];
 
     /**
@@ -57,7 +57,7 @@ class MakeModelTraitCommand extends BaseCommand
 
         $content = (new Stub('/classes/model-trait.stub', $replacements))->render();
 
-        $path = get_modularity_vendor_path("src/Entities/Traits/Has{$studlyName}.php");
+        $path = get_modularous_vendor_path("src/Entities/Traits/Has{$studlyName}.php");
 
         File::put($path, $content);
 

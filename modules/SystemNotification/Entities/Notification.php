@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\DatabaseNotificationCollection;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class Notification extends Model
 {

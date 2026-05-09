@@ -4,7 +4,7 @@ namespace Modules\SystemUtility\Http\Controllers\Front;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class StateController extends BaseController
 {

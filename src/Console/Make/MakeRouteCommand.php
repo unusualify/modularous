@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Generators\RouteGenerator;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Generators\RouteGenerator;
 
 class MakeRouteCommand extends BaseCommand
 {
@@ -15,7 +15,7 @@ class MakeRouteCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:route
+    protected $signature = 'modularous:make:route
         {module : The name of module will be used}
         {route : The name of the route}
         {--schema= : The specified migration schema table}
@@ -81,15 +81,15 @@ class MakeRouteCommand extends BaseCommand
      */
     public function handle(): int
     {
-        Modularity::disableCache();
+        Modularous::disableCache();
 
         $route = $this->argument('route');
 
         $module = $this->argument('module');
 
-        $traits = activeModularityTraits($this->options());
+        $traits = activeModularousTraits($this->options());
 
-        foreach (getModularityTraits() as $_trait) {
+        foreach (getModularousTraits() as $_trait) {
             $this->responses[$_trait] = $this->checkOption($_trait);
         }
 
@@ -119,7 +119,7 @@ class MakeRouteCommand extends BaseCommand
             $success = false;
         }
 
-        Modularity::clearCache();
+        Modularous::clearCache();
 
         return $success ? 0 : E_ERROR;
     }

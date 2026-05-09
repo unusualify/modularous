@@ -3,8 +3,8 @@
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityVite;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousVite;
 
 if (! function_exists('getHost')) {
     /**
@@ -17,13 +17,13 @@ if (! function_exists('getHost')) {
     }
 }
 
-if (! function_exists('getModularityDefaultUrls')) {
+if (! function_exists('getModularousDefaultUrls')) {
     /**
-     * Get the default urls for the modularity
+     * Get the default urls for the modularous
      *
      * @return array
      */
-    function getModularityDefaultUrls()
+    function getModularousDefaultUrls()
     {
         return [
             'languages' => route(Route::hasAdmin('api.languages.index')),
@@ -36,13 +36,13 @@ if (! function_exists('getModularityDefaultUrls')) {
     }
 }
 
-if (! function_exists('modularity_svg_symbol_exists')) {
+if (! function_exists('modularous_svg_symbol_exists')) {
     /**
-     * Check whether an SVG <symbol> exists in the Modularity SVG sprite/theme by its short name.
+     * Check whether an SVG <symbol> exists in the Modularous SVG sprite/theme by its short name.
      *
-     * Example: modularityIconExists('main-logo-dark') or modularityIconExists('icon--main-logo-dark')
+     * Example: modularousIconExists('main-logo-dark') or modularousIconExists('icon--main-logo-dark')
      */
-    function modularity_svg_symbol_exists(string $symbolName): bool
+    function modularous_svg_symbol_exists(string $symbolName): bool
     {
         $svgName = str_starts_with($symbolName, 'icon--') ? preg_replace('/^icon--/', '', $symbolName) : $symbolName;
         $normalized = str_starts_with($symbolName, 'icon--') ? $symbolName : 'icon--' . $symbolName;
@@ -50,14 +50,14 @@ if (! function_exists('modularity_svg_symbol_exists')) {
         static $parsedSymbolIds = null;
 
         if ($parsedSymbolIds === null) {
-            $isRunningHot = ModularityVite::isRunningHot();
+            $isRunningHot = ModularousVite::isRunningHot();
             if ($isRunningHot) {
-                return file_exists(Modularity::getThemePath("icons/{$svgName}.svg"));
+                return file_exists(Modularous::getThemePath("icons/{$svgName}.svg"));
             } else {
                 // Prefer the full theme file where <symbol> definitions live; fall back to the sprite wrapper
-                $viewName = View::exists('modularity::partials.icons.svg-theme')
-                    ? 'modularity::partials.icons.svg-theme'
-                    : (View::exists('modularity::partials.icons.svg-sprite') ? 'modularity::partials.icons.svg-sprite' : null);
+                $viewName = View::exists('modularous::partials.icons.svg-theme')
+                    ? 'modularous::partials.icons.svg-theme'
+                    : (View::exists('modularous::partials.icons.svg-sprite') ? 'modularous::partials.icons.svg-sprite' : null);
 
                 if ($viewName === null) {
                     return false;
@@ -81,17 +81,17 @@ if (! function_exists('modularity_svg_symbol_exists')) {
     }
 }
 
-if (! function_exists('get_modularity_logo_symbol')) {
-    function get_modularity_logo_symbol(array $symbols)
+if (! function_exists('get_modularous_logo_symbol')) {
+    function get_modularous_logo_symbol(array $symbols)
     {
         return collect($symbols)->first(function ($value, $key) {
-            return modularity_svg_symbol_exists($value);
+            return modularous_svg_symbol_exists($value);
         });
     }
 }
 
-if (! function_exists('get_modularity_locale_symbol')) {
-    function get_modularity_locale_symbol(string $symbol, $default = null)
+if (! function_exists('get_modularous_locale_symbol')) {
+    function get_modularous_locale_symbol(string $symbol, $default = null)
     {
         $locale = app()->getLocale();
         $defaults = is_array($default) ? $default : [$default];
@@ -102,6 +102,6 @@ if (! function_exists('get_modularity_locale_symbol')) {
             ...$defaults,
         ];
 
-        return get_modularity_logo_symbol($symbols);
+        return get_modularous_logo_symbol($symbols);
     }
 }

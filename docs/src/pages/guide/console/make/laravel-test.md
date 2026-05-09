@@ -7,9 +7,9 @@ sidebarTitle: make:laravel:test
 
 > Scaffold a PHPUnit Feature or Unit test file for a module
 
-**Signature**: `modularity:make:laravel:test`
+**Signature**: `modularous:make:laravel:test`
 
-**Alias**: `modularity:create:laravel:test`
+**Alias**: `modularous:create:laravel:test`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Creates a PHPUnit test file using `LaravelTestGenerator`. Accepts a module and t
 ## Usage
 
 ```
-modularity:make:laravel:test [options] <module> <test>
+modularous:make:laravel:test [options] <module> <test>
 ```
 
 ### Arguments
@@ -47,13 +47,13 @@ modularity:make:laravel:test [options] <module> <test>
 ### Feature test
 
 ```bash
-php artisan modularity:make:laravel:test Blog PostControllerTest
+php artisan modularous:make:laravel:test Blog PostControllerTest
 ```
 
 ### Unit test
 
 ```bash
-php artisan modularity:make:laravel:test Blog PostRepositoryTest --unit
+php artisan modularous:make:laravel:test Blog PostRepositoryTest --unit
 ```
 
 ---

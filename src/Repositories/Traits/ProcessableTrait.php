@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
-use Modularity\Entities\Models\Process;
-use Unusualify\Modularity\Models\Model;
+use Modularous\Entities\Models\Process;
+use Unusualify\Modularous\Models\Model;
 
 trait ProcessableTrait
 {
@@ -39,7 +39,7 @@ trait ProcessableTrait
     public function getFormFieldsProcessableTrait($object, $fields, $schema = [])
     {
         // set, cast, unset or manipulate the fields by using object, fields and schema
-        if ($object->exists && classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\Processable')) {
+        if ($object->exists && classHasTrait($object, 'Unusualify\Modularous\Entities\Traits\Processable')) {
             foreach ($this->getColumns(__TRAIT__) as $column) {
                 $fields[$column] = $this->getProcessId($object);
 

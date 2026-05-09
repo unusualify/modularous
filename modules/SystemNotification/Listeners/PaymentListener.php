@@ -9,7 +9,7 @@ use Modules\SystemNotification\Events\PaymentCompleted;
 use Modules\SystemNotification\Events\PaymentFailed;
 use Modules\SystemNotification\Notifications\PaymentCompletedNotification;
 use Modules\SystemNotification\Notifications\PaymentFailedNotification;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Entities\User;
 
 class PaymentListener implements ShouldHandleEventsAfterCommit, ShouldQueue
 {

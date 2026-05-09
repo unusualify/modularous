@@ -5,7 +5,7 @@ sidebarTitle: Entities Overview
 
 # Entities
 
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Location**: `src/Entities/`
 
 All Eloquent models in the Modularous package. Module-generated models extend `Model` and gain soft-deletes, tagging, caching, presenter support, and trait composition out of the box.

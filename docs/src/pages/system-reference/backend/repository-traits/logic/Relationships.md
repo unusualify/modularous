@@ -5,7 +5,7 @@ sidebarTitle: Relationships
 
 # Relationships
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\Relationships`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\Relationships`
 
 Handles automatic synchronisation of all Eloquent relationship types when a record is saved. Composes `CheckSnapshot` and `ResolveConnector` to support special snapshot-sourced `HasMany` children and connector-resolved repositories.
 

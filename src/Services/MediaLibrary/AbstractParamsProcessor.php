@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\MediaLibrary;
+namespace Unusualify\Modularous\Services\MediaLibrary;
 
 /**
  * Base class to implement image service parameter compatibility.

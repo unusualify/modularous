@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Requests;
+namespace Unusualify\Modularous\Http\Requests;
 
 class FileRequest extends Request
 {
@@ -11,7 +11,7 @@ class FileRequest extends Request
      */
     public function rules()
     {
-        switch (modularityConfig('file_library.endpoint_type')) {
+        switch (modularousConfig('file_library.endpoint_type')) {
             case 'local':
                 return [
                     'qqfilename' => 'required',

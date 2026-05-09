@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Generators;
+namespace Unusualify\Modularous\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Module;
 
 class VueTestGenerator extends Generator
 {
@@ -90,7 +90,7 @@ class VueTestGenerator extends Generator
 
         parent::__construct($name, $config, $filesystem, $console, $module);
 
-        $this->targetPath = get_modularity_vendor_path('vue/test');
+        $this->targetPath = get_modularous_vendor_path('vue/test');
 
     }
 

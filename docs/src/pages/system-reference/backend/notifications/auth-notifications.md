@@ -5,7 +5,7 @@ sidebarTitle: Auth Notifications
 
 # Auth Notifications
 
-`Unusualify\Modularity\Notifications\`
+`Unusualify\Modularous\Notifications\`
 
 Three transactional email notifications that cover the user registration and password management flows. Each class extends Laravel's `Notification` directly and delivers via the `mail` channel only.
 
@@ -13,7 +13,7 @@ Three transactional email notifications that cover the user registration and pas
 
 ## EmailVerification
 
-`Unusualify\Modularity\Notifications\EmailVerification`
+`Unusualify\Modularous\Notifications\EmailVerification`
 
 Sent when a new user needs to verify their email address before completing registration.
 
@@ -52,7 +52,7 @@ $user->notify(new EmailVerification($token, ['invite' => $inviteId]));
 
 ## GeneratePasswordNotification
 
-`Unusualify\Modularity\Notifications\GeneratePasswordNotification`
+`Unusualify\Modularous\Notifications\GeneratePasswordNotification`
 
 Sent to new users who were created without a password (e.g. admin-invited accounts). The email contains a link where the user sets their password for the first time.
 
@@ -104,7 +104,7 @@ GeneratePasswordNotification::toMailUsing(function ($notifiable, $token) {
 
 ## ResetPasswordNotification
 
-`Unusualify\Modularity\Notifications\ResetPasswordNotification`
+`Unusualify\Modularous\Notifications\ResetPasswordNotification`
 
 Overrides Laravel's built-in `Illuminate\Auth\Notifications\ResetPassword` with an app-branded mail template. The password-reset URL and token logic are inherited from the parent class.
 

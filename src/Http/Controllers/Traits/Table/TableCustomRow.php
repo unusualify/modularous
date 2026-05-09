@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
-use Unusualify\Modularity\Models\Model;
+use Unusualify\Modularous\Models\Model;
 
 trait TableCustomRow
 {

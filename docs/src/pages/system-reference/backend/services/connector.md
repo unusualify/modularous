@@ -80,7 +80,7 @@ $connector->run($fieldSchema, 'endpoint');
 
 ## Usage in Navigation
 
-`ModularityNavigation` uses `Connector` to resolve badge counts on sidebar menu items:
+`ModularousNavigation` uses `Connector` to resolve badge counts on sidebar menu items:
 
 ```php
 // In a module's menu config

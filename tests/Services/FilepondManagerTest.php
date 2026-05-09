@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
-use Unusualify\Modularity\Services\FilepondManager;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\TemporaryFilepond;
+use Unusualify\Modularous\Services\FilepondManager;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FilepondManagerTest extends TestCase
 {
@@ -19,7 +19,7 @@ class FilepondManagerTest extends TestCase
 
         // Manual migration for testing fileponds since TestCase doesn't run all migrations
         $schema = $this->app['db']->connection()->getSchemaBuilder();
-        $temporariesTable = modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries');
+        $temporariesTable = modularousConfig('tables.filepond_temporaries', 'modularous_filepond_temporaries');
 
         if (! $schema->hasTable($temporariesTable)) {
             $schema->create($temporariesTable, function ($table) {
@@ -47,7 +47,7 @@ class FilepondManagerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $folderName = $response->getContent();
 
-        $this->assertDatabaseHas(modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries'), [
+        $this->assertDatabaseHas(modularousConfig('tables.filepond_temporaries', 'modularous_filepond_temporaries'), [
             'folder_name' => $folderName,
             'file_name' => 'avatar.jpg',
         ]);
@@ -75,7 +75,7 @@ class FilepondManagerTest extends TestCase
 
         $this->manager->deleteTemporaryFilepond($request);
 
-        $this->assertDatabaseMissing(modularityConfig('tables.filepond_temporaries', 'modularity_filepond_temporaries'), ['folder_name' => $folderName]);
+        $this->assertDatabaseMissing(modularousConfig('tables.filepond_temporaries', 'modularous_filepond_temporaries'), ['folder_name' => $folderName]);
         $this->assertFalse(Storage::disk('local')->exists('public/fileponds/tmp/' . $folderName));
     }
 }

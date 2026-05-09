@@ -7,9 +7,9 @@ sidebarTitle: make:feature
 
 > Interactive wizard for scaffolding a full Modularous feature bundle
 
-**Signature**: `modularity:make:feature`
+**Signature**: `modularous:make:feature`
 
-**Aliases**: `modularity:create:feature`, `mod:c:feature`
+**Aliases**: `modularous:create:feature`, `mod:c:feature`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ sidebarTitle: make:feature
 ## Usage
 
 ```
-modularity:make:feature [<name>]
+modularous:make:feature [<name>]
 ```
 
 ### Arguments
@@ -53,14 +53,14 @@ modularity:make:feature [<name>]
 ### Fully interactive
 
 ```bash
-php artisan modularity:make:feature
+php artisan modularous:make:feature
 # Prompts: feature name, then each component
 ```
 
 ### With name pre-set
 
 ```bash
-php artisan modularity:make:feature ColorPicker
+php artisan modularous:make:feature ColorPicker
 # Skips the name prompt; still asks about each component
 ```
 

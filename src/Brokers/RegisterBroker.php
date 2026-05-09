@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Brokers;
+namespace Unusualify\Modularous\Brokers;
 
 use Closure;
 use Illuminate\Auth\Passwords\PasswordBroker;
@@ -9,8 +9,8 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Contracts\RegisterBroker as RegisterBrokerContract;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Contracts\RegisterBroker as RegisterBrokerContract;
+use Unusualify\Modularous\Entities\User;
 
 class RegisterBroker extends PasswordBroker implements RegisterBrokerContract
 {
@@ -83,7 +83,7 @@ class RegisterBroker extends PasswordBroker implements RegisterBrokerContract
 
     public function emailIsRegistered($email)
     {
-        $isRegistered = DB::table(modularityConfig('tables.users', 'um_users'))->where('email', $email)->exists();
+        $isRegistered = DB::table(modularousConfig('tables.users', 'um_users'))->where('email', $email)->exists();
 
         return $isRegistered;
     }

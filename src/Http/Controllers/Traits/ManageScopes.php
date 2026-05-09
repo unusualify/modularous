@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -68,7 +68,7 @@ trait ManageScopes
 
     protected function __afterConstructManageScopes($app, $request)
     {
-        $this->defaultTableOrders = (array) Config::get(modularityBaseKey() . '.default_table_orders', ['created_at' => 'desc']);
+        $this->defaultTableOrders = (array) Config::get(modularousBaseKey() . '.default_table_orders', ['created_at' => 'desc']);
 
         // $this->tableOrders = array_merge_recursive_preserve($this->getTableOrders(), $this->tableOrders ?? []);
         // $this->tableOrders = $this->getTableOrders();

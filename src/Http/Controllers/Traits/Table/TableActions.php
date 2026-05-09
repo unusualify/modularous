@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait TableActions
 {
@@ -40,7 +40,7 @@ trait TableActions
      */
     protected function setTableActions()
     {
-        $this->defaultTableActions = (array) Config::get(modularityBaseKey() . '.default_table_actions', []);
+        $this->defaultTableActions = (array) Config::get(modularousBaseKey() . '.default_table_actions', []);
 
         $tableActions = [];
 
@@ -63,7 +63,7 @@ trait TableActions
 
     public function getTableActions(): array
     {
-        $defaultTableAction = (array) Config::get(modularityBaseKey() . '.default_table_action', []);
+        $defaultTableAction = (array) Config::get(modularousBaseKey() . '.default_table_action', []);
 
         return Collection::make($this->tableActions)->reduce(function ($acc, $action, $key) use ($defaultTableAction) {
             $noSuperAdmin = $action['noSuperAdmin'] ?? false;

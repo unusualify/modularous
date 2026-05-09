@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\AutocompleteHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\AutocompleteHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class AutocompleteHydrateTest extends TestCase
 {

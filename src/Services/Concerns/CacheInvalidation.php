@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Services\Concerns;
+namespace Unusualify\Modularous\Services\Concerns;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Traits\Cache\WarmupCache;
-use Unusualify\Modularity\Traits\ModularModel;
+use Unusualify\Modularous\Traits\Cache\WarmupCache;
+use Unusualify\Modularous\Traits\ModularModel;
 
 /**
  * Cache helper methods.
@@ -151,7 +151,7 @@ trait CacheInvalidation
         }
 
         // Redis dışı driver'larda pattern invalidation desteklenmiyor
-        $driver = config('modularity.cache.driver', config('cache.default'));
+        $driver = config('modularous.cache.driver', config('cache.default'));
         if (! in_array($driver, ['redis', 'predis'])) {
             logger()->warning("invalidateByPattern() is only supported with Redis. Current driver: {$driver}");
             return 0;

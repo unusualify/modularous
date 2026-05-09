@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ trait ManageForm
      */
     protected function __afterConstructManageForm($app, $request)
     {
-        $this->defaultFormAttributes = (array) Config::get(modularityBaseKey() . '.default_form_attributes');
+        $this->defaultFormAttributes = (array) Config::get(modularousBaseKey() . '.default_form_attributes');
 
         // $this->formAttributes = array_merge_recursive_preserve($this->getFormAttributes(), $this->formAttributes ?? []);
     }

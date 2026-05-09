@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Modules\Cms\Services\CmsPublicModelResolver;
 use Modules\Cms\Services\CmsSignedPreviewTargetResolver;
 use Modules\Cms\Services\CmsSignedPreviewUrlGenerator;
-use Unusualify\Modularity\Http\Controllers\Controller;
+use Unusualify\Modularous\Http\Controllers\Controller;
 
 /**
  * Panel session GET: mints a time-limited signed CMS public preview URL ({@see cms.signed_preview.show}) for clipboard copy.
@@ -38,7 +38,7 @@ final class SignedPublicPreviewMintController extends Controller
         $localeRaw = $request->query('locale');
         $locale = $localeRaw !== null && $localeRaw !== ''
             ? (string) $localeRaw
-            : (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
+            : (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
 
         $item = $publicModelResolver->resolveByIdBypassingPublicationScopes($modelClass, $id, $locale);
         if ($item === null) {

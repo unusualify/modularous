@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Facades\File;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
@@ -18,10 +18,10 @@ class MakeHorizonSupervisorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:horizon:supervisor';
+    protected $signature = 'modularous:make:horizon:supervisor';
 
     protected $aliases = [
-        'modularity:create:horizon:supervisor',
+        'modularous:create:horizon:supervisor',
     ];
 
     /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Generators\RouteGenerator;
+use Unusualify\Modularous\Generators\RouteGenerator;
 
 class RouteGeneratorTest extends TestCase
 {

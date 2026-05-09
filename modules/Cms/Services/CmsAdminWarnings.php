@@ -25,11 +25,11 @@ final class CmsAdminWarnings
 
         $warnings = array_merge($warnings, $this->pathOverlapWarnings($model));
 
-        if (modularityConfig('cms_seo.admin.publish_soft_warnings', true) && $model->published) {
+        if (modularousConfig('cms_seo.admin.publish_soft_warnings', true) && $model->published) {
             $warnings = array_merge($warnings, $this->publishSeoSoftWarnings($model));
         }
 
-        if (modularityConfig('cms_seo.admin.publish_schedule_warnings', true) && $model->published) {
+        if (modularousConfig('cms_seo.admin.publish_schedule_warnings', true) && $model->published) {
             $warnings = array_merge($warnings, $this->publishScheduleWarnings($model));
         }
 

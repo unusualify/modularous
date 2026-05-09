@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Database\Query\Builder;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Models\Model;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Models\Model;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait AssignmentTrait
 {

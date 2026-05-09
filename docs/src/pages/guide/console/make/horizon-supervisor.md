@@ -7,9 +7,9 @@ sidebarTitle: make:horizon:supervisor
 
 > Generate a Supervisor configuration file for Laravel Horizon
 
-**Signature**: `modularity:make:horizon:supervisor`
+**Signature**: `modularous:make:horizon:supervisor`
 
-**Alias**: `modularity:create:horizon:supervisor`
+**Alias**: `modularous:create:horizon:supervisor`
 
 **Category**: Make
 
@@ -24,7 +24,7 @@ Interactive wizard that creates a Supervisor `.conf` file for running Laravel Ho
 ## Usage
 
 ```
-modularity:make:horizon:supervisor
+modularous:make:horizon:supervisor
 ```
 
 No arguments or options — fully interactive.

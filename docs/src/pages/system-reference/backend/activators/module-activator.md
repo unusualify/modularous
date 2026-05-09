@@ -6,7 +6,7 @@ sidebarTitle: ModuleActivator
 # ModuleActivator
 
 **File**: `src/Activators/ModuleActivator.php`  
-**Namespace**: `Unusualify\Modularity\Activators`  
+**Namespace**: `Unusualify\Modularous\Activators`  
 **Extends**: `Nwidart\Modules\Activators\FileActivator`
 
 `ModuleActivator` is the route-level status manager used by Modularous to enable or disable specific route actions (for example `create`, `edit`, `destroy`) inside a module.
@@ -53,7 +53,7 @@ The route statuses file stores an object keyed by route/action key:
 
 ## Related
 
-- [ModularityActivator](./modularity-activator) — module-level status manager
+- [ModularousActivator](./modularous-activator) — module-level status manager
 - [Module System](/system-reference/modules)
 - [Commands · route:enable](/guide/console/module/route-enable)
 - [Commands · route:disable](/guide/console/module/route-disable)

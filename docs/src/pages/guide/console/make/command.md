@@ -7,9 +7,9 @@ sidebarTitle: make:command
 
 > Scaffold a new Artisan command class
 
-**Signature**: `modularity:make:command`
+**Signature**: `modularous:make:command`
 
-**Aliases**: `modularity:create:command`, `mod:c:cmd`
+**Aliases**: `modularous:create:command`, `mod:c:cmd`
 
 **Category**: Make
 
@@ -17,14 +17,14 @@ sidebarTitle: make:command
 
 ## Description
 
-Creates a new Artisan command class inside `src/Console/` of the Modularous vendor path. The signature is automatically prefixed with `modularity:`, tab and newline escape sequences (`\t`, `\n`) in the signature string are converted to real whitespace.
+Creates a new Artisan command class inside `src/Console/` of the Modularous vendor path. The signature is automatically prefixed with `modularous:`, tab and newline escape sequences (`\t`, `\n`) in the signature string are converted to real whitespace.
 
 ---
 
 ## Usage
 
 ```
-modularity:make:command [options] <name> <signature>
+modularous:make:command [options] <name> <signature>
 ```
 
 ### Arguments
@@ -32,7 +32,7 @@ modularity:make:command [options] <name> <signature>
 | Argument | Required | Description |
 |----------|----------|-------------|
 | `name` | yes | Class name (studly-cased, `Command` suffix added automatically) |
-| `signature` | yes | Artisan signature string (without `modularity:` prefix) |
+| `signature` | yes | Artisan signature string (without `modularous:` prefix) |
 
 ### Options
 
@@ -47,14 +47,14 @@ modularity:make:command [options] <name> <signature>
 ### Minimal command
 
 ```bash
-php artisan modularity:make:command SyncThemes sync:themes
-# → src/Console/SyncThemesCommand.php with signature: modularity:sync:themes
+php artisan modularous:make:command SyncThemes sync:themes
+# → src/Console/SyncThemesCommand.php with signature: modularous:sync:themes
 ```
 
 ### Command with arguments and description
 
 ```bash
-php artisan modularity:make:command ImportData \
+php artisan modularous:make:command ImportData \
     "import:data {source : The data source path}" \
     --description="Import data from a source file"
 ```

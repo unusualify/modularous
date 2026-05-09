@@ -2,7 +2,7 @@
 
 namespace Modules\Cms\Http\Requests;
 
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 /**
  * Panel JSON POST for {@see \Modules\Cms\Http\Controllers\CmsSitemapPanelController} (body genelde boş; ileri alanlar için genişletilebilir).

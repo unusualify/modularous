@@ -11,20 +11,20 @@ Helpers that produce Vue component configuration arrays for Modularous modal and
 
 ## Functions
 
-### `modularity_response_modal_body_component`
+### `modularous_response_modal_body_component`
 
 ```php
-modularity_response_modal_body_component(string $component, array $props = []): array
+modularous_response_modal_body_component(string $component, array $props = []): array
 ```
 
 Returns a config array describing a `ue-recursive-stuff` Vue component to be used as a modal body. Merges `$props` into the component descriptor.
 
 ---
 
-### `modularity_modal_service`
+### `modularous_modal_service`
 
 ```php
-modularity_modal_service(string $component, array $props = []): array
+modularous_modal_service(string $component, array $props = []): array
 ```
 
 Builds a `ue-recursive-stuff` modal service config — the structure that drives Modularous's dynamic modal system. Returns:
@@ -39,30 +39,30 @@ Builds a `ue-recursive-stuff` modal service config — the structure that drives
 
 ---
 
-### `modularity_modal_service_form`
+### `modularous_modal_service_form`
 
 ```php
-modularity_modal_service_form(string $component, array $props = []): array
+modularous_modal_service_form(string $component, array $props = []): array
 ```
 
-Variant of `modularity_modal_service` that wraps a `ue-form` component inside the modal body. Used when the modal content is a form.
+Variant of `modularous_modal_service` that wraps a `ue-form` component inside the modal body. Used when the modal content is a form.
 
 ---
 
-### `modularity_new_modal_service`
+### `modularous_new_modal_service`
 
 ```php
-modularity_new_modal_service(string $component, array $props = []): array
+modularous_new_modal_service(string $component, array $props = []): array
 ```
 
-Builds a new-style modal service config using the updated modal component structure introduced in a later Modularous version. Use this for new modals; prefer `modularity_modal_service` only for legacy modals.
+Builds a new-style modal service config using the updated modal component structure introduced in a later Modularous version. Use this for new modals; prefer `modularous_modal_service` only for legacy modals.
 
 ---
 
-### `modularity_new_response_modal_body_component`
+### `modularous_new_response_modal_body_component`
 
 ```php
-modularity_new_response_modal_body_component(string $component, array $props = []): array
+modularous_new_response_modal_body_component(string $component, array $props = []): array
 ```
 
-New-style modal body component descriptor. Pair with `modularity_new_modal_service` when building modals with the updated component structure.
+New-style modal body component descriptor. Pair with `modularous_new_modal_service` when building modals with the updated component structure.

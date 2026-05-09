@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Migration;
+namespace Unusualify\Modularous\Console\Migration;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migrator;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MigrateRollbackCommand extends Command
 {
@@ -15,7 +15,7 @@ class MigrateRollbackCommand extends Command
      *
      * @var string
      */
-    protected $name = 'modularity:migrate:rollback';
+    protected $name = 'modularous:migrate:rollback';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class MigrateRollbackCommand extends Command
     public function handle(): int
     {
         /** @var Module $module */
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         $basePattern = preg_quote(base_path('/'), '/');
         $relativeDir = preg_replace('/' . $basePattern . '/', '', $module->getDirectoryPath('Database/Migrations'));

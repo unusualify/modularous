@@ -10,7 +10,7 @@ Modularous ships two tiers of notifications that serve different purposes.
 
 | Tier | Namespace | Purpose |
 |------|-----------|---------|
-| **Auth notifications** | `Unusualify\Modularity\Notifications\` | Low-level transactional emails for registration and password flows |
+| **Auth notifications** | `Unusualify\Modularous\Notifications\` | Low-level transactional emails for registration and password flows |
 | **System notifications** | `Modules\SystemNotification\Notifications\` | Feature-rich, queue-able, multi-channel notifications tied to model lifecycle events |
 
 ---
@@ -91,21 +91,21 @@ Appended attributes on the model: `is_read`, `is_mine`, `subject`, `message`, `h
         │       stored in notifications table
         │
         └─► Notification::route('mail', ...)  [mail channel]
-                queued via modularity.notifications.mail_queue
+                queued via modularous.notifications.mail_queue
 ```
 
 ---
 
 ## Configuration
 
-All system-notification behaviour is governed by `config/modularity.php` under the `notifications` key:
+All system-notification behaviour is governed by `config/modularous.php` under the `notifications` key:
 
 | Key | Description |
 |-----|-------------|
-| `modularity.mail.enabled` | Master switch — disables all mail from `Listener::handle()` when `false` |
-| `modularity.notifications.mail_connection` | Queue connection used for mail channel |
-| `modularity.notifications.database_connection` | Queue connection used for database channel |
-| `modularity.notifications.mail_queue` | Queue name for mail jobs |
-| `modularity.notifications.database_queue` | Queue name for database notification jobs |
-| `modularity.notifications.{ClassName}.channels` | Per-class channel override (comma-separated string) |
-| `modularity.notifications.authorizable.channels` | Channel override for `TaskAssignedToAuthorizableNotification` |
+| `modularous.mail.enabled` | Master switch — disables all mail from `Listener::handle()` when `false` |
+| `modularous.notifications.mail_connection` | Queue connection used for mail channel |
+| `modularous.notifications.database_connection` | Queue connection used for database channel |
+| `modularous.notifications.mail_queue` | Queue name for mail jobs |
+| `modularous.notifications.database_queue` | Queue name for database notification jobs |
+| `modularous.notifications.{ClassName}.channels` | Per-class channel override (comma-separated string) |
+| `modularous.notifications.authorizable.channels` | Channel override for `TaskAssignedToAuthorizableNotification` |

@@ -5,7 +5,7 @@ sidebarTitle: FileLoader
 
 # FileLoader
 
-`Unusualify\Modularity\Support\FileLoader`
+`Unusualify\Modularous\Support\FileLoader`
 
 Extends Laravel's `Illuminate\Translation\FileLoader` to support multiple translation search paths and expose runtime path/group introspection. It is bound in the service container and powers Modularous multi-module translation resolution.
 
@@ -30,7 +30,7 @@ new FileLoader(Filesystem $files, array|string $path)
 ## Example
 
 ```php
-/** @var \Unusualify\Modularity\Support\FileLoader $loader */
+/** @var \Unusualify\Modularous\Support\FileLoader $loader */
 $loader = app('translation.loader');
 
 // Add a module's translation path at runtime

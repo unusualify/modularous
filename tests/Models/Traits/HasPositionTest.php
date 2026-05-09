@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Traits\HasPosition;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Traits\HasPosition;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasPositionTest extends ModelTestCase
 {
@@ -31,7 +31,7 @@ class HasPositionTest extends ModelTestCase
     {
         $model = new TestPositionModel;
         $traits = class_uses_recursive($model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasPosition', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasPosition', $traits);
     }
 
     public function test_boot_has_position_sets_position_on_creating()

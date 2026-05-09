@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
-use Unusualify\Modularity\Models\Model;
+use Unusualify\Modularous\Models\Model;
 
 trait AuthorizableTrait
 {
@@ -18,7 +18,7 @@ trait AuthorizableTrait
         if (isset($schema['authorized_id']) && $object->authorization_record_exists) {
             $fields['authorized_id'] = $object->authorizationRecord->authorized_id;
             $fields['authorized_type'] = $object->authorizationRecord->authorized_type;
-            if (! in_array('Unusualify\Modularity\Entities\Traits\HasUuid', class_uses_recursive($fields['authorized_type']))) {
+            if (! in_array('Unusualify\Modularous\Entities\Traits\HasUuid', class_uses_recursive($fields['authorized_type']))) {
                 $fields['authorized_id'] = intval($fields['authorized_id']);
             }
         }

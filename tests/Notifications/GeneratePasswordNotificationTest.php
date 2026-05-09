@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Notifications;
+namespace Unusualify\Modularous\Tests\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Notifications\GeneratePasswordNotification;
+use Unusualify\Modularous\Tests\TestCase;
 
 class GeneratePasswordNotificationTest extends TestCase
 {

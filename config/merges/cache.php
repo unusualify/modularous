@@ -6,38 +6,38 @@ return [
     | Cache Enabled
     |--------------------------------------------------------------------------
     |
-    | This option controls whether the modularity caching system is enabled.
+    | This option controls whether the modularous caching system is enabled.
     | When disabled, all cache operations will be bypassed and data will
     | be fetched directly from the database.
     |
     */
-    'enabled' => env('MODULARITY_RESOURCE_CACHE_ENABLED', true),
+    'enabled' => env('MODULAROUS_RESOURCE_CACHE_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
     | Check Whether to Cache All Modules
     |--------------------------------------------------------------------------
     |
-    | This option controls whether the modularity caching system is enabled for all modules on default behavior.
-    | When enabled, the modularity caching system will be enabled for all modules on default behavior. You must
+    | This option controls whether the modularous caching system is enabled for all modules on default behavior.
+    | When enabled, the modularous caching system will be enabled for all modules on default behavior. You must
     | use modules key to disable/enable the caching system for specific modules.
     |
     */
-    'all_modules' => env('MODULARITY_RESOURCE_CACHE_ALL_MODULES', false),
+    'all_modules' => env('MODULAROUS_RESOURCE_CACHE_ALL_MODULES', false),
 
     /*
     |--------------------------------------------------------------------------
     | Cache Mode
     |--------------------------------------------------------------------------
     |
-    | This option controls the mode of the modularity caching system.
+    | This option controls the mode of the modularous caching system.
     | The possible values are: local, development, production.
-    | The mode will be used to determine if the modularity caching system is enabled.
-    | If the mode is local, the modularity caching system to log the cache operations to the console.
-    | If the mode is development, the modularity caching system to log the cache operations to the database.
-    | If the mode is production, the modularity caching system to log the cache operations to the file.
+    | The mode will be used to determine if the modularous caching system is enabled.
+    | If the mode is local, the modularous caching system to log the cache operations to the console.
+    | If the mode is development, the modularous caching system to log the cache operations to the database.
+    | If the mode is production, the modularous caching system to log the cache operations to the file.
     */
-    'environment_variable' => env('MODULARITY_RESOURCE_CACHE_MODE', 'local'),
+    'environment_variable' => env('MODULAROUS_RESOURCE_CACHE_MODE', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,10 +45,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | This option controls which cache driver should be used for storing
-    | modularity cache data. By default, it uses Redis for optimal performance.
+    | modularous cache data. By default, it uses Redis for optimal performance.
     |
     */
-    'driver' => env('MODULARITY_RESOURCE_CACHE_DRIVER', 'redis'),
+    'driver' => env('MODULAROUS_RESOURCE_CACHE_DRIVER', 'redis'),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ return [
     | with other cached data in your application.
     |
     */
-    'prefix' => env('MODULARITY_RESOURCE_CACHE_PREFIX', 'modularity'),
+    'prefix' => env('MODULAROUS_RESOURCE_CACHE_PREFIX', 'modularous'),
 
     /*
     |--------------------------------------------------------------------------
@@ -75,14 +75,14 @@ return [
     |
     */
     'ttl' => [
-        'counts' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_COUNTS', 300),           // 5 minutes
-        'index' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_INDEX', 600),             // 10 minutes
-        'record' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RECORD', 1800),          // 30 minutes
-        'formattedItem' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_FORMATTED_ITEM', 1800),          // 30 minutes
-        'formItem' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_FORM_ITEM', 1800),          // 30 minutes
+        'counts' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_COUNTS', 300),           // 5 minutes
+        'index' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_INDEX', 600),             // 10 minutes
+        'record' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_RECORD', 1800),          // 30 minutes
+        'formattedItem' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_FORMATTED_ITEM', 1800),          // 30 minutes
+        'formItem' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_FORM_ITEM', 1800),          // 30 minutes
 
-        'response:json' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RESPONSE', 300),  // 5 minutes (formatted JSON)
-        'response:index' => (int) env('MODULARITY_RESOURCE_CACHE_TTL_RESPONSE', 300), // 5 minutes (index page)
+        'response:json' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_RESPONSE', 300),  // 5 minutes (formatted JSON)
+        'response:index' => (int) env('MODULAROUS_RESOURCE_CACHE_TTL_RESPONSE', 300), // 5 minutes (index page)
     ],
 
     /*
@@ -94,7 +94,7 @@ return [
     | cache tags are only supported by certain cache drivers (Redis, Memcached).
     |
     */
-    'use_tags' => env('MODULARITY_RESOURCE_CACHE_USE_TAGS', true),
+    'use_tags' => env('MODULAROUS_RESOURCE_CACHE_USE_TAGS', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -118,7 +118,7 @@ return [
     | Disable this only if all queries are truly public and user-independent.
     |
     */
-    'user_aware' => env('MODULARITY_RESOURCE_CACHE_USER_AWARE', true),
+    'user_aware' => env('MODULAROUS_RESOURCE_CACHE_USER_AWARE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -142,14 +142,14 @@ return [
     | - HasOneThrough, HasManyThrough (with middleman tables)
     |
     | Commands:
-    | - php artisan modularity:cache:graph show    -- Display the graph
-    | - php artisan modularity:cache:graph rebuild -- Rebuild the graph
-    | - php artisan modularity:cache:graph stats   -- Show statistics
+    | - php artisan modularous:cache:graph show    -- Display the graph
+    | - php artisan modularous:cache:graph rebuild -- Rebuild the graph
+    | - php artisan modularous:cache:graph stats   -- Show statistics
     |
     */
     'graph' => [
-        'enabled' => env('MODULARITY_RESOURCE_CACHE_GRAPH_ENABLED', true),
-        'ttl' => (int) env('MODULARITY_RESOURCE_CACHE_GRAPH_TTL', 86400), // 24 hours
+        'enabled' => env('MODULAROUS_RESOURCE_CACHE_GRAPH_ENABLED', true),
+        'ttl' => (int) env('MODULAROUS_RESOURCE_CACHE_GRAPH_TTL', 86400), // 24 hours
     ],
 
     /*

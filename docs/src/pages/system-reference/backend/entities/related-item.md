@@ -6,7 +6,7 @@ sidebarTitle: RelatedItem
 # RelatedItem
 
 **File**: `src/Entities/RelatedItem.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Polymorphic many-to-many pivot model for relating any two models to each other. Has no primary key and no auto-incrementing — it uses a composite of the morph columns. Timestamps are disabled.
@@ -32,7 +32,7 @@ The subject model (the model that "has" related items).
 
 ## Table
 
-Resolved from `modularity.related_table`, defaults to `twill_related`.
+Resolved from `modularous.related_table`, defaults to `twill_related`.
 
 ## Related
 

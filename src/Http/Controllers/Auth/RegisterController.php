@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -11,20 +11,20 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Events\ModularityUserRegistered;
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Events\ModularousUserRegistered;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Services\MessageStage;
 
 class RegisterController extends Controller
 {
     public function showForm()
     {
-        if (modularityConfig('email_verified_register')) {
+        if (modularousConfig('email_verified_register')) {
             return redirect()->route(Route::hasAdmin('register.email_form'));
         }
 
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', $this->buildAuthViewData('register'));
+        return $this->viewFactory->make(modularousBaseKey() . '::auth.register', $this->buildAuthViewData('register'));
     }
 
     /**
@@ -45,7 +45,7 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
-        $emailVerifiedRegister = modularityConfig('email_verified_register');
+        $emailVerifiedRegister = modularousConfig('email_verified_register');
 
         if ($emailVerifiedRegister) {
             return $request->wantsJson()
@@ -72,7 +72,7 @@ class RegisterController extends Controller
             return $res;
         }
 
-        event(new ModularityUserRegistering($request));
+        event(new ModularousUserRegistering($request));
 
         $user = Company::create([
             'name' => $request['company'] ?? '',
@@ -86,9 +86,9 @@ class RegisterController extends Controller
             'language' => $request['language'] ?? app()->getLocale(),
         ]);
 
-        $user->assignRole(modularityConfig('default_register_role'));
+        $user->assignRole(modularousConfig('default_register_role'));
 
-        event(new ModularityUserRegistered($user, $request));
+        event(new ModularousUserRegistered($user, $request));
 
         return $request->wantsJson()
             ? new JsonResponse([
@@ -102,7 +102,7 @@ class RegisterController extends Controller
 
     public function rules()
     {
-        $usersTable = modularityConfig('tables.users', 'um_users');
+        $usersTable = modularousConfig('tables.users', 'um_users');
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -117,7 +117,7 @@ class RegisterController extends Controller
 
     public function success()
     {
-        return view(modularityBaseKey() . '::auth.success', [
+        return view(modularousBaseKey() . '::auth.success', [
             'taskState' => [
                 'status' => 'success',
                 'title' => __('authentication.register-title'),

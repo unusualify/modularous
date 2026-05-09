@@ -11,7 +11,7 @@ This trait provides the repository-level logic for the state machine feature. It
 
 ## StateableTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\StateableTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\StateableTrait`
 
 Builds state-based filter lists and data table filter tabs by querying the model's configured states. Provides count-by-status methods for the table UI.
 
@@ -74,7 +74,7 @@ class OrderRepository extends Repository
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\StateableTrait;
+use Unusualify\Modularous\Repositories\Traits\StateableTrait;
 
 class OrderRepository extends Repository
 {

@@ -5,7 +5,7 @@ sidebarTitle: StubsGenerator
 
 # StubsGenerator
 
-**Class**: `Unusualify\Modularity\Generators\StubsGenerator`  
+**Class**: `Unusualify\Modularous\Generators\StubsGenerator`  
 **Source**: `src/Generators/StubsGenerator.php`  
 **Extends**: [`Generator`](./generator)
 
@@ -42,7 +42,7 @@ Validates that the route config exists, then delegates entirely to `generateFile
 
 ### `generateFiles()`
 
-Iterates the stubs defined in `modularity.stubs.files` and writes each one if:
+Iterates the stubs defined in `modularous.stubs.files` and writes each one if:
 - The file does not yet exist, **or**
 - `forcibleStub($stub)` returns `true`
 
@@ -68,4 +68,4 @@ $generator
     ->generate();
 ```
 
-This is the generator used when running `modularity:fix:stubs` — it lets developers refresh auto-generated boilerplate without losing manual edits to files like the migration or model.
+This is the generator used when running `modularous:fix:stubs` — it lets developers refresh auto-generated boilerplate without losing manual edits to files like the migration or model.

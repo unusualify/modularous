@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 trait $STUDLY_NAME$Trait
 {
@@ -30,7 +30,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @return string[]
      */
@@ -42,7 +42,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @return void
      */
@@ -52,7 +52,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @return void
      */
@@ -62,7 +62,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @return void
      */
@@ -72,7 +72,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return void
      */
     public function afterDelete$STUDLY_NAME$Trait($object)
@@ -81,7 +81,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return void
      */
     public function afterForceDelete$STUDLY_NAME$Trait($object)
@@ -90,7 +90,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return void
      */
     public function afterRestore$STUDLY_NAME$Trait($object)
@@ -99,9 +99,9 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
-     * @return \Unusualify\Modularity\Models\Model
+     * @return \Unusualify\Modularous\Models\Model
      */
     public function hydrate$STUDLY_NAME$Trait($object, $fields)
     {
@@ -111,7 +111,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @param array $schema
      * @return array
@@ -124,7 +124,7 @@ trait $STUDLY_NAME$Trait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @param array $fields
      * @param array $schema
      * @return array

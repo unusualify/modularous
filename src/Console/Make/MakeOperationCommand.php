@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MakeOperationCommand extends BaseCommand
 {
@@ -18,9 +18,9 @@ class MakeOperationCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:operation
+    protected $signature = 'modularous:make:operation
         {name : The name of the operation}
-        {--self : The path of the modularity}
+        {--self : The path of the modularous}
         {--path= : The path of the operation}
         {--t|tag= : The tag of the operation}
         {--async : The operation will be processed asynchronously}
@@ -28,9 +28,9 @@ class MakeOperationCommand extends BaseCommand
     ';
 
     protected $aliases = [
-        'modularity:operations:make',
+        'modularous:operations:make',
         'mod:c:operation',
-        'modularity:create:operation',
+        'modularous:create:operation',
     ];
 
     /**
@@ -38,7 +38,7 @@ class MakeOperationCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Create an operation with the modularity tag in order to use in timokoerber/laravel-one-time-operations';
+    protected $description = 'Create an operation with the modularous tag in order to use in timokoerber/laravel-one-time-operations';
 
     /**
      * Create a new command instance.
@@ -65,9 +65,9 @@ class MakeOperationCommand extends BaseCommand
         $fileNameSegments = [$this->getDatePrefix()];
 
         if ($this->option('self')) {
-            $path = Modularity::getVendorPath('operations');
-            $tag = $tag ?? 'modularity';
-            $fileNameSegments[] = 'modularity';
+            $path = Modularous::getVendorPath('operations');
+            $tag = $tag ?? 'modularous';
+            $fileNameSegments[] = 'modularous';
 
         } else {
             $path = $this->option('path') ?? base_path(config('one-time-operations.directory', 'operations'));

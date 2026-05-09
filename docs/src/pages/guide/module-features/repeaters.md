@@ -16,8 +16,8 @@ Add the `HasRepeaters` trait to your model:
 
 namespace Modules\Page\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
 
 class Page extends Model
 {
@@ -42,8 +42,8 @@ Add `RepeatersTrait` to your repository:
 
 namespace Modules\Page\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\RepeatersTrait;
 
 class PageRepository extends Repository
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Modules\SystemNotification\Events\AssignmentCreated;
 use Modules\SystemNotification\Events\AssignmentUpdated;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
-use Unusualify\Modularity\Entities\Scopes\AssignmentScopes;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Entities\Scopes\AssignmentScopes;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Filepond;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class AssignmentTest extends ModelTestCase
 {
@@ -27,7 +27,7 @@ class AssignmentTest extends ModelTestCase
     public function test_get_table_assignment()
     {
         $assignment = new Assignment;
-        $this->assertEquals(modularityConfig('tables.assignments', 'um_assignments'), $assignment->getTable());
+        $this->assertEquals(modularousConfig('tables.assignments', 'um_assignments'), $assignment->getTable());
     }
 
     public function test_fillable_attributes()
@@ -573,7 +573,7 @@ class AssignmentTest extends ModelTestCase
         $this->assertStringContainsString('font-weight-bold text-warning', $cancelled->status_interval_description);
 
         $this->assertEquals($assignee->name, $cancelled->assignee_name);
-        $this->assertEquals('/vendor/modularity/jpg/anonymous.jpg', $cancelled->assignee_avatar);
+        $this->assertEquals('/vendor/modularous/jpg/anonymous.jpg', $cancelled->assignee_avatar);
         $this->assertEquals($assigner->name, $cancelled->assigner_name);
 
         Carbon::setTestNow(); // clear

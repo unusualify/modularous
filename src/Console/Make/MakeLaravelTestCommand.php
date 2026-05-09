@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 // use Illuminate\Console\Command as Console;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\text;
 
@@ -20,17 +20,17 @@ class MakeLaravelTestCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:laravel:test';
+    protected $name = 'modularous:make:laravel:test';
 
     /**
      * The signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'modularity:make:laravel:test {module} {test} {--unit}';
+    protected $signature = 'modularous:make:laravel:test {module} {test} {--unit}';
 
     protected $aliases = [
-        'modularity:create:laravel:test',
+        'modularous:create:laravel:test',
     ];
 
     /**
@@ -62,7 +62,7 @@ class MakeLaravelTestCommand extends BaseCommand
             $test_name = $this->getStudlyName(text('What is the test name?'));
         }
 
-        $testGenerator = $this->laravel->make('Unusualify\Modularity\Generators\LaravelTestGenerator', ['name' => $test_name]);
+        $testGenerator = $this->laravel->make('Unusualify\Modularous\Generators\LaravelTestGenerator', ['name' => $test_name]);
 
         return 0;
     }
@@ -97,7 +97,7 @@ class MakeLaravelTestCommand extends BaseCommand
             // ['no-defaults', null, InputOption::VALUE_NONE, 'unuse default input and headers.'],
             // ['notAsk', null, InputOption::VALUE_NONE, 'don\'t ask for trait questions.'],
             // ['all', null, InputOption::VALUE_NONE, 'add all traits.'],
-        ], modularityTraitOptions());
+        ], modularousTraitOptions());
     }
 
     /**

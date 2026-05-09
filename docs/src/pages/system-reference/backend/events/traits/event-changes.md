@@ -5,7 +5,7 @@ sidebarTitle: EventChanges
 
 # EventChanges
 
-`Unusualify\Modularity\Events\Traits\EventChanges`
+`Unusualify\Modularous\Events\Traits\EventChanges`
 
 Captures which model attributes and relationships changed before the event fired. Added to every `ModelEvent` subclass automatically.
 

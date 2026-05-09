@@ -1,7 +1,7 @@
 - Modules live in `modules/` and are self-bootstrapped via their ServiceProvider.
 - Autoload PSR-4 maps `Modules\\` to `modules/`.
 - Use contracts/interfaces to decouple modules; avoid direct class coupling.
-- Vite assets are exposed through `ModularityVite` helper and registered entries.
+- Vite assets are exposed through `ModularousVite` helper and registered entries.
 - Inertia + Vue pages/components live under module Resources/js folders following composition API.
 - Providers must register routes, views, translations and migrations via load helpers.
 - Coverage tooling: commands under `src/Console/Coverage` generate and analyze module coverage.

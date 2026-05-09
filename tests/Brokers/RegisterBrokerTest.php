@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Brokers;
+namespace Unusualify\Modularous\Tests\Brokers;
 
 use Carbon\Carbon;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
@@ -8,10 +8,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Notifications\EmailVerification;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Notifications\EmailVerification;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class RegisterBrokerTest extends ModelTestCase
 {
@@ -33,15 +33,15 @@ class RegisterBrokerTest extends ModelTestCase
     {
         parent::setUp();
 
-        config(['auth.passwords.modularity_users' => [
-            'provider' => 'modularity_users',
+        config(['auth.passwords.modularous_users' => [
+            'provider' => 'modularous_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ]]);
 
         config(['auth.passwords.register_verified_users' => [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'um_email_verification_tokens',
             'expire' => 60,
             'throttle' => 60,
@@ -60,7 +60,7 @@ class RegisterBrokerTest extends ModelTestCase
 
         $this->broker = new RegisterBroker(
             $this->tokens,
-            $this->app['auth']->createUserProvider('modularity_users'),
+            $this->app['auth']->createUserProvider('modularous_users'),
             $this->app['db']->connection(),
             $this->brokerConfig,
         );

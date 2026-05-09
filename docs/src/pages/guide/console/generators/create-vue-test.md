@@ -9,8 +9,8 @@ sidebarTitle: Create Vue Test
 
 ## Command Information
 
-- **Signature:** `modularity:make:vue:test [name?] [type?] [--importDir] [--F|force]`
-- **Aliases:** `modularity:create:vue:test`, `mod:c:vue:test`
+- **Signature:** `modularous:make:vue:test [name?] [type?] [--importDir] [--F|force]`
+- **Aliases:** `modularous:create:vue:test`, `mod:c:vue:test`
 - **Category:** Generators
 
 ## Arguments
@@ -35,13 +35,13 @@ Delegates to `VueTestGenerator`, which resolves the test type and writes a Vites
 
 ```bash
 # Fully interactive
-php artisan modularity:make:vue:test
+php artisan modularous:make:vue:test
 
 # Provide all arguments
-php artisan modularity:make:vue:test ProductCard component
+php artisan modularous:make:vue:test ProductCard component
 
 # Force overwrite
-php artisan modularity:make:vue:test ProductCard component --force
+php artisan modularous:make:vue:test ProductCard component --force
 ```
 
 ## Related

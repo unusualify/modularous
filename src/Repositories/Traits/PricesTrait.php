@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Models\Currency;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Facades\CurrencyExchange;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Facades\CurrencyExchange;
 
 trait PricesTrait
 {
@@ -52,8 +52,8 @@ trait PricesTrait
         //     return;
         // }
 
-        $onlyBaseCurrency = modularityConfig('services.currency_exchange.active');
-        $baseCurrencyIso4217 = modularityConfig('services.currency_exchange.base_currency');
+        $onlyBaseCurrency = modularousConfig('services.currency_exchange.active');
+        $baseCurrencyIso4217 = modularousConfig('services.currency_exchange.base_currency');
 
         $priceSavingKey = Price::$priceSavingKey;
 
@@ -81,7 +81,7 @@ trait PricesTrait
                     }
 
                     if ($onlyBaseCurrency) {
-                        foreach (modularityConfig('enabled_currencies') as $key => $iso4217) {
+                        foreach (modularousConfig('enabled_currencies') as $key => $iso4217) {
                             $_currency = Currency::where('iso_4217', $iso4217)->first();
                             if (! $_currency) {
                                 continue;
@@ -128,7 +128,7 @@ trait PricesTrait
     {
         if (method_exists($object, 'prices') && get_class($object->prices()) === 'Illuminate\Database\Eloquent\Relations\MorphMany') {
             $priceSavingKey = Price::$priceSavingKey;
-            $onlyBaseCurrency = modularityConfig('services.currency_exchange.active');
+            $onlyBaseCurrency = modularousConfig('services.currency_exchange.active');
             $priceModel = $object->prices()->getRelated();
             $defaultPriceAttributes = $priceModel->defaultAttributes();
 

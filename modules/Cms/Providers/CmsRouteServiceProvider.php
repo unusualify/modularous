@@ -29,11 +29,11 @@ class CmsRouteServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
-        if (! (bool) modularityConfig('cms_routing.auto_register_public_front', true)) {
+        if (! (bool) modularousConfig('cms_routing.auto_register_public_front', true)) {
             return;
         }
 

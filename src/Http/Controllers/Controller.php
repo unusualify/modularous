@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as LaravelController;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Exceptions\Handler as ModularityHandler;
+use Unusualify\Modularous\Exceptions\Handler as ModularousHandler;
 
 class Controller extends LaravelController
 {
@@ -17,8 +17,8 @@ class Controller extends LaravelController
 
     public function __construct()
     {
-        if (modularityConfig('bind_exception_handler', false)) {
-            App::singleton(ExceptionHandler::class, ModularityHandler::class);
+        if (modularousConfig('bind_exception_handler', false)) {
+            App::singleton(ExceptionHandler::class, ModularousHandler::class);
         }
     }
 

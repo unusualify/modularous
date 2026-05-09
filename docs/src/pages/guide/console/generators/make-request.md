@@ -9,7 +9,7 @@ sidebarTitle: Make Request
 
 ## Command Information
 
-- **Signature:** `modularity:make:request {module} {request} [--rules=]`
+- **Signature:** `modularous:make:request {module} {request} [--rules=]`
 - **Category:** Generators
 
 ## Arguments
@@ -29,10 +29,10 @@ sidebarTitle: Make Request
 
 ```bash
 # Generate an empty StorePostRequest
-php artisan modularity:make:request Blog StorePost
+php artisan modularous:make:request Blog StorePost
 
 # Generate with seeded validation rules
-php artisan modularity:make:request Blog StorePost --rules="title=required|string|max:255&body=nullable|string"
+php artisan modularous:make:request Blog StorePost --rules="title=required|string|max:255&body=nullable|string"
 ```
 
 ## Output

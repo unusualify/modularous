@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 

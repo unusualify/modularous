@@ -5,7 +5,7 @@ sidebarTitle: Controllers Overview
 
 # Controllers
 
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Location**: `src/Http/Controllers/`
 
 All HTTP controllers in the Modularous package. They form a four-level hierarchy rooted at `Controller`, with specialized controllers for admin panel, REST APIs, authentication, and utility endpoints.

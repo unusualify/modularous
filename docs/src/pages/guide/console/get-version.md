@@ -9,7 +9,7 @@ sidebarTitle: Get Version
 
 ## Command Information
 
-- **Signature:** `modularity:get:version [--p|package=]`
+- **Signature:** `modularous:get:version [--p|package=]`
 - **Alias:** `mod:g:ver`
 - **Category:** Module
 
@@ -17,7 +17,7 @@ sidebarTitle: Get Version
 
 | Option | Description |
 |--------|-------------|
-| `--package=` / `-p` | The Composer package name to look up (e.g. `unusualify/modularity`) |
+| `--package=` / `-p` | The Composer package name to look up (e.g. `unusualify/modularous`) |
 
 ## What It Does
 
@@ -26,7 +26,7 @@ Calls `get_package_version($package)` and prints the result. Useful for quickly 
 ## Examples
 
 ```bash
-php artisan modularity:get:version --package=unusualify/modularity
+php artisan modularous:get:version --package=unusualify/modularous
 php artisan mod:g:ver -p laravel/framework
 ```
 

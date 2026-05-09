@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
-use Unusualify\Modularity\Support\TranslatableMetadata;
+use Unusualify\Modularous\Support\TranslatableMetadata;
 
 /**
  * Opt-in translatable metadata (SEO + robots + sitemap flag) for models using {@see HasTranslation}.

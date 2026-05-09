@@ -6,13 +6,13 @@ sidebarTitle: Overview
 # MediaLibrary Services
 
 **Directory**: `src/Services/MediaLibrary/`  
-**Facade**: `Unusualify\Modularity\Facades\ImageService` (bound as `imageService`)
+**Facade**: `Unusualify\Modularous\Facades\ImageService` (bound as `imageService`)
 
 The MediaLibrary namespace provides a **driver-based image service abstraction**. All concrete drivers implement `ImageServiceInterface`, exposing a unified API for generating image URLs regardless of the underlying CDN or storage backend.
 
 ## Selecting a Driver
 
-Set `modularity.media_library.image_service` in `config/modularity.php`:
+Set `modularous.media_library.image_service` in `config/modularous.php`:
 
 ```php
 'media_library' => [
@@ -56,7 +56,7 @@ All drivers implement the following interface:
 ## Facade Usage
 
 ```php
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
 
 // Via facade (resolves the active driver)
 $url     = ImageService::getUrl($media->uuid);

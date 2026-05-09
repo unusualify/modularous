@@ -6,8 +6,8 @@ sidebarTitle: RedirectorMiddleware
 # RedirectorMiddleware
 
 **File**: `src/Http/Middleware/RedirectorMiddleware.php`  
-**Alias**: `modularity.redirector`  
-**Part of**: `modularity.panel` group
+**Alias**: `modularous.redirector`  
+**Part of**: `modularous.panel` group
 
 Consumes a pending redirect URL stored by `RedirectService` and issues the redirect before the request reaches the controller.
 
@@ -25,7 +25,7 @@ return $next($request);
 
 ## When It Fires
 
-Only on `modularity.panel` routes (authenticated admin panel). If no pending redirect is stored, the request continues normally.
+Only on `modularous.panel` routes (authenticated admin panel). If no pending redirect is stored, the request continues normally.
 
 ## Typical Use Case
 

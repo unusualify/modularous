@@ -6,7 +6,7 @@ sidebarTitle: Media
 # Media
 
 **File**: `src/Entities/Media.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`  
 **Traits**: `HasFactory`, `HasCreator`
 
@@ -23,7 +23,7 @@ Represents an uploaded image in the media library. Stores dimensions, alt text, 
 | `width` | `int` | Image width in pixels |
 | `height` | `int` | Image height in pixels |
 
-Additional fields from `modularity.media_library.extra_metadatas_fields` config are merged into fillable at construction time.
+Additional fields from `modularous.media_library.extra_metadatas_fields` config are merged into fillable at construction time.
 
 ## Accessors
 

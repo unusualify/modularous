@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Facades\TwillCapsules;
+use Unusualify\Modularous\Facades\TwillCapsules;
 
 trait HasTranslation
 {
@@ -184,7 +184,7 @@ trait HasTranslation
      */
     public function getTranslationModelNameDefault()
     {
-        $model = modularityConfig('namespace') . "\Entities\Translations\\" . class_basename($this) . 'Translation';
+        $model = modularousConfig('namespace') . "\Entities\Translations\\" . class_basename($this) . 'Translation';
 
         if (@class_exists($model)) {
             return $model;

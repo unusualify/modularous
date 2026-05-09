@@ -6,25 +6,25 @@ sidebarTitle: Overview
 # Middleware
 
 **Directory**: `src/Http/Middleware/`  
-**Registration**: `src/Support/ModularityRoutes::generateRouteMiddlewares()`
+**Registration**: `src/Support/ModularousRoutes::generateRouteMiddlewares()`
 
-Modularous registers its own middleware aliases and groups during the route bootstrapping phase. All aliases use the `modularity.*` prefix to avoid conflicts with application middleware.
+Modularous registers its own middleware aliases and groups during the route bootstrapping phase. All aliases use the `modularous.*` prefix to avoid conflicts with application middleware.
 
 ## Middleware Aliases
 
 | Alias | Class | Description |
 |-------|-------|-------------|
-| `modularity.auth` | [AuthenticateMiddleware](/system-reference/backend/http/middleware/authenticate) | Guards routes; stores intended URL; handles JSON 401 |
-| `modularity.guest` | [RedirectIfAuthenticatedMiddleware](/system-reference/backend/http/middleware/redirect-if-authenticated) | Redirects already-authenticated users away from guest pages |
-| `modularity.log` | [LogMiddleware](/system-reference/backend/http/middleware/log) | Injects `Request-Id` UUID into every request/response |
-| `modularity.utm` | [UtmMiddleware](/system-reference/backend/http/middleware/utm) | Captures UTM params and shares them with views |
-| `modularity.language` | [LanguageMiddleware](/system-reference/backend/http/middleware/language) | Resolves locale, timezone, and active currency per request |
-| `modularity.impersonate` | [ImpersonateMiddleware](/system-reference/backend/http/middleware/impersonate) | Activates user impersonation from session |
-| `modularity.loadLocalizedConfig` | [LoadLocalizedConfig](/system-reference/backend/http/middleware/load-localized-config) | Merges deferred and app-level config files at request time |
-| `modularity.navigation` | [NavigationMiddleware](/system-reference/backend/http/middleware/navigation) | Shares navigation config with Blade layout views |
+| `modularous.auth` | [AuthenticateMiddleware](/system-reference/backend/http/middleware/authenticate) | Guards routes; stores intended URL; handles JSON 401 |
+| `modularous.guest` | [RedirectIfAuthenticatedMiddleware](/system-reference/backend/http/middleware/redirect-if-authenticated) | Redirects already-authenticated users away from guest pages |
+| `modularous.log` | [LogMiddleware](/system-reference/backend/http/middleware/log) | Injects `Request-Id` UUID into every request/response |
+| `modularous.utm` | [UtmMiddleware](/system-reference/backend/http/middleware/utm) | Captures UTM params and shares them with views |
+| `modularous.language` | [LanguageMiddleware](/system-reference/backend/http/middleware/language) | Resolves locale, timezone, and active currency per request |
+| `modularous.impersonate` | [ImpersonateMiddleware](/system-reference/backend/http/middleware/impersonate) | Activates user impersonation from session |
+| `modularous.loadLocalizedConfig` | [LoadLocalizedConfig](/system-reference/backend/http/middleware/load-localized-config) | Merges deferred and app-level config files at request time |
+| `modularous.navigation` | [NavigationMiddleware](/system-reference/backend/http/middleware/navigation) | Shares navigation config with Blade layout views |
 | `authorization` | [AuthorizationMiddleware](/system-reference/backend/http/middleware/authorization) | Shares profile/login shortcut schemas with the master layout |
-| `modularity.company.registration` | [CompanyRegistrationMiddleware](/system-reference/backend/http/middleware/company-registration) | Guards routes that require a valid company (stub) |
-| `modularity.redirector` | [RedirectorMiddleware](/system-reference/backend/http/middleware/redirector) | Consumes a pending redirect URL from `RedirectService` |
+| `modularous.company.registration` | [CompanyRegistrationMiddleware](/system-reference/backend/http/middleware/company-registration) | Guards routes that require a valid company (stub) |
+| `modularous.redirector` | [RedirectorMiddleware](/system-reference/backend/http/middleware/redirector) | Consumes a pending redirect URL from `RedirectService` |
 | `hostable` | [HostableMiddleware](/system-reference/backend/http/middleware/hostable) | Stub for host-based routing features |
 | `inertia.middleware` | [HandleInertiaRequests](/system-reference/backend/http/middleware/handle-inertia-requests) | Inertia root view + shared props (auth, flash, config, store) |
 | `role` | Spatie `RoleMiddleware` | Role-based route protection (Spatie Permission) |
@@ -35,10 +35,10 @@ Modularous registers its own middleware aliases and groups during the route boot
 
 | Group | Middleware stack |
 |-------|-----------------|
-| `web.auth` | `web`, `modularity.auth:{guard}` |
-| `api.auth` | `api`, `throttle:api`, `modularity.auth:{guard}` |
-| `modularity.core` | `modularity.utm`, `modularity.impersonate`, `modularity.language`, `modularity.loadLocalizedConfig`, `modularity.navigation`, `inertia.middleware` |
-| `modularity.panel` | `authorization`, `modularity.company.registration`, `modularity.redirector` |
+| `web.auth` | `web`, `modularous.auth:{guard}` |
+| `api.auth` | `api`, `throttle:api`, `modularous.auth:{guard}` |
+| `modularous.core` | `modularous.utm`, `modularous.impersonate`, `modularous.language`, `modularous.loadLocalizedConfig`, `modularous.navigation`, `inertia.middleware` |
+| `modularous.panel` | `authorization`, `modularous.company.registration`, `modularous.redirector` |
 
 ## Route Stack by Type
 
@@ -46,26 +46,26 @@ Every route registered by Modularous belongs to one of four stacks:
 
 | Route type | Middleware stack |
 |------------|-----------------|
-| `web` (public) | `web` + `modularity.log` + `modularity.core` |
-| `webPanel` (authenticated admin) | `web.auth` + `modularity.log` + `modularity.core` + `modularity.panel` |
-| `api` (public API) | `api` + `modularity.log` + `modularity.core` |
-| `apiPanel` (authenticated API) | `api.auth` + `modularity.log` + `modularity.core` + `modularity.panel` |
+| `web` (public) | `web` + `modularous.log` + `modularous.core` |
+| `webPanel` (authenticated admin) | `web.auth` + `modularous.log` + `modularous.core` + `modularous.panel` |
+| `api` (public API) | `api` + `modularous.log` + `modularous.core` |
+| `apiPanel` (authenticated API) | `api.auth` + `modularous.log` + `modularous.core` + `modularous.panel` |
 
 ## Request Flow
 
 ```
 Incoming request
-  └── modularity.log          ← assign Request-Id UUID
-  └── modularity.core group
-        ├── modularity.utm          ← capture UTM params
-        ├── modularity.impersonate  ← swap auth user if impersonating
-        ├── modularity.language     ← set locale / currency
-        ├── modularity.loadLocalizedConfig  ← merge runtime config
-        ├── modularity.navigation   ← share nav data with views
+  └── modularous.log          ← assign Request-Id UUID
+  └── modularous.core group
+        ├── modularous.utm          ← capture UTM params
+        ├── modularous.impersonate  ← swap auth user if impersonating
+        ├── modularous.language     ← set locale / currency
+        ├── modularous.loadLocalizedConfig  ← merge runtime config
+        ├── modularous.navigation   ← share nav data with views
         └── inertia.middleware      ← share auth/flash/config with Inertia
-  └── [modularity.panel group — authenticated panel routes only]
+  └── [modularous.panel group — authenticated panel routes only]
         ├── authorization           ← share profile shortcuts with layout
-        ├── modularity.company.registration  ← company guard
-        └── modularity.redirector   ← consume pending redirects
+        ├── modularous.company.registration  ← company guard
+        └── modularous.redirector   ← consume pending redirects
   └── Controller
 ```

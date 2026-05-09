@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\View\Widgets;
+namespace Unusualify\Modularous\Tests\View\Widgets;
 
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\View\Widgets\BoardInformationWidget;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\View\Widgets\BoardInformationWidget;
 
 class BoardInformationWidgetTest extends TestCase
 {

@@ -7,7 +7,7 @@ sidebarTitle: make:event
 
 > Create a Laravel Event class
 
-**Signature**: `modularity:make:event`
+**Signature**: `modularous:make:event`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Interactive wizard that generates a Laravel Event class. It scans all abstract e
 ## Usage
 
 ```
-modularity:make:event [options] <name> [<module>]
+modularous:make:event [options] <name> [<module>]
 ```
 
 ### Arguments
@@ -49,20 +49,20 @@ modularity:make:event [options] <name> [<module>]
 ### Module event
 
 ```bash
-php artisan modularity:make:event PostPublished Blog
+php artisan modularous:make:event PostPublished Blog
 ```
 
 ### Broadcastable event
 
 ```bash
-php artisan modularity:make:event PostPublished Blog --should-broadcast
+php artisan modularous:make:event PostPublished Blog --should-broadcast
 # Prompts: abstract base class, channel type (Channel/Private/Presence), queue, channel name
 ```
 
 ### App-level deferred event
 
 ```bash
-php artisan modularity:make:event OrderShipped --should-dispatch-after-commit
+php artisan modularous:make:event OrderShipped --should-dispatch-after-commit
 ```
 
 ---

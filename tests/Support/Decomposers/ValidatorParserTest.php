@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support\Decomposers;
+namespace Unusualify\Modularous\Tests\Support\Decomposers;
 
-use Unusualify\Modularity\Support\Decomposers\ValidatorParser;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Support\Decomposers\ValidatorParser;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ValidatorParserTest extends TestCase
 {

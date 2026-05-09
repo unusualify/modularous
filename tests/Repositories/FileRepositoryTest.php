@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Repositories\FileRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Repositories\FileRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class FileRepositoryTest extends RepositoryTestCase
 {

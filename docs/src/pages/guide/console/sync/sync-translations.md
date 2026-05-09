@@ -9,7 +9,7 @@ sidebarTitle: Sync Translations
 
 ## Command Information
 
-- **Signature:** `modularity:sync:translations [--dry-run] [--only-languages[=ONLY-LANGUAGES]] [--exclude-languages[=EXCLUDE-LANGUAGES]] [--language[=LANGUAGE]]`
+- **Signature:** `modularous:sync:translations [--dry-run] [--only-languages[=ONLY-LANGUAGES]] [--exclude-languages[=EXCLUDE-LANGUAGES]] [--language[=LANGUAGE]]`
 - **Category:** Sync
 
 ## Examples
@@ -17,41 +17,41 @@ sidebarTitle: Sync Translations
 ### Sync all missing keys for all languages
 
 ```bash
-php artisan modularity:sync:translations
+php artisan modularous:sync:translations
 ```
 
 ### Preview missing keys without writing any files
 
 ```bash
-php artisan modularity:sync:translations --dry-run
+php artisan modularous:sync:translations --dry-run
 ```
 
 ### Sync only a specific language
 
 ```bash
-php artisan modularity:sync:translations --language=tr
+php artisan modularous:sync:translations --language=tr
 ```
 
 ### Sync only specific languages (comma-separated)
 
 ```bash
-php artisan modularity:sync:translations --only-languages=en,tr,de
+php artisan modularous:sync:translations --only-languages=en,tr,de
 ```
 
 ### Sync all languages except specific ones
 
 ```bash
-php artisan modularity:sync:translations --exclude-languages=fr,es
+php artisan modularous:sync:translations --exclude-languages=fr,es
 ```
 
-`modularity:sync:translations`
+`modularous:sync:translations`
 -------------------------------
 
-Compares translation files in `lang/` (Laravel's lang path) against `modularity/lang/` and copies any missing keys into the Modularous lang path. Language folders that do not yet exist in `modularity/lang/` are created automatically. Use `--dry-run` to inspect what would be synced without modifying any files.
+Compares translation files in `lang/` (Laravel's lang path) against `modularous/lang/` and copies any missing keys into the Modularous lang path. Language folders that do not yet exist in `modularous/lang/` are created automatically. Use `--dry-run` to inspect what would be synced without modifying any files.
 
 ### Usage
 
-* `modularity:sync:translations [--dry-run] [--only-languages[=ONLY-LANGUAGES]] [--exclude-languages[=EXCLUDE-LANGUAGES]] [--language[=LANGUAGE]]`
+* `modularous:sync:translations [--dry-run] [--only-languages[=ONLY-LANGUAGES]] [--exclude-languages[=EXCLUDE-LANGUAGES]] [--language[=LANGUAGE]]`
 
 ### Options
 

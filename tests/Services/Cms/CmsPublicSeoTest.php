@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Http\Request;
 use Modules\Cms\Support\CmsPublicSeo;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsPublicSeoTest extends TestCase
 {

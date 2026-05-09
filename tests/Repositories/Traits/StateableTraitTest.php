@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\StateableTrait;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\StateableTrait;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class StateableTraitTest extends RepositoryTestCase
 {

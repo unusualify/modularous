@@ -6,7 +6,7 @@ sidebarTitle: FilepondController
 # FilepondController
 
 **File**: `src/Http/Controllers/FilepondController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `App\Http\Controllers\Controller`
 
 Handles the temporary file lifecycle for [FilePond](https://pqina.nl/filepond/) uploads. Files are held in a temporary location and either promoted to the media/file library on form submission or reverted (deleted) when the user cancels.

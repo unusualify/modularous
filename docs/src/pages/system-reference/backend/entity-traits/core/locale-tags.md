@@ -5,7 +5,7 @@ sidebarTitle: LocaleTags
 
 # Core\LocaleTags
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\LocaleTags`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\LocaleTags`
 
 Locale-scoped tagging backed by the shared `tagged` pivot table. Tags are namespaced to the model class and filtered by locale so the same tag slug can exist in multiple languages without collision. Extends the Eloquent tagging convention from Cviebrock/Spatie tagging packages.
 
@@ -81,7 +81,7 @@ public static bool $loadLocalizedTags = true;
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
+use Unusualify\Modularous\Entities\Traits\Core\LocaleTags;
 
 class Article extends Model
 {

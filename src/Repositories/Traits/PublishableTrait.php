@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
-use Unusualify\Modularity\Entities\Traits\Publishable;
-use Unusualify\Modularity\Support\PublishableMetadata;
+use Unusualify\Modularous\Entities\Traits\Publishable;
+use Unusualify\Modularous\Support\PublishableMetadata;
 
 trait PublishableTrait
 {

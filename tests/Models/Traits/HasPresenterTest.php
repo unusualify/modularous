@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Unusualify\Modularity\Entities\Traits\Secondary\HasPresenter;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasPresenter;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasPresenterTest extends ModelTestCase
 {
@@ -20,7 +20,7 @@ class HasPresenterTest extends ModelTestCase
     public function test_model_uses_has_presenter_trait()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\Secondary\HasPresenter', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\Secondary\HasPresenter', $traits);
     }
 
     public function test_present_method_throws_exception_when_presenter_not_set()

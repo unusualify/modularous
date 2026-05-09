@@ -3,7 +3,7 @@
 namespace Modules\SystemUser\Repositories;
 
 use Spatie\Permission\Models\Permission;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class PermissionRepository extends Repository
 {

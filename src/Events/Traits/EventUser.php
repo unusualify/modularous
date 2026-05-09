@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Events\Traits;
+namespace Unusualify\Modularous\Events\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Test class that uses CreateVerifiedEmailAccount trait for testing.

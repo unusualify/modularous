@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Exceptions;
+namespace Unusualify\Modularous\Tests\Exceptions;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Exceptions\Handler;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Exceptions\Handler;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HandlerTest extends ModelTestCase
 {
@@ -33,14 +33,14 @@ class HandlerTest extends ModelTestCase
                 return $this->getUserDataFromSession($sessionId);
             }
 
-            public function exposeRunModularityMiddleware()
+            public function exposeRunModularousMiddleware()
             {
-                $this->runModularityMiddleware();
+                $this->runModularousMiddleware();
             }
 
-            public function exposeAttemptModularityAuthentication()
+            public function exposeAttemptModularousAuthentication()
             {
-                return $this->attemptModularityAuthentication();
+                return $this->attemptModularousAuthentication();
             }
         };
     }
@@ -57,14 +57,14 @@ class HandlerTest extends ModelTestCase
         }
 
         $userClass = User::class;
-        $loginKey = 'login_modularity_' . sha1($userClass);
+        $loginKey = 'login_modularous_' . sha1($userClass);
         $sessionData = serialize([$loginKey => $user->id]);
         $sessionFile = 'test_session_id';
         file_put_contents($sessionDir . '/' . $sessionFile, $sessionData);
 
         try {
             // 3. Mock View
-            $viewName = modularityBaseKey() . '::errors.404';
+            $viewName = modularousBaseKey() . '::errors.404';
             View::shouldReceive('exists')->with($viewName)->andReturn(true);
 
             // 4. Test 404
@@ -72,17 +72,17 @@ class HandlerTest extends ModelTestCase
             $result = $this->handler->exposeGetHttpExceptionView($exception);
 
             $this->assertEquals($viewName, $result);
-            $this->assertEquals($user->id, Auth::guard(Modularity::getAuthGuardName())->user()->id);
+            $this->assertEquals($user->id, Auth::guard(Modularous::getAuthGuardName())->user()->id);
 
             // 1. Mock request to have cookie
-            $cookieName = 'remember_' . Modularity::getAuthGuardName();
+            $cookieName = 'remember_' . Modularous::getAuthGuardName();
             $this->app['request']->cookies->set($cookieName, 'some-token');
 
             $exception = new HttpException(404);
             $result = $this->handler->exposeGetHttpExceptionView($exception);
 
             $this->assertEquals($viewName, $result);
-            $this->assertEquals($user->id, Auth::guard(Modularity::getAuthGuardName())->user()->id);
+            $this->assertEquals($user->id, Auth::guard(Modularous::getAuthGuardName())->user()->id);
 
         } finally {
             unlink($sessionDir . '/' . $sessionFile);
@@ -101,8 +101,8 @@ class HandlerTest extends ModelTestCase
         }
 
         $userClass = User::class;
-        $loginKey = 'login_modularity_' . sha1($userClass);
-        // Manually construct the string search pattern: login_modularity_[a-f0-9]+";i:(\d+);
+        $loginKey = 'login_modularous_' . sha1($userClass);
+        // Manually construct the string search pattern: login_modularous_[a-f0-9]+";i:(\d+);
         $sessionData = "raw_garbage;{$loginKey}\";i:{$user->id};more_garbage";
         $sessionFile = 'test_session_regex';
         file_put_contents($sessionDir . '/' . $sessionFile, $sessionData);
@@ -113,7 +113,7 @@ class HandlerTest extends ModelTestCase
             $exception = new HttpException(404);
             $result = $this->handler->exposeGetHttpExceptionView($exception);
 
-            $this->assertEquals($user->id, Auth::guard(Modularity::getAuthGuardName())->user()->id);
+            $this->assertEquals($user->id, Auth::guard(Modularous::getAuthGuardName())->user()->id);
         } finally {
             unlink($sessionDir . '/' . $sessionFile);
         }
@@ -122,7 +122,7 @@ class HandlerTest extends ModelTestCase
     public function test_it_checks_remember_me_cookie()
     {
         // 1. Mock request to have cookie
-        $cookieName = 'remember_' . Modularity::getAuthGuardName();
+        $cookieName = 'remember_' . Modularous::getAuthGuardName();
         $this->app['request']->cookies->set($cookieName, 'some-token');
 
         // 2. Mock View
@@ -132,9 +132,9 @@ class HandlerTest extends ModelTestCase
         $exception = new HttpException(404);
         $result = $this->handler->exposeGetHttpExceptionView($exception);
 
-        // Note: attemptModularityAuthentication returns true if cookie exists,
+        // Note: attemptModularousAuthentication returns true if cookie exists,
         // even if it doesn't log in the user (per implementation logic)
-        $this->assertTrue(modularityBaseKey() . '::errors.404' === $result || true);
+        $this->assertTrue(modularousBaseKey() . '::errors.404' === $result || true);
     }
 
     public function test_it_handles_missing_user_in_session()
@@ -142,7 +142,7 @@ class HandlerTest extends ModelTestCase
         // 1. Mock session file with non-existent user ID
         $sessionDir = storage_path('framework/sessions');
         $userClass = User::class;
-        $loginKey = 'login_modularity_' . sha1($userClass);
+        $loginKey = 'login_modularous_' . sha1($userClass);
         $sessionData = serialize([$loginKey => 9999]); // Non-existent ID
         $sessionFile = 'test_session_missing_user';
         if (! is_dir($sessionDir)) {
@@ -157,7 +157,7 @@ class HandlerTest extends ModelTestCase
             $result = $this->handler->exposeGetHttpExceptionView($exception);
 
             // Should not be authenticated
-            $this->assertNull(Auth::guard(Modularity::getAuthGuardName())->user());
+            $this->assertNull(Auth::guard(Modularous::getAuthGuardName())->user());
         } finally {
             unlink($sessionDir . '/' . $sessionFile);
         }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\View\Widgets;
+namespace Unusualify\Modularous\View\Widgets;
 
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Traits\Allowable;
-use Unusualify\Modularity\View\ModularityWidget;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Traits\Allowable;
+use Unusualify\Modularous\View\ModularousWidget;
 
-class TableWidget extends ModularityWidget
+class TableWidget extends ModularousWidget
 {
     use Allowable;
 
@@ -71,7 +71,7 @@ class TableWidget extends ModularityWidget
         $attributes = parent::hydrateAttributes($attributes);
 
         $attributes = array_merge_recursive_preserve(
-            modularityConfig('default_table_attributes'),
+            modularousConfig('default_table_attributes'),
             $attributes
         );
 
@@ -84,7 +84,7 @@ class TableWidget extends ModularityWidget
             );
 
             $attributes['endpoints'] = array_merge(
-                getModularityDefaultUrls(),
+                getModularousDefaultUrls(),
                 $routeEndpoints,
             );
         }

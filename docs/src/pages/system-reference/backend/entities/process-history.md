@@ -6,7 +6,7 @@ sidebarTitle: ProcessHistory
 # ProcessHistory
 
 **File**: `src/Entities/ProcessHistory.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Audit trail for process status changes. Each record captures who changed the status, the new status, and an optional reason.
@@ -39,7 +39,7 @@ The [User](./user) who triggered this status change.
 
 ## Table
 
-Resolved from `modularity.tables.process_histories`, defaults to `m_process_histories`.
+Resolved from `modularous.tables.process_histories`, defaults to `m_process_histories`.
 
 ## Related
 

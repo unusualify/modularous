@@ -5,7 +5,7 @@ sidebarTitle: Entities
 
 # Entities
 
-Modularous entities (models) use traits for feature composition. All models extend `Unusualify\Modularity\Entities\Model`.
+Modularous entities (models) use traits for feature composition. All models extend `Unusualify\Modularous\Entities\Model`.
 
 For detailed documentation on each model, see the [Entities reference](/system-reference/backend/entities/overview).
 

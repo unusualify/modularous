@@ -11,18 +11,18 @@ Blueprint helper functions that provide standardized field presets for Modularou
 
 ## Integer Type Helpers
 
-### `modularityIncrementsMethod`
+### `modularousIncrementsMethod`
 
 ```php
-modularityIncrementsMethod(): string
+modularousIncrementsMethod(): string
 ```
 
 Returns `'bigIncrements'` or `'increments'` depending on the `use_big_integers_on_migrations` config flag.
 
-### `modularityIntegerMethod`
+### `modularousIntegerMethod`
 
 ```php
-modularityIntegerMethod(): string
+modularousIntegerMethod(): string
 ```
 
 Returns `'bigInteger'` or `'integer'` depending on the same config flag.
@@ -37,7 +37,7 @@ Returns `'bigInteger'` or `'integer'` depending on the same config flag.
 createDefaultTableFields(Blueprint $table, bool $has_name = true): void
 ```
 
-Adds the primary key column using `modularityIncrementsMethod()`. Minimal base — does not add `name`, timestamps, or soft deletes.
+Adds the primary key column using `modularousIncrementsMethod()`. Minimal base — does not add `name`, timestamps, or soft deletes.
 
 ---
 

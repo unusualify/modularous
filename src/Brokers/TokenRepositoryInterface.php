@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Brokers;
+namespace Unusualify\Modularous\Brokers;
 
 use Illuminate\Auth\Passwords\TokenRepositoryInterface as BaseTokenRepositoryInterface;
 

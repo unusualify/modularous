@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Entities\Traits\Assignable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Traits\Assignable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Repositories\Traits\AssignmentTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class AssignmentTraitTest extends RepositoryTestCase
 {
@@ -81,8 +81,8 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_get_table_filters_assignment_trait()
     {
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@example.com']);
         $admin->assignRole('admin');
@@ -132,9 +132,9 @@ class AssignmentTraitTest extends RepositoryTestCase
 
     public function test_get_assignments()
     {
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         $model = $this->repository->create(['name' => 'Test']);
 
@@ -156,7 +156,7 @@ class AssignmentTraitTest extends RepositoryTestCase
     }
 }
 
-class TestModel extends \Unusualify\Modularity\Tests\Repositories\TestModel
+class TestModel extends \Unusualify\Modularous\Tests\Repositories\TestModel
 {
     use Assignable;
 }

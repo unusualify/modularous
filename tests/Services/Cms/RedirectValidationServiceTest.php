@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsParentSegmentResolver;
 use Modules\Cms\Services\CmsUrlRouteRegistry;
 use Modules\Cms\Services\RedirectValidationService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class RedirectValidationServiceTest extends TestCase
 {

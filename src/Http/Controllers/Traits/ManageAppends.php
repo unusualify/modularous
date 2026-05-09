@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 trait ManageAppends
 {

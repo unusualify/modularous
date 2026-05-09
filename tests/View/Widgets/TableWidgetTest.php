@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\View\Widgets;
+namespace Unusualify\Modularous\Tests\View\Widgets;
 
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\View\Widgets\TableWidget;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\View\Widgets\TableWidget;
 
 class TableWidgetTest extends TestCase
 {

@@ -14,7 +14,7 @@ class SiteSeoSettingsController extends Controller
 {
     public function update(SiteSeoSettingsRequest $request, CmsSiteSeoSettingsService $service): JsonResponse
     {
-        if (! modularityConfig('cms_seo.robots.use_site_settings', true)) {
+        if (! modularousConfig('cms_seo.robots.use_site_settings', true)) {
             return response()->json([
                 'ok' => false,
                 'message' => __('Database-backed site SEO is disabled in configuration.'),

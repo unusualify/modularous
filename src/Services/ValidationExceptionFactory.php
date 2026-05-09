@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
-use Unusualify\Modularity\Exceptions\ValidationException;
+use Unusualify\Modularous\Exceptions\ValidationException;
 
 class ValidationExceptionFactory
 {

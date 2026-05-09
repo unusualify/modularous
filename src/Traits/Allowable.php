@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
 use Closure;
 use Illuminate\Contracts\Auth\Authenticatable;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
 
 class State extends Model
 {
@@ -37,6 +37,6 @@ class State extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.states', 'um_states');
+        return modularousConfig('tables.states', 'um_states');
     }
 }

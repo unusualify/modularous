@@ -32,6 +32,6 @@ class ParentSegment extends EloquentModel
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        return modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
     }
 }

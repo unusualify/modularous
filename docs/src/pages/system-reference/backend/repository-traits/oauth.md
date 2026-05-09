@@ -11,7 +11,7 @@ This trait provides OAuth user management at the repository level. It pairs with
 
 ## OauthTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\OauthTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\OauthTrait`
 
 Handles user lookup, provider linking verification, provider token updates, and new user creation from OAuth provider data (e.g., Google, GitHub). Designed to work with Laravel Socialite's `User` contract.
 
@@ -46,7 +46,7 @@ Handles user lookup, provider linking verification, provider token updates, and 
 | `email` | `$oauthUser->email` |
 | `name` | `$oauthUser->user['given_name']` (falls back to `$oauthUser->name`) |
 | `surname` | `$oauthUser->user['family_name']` (falls back to empty string) |
-| `role` | `modularityConfig('oauth.default_role')` |
+| `role` | `modularousConfig('oauth.default_role')` |
 | `published` | `true` |
 
 The method uses `firstOrNew` to avoid duplicate email records — if a user with the same email already exists, it returns the existing user instead of creating a new one.
@@ -56,7 +56,7 @@ The method uses `firstOrNew` to avoid duplicate email records — if a user with
 The default role for newly created OAuth users is configured in:
 
 ```php
-// config/modularity.php (or equivalent)
+// config/modularous.php (or equivalent)
 'oauth' => [
     'default_role' => 'member',
 ],
@@ -65,7 +65,7 @@ The default role for newly created OAuth users is configured in:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\OauthTrait;
+use Unusualify\Modularous\Repositories\Traits\OauthTrait;
 
 class UserRepository extends Repository
 {

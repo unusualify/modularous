@@ -57,8 +57,8 @@ Internally calls `makeGridSection()` after wrapping each element in `UComponent:
 ## Example
 
 ```php
-use Unusualify\Modularity\Services\View\UComponent;
-use Unusualify\Modularity\Services\View\UWrapper;
+use Unusualify\Modularous\Services\View\UComponent;
+use Unusualify\Modularous\Services\View\UWrapper;
 
 $grid = UWrapper::makeGridSection([
     UComponent::makeUeCard(['title' => 'Revenue']),

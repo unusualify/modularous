@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SystemPayment\Entities\PaymentCountry;
 use Modules\SystemUtility\Entities\Country;
-use Unusualify\Modularity\Database\Factories\CompanyFactory;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Database\Factories\CompanyFactory;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 
 class Company extends Model
 {
@@ -130,6 +130,6 @@ class Company extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.companies', parent::getTable());
+        return modularousConfig('tables.companies', parent::getTable());
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class UserController extends BaseController
 {
@@ -66,7 +66,7 @@ class UserController extends BaseController
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $response = Password::broker(Modularity::getAuthProviderName())->sendResetLink(
+        $response = Password::broker(Modularous::getAuthProviderName())->sendResetLink(
             // $this->request->only('email'),
             ['email' => $item->email],
             function ($user, $token) {
@@ -124,6 +124,6 @@ class UserController extends BaseController
         }
 
         return $this->respondWithError(___('listing.delete.error', ['modelTitle' => $this->modelTitle]));
-        // return $this->respondWithError(modularityTrans("$this->baseKey::lang.listing.delete.error", ['modelTitle' => $this->modelTitle]));
+        // return $this->respondWithError(modularousTrans("$this->baseKey::lang.listing.delete.error", ['modelTitle' => $this->modelTitle]));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
@@ -8,8 +8,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
-use Unusualify\Modularity\Facades\ModularityLog;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Facades\ModularousLog;
 
 class LanguageMiddleware
 {
@@ -24,7 +24,7 @@ class LanguageMiddleware
         $defaultLocale = app()->getLocale();
         $fallbackLocale = app()->getFallbackLocale();
         $locale = $defaultLocale;
-        $availableUserLocales = modularityConfig('available_user_locales');
+        $availableUserLocales = modularousConfig('available_user_locales');
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $request->ip();
 
         if ($request->has('language')) {
@@ -33,7 +33,7 @@ class LanguageMiddleware
             $locale = $request->user()->language;
         } else {
             try {
-                if (env('MODULARITY_AUTO_LOCALE_FINDER', false)) {
+                if (env('MODULAROUS_AUTO_LOCALE_FINDER', false)) {
                     $newLocale = mb_strtolower(geoip()->getLocation($ip)->iso_code);
 
                     if (in_array($newLocale, $availableUserLocales)) {
@@ -42,7 +42,7 @@ class LanguageMiddleware
                 }
 
             } catch (\Exception $e) {
-                ModularityLog::error('LanguageMiddleware: Error while finding locale with geoip: ' . $e->getMessage());
+                ModularousLog::error('LanguageMiddleware: Error while finding locale with geoip: ' . $e->getMessage());
             }
         }
 
@@ -50,16 +50,16 @@ class LanguageMiddleware
             $locale = $fallbackLocale;
         }
 
-        config([modularityBaseKey() . '.locale' => $locale]);
-        config([modularityBaseKey() . '.timezone' => auth()->user()->timezone ?? 'Europe/London']);
+        config([modularousBaseKey() . '.locale' => $locale]);
+        config([modularousBaseKey() . '.timezone' => auth()->user()->timezone ?? 'Europe/London']);
 
         App::setLocale($locale);
-        App::setFallbackLocale(modularityConfig('fallback_locale'));
+        App::setFallbackLocale(modularousConfig('fallback_locale'));
 
         $currency = config('priceable.currency', 'EUR');
 
-        if (! modularityConfig('services.currency_exchange.active')) { // onlyBaseCurrency
-            $currency = modularityConfig("payment.locale_currencies.{$locale}", null)
+        if (! modularousConfig('services.currency_exchange.active')) { // onlyBaseCurrency
+            $currency = modularousConfig("payment.locale_currencies.{$locale}", null)
                 ?? config('priceable.currency');
         }
 

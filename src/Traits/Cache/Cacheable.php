@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Traits\Cache;
+namespace Unusualify\Modularous\Traits\Cache;
 
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Contracts\ModuleableInterface;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Traits\Moduleable;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Traits\Moduleable;
 
 trait Cacheable
 {
@@ -37,7 +37,7 @@ trait Cacheable
      */
     public function shouldUseCache(?string $type = null): bool
     {
-        return $this->cacheEnabled && ModularityCache::isEnabled($this->getCacheModuleName(), $this->getCacheModuleRouteName(), $type);
+        return $this->cacheEnabled && ModularousCache::isEnabled($this->getCacheModuleName(), $this->getCacheModuleRouteName(), $type);
     }
 
     public function withCache(bool $enabled = true): static
@@ -145,7 +145,7 @@ trait Cacheable
      */
     public function getCacheTtl(string $type): int
     {
-        return ModularityCache::getTtl($type, $this->getCacheModuleName(), $this->getCacheModuleRouteName());
+        return ModularousCache::getTtl($type, $this->getCacheModuleName(), $this->getCacheModuleRouteName());
     }
 
     public function generateTypeCacheKey(string $type, array $data): string
@@ -165,6 +165,6 @@ trait Cacheable
         $cacheKey = $this->generateTypeCacheKey($type, $data);
         $ttl = $this->getCacheTtl($type);
 
-        return ModularityCache::remember($cacheKey, $ttl, $callback, $this->getCacheModuleName(), $this->getCacheModuleRouteName());
+        return ModularousCache::remember($cacheKey, $ttl, $callback, $this->getCacheModuleName(), $this->getCacheModuleRouteName());
     }
 }

@@ -13,17 +13,17 @@ This command has `$hidden = true` and does not appear in `php artisan list`.
 
 ## Command Information
 
-- **Signature:** `modularity:flush`
+- **Signature:** `modularous:flush`
 - **Category:** Flush
 
 ## What It Does
 
-Calls `Modularity::clearCache()` to wipe all Modularous cache entries, then runs `modularity:cache:versions` to print the refreshed version numbers — a quick confirmation that the flush succeeded.
+Calls `Modularous::clearCache()` to wipe all Modularous cache entries, then runs `modularous:cache:versions` to print the refreshed version numbers — a quick confirmation that the flush succeeded.
 
 ## Example
 
 ```bash
-php artisan modularity:flush
+php artisan modularous:flush
 ```
 
 ## Related

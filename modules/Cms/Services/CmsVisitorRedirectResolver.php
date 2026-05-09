@@ -11,7 +11,7 @@ use Modules\Cms\Entities\Redirect;
 use Modules\Cms\Support\CmsSluglessFallbackLocale;
 use Modules\Cms\Entities\UrlRoute;
 use Modules\Cms\Support\CmsFrontPath;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 /**
  * Resolves {@see Redirect} rules for public HTTP requests (locale + normalized path).
@@ -29,7 +29,7 @@ final class CmsVisitorRedirectResolver
      */
     public function resolveRedirectResponse(Request $request): ?RedirectResponse
     {
-        if (! modularityConfig('cms_routing.visitor_redirects_enabled', true)) {
+        if (! modularousConfig('cms_routing.visitor_redirects_enabled', true)) {
             return null;
         }
 
@@ -54,8 +54,8 @@ final class CmsVisitorRedirectResolver
     public function shouldExcludeRequest(Request $request): bool
     {
         $normalized = $this->canonicalUrlResolver->normalizePath($request->path());
-        $previewPrefix = '/' . trim((string) modularityConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
-        if (modularityConfig('cms_routing.signed_preview.enabled', true)
+        $previewPrefix = '/' . trim((string) modularousConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
+        if (modularousConfig('cms_routing.signed_preview.enabled', true)
             && $previewPrefix !== '/'
             && ($normalized === $previewPrefix || str_starts_with($normalized, $previewPrefix . '/'))) {
             return true;
@@ -63,12 +63,12 @@ final class CmsVisitorRedirectResolver
 
         $first = explode('/', trim($normalized, '/'))[0] ?? '';
 
-        $extra = (array) modularityConfig('cms_routing.visitor_redirect_exclude_prefixes', ['api', 'sanctum', 'livewire']);
+        $extra = (array) modularousConfig('cms_routing.visitor_redirect_exclude_prefixes', ['api', 'sanctum', 'livewire']);
         if ($first !== '' && in_array($first, $extra, true)) {
             return true;
         }
 
-        $adminPrefix = Modularity::getAdminUrlPrefix();
+        $adminPrefix = Modularous::getAdminUrlPrefix();
         if ($adminPrefix !== false && $adminPrefix !== '') {
             $p = '/' . ltrim((string) $adminPrefix, '/');
             if ($normalized === $p || str_starts_with($normalized, $p . '/')) {
@@ -76,7 +76,7 @@ final class CmsVisitorRedirectResolver
             }
         }
 
-        $system = (string) modularityConfig('system_prefix', 'system-settings');
+        $system = (string) modularousConfig('system_prefix', 'system-settings');
         $system = '/' . trim(str_replace('_', '-', $system), '/');
         if ($normalized === $system || str_starts_with($normalized, $system . '/')) {
             return true;

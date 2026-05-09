@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 use Modules\Cms\Services\CmsSiteSeoSettingsService;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 /**
  * Inertia shell for CMS site-wide SEO (global robots.txt body stored in site_settings).
@@ -27,7 +27,7 @@ class SiteSeoToolController extends BaseController
 
     public function __invoke(CmsSiteSeoSettingsService $siteSeo): Response
     {
-        $pageTitle = __('Site SEO') . ' - ' . Modularity::pageTitle();
+        $pageTitle = __('Site SEO') . ' - ' . Modularous::pageTitle();
         $headerTitle = __('Site SEO');
 
         $data = [
@@ -47,7 +47,7 @@ class SiteSeoToolController extends BaseController
                 'save' => route($prefix . 'siteSeo.save'),
             ],
             'globalRobotsTxt' => $siteSeo->globalRobotsTxtForEditor(),
-            'useSiteSettings' => (bool) modularityConfig('cms_seo.robots.use_site_settings', true),
+            'useSiteSettings' => (bool) modularousConfig('cms_seo.robots.use_site_settings', true),
             'endpoints' => new \stdClass,
             'mainConfiguration' => $this->getInertiaMainConfiguration($data),
             'headLayoutData' => $this->getHeadLayoutData($data),
@@ -59,7 +59,7 @@ class SiteSeoToolController extends BaseController
      */
     protected function siteSeoNavigationWithBreadcrumbs(): array
     {
-        $navigation = get_modularity_navigation_config();
+        $navigation = get_modularous_navigation_config();
 
         $pageIndexRoute = $this->module->panelRouteNamePrefix() . '.page.index';
         $cmsCrumb = [

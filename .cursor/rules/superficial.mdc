@@ -1,5 +1,5 @@
 ---
-description: "This rule provides standards for superficial code of Modularity"
+description: "This rule provides standards for superficial code of Modularous"
 alwaysApply: false
 applyToSpecificFiles: true
 globs: ./modularous/src/**/*.php, modularous/vue/src/**/*.vue, modularous/vue/src/**/*.js , modularous/vue/src/**/*.scss, modularous/vue/src/**/*.css

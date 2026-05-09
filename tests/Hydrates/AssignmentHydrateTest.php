@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\AssignmentHydrate;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\AssignmentHydrate;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
 
 // simple stub model to satisfy ::query()
 class AssignmentStubAssignee

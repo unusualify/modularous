@@ -35,7 +35,7 @@ $ cd your-project-folder
 ```
 To install Modularous via Composer, run the following shell command:
 ```sh
-$ composer require unusualify/modularity
+$ composer require unusualify/modularous
 ```
 After the installation of the package is done run:
 ```sh
@@ -118,7 +118,7 @@ You can do further custom configuration through ``config`` files which are store
 ## Installation Wizard
 Modularous ships with a command line installation wizard that will help on scaffolding a basic project. After installation via Composer, wizard can be started by running:
 ```sh
-$ php artisan modularity:install
+$ php artisan modularous:install
 ```
 Wizard will be processing with simple questions to construct projects core configurations.
 ```

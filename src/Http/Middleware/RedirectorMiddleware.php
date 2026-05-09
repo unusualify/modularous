@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response;
-use Unusualify\Modularity\Services\RedirectService;
+use Unusualify\Modularous\Services\RedirectService;
 
 final class RedirectorMiddleware
 {

@@ -11,10 +11,10 @@ Modularous ships a comprehensive set of Eloquent model traits organized into fou
 
 | Group | Namespace | Purpose |
 |-------|-----------|---------|
-| [Top-Level](#top-level-traits) | `Unusualify\Modularity\Entities\Traits\` | Core domain behaviors — relationships, media, state, slugs, etc. |
-| [Core](#core-traits) | `Unusualify\Modularity\Entities\Traits\Core\` | Low-level plumbing — caching, scopes, change tracking, locale tags |
-| [Auth](#auth-traits) | `Unusualify\Modularity\Entities\Traits\Auth\` | Authentication helpers — OAuth linking, email-verification registration |
-| [Secondary](#secondary-traits) | `Unusualify\Modularity\Entities\Traits\Secondary\` | Optional extras — nesting, blocks, revisions, related items |
+| [Top-Level](#top-level-traits) | `Unusualify\Modularous\Entities\Traits\` | Core domain behaviors — relationships, media, state, slugs, etc. |
+| [Core](#core-traits) | `Unusualify\Modularous\Entities\Traits\Core\` | Low-level plumbing — caching, scopes, change tracking, locale tags |
+| [Auth](#auth-traits) | `Unusualify\Modularous\Entities\Traits\Auth\` | Authentication helpers — OAuth linking, email-verification registration |
+| [Secondary](#secondary-traits) | `Unusualify\Modularous\Entities\Traits\Secondary\` | Optional extras — nesting, blocks, revisions, related items |
 
 ---
 
@@ -42,7 +42,7 @@ Modularous ships a comprehensive set of Eloquent model traits organized into fou
 | `HasTranslation` | [HasTranslation](./translation/has-translation) | Multi-locale content via `astrotomic/laravel-translatable` |
 | `HasUuid` | [HasUuid](./model-behavior/has-uuid) | Auto UUID primary key (`ordered_uuid`) |
 | `IsHostable` | [IsHostable](./singletons/is-hostable) | Slug + hostable route resolution across parent hierarchy |
-| `IsSingular` | [IsSingular](./singletons/is-singular) | Singleton model stored in shared `modularity_singletons` table |
+| `IsSingular` | [IsSingular](./singletons/is-singular) | Singleton model stored in shared `modularous_singletons` table |
 | `IsTranslatable` | [IsTranslatable](./translation/is-translatable) | Check helper — detects if model uses translations |
 | `ModelHelpers` *(deprecated)* | [Deprecated →](./deprecated) | Alias for `Core\ModelHelpers` |
 | `Processable` | [Processable](./processes/processable) | Single-process workflow: confirm / reject flow |

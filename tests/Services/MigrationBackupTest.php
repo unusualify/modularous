@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Facades\MigrationBackup;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\MigrationBackup;
+use Unusualify\Modularous\Tests\TestCase;
 
 class MigrationBackupTest extends TestCase
 {

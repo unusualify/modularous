@@ -1,6 +1,6 @@
 Minimize token usage. No explanations.
 
-You are writing COVERAGE-DRIVEN unit tests for the unusualify/modularity package.
+You are writing COVERAGE-DRIVEN unit tests for the unusualify/modularous package.
 
 Target file:
 <PASTE FILE CONTENT>

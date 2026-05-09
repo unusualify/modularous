@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Enums\RevisionStatus;
-use Unusualify\Modularity\Facades\ValidationException;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Enums\RevisionStatus;
+use Unusualify\Modularous\Facades\ValidationException;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait RevisionsTrait
 {
@@ -46,7 +46,7 @@ trait RevisionsTrait
         $this->setSchema($schema);
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
-        if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
+        if (classHasTrait($this->model, 'Unusualify\Modularous\Entities\Traits\IsSingular')) {
             $object = $this->model->single();
         } else {
             $object = $this->model->findOrFail($id);
@@ -93,7 +93,7 @@ trait RevisionsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return array
      */
     public function getFormFieldsRevisionsTrait($object, $fields, $schema = [])
@@ -120,7 +120,7 @@ trait RevisionsTrait
             return $fields;
         }
 
-        $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+        $userId = Auth::guard(Modularous::getAuthGuardName())->id() ?? Auth::id();
 
         $revisionAttributes = [
             'payload' => json_encode($fullPayload),
@@ -201,7 +201,7 @@ trait RevisionsTrait
         $this->update($id, $fields);
         $this->skipRevisionCreation = false;
 
-        $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+        $userId = Auth::guard(Modularous::getAuthGuardName())->id() ?? Auth::id();
         $restoreAttributes = [
             'payload' => json_encode($fields),
             'user_id' => $userId,
@@ -219,7 +219,7 @@ trait RevisionsTrait
     /**
      * Workflow on + user lacks {@code *_revision_approve}: restore only queues a pending snapshot (subject row unchanged), like a normal edit.
      *
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      */
     protected function shouldRestoreAsPendingOnly($object): bool
     {
@@ -237,7 +237,7 @@ trait RevisionsTrait
     /**
      * Record a proposed restore as the latest pending revision without persisting payload to the subject.
      *
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      */
     protected function restoreRevisionAsPendingOnly($object, array $fields, int $sourceRevisionId): mixed
     {
@@ -250,7 +250,7 @@ trait RevisionsTrait
         $this->skipRevisionCreation = true;
 
         try {
-            $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+            $userId = Auth::guard(Modularous::getAuthGuardName())->id() ?? Auth::id();
 
             $revisionAttributes = [
                 'payload' => json_encode($fields),
@@ -367,7 +367,7 @@ trait RevisionsTrait
                 $revision->update([
                     'status' => RevisionStatus::Approved->value,
                     'approved_at' => now(),
-                    'approved_by' => Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id(),
+                    'approved_by' => Auth::guard(Modularous::getAuthGuardName())->id() ?? Auth::id(),
                 ]);
             }
         } finally {
@@ -477,7 +477,7 @@ trait RevisionsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return bool false when merged payload matches last approved (nothing new to queue)
      */
     protected function processPendingRevisionSubmission($object, array $fields): bool
@@ -498,7 +498,7 @@ trait RevisionsTrait
         $this->skipRevisionCreation = true;
 
         try {
-            $userId = Auth::guard(Modularity::getAuthGuardName())->id() ?? Auth::id();
+            $userId = Auth::guard(Modularous::getAuthGuardName())->id() ?? Auth::id();
 
             $revisionAttributes = [
                 'payload' => json_encode($fullPayload),
@@ -566,7 +566,7 @@ trait RevisionsTrait
     }
 
     /**
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      */
     protected function revisionTableHasStatusColumn($object): bool
     {
@@ -579,7 +579,7 @@ trait RevisionsTrait
     /**
      * Payload merged from the latest approved (or legacy unmarked) revision.
      *
-     * @param \Unusualify\Modularity\Models\Model $object
+     * @param \Unusualify\Modularous\Models\Model $object
      * @return array<string, mixed>
      */
     public function getLastApprovedRevisionPayload($object): array

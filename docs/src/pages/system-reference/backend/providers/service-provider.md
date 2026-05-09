@@ -5,7 +5,7 @@ sidebarTitle: ServiceProvider
 
 # ServiceProvider
 
-**Class**: `Unusualify\Modularity\Providers\ServiceProvider`  
+**Class**: `Unusualify\Modularous\Providers\ServiceProvider`  
 **Source**: `src/Providers/ServiceProvider.php`  
 **Extends**: `Illuminate\Support\ServiceProvider`
 
@@ -15,9 +15,9 @@ Abstract base class that all Modularous service providers extend. Sets the `$bas
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `$baseName` | `string` | Human-readable package name, sourced from `MODULARITY_BASE_NAME` env var (default: `'Modularity'`) |
-| `$baseKey` | `string` | Snake-case version of `$baseName` used as the config namespace key (e.g. `modularity`) |
-| `$terminalNamespace` | `string` | Root namespace for console commands: `Unusualify\Modularity\Console` |
+| `$baseName` | `string` | Human-readable package name, sourced from `MODULAROUS_BASE_NAME` env var (default: `'Modularous'`) |
+| `$baseKey` | `string` | Snake-case version of `$baseName` used as the config namespace key (e.g. `modularous`) |
+| `$terminalNamespace` | `string` | Root namespace for console commands: `Unusualify\Modularous\Console` |
 | `$viewSourcePath` | `string` | Absolute path to `resources/views` inside the package |
 
 ## Constructor
@@ -26,7 +26,7 @@ Abstract base class that all Modularous service providers extend. Sets the `$bas
 public function __construct($app)
 ```
 
-Reads `MODULARITY_BASE_NAME` from the environment and derives `$baseKey` via `Str::snake()`. Both values are available to every extending provider.
+Reads `MODULAROUS_BASE_NAME` from the environment and derives `$baseKey` via `Str::snake()`. Both values are available to every extending provider.
 
 ## Overridden Methods
 
@@ -43,7 +43,7 @@ Scans every path in `config('view.paths')` for a `modules/{baseKey}` subdirector
 Never register `ServiceProvider` directly. Extend it when creating a new internal provider:
 
 ```php
-class MyProvider extends \Unusualify\Modularity\Providers\ServiceProvider
+class MyProvider extends \Unusualify\Modularous\Providers\ServiceProvider
 {
     public function boot(): void
     {

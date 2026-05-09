@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Schema\Blueprint;
@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\StateableUpdated;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\Stateable;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\Stateable;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasStateableTest extends ModelTestCase
 {

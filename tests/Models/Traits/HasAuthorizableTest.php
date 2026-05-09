@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\AuthorizableCreated;
 use Modules\SystemNotification\Events\AuthorizableUpdated;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Entities\Authorization;
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Authorization;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasAuthorizableTest extends ModelTestCase
 {
@@ -69,7 +69,7 @@ class HasAuthorizableTest extends ModelTestCase
     public function test_model_uses_has_authorizable_trait()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasAuthorizable', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasAuthorizable', $traits);
     }
 
     public function test_authorization_record_relationship_exists()
@@ -111,7 +111,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->model->save();
 
         // Check that authorization record was created
-        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $authorizationTable = modularousConfig('tables.authorizations', 'um_authorizations');
         $this->assertDatabaseHas($authorizationTable, [
             'authorizable_id' => $this->model->id,
             'authorizable_type' => get_class($this->model),
@@ -165,7 +165,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->model->save();
 
         // Check that authorization record was updated
-        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $authorizationTable = modularousConfig('tables.authorizations', 'um_authorizations');
         $this->assertDatabaseHas($authorizationTable, [
             'authorizable_id' => $this->model->id,
             'authorizable_type' => get_class($this->model),
@@ -205,7 +205,7 @@ class HasAuthorizableTest extends ModelTestCase
             'authorized_id' => $newUser->id,
         ]);
 
-        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $authorizationTable = modularousConfig('tables.authorizations', 'um_authorizations');
         $this->assertDatabaseHas($authorizationTable, [
             'authorizable_id' => $this->model->id,
             'authorizable_type' => get_class($this->model),
@@ -251,7 +251,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->model->delete();
 
         // Check that authorization record was deleted
-        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $authorizationTable = modularousConfig('tables.authorizations', 'um_authorizations');
         $this->assertDatabaseMissing($authorizationTable, [
             'id' => $authorizationId,
         ]);
@@ -276,7 +276,7 @@ class HasAuthorizableTest extends ModelTestCase
         $this->softDeletesModel->forceDelete();
 
         // Check that authorization record was deleted
-        $authorizationTable = modularityConfig('tables.authorizations', 'um_authorizations');
+        $authorizationTable = modularousConfig('tables.authorizations', 'um_authorizations');
         $this->assertDatabaseMissing($authorizationTable, [
             'id' => $authorizationId,
         ]);
@@ -407,9 +407,9 @@ class HasAuthorizableTest extends ModelTestCase
         };
 
         // Create roles
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $userRole = Role::create(['name' => 'user', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $userRole = Role::create(['name' => 'user', 'guard_name' => 'modularous']);
 
         // Create users with roles
         $adminUser = User::create(['name' => 'Admin User', 'email' => 'admin@example.com', 'published' => true]);
@@ -495,8 +495,8 @@ class HasAuthorizableTest extends ModelTestCase
     public function test_scope_is_authorized_to_your_role()
     {
         // Create roles
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         // Create users with roles
         $manager1 = User::create(['name' => 'Manager 1', 'email' => 'manager1@example.com', 'published' => true]);
@@ -590,10 +590,10 @@ class HasAuthorizableTest extends ModelTestCase
             public static $authorizableRolesToCheck = ['manager'];
         };
         // Create roles similar to PressRelease model configuration
-        $superAdminRole = Role::create(['name' => 'superadmin', 'guard_name' => 'modularity']);
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularity']);
+        $superAdminRole = Role::create(['name' => 'superadmin', 'guard_name' => 'modularous']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularous']);
 
         // Create users with different roles
         $superAdmin = User::create(['name' => 'Super Admin', 'email' => 'superadmin@example.com', 'published' => true]);
@@ -651,8 +651,8 @@ class HasAuthorizableTest extends ModelTestCase
         };
 
         // Create roles
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $userRole = Role::create(['name' => 'user', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $userRole = Role::create(['name' => 'user', 'guard_name' => 'modularous']);
 
         // Create users
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@example.com', 'published' => true]);

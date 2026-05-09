@@ -8,7 +8,7 @@ sidebarTitle: CacheHelpers
 **File**: `src/Services/Concerns/CacheHelpers.php`  
 **Uses**: `CacheTags`, `CacheInvalidation`
 
-`CacheHelpers` is the primary trait consumed by `ModularityCacheService`. It wraps standard Laravel cache operations (`remember`, `get`, `put`, `forget`, `flush`) with tag awareness — automatically applying the correct tag set when the cache store supports tags, and falling back to untagged operations otherwise.
+`CacheHelpers` is the primary trait consumed by `ModularousCacheService`. It wraps standard Laravel cache operations (`remember`, `get`, `put`, `forget`, `flush`) with tag awareness — automatically applying the correct tag set when the cache store supports tags, and falling back to untagged operations otherwise.
 
 ## Methods
 
@@ -22,7 +22,7 @@ sidebarTitle: CacheHelpers
 | `putWithRelations` | `putWithRelations(string $key, $value, int $ttl, ?string $module, ?string $route, array $relations): bool` | `put` + relation tags |
 | `has` | `has(string $key, ?string $module, ?string $route): bool` | Tag-aware existence check |
 | `forget` | `forget(string $key, ?string $module, ?string $route): bool` | Tag-aware key deletion (uses `onlyRoute: true` tag for narrow scope) |
-| `flush` | `flush(): bool` | Flush all modularity caches (by global prefix tag, or pattern fallback) |
+| `flush` | `flush(): bool` | Flush all modularous caches (by global prefix tag, or pattern fallback) |
 
 ## Tag Selection Logic
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Activators;
+namespace Unusualify\Modularous\Tests\Activators;
 
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Unusualify\Modularity\Activators\ModuleActivator;
+use Unusualify\Modularous\Activators\ModuleActivator;
 
 class ModuleActivatorTest extends TestCase
 {
@@ -57,7 +57,7 @@ class ModuleActivatorTest extends TestCase
         // Create a mock config
         $config = Mockery::mock('config');
         $config->shouldReceive('get')->with('modules.cache.enabled')->andReturn(false);
-        $config->shouldReceive('get')->with('modularity.activators.file.directory', null)->andReturnNull();
+        $config->shouldReceive('get')->with('modularous.activators.file.directory', null)->andReturnNull();
 
         // Set up container mocks
         $this->container->shouldReceive('offsetGet')->with('cache')->andReturn($cache);
@@ -121,7 +121,7 @@ class ModuleActivatorTest extends TestCase
         // Create a mock config
         $config = Mockery::mock('config');
         $config->shouldReceive('get')->with('modules.cache.enabled')->andReturn(true);
-        $config->shouldReceive('get')->with('modularity.activators.file.directory', null)->andReturnNull();
+        $config->shouldReceive('get')->with('modularous.activators.file.directory', null)->andReturnNull();
 
         // Set up container mocks
         $this->container->shouldReceive('offsetGet')->with('cache')->andReturn($cache);

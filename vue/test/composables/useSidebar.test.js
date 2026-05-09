@@ -4,9 +4,9 @@ import { defineComponent, h } from 'vue'
 import { createStore } from 'vuex'
 import useSidebar from '../../src/js/hooks/useSidebar'
 import { CONFIG } from '../../src/js/store/mutations'
-import createModularityVuetify from '../../src/js/plugins/vuetify'
+import createModularousVuetify from '../../src/js/plugins/vuetify'
 
-const vuetify = createModularityVuetify()
+const vuetify = createModularousVuetify()
 
 function createTestStore(initialState = {}) {
   const configState = {

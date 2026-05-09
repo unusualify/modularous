@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-if (modularityConfig('enabled.users-management')) {
-    $securityEnabled = (bool) modularityConfig('security.enabled', false);
-    $authMfaEnabled = (bool) modularityConfig('security.mfa.enabled', false);
+if (modularousConfig('enabled.users-management')) {
+    $securityEnabled = (bool) modularousConfig('security.enabled', false);
+    $authMfaEnabled = (bool) modularousConfig('security.mfa.enabled', false);
     $loginMiddlewares = $securityEnabled
-        ? ['throttle:' . modularityConfig('security.throttle.login', '8,1')]
+        ? ['throttle:' . modularousConfig('security.throttle.login', '8,1')]
         : [];
     $login2faMiddlewares = $authMfaEnabled
-        ? ['throttle:' . modularityConfig('security.mfa.throttle', modularityConfig('security.throttle.login_2fa', '6,1'))]
+        ? ['throttle:' . modularousConfig('security.mfa.throttle', modularousConfig('security.throttle.login_2fa', '6,1'))]
         : [];
 
 

@@ -14,7 +14,7 @@ The `Disk` driver is the default FileLibrary implementation. It delegates URL ge
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'file_library' => [
     'disk' => env('FILE_LIBRARY_DISK', 'public'),
 ],
@@ -28,7 +28,7 @@ Set `FILE_LIBRARY_DISK` to any Laravel filesystem disk name (`public`, `s3`, `lo
 public function getUrl($id)
 {
     return $this->filesystemManager
-        ->disk(config('modularity.file_library.disk'))
+        ->disk(config('modularous.file_library.disk'))
         ->url($id);
 }
 ```
@@ -38,7 +38,7 @@ The driver reads the configured disk name at call time, then calls Laravel's sta
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\FileService;
+use Unusualify\Modularous\Facades\FileService;
 
 // Store a file and record its path
 $path = Storage::disk('public')->putFile('documents', $request->file('doc'));

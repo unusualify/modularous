@@ -1,9 +1,9 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.master")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.master")
 
 @section('content')
     <h1>Hello World</h1>
 
     <p>
-        This view is loaded from module: {!! modularityConfig('name') !!}
+        This view is loaded from module: {!! modularousConfig('name') !!}
     </p>
 @endsection

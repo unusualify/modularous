@@ -6,7 +6,7 @@ sidebarTitle: API\LanguageController
 # API\LanguageController
 
 **File**: `src/Http/Controllers/API/LanguageController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\API`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\API`  
 **Extends**: `Illuminate\Routing\Controller`
 
 Serves all translation strings as a JSON payload for frontend consumption. Results are cached to a file store for 10 minutes to avoid recomputing translations on every request.
@@ -30,7 +30,7 @@ Returns a JSON object containing all application translations, keyed by locale a
 | Detail | Value |
 |--------|-------|
 | Cache store | `file` |
-| Cache key | `modularity-languages` |
+| Cache key | `modularous-languages` |
 | TTL | 600 seconds (10 minutes) |
 
 Translations are resolved via `app('translator')->getTranslations()` which aggregates group and single-line translation files across all registered modules and the base application.

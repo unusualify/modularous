@@ -36,10 +36,10 @@ sidebarTitle: Auth
 
 ## Layout Config
 
-Card width per breakpoint can be customised via the global `window.__MODULARITY_AUTH_CONFIG__` object:
+Card width per breakpoint can be customised via the global `window.__MODULAROUS_AUTH_CONFIG__` object:
 
 ```js
-window.__MODULARITY_AUTH_CONFIG__ = {
+window.__MODULAROUS_AUTH_CONFIG__ = {
   formWidth: {
     xs: '90vw',
     sm: '420px',

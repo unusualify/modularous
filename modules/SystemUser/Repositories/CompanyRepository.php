@@ -3,8 +3,8 @@
 namespace Modules\SystemUser\Repositories;
 
 use Modules\SystemUser\Entities\Company;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
 
 class CompanyRepository extends Repository
 {

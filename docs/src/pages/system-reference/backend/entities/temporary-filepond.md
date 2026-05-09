@@ -6,7 +6,7 @@ sidebarTitle: TemporaryFilepond
 # TemporaryFilepond
 
 **File**: `src/Entities/TemporaryFilepond.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Tracks temporary Filepond uploads before they are promoted to permanent [Filepond](./filepond) records on form submission. Automatically generates a unique folder name on creation.
@@ -25,7 +25,7 @@ On `creating`, if `folder_name` is null, a unique folder name is generated using
 
 ## Table
 
-Resolved from `modularity.tables.filepond_temporaries`.
+Resolved from `modularous.tables.filepond_temporaries`.
 
 ## Related
 

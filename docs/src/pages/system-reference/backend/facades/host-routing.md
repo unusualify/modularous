@@ -5,9 +5,9 @@ sidebarTitle: HostRouting
 
 # HostRouting
 
-**Facade**: `Unusualify\Modularity\Facades\HostRouting`  
+**Facade**: `Unusualify\Modularous\Facades\HostRouting`  
 **Accessor**: `unusualify.hosting`  
-**Underlying**: `Unusualify\Modularity\Support\HostRouting`
+**Underlying**: `Unusualify\Modularous\Support\HostRouting`
 
 Provides host-based (subdomain / domain) routing introspection and management. Works alongside `HostableMiddleware` for multi-tenant subdomain scenarios.
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Entities\Traits\HasPresenter;
-use Unusualify\Modularity\Entities\Traits\Secondary\HasRelated;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasPresenter;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasRelated;
 
 class Block extends BaseModel
 {
@@ -45,7 +45,7 @@ class Block extends BaseModel
 
     public function children()
     {
-        return $this->hasMany('Unusualify\Modularity\Entities\Block', 'parent_id');
+        return $this->hasMany('Unusualify\Modularous\Entities\Block', 'parent_id');
     }
 
     public function input($name)
@@ -78,7 +78,7 @@ class Block extends BaseModel
 
     public function getPresenterAttribute()
     {
-        if (($presenter = modularityConfig('block_editor.block_presenter_path')) != null) {
+        if (($presenter = modularousConfig('block_editor.block_presenter_path')) != null) {
             return $presenter;
         }
 
@@ -87,6 +87,6 @@ class Block extends BaseModel
 
     public function getTable()
     {
-        return modularityConfig('blocks_table', 'twill_blocks');
+        return modularousConfig('blocks_table', 'twill_blocks');
     }
 }

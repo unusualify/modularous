@@ -5,8 +5,8 @@ namespace Modules\Cms\Repositories;
 use Illuminate\Validation\ValidationException;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Support\ParentSegmentBindingValidator;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Repositories\Repository;
 
 class ParentSegmentRepository extends Repository
 {
@@ -29,7 +29,7 @@ class ParentSegmentRepository extends Repository
         }
 
         if (! empty($fields['target_model_class'])) {
-            if (Modularity::resolveTargetModuleRouteForModelClass((string) $fields['target_model_class']) === null) {
+            if (Modularous::resolveTargetModuleRouteForModelClass((string) $fields['target_model_class']) === null) {
                 throw ValidationException::withMessages([
                     'target_model_class' => [__('Unknown model class for a module route.')],
                 ]);

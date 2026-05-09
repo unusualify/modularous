@@ -9,7 +9,7 @@ sidebarTitle: Route Disable
 
 ## Command Information
 
-- **Signature:** `modularity:route:disable {module} {route}`
+- **Signature:** `modularous:route:disable {module} {route}`
 - **Category:** Module
 
 ## Arguments
@@ -28,8 +28,8 @@ Disabled routes are excluded from the router registration on the next request, e
 ## Examples
 
 ```bash
-php artisan modularity:route:disable Blog posts
-php artisan modularity:route:disable Shop api-products
+php artisan modularous:route:disable Blog posts
+php artisan modularous:route:disable Shop api-products
 ```
 
 ## Related

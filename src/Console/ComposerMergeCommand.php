@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 class ComposerMergeCommand extends BaseCommand
 {
@@ -9,7 +9,7 @@ class ComposerMergeCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:composer:merge
+    protected $signature = 'modularous:composer:merge
         {--p|production : Update Production composer.json file}
     ';
 

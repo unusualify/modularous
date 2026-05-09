@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity;
+namespace Unusualify\Modularous;
 
 use Illuminate\Console\Application;
 use Illuminate\Database\Eloquent\Model;
@@ -20,12 +20,12 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Laravel\Module as NwidartModule;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
-use Unusualify\Modularity\Activators\ModuleActivator;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Support\Finder;
+use Unusualify\Modularous\Activators\ModuleActivator;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Exceptions\ModularousException;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Support\Finder;
 
 class Module extends NwidartModule
 {
@@ -136,14 +136,14 @@ class Module extends NwidartModule
         try {
             return $this->moduleActivator->hasStatus($this, $status);
         } catch (\Throwable $th) {
-            Log::error('Modularity module status check failed', [
+            Log::error('Modularous module status check failed', [
                 'module' => $this->getName(),
                 'status' => $status,
                 'exception' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 "Failed to check module status for {$this->getName()}: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -272,7 +272,7 @@ class Module extends NwidartModule
     private function flushModuleCache(): void
     {
 
-        if (modularityConfig('cache.enabled')) {
+        if (modularousConfig('cache.enabled')) {
             // $this->cache->store()->flush();
         }
     }
@@ -292,13 +292,13 @@ class Module extends NwidartModule
     }
 
     /**
-     * isModularityModule
+     * isModularousModule
      */
-    public function isModularityModule(): bool
+    public function isModularousModule(): bool
     {
-        $modularityModulesPath = Modularity::getVendorPath('modules');
+        $modularousModulesPath = Modularous::getVendorPath('modules');
 
-        return str_starts_with($this->getPath(), $modularityModulesPath);
+        return str_starts_with($this->getPath(), $modularousModulesPath);
     }
 
     /**
@@ -524,7 +524,7 @@ class Module extends NwidartModule
      */
     public function isSingleton($routeName): bool
     {
-        $singularTrait = 'Unusualify\Modularity\Entities\Traits\IsSingular';
+        $singularTrait = 'Unusualify\Modularous\Entities\Traits\IsSingular';
         $repository = $this->getRouteClass($routeName, 'repository', true);
 
         return classHasTrait(App::make($repository)->getModel(), $singularTrait);
@@ -694,7 +694,7 @@ class Module extends NwidartModule
      */
     public function userHasPermission(string $permissionName, string $routeName): bool
     {
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         if (! $user) {
             return false;
@@ -898,14 +898,14 @@ class Module extends NwidartModule
                 ? $relativeUrl
                 : '/' . $relativeUrl) . (count($replacements) > 0 ? '?' . http_build_query($replacements) : '');
         } catch (\Throwable $th) {
-            Log::error('Modularity route generation failed', [
+            Log::error('Modularous route generation failed', [
                 'module' => $this->getName(),
                 'routeName' => $name ?? null,
                 'exception' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 "Failed to generate route: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th

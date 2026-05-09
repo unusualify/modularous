@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Config\Repository as Config;
@@ -38,10 +38,10 @@ class RedirectIfAuthenticatedMiddleware
      * @param Request $request
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = 'modularity')
+    public function handle($request, Closure $next, $guard = 'modularous')
     {
         if ($this->authFactory->guard($guard)->check()) {
-            return $this->redirector->to(modularityConfig('auth_login_redirect_path', '/'));
+            return $this->redirector->to(modularousConfig('auth_login_redirect_path', '/'));
         }
 
         return $next($request);

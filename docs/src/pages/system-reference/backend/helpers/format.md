@@ -86,7 +86,7 @@ These helpers write PHP source fragments used by `make:*` console commands.
 | Function | Signature | Description |
 |----------|-----------|-------------|
 | `laravelRelationshipMap` | `(): array` | Returns the cached Eloquent relationship type map |
-| `saveLaravelRelationshipMap` | `(array $map): void` | Persists the relationship map to the modularity cache |
+| `saveLaravelRelationshipMap` | `(array $map): void` | Persists the relationship map to the modularous cache |
 
 ## Routing / Display
 

@@ -36,7 +36,7 @@ outline: deep
 ### Allowable — Filter by Role
 
 ```php
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Traits\Allowable;
 
 class NavigationController extends Controller
 {
@@ -59,7 +59,7 @@ Items without `allowedRoles` are public. See [Allowable](./allowable) for closur
 ### Responsive Visibility — Breakpoint Control
 
 ```php
-use Unusualify\Modularity\Traits\ResponsiveVisibility;
+use Unusualify\Modularous\Traits\ResponsiveVisibility;
 
 class MenuController extends Controller
 {
@@ -84,7 +84,7 @@ Applies Vuetify `d-{breakpoint}-*` classes. See [Responsive Visibility](./respon
 Model:
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class Ticket extends Model
 {
@@ -103,7 +103,7 @@ Route config:
 Repository:
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
 
 class TicketRepository extends Repository
 {
@@ -119,11 +119,11 @@ See [File Storage with Filepond](./file-storage-with-filepond) for storage mecha
 
 ```bash
 # Model-level (adds method to parent model)
-php artisan modularity:make:model Package Billing \
+php artisan modularous:make:model Package Billing \
   --relationships="belongsToMany:Feature"
 
 # Route-level (creates pivot + migration + reverse relation)
-php artisan modularity:make:route Billing packages \
+php artisan modularous:make:route Billing packages \
   --relationships="Feature:belongsToMany,position:integer:unsigned:index"
 ```
 
@@ -136,7 +136,7 @@ See [Relationships](./relationships) for full grammar, field types, and modifier
 Generics are independent, so you can stack them. The most common combo is **Allowable + ResponsiveVisibility** on the same menu:
 
 ```php
-use Unusualify\Modularity\Traits\{Allowable, ResponsiveVisibility};
+use Unusualify\Modularous\Traits\{Allowable, ResponsiveVisibility};
 
 class MenuController extends Controller
 {
@@ -166,10 +166,10 @@ class MenuController extends Controller
 
 | Generic | FQCN |
 |---------|------|
-| Allowable | `Unusualify\Modularity\Traits\Allowable` |
-| ResponsiveVisibility | `Unusualify\Modularity\Traits\ResponsiveVisibility` |
-| HasFileponds | `Unusualify\Modularity\Entities\Traits\HasFileponds` |
-| FilepondsTrait | `Unusualify\Modularity\Repositories\Traits\FilepondsTrait` |
+| Allowable | `Unusualify\Modularous\Traits\Allowable` |
+| ResponsiveVisibility | `Unusualify\Modularous\Traits\ResponsiveVisibility` |
+| HasFileponds | `Unusualify\Modularous\Entities\Traits\HasFileponds` |
+| FilepondsTrait | `Unusualify\Modularous\Repositories\Traits\FilepondsTrait` |
 
 ## Related
 

@@ -5,7 +5,7 @@ sidebarTitle: HasPresenter
 
 # HasPresenter
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasPresenter`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasPresenter`
 
 Lightweight presenter pattern — wraps the model in a presenter class for display logic. Supports a main presenter and an admin-specific presenter. Presenter instances are cached on the model instance.
 
@@ -34,7 +34,7 @@ Lightweight presenter pattern — wraps the model in a presenter class for displ
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasPresenter;
+use Unusualify\Modularous\Entities\Traits\HasPresenter;
 
 class Article extends Model
 {

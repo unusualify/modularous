@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Traits\ManageNames;
 
 /**
  * Base class for input schema hydration.
@@ -43,7 +43,7 @@ abstract class InputHydrate
      * İnput Schema array
      *
      *
-     * @var Unusualify\Modularity\Module
+     * @var Unusualify\Modularous\Module
      */
     protected $module;
 
@@ -432,12 +432,12 @@ abstract class InputHydrate
     /**
      * Get module
      *
-     * @return Unusualify\Modularity\Module
+     * @return Unusualify\Modularous\Module
      */
     final protected function getModule(bool $noSelfModule = false)
     {
         return isset($this->input['_moduleName'])
-            ? Modularity::find($this->input['_moduleName'])
+            ? Modularous::find($this->input['_moduleName'])
             : ((! $noSelfModule && $this->hasModule())
                 ? $this->module
                 : throw new \Exception($noSelfModule

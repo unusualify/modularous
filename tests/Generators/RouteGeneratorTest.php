@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Generators;
+namespace Unusualify\Modularous\Tests\Generators;
 
 use Illuminate\Config\Repository;
 use Illuminate\Console\Command as Console;
@@ -8,12 +8,12 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Mockery;
 use Modules\SystemUser\Repositories\PermissionRepository;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Generators\RouteGenerator;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Services\FileTranslation;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Generators\RouteGenerator;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Services\FileTranslation;
+use Unusualify\Modularous\Tests\TestCase;
 
 class RouteGeneratorTest extends TestCase
 {
@@ -48,7 +48,7 @@ class RouteGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('modularity.base_key', 'modularity');
+        $this->app['config']->set('modularous.base_key', 'modularous');
 
         // Ensure ALL generators have 'generate' => true to avoid prompts
         $generators = [
@@ -58,17 +58,17 @@ class RouteGeneratorTest extends TestCase
         ];
 
         foreach ($generators as $gen) {
-            $this->app['config']->set("modularity.paths.generator.$gen", ['path' => 'Test', 'generate' => true]);
+            $this->app['config']->set("modularous.paths.generator.$gen", ['path' => 'Test', 'generate' => true]);
             $this->app['config']->set("modules.paths.generator.$gen", ['path' => 'Test', 'generate' => true]);
         }
 
-        $this->app['config']->set('modularity.stubs.files', []);
+        $this->app['config']->set('modularous.stubs.files', []);
 
         $this->filesystem = Mockery::mock(Filesystem::class);
         $this->console = Mockery::mock(Console::class);
         $this->module = Mockery::mock(Module::class);
 
-        $this->module->shouldReceive('isModularityModule')->andReturn(false)->byDefault();
+        $this->module->shouldReceive('isModularousModule')->andReturn(false)->byDefault();
         $this->module->shouldReceive('getStudlyName')->andReturn('TestModule')->byDefault();
         $this->module->shouldReceive('getName')->andReturn('TestModule')->byDefault();
         $this->module->shouldReceive('getSnakeName')->andReturn('test_module')->byDefault();
@@ -116,7 +116,7 @@ class RouteGeneratorTest extends TestCase
         $permissionRepository = Mockery::mock(PermissionRepository::class);
         $this->app->instance(PermissionRepository::class, $permissionRepository);
 
-        Modularity::shouldReceive('getAuthGuardName')->andReturn('admin');
+        Modularous::shouldReceive('getAuthGuardName')->andReturn('admin');
         $permissionRepository->shouldReceive('firstOrCreate')->atLeast()->once();
 
         $this->assertTrue($this->generator->createRoutePermissions());
@@ -384,7 +384,7 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_returns_vendor_replacement()
     {
-        $this->app['config']->set('modularity.composer.vendor', 'test-vendor');
+        $this->app['config']->set('modularous.composer.vendor', 'test-vendor');
 
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getVendorReplacement');
@@ -409,7 +409,7 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_returns_author_replacement()
     {
-        $this->app['config']->set('modularity.composer.author.name', 'John Doe');
+        $this->app['config']->set('modularous.composer.author.name', 'John Doe');
 
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getAuthorReplacement');
@@ -421,7 +421,7 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_returns_author_email_replacement()
     {
-        $this->app['config']->set('modularity.composer.author.email', 'john@example.com');
+        $this->app['config']->set('modularous.composer.author.email', 'john@example.com');
 
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('getAuthorEmailReplacement');
@@ -516,7 +516,7 @@ class RouteGeneratorTest extends TestCase
     /** @test */
     public function it_generates_files()
     {
-        $this->app['config']->set('modularity.stubs.files', []);
+        $this->app['config']->set('modularous.stubs.files', []);
 
         $reflection = new \ReflectionClass($this->generator);
         $method = $reflection->getMethod('generateFiles');

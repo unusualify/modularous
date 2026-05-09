@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Traits\Cache;
+namespace Unusualify\Modularous\Traits\Cache;
 
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularous\Traits\ManageTraits;
 
 trait HasUserAwareCache
 {

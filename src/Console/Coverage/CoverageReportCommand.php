@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Coverage;
+namespace Unusualify\Modularous\Console\Coverage;
 
 use Illuminate\Console\Command;
-use Unusualify\Modularity\Facades\Coverage;
+use Unusualify\Modularous\Facades\Coverage;
 
 /**
  * Generate coverage reports in various formats

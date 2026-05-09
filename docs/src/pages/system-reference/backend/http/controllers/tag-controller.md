@@ -6,7 +6,7 @@ sidebarTitle: TagController
 # TagController
 
 **File**: `src/Http/Controllers/TagController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Illuminate\Routing\Controller`
 
 Provides tag search and creation endpoints used by taggable input components across the admin panel.

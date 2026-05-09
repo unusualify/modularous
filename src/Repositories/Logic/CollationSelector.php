@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Database\Concerns\CompilesJsonPaths;
 use Illuminate\Database\Query\Builder;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait CollationSelector
 {
@@ -56,7 +56,7 @@ trait CollationSelector
      */
     public function shouldUseSearchCollation($query)
     {
-        return (Modularity::shouldUseCollationForSearch() || $this->shouldUseSearchCollation) && $this->isCollationQuery($query);
+        return (Modularous::shouldUseCollationForSearch() || $this->shouldUseSearchCollation) && $this->isCollationQuery($query);
     }
 
     public function getCollationSelectorColumns()

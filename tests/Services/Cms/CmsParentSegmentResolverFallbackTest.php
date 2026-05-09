@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -9,7 +9,7 @@ use Modules\Cms\Entities\Page;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsParentSegmentResolver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsParentSegmentResolverFallbackTest extends TestCase
 {
@@ -17,7 +17,7 @@ class CmsParentSegmentResolverFallbackTest extends TestCase
     {
         parent::setUp();
 
-        $table = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $table = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
         Schema::dropIfExists($table);
         Schema::create($table, function (Blueprint $table): void {
             $table->id();
@@ -30,14 +30,14 @@ class CmsParentSegmentResolverFallbackTest extends TestCase
             $table->timestamps();
         });
 
-        $this->app['config']->set('modularity.cms_parent_segments.enabled', true);
+        $this->app['config']->set('modularous.cms_parent_segments.enabled', true);
         $this->app->singleton(CanonicalUrlResolverInterface::class, CanonicalUrlResolver::class);
     }
 
     public function test_fallback_uses_enabled_default_locale_prefix_when_locale_binding_disabled(): void
     {
         $this->app['config']->set('translatable.locales', ['tr', 'en']);
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'en');
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'en');
 
         ParentSegment::query()->create([
             'target_model_class' => Page::class,
@@ -67,7 +67,7 @@ class CmsParentSegmentResolverFallbackTest extends TestCase
     public function test_prefers_own_locale_binding_when_enabled(): void
     {
         $this->app['config']->set('translatable.locales', ['tr', 'en']);
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'en');
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'en');
 
         ParentSegment::query()->create([
             'target_model_class' => Page::class,
@@ -96,7 +96,7 @@ class CmsParentSegmentResolverFallbackTest extends TestCase
     public function test_no_prefix_when_no_enabled_binding_anywhere(): void
     {
         $this->app['config']->set('translatable.locales', ['tr', 'en']);
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'en');
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'en');
 
         ParentSegment::query()->create([
             'target_model_class' => Page::class,

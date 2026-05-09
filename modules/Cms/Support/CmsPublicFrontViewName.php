@@ -4,8 +4,8 @@ namespace Modules\Cms\Support;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 /**
  * Picks the Blade for {@see \Modules\Cms\Http\Controllers\Front\CmsPublicFrontController} from config or by matching
@@ -18,7 +18,7 @@ final class CmsPublicFrontViewName
      */
     public static function forModel(Model $item): string
     {
-        $map = (array) modularityConfig('cms_routing.public_front_views_by_model', []);
+        $map = (array) modularousConfig('cms_routing.public_front_views_by_model', []);
         $class = get_class($item);
         if (isset($map[$class]) && is_string($map[$class]) && $map[$class] !== '') {
             return $map[$class];
@@ -44,7 +44,7 @@ final class CmsPublicFrontViewName
             }
         }
 
-        $fallback = (string) modularityConfig('cms_routing.universal_public_front_fallback_view', 'cms::page.custom');
+        $fallback = (string) modularousConfig('cms_routing.universal_public_front_fallback_view', 'cms::page.custom');
         if ($fallback === '') {
             return 'cms::page.custom';
         }
@@ -54,7 +54,7 @@ final class CmsPublicFrontViewName
 
     private static function cmsModule(): ?Module
     {
-        foreach (Modularity::allEnabled() as $module) {
+        foreach (Modularous::allEnabled() as $module) {
             if ($module instanceof Module && $module->getName() === 'Cms') {
                 return $module;
             }

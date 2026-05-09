@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class ImpersonateMiddleware
 {
@@ -28,11 +28,11 @@ class ImpersonateMiddleware
     public function handle($request, Closure $next)
     {
         if ($request->hasSession() && $request->session()->has('impersonate')) {
-            $this->authFactory->guard(Modularity::getAuthGuardName())->onceUsingId($request->session()->get('impersonate'));
+            $this->authFactory->guard(Modularous::getAuthGuardName())->onceUsingId($request->session()->get('impersonate'));
         }
 
-        view()->composer(modularityBaseKey() . '::layouts.master', function ($view) {
-            $view->with('impersonation', get_modularity_impersonation_config());
+        view()->composer(modularousBaseKey() . '::layouts.master', function ($view) {
+            $view->with('impersonation', get_modularous_impersonation_config());
         });
 
         return $next($request);

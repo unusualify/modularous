@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use Oobook\Database\Eloquent\Concerns\ManageEloquent;
-use Unusualify\Modularity\Entities\Spread;
+use Unusualify\Modularous\Entities\Spread;
 
 trait HasSpreadable
 {

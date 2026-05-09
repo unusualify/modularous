@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
-use Unusualify\Modularity\Traits\Pretending;
-use Unusualify\Modularity\Traits\Verbosity;
+use Unusualify\Modularous\Traits\Pretending;
+use Unusualify\Modularous\Traits\Verbosity;
 
 class RegexReplacement
 {

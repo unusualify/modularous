@@ -7,7 +7,7 @@ sidebarTitle: make:controller
 
 > Create an admin-panel CRUD controller for a module
 
-**Signature**: `modularity:make:controller`
+**Signature**: `modularous:make:controller`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Generates a controller that extends the configured `base_controller` (default: M
 ## Usage
 
 ```
-modularity:make:controller <module> <name>
+modularous:make:controller <module> <name>
 ```
 
 ### Arguments
@@ -37,12 +37,12 @@ modularity:make:controller <module> <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:controller Blog Post
+php artisan modularous:make:controller Blog Post
 # → Blog/Http/Controllers/PostController.php
 ```
 
 ```bash
-php artisan modularity:make:controller Blog PostController
+php artisan modularous:make:controller Blog PostController
 # → Blog/Http/Controllers/PostController.php (same result)
 ```
 

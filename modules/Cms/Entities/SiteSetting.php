@@ -2,7 +2,7 @@
 
 namespace Modules\Cms\Entities;
 
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class SiteSetting extends Model
 {
@@ -20,6 +20,6 @@ class SiteSetting extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_site_settings', 'um_cms_site_settings');
+        return modularousConfig('tables.cms_site_settings', 'um_cms_site_settings');
     }
 }

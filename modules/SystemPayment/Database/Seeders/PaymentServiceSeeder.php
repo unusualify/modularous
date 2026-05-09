@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\MediaLibraryController;
-use Unusualify\Modularity\Http\Requests\MediaRequest;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\MediaLibraryController;
+use Unusualify\Modularous\Http\Requests\MediaRequest;
 
 class PaymentServiceSeeder extends Seeder
 {
@@ -222,7 +222,7 @@ class PaymentServiceSeeder extends Seeder
             ],
         ];
 
-        $superadmin = User::role('superadmin', Modularity::getAuthGuardName())->first();
+        $superadmin = User::role('superadmin', Modularous::getAuthGuardName())->first();
 
         if (! $superadmin) {
             $this->command->error('Admin user not found. Please ensure the admin user exists in the database.');
@@ -230,7 +230,7 @@ class PaymentServiceSeeder extends Seeder
             return;
         }
 
-        Auth::guard(Modularity::getAuthGuardName())->login($superadmin);
+        Auth::guard(Modularous::getAuthGuardName())->login($superadmin);
 
         foreach ($paymentServices as $_paymentService) {
             $paymentService = PaymentService::create(Arr::only($_paymentService, ['name', 'key', 'is_external', 'is_internal', 'published', 'button_style', 'spread_payload']));
@@ -270,9 +270,9 @@ class PaymentServiceSeeder extends Seeder
             $imagePath = $base_path . $imageName;
 
         } else {
-            $imagePath = base_path('vendor/unusualify/modularity/resources/assets/images/payment-services/' . $imageName);
+            $imagePath = base_path('vendor/unusualify/modularous/resources/assets/images/payment-services/' . $imageName);
         }
-        $imagePath = base_path('vendor/unusualify/modularity/resources/assets/images/payment-services/' . $imageName);
+        $imagePath = base_path('vendor/unusualify/modularous/resources/assets/images/payment-services/' . $imageName);
         // $this->command->warn("Image path: $imagePath");
 
         if (file_exists($imagePath)) {

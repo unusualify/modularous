@@ -3,7 +3,7 @@
 namespace Modules\SystemUtility\Entities\Translations;
 
 use Modules\SystemUtility\Entities\Country;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class CountryTranslation extends Model
 {
@@ -11,6 +11,6 @@ class CountryTranslation extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.country_translations', 'um_country_translations');
+        return modularousConfig('tables.country_translations', 'um_country_translations');
     }
 }

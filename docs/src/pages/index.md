@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Unusualify Modularous"
-#   text: "Unusualify Modularity"
+#   text: "Unusualify Modularous"
   tagline: Laravel & Vue.js - Vuetify.js Powered Laravel Project Generator
   actions:
     - theme: brand

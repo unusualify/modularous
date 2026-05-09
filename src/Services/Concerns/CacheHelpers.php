@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\Concerns;
+namespace Unusualify\Modularous\Services\Concerns;
 
 use Closure;
 use Illuminate\Cache\Repository;
@@ -237,12 +237,12 @@ trait CacheHelpers
     }
 
     /**
-     * Flush all modularity caches.
+     * Flush all modularous caches.
      */
     public function flush(): bool
     {
         if ($this->usesTags()) {
-            // Flush the main modularity tag
+            // Flush the main modularous tag
             $this->getStore()->tags([$this->getPrefix()])->flush();
 
             return true;

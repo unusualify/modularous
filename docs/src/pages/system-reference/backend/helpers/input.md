@@ -24,9 +24,9 @@ hydrate_input()  → runs InputHydrator
     ↓
 hydrate_input_extension()  → processes ext patterns (permalink, filter, toggle, etc.)
     ↓
-modularity_format_input()  → merges with default input, keys by name
+modularous_format_input()  → merges with default input, keys by name
     ↓
-modularity_format_inputs()  → maps over schema array
+modularous_format_inputs()  → maps over schema array
 ```
 
 ## Functions
@@ -41,13 +41,13 @@ Normalizes shorthand input config. Numeric keys (flags like `'required'`) are co
 
 ---
 
-### `modularity_default_input`
+### `modularous_default_input`
 
 ```php
-modularity_default_input(): array
+modularous_default_input(): array
 ```
 
-Returns the default input configuration from `modularity.default_input` config key. Merged into every input by `modularity_format_input`.
+Returns the default input configuration from `modularous.default_input` config key. Merged into every input by `modularous_format_input`.
 
 ---
 
@@ -57,7 +57,7 @@ Returns the default input configuration from `modularity.default_input` config k
 hydrate_input_type(array $input): array
 ```
 
-Looks up `$input['type']` in `modularity.input_types` config and merges the preset defaults with the provided input array. Allows centralized type defaults (e.g. all `select` inputs get `itemValue: 'id'` automatically).
+Looks up `$input['type']` in `modularous.input_types` config and merges the preset defaults with the provided input array. Allows centralized type defaults (e.g. all `select` inputs get `itemValue: 'id'` automatically).
 
 ---
 
@@ -129,20 +129,20 @@ Returns `[$processedInput, $isArrayable]`.
 
 ---
 
-### `modularity_format_input`
+### `modularous_format_input`
 
 ```php
-modularity_format_input(array $input, ...): array
+modularous_format_input(array $input, ...): array
 ```
 
 Full pipeline entry for a single input: resolves closures, calls `format_input`, merges defaults, applies `configure_input`, and returns `['name' => $normalizedInput]`.
 
 ---
 
-### `modularity_format_inputs`
+### `modularous_format_inputs`
 
 ```php
-modularity_format_inputs(array $inputs, ...): array
+modularous_format_inputs(array $inputs, ...): array
 ```
 
-Maps `modularity_format_input` over an array of input definitions, returning the keyed schema array ready for the frontend.
+Maps `modularous_format_input` over an array of input definitions, returning the keyed schema array ready for the frontend.

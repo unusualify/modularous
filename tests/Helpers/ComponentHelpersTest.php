@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ComponentHelpersTest extends TestCase
 {
     /** @test */
-    public function test_modularity_response_modal_body_component_returns_array()
+    public function test_modularous_response_modal_body_component_returns_array()
     {
-        $result = modularity_response_modal_body_component(
+        $result = modularous_response_modal_body_component(
             'success',
             'mdi-check-circle',
             'Success',
@@ -21,9 +21,9 @@ class ComponentHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_modal_service_returns_array_structure()
+    public function test_modularous_modal_service_returns_array_structure()
     {
-        $result = modularity_modal_service(
+        $result = modularous_modal_service(
             'error',
             'mdi-alert',
             'Error',
@@ -38,13 +38,13 @@ class ComponentHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_modal_service_form_returns_array_structure()
+    public function test_modularous_modal_service_form_returns_array_structure()
     {
         $schema = [['name' => 'email', 'type' => 'text']];
         $actionUrl = '/submit';
         $buttonText = 'Submit';
 
-        $result = modularity_modal_service_form($schema, $actionUrl, $buttonText);
+        $result = modularous_modal_service_form($schema, $actionUrl, $buttonText);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('component', $result);
@@ -54,23 +54,23 @@ class ComponentHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_modal_service_form_with_model()
+    public function test_modularous_modal_service_form_with_model()
     {
         $schema = [['name' => 'email', 'type' => 'text']];
         $actionUrl = '/submit';
         $buttonText = 'Submit';
         $model = ['email' => 'test@example.com'];
 
-        $result = modularity_modal_service_form($schema, $actionUrl, $buttonText, $model);
+        $result = modularous_modal_service_form($schema, $actionUrl, $buttonText, $model);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('props', $result);
     }
 
     /** @test */
-    public function test_modularity_new_modal_service_returns_array_structure()
+    public function test_modularous_new_modal_service_returns_array_structure()
     {
-        $result = modularity_new_modal_service(
+        $result = modularous_new_modal_service(
             'warning',
             'mdi-alert-circle',
             'Warning',
@@ -85,9 +85,9 @@ class ComponentHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_new_response_modal_body_component_returns_array()
+    public function test_modularous_new_response_modal_body_component_returns_array()
     {
-        $result = modularity_new_response_modal_body_component(
+        $result = modularous_new_response_modal_body_component(
             'info',
             'mdi-information',
             'Information',

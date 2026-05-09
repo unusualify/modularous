@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories;
+namespace Unusualify\Modularous\Repositories;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
-use Unusualify\Modularity\Repositories\Traits\TagsTrait;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Repositories\Traits\CreatorTrait;
+use Unusualify\Modularous\Repositories\Traits\TagsTrait;
 
 class FileRepository extends Repository
 {

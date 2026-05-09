@@ -6,7 +6,7 @@ sidebarTitle: Model
 # Model
 
 **File**: `src/Entities/Model.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`  
 **Implements**: `CacheableInterface`, `ModuleableInterface`, `TaggableInterface`  
 **Traits**: `HasPresenter`, `IsTranslatable`, `ModelHelpers`, `SoftDeletes`, `TaggableTrait`, `LocaleTags`, `Notifiable`, `HasCaching`, `Traitify`
@@ -33,7 +33,7 @@ Returns the model's fillable attributes. For translation models that define a `$
 
 ### `tags(): MorphToMany`
 
-Polymorphic many-to-many relationship to `Tag` via the `tagged` pivot table. Table name is read from `modularity.tables.tagged`.
+Polymorphic many-to-many relationship to `Tag` via the `tagged` pivot table. Table name is read from `modularous.tables.tagged`.
 
 ### `newInstance($attributes, $exists): static`
 
@@ -45,7 +45,7 @@ Mutator that defaults `publish_start_date` to the current time when null.
 
 ## Table Name
 
-All entity models resolve their table name via `modularityConfig('tables.{key}')`, falling back to the parent's default.
+All entity models resolve their table name via `modularousConfig('tables.{key}')`, falling back to the parent's default.
 
 ## Related
 

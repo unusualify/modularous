@@ -6,7 +6,7 @@ sidebarTitle: AuthenticateMiddleware
 # AuthenticateMiddleware
 
 **File**: `src/Http/Middleware/AuthenticateMiddleware.php`  
-**Alias**: `modularity.auth`  
+**Alias**: `modularous.auth`  
 **Extends**: `Illuminate\Auth\Middleware\Authenticate`
 
 Extends Laravel's built-in `Authenticate` middleware with two Modularous-specific behaviours: intended-URL preservation before the redirect and JSON 401 handling for Inertia/AJAX requests.
@@ -48,11 +48,11 @@ Applied via the `web.auth` and `api.auth` middleware groups:
 ```php
 Route::middlewareGroup('web.auth', [
     'web',
-    'modularity.auth:modularity',
+    'modularous.auth:modularous',
 ]);
 ```
 
-The guard name is injected from `Modularity::getAuthGuardName()` (default: `'modularity'`).
+The guard name is injected from `Modularous::getAuthGuardName()` (default: `'modularous'`).
 
 ## Notes
 

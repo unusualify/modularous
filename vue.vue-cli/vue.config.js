@@ -14,7 +14,7 @@ const srcDirectory = 'src'
 
 // const partialsDirectory = '../../src/Resources/views/partials'
 // const svgIconsDirectory = '../../src/Resources/views/partials/icons'
-const svgIconsDirectory = `${CD_PARENT_STRING}/resources/views/vendor/modularity/partials/icons`
+const svgIconsDirectory = `${CD_PARENT_STRING}/resources/views/vendor/modularous/partials/icons`
 
 const outputDir = isProd ? 'dist' : (process.env.VUE_DEV_ASSETS_PATH || 'dist')
 const assetsDir = process.env.UNUSUAL_ASSETS_DIR || 'unusual'

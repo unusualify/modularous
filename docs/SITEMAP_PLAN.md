@@ -119,7 +119,7 @@
 - **Servis sınıf adı:** `CmsSitemapBuildService` (plan maddesindeki `SitemapBuildService` ile aynı rol).
 - **Şema:** `2026_04_02_000001_create_cms_sitemap_tables.php` → `um_cms_sitemaps` (id=1 `default` seed) + `um_cms_sitemapables` (morph + `changefreq` / `priority`).
 - **Cache / route / job / artisan:** `CmsSitemapCacheService` (`Cache::forever`); `GET /sitemap.xml` → `PublicSitemapController`; `RebuildCmsSitemapJob`; `php artisan cms:sitemap:rebuild` (`--dry-run` ile stdout).
-- **Config:** `config/merges/cms_sitemap.php` (`modularity.cms_sitemap`); açıklama: [`docs/CONFIG.md`](../docs/CONFIG.md) (Sitemap bölümü).
+- **Config:** `config/merges/cms_sitemap.php` (`modularous.cms_sitemap`); açıklama: [`docs/CONFIG.md`](../docs/CONFIG.md) (Sitemap bölümü).
 - **Kalan (ürün / panel):** Cms Sitemap **alt modül** UI (dry-run/commit ekranı), parça sitemap index; isteğe bağlı sitemap’i `robots.txt` / Site SEO’ya bağlama.
 
 ---

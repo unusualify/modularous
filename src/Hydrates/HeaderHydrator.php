@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates;
+namespace Unusualify\Modularous\Hydrates;
 
-use Unusualify\Modularity\Traits\ResponsiveVisibility;
+use Unusualify\Modularous\Traits\ResponsiveVisibility;
 
 class HeaderHydrator
 {
@@ -64,6 +64,6 @@ class HeaderHydrator
 
     protected function defaultHeader()
     {
-        return modularityConfig('default_header');
+        return modularousConfig('default_header');
     }
 }

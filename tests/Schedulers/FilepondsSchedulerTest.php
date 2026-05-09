@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Schedulers;
+namespace Unusualify\Modularous\Tests\Schedulers;
 
 use Illuminate\Support\Facades\Log;
 use Mockery;
-use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Schedulers\FilepondsScheduler;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Filepond;
+use Unusualify\Modularous\Schedulers\FilepondsScheduler;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FilepondsSchedulerTest extends TestCase
 {
@@ -51,10 +51,10 @@ class FilepondsSchedulerTest extends TestCase
 
         Log::shouldReceive('info')
             ->once()
-            ->with('Modularity: Deleted 0 expired temporary fileponds in last 7 days');
+            ->with('Modularous: Deleted 0 expired temporary fileponds in last 7 days');
 
         // Execute command via Artisan facade
-        $this->artisan('modularity:fileponds:scheduler')
+        $this->artisan('modularous:fileponds:scheduler')
             ->assertSuccessful();
     }
 
@@ -83,10 +83,10 @@ class FilepondsSchedulerTest extends TestCase
 
         Log::shouldReceive('info')
             ->once()
-            ->with('Modularity: Deleted 3 expired temporary fileponds in last 14 days');
+            ->with('Modularous: Deleted 3 expired temporary fileponds in last 14 days');
 
         // Execute command via Artisan with the --days option
-        $this->artisan('modularity:fileponds:scheduler', ['--days' => 14])
+        $this->artisan('modularous:fileponds:scheduler', ['--days' => 14])
             ->assertSuccessful();
     }
 
@@ -113,9 +113,9 @@ class FilepondsSchedulerTest extends TestCase
 
         Log::shouldReceive('info')
             ->once()
-            ->with('Modularity: Deleted 2 expired temporary fileponds in last 7 days');
+            ->with('Modularous: Deleted 2 expired temporary fileponds in last 7 days');
 
-        $this->artisan('modularity:fileponds:scheduler')
+        $this->artisan('modularous:fileponds:scheduler')
             ->assertSuccessful();
     }
 }

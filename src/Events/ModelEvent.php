@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Events;
+namespace Unusualify\Modularous\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Events\Traits\EventChanges;
-use Unusualify\Modularity\Events\Traits\EventStateable;
-use Unusualify\Modularity\Events\Traits\EventUrls;
-use Unusualify\Modularity\Events\Traits\EventUser;
+use Unusualify\Modularous\Events\Traits\EventChanges;
+use Unusualify\Modularous\Events\Traits\EventStateable;
+use Unusualify\Modularous\Events\Traits\EventUrls;
+use Unusualify\Modularous\Events\Traits\EventUser;
 
 abstract class ModelEvent
 {
@@ -77,8 +77,8 @@ abstract class ModelEvent
     public function broadcastAs()
     {
         // dd(
-        //     'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))))
+        //     'modularous.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))))
         // );
-        return 'modularity.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))));
+        return 'modularous.' . Str::replace('_', '.', Str::replace('_event', '', Str::snake(get_class_short_name($this))));
     }
 }

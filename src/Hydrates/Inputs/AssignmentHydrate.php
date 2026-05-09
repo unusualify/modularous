@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 class AssignmentHydrate extends InputHydrate
 {
@@ -83,7 +83,7 @@ class AssignmentHydrate extends InputHydrate
         $acceptedFileTypes = $input['accepted-file-types']
             ?? $this->getAcceptedFileTypes($filepondAcceptedFileTypes);
         $maxAttachments = $input['max-attachments'] ?? 3;
-        $input['filepond'] = modularity_format_input([
+        $input['filepond'] = modularous_format_input([
             'type' => 'filepond',
             'name' => 'attachments',
             'accepted-file-types' => $acceptedFileTypes,

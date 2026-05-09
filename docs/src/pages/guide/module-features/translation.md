@@ -16,9 +16,9 @@ Add both traits to your model:
 
 namespace Modules\Page\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\IsTranslatable;
 
 class Page extends Model
 {
@@ -47,8 +47,8 @@ Add `TranslationsTrait` to your repository:
 
 namespace Modules\Page\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
 
 class PageRepository extends Repository
 {

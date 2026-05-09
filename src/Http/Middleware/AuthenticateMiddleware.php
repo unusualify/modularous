@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Middleware\Concerns\HandlesUnauthenticatedInertiaAndAjax;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Middleware\Concerns\HandlesUnauthenticatedInertiaAndAjax;
 
 class AuthenticateMiddleware extends Middleware
 {
@@ -35,7 +35,7 @@ class AuthenticateMiddleware extends Middleware
             return null;
         }
 
-        $modularityAdminRouteNamePrefix = Modularity::getAdminRouteNamePrefix();
+        $modularousAdminRouteNamePrefix = Modularous::getAdminRouteNamePrefix();
         // Define auth routes that should not be stored as intended URL
         $excludedRoutes = Arr::map([
             'login.form', 'login', 'logout',
@@ -44,8 +44,8 @@ class AuthenticateMiddleware extends Middleware
             'password.reset.success', 'password.reset',
             'password.reset.update',
             'impersonate.stop', 'impersonate',
-        ], function ($route) use ($modularityAdminRouteNamePrefix) {
-            return $modularityAdminRouteNamePrefix ? $modularityAdminRouteNamePrefix . '.' . $route : $route;
+        ], function ($route) use ($modularousAdminRouteNamePrefix) {
+            return $modularousAdminRouteNamePrefix ? $modularousAdminRouteNamePrefix . '.' . $route : $route;
         });
 
         $routeName = $request->route()?->getName();

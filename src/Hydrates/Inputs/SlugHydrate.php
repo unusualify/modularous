@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class SlugHydrate extends InputHydrate
 {
@@ -45,11 +45,11 @@ class SlugHydrate extends InputHydrate
             $input = $this->appendParentSegmentPrefixSchema($input);
         }
 
-        if (modularityConfig('cms_routing.admin.slug_public_path_preview', true)) {
+        if (modularousConfig('cms_routing.admin.slug_public_path_preview', true)) {
             $input['cmsPublicPathPreview'] = [
-                'prefix' => trim((string) modularityConfig('cms_routing.front_route_prefix', 'cms'), '/'),
-                'default_locale' => (string) modularityConfig('cms_routing.default_locale', config('app.locale')),
-                'hide_default_locale' => (bool) modularityConfig('cms_routing.hide_default_locale_segment', false),
+                'prefix' => trim((string) modularousConfig('cms_routing.front_route_prefix', 'cms'), '/'),
+                'default_locale' => (string) modularousConfig('cms_routing.default_locale', config('app.locale')),
+                'hide_default_locale' => (bool) modularousConfig('cms_routing.hide_default_locale_segment', false),
             ];
         }
 
@@ -63,7 +63,7 @@ class SlugHydrate extends InputHydrate
     /**
      * When the submodule repository uses {@see \Modules\Cms\Repositories\Traits\ParentSegmentTrait}
      * (via {@see \Modules\Cms\Repositories\Traits\CMRTrait}), or the route model uses
-     * {@see HasParentSegment} / {@see \Unusualify\Modularity\Entities\Traits\IsCmr}, pass locale → normalized prefix map for the slug field prefix.
+     * {@see HasParentSegment} / {@see \Unusualify\Modularous\Entities\Traits\IsCmr}, pass locale → normalized prefix map for the slug field prefix.
      *
      * @param array<string, mixed> $input
      * @return array<string, mixed>
@@ -74,7 +74,7 @@ class SlugHydrate extends InputHydrate
             return $input;
         }
 
-        $module = Modularity::find($input['_moduleName']);
+        $module = Modularous::find($input['_moduleName']);
         if ($module === null) {
             return $input;
         }
@@ -100,7 +100,7 @@ class SlugHydrate extends InputHydrate
     }
 
     /**
-     * @param object $module \Unusualify\Modularity\Module
+     * @param object $module \Unusualify\Modularous\Module
      */
     protected function resolveRouteModelFqcn($module, string $routeName): ?string
     {
@@ -114,7 +114,7 @@ class SlugHydrate extends InputHydrate
     }
 
     /**
-     * @param object $module \Unusualify\Modularity\Module
+     * @param object $module \Unusualify\Modularous\Module
      */
     protected function routeUsesParentSegmentFeatures($module, string $routeName, string $modelFqcn): bool
     {

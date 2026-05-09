@@ -9,7 +9,7 @@ sidebarTitle: Make Controller Front
 
 ## Command Information
 
-- **Signature:** `modularity:make:controller:front {module} {name}`
+- **Signature:** `modularous:make:controller:front {module} {name}`
 - **Category:** Generators
 
 ## Arguments
@@ -26,10 +26,10 @@ Creates a frontend controller stub that uses `Inertia::render()` to return Vue p
 ## Examples
 
 ```bash
-php artisan modularity:make:controller:front Blog Post
+php artisan modularous:make:controller:front Blog Post
 # → Modules/Blog/Http/Controllers/PostFrontController.php
 
-php artisan modularity:make:controller:front Shop Product
+php artisan modularous:make:controller:front Shop Product
 ```
 
 ## Related

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Repeater;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Repeater;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class RepeaterTest extends ModelTestCase
 {
@@ -15,7 +15,7 @@ class RepeaterTest extends ModelTestCase
     public function test_get_table_repeater()
     {
         $repeater = new Repeater;
-        $this->assertEquals(modularityConfig('tables.repeaters', 'repeaters'), $repeater->getTable());
+        $this->assertEquals(modularousConfig('tables.repeaters', 'repeaters'), $repeater->getTable());
     }
 
     public function test_fillable_attributes()

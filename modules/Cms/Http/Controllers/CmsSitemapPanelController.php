@@ -2,7 +2,7 @@
 
 namespace Modules\Cms\Http\Controllers;
 
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 /**
  * Session-backed JSON for panel (dry-run / commit), aligned with {@see \Modules\Cms\Routes\web} pattern.

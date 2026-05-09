@@ -8,13 +8,13 @@ use Modules\Cms\Contracts\CanonicalUrlResolverInterface;
 use Modules\Cms\Contracts\PublicUrlRegistryContract;
 use Modules\Cms\Entities\UrlRoute;
 use Modules\Cms\Support\CmsPublicPathHierarchy;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
 
 /**
  * Syncs {@see UrlRoute} rows from page-like models (slugs + parent segments) and redirect sources.
  * Uses each model instance's morph class / class name — no hard-coded entity types.
- * {@see \Unusualify\Modularity\Entities\Traits\IsSingular} models share the singletons table but still sync routes from
+ * {@see \Unusualify\Modularous\Entities\Traits\IsSingular} models share the singletons table but still sync routes from
  * {@see desiredPublicPathsByLocale()} via {@see ParentSegment} bindings per locale (no per-model slug table).
  * Public requests are gated by {@see \Modules\Cms\Support\CmsParentSegmentRegistryGate} together with
  * {@see \Modules\Cms\Services\CmsPublicModelResolver::resolveForParentSegmentRegistry()}.
@@ -203,7 +203,7 @@ final class CmsUrlRouteRegistry implements PublicUrlRegistryContract
             return;
         }
 
-        $chunkSize = max(1, (int) modularityConfig('cms_routing.parent_segment_change_resync_chunk_size', 100));
+        $chunkSize = max(1, (int) modularousConfig('cms_routing.parent_segment_change_resync_chunk_size', 100));
 
         /** @var Model $prototype */
         $prototype = new $modelClass;
@@ -390,7 +390,7 @@ final class CmsUrlRouteRegistry implements PublicUrlRegistryContract
             $orderedLocales[] = $loc;
         };
 
-        $push(modularityConfig('cms_routing.default_locale', config('app.locale')));
+        $push(modularousConfig('cms_routing.default_locale', config('app.locale')));
         $transFallback = config('translatable.fallback_locale');
         if (is_string($transFallback) && $transFallback !== '') {
             $push($transFallback);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Foundation\CachesConfiguration;
@@ -24,7 +24,7 @@ class ServiceProvider extends Provider
      *
      * @var string
      */
-    protected $terminalNamespace = 'Unusualify\\Modularity\\Console';
+    protected $terminalNamespace = 'Unusualify\\Modularous\\Console';
 
     protected $viewSourcePath = __DIR__ . '/../../resources/views';
 
@@ -38,7 +38,7 @@ class ServiceProvider extends Provider
     {
         parent::__construct($app);
 
-        $this->baseName = env('MODULARITY_BASE_NAME', 'Modularity');
+        $this->baseName = env('MODULAROUS_BASE_NAME', 'Modularous');
 
         $this->baseKey = Str::snake($this->baseName);
     }

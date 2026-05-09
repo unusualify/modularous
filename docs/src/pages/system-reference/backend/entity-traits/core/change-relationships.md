@@ -5,7 +5,7 @@ sidebarTitle: ChangeRelationships
 
 # Core\ChangeRelationships
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\ChangeRelationships`
 
 Lightweight change-tracking for Eloquent relationships during a single request cycle. Used internally by `HasFileponds` and `Core\ModelHelpers` to flag which relationship collections changed so event listeners can react without re-querying.
 
@@ -34,7 +34,7 @@ Lightweight change-tracking for Eloquent relationships during a single request c
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
+use Unusualify\Modularous\Entities\Traits\Core\ChangeRelationships;
 
 class Article extends Model
 {

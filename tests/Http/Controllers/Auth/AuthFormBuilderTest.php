@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\Factory as ViewFactory;
-use Unusualify\Modularity\Http\Controllers\Auth\Controller;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Controllers\Auth\Controller;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Test controller that exposes protected AuthFormBuilder methods for testing.
@@ -48,7 +48,7 @@ class AuthFormBuilderTest extends TestCase
     protected function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
-        $app['config']->set('modularity.enabled.users-management', true);
+        $app['config']->set('modularous.enabled.users-management', true);
     }
 
     protected function setUp(): void
@@ -67,7 +67,7 @@ class AuthFormBuilderTest extends TestCase
     protected function setupAuthConfig(): void
     {
         config([
-            'modularity.auth_pages' => array_merge(config('modularity.auth_pages', []), [
+            'modularous.auth_pages' => array_merge(config('modularous.auth_pages', []), [
                 'layout' => [
                     'logoSymbol' => 'main-logo-dark',
                     'logoLightSymbol' => 'main-logo-light',
@@ -97,11 +97,11 @@ class AuthFormBuilderTest extends TestCase
                     ],
                 ],
             ]),
-            'modularity.form_drafts.login_form' => [
+            'modularous.form_drafts.login_form' => [
                 ['name' => 'email', 'type' => 'text', 'label' => 'Email'],
                 ['name' => 'password', 'type' => 'password', 'label' => 'Password'],
             ],
-            'modularity.form_drafts.forgot_password_form' => [
+            'modularous.form_drafts.forgot_password_form' => [
                 ['name' => 'email', 'type' => 'text', 'label' => 'Email'],
             ],
         ]);

@@ -6,7 +6,7 @@ sidebarTitle: Singleton
 # Singleton
 
 **File**: `src/Entities/Singleton.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`
 
 A single-record model for data that should only ever have one row per type. The `singleton_type` discriminator identifies the kind of singleton, and `content` stores its payload as JSON.
@@ -21,7 +21,7 @@ A single-record model for data that should only ever have one row per type. The 
 
 ## Table
 
-Resolved from `modularity.tables.singletons`, defaults to `modularity_singletons`.
+Resolved from `modularous.tables.singletons`, defaults to `modularous_singletons`.
 
 ## Related
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\View;
+namespace Unusualify\Modularous\Services\View;
 
 use Illuminate\Support\Str;
 

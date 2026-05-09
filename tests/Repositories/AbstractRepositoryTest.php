@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Mockery;
 use Mockery\MockInterface;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Facades\CurrencyExchange;
-use Unusualify\Modularity\Facades\ModularityFinder;
-use Unusualify\Modularity\Facades\ModularityLog;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\ModularousFinder;
+use Unusualify\Modularous\Facades\ModularousLog;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class AbstractRepositoryTest extends RepositoryTestCase
 {
@@ -70,23 +70,23 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals($this->repository->isSoftDeletable(), true);
         $this->assertEquals($this->laravelRepository->isSoftDeletable(), false);
 
-        $this->assertEquals($this->repository->hasModelTrait('Unusualify\Modularity\Entities\Traits\IsTranslatable'), true);
-        $this->assertEquals($this->laravelRepository->hasModelTrait('Unusualify\Modularity\Entities\Traits\IsTranslatable'), false);
+        $this->assertEquals($this->repository->hasModelTrait('Unusualify\Modularous\Entities\Traits\IsTranslatable'), true);
+        $this->assertEquals($this->laravelRepository->hasModelTrait('Unusualify\Modularous\Entities\Traits\IsTranslatable'), false);
 
-        $this->assertEquals($this->repository->hasModelTrait('Unusualify\Modularity\Entities\Traits\Core\ModelHelpers'), true);
-        $this->assertEquals($this->laravelRepository->hasModelTrait('Unusualify\Modularity\Entities\Traits\Core\ModelHelpers'), true);
+        $this->assertEquals($this->repository->hasModelTrait('Unusualify\Modularous\Entities\Traits\Core\ModelHelpers'), true);
+        $this->assertEquals($this->laravelRepository->hasModelTrait('Unusualify\Modularous\Entities\Traits\Core\ModelHelpers'), true);
     }
 
     public function test_repository_relationship_get_columns()
     {
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\InspectTraits'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\RelationshipHelpers'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\MethodTransformers'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\QueryBuilder'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\CountBuilders'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\Dates'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\Relationships'));
-        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularity\Repositories\Logic\DispatchEvents'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\InspectTraits'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\RelationshipHelpers'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\MethodTransformers'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\QueryBuilder'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\CountBuilders'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\Dates'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\Relationships'));
+        $this->assertCount(0, $this->repository->getColumns('Unusualify\Modularous\Repositories\Logic\DispatchEvents'));
     }
 
     public function test_repository_cleanup_fields()
@@ -135,8 +135,8 @@ class AbstractRepositoryTest extends RepositoryTestCase
             $mock->shouldReceive('getColumns')->andReturn(['is_active']);
         });
 
-        $this->assertEquals(true, $this->repository->traitHasInput('Unusualify\Modularity\Repositories\Logic\Relationships', 'is_active'));
-        $this->assertEquals(false, $this->repository->traitHasInput('Unusualify\Modularity\Repositories\Logic\Relationships', 'description'));
+        $this->assertEquals(true, $this->repository->traitHasInput('Unusualify\Modularous\Repositories\Logic\Relationships', 'is_active'));
+        $this->assertEquals(false, $this->repository->traitHasInput('Unusualify\Modularous\Repositories\Logic\Relationships', 'description'));
     }
 
     public function test_repository_any_trait_has_input()
@@ -144,8 +144,8 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->repository = $this->partialMock(TestRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getColumns')->andReturn(['is_active']);
         });
-        $this->assertEquals(true, $this->repository->anyTraitHasInput(['Unusualify\Modularity\Repositories\Logic\MethodTransformers', 'Unusualify\Modularity\Repositories\Logic\InspectTraits'], 'is_active'));
-        $this->assertEquals(false, $this->repository->anyTraitHasInput(['Unusualify\Modularity\Repositories\Logic\MethodTransformers', 'Unusualify\Modularity\Repositories\Logic\InspectTraits'], 'description'));
+        $this->assertEquals(true, $this->repository->anyTraitHasInput(['Unusualify\Modularous\Repositories\Logic\MethodTransformers', 'Unusualify\Modularous\Repositories\Logic\InspectTraits'], 'is_active'));
+        $this->assertEquals(false, $this->repository->anyTraitHasInput(['Unusualify\Modularous\Repositories\Logic\MethodTransformers', 'Unusualify\Modularous\Repositories\Logic\InspectTraits'], 'description'));
     }
 
     public function test_filter_excludes_except_ids(): void
@@ -508,7 +508,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
         $noteRepository = App::make(NoteRepository::class);
 
-        ModularityFinder::shouldReceive('getRouteRepository')
+        ModularousFinder::shouldReceive('getRouteRepository')
             ->with('note', true)
             ->andReturn($noteRepository);
 
@@ -548,7 +548,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $object->notes->count());
         $this->assertEquals('Note 1 Updated', $object->notes[0]->content);
 
-        ModularityLog::shouldReceive('critical')
+        ModularousLog::shouldReceive('critical')
             ->with('Found numeric data in hasMany relationship on afterSaveRelationships', [
                 'relationName' => 'notes',
                 'data' => $object->notes[0]->id,
@@ -691,7 +691,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                 'deneme' => 'dee',
             ],
         ];
-        ModularityLog::shouldReceive('critical')
+        ModularousLog::shouldReceive('critical')
             ->with('Error syncing belongsToMany relationship on afterSaveRelationships', [
                 'repository' => TestRepository::class,
                 'relationName' => 'testRoles',
@@ -808,7 +808,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
                     [
                         'name' => 'second_morph_id',
                         'type' => 'select',
-                        'repository' => 'Unusualify\Modularity\Tests\Repositories\NoteRepository',
+                        'repository' => 'Unusualify\Modularous\Tests\Repositories\NoteRepository',
                     ],
                 ],
             ],
@@ -817,7 +817,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             'testModelable' => [
                 [
                     'name' => 'second_morph_id',
-                    'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
+                    'model' => 'Unusualify\Modularous\Tests\Repositories\Note',
                 ],
             ],
         ], $mock->getMorphToRelations());
@@ -841,7 +841,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             'testModelable' => [
                 [
                     'name' => 'second_morph_id',
-                    'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
+                    'model' => 'Unusualify\Modularous\Tests\Repositories\Note',
                 ],
             ],
         ], $mock->getMorphToRelations());
@@ -865,7 +865,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             'testModelable' => [
                 [
                     'name' => 'second_morph_id',
-                    'model' => 'Unusualify\Modularity\Tests\Repositories\Note',
+                    'model' => 'Unusualify\Modularous\Tests\Repositories\Note',
                 ],
             ],
         ], $mock->getMorphToRelations());
@@ -998,7 +998,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
 
         $noteRepository = App::make(NoteRepository::class);
 
-        ModularityFinder::shouldReceive('getRouteRepository')
+        ModularousFinder::shouldReceive('getRouteRepository')
             ->with('note', true)
             ->andReturn($noteRepository);
 
@@ -1008,7 +1008,7 @@ class AbstractRepositoryTest extends RepositoryTestCase
             ],
         ]]);
 
-        ModularityFinder::shouldReceive('getRouteRepository')
+        ModularousFinder::shouldReceive('getRouteRepository')
             ->withArgs(['Note', true])
             ->once()
             ->andReturn(App::make(NoteRepository::class, [new Note]));

@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Logic;
+namespace Unusualify\Modularous\Tests\Repositories\Logic;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class QueryBuilderTest extends RepositoryTestCase
 {

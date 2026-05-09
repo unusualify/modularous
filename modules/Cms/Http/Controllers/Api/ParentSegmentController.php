@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Repositories\ParentSegmentRepository;
-use Unusualify\Modularity\Http\Controllers\Controller;
+use Unusualify\Modularous\Http\Controllers\Controller;
 
 /**
  * Optional JSON API for parent segment bindings (panel CRUD uses {@see \Modules\Cms\Http\Controllers\ParentSegmentController}).

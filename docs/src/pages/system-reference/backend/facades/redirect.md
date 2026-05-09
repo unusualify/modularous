@@ -5,16 +5,16 @@ sidebarTitle: Redirect
 
 # Redirect
 
-**Facade**: `Unusualify\Modularity\Facades\Redirect`  
-**Accessor**: `modularity.redirect`  
-**Underlying**: `Unusualify\Modularity\Services\RedirectService`
+**Facade**: `Unusualify\Modularous\Facades\Redirect`  
+**Accessor**: `modularous.redirect`  
+**Underlying**: `Unusualify\Modularous\Services\RedirectService`
 
 Provides smart redirect logic for panel routes — resolves where to send users after login, after an action, or when a previous route is unavailable. See [RedirectService](/system-reference/backend/services/redirect-service) for implementation details.
 
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Redirect;
+use Unusualify\Modularous\Facades\Redirect;
 
 // Get the intended redirect target for the current user
 $response = Redirect::intended();

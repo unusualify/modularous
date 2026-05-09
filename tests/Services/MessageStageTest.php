@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
-use Unusualify\Modularity\Services\MessageStage;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MessageStage;
+use Unusualify\Modularous\Tests\TestCase;
 
 class MessageStageTest extends TestCase
 {

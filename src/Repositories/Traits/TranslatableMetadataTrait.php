@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
-use Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Support\TranslatableMetadata;
+use Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Support\TranslatableMetadata;
 
 /**
  * Appends translatable metadata form inputs when the model uses {@see HasTranslatableMetadata} and

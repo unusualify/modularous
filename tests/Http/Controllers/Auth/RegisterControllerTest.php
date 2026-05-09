@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\View\View;
@@ -14,8 +14,8 @@ use Oobook\Database\Eloquent\ManageEloquentServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Auth\RegisterController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Auth\RegisterController;
 
 class RegisterControllerTest extends AuthTestCase
 {
@@ -34,7 +34,7 @@ class RegisterControllerTest extends AuthTestCase
     protected function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
-        $app['config']->set('modularity.email_verified_register', false);
+        $app['config']->set('modularous.email_verified_register', false);
         $app['config']->set('activitylog', [
             'enabled' => false,
             'delete_records_older_than_days' => 365,
@@ -53,8 +53,8 @@ class RegisterControllerTest extends AuthTestCase
 
         $this->controller = new RegisterController;
         Role::firstOrCreate(
-            ['name' => 'client-manager', 'guard_name' => Modularity::getAuthGuardName()],
-            ['name' => 'client-manager', 'guard_name' => Modularity::getAuthGuardName()]
+            ['name' => 'client-manager', 'guard_name' => Modularous::getAuthGuardName()],
+            ['name' => 'client-manager', 'guard_name' => Modularous::getAuthGuardName()]
         );
     }
 
@@ -75,7 +75,7 @@ class RegisterControllerTest extends AuthTestCase
     /** @test */
     public function it_redirects_to_email_form_when_email_verified_register_enabled(): void
     {
-        config(['modularity.email_verified_register' => true]);
+        config(['modularous.email_verified_register' => true]);
         $controller = new RegisterController;
 
         $response = $controller->showForm();
@@ -124,7 +124,7 @@ class RegisterControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_json_with_restricted_message_when_email_verified_register_enabled_and_requesting_json(): void
     {
-        config(['modularity.email_verified_register' => true]);
+        config(['modularous.email_verified_register' => true]);
         $controller = new RegisterController;
 
         $request = Request::create('/register', 'POST', []);
@@ -145,7 +145,7 @@ class RegisterControllerTest extends AuthTestCase
     /** @test */
     public function it_redirects_when_email_verified_register_enabled_and_not_requesting_json(): void
     {
-        config(['modularity.email_verified_register' => true]);
+        config(['modularous.email_verified_register' => true]);
         $controller = new RegisterController;
 
         $request = Request::create('/register', 'POST', []);

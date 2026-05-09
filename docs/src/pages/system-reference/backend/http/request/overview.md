@@ -6,7 +6,7 @@ sidebarTitle: Overview
 # Requests
 
 **Directory**: `src/Http/Requests/`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 
 Modularous ships seven `FormRequest` classes. Two of them — `BaseFormRequest` and `Request` — are base classes that the rest of the package (and consumers) extend from; the remaining five are concrete requests used by specific controllers.
 
@@ -34,7 +34,7 @@ Illuminate\Foundation\Http\FormRequest
 | `Request` *(abstract)* | `FormRequest` | Model-aware base that merges schema rules with translated-attribute rules across locales; injects `unique_table` / `unique_translation` helpers | [Request →](./request) |
 | `FileRequest` | `Request` | Validates file-library upload payloads; rules depend on the configured `file_library.endpoint_type` (local / azure / s3) | [FileRequest →](./file-request) |
 | `MediaRequest` | `BaseFormRequest` | Thin authorization pass-through for media-library requests (validation currently disabled) | [MediaRequest →](./media-request) |
-| `OauthRequest` | `Request` | Validates the OAuth `provider` against `modularity.oauth.providers`; merges route param into `all()` | [OauthRequest →](./oauth-request) |
+| `OauthRequest` | `Request` | Validates the OAuth `provider` against `modularous.oauth.providers`; merges route param into `all()` | [OauthRequest →](./oauth-request) |
 | `StorePermissionRequest` | `FormRequest` | Validates permission creation (`name` required, unique on `permissions`) | [StorePermissionRequest →](./store-permission-request) |
 | `StoreRoleRequest` | `FormRequest` | Validates role creation (`name` required, unique on `roles`, min 4 chars) | [StoreRoleRequest →](./store-role-request) |
 

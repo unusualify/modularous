@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Console\Docs;
+namespace Unusualify\Modularous\Console\Docs;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -10,7 +10,7 @@ use Symfony\Component\Finder\Finder;
 
 class DocsAuditCommand extends Command
 {
-    protected $signature = 'modularity:docs:audit
+    protected $signature = 'modularous:docs:audit
         {--section= : Filter to a specific section label (e.g. "Entities")}
         {--fail-on-missing : Exit with code 1 when undocumented files exist}';
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Entities\Scopes\AssignableScopes;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Entities\Scopes\AssignableScopes;
 
 trait Assignable
 {

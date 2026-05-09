@@ -6,7 +6,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\ChatMessage;
 
 class UnreadChatMessage
 {

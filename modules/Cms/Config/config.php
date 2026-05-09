@@ -8,9 +8,9 @@ return [
     'url' => 'cms',
 
     'promotion' => [
-        'enabled' => modularityConfig('cms_promotion.enabled', true),
-        'scope' => modularityConfig('cms_promotion.scope', []),
-        'approval' => modularityConfig('cms_promotion.approval', []),
+        'enabled' => modularousConfig('cms_promotion.enabled', true),
+        'scope' => modularousConfig('cms_promotion.scope', []),
+        'approval' => modularousConfig('cms_promotion.approval', []),
     ],
 
     'routes' => [

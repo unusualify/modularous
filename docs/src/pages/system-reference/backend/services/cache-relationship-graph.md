@@ -6,14 +6,14 @@ sidebarTitle: CacheRelationshipGraph
 # CacheRelationshipGraph
 
 **File**: `src/Services/CacheRelationshipGraph.php`  
-**Cache key**: `modularity:cache:relationship_graph`
+**Cache key**: `modularous:cache:relationship_graph`
 
 `CacheRelationshipGraph` builds and caches a **dependency map** between Eloquent models and the module routes that display their data. When a model record changes, the cache service consults this graph to know exactly which module route caches need to be invalidated — instead of flushing everything.
 
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'cache' => [
     'graph' => [
         'enabled' => true,
@@ -67,7 +67,7 @@ sidebarTitle: CacheRelationshipGraph
 
 ## How the Graph is Built
 
-`buildGraph()` iterates over all enabled modules via `Modularity::allEnabled()`. For each module, it scans the `Entities/` and `Models/` directories for concrete model classes. For each model:
+`buildGraph()` iterates over all enabled modules via `Modularous::allEnabled()`. For each module, it scans the `Entities/` and `Models/` directories for concrete model classes. For each model:
 
 1. Calls `getEloquentRelationships()` on the model instance.
 2. Records the `relationship_model`, `relationship_table`, `middleman_model`, `middleman_table` from each relation.

@@ -6,7 +6,7 @@ sidebarTitle: StorePermissionRequest
 # StorePermissionRequest
 
 **File**: `src/Http/Requests/StorePermissionRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: `Illuminate\Foundation\Http\FormRequest`
 
 Validates the payload for creating a new Spatie permission.

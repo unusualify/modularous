@@ -7,7 +7,7 @@ sidebarTitle: make:repository
 
 > Create a repository class for a module
 
-**Signature**: `modularity:make:repository`
+**Signature**: `modularous:make:repository`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Generates a repository class for a module, pre-wired to the matching Eloquent mo
 ## Usage
 
 ```
-modularity:make:repository [options] <repository> <module>
+modularous:make:repository [options] <repository> <module>
 ```
 
 ### Arguments
@@ -48,20 +48,20 @@ modularity:make:repository [options] <repository> <module>
 ### Basic repository
 
 ```bash
-php artisan modularity:make:repository Post Blog
+php artisan modularous:make:repository Post Blog
 ```
 
 ### Repository bound to a custom model
 
 ```bash
-php artisan modularity:make:repository Order Shop \
+php artisan modularous:make:repository Order Shop \
     --custom-model="App\Models\Order"
 ```
 
 ### Non-interactive with all traits
 
 ```bash
-php artisan modularity:make:repository Post Blog --all --notAsk
+php artisan modularous:make:repository Post Blog --all --notAsk
 ```
 
 ---

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\RadioGroupHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\RadioGroupHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class RadioGroupHydrateTest extends TestCase
 {

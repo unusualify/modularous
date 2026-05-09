@@ -11,8 +11,8 @@ Two top-level traits exist only for backwards compatibility. Both delegate entir
 
 ## HasScopes *(deprecated)*
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasScopes`  
-**Delegates to**: `Unusualify\Modularity\Entities\Traits\Core\HasScopes`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasScopes`  
+**Delegates to**: `Unusualify\Modularous\Entities\Traits\Core\HasScopes`
 
 ::: warning Deprecated
 Use `Core\HasScopes` directly. This alias will be removed in a future major version.
@@ -22,10 +22,10 @@ Use `Core\HasScopes` directly. This alias will be removed in a future major vers
 
 ```php
 // Before (deprecated)
-use Unusualify\Modularity\Entities\Traits\HasScopes;
+use Unusualify\Modularous\Entities\Traits\HasScopes;
 
 // After
-use Unusualify\Modularity\Entities\Traits\Core\HasScopes;
+use Unusualify\Modularous\Entities\Traits\Core\HasScopes;
 ```
 
 All methods and scopes are identical. See [Core Traits →](./core/overview) for the full reference.
@@ -34,8 +34,8 @@ All methods and scopes are identical. See [Core Traits →](./core/overview) for
 
 ## ModelHelpers *(deprecated)*
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\ModelHelpers`  
-**Delegates to**: `Unusualify\Modularity\Entities\Traits\Core\ModelHelpers`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\ModelHelpers`  
+**Delegates to**: `Unusualify\Modularous\Entities\Traits\Core\ModelHelpers`
 
 ::: warning Deprecated
 Use `Core\ModelHelpers` directly. This alias will be removed in a future major version.
@@ -45,10 +45,10 @@ Use `Core\ModelHelpers` directly. This alias will be removed in a future major v
 
 ```php
 // Before (deprecated)
-use Unusualify\Modularity\Entities\Traits\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\ModelHelpers;
 
 // After
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 ```
 
 All methods and boot behavior are identical. See [Core Traits →](./core/overview) for the full reference.

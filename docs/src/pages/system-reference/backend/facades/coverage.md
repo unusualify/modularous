@@ -5,9 +5,9 @@ sidebarTitle: Coverage
 
 # Coverage
 
-**Facade**: `Unusualify\Modularity\Facades\Coverage`  
+**Facade**: `Unusualify\Modularous\Facades\Coverage`  
 **Accessor**: `coverage.service`  
-**Underlying**: `Unusualify\Modularity\Services\CoverageService`
+**Underlying**: `Unusualify\Modularous\Services\CoverageService`
 
 Parses PHPUnit Clover XML coverage reports and provides analysis, filtering, and export utilities. See [CoverageService](/system-reference/backend/services/coverage-service) for implementation details.
 
@@ -56,7 +56,7 @@ Parses PHPUnit Clover XML coverage reports and provides analysis, filtering, and
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Coverage;
+use Unusualify\Modularous\Facades\Coverage;
 
 $report = Coverage::setCloverPath(storage_path('coverage.xml'))
     ->skipMagicMethods()

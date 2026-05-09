@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Support\CmsPublicPathHierarchy;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsPublicPathHierarchyTest extends TestCase
 {

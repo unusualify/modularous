@@ -5,7 +5,7 @@ sidebarTitle: HasRelation
 
 # Secondary\HasRelation
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Secondary\HasRelation`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Secondary\HasRelation`
 
 Minimal stub trait that registers a `forceDeleting` boot hook. Use it as a base for models that need cleanup logic on force-delete without committing to the full `HasRelated` pivot system.
 
@@ -24,7 +24,7 @@ Minimal stub trait that registers a `forceDeleting` boot hook. Use it as a base 
 The trait provides the hook point; add your own cleanup by calling `static::forceDeleting()` in your model's boot method after including the trait:
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Secondary\HasRelation;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasRelation;
 
 class Article extends Model
 {

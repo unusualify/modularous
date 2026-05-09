@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Services\Security\SecurityService;
+use Unusualify\Modularous\Services\Security\SecurityService;
 
 class RequireMfaMiddleware
 {
@@ -15,7 +15,7 @@ class RequireMfaMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (! modularityConfig('security.enabled', false)) {
+        if (! modularousConfig('security.enabled', false)) {
             return $next($request);
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\MediaLibrary;
+namespace Unusualify\Modularous\Services\MediaLibrary;
 
 use Illuminate\Support\Arr;
 
@@ -21,7 +21,7 @@ class TwicPics implements ImageServiceInterface
      */
     public function getUrl($id, array $params = [])
     {
-        $defaultParams = modularityConfig('twicpics.default_params');
+        $defaultParams = modularousConfig('twicpics.default_params');
 
         return $this->createUrl($id, array_replace($defaultParams, $params));
     }
@@ -54,7 +54,7 @@ class TwicPics implements ImageServiceInterface
      */
     public function getLQIPUrl($id, array $params = [])
     {
-        $defaultParams = modularityConfig('twicpics.lqip_default_params');
+        $defaultParams = modularousConfig('twicpics.lqip_default_params');
 
         return $this->getUrlWithDefaultParams($id, $params, $defaultParams);
     }
@@ -65,7 +65,7 @@ class TwicPics implements ImageServiceInterface
      */
     public function getSocialUrl($id, array $params = [])
     {
-        $defaultParams = modularityConfig('twicpics.social_default_params');
+        $defaultParams = modularousConfig('twicpics.social_default_params');
 
         return $this->getUrlWithDefaultParams($id, $params, $defaultParams);
     }
@@ -76,7 +76,7 @@ class TwicPics implements ImageServiceInterface
      */
     public function getCmsUrl($id, array $params = [])
     {
-        $defaultParams = modularityConfig('twicpics.cms_default_params');
+        $defaultParams = modularousConfig('twicpics.cms_default_params');
 
         return $this->getUrlWithDefaultParams($id, $params, $defaultParams);
     }
@@ -87,8 +87,8 @@ class TwicPics implements ImageServiceInterface
      */
     public function getRawUrl($id)
     {
-        $domain = modularityConfig('twicpics.domain');
-        $path = modularityConfig('twicpics.path');
+        $domain = modularousConfig('twicpics.domain');
+        $path = modularousConfig('twicpics.path');
 
         if (! empty($path)) {
             $path = "{$path}/";
@@ -115,7 +115,7 @@ class TwicPics implements ImageServiceInterface
     {
         $rawUrl = $this->getRawUrl($id);
 
-        $apiVersion = modularityConfig('twicpics.api_version');
+        $apiVersion = modularousConfig('twicpics.api_version');
 
         $params = $this->paramsProcessor->process($params);
 

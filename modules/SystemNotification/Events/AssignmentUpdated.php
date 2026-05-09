@@ -7,9 +7,9 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Events\Traits\EventChanges;
-use Unusualify\Modularity\Events\Traits\EventUser;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Events\Traits\EventChanges;
+use Unusualify\Modularous\Events\Traits\EventUser;
 
 class AssignmentUpdated implements ShouldDispatchAfterCommit
 {

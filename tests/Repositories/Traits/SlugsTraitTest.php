@@ -1,21 +1,21 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Astrotomic\Translatable\Locales;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\SlugsTrait;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestModelSlug;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\SlugsTrait;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestModelSlug;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class SlugsTraitTest extends RepositoryTestCase
 {
@@ -488,7 +488,7 @@ class SlugsTraitTest extends RepositoryTestCase
     public function test_utf8_slug_generation(): void
     {
         config(['translatable.locales' => ['tr']]);
-        config(['modularity.slug_utf8_languages' => ['tr']]);
+        config(['modularous.slug_utf8_languages' => ['tr']]);
         app()->setLocale('tr');
 
         $object = $this->repository->create([

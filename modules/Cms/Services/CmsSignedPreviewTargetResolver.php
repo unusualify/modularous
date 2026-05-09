@@ -5,8 +5,8 @@ namespace Modules\Cms\Services;
 use Illuminate\Support\Collection;
 use Modules\Cms\Http\Controllers\Front\CmsController;
 use Modules\Cms\Routing\CmsFrontRouteRegistrar;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 /**
  * Resolves panel URL segments ({@code module} + {@code route}) to a CMS public front target (HasParentSegment + {@see CmsController}).
@@ -18,7 +18,7 @@ final class CmsSignedPreviewTargetResolver
      */
     public function resolve(string $moduleSegment, string $routeSegment): ?array
     {
-        $module = Collection::make(Modularity::allEnabled())->first(
+        $module = Collection::make(Modularous::allEnabled())->first(
             fn ($m) => studlyName($m->getName()) === studlyName($moduleSegment)
         );
 

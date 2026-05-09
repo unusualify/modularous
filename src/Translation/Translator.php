@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Translation;
+namespace Unusualify\Modularous\Translation;
 
 use Illuminate\Support\Str;
 use Illuminate\Translation\Translator as IlluminateTranslator;
@@ -10,7 +10,7 @@ class Translator extends IlluminateTranslator
     /**
      * The loader implementation.
      *
-     * @var Unusualify\Modularity\Support\FileLoader
+     * @var Unusualify\Modularous\Support\FileLoader
      */
     protected $loader;
 

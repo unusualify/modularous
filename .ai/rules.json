@@ -1,7 +1,7 @@
 {
   "hard_rules": [
-    "AI must only operate on files within packages/modularity and its tests/coverage artifacts.",
-    "Never modify host application files outside packages/modularity.",
+    "AI must only operate on files within packages/modularous and its tests/coverage artifacts.",
+    "Never modify host application files outside packages/modularous.",
     "Never introduce breaking changes to public APIs without an explicit upgrade note in composer.json and changelog.",
     "Preserve module boundaries: do not create direct runtime dependencies between modules; use interfaces/contracts.",
     "All PHP code must target >= PHP 8.1 and follow existing package composer constraints.",
@@ -12,7 +12,7 @@
     "Follow PSR-12 and existing project coding style (use typed properties, return types where appropriate).",
     "Favor dependency injection over facades in new code unless pattern consistency dictates otherwise.",
     "Add or update tests for any behavior-changing code (unit or integration).",
-    "Use existing helper classes (ModularityVite, CoverageService) instead of adding duplicate utilities.",
+    "Use existing helper classes (ModularousVite, CoverageService) instead of adding duplicate utilities.",
     "Document new features in package README or docs under packages/modularous/docs when added."
   ],
   "legacy_constraints": [

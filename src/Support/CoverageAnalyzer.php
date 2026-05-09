@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -429,7 +429,7 @@ class CoverageAnalyzer
         $coverage = $lineInfo['coverage'];
 
         // // Check against threshold
-        // if($filePath === '/var/www/b2press-app/packages/modularity/src/Entities/Observers/PriceableObserver.php') {
+        // if($filePath === '/var/www/b2press-app/packages/modularous/src/Entities/Observers/PriceableObserver.php') {
         //     dump($coverage, $this->coverageThreshold);
         // }
         if ($coverage > $this->coverageThreshold) {

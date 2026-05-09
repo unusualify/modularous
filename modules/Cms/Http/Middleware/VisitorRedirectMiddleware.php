@@ -20,7 +20,7 @@ class VisitorRedirectMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (! modularityConfig('cms_routing.visitor_redirects_enabled', true)) {
+        if (! modularousConfig('cms_routing.visitor_redirects_enabled', true)) {
             return $next($request);
         }
 

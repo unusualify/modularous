@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Services\Security\SecurityService;
-use Unusualify\Modularity\Services\Security\StepUpService;
+use Unusualify\Modularous\Services\Security\SecurityService;
+use Unusualify\Modularous\Services\Security\StepUpService;
 
 class StepUpMiddleware
 {
@@ -16,7 +16,7 @@ class StepUpMiddleware
 
     public function handle(Request $request, Closure $next, ?string $capability = null)
     {
-        if (! modularityConfig('security.step_up.enabled', false)) {
+        if (! modularousConfig('security.step_up.enabled', false)) {
             return $next($request);
         }
 
@@ -34,7 +34,7 @@ class StepUpMiddleware
         }
 
         $verifiedAt = (int) $request->session()->get('security_step_up_verified_at', 0);
-        $ttlMinutes = (int) modularityConfig('security.session.step_up_ttl_minutes', 15);
+        $ttlMinutes = (int) modularousConfig('security.session.step_up_ttl_minutes', 15);
 
         if ($verifiedAt > 0 && (time() - $verifiedAt) <= ($ttlMinutes * 60)) {
             return $next($request);

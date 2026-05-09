@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Models\Model;
-use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularous\Models\Model;
+use Unusualify\Modularous\Traits\ManageTraits;
 
 trait MethodTransformers
 {

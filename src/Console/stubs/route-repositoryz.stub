@@ -2,9 +2,9 @@
 
 namespace $NAMESPACE$;
 
-use Unusualify\Modularity\Repositories\BaseRepository;
+use Unusualify\Modularous\Repositories\BaseRepository;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Traits\Tabulable;
+use Unusualify\Modularous\Traits\Tabulable;
 
 class $CLASS$ extends BaseRepository
 {

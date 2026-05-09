@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Http\Controllers\Utility\SlugInputGenerateController;
-use Unusualify\Modularity\Http\Controllers\Utility\SlugInputValidationController;
+use Unusualify\Modularous\Http\Controllers\Utility\SlugInputGenerateController;
+use Unusualify\Modularous\Http\Controllers\Utility\SlugInputValidationController;
 
 /*
 |--------------------------------------------------------------------------
 | Api Routes
 |
-| Middlewares : [ 'web.auth', ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares(), \Unusualify\Modularity\Facades\ModularityRoutes::defaultPanelMiddlewares()]
+| Middlewares : [ 'web.auth', ...\Unusualify\Modularous\Facades\ModularousRoutes::defaultMiddlewares(), \Unusualify\Modularous\Facades\ModularousRoutes::defaultPanelMiddlewares()]
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -28,7 +28,7 @@ Route::post('inputs/slug/generate', SlugInputGenerateController::class)
 // });
 
 // Route::group([ 'prefix' => 'filepond'], function(){
-//     Route::middleware(['web'])->withoutMiddleware(['web.auth', \Unusualify\Modularity\Facades\ModularityRoutes::defaultPanelMiddlewares(), ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares()])->group(function(){
+//     Route::middleware(['web'])->withoutMiddleware(['web.auth', \Unusualify\Modularous\Facades\ModularousRoutes::defaultPanelMiddlewares(), ...\Unusualify\Modularous\Facades\ModularousRoutes::defaultMiddlewares()])->group(function(){
 //         Route::post('process', ['as' => 'filepond.process', 'uses' => 'FilepondController@upload']);
 //         Route::delete('revert', ['as' => 'filepond.revert', 'uses' => 'FilepondController@revert']);
 //         Route::get('preview/{folder}', ['as' => 'filepond.preview', 'uses' => 'FilepondController@preview']);

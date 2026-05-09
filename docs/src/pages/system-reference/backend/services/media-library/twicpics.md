@@ -14,7 +14,7 @@ The `TwicPics` driver generates [TwicPics](https://www.twicpics.com/) CDN URLs. 
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'twicpics' => [
     'base_url'            => env('TWICPICS_BASE_URL', 'https://your-domain.twic.pics'),
     'default_params'      => [],

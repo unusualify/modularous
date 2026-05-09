@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Concerns;
+namespace Unusualify\Modularous\Tests\Services\Concerns;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Services\Concerns\CacheInvalidation;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\Concerns\CacheInvalidation;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CacheInvalidationTest extends TestCase
 {
@@ -17,9 +17,9 @@ class CacheInvalidationTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.cache.driver', 'array');
-        Config::set('modularity.cache.enabled', true);
-        Config::set('modularity.cache.use_tags', false);
+        Config::set('modularous.cache.driver', 'array');
+        Config::set('modularous.cache.enabled', true);
+        Config::set('modularous.cache.use_tags', false);
 
         $this->cacheService = new ConcreteCacheInvalidation;
     }
@@ -65,7 +65,7 @@ class CacheInvalidationTest extends TestCase
     {
         $this->cacheService->setUsesTags(true);
 
-        $count = $this->cacheService->invalidateByPattern('modularity:*');
+        $count = $this->cacheService->invalidateByPattern('modularous:*');
 
         $this->assertEquals(0, $count);
     }
@@ -173,7 +173,7 @@ class ConcreteCacheInvalidation
 
     protected $store;
 
-    protected $prefix = 'modularity';
+    protected $prefix = 'modularous';
 
     protected $usesTags = false;
 

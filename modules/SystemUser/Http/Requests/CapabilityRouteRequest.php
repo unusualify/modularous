@@ -4,7 +4,7 @@ namespace Modules\SystemUser\Http\Requests;
 
 use Closure;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class CapabilityRouteRequest extends Request
 {

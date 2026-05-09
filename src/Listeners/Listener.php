@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Listeners;
+namespace Unusualify\Modularous\Listeners;
 
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\Finder\Finder;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 abstract class Listener
 {
@@ -20,11 +20,11 @@ abstract class Listener
      */
     public function __construct()
     {
-        if (config('modularity.mail.enabled')) {
+        if (config('modularous.mail.enabled')) {
             $this->mailEnabled = true;
         }
 
-        $this->addNotificationPath(Modularity::find('SystemNotification')->getDirectoryPath('Notifications'));
+        $this->addNotificationPath(Modularous::find('SystemNotification')->getDirectoryPath('Notifications'));
     }
 
     /**

@@ -41,25 +41,25 @@ export default {
 
 
       window.Echo.private(`models.1`)
-        .listen('.modularity.model.created', (e) => {
+        .listen('.modularous.model.created', (e) => {
           // commit(ALERT.SET_ALERT, { message: resp.data.message, variant: resp.data.variant })
             app._component.store.commit(ALERT.SET_ALERT, { message: 'model created', variant: 'success', location: 'top' })
             // console.log('private model created', e);
         })
-        .listen('.modularity.model.updated', (e) => {
+        .listen('.modularous.model.updated', (e) => {
           // commit(ALERT.SET_ALERT, { message: resp.data.message, variant: resp.data.variant })
             app._component.store.commit(ALERT.SET_ALERT, { message: 'model updated', variant: 'success', location: 'top' })
             // console.log('private model created', e);
         });
 
       window.Echo.channel('model')
-        .listen('.modularity.model.created', (e) => {
+        .listen('.modularous.model.created', (e) => {
             const data = typeof e === 'string' ? JSON.parse(e) : e;
             console.log('model created', data);
             // console.log('private model created', app._component.store, app);
 
         })
-        .listen('.modularity.model.updated', (e) => {
+        .listen('.modularous.model.updated', (e) => {
             const data = typeof e === 'string' ? JSON.parse(e) : e;
             console.log('model updated', data);
             // console.log('private model created', app._component.store, app);

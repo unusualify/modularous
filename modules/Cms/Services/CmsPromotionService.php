@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Modules\Cms\Contracts\CmsPromotionScopeApplierInterface;
 use Modules\Cms\Events\CmsPromotionExecuted;
-use Unusualify\Modularity\Entities\Enums\RevisionStatus;
-use Unusualify\Modularity\Services\Security\SecurityService;
+use Unusualify\Modularous\Entities\Enums\RevisionStatus;
+use Unusualify\Modularous\Services\Security\SecurityService;
 
 class CmsPromotionService
 {
@@ -29,7 +29,7 @@ class CmsPromotionService
         return [
             'dry_run' => (bool) ($input['dry_run'] ?? true),
             'scope' => $scope,
-            'checkpoint' => modularityConfig('cms_promotion.approval.checkpoint_label', 'approval-checkpoint'),
+            'checkpoint' => modularousConfig('cms_promotion.approval.checkpoint_label', 'approval-checkpoint'),
             'steps' => [
                 'validate',
                 'dry_run_diff',
@@ -46,9 +46,9 @@ class CmsPromotionService
         $user = $user ?? $this->resolveUserFromPayload($input);
 
         $scope = $this->resolveScope((array) ($input['scope'] ?? []));
-        $dryRun = (bool) ($input['dry_run'] ?? modularityConfig('cms_promotion.dry_run_required', true));
+        $dryRun = (bool) ($input['dry_run'] ?? modularousConfig('cms_promotion.dry_run_required', true));
 
-        if (modularityConfig('cms_promotion.approval.enabled', true) && ! $this->securityService->canPromote($user)) {
+        if (modularousConfig('cms_promotion.approval.enabled', true) && ! $this->securityService->canPromote($user)) {
             return [
                 'ok' => false,
                 'stage' => 'approval_check',
@@ -65,8 +65,8 @@ class CmsPromotionService
         ];
 
         if (! $dryRun) {
-            $report['cache_flushed'] = $this->flushModularityCache();
-            if (modularityConfig('cms_promotion.execute.flush_laravel_cache', false)) {
+            $report['cache_flushed'] = $this->flushModularousCache();
+            if (modularousConfig('cms_promotion.execute.flush_laravel_cache', false)) {
                 Cache::flush();
                 $report['laravel_cache_flushed'] = true;
             }
@@ -95,7 +95,7 @@ class CmsPromotionService
 
     protected function auditLogChannel(): string
     {
-        return (string) modularityConfig('cms_promotion.audit.log_channel', 'modularity');
+        return (string) modularousConfig('cms_promotion.audit.log_channel', 'modularous');
     }
 
     /**
@@ -103,7 +103,7 @@ class CmsPromotionService
      */
     protected function recordPromotionAudit(?Authenticatable $user, array $scope, array $report): void
     {
-        if (! modularityConfig('cms_promotion.audit.activity_log', true)) {
+        if (! modularousConfig('cms_promotion.audit.activity_log', true)) {
             return;
         }
 
@@ -166,7 +166,7 @@ class CmsPromotionService
 
         $out = array_merge(['meta' => $meta], $primary);
 
-        $compare = (string) modularityConfig('cms_promotion.compare.connection', '');
+        $compare = (string) modularousConfig('cms_promotion.compare.connection', '');
         if ($compare !== '') {
             try {
                 $this->assertCompareConnectionAllowed($compare);
@@ -174,10 +174,10 @@ class CmsPromotionService
                 $out['comparison'] = [
                     'enabled' => true,
                     'target_connection' => $compare,
-                    'target_label' => (string) modularityConfig('cms_promotion.compare.label', $compare),
+                    'target_label' => (string) modularousConfig('cms_promotion.compare.label', $compare),
                     'count_delta' => $this->diffIntegerLeaves($primary, $secondary),
                 ];
-                if (modularityConfig('cms_promotion.compare.include_full_target_snapshot', false)) {
+                if (modularousConfig('cms_promotion.compare.include_full_target_snapshot', false)) {
                     $out['comparison']['target_snapshots'] = $secondary;
                 }
             } catch (\Throwable $e) {
@@ -255,7 +255,7 @@ class CmsPromotionService
 
     protected function assertCompareConnectionAllowed(string $name): void
     {
-        $allowed = (array) modularityConfig('cms_promotion.compare.allowed_connections', []);
+        $allowed = (array) modularousConfig('cms_promotion.compare.allowed_connections', []);
         if ($allowed === []) {
             return;
         }
@@ -275,7 +275,7 @@ class CmsPromotionService
 
     protected function cmsTable(string $key, string $default): string
     {
-        return (string) modularityConfig('tables.' . $key, $default);
+        return (string) modularousConfig('tables.' . $key, $default);
     }
 
     protected function db(?string $connectionName): Connection
@@ -470,7 +470,7 @@ class CmsPromotionService
 
     protected function resolveScope(array $requestedScope): array
     {
-        $defaults = (array) modularityConfig('cms_promotion.scope', []);
+        $defaults = (array) modularousConfig('cms_promotion.scope', []);
 
         if ($requestedScope === []) {
             return $defaults;
@@ -479,10 +479,10 @@ class CmsPromotionService
         return array_merge($defaults, $requestedScope);
     }
 
-    protected function flushModularityCache(): bool
+    protected function flushModularousCache(): bool
     {
-        if (app()->bound('modularity.cache')) {
-            app('modularity.cache')->flush();
+        if (app()->bound('modularous.cache')) {
+            app('modularous.cache')->flush();
 
             return true;
         }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Modules\SystemNotification\Events\FilepondCreated;
 use Modules\SystemNotification\Events\FilepondDeleted;
 use Modules\SystemNotification\Events\FilepondUpdated;
-use Unusualify\Modularity\Facades\Filepond as FilepondFacade;
+use Unusualify\Modularous\Facades\Filepond as FilepondFacade;
 
 class Filepond extends Model
 {
@@ -43,7 +43,7 @@ class Filepond extends Model
 
     public function canDeleteSafely()
     {
-        // return DB::table(modularityConfig('tables.fileponds'))->where('file_id', $this->id)->count() === 0;
+        // return DB::table(modularousConfig('tables.fileponds'))->where('file_id', $this->id)->count() === 0;
     }
 
     public function filepondable()
@@ -66,6 +66,6 @@ class Filepond extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.fileponds', parent::getTable());
+        return modularousConfig('tables.fileponds', parent::getTable());
     }
 }

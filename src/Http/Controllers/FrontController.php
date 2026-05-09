@@ -1,5 +1,5 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 abstract class FrontController extends CoreController {}

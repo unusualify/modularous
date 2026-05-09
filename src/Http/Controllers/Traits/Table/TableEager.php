@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -26,7 +26,7 @@ trait TableEager
             return (bool) $moduleValue;
         }
 
-        return (bool) config('modularity.use_format_item_eager', false);
+        return (bool) config('modularous.use_format_item_eager', false);
     }
 
     protected function resolveHeaderWiths($with, Model $model): array

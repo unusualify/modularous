@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\CreatorRecord;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Relations\CreatorCompanyRelation;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\CreatorRecord;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Relations\CreatorCompanyRelation;
 
 trait HasCreator
 {
@@ -284,7 +284,7 @@ trait HasCreator
 
     // protected static function getAuthorizedGuardName()
     // {
-    //     return self::$authorizedGuardName ?? Modularity::getAuthGuardName();
+    //     return self::$authorizedGuardName ?? Modularous::getAuthGuardName();
     // }
 
     /**

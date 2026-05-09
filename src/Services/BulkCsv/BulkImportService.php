@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Services\BulkCsv;
+namespace Unusualify\Modularous\Services\BulkCsv;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
 
 /**
  * Application entry for CSV bulk import/export (delegates to {@see BulkCsvImportOrchestrator}).

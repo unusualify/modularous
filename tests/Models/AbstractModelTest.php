@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Carbon\Carbon;
 use Cartalyst\Tags\TaggableInterface;
@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Tag;
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Tag;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class AbstractModelTest extends ModelTestCase
 {
@@ -91,8 +91,8 @@ class AbstractModelTest extends ModelTestCase
     {
         $traits = class_uses_recursive($this->model);
 
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\IsTranslatable', $traits);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\Core\ModelHelpers', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\IsTranslatable', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\Core\ModelHelpers', $traits);
         $this->assertContains('Illuminate\Database\Eloquent\SoftDeletes', $traits);
         $this->assertContains('Cartalyst\Tags\TaggableTrait', $traits);
         $this->assertContains('Illuminate\Notifications\Notifiable', $traits);

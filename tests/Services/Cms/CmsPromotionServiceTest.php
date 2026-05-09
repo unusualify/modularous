@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Cms\Services\CmsPromotionService;
 use Modules\Cms\Services\DefaultCmsPromotionScopeApplier;
-use Unusualify\Modularity\Services\Security\SecurityService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\Security\SecurityService;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsPromotionServiceTest extends TestCase
 {
@@ -43,7 +43,7 @@ class CmsPromotionServiceTest extends TestCase
 
         $this->createMinimalCmsSchema();
 
-        $t = modularityConfig('tables.cms_site_settings', 'um_cms_site_settings');
+        $t = modularousConfig('tables.cms_site_settings', 'um_cms_site_settings');
         DB::table($t)->insert([
             'group_key' => 'seo',
             'key' => 'x',
@@ -86,7 +86,7 @@ class CmsPromotionServiceTest extends TestCase
      */
     protected function createMinimalCmsSchema(): void
     {
-        $t = modularityConfig('tables.cms_site_settings', 'um_cms_site_settings');
+        $t = modularousConfig('tables.cms_site_settings', 'um_cms_site_settings');
         Schema::dropIfExists($t);
         Schema::create($t, function (Blueprint $table): void {
             $table->id();

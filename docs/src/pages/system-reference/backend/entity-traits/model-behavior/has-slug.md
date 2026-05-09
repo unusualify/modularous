@@ -5,7 +5,7 @@ sidebarTitle: HasSlug
 
 # HasSlug
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasSlug`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasSlug`
 
 Generates and stores URL slugs in a dedicated `{Model}Slug` model. Supports multi-locale slugs, UTF-8 transliteration, and automatic slug suffixing to avoid collisions. Overrides `resolveRouteBinding()` to look up models by slug rather than primary key.
 
@@ -82,7 +82,7 @@ protected $slugAttributes = ['title', 'category_id'];
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
 
 class Post extends Model
 {

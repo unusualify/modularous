@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -67,6 +67,6 @@ class Chat extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.chats', parent::getTable());
+        return modularousConfig('tables.chats', parent::getTable());
     }
 }

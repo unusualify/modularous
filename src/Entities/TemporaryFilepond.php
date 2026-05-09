@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +21,6 @@ class TemporaryFilepond extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.filepond_temporaries', parent::getTable());
+        return modularousConfig('tables.filepond_temporaries', parent::getTable());
     }
 }

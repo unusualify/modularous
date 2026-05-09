@@ -1,6 +1,6 @@
 ---
 alwaysApply: false
-description: "This rule provides standards for Vuetify of Modularity"
+description: "This rule provides standards for Vuetify of Modularous"
 globs: vue/src/js/**/*.js, vue/src/js/**/*.vue
 ---
 

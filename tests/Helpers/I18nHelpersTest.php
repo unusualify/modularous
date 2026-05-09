@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class I18nHelpersTest extends TestCase
 {
     /** @test */
-    public function test_modularity_trans_returns_translation()
+    public function test_modularous_trans_returns_translation()
     {
         // Don't mock - test with actual translation system
-        $result = modularityTrans('validation.required');
+        $result = modularousTrans('validation.required');
 
         $this->assertIsString($result);
     }

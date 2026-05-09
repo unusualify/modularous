@@ -3,10 +3,10 @@
 namespace Modules\SystemPayment\Repositories;
 
 use Modules\SystemPayment\Entities\PaymentCountry;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\RepeatersTrait;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
 
 class PaymentCountryRepository extends Repository
 {

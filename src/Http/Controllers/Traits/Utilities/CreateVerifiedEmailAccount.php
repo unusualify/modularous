@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Events\ModularityUserRegistered;
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Events\VerifiedEmailRegister;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Http\Controllers\Traits\RedirectsUsers;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Events\ModularousUserRegistered;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Events\VerifiedEmailRegister;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Http\Controllers\Traits\RedirectsUsers;
 
 trait CreateVerifiedEmailAccount
 {
@@ -131,7 +131,7 @@ trait CreateVerifiedEmailAccount
 
     public function registerEmail(array $credentials)
     {
-        event(new ModularityUserRegistering(request()));
+        event(new ModularousUserRegistering(request()));
 
         $user = $this->setUserRegister($credentials);
 
@@ -148,7 +148,7 @@ trait CreateVerifiedEmailAccount
         $user->language = $credentials['language'] ?? app()->getLocale();
         $user->save();
 
-        event(new ModularityUserRegistered($user, request()));
+        event(new ModularousUserRegistered($user, request()));
 
         event(new VerifiedEmailRegister($user));
 
@@ -167,7 +167,7 @@ trait CreateVerifiedEmailAccount
 
         $user->setRememberToken(Str::random(60));
 
-        $user->assignRole(modularityConfig('default_register_role'));
+        $user->assignRole(modularousConfig('default_register_role'));
 
         return $user;
     }

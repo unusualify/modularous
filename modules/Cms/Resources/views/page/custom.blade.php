@@ -20,7 +20,7 @@
     $locale = app()->getLocale();
     $item->loadMissing(['files', 'medias', 'fileponds']);
 
-    $translatedMedias = modularityConfig('media_library.translated_form_fields', false);
+    $translatedMedias = modularousConfig('media_library.translated_form_fields', false);
 
     $documentFiles = $item->files->filter(function ($file) use ($locale) {
         return $file->pivot->role === 'documents' && $file->pivot->locale === $locale;

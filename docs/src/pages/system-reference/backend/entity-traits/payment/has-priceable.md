@@ -5,7 +5,7 @@ sidebarTitle: HasPriceable
 
 # HasPriceable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasPriceable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasPriceable`
 
 Base pricing trait. Extends `Oobook\Priceable\Traits\HasPriceable` and `HasPriceableMutators` with currency-exchange support, language-based price conversion, and additional query scopes.
 
@@ -50,7 +50,7 @@ public function originalBasePrice(): MorphOne  // → Active Price for user's cu
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
 
 class Product extends Model
 {

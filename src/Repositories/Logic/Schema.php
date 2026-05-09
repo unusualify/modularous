@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
-use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularous\Traits\ManageTraits;
 
 trait Schema
 {

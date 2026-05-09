@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class CacheVersionsCommand extends BaseCommand
 {
@@ -11,7 +11,7 @@ class CacheVersionsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:cache:versions';
+    protected $signature = 'modularous:cache:versions';
 
     protected $aliases = [
         'mod:cache:ver',
@@ -44,7 +44,7 @@ class CacheVersionsCommand extends BaseCommand
         // handle command
 
         set_env_file('APP_VERSION', get_package_version());
-        set_env_file('MODULARITY_VERSION', get_package_version('unusualify/modularous'));
+        set_env_file('MODULAROUS_VERSION', get_package_version('unusualify/modularous'));
         set_env_file('PAYABLE_VERSION', get_package_version('unusualify/payable'));
         set_env_file('SNAPSHOT_VERSION', get_package_version('oobook/snapshot'));
         set_env_file('COMPOSER', get_installed_composer()['root']['name']);

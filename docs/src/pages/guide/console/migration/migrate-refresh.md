@@ -9,7 +9,7 @@ sidebarTitle: Migrate Refresh
 
 ## Command Information
 
-- **Signature:** `modularity:migrate:refresh {module}`
+- **Signature:** `modularous:migrate:refresh {module}`
 - **Category:** Database
 
 ## Arguments
@@ -20,7 +20,7 @@ sidebarTitle: Migrate Refresh
 
 ## What It Does
 
-Calls `modularity:migrate:rollback` followed by `modularity:migrate` for the given module. Use during development to reset a module's schema and replay its migrations cleanly.
+Calls `modularous:migrate:rollback` followed by `modularous:migrate` for the given module. Use during development to reset a module's schema and replay its migrations cleanly.
 
 ::: warning
 This drops and recreates the module's tables. Any data in those tables will be lost.
@@ -29,7 +29,7 @@ This drops and recreates the module's tables. Any data in those tables will be l
 ## Examples
 
 ```bash
-php artisan modularity:migrate:refresh Blog
+php artisan modularous:migrate:refresh Blog
 ```
 
 ## Related

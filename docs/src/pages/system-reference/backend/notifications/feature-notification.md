@@ -13,7 +13,7 @@ Abstract base class for all system notifications in the `SystemNotification` mod
 - **Callback hooks** to customise every part of the mail/database payload without subclassing
 - **Database payload** with a consistent schema for the in-app notification centre
 - **Queue routing** per channel (mail queue vs. database queue)
-- **Failure logging** to a dedicated `modularity-notification-failure` log channel
+- **Failure logging** to a dedicated `modularous-notification-failure` log channel
 
 All concrete system notifications (`ModelCreatedNotification`, `StateableUpdatedNotification`, etc.) extend this class.
 
@@ -48,14 +48,14 @@ Sets `$this->model` and generates a unique `$token` via `uniqid()`. The token is
 
 `via()` resolves channels in this order:
 
-1. Check `config("modularity.notifications.{FullyQualifiedClassName}.channels")` — comma-separated string.
+1. Check `config("modularous.notifications.{FullyQualifiedClassName}.channels")` — comma-separated string.
 2. Fall back to `$defaultChannels` on the subclass.
 
 Invalid channel names (not in `$validChannels`) are filtered out automatically.
 
 ```php
 // Override channels for a specific notification via config:
-// config/modularity.php
+// config/modularous.php
 'notifications' => [
     \Modules\SystemNotification\Notifications\StateableUpdatedNotification::class => [
         'channels' => 'mail,database',
@@ -69,12 +69,12 @@ Invalid channel names (not in `$validChannels`) are filtered out automatically.
 
 ```php
 public function viaConnections(): array
-// mail → modularityConfig('notifications.mail_connection')
-// database → modularityConfig('notifications.database_connection')
+// mail → modularousConfig('notifications.mail_connection')
+// database → modularousConfig('notifications.database_connection')
 
 public function viaQueues(): array
-// mail → modularityConfig('notifications.mail_queue')
-// database → modularityConfig('notifications.database_queue')
+// mail → modularousConfig('notifications.mail_queue')
+// database → modularousConfig('notifications.database_queue')
 ```
 
 ---
@@ -148,7 +148,7 @@ StateableUpdatedNotification::createDatabaseFeatureFields(
 
 ## Redirector Resolution
 
-`getNotificationRedirector()` builds an admin panel URL pointing to the model's edit or index page. It uses `Modularity::find($moduleName)->getRouteActionUrl(...)` and respects the module's `editOnModal` config:
+`getNotificationRedirector()` builds an admin panel URL pointing to the model's edit or index page. It uses `Modularous::find($moduleName)->getRouteActionUrl(...)` and respects the module's `editOnModal` config:
 
 - `editOnModal = true` → links to the index page with the row ID (opens modal)
 - `editOnModal = false` → links directly to the `edit` page
@@ -215,12 +215,12 @@ interface AfterSendable
 
 ## Failure Handling
 
-If a queued notification fails, `failed()` logs the exception to the `modularity-notification-failure` log channel:
+If a queued notification fails, `failed()` logs the exception to the `modularous-notification-failure` log channel:
 
 ```php
 public function failed(?\Throwable $exception): void
 {
-    Log::channel('modularity-notification-failure')->error(
+    Log::channel('modularous-notification-failure')->error(
         static::class . ' failed: ' . $exception->getMessage(),
         ['exception' => $exception]
     );

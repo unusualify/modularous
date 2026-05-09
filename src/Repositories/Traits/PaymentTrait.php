@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -11,8 +11,8 @@ use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Entities\PriceType;
 use Modules\SystemPricing\Entities\VatRate;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Models\Model;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Models\Model;
 
 trait PaymentTrait
 {
@@ -43,7 +43,7 @@ trait PaymentTrait
      *
      * @var string
      */
-    protected $requiredTrait = 'Unusualify\Modularity\Entities\Traits\HasPriceable';
+    protected $requiredTrait = 'Unusualify\Modularous\Entities\Traits\HasPriceable';
 
     /**
      * snapshotTrait
@@ -197,7 +197,7 @@ trait PaymentTrait
                     $user = Auth::user();
                 }
 
-                if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasCreator')
+                if (classHasTrait($object, 'Unusualify\Modularous\Entities\Traits\HasCreator')
                     && ($creator = $object->creator()->first())
                 ) {
                     $paymentPayload['custom_creator_id'] = $creator->id;
@@ -286,7 +286,7 @@ trait PaymentTrait
                 'color' => 'success',
                 'density' => 'compact',
                 'endpoint' => Route::has('admin.system.system_payment.pay') ? route('admin.system.system_payment.pay') : null,
-                'schema' => modularity_format_inputs([
+                'schema' => modularous_format_inputs([
                     [
                         'type' => 'hidden',
                         'name' => 'price_id',

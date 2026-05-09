@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Contracts\Cache;
+namespace Unusualify\Modularous\Contracts\Cache;
 
 interface UserAwareCacheInterface
 {

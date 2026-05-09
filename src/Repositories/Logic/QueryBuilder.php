@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
@@ -10,8 +10,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Interfaces\Sortable;
-use Unusualify\Modularity\Traits\SerializeModel;
+use Unusualify\Modularous\Entities\Interfaces\Sortable;
+use Unusualify\Modularous\Traits\SerializeModel;
 
 trait QueryBuilder
 {
@@ -316,7 +316,7 @@ trait QueryBuilder
      * @param array $with
      * @param array $withCount
      * @param array $scopes
-     * @return \Unusualify\Modularity\Models\Model
+     * @return \Unusualify\Modularous\Models\Model
      *
      * @throws ModelNotFoundException
      */
@@ -380,7 +380,7 @@ trait QueryBuilder
         if ($isFormatted !== null) {
             if (function_exists('trigger_deprecation')) {
                 trigger_deprecation(
-                    'unusualify/modularity',
+                    'unusualify/modularous',
                     '0.53.0',
                     'The $isFormatted parameter is deprecated, functionless now, be removed on v1.0.0'
                 );
@@ -667,7 +667,7 @@ trait QueryBuilder
      * @param array $withCount
      * @param array $lazy
      * @param array $scopes
-     * @return \Unusualify\Modularity\Models\Model
+     * @return \Unusualify\Modularous\Models\Model
      *
      * @throws ModelNotFoundException
      *

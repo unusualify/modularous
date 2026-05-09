@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Entities\Filepond;
+use Unusualify\Modularous\Entities\Filepond;
 
 class FilepondDeleted implements ShouldDispatchAfterCommit
 {

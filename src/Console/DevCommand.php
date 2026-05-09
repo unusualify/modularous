@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 class DevCommand extends BaseCommand
 {
@@ -9,7 +9,7 @@ class DevCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:dev {--noInstall}';
+    protected $signature = 'modularous:dev {--noInstall}';
 
     protected $aliases = [
         'unusual:dev',
@@ -29,7 +29,7 @@ class DevCommand extends BaseCommand
      */
     public function handle(): int
     {
-        $this->call('modularity:build', [
+        $this->call('modularous:build', [
             '--hot' => true,
             '--noInstall' => $this->option('noInstall'),
         ]);

@@ -1,4 +1,4 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.master")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.master")
 
 @php
 
@@ -6,7 +6,7 @@
 
 @push('head_last_js')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-free.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-free.js'])
     }}
 @endpush
 @push('post_js')

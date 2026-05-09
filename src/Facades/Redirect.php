@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,6 +8,6 @@ class Redirect extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'modularity.redirect';
+        return 'modularous.redirect';
     }
 }

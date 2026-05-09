@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:db:check-collation <table>`
+- **Signature:** `modularous:db:check-collation <table>`
 - **Category:** Console
 
 ## Examples
@@ -12,16 +12,16 @@
 ### Check collation for a specific table
 
 ```bash
-php artisan modularity:db:check-collation users
+php artisan modularous:db:check-collation users
 ```
 
 ### Check collation for a module's main table
 
 ```bash
-php artisan modularity:db:check-collation posts
+php artisan modularous:db:check-collation posts
 ```
 
-`modularity:db:check-collation`
+`modularous:db:check-collation`
 --------------------------------
 
 Outputs the current database collation, the active connection collation, and then a per-column collation listing for the given table. Useful for diagnosing charset mismatches that cause query errors when joining tables with different collations.
@@ -40,7 +40,7 @@ email: utf8mb4_unicode_ci
 
 ### Usage
 
-* `modularity:db:check-collation <table>`
+* `modularous:db:check-collation <table>`
 
 ### Arguments
 

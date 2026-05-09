@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Enums;
+namespace Unusualify\Modularous\Entities\Enums;
 
 enum RevisionStatus: string
 {

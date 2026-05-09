@@ -2,7 +2,7 @@
 
 namespace Modules\SystemUser\Http\Controllers\API;
 
-use Unusualify\Modularity\Http\Controllers\ApiController;
+use Unusualify\Modularous\Http\Controllers\ApiController;
 
 class UserController extends ApiController
 {

@@ -6,7 +6,7 @@ sidebarTitle: Profile
 # Profile
 
 **File**: `src/Entities/Profile.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`
 
 Extended profile data for a user. Provides a dedicated record for personal details that sit alongside the core `User` model.

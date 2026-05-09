@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Form;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Form;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Support\Finder;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Support\Finder;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait FormSchema
 {
@@ -46,7 +46,7 @@ trait FormSchema
      */
     protected function __beforeConstructFormSchema($app, $request)
     {
-        $this->inputTypes = modularityConfig('input_types', []);
+        $this->inputTypes = modularousConfig('input_types', []);
     }
 
     /**
@@ -110,7 +110,7 @@ trait FormSchema
      */
     protected function getSchemaInput($input, $inputs = [])
     {
-        $default_input = (array) Config::get(modularityBaseKey() . '.default_input');
+        $default_input = (array) Config::get(modularousBaseKey() . '.default_input');
         $input = transform_closure_values($input, forceArray: true);
 
         [$hydrated, $spreaded] = $this->hydrateInput($input, $inputs);
@@ -169,7 +169,7 @@ trait FormSchema
                 $relation_class = null;
 
                 // dd(
-                //     Modularity::find($this->moduleName),
+                //     Modularous::find($this->moduleName),
                 //     // $this->config->parent_route,
                 //     // FacadesModule::find('Base')
                 // );
@@ -180,7 +180,7 @@ trait FormSchema
                     $relation_class = App::make($input['model']);
                 } elseif (isset($input['route'])) {
                     $finder = new Finder;
-                    $module = Modularity::find($this->moduleName);
+                    $module = Modularous::find($this->moduleName);
 
                     if ($module->isEnabledRoute($input['route'])) {
                         foreach ($this->config->routes as $r) {
@@ -385,7 +385,7 @@ trait FormSchema
                         } elseif (isset($attachable['repository'])) {
                             $modelClass = App::make($attachable['repository'])->getModel();
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
-                            $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
+                            $modelClass = Modularous::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
                         } else {
                             throw new \Exception('Model or repository or connector not found on morphTo input: ' . $name);
                         }
@@ -658,7 +658,7 @@ trait FormSchema
             $names = explode(':', array_shift($parts)); // moduleName:routeName
             $routeName = $this->getStudlyName(array_pop($names));
             $targetModuleName = $this->getStudlyName(! empty($names) ? array_pop($names) : $this->moduleName);
-            $targetModule = Modularity::find($targetModuleName);
+            $targetModule = Modularous::find($targetModuleName);
 
             $types = ! empty($parts) ? explode(':', array_shift($parts)) : ['uri', 'index']; // uri:edit
             // controller,repository,uri
@@ -707,7 +707,7 @@ trait FormSchema
             if (isset($_input->type) && $_input->type === 'relationship') {
                 $additionalExt = [];
 
-                $foreignKeyExt = collect(Modularity::find($this->moduleName)->getRawRouteConfig(studlyName($_input->name) . '.inputs'))
+                $foreignKeyExt = collect(Modularous::find($this->moduleName)->getRawRouteConfig(studlyName($_input->name) . '.inputs'))
                     ->filter(fn ($_i) => $this->getCamelCase($_i['name'] ?? '') === $this->getCamelCase($this->routeName) . 'Id')
                     ->toArray()[1]['ext'] ?? '';
 
@@ -857,7 +857,7 @@ trait FormSchema
 
                                 $routeName = $this->getStudlyName($r['_routeName'] ?? $r['name']);
                                 $targetModuleName = $this->getStudlyName($r['_moduleName'] ?? $this->moduleName);
-                                $targetModule = Modularity::find($targetModuleName);
+                                $targetModule = Modularous::find($targetModuleName);
 
                                 $routeName = $this->getStudlyName($r['name']);
 
@@ -868,7 +868,7 @@ trait FormSchema
                         if (! $filterEndpoint && isset($input['_routeName'])) {
                             $routeName = $this->getStudlyName($input['_routeName']);
                             $targetModuleName = $this->getStudlyName($input['_moduleName'] ?? $this->moduleName);
-                            $targetModule = Modularity::find($targetModuleName);
+                            $targetModule = Modularous::find($targetModuleName);
 
                             if ($targetModule) {
                                 $filterEndpoint = $targetModule->getRouteActionUrl($routeName, 'show');

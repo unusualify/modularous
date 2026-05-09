@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Exceptions;
+namespace Unusualify\Modularous\Exceptions;
 
 use Illuminate\Validation\ValidationException as BaseValidationException;
 

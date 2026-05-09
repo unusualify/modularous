@@ -5,8 +5,8 @@ namespace Modules\SystemNotification\Notifications;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SystemNotification\Notifications\Contracts\AfterSendable;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Facades\ModularityLog;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Facades\ModularousLog;
 
 class ChatableUnreadNotification extends FeatureNotification implements AfterSendable, ShouldQueue
 {
@@ -71,7 +71,7 @@ class ChatableUnreadNotification extends FeatureNotification implements AfterSen
         try {
             $this->model->latestChatMessage()->first()->touchQuietly('notified_at');
         } catch (\Exception $e) {
-            ModularityLog::error('Error updating notified_at for chatable model: ' . get_class($this->model), [
+            ModularousLog::error('Error updating notified_at for chatable model: ' . get_class($this->model), [
                 'model' => $this->model,
                 'error' => $e->getMessage(),
             ]);

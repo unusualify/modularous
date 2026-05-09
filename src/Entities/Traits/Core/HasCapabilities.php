@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,15 +11,15 @@ trait HasCapabilities
 {
     public static function bootHasCapabilities(): void
     {
-        if (! modularityConfig('security.step_up.enabled', false)) {
+        if (! modularousConfig('security.step_up.enabled', false)) {
             return;
         }
 
         static::addGlobalScope('capabilities', function (Builder $builder) {
             $model = $builder->getModel();
             $usersTable = $model->getTable();
-            $capabilitiesTable = modularityConfig('tables.capabilities', 'um_capabilities');
-            $roleCapabilityTable = modularityConfig('tables.role_capability', 'um_role_capability');
+            $capabilitiesTable = modularousConfig('tables.capabilities', 'um_capabilities');
+            $roleCapabilityTable = modularousConfig('tables.role_capability', 'um_role_capability');
             $modelHasRolesTable = config('permission.table_names.model_has_roles', 'sp_model_has_roles');
             $modelMorphKey = config('permission.column_names.model_morph_key', 'model_id');
 
@@ -50,7 +50,7 @@ trait HasCapabilities
 
     public function initializeHasCapabilities(): void
     {
-        if (! modularityConfig('security.step_up.enabled', false)) {
+        if (! modularousConfig('security.step_up.enabled', false)) {
             return;
         }
 

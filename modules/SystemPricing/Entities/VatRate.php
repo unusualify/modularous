@@ -3,7 +3,7 @@
 namespace Modules\SystemPricing\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 
 class VatRate extends \Oobook\Priceable\Models\VatRate
 {

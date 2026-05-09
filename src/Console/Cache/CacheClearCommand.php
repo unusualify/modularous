@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityCache;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousCache;
 
 class CacheClearCommand extends BaseCommand
 {
@@ -14,7 +14,7 @@ class CacheClearCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:cache:clear
+    protected $signature = 'modularous:cache:clear
                             {module? : The module name to clear cache for}
                             {routeName? : The route name to clear cache for}
                             {--counts : Clear only count caches}
@@ -28,7 +28,7 @@ class CacheClearCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Clear modularity caches for all or specific modules';
+    protected $description = 'Clear modularous caches for all or specific modules';
 
     /**
      * Create a new command instance.
@@ -51,8 +51,8 @@ class CacheClearCommand extends BaseCommand
         $formattedItemsOnly = $this->option('formattedItems');
         $formItemsOnly = $this->option('formItems');
         // Check if caching is enabled
-        if (! ModularityCache::isEnabled()) {
-            $this->warn('Modularity caching is disabled.');
+        if (! ModularousCache::isEnabled()) {
+            $this->warn('Modularous caching is disabled.');
 
             return 1;
         }
@@ -90,41 +90,41 @@ class CacheClearCommand extends BaseCommand
         }
 
         if ($clearAll) {
-            ModularityCache::invalidateModule($module, $routeName);
+            ModularousCache::invalidateModule($module, $routeName);
             $this->line("  <fg=green>✓</> All caches cleared for {$module}");
 
             return;
         }
 
         if ($countsOnly) {
-            ModularityCache::invalidateCountCaches($module, $routeName);
+            ModularousCache::invalidateCountCaches($module, $routeName);
             $this->line("  <fg=green>✓</> Count caches cleared for {$module}");
         }
 
         if ($indexOnly) {
-            ModularityCache::invalidateIndexCaches($module, $routeName);
-            // ModularityCache::invalidateIndexResponseCaches($module, $routeName);
+            ModularousCache::invalidateIndexCaches($module, $routeName);
+            // ModularousCache::invalidateIndexResponseCaches($module, $routeName);
             $this->line("  <fg=green>✓</> Index caches cleared for {$module}");
         }
 
         if ($recordsOnly) {
-            $prefix = ModularityCache::getPrefix();
+            $prefix = ModularousCache::getPrefix();
             $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':record:*';
-            $count = ModularityCache::invalidateByPattern($pattern);
+            $count = ModularousCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} record caches cleared for {$module}");
         }
 
         if ($formattedItemsOnly) {
-            $prefix = ModularityCache::getPrefix();
+            $prefix = ModularousCache::getPrefix();
             $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':formattedItem:*';
-            $count = ModularityCache::invalidateByPattern($pattern);
+            $count = ModularousCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} formatted item caches cleared for {$module}");
         }
 
         if ($formItemsOnly) {
-            $prefix = ModularityCache::getPrefix();
+            $prefix = ModularousCache::getPrefix();
             $pattern = "{$prefix}:{$module}:" . ($routeName ?: '*') . ':formItem:*';
-            $count = ModularityCache::invalidateByPattern($pattern);
+            $count = ModularousCache::invalidateByPattern($pattern);
             $this->line("  <fg=green>✓</> {$count} form item caches cleared for {$module}");
         }
     }
@@ -141,14 +141,14 @@ class CacheClearCommand extends BaseCommand
         bool $formItemsOnly
     ): void {
         if ($clearAll) {
-            $this->info('Clearing all modularity caches...');
-            ModularityCache::flush();
-            $this->line('<fg=green>✓</> All modularity caches cleared');
+            $this->info('Clearing all modularous caches...');
+            ModularousCache::flush();
+            $this->line('<fg=green>✓</> All modularous caches cleared');
 
             return;
         }
 
-        $modules = Modularity::allEnabled();
+        $modules = Modularous::allEnabled();
 
         if ($modules->isEmpty()) {
             $this->warn('No enabled modules found.');
@@ -162,34 +162,34 @@ class CacheClearCommand extends BaseCommand
             $moduleName = $module->getStudlyName();
 
             if ($countsOnly) {
-                ModularityCache::invalidateCountCaches($moduleName);
+                ModularousCache::invalidateCountCaches($moduleName);
                 $this->line("  <fg=green>✓</> Count caches cleared for {$moduleName}");
             }
 
             if ($indexOnly) {
-                ModularityCache::invalidateIndexCaches($moduleName);
-                // ModularityCache::invalidateIndexResponseCaches($moduleName);
+                ModularousCache::invalidateIndexCaches($moduleName);
+                // ModularousCache::invalidateIndexResponseCaches($moduleName);
                 $this->line("  <fg=green>✓</> Index caches cleared for {$moduleName}");
             }
 
             if ($recordsOnly) {
-                $prefix = ModularityCache::getPrefix();
+                $prefix = ModularousCache::getPrefix();
                 $pattern = "{$prefix}:{$moduleName}:*:record:*";
-                $count = ModularityCache::invalidateByPattern($pattern);
+                $count = ModularousCache::invalidateByPattern($pattern);
                 $this->line("  <fg=green>✓</> {$count} record caches cleared for {$moduleName}");
             }
 
             if ($formattedItemsOnly) {
-                $prefix = ModularityCache::getPrefix();
+                $prefix = ModularousCache::getPrefix();
                 $pattern = "{$prefix}:{$moduleName}:*:formattedItem:*";
-                $count = ModularityCache::invalidateByPattern($pattern);
+                $count = ModularousCache::invalidateByPattern($pattern);
                 $this->line("  <fg=green>✓</> {$count} formatted item caches cleared for {$moduleName}");
             }
 
             if ($formItemsOnly) {
-                $prefix = ModularityCache::getPrefix();
+                $prefix = ModularousCache::getPrefix();
                 $pattern = "{$prefix}:{$moduleName}:*:formItem:*";
-                $count = ModularityCache::invalidateByPattern($pattern);
+                $count = ModularousCache::invalidateByPattern($pattern);
                 $this->line("  <fg=green>✓</> {$count} form item caches cleared for {$moduleName}");
             }
         }

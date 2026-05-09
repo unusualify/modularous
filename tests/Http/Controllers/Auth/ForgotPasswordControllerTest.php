@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Contracts\View\View;
@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Mockery;
-use Unusualify\Modularity\Http\Controllers\Auth\ForgotPasswordController;
+use Unusualify\Modularous\Http\Controllers\Auth\ForgotPasswordController;
 
 class ForgotPasswordControllerTest extends AuthTestCase
 {

@@ -59,7 +59,7 @@ class LogNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->greeting($this->logData['level'])
-            ->subject('Modularity Log Alert: ' . $this->logData['level'])
+            ->subject('Modularous Log Alert: ' . $this->logData['level'])
             ->line('App URL: ' . config('app.url'))
             ->line('IP Address: ' . request()->ip())
             ->line('Time: ' . $this->logData['datetime'])

@@ -3,7 +3,7 @@
 namespace Modules\SystemPricing\Repositories;
 
 use Modules\SystemPricing\Entities\PriceType;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class PriceTypeRepository extends Repository
 {

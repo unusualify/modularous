@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class NoteRepository extends Repository
 {

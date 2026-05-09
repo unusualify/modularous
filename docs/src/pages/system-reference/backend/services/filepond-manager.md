@@ -6,7 +6,7 @@ sidebarTitle: FilepondManager
 # FilepondManager
 
 **File**: `src/Services/FilepondManager.php`  
-**Facade**: `Unusualify\Modularity\Facades\Filepond`
+**Facade**: `Unusualify\Modularous\Facades\Filepond`
 
 Manages the full lifecycle of [FilePond](https://pqina.nl/filepond/) file uploads: accepting temporary uploads, serving previews, persisting files to permanent storage when a model is saved, and cleaning up orphaned or expired temporary files.
 
@@ -76,14 +76,14 @@ When a file is temporarily uploaded, its UUID is stored in the PHP session under
 
 ```php
 $schedule->call(function () {
-    app(\Unusualify\Modularity\Services\FilepondManager::class)->clearTemporaryFiles(7);
+    app(\Unusualify\Modularous\Services\FilepondManager::class)->clearTemporaryFiles(7);
 })->daily();
 ```
 
 ## Facade Usage
 
 ```php
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Facades\Filepond;
 
 // In a controller upload endpoint
 public function upload(Request $request)

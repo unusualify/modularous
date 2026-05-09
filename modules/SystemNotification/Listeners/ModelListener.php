@@ -3,7 +3,7 @@
 namespace Modules\SystemNotification\Listeners;
 
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
-use Unusualify\Modularity\Listeners\Listener;
+use Unusualify\Modularous\Listeners\Listener;
 
 class ModelListener extends Listener implements ShouldHandleEventsAfterCommit
 {

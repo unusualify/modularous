@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Module;
+namespace Unusualify\Modularous\Console\Module;
 
 use Illuminate\Console\Command;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class RouteEnableCommand extends Command
 {
@@ -14,7 +14,7 @@ class RouteEnableCommand extends Command
      *
      * @var string
      */
-    protected $name = 'modularity:route:enable';
+    protected $name = 'modularous:route:enable';
 
     /**
      * The console command description.
@@ -30,7 +30,7 @@ class RouteEnableCommand extends Command
     {
 
         /** @var Module $module */
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         $module->setModuleActivator($this->argument('module'));
 

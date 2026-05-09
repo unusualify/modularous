@@ -5,16 +5,16 @@ namespace Modules\Cms\Entities;
 use Modules\Cms\Entities\Concerns\IsCmr;
 use Modules\Cms\Entities\Revisions\PageRevision;
 use Modules\Cms\Entities\Slugs\PageSlug;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
-use Unusualify\Modularity\Entities\Traits\HasRevisions;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
-use Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Entities\Traits\Publishable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Entities\Traits\HasRevisions;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\Publishable;
 
 class Page extends Model
 {
@@ -78,7 +78,7 @@ class Page extends Model
     ];
 
     // /**
-    //  * Permissions: page_revision_approve, page_revision_restore (see modularity:sync:revision-permissions).
+    //  * Permissions: page_revision_approve, page_revision_restore (see modularous:sync:revision-permissions).
     //  */
     // protected function revisionPermissionPrefix(): ?string
     // {
@@ -94,7 +94,7 @@ class Page extends Model
     // }
 
     /**
-     * Base {@see \Unusualify\Modularity\Entities\Model} maps null publish_start to "now"; CMS pages use null to clear the schedule.
+     * Base {@see \Unusualify\Modularous\Entities\Model} maps null publish_start to "now"; CMS pages use null to clear the schedule.
      */
     public function setPublishStartDateAttribute(mixed $value): void
     {
@@ -123,7 +123,7 @@ class Page extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_pages', 'um_cms_pages');
+        return modularousConfig('tables.cms_pages', 'um_cms_pages');
     }
 
     // /**

@@ -32,8 +32,8 @@ window.ResizeObserver = ResizeObserverMock
 // window.$ for Sidebar onMounted (querySelector fallback)
 window.$ = window.$ || ((sel) => document.querySelectorAll(sel))
 
-// Layout/sidebar tests need MODULARITY.STORE.config (config module reads at load time)
-const APP_NAME = import.meta.env?.VUE_APP_NAME || 'MODULARITY'
+// Layout/sidebar tests need MODULAROUS.STORE.config (config module reads at load time)
+const APP_NAME = import.meta.env?.VUE_APP_NAME || 'MODULAROUS'
 if (!window[APP_NAME]) {
   window[APP_NAME] = { STORE: { config: {} } }
 }

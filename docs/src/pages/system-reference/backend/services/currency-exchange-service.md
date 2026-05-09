@@ -6,13 +6,13 @@ sidebarTitle: CurrencyExchangeService
 # CurrencyExchangeService
 
 **File**: `src/Services/CurrencyExchangeService.php`  
-**Facade**: `Unusualify\Modularity\Facades\CurrencyExchange`
+**Facade**: `Unusualify\Modularous\Facades\CurrencyExchange`
 
 Fetches live currency exchange rates from a configurable external API, caches the result for one hour, and provides amount conversion helpers.
 
 ## Configuration
 
-All options live under `config/modularity.php` → `services.currency_exchange`:
+All options live under `config/modularous.php` → `services.currency_exchange`:
 
 ```php
 'services' => [
@@ -62,7 +62,7 @@ php artisan cache:forget exchange_rates
 ## Facade Usage
 
 ```php
-use Unusualify\Modularity\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\CurrencyExchange;
 
 // Convert 100 EUR to USD
 $usd = CurrencyExchange::convertTo(100, 'USD');
@@ -83,4 +83,4 @@ The `CurrencyExchangeService` is supplemented by currency provider classes used 
 | `Currency/SystemPricingCurrencyProvider` | Fetches the configured currency from the system pricing module |
 | `Currency/NullCurrencyProvider` | No-op provider returned when no pricing module is active |
 
-The active provider is resolved via `modularity.currency_provider` config key.
+The active provider is resolved via `modularous.currency_provider` config key.

@@ -5,7 +5,7 @@ sidebarTitle: MediasUploaderConfig
 
 # MediasUploaderConfig
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\MediasUploaderConfig`  
 **Source**: `src/Http/ViewComposers/MediasUploaderConfig.php`
 
 Builds and injects the media-library upload configuration object into every view. The frontend image/media uploader reads `$mediasUploaderConfig` to know where and how to upload media files. Mirrors [`FilesUploaderConfig`](./files-uploader-config) but targets the media library instead of the file library.
@@ -48,7 +48,7 @@ Builds and injects the media-library upload configuration object into every view
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'media_library' => [
     'disk'               => 's3',
     'endpoint_type'      => 's3',       // 'local' | 's3' | 'azure'

@@ -5,7 +5,7 @@ sidebarTitle: MethodTransformers
 
 # MethodTransformers
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\MethodTransformers`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\MethodTransformers`
 
 The lifecycle-hook dispatcher at the heart of every `Repository`. Composes `ManageTraits` (which enumerates hook methods from loaded traits via naming conventions) and `CacheableTrait`. All repository traits plug into the lifecycle through this class.
 

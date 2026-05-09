@@ -1,45 +1,45 @@
 ```
-    php artisan vendor:publish --provider="Unusualify\Modularity\LaravelServiceProvider" --tag="config"
+    php artisan vendor:publish --provider="Unusualify\Modularous\LaravelServiceProvider" --tag="config"
     
-    php artisan modularity:build --noInstall --hot
+    php artisan modularous:build --noInstall --hot
 
-    php artisan modularity:make:module Package 
+    php artisan modularous:make:module Package 
         -TP 
         --schema="name:string:unique,type:enum('type'\,['POS'\,'SERVICE'])" 
         --rules="name=required|min:3|unique:payments&type=in:POS,SOCIAL"
     
-    php artisan modularity:make:route Invoice Payment
+    php artisan modularous:make:route Invoice Payment
         --schema="name:string:unique,type:enum('type'\,['POS'\,'SERVICE'])" 
         --rules="name=required|min:3|unique:payments&type=in:POS,SOCIAL"
 
-    php artisan modularity:make:route Invoice Payment 
+    php artisan modularous:make:route Invoice Payment 
         --schema="basic_name:string:unique,payment_id:foreignId:constrained:onUpdate('cascade'):onDelete('cascade'),soft_delete,remember_token"
     
-    php artisan modularity:make:route Invoice Payment 
+    php artisan modularous:make:route Invoice Payment 
         --schema="basic_name:string:unique,belongsTo:payment:id:payments:constrained:onUpdate('cascade'):onDelete('cascade'),soft_delete,remember_token"
 
-    php artisan modularity:make:controller Payment Invoice
+    php artisan modularous:make:controller Payment Invoice
 
-    php artisan modularity:make:model Reference Payment
+    php artisan modularous:make:model Reference Payment
         --soft-delete --has-factory
-    php artisan modularity:make:model Invoice Payment
+    php artisan modularous:make:model Invoice Payment
         --relationships="belongsTo:payments:payment_id:id,hasMany:users:user_id:id"
 
-    php artisan modularity:make:migration create_invoices_table Payment
+    php artisan modularous:make:migration create_invoices_table Payment
         --fields="name:string:unique,payment_id:foreignId:constrained:onUpdate('cascade'):onDelete('cascade'),soft_delete,remember_token"
 
-    php artisan modularity:make:repository Payment Reference -TMP
+    php artisan modularous:make:repository Payment Reference -TMP
 
-    php artisan modularity:make:request Payment Payment --rules="name=required|min:3|unique:payments&email=required|email|unique:payments"
+    php artisan modularous:make:request Payment Payment --rules="name=required|min:3|unique:payments&email=required|email|unique:payments"
 
     php artisan migrate --path="Modules/PressRelease/Database/Migrations"
     php artisan migrate:rollback --path="Modules/PressRelease/Database/Migrations"
     php artisan migrate:refresh --path="Modules/PressRelease/Database/Migrations"
 
     // MODULE MIGRATE OPERATIONS
-    php artisan modularity:migrate Package
-    php artisan modularity:migrate:rollback Package
-    php artisan modularity:migrate:refresh Package
+    php artisan modularous:migrate Package
+    php artisan modularous:migrate:rollback Package
+    php artisan modularous:migrate:refresh Package
 
     php artisan iseed sp_roles
 
@@ -71,12 +71,12 @@ IF #locale column not found on imageables table
 
 from
     (?<=[Config::get\(|config\(])\s?'base\.
-    (?<=[Config::get\(|config\(])\s?\\Illuminate\\Support\\Str::snake\(env\('MODULARITY_BASE_NAME',\s?'Base'\)\)\s?\.\s?'\.
-    (?<=[Config::get\(|config\(])\s?Str::snake\(env\('MODULARITY_BASE_NAME',\s?'Base'\)\)\s?\.\s?'\.
+    (?<=[Config::get\(|config\(])\s?\\Illuminate\\Support\\Str::snake\(env\('MODULAROUS_BASE_NAME',\s?'Base'\)\)\s?\.\s?'\.
+    (?<=[Config::get\(|config\(])\s?Str::snake\(env\('MODULAROUS_BASE_NAME',\s?'Base'\)\)\s?\.\s?'\.
     (?<=[Config::get\(|config\(])\s?getUnusualBaseKey\(\)\s?\.\s?'\.
 to 
-    \Illuminate\Support\Str::snake(env('MODULARITY_BASE_NAME', 'Base')) . '.
-    modularityBaseKey() . '.
+    \Illuminate\Support\Str::snake(env('MODULAROUS_BASE_NAME', 'Base')) . '.
+    modularousBaseKey() . '.
 
 from 
     ["'](base)(::[A-Za-z\$\->\.]*)["']
@@ -98,5 +98,5 @@ for seeders
     \[([a-zA-Z]*)::class,\s'(.*)'\] => '$1@$2'
  */
 
-/** modularity:replace:regex command */
+/** modularous:replace:regex command */
 art mod:replace:regex modules "@section\s*\(\s*[\']STORE[\']\s*\)([\s\S]*?)@endsection" "@push('STORE')\$1@endpush" --directory='**/*.blade.php' -p

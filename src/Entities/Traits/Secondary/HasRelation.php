@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Secondary;
+namespace Unusualify\Modularous\Entities\Traits\Secondary;
 
 trait HasRelation
 {

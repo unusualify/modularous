@@ -6,7 +6,7 @@ outline: deep
 
 # ModelEvent
 
-`Unusualify\Modularity\Events\ModelEvent`
+`Unusualify\Modularous\Events\ModelEvent`
 
 **File**: `src/Events/ModelEvent.php`
 
@@ -53,7 +53,7 @@ The constructor:
 | Method | Default return | Override when |
 |--------|---------------|---------------|
 | `broadcastOn()` | `[PrivateChannel('models.{id}'), Channel('model')]` | You need custom/per-user channels |
-| `broadcastAs()` | `'modularity.' . snake-dot class name` | You want a stable wire name |
+| `broadcastAs()` | `'modularous.' . snake-dot class name` | You want a stable wire name |
 | `broadcastWhen()` | `true` | You want conditional broadcasting |
 | `$broadcastService` | `'reverb'` | You want Pusher/Ably per event |
 
@@ -73,17 +73,17 @@ The constructor:
 The broadcast event name follows the convention:
 
 ```
-modularity.{snake_case_event_without_event_suffix}
+modularous.{snake_case_event_without_event_suffix}
 ```
 
-For example, a class named `UserCreatedEvent` broadcasts as `modularity.user.created`.
+For example, a class named `UserCreatedEvent` broadcasts as `modularous.user.created`.
 
 This is resolved by:
 
 ```php
 public function broadcastAs(): string
 {
-    return 'modularity.' . Str::replace('_', '.', 
+    return 'modularous.' . Str::replace('_', '.', 
         Str::replace('_event', '', Str::snake(get_class_short_name($this)))
     );
 }
@@ -117,7 +117,7 @@ Each trait is set up inside the constructor before broadcasting is configured. S
 ## Extending ModelEvent
 
 ```php
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 
@@ -173,7 +173,7 @@ See [Event Traits](./traits/overview) for the full reference on each trait.
 
 ## Broadcast Payload Shape
 
-Because all four trait properties are `public`, they are automatically serialized into the broadcast payload. Clients listening on `.modularity.*` events receive an object with:
+Because all four trait properties are `public`, they are automatically serialized into the broadcast payload. Clients listening on `.modularous.*` events receive an object with:
 
 ```jsonc
 {
@@ -208,7 +208,7 @@ public function broadcastWith(): array
 
 When creating a new broadcast event:
 
-- [ ] Extend `Unusualify\Modularity\Events\ModelEvent`
+- [ ] Extend `Unusualify\Modularous\Events\ModelEvent`
 - [ ] Implement `Illuminate\Contracts\Broadcasting\ShouldBroadcast`
 - [ ] Use `Illuminate\Broadcasting\InteractsWithBroadcasting`
 - [ ] (Optional) Override `broadcastOn()` for custom channels

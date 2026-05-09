@@ -92,13 +92,13 @@ createInertiaApp({
       const app = createApp({ render: () => h(App, props) })
           .use(plugin)
 
-      console.debug('[modularity]: inertia setup')
+      console.debug('[modularous]: inertia setup')
 
       if(__HAS_ZIGGY__){
-        console.debug('[modularity]: found on vendor/tightenco/ziggy')
+        console.debug('[modularous]: found on vendor/tightenco/ziggy')
         app.use(ZiggyVue)
       } else {
-        console.debug('[modularity]: no found on vendor/tightenco/ziggy')
+        console.debug('[modularous]: no found on vendor/tightenco/ziggy')
       }
       app.use(UEConfig)
 

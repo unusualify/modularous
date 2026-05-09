@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Modules\Cms\Http\Controllers\Traits\ResolvesPublicPresentationView;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Services\MessageStage;
 
 trait ManagePreview
 {

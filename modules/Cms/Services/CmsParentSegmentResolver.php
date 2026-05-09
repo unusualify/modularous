@@ -23,7 +23,7 @@ final class CmsParentSegmentResolver
 
     public function enabled(): bool
     {
-        return (bool) modularityConfig('cms_parent_segments.enabled', true);
+        return (bool) modularousConfig('cms_parent_segments.enabled', true);
     }
 
     public function tablesReady(): bool
@@ -188,7 +188,7 @@ final class CmsParentSegmentResolver
     private function fallbackLocaleCandidatesForSegments(string $targetClass): array
     {
         $candidates = [];
-        $candidates[] = (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
+        $candidates[] = (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
 
         $transFallback = config('translatable.fallback_locale');
         if (is_string($transFallback) && $transFallback !== '') {

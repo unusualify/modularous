@@ -12,17 +12,17 @@ Modularous ships a set of events that fire at key points in the application life
 
 | Class | Namespace | Fired When |
 |-------|-----------|------------|
-| [ModelEvent](./model-event) | `Unusualify\Modularity\Events` | Abstract base — extended by all model-level events |
-| [ModularityUserRegistering](./user-events#modularityuserregistering) | `Unusualify\Modularity\Events` | Just before a new user is persisted |
-| [ModularityUserRegistered](./user-events#modularityuserregistered) | `Unusualify\Modularity\Events` | Immediately after a user is created |
-| [ModularityUserVerification](./user-events#modularityuserverification) | `Unusualify\Modularity\Events` | When an email-verification request is initiated |
-| [VerifiedEmailRegister](./user-events#verifiedemailregister) | `Unusualify\Modularity\Events` | When a user completes registration via verified e-mail |
+| [ModelEvent](./model-event) | `Unusualify\Modularous\Events` | Abstract base — extended by all model-level events |
+| [ModularousUserRegistering](./user-events#modularoususerregistering) | `Unusualify\Modularous\Events` | Just before a new user is persisted |
+| [ModularousUserRegistered](./user-events#modularoususerregistered) | `Unusualify\Modularous\Events` | Immediately after a user is created |
+| [ModularousUserVerification](./user-events#modularoususerverification) | `Unusualify\Modularous\Events` | When an email-verification request is initiated |
+| [VerifiedEmailRegister](./user-events#verifiedemailregister) | `Unusualify\Modularous\Events` | When a user completes registration via verified e-mail |
 
 ## Listeners
 
 | Class | Namespace | Listens To |
 |-------|-----------|------------|
-| [Listener](./listener) | `Unusualify\Modularity\Listeners` | Abstract base — extended by concrete listeners |
+| [Listener](./listener) | `Unusualify\Modularous\Listeners` | Abstract base — extended by concrete listeners |
 
 ## Event Traits
 
@@ -73,12 +73,12 @@ All these extend `ModelEvent`, so they automatically carry `EventUser`, `EventUr
         │
         ├─► Listener::handle($event)
         │       └─ resolves {EventName}Notification
-        │          sends mail if modularity.mail.enabled = true
+        │          sends mail if modularous.mail.enabled = true
         │
         └─► Broadcasting (ModelEvent only)
                 broadcast on private channel: models.{model_id}
                 broadcast on public channel:  model
-                event name: modularity.{event_name}
+                event name: modularous.{event_name}
 ```
 
 → [Broadcasting guide](/guide/broadcasting/overview)

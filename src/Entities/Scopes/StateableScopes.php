@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
 trait StateableScopes
 {

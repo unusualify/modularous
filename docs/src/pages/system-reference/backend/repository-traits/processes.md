@@ -11,7 +11,7 @@ These traits handle workflow process management and nested repeater block persis
 
 ## ProcessableTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\ProcessableTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\ProcessableTrait`
 
 Auto-creates a workflow `Process` record for models that use the `Processable` entity trait. Hydrates the process ID and any nested process schema fields into form fields.
 
@@ -44,7 +44,7 @@ This recursive hydration allows process inputs to contain embedded sub-forms (e.
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\ProcessableTrait;
+use Unusualify\Modularous\Repositories\Traits\ProcessableTrait;
 
 class SubmissionRepository extends Repository
 {
@@ -62,7 +62,7 @@ $processId = $repo->getProcessId($submission);
 
 ## RepeatersTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\RepeatersTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\RepeatersTrait`
 
 Persists nested repeater blocks (JSON content stored in a `Repeater` morph-many) with full locale support. Internally composes `FilesTrait`, `ImagesTrait`, and `PricesTrait` to handle media and pricing within repeater rows.
 
@@ -120,7 +120,7 @@ When loading form fields for an existing record:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
+use Unusualify\Modularous\Repositories\Traits\RepeatersTrait;
 
 class ProductRepository extends Repository
 {

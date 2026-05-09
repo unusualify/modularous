@@ -11,7 +11,7 @@ The `Support\Decomposers` sub-namespace contains three parser classes used by th
 
 ## ModelRelationParser
 
-`Unusualify\Modularity\Support\Decomposers\ModelRelationParser`
+`Unusualify\Modularous\Support\Decomposers\ModelRelationParser`
 
 Parses a relation definition string (as entered in `make:model --relations`) into an array of Eloquent relationship descriptors, and can render the resulting `public function …()` method stubs.
 
@@ -40,7 +40,7 @@ commentable:morphTo
 ### Example
 
 ```php
-use Unusualify\Modularity\Support\Decomposers\ModelRelationParser;
+use Unusualify\Modularous\Support\Decomposers\ModelRelationParser;
 
 $parser = new ModelRelationParser('company:belongsTo,tags:belongsToMany:tag');
 $rendered = $parser->render();
@@ -51,7 +51,7 @@ $rendered = $parser->render();
 
 ## SchemaParser (Decomposers)
 
-`Unusualify\Modularity\Support\Decomposers\SchemaParser`
+`Unusualify\Modularous\Support\Decomposers\SchemaParser`
 
 Parses a field-definition string (as entered in `make:model --fields`) into an array of input schema descriptors consumed by hydrate and Vue input generators.
 
@@ -75,7 +75,7 @@ title:string,body:textarea,published_at:datetime:nullable,status:select
 
 ## ValidatorParser
 
-`Unusualify\Modularity\Support\Decomposers\ValidatorParser`
+`Unusualify\Modularous\Support\Decomposers\ValidatorParser`
 
 Parses a validation-rules string (as entered in `make:model --rules`) into a `['field' => 'rules']` array suitable for pasting into a `StoreRequest` / `UpdateRequest`.
 
@@ -99,7 +99,7 @@ title=required|string|max:255&body=nullable|string&published_at=nullable|date
 ### Example
 
 ```php
-use Unusualify\Modularity\Support\Decomposers\ValidatorParser;
+use Unusualify\Modularous\Support\Decomposers\ValidatorParser;
 
 $parser = new ValidatorParser('title=required|string|max:255&body=nullable|string');
 $rules  = $parser->toArray();

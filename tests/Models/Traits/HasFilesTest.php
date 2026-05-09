@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -9,10 +9,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
-use Unusualify\Modularity\Services\FileLibrary\FileService;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Services\FileLibrary\FileService;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasFilesTest extends ModelTestCase
 {
@@ -77,7 +77,7 @@ class HasFilesTest extends ModelTestCase
 
         $this->assertInstanceOf(MorphToMany::class, $relationship);
         $this->assertEquals(File::class, get_class($relationship->getRelated()));
-        $this->assertEquals(modularityConfig('tables.fileables'), $relationship->getTable());
+        $this->assertEquals(modularousConfig('tables.fileables'), $relationship->getTable());
     }
 
     public function test_attach_and_retrieve_single_file()
@@ -432,7 +432,7 @@ class HasFilesTest extends ModelTestCase
         ]);
 
         // Check database directly
-        $this->assertDatabaseHas(modularityConfig('tables.fileables'), [
+        $this->assertDatabaseHas(modularousConfig('tables.fileables'), [
             'file_id' => $this->file1->id,
             'fileable_id' => $this->model->id,
             'fileable_type' => get_class($this->model),
@@ -444,7 +444,7 @@ class HasFilesTest extends ModelTestCase
         $this->model->files()->detach($this->file1->id);
 
         // Check that it's removed from database
-        $this->assertDatabaseMissing(modularityConfig('tables.fileables'), [
+        $this->assertDatabaseMissing(modularousConfig('tables.fileables'), [
             'file_id' => $this->file1->id,
             'fileable_id' => $this->model->id,
             'fileable_type' => get_class($this->model),

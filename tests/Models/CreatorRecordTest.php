@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\CreatorRecord;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\CreatorRecord;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class CreatorRecordTest extends ModelTestCase
 {
@@ -16,7 +16,7 @@ class CreatorRecordTest extends ModelTestCase
     public function test_get_table_creator_record()
     {
         $creatorRecord = new CreatorRecord;
-        $this->assertEquals(modularityConfig('tables.creator_records', 'modularity_creator_records'), $creatorRecord->getTable());
+        $this->assertEquals(modularousConfig('tables.creator_records', 'modularous_creator_records'), $creatorRecord->getTable());
     }
 
     public function test_fillable_attributes()
@@ -349,7 +349,7 @@ class CreatorRecordTest extends ModelTestCase
         // Test that creator record can be deleted independently
         $creatorRecord->delete();
 
-        $this->assertDatabaseMissing(modularityConfig('tables.creator_records', 'modularity_creator_records'), ['id' => $creatorRecordId]);
+        $this->assertDatabaseMissing(modularousConfig('tables.creator_records', 'modularous_creator_records'), ['id' => $creatorRecordId]);
 
         // Original models should still exist
         $this->assertDatabaseHas('um_users', ['id' => $creator->id]);

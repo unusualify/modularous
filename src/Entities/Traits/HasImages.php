@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
-use Unusualify\Modularity\Commands\RefreshLQIP;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Commands\RefreshLQIP;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
 
 trait HasImages
 {
@@ -87,7 +87,7 @@ trait HasImages
         return $this->morphToMany(
             Media::class,
             'mediable',
-            modularityConfig('tables.mediables', 'twill_mediables')
+            modularousConfig('tables.mediables', 'twill_mediables')
         )->withPivot(array_merge([
             'crop',
             'role',
@@ -98,8 +98,8 @@ trait HasImages
             'lqip_data',
             'ratio',
             'metadatas',
-        ], modularityConfig('media_library.translated_form_fields', false) ? ['locale'] : []))
-            ->withTimestamps()->orderBy(modularityConfig('tables.mediables', 'twill_mediables') . '.id', 'asc');
+        ], modularousConfig('media_library.translated_form_fields', false) ? ['locale'] : []))
+            ->withTimestamps()->orderBy(modularousConfig('tables.mediables', 'twill_mediables') . '.id', 'asc');
     }
 
     private function findMedia($role, $crop = 'default', $locale = null)
@@ -108,7 +108,7 @@ trait HasImages
             if ($locale) {
                 $localeScope = $media->pivot->locale === $locale;
             } else {
-                if (modularityConfig('media_library.translated_form_fields', false)) {
+                if (modularousConfig('media_library.translated_form_fields', false)) {
                     $localeScope = $media->pivot->locale === app()->getLocale();
                 }
             }
@@ -116,7 +116,7 @@ trait HasImages
             return $media->pivot->role === $role && $media->pivot->crop === $crop && ($localeScope ?? true);
         });
 
-        if (! $media && modularityConfig('media_library.translated_form_fields', false)) {
+        if (! $media && modularousConfig('media_library.translated_form_fields', false)) {
             $media = $this->medias->first(function ($media) use ($role, $crop) {
                 return $media->pivot->role === $role && $media->pivot->crop === $crop;
             });
@@ -308,7 +308,7 @@ trait HasImages
     {
         if (! $media) {
             $media = $this->medias->first(function ($media) use ($role) {
-                if (modularityConfig('media_library.translated_form_fields', false)) {
+                if (modularousConfig('media_library.translated_form_fields', false)) {
                     $localeScope = $media->pivot->locale === app()->getLocale();
                 }
 
@@ -334,7 +334,7 @@ trait HasImages
     {
         if (! $media) {
             $media = $this->medias->first(function ($media) use ($role) {
-                if (modularityConfig('media_library.translated_form_fields', false)) {
+                if (modularousConfig('media_library.translated_form_fields', false)) {
                     $localeScope = $media->pivot->locale === app()->getLocale();
                 }
 
@@ -360,7 +360,7 @@ trait HasImages
     {
         if (! $media) {
             $media = $this->medias->first(function ($media) use ($role) {
-                if (modularityConfig('media_library.translated_form_fields', false)) {
+                if (modularousConfig('media_library.translated_form_fields', false)) {
                     $localeScope = $media->pivot->locale === app()->getLocale();
                 }
 

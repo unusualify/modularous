@@ -15,7 +15,7 @@ Modularous has two activation concepts:
 
 A module can be enabled but have specific routes disabled (e.g. hide the create route).
 
-See [Backend · Activators](/system-reference/backend/activators/overview) for class-level details of `ModularityActivator` and `ModuleActivator`.
+See [Backend · Activators](/system-reference/backend/activators/overview) for class-level details of `ModularousActivator` and `ModuleActivator`.
 
 ## Module Discovery
 
@@ -57,6 +57,6 @@ Standard route actions (Module::$routeActionLists): restore, forceDelete, duplic
 
 ## Route Status
 
-Use `php artisan modularity:route:enable` and `modularity:route:disable` to toggle routes. Status is stored in `modules/{ModuleName}/routes_statuses.json`.
+Use `php artisan modularous:route:enable` and `modularous:route:disable` to toggle routes. Status is stored in `modules/{ModuleName}/routes_statuses.json`.
 
 See [route:enable](/guide/console/module/route-enable) and [route:disable](/guide/console/module/route-disable).

@@ -29,7 +29,7 @@ class UrlRoute extends EloquentModel
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_url_routes', 'um_cms_url_routes');
+        return modularousConfig('tables.cms_url_routes', 'um_cms_url_routes');
     }
 
     /**

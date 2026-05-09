@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository as Config;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\Factory as ViewFactory;
-use Unusualify\Modularity\Http\Controllers\Auth\LoginController;
+use Unusualify\Modularous\Http\Controllers\Auth\LoginController;
 
 class LoginControllerTest extends AuthTestCase
 {
@@ -157,8 +157,8 @@ class LoginControllerTest extends AuthTestCase
     /** @test */
     public function it_redirects_to_2fa_form_when_user_has_2fa_enabled(): void
     {
-        config()->set('modularity.security.mfa.enabled', true);
-        config()->set('modularity.security.mfa.provider', 'google_totp');
+        config()->set('modularous.security.mfa.enabled', true);
+        config()->set('modularous.security.mfa.provider', 'google_totp');
 
         $user = (object) [
             'id' => 1,
@@ -184,8 +184,8 @@ class LoginControllerTest extends AuthTestCase
     /** @test */
     public function it_returns_json_with_redirector_when_authenticated_with_2fa_and_requesting_json(): void
     {
-        config()->set('modularity.security.mfa.enabled', true);
-        config()->set('modularity.security.mfa.provider', 'google_totp');
+        config()->set('modularous.security.mfa.enabled', true);
+        config()->set('modularous.security.mfa.provider', 'google_totp');
 
         $user = (object) [
             'id' => 1,

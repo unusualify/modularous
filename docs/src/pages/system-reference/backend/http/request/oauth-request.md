@@ -6,7 +6,7 @@ sidebarTitle: OauthRequest
 # OauthRequest
 
 **File**: `src/Http/Requests/OauthRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: [`Request`](./request)
 
 Validates the OAuth provider portion of the authentication callback flow. The provider value is accepted from either the request body or the route parameter and must match one of the configured providers.
@@ -31,18 +31,18 @@ This lets downstream validation and controllers read `$request->input('provider'
 
 ```php
 [
-    'provider' => ['required', Rule::in(array_keys(modularityConfig('oauth.providers', [])))],
+    'provider' => ['required', Rule::in(array_keys(modularousConfig('oauth.providers', [])))],
 ]
 ```
 
-The whitelist is read dynamically from `modularity.oauth.providers`, so enabling a new provider in config immediately makes it accepted here — no code change required.
+The whitelist is read dynamically from `modularous.oauth.providers`, so enabling a new provider in config immediately makes it accepted here — no code change required.
 
 ## Redirect on validation failure
 
 `getRedirectUrl()` attempts to return the route for the authenticated callback:
 
 ```php
-$url->route(config('modularity.admin_route_name_prefix') . '.loginHandleCallbackProvider', ['provider' => $provider]);
+$url->route(config('modularous.admin_route_name_prefix') . '.loginHandleCallbackProvider', ['provider' => $provider]);
 ```
 
 > [!WARNING]
@@ -51,4 +51,4 @@ $url->route(config('modularity.admin_route_name_prefix') . '.loginHandleCallback
 ## Related
 
 - [`LoginController`](/system-reference/backend/http/controllers/auth/login-controller) — consumes this request during callback handling
-- `config/modularity.php` → `oauth.providers` — provider whitelist driving the `Rule::in` list
+- `config/modularous.php` → `oauth.providers` — provider whitelist driving the `Rule::in` list

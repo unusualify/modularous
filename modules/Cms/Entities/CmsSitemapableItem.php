@@ -25,7 +25,7 @@ class CmsSitemapableItem extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_sitemapables', 'um_cms_sitemapables');
+        return modularousConfig('tables.cms_sitemapables', 'um_cms_sitemapables');
     }
 
     public function sitemap(): BelongsTo

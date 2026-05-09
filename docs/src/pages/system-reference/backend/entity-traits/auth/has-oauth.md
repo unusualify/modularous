@@ -5,7 +5,7 @@ sidebarTitle: HasOauth
 
 # HasOauth
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Auth\HasOauth`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Auth\HasOauth`
 
 Links a `User` to one or more OAuth provider records (`UserOauth`) via a `HasMany` relationship. Provides a helper to create or associate a `UserOauth` record from a Laravel Socialite callback.
 
@@ -39,7 +39,7 @@ public function providers(): HasMany   // → UserOauth records (foreign key: us
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Auth\HasOauth;
+use Unusualify\Modularous\Entities\Traits\Auth\HasOauth;
 
 class User extends Authenticatable
 {

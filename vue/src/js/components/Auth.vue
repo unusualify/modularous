@@ -69,7 +69,7 @@ export default {
     )
 
     const formSheetStyle = computed(() => {
-      const config = window.__MODULARITY_AUTH_CONFIG__ || window.MODULARITY?.AUTH_COMPONENT
+      const config = window.__MODULAROUS_AUTH_CONFIG__ || window.MODULAROUS?.AUTH_COMPONENT
       const widths = config?.formWidth ?? {}
       const bp = name.value
       const val = widths[bp] ?? { xs: '85vw', sm: '450px', md: '450px', lg: '500px', xl: '600px', xxl: 700 }[bp] ?? '100%'
@@ -77,7 +77,7 @@ export default {
     })
 
     const dividerText = computed(() => {
-      const config = window.__MODULARITY_AUTH_CONFIG__ || window.MODULARITY?.AUTH_COMPONENT
+      const config = window.__MODULAROUS_AUTH_CONFIG__ || window.MODULAROUS?.AUTH_COMPONENT
       const key = config?.dividerText ?? 'or'
       return te(key) ? t(key) : key
     })

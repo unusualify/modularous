@@ -68,7 +68,7 @@ flowchart LR
 2. **Repository trait**: Add `MyFeatureTrait` with `hydrate*`, `afterSave*`, `getFormFields*`
 3. **Hydrate**: Add `MyFeatureHydrate` extending `InputHydrate`; set `type` → `input-my-feature`
 4. **Vue component**: Create `VInputMyFeature`; register in `registry.js`
-5. **Config**: Add trait to `modularity.traits` if needed; add input to route config
+5. **Config**: Add trait to `modularous.traits` if needed; add input to route config
 
 ## Feature Dependencies
 

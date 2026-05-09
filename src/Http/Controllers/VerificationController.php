@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageForm;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageForm;
 
 class VerificationController extends Controller
 {
@@ -14,7 +14,7 @@ class VerificationController extends Controller
     {
         $request->fulfill();
 
-        return view(modularityBaseKey() . '::auth.success', [
+        return view(modularousBaseKey() . '::auth.success', [
             'pageTitle' => __('authentication.verification-complete'),
             'taskState' => [
                 'status' => 'success',

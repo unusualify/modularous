@@ -11,10 +11,10 @@ use Illuminate\Support\Arr;
 use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPricing\Entities\Mutators\PriceMutators;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Facades\CurrencyExchange;
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\Filepond;
 
 class Price extends \Oobook\Priceable\Models\Price
 {
@@ -128,7 +128,7 @@ class Price extends \Oobook\Priceable\Models\Price
     {
         $defaultCurrency = $this->currency;
         $orderId = uniqid('ORD');
-        $modularityPayload = array_merge([
+        $modularousPayload = array_merge([
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
             'original_raw_amount' => $this->discounted_raw_amount,
@@ -145,12 +145,12 @@ class Price extends \Oobook\Priceable\Models\Price
             'converted_currency' => $defaultCurrency->iso_4217,
             'converted_currency_id' => $defaultCurrency->id,
             'exchange_rate' => 1,
-        ], $payload['parameters']['modularity'] ?? []);
+        ], $payload['parameters']['modularous'] ?? []);
 
         $rawAmount = $this->discounted_raw_amount;
-        $totalAmount = $modularityPayload['converted_total_amount'] ?? $this->total_amount;
+        $totalAmount = $modularousPayload['converted_total_amount'] ?? $this->total_amount;
 
-        $alreadyConverted = $modularityPayload['converted'] ?? false;
+        $alreadyConverted = $modularousPayload['converted'] ?? false;
         $currency = $defaultCurrency;
         if (! $alreadyConverted && isset($payload['currency_id']) && $payload['currency_id'] != $defaultCurrency->id) {
             $currency = Currency::find($payload['currency_id']);
@@ -161,16 +161,16 @@ class Price extends \Oobook\Priceable\Models\Price
                 round: 'round'
             );
             $totalAmount = intval($rawAmount * (1 + $this->vat_multiplier));
-            $modularityPayload['exchange_rate'] = CurrencyExchange::getExchangeRate(mb_strtoupper($currency->iso_4217));
-            $modularityPayload['converted_raw_amount'] = $rawAmount;
-            $modularityPayload['converted_total_amount'] = $totalAmount;
-            $modularityPayload['converted_currency'] = $currency->iso_4217;
-            $modularityPayload['converted_currency_id'] = $payload['currency_id'];
-        } elseif ($modularityPayload['converted_currency_id'] != $defaultCurrency->id) {
-            $currency = Currency::find($modularityPayload['converted_currency_id']);
+            $modularousPayload['exchange_rate'] = CurrencyExchange::getExchangeRate(mb_strtoupper($currency->iso_4217));
+            $modularousPayload['converted_raw_amount'] = $rawAmount;
+            $modularousPayload['converted_total_amount'] = $totalAmount;
+            $modularousPayload['converted_currency'] = $currency->iso_4217;
+            $modularousPayload['converted_currency_id'] = $payload['currency_id'];
+        } elseif ($modularousPayload['converted_currency_id'] != $defaultCurrency->id) {
+            $currency = Currency::find($modularousPayload['converted_currency_id']);
         }
 
-        // $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
+        // $hasTransactionFee = Modularous::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
         // $transactionFeePercentage = 0.0;
         // $transactionFeeAmount = 0.0;
         // $totalAmountWithoutTransactionFee = $totalAmount;
@@ -180,11 +180,11 @@ class Price extends \Oobook\Priceable\Models\Price
         //     $totalAmount = $totalAmount + $transactionFeeAmount;
         // }
 
-        $modularityPayload['total_amount_without_transaction_fee'] = $totalAmount;
-        $modularityPayload['transaction_fee_exists'] = false;
-        $modularityPayload['transaction_fee_percentage'] = 0.0;
-        $modularityPayload['transaction_fee_amount'] = 0.0;
-        $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
+        $modularousPayload['total_amount_without_transaction_fee'] = $totalAmount;
+        $modularousPayload['transaction_fee_exists'] = false;
+        $modularousPayload['transaction_fee_percentage'] = 0.0;
+        $modularousPayload['transaction_fee_amount'] = 0.0;
+        $modularousPayload['total_amount_with_transaction_fee'] = $totalAmount;
 
         $payload = array_merge([
             'amount' => $totalAmount,
@@ -197,7 +197,7 @@ class Price extends \Oobook\Priceable\Models\Price
             // 'payment_service_id' => $paymentService->id,
             'parameters' => [
                 ...($payload['parameters'] ?? []),
-                'modularity' => $modularityPayload,
+                'modularous' => $modularousPayload,
             ],
             'response' => [],
         ], Arr::except($payload, ['parameters']));

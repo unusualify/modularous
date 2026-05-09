@@ -6,7 +6,7 @@ sidebarTitle: ResetPasswordController
 # ResetPasswordController
 
 **File**: `src/Http/Controllers/Auth/ResetPasswordController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`  
 **Traits**: `ResetsPasswords`, `RespondsWithJsonOrRedirect`
 
@@ -16,7 +16,7 @@ Handles the password reset flow after the user clicks the reset link from the [F
 
 ### `broker(): PasswordBroker`
 
-Returns the password broker configured for the Modularous auth provider via `Modularity::getAuthProviderName()`.
+Returns the password broker configured for the Modularous auth provider via `Modularous::getAuthProviderName()`.
 
 ### `showResetForm(Request $request, $token = null): View|RedirectResponse`
 

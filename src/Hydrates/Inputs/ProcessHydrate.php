@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class ProcessHydrate extends InputHydrate
 {
@@ -30,11 +30,11 @@ class ProcessHydrate extends InputHydrate
         $input = $this->input;
 
         if (isset($input['_moduleName']) && isset($input['_routeName'])) {
-            $module = Modularity::find($input['_moduleName']);
+            $module = Modularous::find($input['_moduleName']);
             $model = $module->getRouteClass($input['_routeName'], 'model');
             $mode = App::make($model);
 
-            if (! classHasTrait($mode, 'Unusualify\Modularity\Entities\Traits\Processable')) {
+            if (! classHasTrait($mode, 'Unusualify\Modularous\Entities\Traits\Processable')) {
                 throw new \Exception('Model ' . $model . ' does not have ProcessableTrait in ' . $this->input['name'] . ' input');
             }
 

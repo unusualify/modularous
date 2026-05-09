@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Services\Security\StepUpService;
+use Unusualify\Modularous\Services\Security\StepUpService;
 
 class StepUpController extends Controller
 {
@@ -28,7 +28,7 @@ class StepUpController extends Controller
         }
 
         return $this->viewFactory->make(
-            modularityBaseKey() . '::auth.login',
+            modularousBaseKey() . '::auth.login',
             $this->buildAuthViewData($this->stepUpService->pageKey(), [
                 'formAttributes' => [
                     'subtitle' => __('We sent a verification code to your email.'),

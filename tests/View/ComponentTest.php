@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\View;
+namespace Unusualify\Modularous\Tests\View;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\View\Component;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\View\Component;
 
 class ComponentTest extends TestCase
 {
@@ -342,7 +342,7 @@ class ComponentTest extends TestCase
 
     public function test_create_with_widget_alias_merges_config()
     {
-        Config::set('modularity.widgets.custom-metrics', [
+        Config::set('modularous.widgets.custom-metrics', [
             'tag' => 'v-col',
             'attributes' => ['fromConfig' => true],
         ]);

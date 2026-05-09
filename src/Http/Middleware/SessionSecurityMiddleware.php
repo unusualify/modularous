@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ class SessionSecurityMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! modularityConfig('security.enabled', false)) {
+        if (! modularousConfig('security.enabled', false)) {
             return $next($request);
         }
 
@@ -18,7 +18,7 @@ class SessionSecurityMiddleware
             return $next($request);
         }
 
-        $idleTimeoutMinutes = (int) modularityConfig('security.session.idle_timeout_minutes', 60);
+        $idleTimeoutMinutes = (int) modularousConfig('security.session.idle_timeout_minutes', 60);
         $lastSeenAt = (int) $request->session()->get('security_last_seen_at', time());
 
         if ((time() - $lastSeenAt) > ($idleTimeoutMinutes * 60)) {

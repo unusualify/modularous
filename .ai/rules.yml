@@ -1,8 +1,8 @@
-# Modularity AI – Agent Rules Manifest
+# Modularous AI – Agent Rules Manifest
 # Bu dosya AI ajanının NE yapabileceğini, NE yapamayacağını ve NASIL davranacağını tanımlar.
 # Model bağımsızdır. Prompt'a system olarak enjekte edilir.
 agent:
-  name: modularity-ai
+  name: modularous-ai
   role: repo-aware software agent
   tone: professional
   verbosity: balanced
@@ -24,7 +24,7 @@ scope:
 
 knowledge:
   source_of_truth:
-    - unusualify/modularity repository
+    - unusualify/modularous repository
     - provided context markdown files
 
   assumptions:

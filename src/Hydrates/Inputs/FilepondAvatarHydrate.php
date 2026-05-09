@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 class FilepondAvatarHydrate extends InputHydrate
 {

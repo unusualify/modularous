@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Request;
 use Modules\SystemPricing\Entities\Price;
 use Oobook\Priceable\Traits\HasPriceable as TraitsHasPriceable;
-use Unusualify\Modularity\Entities\Mutators\HasPriceableMutators;
-use Unusualify\Modularity\Facades\CurrencyExchange;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Mutators\HasPriceableMutators;
+use Unusualify\Modularous\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait HasPriceable
 {
@@ -35,7 +35,7 @@ trait HasPriceable
             ->with('currency')
             ->where('currency_id', Request::getCachedUserCurrency()?->id);
 
-        $currencyForLanguageBasedPrices = Modularity::getCurrencyForLanguageBasedPrices();
+        $currencyForLanguageBasedPrices = Modularous::getCurrencyForLanguageBasedPrices();
 
         if ($currencyForLanguageBasedPrices) {
             $convertedExchangeRate = CurrencyExchange::getExchangeRate($currencyForLanguageBasedPrices->iso_4217);

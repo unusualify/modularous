@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Sync;
+namespace Unusualify\Modularous\Console\Sync;
 
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
-use Unusualify\Modularity\Facades\ModularityFinder;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Facades\ModularousFinder;
 
 use function Laravel\Prompts\select;
 
@@ -17,7 +17,7 @@ class SyncStatesCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:sync:states
+    protected $signature = 'modularous:sync:states
         {model? : The model to sync states}
     ';
 
@@ -57,7 +57,7 @@ class SyncStatesCommand extends BaseCommand
             }
         } else {
             // get all stateable models
-            $models = ModularityFinder::getModelsWithTrait(HasStateable::class);
+            $models = ModularousFinder::getModelsWithTrait(HasStateable::class);
 
             $model = select('Select a model', $models);
         }

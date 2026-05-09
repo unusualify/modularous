@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Entities\Observers;
+namespace Unusualify\Modularous\Tests\Entities\Observers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Entities\Observers\CacheObserver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Observers\CacheObserver;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CacheObserverTest extends TestCase
 {
@@ -15,7 +15,7 @@ class CacheObserverTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.cache.enabled', false);
+        Config::set('modularous.cache.enabled', false);
 
         $this->observer = new CacheObserver;
     }

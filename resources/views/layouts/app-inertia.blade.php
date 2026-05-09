@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta name="robots" content="noindex,nofollow" />
 
-        {{-- <title> {{ $pageTitle ?? \Unusualify\Modularity\Facades\Modularity::pageTitle() }}</title> --}}
+        {{-- <title> {{ $pageTitle ?? \Unusualify\Modularous\Facades\Modularous::pageTitle() }}</title> --}}
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Fonts -->
@@ -24,14 +24,14 @@
         @stack('head_js')
 
         {{
-            ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-inertia.js'])
+            ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-inertia.js'])
         }}
 
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        @if(!ModularityVite::useHotFile(public_path('modularity.hot'))->isRunningHot())
-            @include("{$MODULARITY_VIEW_NAMESPACE}::partials.icons.svg-sprite")
+        @if(!ModularousVite::useHotFile(public_path('modularous.hot'))->isRunningHot())
+            @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.icons.svg-sprite")
         @endif
 
         @php
@@ -59,25 +59,25 @@
         @stack('post_js')
 
         <script>
-            @include("{$MODULARITY_VIEW_NAMESPACE}::partials.default-store")
+            @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.default-store")
 
-            window['{{ modularityConfig('js_namespace') }}'].TIMEZONE = '{{ modularityConfig('timezone') }}';
-            window['{{ modularityConfig('js_namespace') }}'].AUTHORIZATION = @json($authorization ?? []);
+            window['{{ modularousConfig('js_namespace') }}'].TIMEZONE = '{{ modularousConfig('timezone') }}';
+            window['{{ modularousConfig('js_namespace') }}'].AUTHORIZATION = @json($authorization ?? []);
 
-            window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
-            window['{{ modularityConfig('js_namespace') }}'].STORE.config = {
-                isInertia: {{ json_encode(\Unusualify\Modularity\Facades\Modularity::shouldUseInertia()) }},
-                useCountryBasedVatRates: {{ json_encode(\Unusualify\Modularity\Facades\Modularity::shouldUseCountryBasedVatRates()) }},
+            window['{{ modularousConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
+            window['{{ modularousConfig('js_namespace') }}'].STORE.config = {
+                isInertia: {{ json_encode(\Unusualify\Modularous\Facades\Modularous::shouldUseInertia()) }},
+                useCountryBasedVatRates: {{ json_encode(\Unusualify\Modularous\Facades\Modularous::shouldUseCountryBasedVatRates()) }},
                 test: false,
                 profileMenu: {!! json_encode($navigation['profileMenu'] ?? []) !!},
-                sidebarOptions: {!! json_encode(modularityConfig('ui_settings.sidebar')) !!},
-                secondarySidebarOptions : {!! json_encode(modularityConfig('ui_settings.secondarySidebar')) !!},
-                topbarOptions: {!! json_encode(modularityConfig('ui_settings.topbar')) !!},
-                bottomNavigationOptions: {!! json_encode(modularityConfig('ui_settings.bottomNavigation')) !!},
-                uiPreferences: {!! json_encode(get_modularity_ui_preferences()) !!},
+                sidebarOptions: {!! json_encode(modularousConfig('ui_settings.sidebar')) !!},
+                secondarySidebarOptions : {!! json_encode(modularousConfig('ui_settings.secondarySidebar')) !!},
+                topbarOptions: {!! json_encode(modularousConfig('ui_settings.topbar')) !!},
+                bottomNavigationOptions: {!! json_encode(modularousConfig('ui_settings.bottomNavigation')) !!},
+                uiPreferences: {!! json_encode(get_modularous_ui_preferences()) !!},
                 uiPreferencesEndpoint: '{{ \Illuminate\Support\Facades\Route::hasAdmin("profile.ui-preferences") ? route(\Illuminate\Support\Facades\Route::hasAdmin("profile.ui-preferences")) : "" }}',
             },
-            window['{{ modularityConfig('js_namespace') }}'].STORE.user = {
+            window['{{ modularousConfig('js_namespace') }}'].STORE.user = {
                 isGuest: {{ json_encode(auth()->guest()) }},
                 profile: {!! json_encode($currentUser) !!},
                 profileRoute: '{{ route(Route::hasAdmin('profile.update')) }}',
@@ -89,23 +89,23 @@
                 loginRoute: '{{ route('admin.login') }}',
             },
 
-            @if (modularityConfig('enabled.media-library'))
-                window['{{ modularityConfig('js_namespace') }}'].STORE.medias.types.push({
+            @if (modularousConfig('enabled.media-library'))
+                window['{{ modularousConfig('js_namespace') }}'].STORE.medias.types.push({
                     value: 'image',
-                    text: '{{ modularityTrans("media-library.images") }}',
-                    total: {{ \Unusualify\Modularity\Entities\Media::query()->authorized()->count() }},
+                    text: '{{ modularousTrans("media-library.images") }}',
+                    total: {{ \Unusualify\Modularous\Entities\Media::query()->authorized()->count() }},
                     endpoint: '{{ route(Route::hasAdmin('media-library.media.index')) }}',
                     tagsEndpoint: '{{ route(Route::hasAdmin('media-library.media.tags')) }}',
                     uploaderConfig: {!! json_encode($mediasUploaderConfig) !!}
                 });
-                window['{{ modularityConfig('js_namespace') }}'].STORE.medias.showFileName = !!'{{ modularityConfig('media_library.show_file_name') }}';
+                window['{{ modularousConfig('js_namespace') }}'].STORE.medias.showFileName = !!'{{ modularousConfig('media_library.show_file_name') }}';
             @endif
 
-            @if (modularityConfig('enabled.file-library'))
-                window['{{ modularityConfig('js_namespace') }}'].STORE.medias.types.push({
+            @if (modularousConfig('enabled.file-library'))
+                window['{{ modularousConfig('js_namespace') }}'].STORE.medias.types.push({
                     value: 'file',
-                    text: '{{ modularityTrans("media-library.files") }}',
-                    total: {{ \Unusualify\Modularity\Entities\File::query()->authorized()->count() }},
+                    text: '{{ modularousTrans("media-library.files") }}',
+                    total: {{ \Unusualify\Modularous\Entities\File::query()->authorized()->count() }},
                     endpoint: '{{ route(Route::hasAdmin('file-library.file.index')) }}',
                     tagsEndpoint: '{{ route(Route::hasAdmin('file-library.file.tags')) }}',
                     uploaderConfig: {!! json_encode($filesUploaderConfig) !!}

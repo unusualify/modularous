@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Contracts;
+namespace Unusualify\Modularous\Contracts;
 
 interface ModuleableInterface
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Generators;
+namespace Unusualify\Modularous\Tests\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Generators\VueTestGenerator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Generators\VueTestGenerator;
+use Unusualify\Modularous\Tests\TestCase;
 
 class VueTestGeneratorTest extends TestCase
 {
@@ -139,7 +139,7 @@ class VueTestGeneratorTest extends TestCase
         $this->assertTrue(method_exists($this->generator, 'generate'));
 
         $originalStubPath = Stub::getBasePath();
-        Stub::setBasePath(rtrim(modularityConfig('stubs.path', dirname(__FILE__) . '/stubs')));
+        Stub::setBasePath(rtrim(modularousConfig('stubs.path', dirname(__FILE__) . '/stubs')));
 
         $tmpDir = sys_get_temp_dir() . '/vue-test-generator';
 

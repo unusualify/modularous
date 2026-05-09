@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Models\Model;
+use Unusualify\Modularous\Models\Model;
 
 trait CreatorTrait
 {

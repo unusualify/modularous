@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
 use Illuminate\Support\Facades\App;
 use Mockery as m;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Hydrates\Inputs\SpreadHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Hydrates\Inputs\SpreadHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SpreadHydrateTest extends TestCase
 {
@@ -28,10 +28,10 @@ class SpreadHydrateTest extends TestCase
         ]);
         $modelMock->shouldReceive('getSpreadableSavingKey')->andReturn('spread_data');
 
-        $moduleMock = m::mock(\Unusualify\Modularity\Module::class);
+        $moduleMock = m::mock(\Unusualify\Modularous\Module::class);
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'model')->andReturn(get_class($modelMock));
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('TestModule')
             ->andReturn($moduleMock);
 

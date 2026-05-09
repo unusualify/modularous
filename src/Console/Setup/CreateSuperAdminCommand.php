@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Setup;
+namespace Unusualify\Modularous\Console\Setup;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\DB;
@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Factory as ValidatorFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Entities\User;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
@@ -25,7 +25,7 @@ class CreateSuperAdminCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:create:superadmin';
+    protected $name = 'modularous:create:superadmin';
 
     /**
      * The console command description.
@@ -59,7 +59,7 @@ class CreateSuperAdminCommand extends BaseCommand
     {
         return array_merge([
             ['default', '--d', InputOption::VALUE_NONE, 'Use default options for super-admin auth. information'],
-        ], modularityTraitOptions());
+        ], modularousTraitOptions());
     }
 
     protected function getArguments(): array
@@ -120,7 +120,7 @@ class CreateSuperAdminCommand extends BaseCommand
     {
 
         if ($this->option('default')) {
-            $email = getValueOrNull(env('MODULARITY_ADMIN_EMAIL', 'software-dev@unusualgrowth.com')) ?? 'software-dev@unusualgrowth.com';
+            $email = getValueOrNull(env('MODULAROUS_ADMIN_EMAIL', 'software-dev@unusualgrowth.com')) ?? 'software-dev@unusualgrowth.com';
             $this->info('Email configured for super-admin as ' . $email);
 
             return $email;
@@ -137,7 +137,7 @@ class CreateSuperAdminCommand extends BaseCommand
         );
 
         if ($useDefault) {
-            $email = env('MODULARITY_ADMIN_EMAIL', 'software-dev@unusualgrowth.com');
+            $email = env('MODULAROUS_ADMIN_EMAIL', 'software-dev@unusualgrowth.com');
         } else {
             $email = text(
                 label: 'Please enter a valid e-mail address for super-admin',
@@ -145,7 +145,7 @@ class CreateSuperAdminCommand extends BaseCommand
                 hint: '',
                 required: true,
                 validate: fn ($value) => match (true) {
-                    DB::table(modularityConfig('tables.users', 'um_users'))->where('email', $value)->exists() => $value . ' is already in use. Please use an unique e-mail',
+                    DB::table(modularousConfig('tables.users', 'um_users'))->where('email', $value)->exists() => $value . ' is already in use. Please use an unique e-mail',
                     mb_strlen($value) > 255 => 'Please enter maximum 255 characters',
                     ! filter_var($value, FILTER_VALIDATE_EMAIL) => 'Please enter a valid email pattern',
                     default => null,
@@ -173,7 +173,7 @@ class CreateSuperAdminCommand extends BaseCommand
     {
 
         if ($this->option('default')) {
-            $password = env('MODULARITY_ADMIN_PASSWORD', 'w@123456');
+            $password = env('MODULAROUS_ADMIN_PASSWORD', 'w@123456');
             info('Password configured for super-admin as ' . $password);
 
             return $password;
@@ -189,7 +189,7 @@ class CreateSuperAdminCommand extends BaseCommand
         );
 
         if ($useDefault) {
-            $password = getValueOrNull(env('MODULARITY_ADMIN_PASSWORD', 'w@123456'), bool: false);
+            $password = getValueOrNull(env('MODULAROUS_ADMIN_PASSWORD', 'w@123456'), bool: false);
         } else {
             $password = password(
                 label: 'Please enter valid password',
@@ -213,7 +213,7 @@ class CreateSuperAdminCommand extends BaseCommand
      */
     private function validateEmail($email)
     {
-        $admin_user_table = $this->config->get(env('MODULARITY_BASE_NAME', 'modularity') . '.table.users', 'um_users');
+        $admin_user_table = $this->config->get(env('MODULAROUS_BASE_NAME', 'modularous') . '.table.users', 'um_users');
 
         return $this->validatorFactory->make(['email' => $email], [
             'email' => 'required|email|max:255|unique:' . $admin_user_table,

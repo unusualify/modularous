@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Traits;
 
-use Unusualify\Modularity\Http\Controllers\Traits\Table\TableEager;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Controllers\Traits\Table\TableEager;
+use Unusualify\Modularous\Tests\TestCase;
 
 class TableEagerMergeTest extends TestCase
 {

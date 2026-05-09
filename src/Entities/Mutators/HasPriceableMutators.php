@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Mutators;
+namespace Unusualify\Modularous\Entities\Mutators;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Money\Currency as MoneyCurrency;

@@ -44,8 +44,8 @@ Reads `bucket` and `secret` from `filesystems.disks.{$disk}`.
 ## Example Controller
 
 ```php
-use Unusualify\Modularity\Services\Uploader\SignS3Upload;
-use Unusualify\Modularity\Services\Uploader\SignUploadListener;
+use Unusualify\Modularous\Services\Uploader\SignS3Upload;
+use Unusualify\Modularous\Services\Uploader\SignUploadListener;
 
 class MediaController extends Controller implements SignUploadListener
 {

@@ -6,7 +6,7 @@ sidebarTitle: MediaRequest
 # MediaRequest
 
 **File**: `src/Http/Requests/MediaRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: [`BaseFormRequest`](./base-form-request)
 
 The current media-library request is effectively a pass-through: it authorizes everything and performs no validation.
@@ -31,7 +31,7 @@ The source carries a commented-out block that mirrors the endpoint-branching pat
 // }
 ```
 
-It is retained as a reference but is intentionally disabled. Re-enable it if you need strict validation on uploads — remember to switch the config key to `modularity.media_library.endpoint_type` rather than the legacy `twill.*` path.
+It is retained as a reference but is intentionally disabled. Re-enable it if you need strict validation on uploads — remember to switch the config key to `modularous.media_library.endpoint_type` rather than the legacy `twill.*` path.
 
 ## Related
 

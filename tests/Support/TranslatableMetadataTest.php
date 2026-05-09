@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
-use Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata;
-use Unusualify\Modularity\Support\TranslatableMetadata;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata;
+use Unusualify\Modularous\Support\TranslatableMetadata;
+use Unusualify\Modularous\Tests\TestCase;
 
 class TranslatableMetadataTest extends TestCase
 {

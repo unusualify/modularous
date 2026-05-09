@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
-use Unusualify\Modularity\Entities\File as LibraryFile;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
-use Unusualify\Modularity\Repositories\Traits\FilesTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\File as LibraryFile;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Repositories\Traits\FilesTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class FilesTraitTest extends RepositoryTestCase
 {

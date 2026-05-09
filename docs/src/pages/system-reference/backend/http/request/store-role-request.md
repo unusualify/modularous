@@ -6,7 +6,7 @@ sidebarTitle: StoreRoleRequest
 # StoreRoleRequest
 
 **File**: `src/Http/Requests/StoreRoleRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: `Illuminate\Foundation\Http\FormRequest`
 
 Validates the payload for creating a new Spatie role.

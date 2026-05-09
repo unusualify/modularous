@@ -120,7 +120,7 @@ flowchart TB
 
 ## İlgili birleşik config dosyası
 
-Çoğu anahtar: `config/merges/cms_routing.php` (uygulamada `modularity.cms_routing.*`).
+Çoğu anahtar: `config/merges/cms_routing.php` (uygulamada `modularous.cms_routing.*`).
 
 ---
 

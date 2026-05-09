@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
-use Unusualify\Modularity\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
 
 trait ModularModel
 {
@@ -24,7 +24,7 @@ trait ModularModel
             return $moduleName;
         }
 
-        if ($model instanceof \Unusualify\Modularity\Entities\Model) {
+        if ($model instanceof \Unusualify\Modularous\Entities\Model) {
             if (preg_match('/Modules\\\\([^\\\\]+)\\\\/', get_class($model), $matches)) {
                 return $matches[1];
             }
@@ -56,7 +56,7 @@ trait ModularModel
             return $routeName;
         }
 
-        if ($model instanceof \Unusualify\Modularity\Entities\Model) {
+        if ($model instanceof \Unusualify\Modularous\Entities\Model) {
             return $model->getCacheModuleRouteName();
         }
 

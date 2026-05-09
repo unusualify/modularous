@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Factories;
+namespace Unusualify\Modularous\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Unusualify\Modularity\Entities\File;
+use Unusualify\Modularous\Entities\File;
 
 /**
  * @extends Factory<File>

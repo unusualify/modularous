@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Brokers;
+namespace Unusualify\Modularous\Brokers;
 
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Contracts\Auth\PasswordBroker;

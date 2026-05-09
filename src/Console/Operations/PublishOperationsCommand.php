@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Operations;
+namespace Unusualify\Modularous\Console\Operations;
 
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class PublishOperationsCommand extends BaseCommand
 {
@@ -13,7 +13,7 @@ class PublishOperationsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:publish:operations';
+    protected $signature = 'modularous:publish:operations';
 
     protected $aliases = [];
 
@@ -43,7 +43,7 @@ class PublishOperationsCommand extends BaseCommand
     {
         // handle command
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\\Modularity\\LaravelServiceProvider',
+            '--provider' => 'Unusualify\\Modularous\\LaravelServiceProvider',
             '--tag' => 'operations',
         ]);
 

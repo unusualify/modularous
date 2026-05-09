@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Enums;
+namespace Unusualify\Modularous\Tests\Models\Enums;
 
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ProcessStatusTest extends TestCase
 {

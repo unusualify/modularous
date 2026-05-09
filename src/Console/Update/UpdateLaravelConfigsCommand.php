@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Update;
+namespace Unusualify\Modularous\Console\Update;
 
 use Illuminate\Support\Facades\File;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 use function Laravel\Prompts\confirm;
 
@@ -17,7 +17,7 @@ class UpdateLaravelConfigsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:update:laravel:configs';
+    protected $signature = 'modularous:update:laravel:configs';
 
     protected $aliases = [];
 
@@ -45,45 +45,45 @@ class UpdateLaravelConfigsCommand extends BaseCommand
      */
     public function handle(): int
     {
-        $modularityAuthGuardName = Modularity::getAuthGuardName();
-        $modularityAuthProviderName = Modularity::getAuthProviderName();
+        $modularousAuthGuardName = Modularous::getAuthGuardName();
+        $modularousAuthProviderName = Modularous::getAuthProviderName();
         // Laravel Auth Configs
-        if (blank(config('auth.guards.' . $modularityAuthGuardName))) {
+        if (blank(config('auth.guards.' . $modularousAuthGuardName))) {
             File::replaceInFile(
                 "'guards' => [\n",
                 <<<CONFIG
                 'guards' => [
-                        '{$modularityAuthGuardName}' => [
+                        '{$modularousAuthGuardName}' => [
                             'driver' => 'session',
-                            'provider' => '{$modularityAuthProviderName}',
+                            'provider' => '{$modularousAuthProviderName}',
                         ],
 
                 CONFIG,
                 app()->configPath('auth.php')
             );
         }
-        if (blank(config('auth.providers.' . $modularityAuthProviderName))) {
+        if (blank(config('auth.providers.' . $modularousAuthProviderName))) {
             File::replaceInFile(
                 "'providers' => [\n",
                 <<<CONFIG
                 'providers' => [
-                        '{$modularityAuthProviderName}' => [
+                        '{$modularousAuthProviderName}' => [
                             'driver' => 'eloquent',
-                            'model' => \Unusualify\Modularity\Entities\User::class,
+                            'model' => \Unusualify\Modularous\Entities\User::class,
                         ],
 
                 CONFIG,
                 app()->configPath('auth.php')
             );
         }
-        if (blank(config('auth.passwords.' . $modularityAuthProviderName))) {
-            $passwordResetTokensTable = modularityConfig('tables.password_reset_tokens', 'password_reset_tokens');
+        if (blank(config('auth.passwords.' . $modularousAuthProviderName))) {
+            $passwordResetTokensTable = modularousConfig('tables.password_reset_tokens', 'password_reset_tokens');
             File::replaceInFile(
                 "'passwords' => [\n",
                 <<<CONFIG
                 'passwords' => [
-                        '{$modularityAuthProviderName}' => [
-                            'provider' => '{$modularityAuthProviderName}',
+                        '{$modularousAuthProviderName}' => [
+                            'provider' => '{$modularousAuthProviderName}',
                             'table' => '{$passwordResetTokensTable}',
                             'expire' => 60,
                             'throttle' => 60,
@@ -111,7 +111,7 @@ class UpdateLaravelConfigsCommand extends BaseCommand
                 "'cache' => [\n        'enabled' => false",
                 <<<'CONFIG'
                 'cache' => [
-                        'enabled' => env('MODULARITY_CACHE_ENABLED', true)
+                        'enabled' => env('MODULAROUS_CACHE_ENABLED', true)
                 CONFIG,
                 app()->configPath('modules.php')
             );
@@ -119,21 +119,21 @@ class UpdateLaravelConfigsCommand extends BaseCommand
                 "'cache' => [\n        'enabled' => true",
                 <<<'CONFIG'
                 'cache' => [
-                        'enabled' => env('MODULARITY_CACHE_ENABLED', true)
+                        'enabled' => env('MODULAROUS_CACHE_ENABLED', true)
                 CONFIG,
                 app()->configPath('modules.php')
             );
             File::replaceInFile(
                 "'key' => 'laravel-modules',",
                 <<<'CONFIG'
-                'key' => env('MODULARITY_CACHE_KEY', 'modularity'),
+                'key' => env('MODULAROUS_CACHE_KEY', 'modularous'),
                 CONFIG,
                 app()->configPath('modules.php')
             );
             File::replaceInFile(
                 "'lifetime' => 60,",
                 <<<'CONFIG'
-                'lifetime' => env('MODULARITY_CACHE_LIFETIME', 600),
+                'lifetime' => env('MODULAROUS_CACHE_LIFETIME', 600),
                 CONFIG,
                 app()->configPath('modules.php')
             );
@@ -146,11 +146,11 @@ class UpdateLaravelConfigsCommand extends BaseCommand
                 <<<'CONFIG'
                 'middleware' => [
                             'web',
-                            'modularity.auth:modularity',
-                            'modularity.language',
+                            'modularous.auth:modularous',
+                            'modularous.language',
                             'auth',
-                            'modularity.navigation',
-                            'modularity.impersonate'
+                            'modularous.navigation',
+                            'modularous.impersonate'
                             'role:superadmin|admin',
                         ]
                 CONFIG,

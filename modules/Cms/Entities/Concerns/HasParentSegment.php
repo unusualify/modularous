@@ -10,7 +10,7 @@ use Modules\Cms\Entities\ParentSegment;
  * (shared path prefixes per model class + locale).
  *
  * Used by {@see \Modules\Cms\Repositories\Traits\ParentSegmentTrait},
- * {@see \Unusualify\Modularity\Modularity::getModuleRouteModelSelectItems()},
+ * {@see \Unusualify\Modularous\Modularous::getModuleRouteModelSelectItems()},
  * and CMS slug validation when resolving public paths.
  */
 trait HasParentSegment

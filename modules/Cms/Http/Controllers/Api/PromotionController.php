@@ -5,7 +5,7 @@ namespace Modules\Cms\Http\Controllers\API;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Cms\Services\CmsPromotionService;
-use Unusualify\Modularity\Http\Controllers\Controller;
+use Unusualify\Modularous\Http\Controllers\Controller;
 
 class PromotionController extends Controller
 {
@@ -17,7 +17,7 @@ class PromotionController extends Controller
 
     public function dryRun(Request $request): JsonResponse
     {
-        if (! modularityConfig('cms_promotion.enabled', false)) {
+        if (! modularousConfig('cms_promotion.enabled', false)) {
             return response()->json(['ok' => false, 'message' => 'CMS promotion is disabled in configuration.'], 403);
         }
 
@@ -29,7 +29,7 @@ class PromotionController extends Controller
 
     public function execute(Request $request): JsonResponse
     {
-        if (! modularityConfig('cms_promotion.enabled', false)) {
+        if (! modularousConfig('cms_promotion.enabled', false)) {
             return response()->json(['ok' => false, 'message' => 'CMS promotion is disabled in configuration.'], 403);
         }
 

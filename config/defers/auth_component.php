@@ -5,10 +5,10 @@ declare(strict_types=1);
 /**
  * Auth component (ue-auth) layout and styling configuration (deferred).
  *
- * Override in modularity/auth_component.php to customize Auth.vue layout.
- * Passed to Vue via layout STORE; Auth.vue reads from window.MODULARITY.AUTH_COMPONENT.
+ * Override in modularous/auth_component.php to customize Auth.vue layout.
+ * Passed to Vue via layout STORE; Auth.vue reads from window.MODULAROUS.AUTH_COMPONENT.
  *
- * useLegacy: When true, layout uses UeCustomAuth (from resources/vendor/modularity/js/components/Auth.vue).
+ * useLegacy: When true, layout uses UeCustomAuth (from resources/vendor/modularous/js/components/Auth.vue).
  *
  * @see resources/views/auth/layout.blade.php
  * @see vue/src/js/components/Auth.vue

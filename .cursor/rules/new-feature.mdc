@@ -1,6 +1,6 @@
 ---
 alwaysApply: false
-description: "This rule provides standards for new features of Modularity"
+description: "This rule provides standards for new features of Modularous"
 globs: src/**/*.php, vue/src/**/*.vue, vue/src/**/*.js ,vue/src/**/*.scss, vue/src/**/*.css
 ---
 
@@ -31,7 +31,7 @@ Core rules:
 - Trait execution must be inferred via repository or model lifecycle
 - Avoid stateful traits unless explicitly required
 
-4. Modularity
+4. Modularous
 - Code must remain module-isolated and feature-scoped
 - No cross-module coupling without explicit contracts
 - Shared logic must live in base repositories or shared traits

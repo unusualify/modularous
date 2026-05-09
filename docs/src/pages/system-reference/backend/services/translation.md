@@ -79,5 +79,5 @@ The base class calls these but does not define them — consult the concrete dri
 ## Related
 
 - [FileTranslation](./file-translation) — the file-based driver that extends this class and adds cross-path sync
-- [`modularity:sync:translations`](/guide/console/sync/sync-translations) — Artisan command that drives the sync flow
+- [`modularous:sync:translations`](/guide/console/sync/sync-translations) — Artisan command that drives the sync flow
 - [FileLoader](../support/file-loader) — multi-path Laravel translation loader that cooperates with `FileTranslation`

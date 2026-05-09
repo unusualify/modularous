@@ -9,21 +9,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $pagesTable = modularityConfig('tables.cms_pages', 'um_cms_pages');
-        $pageTranslationsTable = modularityConfig('tables.cms_page_translations', 'um_cms_page_translations');
-        $pageSlugsTable = modularityConfig('tables.cms_page_slugs', 'um_cms_page_slugs');
-        $pageRevisionsTable = modularityConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions');
-        $redirectsTable = modularityConfig('tables.cms_redirects', 'um_cms_redirects');
-        $siteSettingsTable = modularityConfig('tables.cms_site_settings', 'um_cms_site_settings');
-        $searchIndexesTable = modularityConfig('tables.cms_search_indexes', 'um_cms_search_indexes');
-        $urlRoutesTable = modularityConfig('tables.cms_url_routes', 'um_cms_url_routes');
-        $sitemapsTable = modularityConfig('tables.cms_sitemaps', 'um_cms_sitemaps');
-        $sitemapablesTable = modularityConfig('tables.cms_sitemapables', 'um_cms_sitemapables');
-        $parentSegmentBindingsTable = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $pagesTable = modularousConfig('tables.cms_pages', 'um_cms_pages');
+        $pageTranslationsTable = modularousConfig('tables.cms_page_translations', 'um_cms_page_translations');
+        $pageSlugsTable = modularousConfig('tables.cms_page_slugs', 'um_cms_page_slugs');
+        $pageRevisionsTable = modularousConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions');
+        $redirectsTable = modularousConfig('tables.cms_redirects', 'um_cms_redirects');
+        $siteSettingsTable = modularousConfig('tables.cms_site_settings', 'um_cms_site_settings');
+        $searchIndexesTable = modularousConfig('tables.cms_search_indexes', 'um_cms_search_indexes');
+        $urlRoutesTable = modularousConfig('tables.cms_url_routes', 'um_cms_url_routes');
+        $sitemapsTable = modularousConfig('tables.cms_sitemaps', 'um_cms_sitemaps');
+        $sitemapablesTable = modularousConfig('tables.cms_sitemapables', 'um_cms_sitemapables');
+        $parentSegmentBindingsTable = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
 
         // Legacy two-table layout (replaced by bindings); safe if already rolled back / empty.
-        $oldParentSegmentTargetsTable = modularityConfig('tables.cms_parent_segment_targets', 'um_cms_parent_segment_targets');
-        $oldParentSegmentsTable = modularityConfig('tables.cms_parent_segments', 'um_cms_parent_segments');
+        $oldParentSegmentTargetsTable = modularousConfig('tables.cms_parent_segment_targets', 'um_cms_parent_segment_targets');
+        $oldParentSegmentsTable = modularousConfig('tables.cms_parent_segments', 'um_cms_parent_segments');
         Schema::dropIfExists($oldParentSegmentTargetsTable);
         Schema::dropIfExists($oldParentSegmentsTable);
 
@@ -161,16 +161,16 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings'));
-        Schema::dropIfExists(modularityConfig('tables.cms_sitemapables', 'um_cms_sitemapables'));
-        Schema::dropIfExists(modularityConfig('tables.cms_sitemaps', 'um_cms_sitemaps'));
-        Schema::dropIfExists(modularityConfig('tables.cms_url_routes', 'um_cms_url_routes'));
-        Schema::dropIfExists(modularityConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions'));
-        Schema::dropIfExists(modularityConfig('tables.cms_page_slugs', 'um_cms_page_slugs'));
-        Schema::dropIfExists(modularityConfig('tables.cms_search_indexes', 'um_cms_search_indexes'));
-        Schema::dropIfExists(modularityConfig('tables.cms_site_settings', 'um_cms_site_settings'));
-        Schema::dropIfExists(modularityConfig('tables.cms_redirects', 'um_cms_redirects'));
-        Schema::dropIfExists(modularityConfig('tables.cms_page_translations', 'um_cms_page_translations'));
-        Schema::dropIfExists(modularityConfig('tables.cms_pages', 'um_cms_pages'));
+        Schema::dropIfExists(modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings'));
+        Schema::dropIfExists(modularousConfig('tables.cms_sitemapables', 'um_cms_sitemapables'));
+        Schema::dropIfExists(modularousConfig('tables.cms_sitemaps', 'um_cms_sitemaps'));
+        Schema::dropIfExists(modularousConfig('tables.cms_url_routes', 'um_cms_url_routes'));
+        Schema::dropIfExists(modularousConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions'));
+        Schema::dropIfExists(modularousConfig('tables.cms_page_slugs', 'um_cms_page_slugs'));
+        Schema::dropIfExists(modularousConfig('tables.cms_search_indexes', 'um_cms_search_indexes'));
+        Schema::dropIfExists(modularousConfig('tables.cms_site_settings', 'um_cms_site_settings'));
+        Schema::dropIfExists(modularousConfig('tables.cms_redirects', 'um_cms_redirects'));
+        Schema::dropIfExists(modularousConfig('tables.cms_page_translations', 'um_cms_page_translations'));
+        Schema::dropIfExists(modularousConfig('tables.cms_pages', 'um_cms_pages'));
     }
 };

@@ -1,21 +1,21 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Sync;
+namespace Unusualify\Modularous\Console\Sync;
 
 use ReflectionMethod;
 use Spatie\Permission\Models\Permission;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Entities\Enums\Permission as PermissionEnum;
-use Unusualify\Modularity\Entities\Traits\HasRevisions;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityFinder;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Entities\Enums\Permission as PermissionEnum;
+use Unusualify\Modularous\Entities\Traits\HasRevisions;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousFinder;
 
 class SyncRevisionPermissionsCommand extends BaseCommand
 {
     /**
      * @var string
      */
-    protected $signature = 'modularity:sync:revision-permissions
+    protected $signature = 'modularous:sync:revision-permissions
         {--dry-run : List permissions without writing to the database}';
 
     /**
@@ -25,7 +25,7 @@ class SyncRevisionPermissionsCommand extends BaseCommand
 
     public function handle(): int
     {
-        $models = ModularityFinder::getModelsWithTrait(HasRevisions::class);
+        $models = ModularousFinder::getModelsWithTrait(HasRevisions::class);
 
         if (count($models) === 0) {
             $this->warn('No models using HasRevisions were found.');
@@ -34,7 +34,7 @@ class SyncRevisionPermissionsCommand extends BaseCommand
         }
 
         // $guard = config('auth.defaults.guard', 'web');
-        $guard = Modularity::getAuthGuardName();
+        $guard = Modularous::getAuthGuardName();
 
         $suffixes = [
             PermissionEnum::REVISION_APPROVE->value,

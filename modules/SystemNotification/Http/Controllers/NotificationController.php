@@ -2,7 +2,7 @@
 
 namespace Modules\SystemNotification\Http\Controllers;
 
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class NotificationController extends BaseController
 {

@@ -5,7 +5,7 @@ sidebarTitle: Dates
 
 # Dates
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\Dates`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\Dates`
 
 Normalises date fields to `Y-m-d H:i:s` format before they are saved to the database. Works with Carbon for robust parsing of whatever date string the frontend sends.
 

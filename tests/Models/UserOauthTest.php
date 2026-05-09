@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Entities\UserOauth;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Entities\UserOauth;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class UserOauthTest extends ModelTestCase
 {
@@ -44,7 +44,7 @@ class UserOauthTest extends ModelTestCase
     public function test_get_table_user_oauths()
     {
         $userOauth = new UserOauth;
-        $this->assertEquals(modularityConfig('tables.user_oauths', 'um_user_oauths'), $userOauth->getTable());
+        $this->assertEquals(modularousConfig('tables.user_oauths', 'um_user_oauths'), $userOauth->getTable());
     }
 
     public function test_user_oauth_belongs_to_user()

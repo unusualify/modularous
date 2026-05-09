@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:fix:module [--migration] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> [<route>]`
+- **Signature:** `modularous:fix:module [--migration] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> [<route>]`
 - **Category:** Other
 
 
@@ -13,101 +13,101 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:fix:module MODULE ROUTE
+php artisan modularous:fix:module MODULE ROUTE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:fix:module --migration
+php artisan modularous:fix:module --migration
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -T
+php artisan modularous:fix:module -T
 
 # Using full option name
-php artisan modularity:fix:module --addTranslation
+php artisan modularous:fix:module --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -M
+php artisan modularous:fix:module -M
 
 # Using full option name
-php artisan modularity:fix:module --addMedia
+php artisan modularous:fix:module --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -F
+php artisan modularous:fix:module -F
 
 # Using full option name
-php artisan modularity:fix:module --addFile
+php artisan modularous:fix:module --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -P
+php artisan modularous:fix:module -P
 
 # Using full option name
-php artisan modularity:fix:module --addPosition
+php artisan modularous:fix:module --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -S
+php artisan modularous:fix:module -S
 
 # Using full option name
-php artisan modularity:fix:module --addSlug
+php artisan modularous:fix:module --addSlug
 ```
 
 ```bash
-php artisan modularity:fix:module --addPrice
+php artisan modularous:fix:module --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -A
+php artisan modularous:fix:module -A
 
 # Using full option name
-php artisan modularity:fix:module --addAuthorized
+php artisan modularous:fix:module --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -FP
+php artisan modularous:fix:module -FP
 
 # Using full option name
-php artisan modularity:fix:module --addFilepond
+php artisan modularous:fix:module --addFilepond
 ```
 
 ```bash
-php artisan modularity:fix:module --addUuid
+php artisan modularous:fix:module --addUuid
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:fix:module -SS
+php artisan modularous:fix:module -SS
 
 # Using full option name
-php artisan modularity:fix:module --addSnapshot
+php artisan modularous:fix:module --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:fix:module MODULE
+php artisan modularous:fix:module MODULE
 ```
 
-`modularity:fix:module`
+`modularous:fix:module`
 -----------------------
 
 Fixes the un-desired changes on module's config file
 
 ### Usage
 
-* `modularity:fix:module [--migration] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> [<route>]`
+* `modularous:fix:module [--migration] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> [<route>]`
 
 Fixes the un-desired changes on module's config file
 

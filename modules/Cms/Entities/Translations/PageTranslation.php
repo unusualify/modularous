@@ -3,8 +3,8 @@
 namespace Modules\Cms\Entities\Translations;
 
 use Modules\Cms\Entities\Page;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Support\TranslatableMetadata;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Support\TranslatableMetadata;
 
 class PageTranslation extends Model
 {
@@ -28,6 +28,6 @@ class PageTranslation extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_page_translations', 'um_cms_page_translations');
+        return modularousConfig('tables.cms_page_translations', 'um_cms_page_translations');
     }
 }

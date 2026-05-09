@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class Note extends Model
 {

@@ -9,8 +9,8 @@ sidebarTitle: Create Input Hydrate
 
 ## Command Information
 
-- **Signature:** `modularity:make:input:hydrate <name>`
-- **Aliases:** `modularity:create:input:hydrate`, `mod:c:input:hydrate`
+- **Signature:** `modularous:make:input:hydrate <name>`
+- **Aliases:** `modularous:create:input:hydrate`, `mod:c:input:hydrate`
 - **Category:** Generators
 
 ## Arguments
@@ -27,7 +27,7 @@ Creates `{StudlyName}Hydrate.php` from the `input-hydrate.stub` template. The ge
 
 ```bash
 # Generate ProductHydrate
-php artisan modularity:make:input:hydrate Product
+php artisan modularous:make:input:hydrate Product
 
 # Short alias
 php artisan mod:c:input:hydrate Product

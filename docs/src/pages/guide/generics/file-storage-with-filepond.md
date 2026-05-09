@@ -22,7 +22,7 @@ This approach ensures efficient file handling, reducing the load on the system a
 
 :::
 
-Regarding the object relations, `modularity's filepond` offers `one to many polymorphic` relation between assetable objects and assets. Database structure can be observed below for user-assets mechanism.
+Regarding the object relations, `modularous's filepond` offers `one to many polymorphic` relation between assetable objects and assets. Database structure can be observed below for user-assets mechanism.
 
 <img src="https://i.ibb.co/WvdQsCh/Screenshot-2024-07-23-at-11-53-36.png" alt="filepond_db_relations" border="0" />
 
@@ -39,7 +39,7 @@ Three steps wire up Filepond for any entity:
 ### 1. Model — `HasFileponds` trait
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class Ticket extends Model
 {
@@ -52,7 +52,7 @@ Adds a `morphMany(Filepond::class, 'filepondable')` relation and accessors: `fil
 ### 2. Repository — `FilepondsTrait`
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
 
 class TicketRepository extends Repository
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Services\Security;
+namespace Unusualify\Modularous\Services\Security;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PragmaRX\Google2FA\Google2FA;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Notifications\StepUpCodeNotification;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Notifications\StepUpCodeNotification;
+use Unusualify\Modularous\Services\MessageStage;
 
 class StepUpService
 {
     private function config(string $key, mixed $default = null): mixed
     {
-        return modularityConfig("security.step_up.{$key}", $default);
+        return modularousConfig("security.step_up.{$key}", $default);
     }
 
     public function isEnabled(): bool
@@ -31,7 +31,7 @@ class StepUpService
 
     public function otpField(): string
     {
-        return (string) $this->config('otp_field', modularityConfig('security.mfa.otp_field', 'verify-code'));
+        return (string) $this->config('otp_field', modularousConfig('security.mfa.otp_field', 'verify-code'));
     }
 
     public function pageKey(): string
@@ -159,9 +159,9 @@ class StepUpService
             return redirect()->to((string) ($pending['full_url'] ?? $pending['url'] ?? route(Route::hasAdmin('dashboard'))));
         }
 
-        return response()->view(modularityBaseKey() . '::auth.step-up-replay', [
+        return response()->view(modularousBaseKey() . '::auth.step-up-replay', [
             'pendingRequest' => $pending,
-            'pageTitle' => __('Continuing your action') . ' | ' . \Unusualify\Modularity\Facades\Modularity::pageTitle(),
+            'pageTitle' => __('Continuing your action') . ' | ' . \Unusualify\Modularous\Facades\Modularous::pageTitle(),
             'otpField' => $this->otpField(),
         ]);
     }
@@ -184,7 +184,7 @@ class StepUpService
 
     private function provider(): string
     {
-        return (string) $this->config('provider', modularityConfig('security.mfa.provider', 'email_otp'));
+        return (string) $this->config('provider', modularousConfig('security.mfa.provider', 'email_otp'));
     }
 
     private function usesEmailOtp(): bool

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
-use Unusualify\Modularity\Services\MediaLibrary\TwicPicsParamsProcessor;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\TwicPicsParamsProcessor;
+use Unusualify\Modularous\Tests\TestCase;
 
 class TwicPicsParamsProcessorTest extends TestCase
 {

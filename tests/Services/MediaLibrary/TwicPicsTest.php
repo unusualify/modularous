@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Services\MediaLibrary\TwicPics;
-use Unusualify\Modularity\Services\MediaLibrary\TwicPicsParamsProcessor;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\TwicPics;
+use Unusualify\Modularous\Services\MediaLibrary\TwicPicsParamsProcessor;
+use Unusualify\Modularous\Tests\TestCase;
 
 class TwicPicsTest extends TestCase
 {
@@ -15,13 +15,13 @@ class TwicPicsTest extends TestCase
     {
         parent::setUp();
 
-        Config::set(modularityBaseKey() . '.twicpics.domain', 'test.twic.pics');
-        Config::set(modularityBaseKey() . '.twicpics.path', 'images');
-        Config::set(modularityBaseKey() . '.twicpics.api_version', 'v1');
-        Config::set(modularityBaseKey() . '.twicpics.default_params', ['quality' => 80]);
-        Config::set(modularityBaseKey() . '.twicpics.lqip_default_params', ['resize' => '50x', 'output' => 'preview']);
-        Config::set(modularityBaseKey() . '.twicpics.social_default_params', ['cover' => '1200x630']);
-        Config::set(modularityBaseKey() . '.twicpics.cms_default_params', ['resize' => '800x']);
+        Config::set(modularousBaseKey() . '.twicpics.domain', 'test.twic.pics');
+        Config::set(modularousBaseKey() . '.twicpics.path', 'images');
+        Config::set(modularousBaseKey() . '.twicpics.api_version', 'v1');
+        Config::set(modularousBaseKey() . '.twicpics.default_params', ['quality' => 80]);
+        Config::set(modularousBaseKey() . '.twicpics.lqip_default_params', ['resize' => '50x', 'output' => 'preview']);
+        Config::set(modularousBaseKey() . '.twicpics.social_default_params', ['cover' => '1200x630']);
+        Config::set(modularousBaseKey() . '.twicpics.cms_default_params', ['resize' => '800x']);
 
         $this->service = new TwicPics(new TwicPicsParamsProcessor);
     }

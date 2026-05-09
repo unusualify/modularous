@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Modules\SystemUser\Repositories\UserRepository;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\Navigation;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\Navigation;
 
 if (! function_exists('getLocales')) {
     /**
@@ -57,8 +57,8 @@ if (! function_exists('getFormDraft')) {
     {
 
         $draft = $preserve
-            ? array_merge_recursive_preserve(modularityConfig("form_drafts.{$name}", []), $overwrites)
-            : array_merge(modularityConfig("form_drafts.{$name}", []), $overwrites);
+            ? array_merge_recursive_preserve(modularousConfig("form_drafts.{$name}", []), $overwrites)
+            : array_merge(modularousConfig("form_drafts.{$name}", []), $overwrites);
 
         if (count($excludes)) {
 
@@ -75,7 +75,7 @@ if (! function_exists('adminRouteNamePrefix')) {
 
     function adminRouteNamePrefix()
     {
-        return Modularity::getAdminRouteNamePrefix();
+        return Modularous::getAdminRouteNamePrefix();
     }
 }
 
@@ -83,7 +83,7 @@ if (! function_exists('adminUrlPrefix')) {
 
     function adminUrlPrefix()
     {
-        return Modularity::getAdminUrlPrefix();
+        return Modularous::getAdminUrlPrefix();
     }
 }
 
@@ -91,7 +91,7 @@ if (! function_exists('systemUrlPrefix')) {
 
     function systemUrlPrefix()
     {
-        return modularityConfig('system_prefix', 'system-settings');
+        return modularousConfig('system_prefix', 'system-settings');
     }
 }
 
@@ -103,12 +103,12 @@ if (! function_exists('systemRouteNamePrefix')) {
     }
 }
 
-if (! function_exists('builtInModularityThemes')) {
+if (! function_exists('builtInModularousThemes')) {
 
-    function builtInModularityThemes()
+    function builtInModularousThemes()
     {
         return collect(array_filter(
-            File::glob(Modularity::getVendorPath('vue/src/sass/themes') . '/*', GLOB_ONLYDIR),
+            File::glob(Modularous::getVendorPath('vue/src/sass/themes') . '/*', GLOB_ONLYDIR),
             fn ($dir) => File::isDirectory($dir) && ! preg_match('/customs/', $dir)
         ))->mapWithKeys(function ($dir) {
             $info = pathinfo($dir);
@@ -118,12 +118,12 @@ if (! function_exists('builtInModularityThemes')) {
     }
 }
 
-if (! function_exists('customModularityThemes')) {
+if (! function_exists('customModularousThemes')) {
 
-    function customModularityThemes()
+    function customModularousThemes()
     {
         return collect(array_filter(
-            File::glob(resource_path('vendor/modularity/themes/*'), GLOB_ONLYDIR),
+            File::glob(resource_path('vendor/modularous/themes/*'), GLOB_ONLYDIR),
             fn ($dir) => File::isDirectory($dir)
         ))->mapWithKeys(function ($dir) {
             $info = pathinfo($dir);
@@ -137,7 +137,7 @@ if (! function_exists('get_translations')) {
 
     function get_translations(): array
     {
-        $cache_key = 'modularity-languages';
+        $cache_key = 'modularous-languages';
 
         $cache = Cache::store('file');
 
@@ -157,14 +157,14 @@ if (! function_exists('clear_translations')) {
 
     function clear_translations(): void
     {
-        $cache_key = 'modularity-languages';
+        $cache_key = 'modularous-languages';
 
         Cache::forget($cache_key);
     }
 }
 
-if (! function_exists('get_modularity_navigation_config')) {
-    function get_modularity_navigation_config()
+if (! function_exists('get_modularous_navigation_config')) {
+    function get_modularous_navigation_config()
     {
         $sidebarKey = 'default';
         $profileMenuKey = 'default';
@@ -188,24 +188,24 @@ if (! function_exists('get_modularity_navigation_config')) {
             }
         }
 
-        $sidebarConfigKey = 'modularity.navigation.sidebar.' . $sidebarKey;
-        $profileMenuConfigKey = 'modularity.navigation.profileMenu.' . $profileMenuKey;
-        $sidebarBottomConfigKey = 'modularity.navigation.sidebarBottom.' . $sidebarBottomKey;
+        $sidebarConfigKey = 'modularous.navigation.sidebar.' . $sidebarKey;
+        $profileMenuConfigKey = 'modularous.navigation.profileMenu.' . $profileMenuKey;
+        $sidebarBottomConfigKey = 'modularous.navigation.sidebarBottom.' . $sidebarBottomKey;
 
         $navigation = [
             'current_url' => url()->current(),
-            'sidebar' => array_values(Navigation::formatSidebarMenu(config($sidebarConfigKey, config('modularity-navigation.sidebar.' . $sidebarKey, [])))),
+            'sidebar' => array_values(Navigation::formatSidebarMenu(config($sidebarConfigKey, config('modularous-navigation.sidebar.' . $sidebarKey, [])))),
             'breadcrumbs' => [],
-            'profileMenu' => array_values(Navigation::formatSidebarMenu(config($profileMenuConfigKey, config('modularity-navigation.profileMenu.' . $profileMenuKey, [])))),
-            'sidebarBottom' => array_values(Navigation::formatSidebarMenu(config($sidebarBottomConfigKey, config('modularity-navigation.sidebarBottom.' . $sidebarBottomKey, [])))),
+            'profileMenu' => array_values(Navigation::formatSidebarMenu(config($profileMenuConfigKey, config('modularous-navigation.profileMenu.' . $profileMenuKey, [])))),
+            'sidebarBottom' => array_values(Navigation::formatSidebarMenu(config($sidebarBottomConfigKey, config('modularous-navigation.sidebarBottom.' . $sidebarBottomKey, [])))),
         ];
 
         return $navigation;
     }
 }
 
-if (! function_exists('get_modularity_authorization_config')) {
-    function get_modularity_authorization_config()
+if (! function_exists('get_modularous_authorization_config')) {
+    function get_modularous_authorization_config()
     {
         $user = Auth::user();
 
@@ -228,8 +228,8 @@ if (! function_exists('get_modularity_authorization_config')) {
     }
 }
 
-if (! function_exists('get_modularity_impersonation_config')) {
-    function get_modularity_impersonation_config()
+if (! function_exists('get_modularous_impersonation_config')) {
+    function get_modularous_impersonation_config()
     {
         $activeUser = null;
         $canFetchUsers = false;
@@ -241,7 +241,7 @@ if (! function_exists('get_modularity_impersonation_config')) {
 
         $userRepository = app()->make(UserRepository::class);
 
-        $defaultInput = modularityConfig('default_input');
+        $defaultInput = modularousConfig('default_input');
 
         return [
             'active' => $activeUser ? $activeUser->is_superadmin || $activeUser->isImpersonating() : false,
@@ -262,46 +262,46 @@ if (! function_exists('get_modularity_impersonation_config')) {
     }
 }
 
-if (! function_exists('get_modularity_localization_config')) {
-    function get_modularity_localization_config()
+if (! function_exists('get_modularous_localization_config')) {
+    function get_modularous_localization_config()
     {
-        // $currentLang = Lang::get("{$name}::lang", [], modularityConfig('locale'));
-        $currentLang = Lang::get('*', [], modularityConfig('locale'));
+        // $currentLang = Lang::get("{$name}::lang", [], modularousConfig('locale'));
+        $currentLang = Lang::get('*', [], modularousConfig('locale'));
 
-        // $fallbackLang = Lang::get("{$name}::lang", [], modularityConfig('fallback_locale', 'en'));
-        $fallbackLang = Lang::get('*', [], modularityConfig('fallback_locale', 'en'));
+        // $fallbackLang = Lang::get("{$name}::lang", [], modularousConfig('fallback_locale', 'en'));
+        $fallbackLang = Lang::get('*', [], modularousConfig('fallback_locale', 'en'));
 
         $lang = array_replace_recursive($fallbackLang, $currentLang);
 
         return [
-            'locale' => modularityConfig('locale'),
-            'fallback_locale' => modularityConfig('fallback_locale', 'en'),
+            'locale' => modularousConfig('locale'),
+            'fallback_locale' => modularousConfig('fallback_locale', 'en'),
             'lang' => $lang,
         ];
     }
 }
 
-if (! function_exists('get_modularity_head_layout_config')) {
-    function get_modularity_head_layout_config(array $data)
+if (! function_exists('get_modularous_head_layout_config')) {
+    function get_modularous_head_layout_config(array $data)
     {
         return array_merge([
-            'pageTitle' => $data['pageTitle'] ?? Modularity::pageTitle(),
+            'pageTitle' => $data['pageTitle'] ?? Modularous::pageTitle(),
         ], $data['_headLayoutData'] ?? []);
     }
 }
 
-if (! function_exists('get_modularity_ui_preferences')) {
+if (! function_exists('get_modularous_ui_preferences')) {
     /**
      * Get merged UI preferences: PHP config defaults + user DB preferences.
      *
      * @return array<string, mixed>
      */
-    function get_modularity_ui_preferences(): array
+    function get_modularous_ui_preferences(): array
     {
         $defaults = [
-            'sidebar' => modularityConfig('ui_settings.sidebar', []),
-            'topbar' => modularityConfig('ui_settings.topbar', []),
-            'bottomNavigation' => modularityConfig('ui_settings.bottomNavigation', []),
+            'sidebar' => modularousConfig('ui_settings.sidebar', []),
+            'topbar' => modularousConfig('ui_settings.topbar', []),
+            'bottomNavigation' => modularousConfig('ui_settings.bottomNavigation', []),
         ];
 
         if (Auth::guest()) {
@@ -318,13 +318,13 @@ if (! function_exists('get_modularity_ui_preferences')) {
     }
 }
 
-if (! function_exists('get_modularity_inertia_main_configuration')) {
-    function get_modularity_inertia_main_configuration(array $data)
+if (! function_exists('get_modularous_inertia_main_configuration')) {
+    function get_modularous_inertia_main_configuration(array $data)
     {
         $locale = app()->getLocale();
-        $sidebarLogoSymbol = modularityConfig('ui_settings.sidebar.logoSymbol', 'mini-logo-dark');
+        $sidebarLogoSymbol = modularousConfig('ui_settings.sidebar.logoSymbol', 'mini-logo-dark');
 
-        $sidebarLogoSymbol = get_modularity_logo_symbol([
+        $sidebarLogoSymbol = get_modularous_logo_symbol([
             "{$sidebarLogoSymbol}-{$locale}",
             $sidebarLogoSymbol,
             'main-logo',
@@ -339,9 +339,9 @@ if (! function_exists('get_modularity_inertia_main_configuration')) {
                 'logoSymbol' => $sidebarLogoSymbol,
             ],
 
-            'navigation' => get_modularity_navigation_config(),
-            'impersonation' => get_modularity_impersonation_config(),
-            'authorization' => get_modularity_authorization_config(),
+            'navigation' => get_modularous_navigation_config(),
+            'impersonation' => get_modularous_impersonation_config(),
+            'authorization' => get_modularous_authorization_config(),
         ], $data['_mainConfiguration'] ?? []);
     }
 }
@@ -350,7 +350,7 @@ if (! function_exists('get_user_currency_vat_rates')) {
     function get_user_currency_vat_rates(): Collection
     {
         return tap(Collection::make(), function ($collection) {
-            if ((($guard = Auth::guard('modularity')) !== null) && $guard->check()) {
+            if ((($guard = Auth::guard('modularous')) !== null) && $guard->check()) {
                 $user = $guard->user();
 
                 if ($user->is_client && $user->validCompany) {

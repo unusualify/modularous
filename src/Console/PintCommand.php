@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class PintCommand extends BaseCommand
 {
@@ -11,11 +11,11 @@ class PintCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:pint
+    protected $signature = 'modularous:pint
         {--test : Check if files need fixing}
         {--dirty : Only fix files that have been modified}
         {--repair : Repair the code}
-        {--s|self : Lint modularity sources}';
+        {--s|self : Lint modularous sources}';
 
     /**
      * The console command description.
@@ -32,11 +32,11 @@ class PintCommand extends BaseCommand
         $dir = config('modules.paths.modules');
 
         if ($this->option('self')) {
-            if (Modularity::isProduction()) {
+            if (Modularous::isProduction()) {
                 throw new \Exception('Pint\'s self argument is not allowed in production mode.');
             }
-            $dir = Modularity::getVendorDir();
-            $path = Modularity::getVendorPath();
+            $dir = Modularous::getVendorDir();
+            $path = Modularous::getVendorPath();
             $dir = "\"{$path}\" --config \"{$dir}/pint.json\"";
         }
 

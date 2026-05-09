@@ -5,7 +5,7 @@ namespace Nwidart\Modules\Support\Migrations;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularous\Facades\UFinder;
 
 class SchemaParser implements Arrayable
 {

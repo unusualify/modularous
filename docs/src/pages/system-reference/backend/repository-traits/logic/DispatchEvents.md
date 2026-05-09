@@ -5,7 +5,7 @@ sidebarTitle: DispatchEvents
 
 # DispatchEvents
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\DispatchEvents`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\DispatchEvents`
 
 Dispatches domain events after CUD operations, deferred until after the current database transaction commits. Events are fired by `SystemNotification` module event classes.
 

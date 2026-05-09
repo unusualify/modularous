@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use App\Models\User;
-use Unusualify\Modularity\Providers\RouteServiceProvider;
+use Unusualify\Modularous\Providers\RouteServiceProvider;
 
 abstract class RouteTestCase extends TestCase
 {
@@ -13,10 +13,10 @@ abstract class RouteTestCase extends TestCase
 
         // dd(
         //     parse_url('http://localhost'),
-        //     $this->app['config']->get('modularity.app_url'),
-        //     $this->app['config']->get('modularity.admin_app_url'),
-        //     $this->app['config']->get('modularity.admin_app_path'),
-        //     $this->app['config']->get('modularity.admin_route_name_prefix'),
+        //     $this->app['config']->get('modularous.app_url'),
+        //     $this->app['config']->get('modularous.admin_app_url'),
+        //     $this->app['config']->get('modularous.admin_app_path'),
+        //     $this->app['config']->get('modularous.admin_route_name_prefix'),
         // );
 
         // Set the application URL to match the domain in routes
@@ -38,25 +38,25 @@ abstract class RouteTestCase extends TestCase
         parent::getEnvironmentSetUp($app);
 
         // $app['config']->set('app.url', 'http://localhost');
-        $app['config']->set('modularity.app_url', 'localhost');
-        $app['config']->set('modularity.admin_app_url', null);
-        $app['config']->set('modularity.admin_app_path', 'admin');
+        $app['config']->set('modularous.app_url', 'localhost');
+        $app['config']->set('modularous.admin_app_url', null);
+        $app['config']->set('modularous.admin_app_path', 'admin');
 
-        // Configure the modularity auth guard
-        $app['config']->set('auth.guards.modularity', [
+        // Configure the modularous auth guard
+        $app['config']->set('auth.guards.modularous', [
             'driver' => 'session',
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
         ]);
 
-        // Configure the auth provider for modularity
-        $app['config']->set('auth.providers.modularity_users', [
+        // Configure the auth provider for modularous
+        $app['config']->set('auth.providers.modularous_users', [
             'driver' => 'eloquent',
             'model' => User::class, // Adjust this to your actual User model
         ]);
 
         // Add password reset configuration
-        $app['config']->set('auth.passwords.modularity_users', [
-            'provider' => 'modularity_users',
+        $app['config']->set('auth.passwords.modularous_users', [
+            'provider' => 'modularous_users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class StateTest extends ModelTestCase
 {
@@ -17,7 +17,7 @@ class StateTest extends ModelTestCase
     public function test_get_table_state()
     {
         $state = new State;
-        $this->assertEquals(modularityConfig('tables.states', 'um_states'), $state->getTable());
+        $this->assertEquals(modularousConfig('tables.states', 'um_states'), $state->getTable());
     }
 
     public function test_fillable_attributes()
@@ -224,7 +224,7 @@ class StateTest extends ModelTestCase
         // Test that translations are deleted when state is deleted (via HasTranslation trait)
         $state->delete();
 
-        $this->assertDatabaseMissing(modularityConfig('tables.states', 'um_states'), ['id' => $state->id]);
+        $this->assertDatabaseMissing(modularousConfig('tables.states', 'um_states'), ['id' => $state->id]);
     }
 
     public function test_state_active_translation_check()

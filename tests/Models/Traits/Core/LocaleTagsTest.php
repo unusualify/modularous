@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits\Core;
+namespace Unusualify\Modularous\Tests\Models\Traits\Core;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\Core\LocaleTags;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class LocaleTagsTest extends ModelTestCase
 {
@@ -49,11 +49,11 @@ class LocaleTagsTest extends ModelTestCase
         $object->addLocaleTag('test', 'en');
         $object->addLocaleTag('test2', 'en');
 
-        $this->assertDatabaseHas(modularityConfig('tables.tags', 'tags'), [
+        $this->assertDatabaseHas(modularousConfig('tables.tags', 'tags'), [
             'name' => 'test',
             'locale' => 'en',
         ]);
-        $this->assertDatabaseHas(modularityConfig('tables.tags', 'tags'), [
+        $this->assertDatabaseHas(modularousConfig('tables.tags', 'tags'), [
             'name' => 'test2',
             'locale' => 'en',
         ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -8,10 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\Http\Controllers\ControllerUsingSendsEmailVerificationRegister;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\Http\Controllers\ControllerUsingSendsEmailVerificationRegister;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class SendsEmailVerificationRegisterTest extends ModelTestCase
 {
@@ -33,15 +33,15 @@ class SendsEmailVerificationRegisterTest extends ModelTestCase
 
         $this->controller = new ControllerUsingSendsEmailVerificationRegister;
 
-        config(['auth.passwords.modularity_users' => [
-            'provider' => 'modularity_users',
+        config(['auth.passwords.modularous_users' => [
+            'provider' => 'modularous_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ]]);
 
         config(['auth.passwords.register_verified_users' => [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'um_email_verification_tokens',
             'expire' => 60,
             'throttle' => 60,
@@ -60,7 +60,7 @@ class SendsEmailVerificationRegisterTest extends ModelTestCase
 
         $this->broker = new RegisterBroker(
             $this->tokens,
-            $this->app['auth']->createUserProvider('modularity_users'),
+            $this->app['auth']->createUserProvider('modularous_users'),
             $this->app['db']->connection(),
             $this->brokerConfig,
         );
@@ -74,7 +74,7 @@ class SendsEmailVerificationRegisterTest extends ModelTestCase
         $this->assertArrayHasKey('register_verified_users', Config::get('auth.passwords'));
 
         $this->assertEquals('um_email_verification_tokens', $this->brokerConfig['table']);
-        $this->assertEquals('modularity_users', $this->brokerConfig['provider']);
+        $this->assertEquals('modularous_users', $this->brokerConfig['provider']);
         $this->assertEquals(60, $this->brokerConfig['expire']);
         $this->assertEquals(60, $this->brokerConfig['throttle']);
     }

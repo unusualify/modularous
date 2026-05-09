@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Exceptions;
+namespace Unusualify\Modularous\Exceptions;
 
 use Exception;
 
@@ -15,7 +15,7 @@ class AuthConfigurationException extends Exception
     public static function guardMissing(): self
     {
         return new self(
-            "Modularity auth guard configuration is missing. Please run 'php artisan modularity:update:laravel:configs' to update your auth configuration.",
+            "Modularous auth guard configuration is missing. Please run 'php artisan modularous:update:laravel:configs' to update your auth configuration.",
             self::GUARD_MISSING
         );
     }
@@ -23,7 +23,7 @@ class AuthConfigurationException extends Exception
     public static function providerMissing(): self
     {
         return new self(
-            "Modularity auth provider configuration is missing. Please run 'php artisan modularity:update:laravel:configs' to update your auth configuration.",
+            "Modularous auth provider configuration is missing. Please run 'php artisan modularous:update:laravel:configs' to update your auth configuration.",
             self::PROVIDER_MISSING
         );
     }
@@ -31,7 +31,7 @@ class AuthConfigurationException extends Exception
     public static function passwordMissing(): self
     {
         return new self(
-            "Modularity auth password configuration is missing. Please run 'php artisan modularity:update:laravel:configs' to update your auth configuration.",
+            "Modularous auth password configuration is missing. Please run 'php artisan modularous:update:laravel:configs' to update your auth configuration.",
             self::PASSWORD_MISSING
         );
     }

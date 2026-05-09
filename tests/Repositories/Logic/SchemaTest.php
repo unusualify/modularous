@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Logic;
+namespace Unusualify\Modularous\Tests\Repositories\Logic;
 
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class SchemaTest extends RepositoryTestCase
 {

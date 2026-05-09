@@ -6,7 +6,7 @@ sidebarTitle: PreRegisterController
 # PreRegisterController
 
 **File**: `src/Http/Controllers/Auth/PreRegisterController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`  
 **Traits**: `SendsEmailVerificationRegister`
 
@@ -32,9 +32,9 @@ Renders the pre-registration form where the user enters their email address. The
 
 ### `sendVerificationLinkEmail(Request $request)` *(from trait)*
 
-Validates the email, sends a verification link through the register broker, and fires the `ModularityUserVerification` event on success.
+Validates the email, sends a verification link through the register broker, and fires the `ModularousUserVerification` event on success.
 
-**Response on success**: redirects to the login page with a modal confirming the email was sent, or to a dedicated success page depending on the `MODULARITY_USE_REGISTRATION_REDIRECT_WITH_MODAL` environment variable.
+**Response on success**: redirects to the login page with a modal confirming the email was sent, or to a dedicated success page depending on the `MODULAROUS_USE_REGISTRATION_REDIRECT_WITH_MODAL` environment variable.
 
 **Response on failure**: returns a warning with the broker error message.
 

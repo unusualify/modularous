@@ -14,7 +14,7 @@ sidebarTitle: ImageService (Facade)
 ## Usage
 
 ```php
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
 
 $url  = ImageService::getUrl($media->uuid);
 $lqip = ImageService::getLQIPUrl($media->uuid);
@@ -31,7 +31,7 @@ All methods on `ImageServiceInterface` are accessible statically through this Fa
 ## Driver Selection
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'media_library' => [
     'image_service' => env('IMAGE_SERVICE', 'local'),  // local | glide | imgix | twicpics
 ],
@@ -51,6 +51,6 @@ All methods on `ImageServiceInterface` are accessible statically through this Fa
 $url = app('imageService')->getUrl($id);      // uses configured driver
 
 // Or resolve directly from the container
-$imgix = app(\Unusualify\Modularity\Services\MediaLibrary\Imgix::class);
+$imgix = app(\Unusualify\Modularous\Services\MediaLibrary\Imgix::class);
 $url = $imgix->getUrl($id);
 ```

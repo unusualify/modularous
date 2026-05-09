@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Foundation\Application;
-use Unusualify\Modularity\Services\MediaLibrary\Glide;
+use Unusualify\Modularous\Services\MediaLibrary\Glide;
 
 class GlideController
 {

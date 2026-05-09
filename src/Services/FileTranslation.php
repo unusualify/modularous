@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;

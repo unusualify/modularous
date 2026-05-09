@@ -16,8 +16,8 @@ Add the `Processable` trait to your model:
 
 namespace Modules\Order\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\Processable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\Processable;
 
 class Order extends Model
 {
@@ -59,8 +59,8 @@ Add `ProcessableTrait` to your repository:
 
 namespace Modules\Order\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\ProcessableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\ProcessableTrait;
 
 class OrderRepository extends Repository
 {

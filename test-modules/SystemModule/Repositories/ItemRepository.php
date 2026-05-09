@@ -3,7 +3,7 @@
 namespace TestModules\SystemModule\Repositories;
 
 use TestModules\SystemModule\Entities\Item;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class ItemRepository extends Repository
 {

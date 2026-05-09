@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Filepond as FilepondEntity;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
-use Unusualify\Modularity\Facades\Filepond as FilepondFacade;
+use Unusualify\Modularous\Entities\Filepond as FilepondEntity;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\TemporaryFilepond;
+use Unusualify\Modularous\Facades\Filepond as FilepondFacade;
 
 trait FilepondsTrait
 {

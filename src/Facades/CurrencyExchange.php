@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Services\CurrencyExchangeService;
+use Unusualify\Modularous\Services\CurrencyExchangeService;
 
 /**
  * @method static array fetchExchangeRates()

@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Observers;
+namespace Unusualify\Modularous\Entities\Observers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Facades\RelationshipGraph;
-use Unusualify\Modularity\Traits\ModularModel;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Facades\RelationshipGraph;
+use Unusualify\Modularous\Traits\ModularModel;
 
 class CacheObserver
 {
@@ -34,8 +34,8 @@ class CacheObserver
             return;
         }
 
-        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model, options: ['warmup' => false]);
+        if (ModularousCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            ModularousCache::invalidateForModel($model, options: ['warmup' => false]);
         }
 
         $this->invalidateDependentModules($model);
@@ -56,10 +56,10 @@ class CacheObserver
             return;
         }
 
-        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+        if (ModularousCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
             $clone = clone $model;
             $clone->refresh();
-            ModularityCache::invalidateForModel($clone);
+            ModularousCache::invalidateForModel($clone);
         }
 
         // Invalidate caches of modules that depend on this model
@@ -81,8 +81,8 @@ class CacheObserver
             return;
         }
 
-        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model);
+        if (ModularousCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            ModularousCache::invalidateForModel($model);
         }
 
         $this->invalidateDependentModules($model);
@@ -103,8 +103,8 @@ class CacheObserver
             return;
         }
 
-        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model);
+        if (ModularousCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            ModularousCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
     }
@@ -122,8 +122,8 @@ class CacheObserver
             return;
         }
 
-        if (ModularityCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
-            ModularityCache::invalidateForModel($model);
+        if (ModularousCache::isEnabled($this->getModuleNameFromModel($model), $this->getModuleRouteNameFromModel($model))) {
+            ModularousCache::invalidateForModel($model);
         }
         $this->invalidateDependentModules($model);
     }
@@ -148,7 +148,7 @@ class CacheObserver
         try {
             // Use granular invalidation by relationship tag
             // This only clears caches that reference this specific model:id
-            $invalidated = ModularityCache::invalidateByRelatedModel(
+            $invalidated = ModularousCache::invalidateByRelatedModel(
                 get_class($model),
                 $model->getKey()
             );
@@ -188,16 +188,16 @@ class CacheObserver
                     $module = null;
                     if (! $moduleName || ! $moduleRouteName) {
                         continue;
-                    } elseif (! Modularity::hasModule($moduleName) || ! ($module = Modularity::find($moduleName)) || ! $module->hasRoute($moduleRouteName) || ! $module->isEnabledRoute($moduleRouteName)) {
+                    } elseif (! Modularous::hasModule($moduleName) || ! ($module = Modularous::find($moduleName)) || ! $module->hasRoute($moduleRouteName) || ! $module->isEnabledRoute($moduleRouteName)) {
                         continue;
                     }
 
-                    if (ModularityCache::isEnabled($moduleName, $moduleRouteName)) {
+                    if (ModularousCache::isEnabled($moduleName, $moduleRouteName)) {
                         // if($types['counts']) {
-                        //     ModularityCache::invalidateCount($moduleName, $moduleRouteName);
+                        //     ModularousCache::invalidateCount($moduleName, $moduleRouteName);
                         // }
                         // if($types['index']) {
-                        //     ModularityCache::invalidateIndex($moduleName, $moduleRouteName);
+                        //     ModularousCache::invalidateIndex($moduleName, $moduleRouteName);
                         // }
 
                         if ($targetRelationshipName
@@ -234,7 +234,7 @@ class CacheObserver
                                 $this->invalidateItemCache($target, $moduleName, $moduleRouteName, $types, $shouldWarmDependentModules);
                             }
                         }
-                        // ModularityCache::invalidateModuleRoute($moduleName, $moduleRouteName);
+                        // ModularousCache::invalidateModuleRoute($moduleName, $moduleRouteName);
                     }
                 }
             }
@@ -245,7 +245,7 @@ class CacheObserver
 
     protected function invalidateItemCache(Model $item, string $moduleName, string $moduleRouteName, array $types, bool $warmup = true): void
     {
-        ModularityCache::invalidateForModel($item, $types, options: ['warmup' => $warmup]);
+        ModularousCache::invalidateForModel($item, $types, options: ['warmup' => $warmup]);
     }
 
     /**
@@ -302,7 +302,7 @@ class CacheObserver
      */
     protected function getConfigDependents(string $modelClass): array
     {
-        $dependencies = config('modularity.cache.dependencies', []);
+        $dependencies = config('modularous.cache.dependencies', []);
 
         if (empty($dependencies) || ! isset($dependencies[$modelClass])) {
             return [];
@@ -339,8 +339,8 @@ class CacheObserver
             if ($moduleName
                 && $moduleRouteName
                 && ($moduleRouteName = Str::studly($moduleRouteName))
-                && Modularity::hasModule($moduleName)
-                && ($module = Modularity::find($moduleName))
+                && Modularous::hasModule($moduleName)
+                && ($module = Modularous::find($moduleName))
                 && $module->hasRoute($moduleRouteName)
                 && $module->isEnabledRoute($moduleRouteName)
             ) {
@@ -368,7 +368,7 @@ class CacheObserver
         $moduleRouteName = $this->getModuleRouteNameFromModel($model);
 
         // Check if caching is enabled globally
-        if (! ModularityCache::isEnabled()) {
+        if (! ModularousCache::isEnabled()) {
             return false;
         }
 
@@ -381,6 +381,6 @@ class CacheObserver
         // So return true if either this module has caching OR there are dependents
         $hasDependents = ! empty($this->getCacheDependents($model));
 
-        return ModularityCache::isEnabled($moduleName, $moduleRouteName) || $hasDependents;
+        return ModularousCache::isEnabled($moduleName, $moduleRouteName) || $hasDependents;
     }
 }

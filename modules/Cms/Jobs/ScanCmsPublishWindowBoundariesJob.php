@@ -20,15 +20,15 @@ final class ScanCmsPublishWindowBoundariesJob
 
     public function handle(): void
     {
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
-        if (! modularityConfig('cms_schedule.enabled', true)) {
+        if (! modularousConfig('cms_schedule.enabled', true)) {
             return;
         }
 
-        $window = max(1, (int) modularityConfig('cms_schedule.boundary_window_minutes', 6));
+        $window = max(1, (int) modularousConfig('cms_schedule.boundary_window_minutes', 6));
         $since = now()->subMinutes($window);
         $until = now();
 
@@ -82,7 +82,7 @@ final class ScanCmsPublishWindowBoundariesJob
      */
     private function resolvePublishWindowModelClasses(): array
     {
-        $configured = modularityConfig('cms_schedule.publish_window_models', null);
+        $configured = modularousConfig('cms_schedule.publish_window_models', null);
 
         if ($configured === null) {
             return [Page::class];
@@ -108,7 +108,7 @@ final class ScanCmsPublishWindowBoundariesJob
 
     private function maybeLog(string $modelClass, int|string $modelId, string $boundary): void
     {
-        if (! modularityConfig('cms_schedule.log_events', false)) {
+        if (! modularousConfig('cms_schedule.log_events', false)) {
             return;
         }
 
@@ -121,7 +121,7 @@ final class ScanCmsPublishWindowBoundariesJob
 
     private function maybeFlushCacheTags(): void
     {
-        $tags = modularityConfig('cms_schedule.cache_flush_tags');
+        $tags = modularousConfig('cms_schedule.cache_flush_tags');
         if (! is_array($tags) || $tags === []) {
             return;
         }

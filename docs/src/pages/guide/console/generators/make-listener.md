@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:listener <name> [<module>] [--self] [-f|--force] [--should-queue] [--should-handle-events-after-commit]`
+- **Signature:** `modularous:make:listener <name> [<module>] [--self] [-f|--force] [--should-queue] [--should-handle-events-after-commit]`
 - **Category:** Generators
 
 ## Examples
@@ -12,28 +12,28 @@
 ### Create a listener in the default app path
 
 ```bash
-php artisan modularity:make:listener SendOrderConfirmation
+php artisan modularous:make:listener SendOrderConfirmation
 ```
 
 ### Create a listener inside a module
 
 ```bash
-php artisan modularity:make:listener SendOrderConfirmation Shop
+php artisan modularous:make:listener SendOrderConfirmation Shop
 ```
 
 ### Create a queued listener
 
 ```bash
-php artisan modularity:make:listener SendOrderConfirmation --should-queue
+php artisan modularous:make:listener SendOrderConfirmation --should-queue
 ```
 
 ### Create a listener that handles events after database commit
 
 ```bash
-php artisan modularity:make:listener SendOrderConfirmation --should-handle-events-after-commit
+php artisan modularous:make:listener SendOrderConfirmation --should-handle-events-after-commit
 ```
 
-`modularity:make:listener`
+`modularous:make:listener`
 --------------------------
 
 Scaffolds a new Laravel Listener class. An **interactive prompt** lets you optionally bind the listener to an existing event class discovered from `app/Events/`, the package's own events, or any module's Events directory.
@@ -47,7 +47,7 @@ Output path resolution:
 
 ### Usage
 
-* `modularity:make:listener <name> [<module>] [--self] [-f|--force] [--should-queue] [--should-handle-events-after-commit]`
+* `modularous:make:listener <name> [<module>] [--self] [-f|--force] [--should-queue] [--should-handle-events-after-commit]`
 
 ### Arguments
 

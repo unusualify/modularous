@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Generators;
+namespace Unusualify\Modularous\Tests\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use Nwidart\Modules\Support\Config\GeneratorPath;
-use Unusualify\Modularity\Generators\Generator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Generators\Generator;
+use Unusualify\Modularous\Tests\TestCase;
 
 class GeneratorTest extends TestCase
 {
@@ -42,7 +42,7 @@ class GeneratorTest extends TestCase
         parent::setUp();
 
         $config = Mockery::mock(Config::class);
-        $config->shouldReceive('get')->with('modularity.paths.generator.model')->andReturn([
+        $config->shouldReceive('get')->with('modularous.paths.generator.model')->andReturn([
             'path' => 'Entities',
             'generate' => true,
         ]);

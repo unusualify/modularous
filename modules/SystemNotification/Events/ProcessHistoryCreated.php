@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Unusualify\Modularity\Entities\ProcessHistory;
+use Unusualify\Modularous\Entities\ProcessHistory;
 
 class ProcessHistoryCreated implements ShouldDispatchAfterCommit
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Activators;
+namespace Unusualify\Modularous\Activators;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -72,7 +72,7 @@ class ModuleActivator extends FileActivator
     //  */
     // private function config(string $key, $default = null)
     // {
-    //     return $this->config->get(modularityBaseKey() . '.activators.file.' . $key, $default);
+    //     return $this->config->get(modularousBaseKey() . '.activators.file.' . $key, $default);
     // }
 
     /**

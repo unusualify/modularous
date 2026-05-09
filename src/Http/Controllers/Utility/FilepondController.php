@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Services\FilepondManager;
+use Unusualify\Modularous\Services\FilepondManager;
 
 class FilepondController extends Controller
 {

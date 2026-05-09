@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ use Modules\SystemPayment\Entities\Payment;
 use Modules\SystemPricing\Entities\Price;
 use Money\Currency;
 use Oobook\Priceable\Facades\PriceService;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
 
 trait HasPayment
 {

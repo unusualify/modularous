@@ -9,8 +9,8 @@ sidebarTitle: Create Route Permissions
 
 ## Command Information
 
-- **Signature:** `modularity:make:route:permissions [--route[=ROUTE]] <route>`
-- **Aliases:** `modularity:create:route:permissions`
+- **Signature:** `modularous:make:route:permissions [--route[=ROUTE]] <route>`
+- **Aliases:** `modularous:create:route:permissions`
 - **Category:** Generators
 
 ## Arguments
@@ -35,10 +35,10 @@ Run this after adding a new module or route to ensure the permission records exi
 
 ```bash
 # Generate permissions for the "products" route
-php artisan modularity:make:route:permissions products
+php artisan modularous:make:route:permissions products
 
 # Using the option form
-php artisan modularity:make:route:permissions --route=products products
+php artisan modularous:make:route:permissions --route=products products
 ```
 
 ## Related

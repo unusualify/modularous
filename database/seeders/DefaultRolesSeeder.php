@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Seeders;
+namespace Unusualify\Modularous\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class DefaultRolesSeeder extends Seeder
 {
@@ -15,43 +15,43 @@ class DefaultRolesSeeder extends Seeder
      */
     public function run()
     {
-        $modularityAuthGuardName = Modularity::getAuthGuardName();
+        $modularousAuthGuardName = Modularous::getAuthGuardName();
 
         $roles = [
             [
                 'title' => 'Super Admin',
                 'name' => 'superadmin',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Admin',
                 'name' => 'admin',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Account Manager',
                 'name' => 'manager',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Editor',
                 'name' => 'editor',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Reporter',
                 'name' => 'reporter',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Client Manager',
                 'name' => 'client-manager',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'title' => 'Client Assistant',
                 'name' => 'client-assistant',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
         ];
 

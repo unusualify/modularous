@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Finder\Finder;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -18,10 +18,10 @@ class MakeListenerCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:listener
+    protected $signature = 'modularous:make:listener
 		{name : The name of listener}
 		{module? : The name of module}
-        {--self : Create a modularity listener}
+        {--self : Create a modularous listener}
         {--f|force : Overwrite existing file}
         {--should-handle-events-after-commit : Should the event handle events after commit}
         {--should-queue : Should the event be queued}';
@@ -57,18 +57,18 @@ class MakeListenerCommand extends BaseCommand
         $namespace = 'App\Listeners';
 
         if ($self) {
-            $namespace = Modularity::getVendorNamespace('/src/Listeners');
+            $namespace = Modularous::getVendorNamespace('/src/Listeners');
         } elseif ($moduleName) {
-            $module = Modularity::findOrFail($moduleName);
+            $module = Modularous::findOrFail($moduleName);
             $namespace = $module->getTargetClassNamespace('listener');
         }
 
         $paths = [
             base_path('app/Events'),
-            Modularity::getVendorPath('/src/Events'),
+            Modularous::getVendorPath('/src/Events'),
         ];
 
-        $allModules = Modularity::all();
+        $allModules = Modularous::all();
 
         foreach ($allModules as $module) {
             if (file_exists($moduleEventsPath = $module->getTargetClassPath('event'))) {
@@ -207,13 +207,13 @@ class MakeListenerCommand extends BaseCommand
 
         if (! $moduleName) {
             if ($self) {
-                return Modularity::getVendorPath("/src/Listeners/{$fileName}");
+                return Modularous::getVendorPath("/src/Listeners/{$fileName}");
             }
 
             return base_path("app/Listeners/{$fileName}");
         }
 
-        $module = Modularity::findOrFail($moduleName);
+        $module = Modularous::findOrFail($moduleName);
 
         $targetClassPath = $module->getTargetClassPath('listener', $fileName);
 

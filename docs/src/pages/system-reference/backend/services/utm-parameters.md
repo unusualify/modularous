@@ -6,7 +6,7 @@ sidebarTitle: UtmParameters
 # UtmParameters
 
 **File**: `src/Services/UtmParameters.php`  
-**Facade**: `Unusualify\Modularity\Facades\Utm`
+**Facade**: `Unusualify\Modularous\Facades\Utm`
 
 Captures and persists the five standard UTM marketing tracking parameters from incoming HTTP requests to the PHP session. `UtmMiddleware` triggers capture automatically on every request.
 
@@ -24,9 +24,9 @@ Captures and persists the five standard UTM marketing tracking parameters from i
 
 | Variable | Default | Effect |
 |----------|---------|--------|
-| `MODULARITY_UTM_DISABLED` | `false` | Disable UTM capture entirely — all methods become no-ops |
-| `MODULARITY_UTM_TEMPORARY` | `false` | Do not persist parameters between requests — session is reset on every boot |
-| `MODULARITY_UTM_HANDLE_REQUEST` | `false` | Parse UTM params from the current HTTP request automatically on service construction |
+| `MODULAROUS_UTM_DISABLED` | `false` | Disable UTM capture entirely — all methods become no-ops |
+| `MODULAROUS_UTM_TEMPORARY` | `false` | Do not persist parameters between requests — session is reset on every boot |
+| `MODULAROUS_UTM_HANDLE_REQUEST` | `false` | Parse UTM params from the current HTTP request automatically on service construction |
 
 ## Key Methods
 
@@ -54,18 +54,18 @@ Captures and persists the five standard UTM marketing tracking parameters from i
 
 ## Middleware Integration
 
-`UtmMiddleware` is registered automatically by Modularous and calls `handleRequest()` on every request when `MODULARITY_UTM_HANDLE_REQUEST=true`.
+`UtmMiddleware` is registered automatically by Modularous and calls `handleRequest()` on every request when `MODULAROUS_UTM_HANDLE_REQUEST=true`.
 
 To enable automatic capture, add to your `.env`:
 
 ```dotenv
-MODULARITY_UTM_HANDLE_REQUEST=true
+MODULAROUS_UTM_HANDLE_REQUEST=true
 ```
 
 ## Usage Example
 
 ```php
-use Unusualify\Modularity\Facades\Utm;
+use Unusualify\Modularous\Facades\Utm;
 
 // Read all parameters
 $params = Utm::getParameters();

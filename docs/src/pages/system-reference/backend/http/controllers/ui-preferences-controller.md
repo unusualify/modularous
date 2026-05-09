@@ -6,7 +6,7 @@ sidebarTitle: UIPreferencesController
 # UIPreferencesController
 
 **File**: `src/Http/Controllers/UIPreferencesController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Controller`  
 **Traits**: `MakesResponses`
 

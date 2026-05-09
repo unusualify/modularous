@@ -16,8 +16,8 @@ Add the `HasSpreadable` trait to your model:
 
 namespace Modules\Page\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 
 class Page extends Model
 {
@@ -52,8 +52,8 @@ Add `SpreadableTrait` to your repository:
 
 namespace Modules\Page\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
 
 class PageRepository extends Repository
 {

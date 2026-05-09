@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Services\Currency;
+namespace Unusualify\Modularous\Services\Currency;
 
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 /**
  * Null implementation when no pricing module provides currency support.

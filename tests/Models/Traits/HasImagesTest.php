@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -8,11 +8,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasImagesTest extends ModelTestCase
 {
@@ -124,7 +124,7 @@ class HasImagesTest extends ModelTestCase
 
         $this->assertInstanceOf(MorphToMany::class, $relationship);
         $this->assertEquals(Media::class, get_class($relationship->getRelated()));
-        $this->assertEquals(modularityConfig('tables.mediables', 'um_mediables'), $relationship->getTable());
+        $this->assertEquals(modularousConfig('tables.mediables', 'um_mediables'), $relationship->getTable());
     }
 
     public function test_has_image()
@@ -872,7 +872,7 @@ class HasImagesTest extends ModelTestCase
         ]);
 
         // Verify attachment
-        $this->assertDatabaseHas(modularityConfig('tables.mediables', 'twill_mediables'), [
+        $this->assertDatabaseHas(modularousConfig('tables.mediables', 'twill_mediables'), [
             'media_id' => $this->media1->id,
             'mediable_id' => $this->model->id,
             'mediable_type' => get_class($this->model),
@@ -882,7 +882,7 @@ class HasImagesTest extends ModelTestCase
         $this->model->delete();
 
         // Verify detachment
-        $this->assertDatabaseMissing(modularityConfig('tables.mediables', 'twill_mediables'), [
+        $this->assertDatabaseMissing(modularousConfig('tables.mediables', 'twill_mediables'), [
             'media_id' => $this->media1->id,
             'mediable_id' => $this->model->id,
             'mediable_type' => get_class($this->model),

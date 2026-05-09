@@ -18,7 +18,7 @@ sidebarTitle: Overview & Architecture
 
 ### Custom Auth (UeCustomAuth)
 
-- **Location**: `resources/vendor/modularity/js/components/Auth.vue` (published from package)
+- **Location**: `resources/vendor/modularous/js/components/Auth.vue` (published from package)
 - **Purpose**: App-specific layouts (split layout, banner, custom branding)
 - **Props**: Declare any props you need (e.g. `bannerDescription`, `bannerSubDescription`, `redirectButtonText`, `redirectUrl`)
 - **Activation**: Set `auth_pages.component_name` to `ue-custom-auth` in your app config
@@ -45,8 +45,8 @@ Attributes are built from (in merge order):
 | Config | Purpose |
 |--------|---------|
 | `config/merges/auth_pages.php` | Package defaults (pages, layoutPresets) |
-| `modularity/auth_pages.php` | App overrides (attributes, component_name) |
+| `modularous/auth_pages.php` | App overrides (attributes, component_name) |
 | `config/merges/auth_component.php` | Package UI config (formWidth, dividerText) |
-| `modularity/auth_component.php` | App UI overrides |
+| `modularous/auth_component.php` | App UI overrides |
 
-Use `modularity/auth_pages.php` for deferred loading (when translator is needed for `__()` in attributes).
+Use `modularous/auth_pages.php` for deferred loading (when translator is needed for `__()` in attributes).

@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Models\Model;
-use Unusualify\Modularity\Services\View\UWrapper;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Models\Model;
+use Unusualify\Modularous\Services\View\UWrapper;
 
 trait ManageUtilities
 {
@@ -275,7 +275,7 @@ trait ManageUtilities
         }
 
         return [
-            'pageTitle' => "$pageTitle - " . Modularity::pageTitle(),
+            'pageTitle' => "$pageTitle - " . Modularous::pageTitle(),
             'headerTitle' => $headerTitle,
         ];
     }

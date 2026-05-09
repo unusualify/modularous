@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use Unusualify\Modularity\Support\FileLoader;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Support\FileLoader;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FileLoaderTest extends TestCase
 {

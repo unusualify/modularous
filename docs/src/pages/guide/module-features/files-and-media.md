@@ -11,7 +11,7 @@ Files and Media (Images) follow the same triple pattern. Use **Files** for docum
 ### Entity: HasFiles
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
 
 class MyModel extends Model
 {
@@ -31,7 +31,7 @@ class MyModel extends Model
 Add to your repository:
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\FilesTrait;
+use Unusualify\Modularous\Repositories\Traits\FilesTrait;
 
 class MyRepository extends Repository
 {
@@ -62,7 +62,7 @@ Output: `type` → `input-file`, rendered by `VInputFile`.
 ### Entity: HasImages
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasImages;
 
 class MyModel extends Model
 {
@@ -105,7 +105,7 @@ Filepond is **one-to-many** direct binding (no file library). Use when you need 
 ### Entity: HasFileponds
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class MyModel extends Model
 {

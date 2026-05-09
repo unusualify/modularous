@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Logic;
+namespace Unusualify\Modularous\Tests\Repositories\Logic;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Mockery;
-use Unusualify\Modularity\Modularity;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Modularous;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class CollationSelectorTest extends RepositoryTestCase
 {
@@ -100,10 +100,10 @@ class CollationSelectorTest extends RepositoryTestCase
     // =========================================================================
     // shouldUseSearchCollation() Tests
     // =========================================================================
-    public function test_should_use_search_collation_returns_true_when_modularity_config_enabled_and_mysql(): void
+    public function test_should_use_search_collation_returns_true_when_modularous_config_enabled_and_mysql(): void
     {
         config(['database.default' => 'mysql']);
-        config(['modularity.use_collation_for_search' => true]);
+        config(['modularous.use_collation_for_search' => true]);
 
         $mock = $this->createMockRepository();
 
@@ -149,7 +149,7 @@ class CollationSelectorTest extends RepositoryTestCase
 
         $query = $this->createMySqlQueryBuilder();
 
-        $this->partialMock(Modularity::class, function ($mock) {
+        $this->partialMock(Modularous::class, function ($mock) {
             $mock->shouldReceive('shouldUseCollationForSearch')->andReturn(false);
         });
 

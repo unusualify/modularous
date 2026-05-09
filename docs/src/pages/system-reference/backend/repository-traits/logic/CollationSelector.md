@@ -5,7 +5,7 @@ sidebarTitle: CollationSelector
 
 # CollationSelector
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\CollationSelector`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\CollationSelector`
 
 Applies explicit MySQL collation to `LIKE` search queries on text columns, solving case/accent sensitivity mismatches that arise when the database collation differs from the connection default. Composes `CompilesJsonPaths`.
 
@@ -21,7 +21,7 @@ Applies explicit MySQL collation to `LIKE` search queries on text columns, solvi
 | Method | Signature | Description |
 |--------|-----------|-------------|
 | `setShouldUseSearchCollation` | `(bool $value): static` | Fluent setter for the per-repository collation override |
-| `shouldUseSearchCollation` | `($query): bool` | Returns `true` when either `Modularity::shouldUseCollationForSearch()` or `$shouldUseSearchCollation` is set **and** the connection driver is MySQL |
+| `shouldUseSearchCollation` | `($query): bool` | Returns `true` when either `Modularous::shouldUseCollationForSearch()` or `$shouldUseSearchCollation` is set **and** the connection driver is MySQL |
 | `isCollationQuery` | `($query): bool` | Returns `true` only for MySQL connections |
 | `addSearchCollationToQuery` | `(Builder $query, string $field, mixed $value, ?Model $model): Builder` | Adds a collation-aware `LIKE` clause. Handles JSON paths (casts to `CHAR`), checks column types from `getColumnTypes()`, and falls back to a standard `orWhere LIKE` for non-text columns |
 | `getCollationSelectorColumns` | `(): array` | Returns the list of column types that receive explicit collation |
@@ -42,7 +42,7 @@ The collation string is read from the connection config (`collation` key) and de
 ## Usage
 
 ```php
-// Enable globally via config/modularity.php:
+// Enable globally via config/modularous.php:
 'search' => ['use_collation' => true]
 
 // Enable for a specific repository only:

@@ -5,7 +5,7 @@ sidebarTitle: RegexReplacement
 
 # RegexReplacement
 
-`Unusualify\Modularity\Support\RegexReplacement`
+`Unusualify\Modularous\Support\RegexReplacement`
 
 Recursively walks a directory tree and applies a `preg_replace()` substitution to every file that matches a glob-style directory pattern. Supports dry-run preview, verbosity levels, and vendor/node_modules safety guards.
 
@@ -61,7 +61,7 @@ Print a coloured diff of matched lines to stdout. Controlled by verbosity level:
 ## Example
 
 ```php
-use Unusualify\Modularity\Support\RegexReplacement;
+use Unusualify\Modularous\Support\RegexReplacement;
 
 // Replace all occurrences of the old namespace in PHP files
 $replacement = new RegexReplacement(
@@ -77,4 +77,4 @@ $replacement->run();
 
 ## Related
 
-- [modularity:update:laravel:configs](/guide/console/update/update-laravel-configs) — uses `RegexReplacement` internally to patch config files
+- [modularous:update:laravel:configs](/guide/console/update/update-laravel-configs) — uses `RegexReplacement` internally to patch config files

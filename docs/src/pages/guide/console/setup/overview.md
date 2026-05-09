@@ -10,13 +10,13 @@ Installation and initial configuration commands. Run these once when setting up 
 
 | Command | Signature | Description |
 |---------|-----------|-------------|
-| [install](./install) | `modularity:install` | Full Modularous installation (publishes config, runs migrations, sets up auth) |
-| [setup:development](./setup-development) | `modularity:setup:development` | Configure a local dev environment (symlinks, env, permissions) |
-| [create:database](./create-database) | `modularity:create:database` | Create the application database if it does not exist |
-| [create:superadmin](../generators/create-superadmin) | `modularity:create:superadmin` | Create the initial superadmin user account |
+| [install](./install) | `modularous:install` | Full Modularous installation (publishes config, runs migrations, sets up auth) |
+| [setup:development](./setup-development) | `modularous:setup:development` | Configure a local dev environment (symlinks, env, permissions) |
+| [create:database](./create-database) | `modularous:create:database` | Create the application database if it does not exist |
+| [create:superadmin](../generators/create-superadmin) | `modularous:create:superadmin` | Create the initial superadmin user account |
 
 ::: tip
-Run `modularity:install` first, then `modularity:create:superadmin` to bootstrap a fresh project.
+Run `modularous:install` first, then `modularous:create:superadmin` to bootstrap a fresh project.
 :::
 
 ## Common Workflows
@@ -25,10 +25,10 @@ Run `modularity:install` first, then `modularity:create:superadmin` to bootstrap
 
 ```bash
 composer require unusualify/modularous
-php artisan modularity:create:database       # optional — only if the DB doesn't exist yet
-php artisan modularity:install               # publishes config + runs migrations + sets up auth
-php artisan modularity:create:superadmin     # creates the first admin user
-php artisan modularity:build                 # build frontend assets
+php artisan modularous:create:database       # optional — only if the DB doesn't exist yet
+php artisan modularous:install               # publishes config + runs migrations + sets up auth
+php artisan modularous:create:superadmin     # creates the first admin user
+php artisan modularous:build                 # build frontend assets
 ```
 
 ### Bootstrapping a dev machine after a fresh clone
@@ -38,14 +38,14 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
-php artisan modularity:setup:development     # symlinks, storage perms, optional seeders
-php artisan modularity:migrate
-php artisan modularity:build
+php artisan modularous:setup:development     # symlinks, storage perms, optional seeders
+php artisan modularous:migrate
+php artisan modularous:build
 ```
 
 ### Re-running install safely
 
-`modularity:install` is **idempotent** — it detects existing config and migrations and skips them. Re-run it when you adopt Modularous in an existing Laravel app, or after upgrading to pick up new publishable assets.
+`modularous:install` is **idempotent** — it detects existing config and migrations and skips them. Re-run it when you adopt Modularous in an existing Laravel app, or after upgrading to pick up new publishable assets.
 
 ## Related
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Traits\HasPayment;
-use Unusualify\Modularity\Hydrates\HeaderHydrator;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Entities\Traits\HasPayment;
+use Unusualify\Modularous\Hydrates\HeaderHydrator;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait TableColumns
 {
@@ -154,7 +154,7 @@ trait TableColumns
         }
 
         // add uuid suffix for formatting on view
-        if ($header['sourceKey'] == 'id' && $this->repository->hasModelTrait('Unusualify\Modularity\Entities\Traits\HasUuid')) {
+        if ($header['sourceKey'] == 'id' && $this->repository->hasModelTrait('Unusualify\Modularous\Entities\Traits\HasUuid')) {
             $header['sourceKey'] .= '_uuid';
             $header['formatter'] ??= ['edit'];
         }

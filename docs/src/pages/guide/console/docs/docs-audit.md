@@ -9,7 +9,7 @@ sidebarTitle: Docs Audit
 
 ## Command Information
 
-- **Signature:** `modularity:docs:audit [--section=SECTION] [--fail-on-missing]`
+- **Signature:** `modularous:docs:audit [--section=SECTION] [--fail-on-missing]`
 - **Category:** Docs
 
 ## Options
@@ -46,20 +46,20 @@ To track a new section, add an entry to the `sections()` array in `src/Console/D
 ### Full audit
 
 ```bash
-php artisan modularity:docs:audit
+php artisan modularous:docs:audit
 ```
 
 ### Audit a single section
 
 ```bash
-php artisan modularity:docs:audit --section=Entities
-php artisan modularity:docs:audit --section=hydrates
+php artisan modularous:docs:audit --section=Entities
+php artisan modularous:docs:audit --section=hydrates
 ```
 
 ### CI gate
 
 ```bash
-php artisan modularity:docs:audit --fail-on-missing
+php artisan modularous:docs:audit --fail-on-missing
 ```
 
 Exits with a non-zero status when undocumented classes exist, failing the build.

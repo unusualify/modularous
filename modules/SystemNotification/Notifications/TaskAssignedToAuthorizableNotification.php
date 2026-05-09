@@ -18,7 +18,7 @@ class TaskAssignedToAuthorizableNotification extends FeatureNotification impleme
 
     public function via($notifiable): array
     {
-        $via = explode(',', config('modularity.notifications.authorizable.channels', 'database,mail'));
+        $via = explode(',', config('modularous.notifications.authorizable.channels', 'database,mail'));
 
         return $via;
     }

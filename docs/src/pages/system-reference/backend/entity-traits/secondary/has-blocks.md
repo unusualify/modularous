@@ -5,7 +5,7 @@ sidebarTitle: HasBlocks
 
 # Secondary\HasBlocks
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Secondary\HasBlocks`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Secondary\HasBlocks`
 
 Attaches ordered `Block` morph records for flexible content composition — page builder-style blocks where each block has a name, position, and rendered output.
 
@@ -31,7 +31,7 @@ public function blocks(): MorphMany   // → Block, ordered by position ASC
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Secondary\HasBlocks;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasBlocks;
 
 class Page extends Model
 {

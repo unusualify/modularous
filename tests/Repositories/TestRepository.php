@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
-use Unusualify\Modularity\Repositories\Traits\FilesTrait;
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
-use Unusualify\Modularity\Repositories\Traits\PricesTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilesTrait;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Repositories\Traits\PricesTrait;
 
 class TestRepository extends Repository
 {

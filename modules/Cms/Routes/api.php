@@ -6,13 +6,13 @@ use Modules\Cms\Http\Controllers\API\ParentSegmentController;
 use Modules\Cms\Http\Controllers\API\PromotionController;
 use Modules\Cms\Http\Controllers\RedirectController;
 
-Route::middleware(['api.auth', ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares()])->group(function () {
-    $promotionStepUpMiddleware = (modularityConfig('cms_features.register_middlewares', true) && modularityConfig('security.enabled', false))
-        ? 'modularity.security.step_up:promotion.execute'
+Route::middleware(['api.auth', ...\Unusualify\Modularous\Facades\ModularousRoutes::defaultMiddlewares()])->group(function () {
+    $promotionStepUpMiddleware = (modularousConfig('cms_features.register_middlewares', true) && modularousConfig('security.enabled', false))
+        ? 'modularous.security.step_up:promotion.execute'
         : null;
 
-    $redirectBulkStepUpMiddleware = (modularityConfig('cms_features.register_middlewares', true) && modularityConfig('security.enabled', false))
-        ? 'modularity.security.step_up:redirect.bulk_import'
+    $redirectBulkStepUpMiddleware = (modularousConfig('cms_features.register_middlewares', true) && modularousConfig('security.enabled', false))
+        ? 'modularous.security.step_up:redirect.bulk_import'
         : null;
 
     Route::prefix('cms')->name('cms.')->group(function () use ($promotionStepUpMiddleware, $redirectBulkStepUpMiddleware) {

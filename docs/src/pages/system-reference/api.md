@@ -12,7 +12,7 @@ Common use cases and patterns for developers.
 1. Create `modules/MyModule/` with `module.json`
 2. Add `Config/`, `Database/Migrations/`, `Entities/`, `Http/Controllers/`, `Repositories/`, `Routes/`
 3. Enable via `modules_statuses.json` or `php artisan module:enable MyModule`
-4. Run `php artisan modularity:build` to rebuild Vue assets if the module adds frontend pages
+4. Run `php artisan modularous:build` to rebuild Vue assets if the module adds frontend pages
 
 ## Adding a New Input Type
 
@@ -50,14 +50,14 @@ See [Hydrates](./hydrates#adding-a-new-input) for full flow (PHP Hydrate + Vue c
 
 ## Route Generation
 
-Use `php artisan modularity:make:route` to scaffold routes, migrations, controllers, repositories from module config. See [make:route](/guide/console/generators/make-route).
+Use `php artisan modularous:make:route` to scaffold routes, migrations, controllers, repositories from module config. See [make:route](/guide/console/generators/make-route).
 
 ## Currency Provider
 
 When adding pricing without SystemPricing module:
 
 1. Implement `CurrencyProviderInterface`
-2. Register in config: `modularity.currency_provider` = YourProvider::class
+2. Register in config: `modularous.currency_provider` = YourProvider::class
 3. Or bind in a service provider: `$app->singleton(CurrencyProviderInterface::class, YourProvider::class)`
 
 ## Helpers (Frontend)
@@ -70,7 +70,7 @@ import { isObject, dataGet, isset } from '@/utils/helpers'
 
 ## Config Keys
 
-- `modularity.services.*` — service config (currency_exchange, etc.)
-- `modularity.roles` — role definitions
-- `modularity.traits` — entity traits
-- `modularity.paths` — base paths
+- `modularous.services.*` — service config (currency_exchange, etc.)
+- `modularous.roles` — role definitions
+- `modularous.traits` — entity traits
+- `modularous.paths` — base paths

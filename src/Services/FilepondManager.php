@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Image;
-use Unusualify\Modularity\Entities\Filepond;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
+use Unusualify\Modularous\Entities\Filepond;
+use Unusualify\Modularous\Entities\TemporaryFilepond;
 
 class FilepondManager
 {

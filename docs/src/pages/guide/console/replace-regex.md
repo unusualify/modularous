@@ -13,7 +13,7 @@ This command has `$hidden = true` and does not appear in `php artisan list`.
 
 ## Command Information
 
-- **Signature:** `modularity:replace:regex {path} {pattern} {data} [--d|directory=] [--p|pretend]`
+- **Signature:** `modularous:replace:regex {path} {pattern} {data} [--d|directory=] [--p|pretend]`
 - **Alias:** `mod:replace:regex`
 - **Category:** Module
 
@@ -40,13 +40,13 @@ Delegates to `RegexReplacement::run()`. Files inside `vendor/` or `node_modules/
 
 ```bash
 # Preview matches without writing
-php artisan modularity:replace:regex app/Modules "OldNamespace" "NewNamespace" --pretend
+php artisan modularous:replace:regex app/Modules "OldNamespace" "NewNamespace" --pretend
 
 # Replace across all PHP files
-php artisan modularity:replace:regex app/Modules "OldNamespace" "NewNamespace"
+php artisan modularous:replace:regex app/Modules "OldNamespace" "NewNamespace"
 
 # Restrict to a specific glob pattern
-php artisan modularity:replace:regex app "Foo\\\\Bar" "Baz\\\\Qux" --directory="**/*Controller.php"
+php artisan modularous:replace:regex app "Foo\\\\Bar" "Baz\\\\Qux" --directory="**/*Controller.php"
 ```
 
 ## Related

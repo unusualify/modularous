@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Secondary;
+namespace Unusualify\Modularous\Entities\Traits\Secondary;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Unusualify\Modularity\Entities\Block;
-use Unusualify\Modularity\Services\Blocks\Block as BlockConfig;
+use Unusualify\Modularous\Entities\Block;
+use Unusualify\Modularous\Services\Blocks\Block as BlockConfig;
 
 trait HasBlocks
 {
@@ -16,7 +16,7 @@ trait HasBlocks
     public function blocks()
     {
         return $this->morphMany(Block::class, 'blockable')->orderBy(
-            modularityConfig('blocks_table', 'twill_blocks') . '.position',
+            modularousConfig('blocks_table', 'twill_blocks') . '.position',
             'asc'
         );
     }

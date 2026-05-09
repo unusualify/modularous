@@ -3,9 +3,9 @@
 namespace Modules\SystemPayment\Repositories;
 
 use Modules\SystemPayment\Entities\PaymentService;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
 
 class PaymentServiceRepository extends Repository
 {

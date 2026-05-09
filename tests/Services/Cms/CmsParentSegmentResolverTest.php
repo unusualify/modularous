@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,7 +8,7 @@ use Modules\Cms\Entities\Page;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsParentSegmentResolver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsParentSegmentResolverTest extends TestCase
 {
@@ -68,7 +68,7 @@ class CmsParentSegmentResolverTest extends TestCase
 
     protected function createParentSegmentTables(): void
     {
-        $bindings = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $bindings = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
 
         Schema::dropIfExists($bindings);
 
@@ -89,11 +89,11 @@ class CmsParentSegmentResolverTest extends TestCase
 
     protected function dropParentSegmentTables(): void
     {
-        $bindings = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $bindings = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
         Schema::dropIfExists($bindings);
 
-        $targets = modularityConfig('tables.cms_parent_segment_targets', 'um_cms_parent_segment_targets');
-        $segments = modularityConfig('tables.cms_parent_segments', 'um_cms_parent_segments');
+        $targets = modularousConfig('tables.cms_parent_segment_targets', 'um_cms_parent_segment_targets');
+        $segments = modularousConfig('tables.cms_parent_segments', 'um_cms_parent_segments');
         Schema::dropIfExists($targets);
         Schema::dropIfExists($segments);
     }

@@ -18,7 +18,7 @@ The `process` input type renders `VInputProcess`, a stateful process tracker car
 
 The hydrate:
 - Requires `_moduleName` and `_routeName` to be set in the config pipeline
-- Validates the route model has `Unusualify\Modularity\Entities\Traits\Processable`
+- Validates the route model has `Unusualify\Modularous\Entities\Traits\Processable`
 - Auto-resolves `fetchEndpoint` → `route('admin.process.show', [:id, eager?])`
 - Auto-resolves `updateEndpoint` → `route('admin.process.update', [:id])`
 - Overrides `name` to `process_id`

@@ -57,14 +57,14 @@ Modularous layers a Laravel package on top of `nWidart/laravel-modules` and adds
 
 A normal admin CRUD request walks through most of these layers in order:
 
-1. **Providers** — `ModularityProvider` boots child providers (`BaseServiceProvider`, `RouteServiceProvider`, `AuthServiceProvider`, …) and binds every container entry the rest of the stack depends on.
-2. **Activators** — `ModularityActivator` and `ModuleActivator` short-circuit the request if the target module or route is disabled.
+1. **Providers** — `ModularousProvider` boots child providers (`BaseServiceProvider`, `RouteServiceProvider`, `AuthServiceProvider`, …) and binds every container entry the rest of the stack depends on.
+2. **Activators** — `ModularousActivator` and `ModuleActivator` short-circuit the request if the target module or route is disabled.
 3. **Middleware** — the `web` / `admin` / `api` pipelines run guards (`Authenticate`, `Authorization`, `Hostable`, `Language`, `Navigation`, `HandleInertiaRequests`, …).
 4. **Form Request** — a `BaseFormRequest` subclass authorizes the user and validates input before the controller method runs.
 5. **Controller** — `BaseController` resolves the active route, applies traits (`ManageIndexAjax`, `ManageInertia`, `ManagePrevious`, `ManageSingleton`, `ManageTranslations`), renders the form schema, and delegates persistence to `$this->repository`.
 6. **Repository (+ Traits)** — the base `Repository` invokes every applicable [repository trait](#repository-traits) (`prepareFieldsBeforeSave{Trait}`, `afterSave{Trait}`, …) around the Eloquent `save()`.
 7. **Entity (+ Traits)** — Eloquent models compose [entity traits](#entity-traits) for slugs, positions, soft-delete, translations, media, files, repeaters, blocks, processes, state, payments, presenters, and broadcasting context.
-8. **Events & Listeners** — model lifecycle and auth events fire; `Listener::handle()` resolves the matching `{EventName}Notification` and dispatches it when `modularity.mail.enabled = true`.
+8. **Events & Listeners** — model lifecycle and auth events fire; `Listener::handle()` resolves the matching `{EventName}Notification` and dispatches it when `modularous.mail.enabled = true`.
 9. **View Composers** — for Inertia/Blade responses, composers inject shared props (current user, navigation, uploader configs, localization, URLs).
 10. **Response** — Inertia/JSON/Blade payload returns to the client; broadcasted events propagate over Echo channels.
 
@@ -74,7 +74,7 @@ A normal admin CRUD request walks through most of these layers in order:
 |------------------------|----------------------|
 | A new admin route | [Providers](#providers) → [Generators](#generators) → [Controllers](#controllers) → [Form Requests](#form-requests) → [Entities](#entities) → [Repository Traits](#repository-traits) |
 | Authentication / registration | [Middleware](#middleware) → [Controllers](#controllers) (Auth) → [Brokers](#brokers) → [Notifications](#notifications) → [Events & Listeners](#events-listeners) |
-| Caching / invalidation | [Services](#services) (`ModularityCacheService`, `CacheRelationshipGraph`) → [Repository Traits](#repository-traits) (Logic) → [Console Commands](#console-commands) (`cache:*`) |
+| Caching / invalidation | [Services](#services) (`ModularousCacheService`, `CacheRelationshipGraph`) → [Repository Traits](#repository-traits) (Logic) → [Console Commands](#console-commands) (`cache:*`) |
 | File / media uploads | [Controllers](#controllers) (Filepond / FileLibrary / MediaLibrary) → [Form Requests](#form-requests) → [Services](#services) (FilepondManager, FileLibrary, MediaLibrary, Uploader) → [Entity Traits](#entity-traits) (HasFileponds, HasFiles, HasImages) |
 | Multi-tenant routing | [Providers](#providers) (`RouteServiceProvider`) → [Support](#support) (`HostRouting`) → [Middleware](#middleware) (`Hostable`) → [Facades](#facades) (`HostRouting`) |
 | Real-time / chat | [Events & Listeners](#events-listeners) → [Notifications](#notifications) → [Services](#services) (BroadcastManager) → [Scheduled Jobs](#scheduled-jobs) (ChatableScheduler) |
@@ -85,13 +85,13 @@ A normal admin CRUD request walks through most of these layers in order:
 
 ## Activators
 
-**Directory**: `src/Activators/` · **Namespace**: `Unusualify\Modularity\Activators`
+**Directory**: `src/Activators/` · **Namespace**: `Unusualify\Modularous\Activators`
 
 Activators persist and resolve enable/disable state. Modularous splits activation into two layers — module-level (whether a module loads at all) and route-level (whether a specific route action inside a module is enabled).
 
 | Class | Persisted in | Purpose |
 |-------|--------------|---------|
-| [`ModularityActivator`](/system-reference/backend/activators/modularity-activator) | `modules_statuses.json` + cache | Stores and resolves module-level statuses (`enabled` / `disabled`) |
+| [`ModularousActivator`](/system-reference/backend/activators/modularous-activator) | `modules_statuses.json` + cache | Stores and resolves module-level statuses (`enabled` / `disabled`) |
 | [`ModuleActivator`](/system-reference/backend/activators/module-activator) | `routes_statuses.json` per module | Stores and resolves route-level statuses inside a module |
 
 **CLI integration**: [`route:disable`](/guide/console/module/route-disable), [`route:enable`](/guide/console/module/route-enable), [`route:status`](/guide/console/module/route-status) read and mutate these files.
@@ -102,7 +102,7 @@ Activators persist and resolve enable/disable state. Modularous splits activatio
 
 ## Brokers
 
-**Directory**: `src/Brokers/` · **Namespace**: `Unusualify\Modularity\Brokers`
+**Directory**: `src/Brokers/` · **Namespace**: `Unusualify\Modularous\Brokers`
 
 Powers the email-verification-based registration flow behind the [`Register` facade](/system-reference/backend/facades/register). Mirrors Laravel's password broker design, adapted for verification tokens.
 
@@ -120,7 +120,7 @@ Powers the email-verification-based registration flow behind the [`Register` fac
 
 ## Console Commands
 
-**Directory**: `src/Console/` · **Namespace**: `Unusualify\Modularity\Console`
+**Directory**: `src/Console/` · **Namespace**: `Unusualify\Modularous\Console`
 
 Discovered via `CommandDiscovery::discover()` in `BaseServiceProvider`. Every command extends a `BaseCommand`, which adds module-aware option resolution and consistent output formatting on top of `Illuminate\Console\Command`.
 
@@ -145,7 +145,7 @@ Discovered via `CommandDiscovery::discover()` in `BaseServiceProvider`. Every co
 
 ## Controllers
 
-**Directory**: `src/Http/Controllers/` · **Namespace**: `Unusualify\Modularity\Http\Controllers`
+**Directory**: `src/Http/Controllers/` · **Namespace**: `Unusualify\Modularous\Http\Controllers`
 
 The controller hierarchy is **CoreController → PanelController → BaseController**. Modules extend `BaseController` and configure form schemas, with each layer adding more module-aware behaviour.
 
@@ -167,7 +167,7 @@ The controller hierarchy is **CoreController → PanelController → BaseControl
 
 ## Entities
 
-**Directory**: `src/Entities/` · **Namespace**: `Unusualify\Modularity\Entities`
+**Directory**: `src/Entities/` · **Namespace**: `Unusualify\Modularous\Entities`
 
 ~30 Eloquent models for users, content, files, processes, state, and communication, plus supporting `Casts/`, `Enums/`, `Interfaces/`, `Mutators/`, `Observers/`, `Scopes/`, `Traits/`, and `Translations/` subfolders. Module-generated models extend `Model` and gain soft-deletes, tagging, caching, presenter support, and trait composition out of the box.
 
@@ -190,7 +190,7 @@ The controller hierarchy is **CoreController → PanelController → BaseControl
 
 ## Entity Traits
 
-**Directory**: `src/Entities/Traits/` · **Namespace**: `Unusualify\Modularity\Entities\Traits`
+**Directory**: `src/Entities/Traits/` · **Namespace**: `Unusualify\Modularous\Entities\Traits`
 
 A library of traits (top-level + nested under `Auth/`, `Core/`, `Secondary/`) covering relationships, accessors, scopes, lifecycle hooks, and broadcasting context. Each trait composes onto an entity to add a self-contained behaviour without subclassing.
 
@@ -214,7 +214,7 @@ A library of traits (top-level + nested under `Auth/`, `Core/`, `Secondary/`) co
 
 ## Events & Listeners
 
-**Directory**: `src/Events/`, `src/Listeners/` · **Namespace**: `Unusualify\Modularity\Events`, `Unusualify\Modularity\Listeners`
+**Directory**: `src/Events/`, `src/Listeners/` · **Namespace**: `Unusualify\Modularous\Events`, `Unusualify\Modularous\Listeners`
 
 Events fire at lifecycle boundaries (model created/updated, user registered, state changed). Listeners react and, when mail is enabled, dispatch the matching notification.
 
@@ -222,7 +222,7 @@ Events fire at lifecycle boundaries (model created/updated, user registered, sta
 |-------|------|------|
 | [`Listener`](/system-reference/backend/events/listener) | Abstract base for listeners — resolves notification class from event name | Class reference |
 | [`ModelEvent`](/system-reference/backend/events/model-event) | Abstract base — composes `EventChanges`, `EventStateable`, `EventUrls`, `EventUser` traits and provides broadcasting defaults | Class reference |
-| [User events](/system-reference/backend/events/user-events) | `ModularityUserRegistered`, `ModularityUserRegistering`, `ModularityUserVerification`, `VerifiedEmailRegister` | Auth events |
+| [User events](/system-reference/backend/events/user-events) | `ModularousUserRegistered`, `ModularousUserRegistering`, `ModularousUserVerification`, `VerifiedEmailRegister` | Auth events |
 
 **Event traits** (under `events/traits/`): [`EventChanges`](/system-reference/backend/events/traits/event-changes), [`EventStateable`](/system-reference/backend/events/traits/event-stateable), [`EventUrls`](/system-reference/backend/events/traits/event-urls), [`EventUser`](/system-reference/backend/events/traits/event-user). Each is auto-set up in `ModelEvent`'s constructor and its public properties are serialized into broadcast payloads.
 
@@ -233,11 +233,11 @@ Events fire at lifecycle boundaries (model created/updated, user registered, sta
 
 ## Facades
 
-**Directory**: `src/Facades/` · **Namespace**: `Unusualify\Modularity\Facades`
+**Directory**: `src/Facades/` · **Namespace**: `Unusualify\Modularous\Facades`
 
 18 Laravel facades providing static-style access to bound services. Each facade aliases a container entry to a concrete service class.
 
-**Selected facades**: [`Coverage`](/system-reference/backend/facades/coverage), [`CurrencyExchange`](/system-reference/backend/facades/currency-exchange), [`Filepond`](/system-reference/backend/facades/filepond), [`HostRouting`](/system-reference/backend/facades/host-routing), [`MigrationBackup`](/system-reference/backend/facades/migration-backup), [`Modularity`](/system-reference/backend/facades/modularity), [`ModularityCache`](/system-reference/backend/facades/modularity-cache), [`ModularityRoutes`](/system-reference/backend/facades/modularity-routes), [`ModularityVite`](/system-reference/backend/facades/modularity-vite), [`Navigation`](/system-reference/backend/facades/navigation), [`Redirect`](/system-reference/backend/facades/redirect), [`Register`](/system-reference/backend/facades/register), [`RelationshipGraph`](/system-reference/backend/facades/relationship-graph), [`Utm`](/system-reference/backend/facades/utm).
+**Selected facades**: [`Coverage`](/system-reference/backend/facades/coverage), [`CurrencyExchange`](/system-reference/backend/facades/currency-exchange), [`Filepond`](/system-reference/backend/facades/filepond), [`HostRouting`](/system-reference/backend/facades/host-routing), [`MigrationBackup`](/system-reference/backend/facades/migration-backup), [`Modularous`](/system-reference/backend/facades/modularous), [`ModularousCache`](/system-reference/backend/facades/modularous-cache), [`ModularousRoutes`](/system-reference/backend/facades/modularous-routes), [`ModularousVite`](/system-reference/backend/facades/modularous-vite), [`Navigation`](/system-reference/backend/facades/navigation), [`Redirect`](/system-reference/backend/facades/redirect), [`Register`](/system-reference/backend/facades/register), [`RelationshipGraph`](/system-reference/backend/facades/relationship-graph), [`Utm`](/system-reference/backend/facades/utm).
 
 → [Full Facades reference](/system-reference/backend/facades/overview)
 
@@ -245,7 +245,7 @@ Events fire at lifecycle boundaries (model created/updated, user registered, sta
 
 ## Form Requests
 
-**Directory**: `src/Http/Requests/` · **Namespace**: `Unusualify\Modularity\Http\Requests`
+**Directory**: `src/Http/Requests/` · **Namespace**: `Unusualify\Modularous\Http\Requests`
 
 Form Request classes that validate, authorize, and shape incoming requests for module endpoints. Extend Laravel's `FormRequest` with module-aware authorization and translation hooks.
 
@@ -265,7 +265,7 @@ Form Request classes that validate, authorize, and shape incoming requests for m
 
 ## Generators
 
-**Directory**: `src/Generators/` · **Namespace**: `Unusualify\Modularity\Generators`
+**Directory**: `src/Generators/` · **Namespace**: `Unusualify\Modularous\Generators`
 
 Scaffolding engine behind `make:*` and `make:route` commands. Produces the full PHP and JS file set for new module routes plus test scaffolding for both backend and frontend.
 
@@ -309,7 +309,7 @@ Generator (abstract)                ← NwidartGenerator + ReplacementTrait
 | [`input`](/system-reference/backend/helpers/input) | Input schema / hydrate helpers |
 | [`media`](/system-reference/backend/helpers/media) | Image URL / disk resolution |
 | [`migrations`](/system-reference/backend/helpers/migrations) | Migration build helpers |
-| [`module`](/system-reference/backend/helpers/module) | `modularityConfig()`, `module_path()`, `currentModule()` |
+| [`module`](/system-reference/backend/helpers/module) | `modularousConfig()`, `module_path()`, `currentModule()` |
 | [`router`](/system-reference/backend/helpers/router) | Route resolution helpers |
 | [`sources`](/system-reference/backend/helpers/sources) | Module path discovery |
 
@@ -319,7 +319,7 @@ Generator (abstract)                ← NwidartGenerator + ReplacementTrait
 
 ## Middleware
 
-**Directory**: `src/Http/Middleware/` · **Namespace**: `Unusualify\Modularity\Http\Middleware`
+**Directory**: `src/Http/Middleware/` · **Namespace**: `Unusualify\Modularous\Http\Middleware`
 
 14 middleware classes registered via `BaseServiceProvider` and grouped into pipelines for admin, auth, and API routes.
 
@@ -346,7 +346,7 @@ Generator (abstract)                ← NwidartGenerator + ReplacementTrait
 
 ## Notifications
 
-**Directory**: `src/Notifications/` · **Namespace**: `Unusualify\Modularity\Notifications`
+**Directory**: `src/Notifications/` · **Namespace**: `Unusualify\Modularous\Notifications`
 
 | Group | Classes | Page |
 |-------|---------|------|
@@ -354,7 +354,7 @@ Generator (abstract)                ← NwidartGenerator + ReplacementTrait
 | **Feature base** | `FeatureNotification` | [FeatureNotification →](/system-reference/backend/notifications/feature-notification) |
 | **System notifications** | 11 system notification classes (model lifecycle, payments, assignments, chat, state changes) | [System notifications →](/system-reference/backend/notifications/system-notifications) |
 
-Notifications are dispatched by `Listener::handle()` when `modularity.mail.enabled = true` and the listener resolves a `{EventName}Notification` class.
+Notifications are dispatched by `Listener::handle()` when `modularous.mail.enabled = true` and the listener resolves a `{EventName}Notification` class.
 
 → [Full Notifications reference](/system-reference/backend/notifications/overview)
 
@@ -362,7 +362,7 @@ Notifications are dispatched by `Listener::handle()` when `modularity.mail.enabl
 
 ## Providers
 
-**Directory**: `src/Providers/` · **Namespace**: `Unusualify\Modularity\Providers`
+**Directory**: `src/Providers/` · **Namespace**: `Unusualify\Modularous\Providers`
 
 Service providers wire the package into the host Laravel app. Bind services, publish config, register routes, hook view composers, wire the scheduler, and discover commands.
 
@@ -371,7 +371,7 @@ Service providers wire the package into the host Laravel app. Bind services, pub
 | [`AuthServiceProvider`](/system-reference/backend/providers/auth-service-provider) | Modularous policies and gates |
 | [`BaseServiceProvider`](/system-reference/backend/providers/base-service-provider) | Core bindings, command discovery, view composers, scheduler, middleware aliases |
 | [`CoverageServiceProvider`](/system-reference/backend/providers/coverage-service-provider) | Coverage analyzer + commands binding |
-| [`ModularityProvider`](/system-reference/backend/providers/modularity-provider) | Top-level provider — registers all child providers |
+| [`ModularousProvider`](/system-reference/backend/providers/modularous-provider) | Top-level provider — registers all child providers |
 | [`ModuleServiceProvider`](/system-reference/backend/providers/module-service-provider) | Per-module provider auto-generated for each module |
 | [`RouteServiceProvider`](/system-reference/backend/providers/route-service-provider) | Module route registration with host/permission groups |
 | [`ServiceProvider`](/system-reference/backend/providers/service-provider) | Abstract base with config publishing helpers |
@@ -383,7 +383,7 @@ Service providers wire the package into the host Laravel app. Bind services, pub
 
 ## Repository Traits
 
-**Directory**: `src/Repositories/Traits/` · **Namespace**: `Unusualify\Modularity\Repositories\Traits`
+**Directory**: `src/Repositories/Traits/` · **Namespace**: `Unusualify\Modularous\Repositories\Traits`
 
 Repository traits extend the base `Repository` class with domain-specific persistence logic. While [Entity Traits](/system-reference/backend/entity-traits/overview) define model-level behaviour, repository traits handle **how data flows in and out** — form field hydration, after-save side effects, table filters, caching.
 
@@ -419,14 +419,14 @@ Every repository trait follows a naming convention that the base `Repository` di
 
 ## Scheduled Jobs
 
-**Directory**: `src/Schedulers/` · **Namespace**: `Unusualify\Modularity\Schedulers`
+**Directory**: `src/Schedulers/` · **Namespace**: `Unusualify\Modularous\Schedulers`
 
 Background jobs auto-discovered from `src/Schedulers/*.php` via `CommandDiscovery` and registered against Laravel's `Schedule` inside `BaseServiceProvider::boot()` (no `Console\Kernel.php` is required in the host app).
 
 | Command | Class | Cadence | Purpose |
 |---------|-------|---------|---------|
-| `modularity:fileponds:scheduler` | [`FilepondsScheduler`](/system-reference/backend/scheduled-jobs/fileponds-scheduler) | Daily | Cleans up orphaned `temporary_fileponds` rows + their files |
-| `modularity:scheduler:chatable` | [`ChatableScheduler`](/system-reference/backend/scheduled-jobs/chatable-scheduler) | Every minute | Aggregates unread chat messages and dispatches `UnreadChatMessage` notifications |
+| `modularous:fileponds:scheduler` | [`FilepondsScheduler`](/system-reference/backend/scheduled-jobs/fileponds-scheduler) | Daily | Cleans up orphaned `temporary_fileponds` rows + their files |
+| `modularous:scheduler:chatable` | [`ChatableScheduler`](/system-reference/backend/scheduled-jobs/chatable-scheduler) | Every minute | Aggregates unread chat messages and dispatches `UnreadChatMessage` notifications |
 | `telescope:prune` | (Laravel Telescope) | Daily | Prunes Telescope entries older than 168 hours |
 
 Both Modularous schedulers can also be run manually as Artisan commands. Output goes to the `scheduler` log channel; the host server only needs the standard `* * * * * php artisan schedule:run` cron entry.
@@ -437,19 +437,19 @@ Both Modularous schedulers can also be run manually as Artisan commands. Output 
 
 ## Services
 
-**Directory**: `src/Services/` · **Namespace**: `Unusualify\Modularity\Services`
+**Directory**: `src/Services/` · **Namespace**: `Unusualify\Modularous\Services`
 
 Bound in the service container; injected via constructor or accessed through their dedicated [Facades](#facades). Each group has its own reference page.
 
 | Group | Members | Page |
 |-------|---------|------|
 | **Cache concerns** | CacheHelpers, CacheInvalidation, CacheTags | [Cache Concerns →](/system-reference/backend/services/cache-concerns/overview) |
-| **Core services** | Assets, BroadcastManager, Connector, CoverageService, CurrencyExchangeService, FilepondManager, FileTranslation, MessageStage, MigrationBackup, ModularityCacheService, RedirectService, Translation, UtmParameters | [Services →](/system-reference/backend/services/overview) |
+| **Core services** | Assets, BroadcastManager, Connector, CoverageService, CurrencyExchangeService, FilepondManager, FileTranslation, MessageStage, MigrationBackup, ModularousCacheService, RedirectService, Translation, UtmParameters | [Services →](/system-reference/backend/services/overview) |
 | **Currency** | NullCurrencyProvider, SystemPricingCurrencyProvider | [Currency →](/system-reference/backend/services/currency/overview) |
 | **FileLibrary** | Disk, FileService | [FileLibrary →](/system-reference/backend/services/file-library/overview) |
 | **MediaLibrary** | Glide, Imgix, Local, TwicPics drivers | [MediaLibrary →](/system-reference/backend/services/media-library/overview) |
 | **Uploader** | SignAzureUpload, SignS3Upload, SignUploadListener | [Uploader →](/system-reference/backend/services/uploader/overview) |
-| **View services** | ModularityNavigation, UComponent, UWidget, UWrapper | [View Services →](/system-reference/backend/services/view/overview) |
+| **View services** | ModularousNavigation, UComponent, UWidget, UWrapper | [View Services →](/system-reference/backend/services/view/overview) |
 
 **Cache support**: [`CacheRelationshipGraph`](/system-reference/backend/services/cache-relationship-graph) drives cross-entity cache invalidation. The CLI face is [`cache:graph`](/guide/console/cache/cache-graph).
 
@@ -459,7 +459,7 @@ Bound in the service container; injected via constructor or accessed through the
 
 ## Support
 
-**Directory**: `src/Support/` · **Namespace**: `Unusualify\Modularity\Support`
+**Directory**: `src/Support/` · **Namespace**: `Unusualify\Modularous\Support`
 
 Stateless utility classes used across the codebase for command discovery, schema parsing, route grouping, and host-based routing.
 
@@ -472,8 +472,8 @@ Stateless utility classes used across the codebase for command discovery, schema
 | [`Finder`](/system-reference/backend/support/finder) | Resolve model/repository by table name or route name |
 | [`HostRouting / HostRouteRegistrar`](/system-reference/backend/support/host-routing) | Multi-tenant host-based route groups |
 | [`Migrations\SchemaParser`](/system-reference/backend/support/migrations-schema-parser) | Render migration `$table->…` PHP from schema strings |
-| [`ModularityRoutes`](/system-reference/backend/support/modularity-routes) | Route group options and middleware alias registration |
-| [`ModularityVite`](/system-reference/backend/support/modularity-vite) | Vite integration for the Modularous asset manifest |
+| [`ModularousRoutes`](/system-reference/backend/support/modularous-routes) | Route group options and middleware alias registration |
+| [`ModularousVite`](/system-reference/backend/support/modularous-vite) | Vite integration for the Modularous asset manifest |
 | [`RegexReplacement`](/system-reference/backend/support/regex-replacement) | Batch regex find-and-replace across a directory tree |
 
 → [Full Support reference](/system-reference/backend/support/overview)
@@ -482,7 +482,7 @@ Stateless utility classes used across the codebase for command discovery, schema
 
 ## View Composers
 
-**Directory**: `src/Http/ViewComposers/` · **Namespace**: `Unusualify\Modularity\Http\ViewComposers`
+**Directory**: `src/Http/ViewComposers/` · **Namespace**: `Unusualify\Modularous\Http\ViewComposers`
 
 Inject shared variables into Blade / Inertia layouts. Wired in `BaseServiceProvider::registerViewComposers()`.
 
@@ -524,10 +524,10 @@ Modularous ships a versioned, tag-aware cache built on top of Laravel's cache. I
 
 | Layer | Component |
 |-------|-----------|
-| Bind / boot | `BaseServiceProvider` (registers `ModularityCacheService`, `CacheRelationshipGraph`) |
+| Bind / boot | `BaseServiceProvider` (registers `ModularousCacheService`, `CacheRelationshipGraph`) |
 | CLI | [`cache:clear`](/guide/console/cache/cache-clear), [`cache:graph`](/guide/console/cache/cache-graph), [`cache:list`](/guide/console/cache/cache-list), [`cache:stats`](/guide/console/cache/cache-stats), [`cache:versions`](/guide/console/cache/cache-versions), [`cache:warm`](/guide/console/cache/cache-warm) |
 | Concerns | [`CacheHelpers`, `CacheInvalidation`, `CacheTags`](/system-reference/backend/services/cache-concerns/overview) |
-| Day-to-day API | [`ModularityCache`](/system-reference/backend/facades/modularity-cache) facade, [`CacheRelationshipGraph`](/system-reference/backend/services/cache-relationship-graph) |
+| Day-to-day API | [`ModularousCache`](/system-reference/backend/facades/modularous-cache) facade, [`CacheRelationshipGraph`](/system-reference/backend/services/cache-relationship-graph) |
 | Repository hooks | [Repository Traits → Logic](/system-reference/backend/repository-traits/logic/overview) (`afterSave{Trait}`, `afterDelete{Trait}`) |
 
 → Full deep-dive: [Caching guide](/guide/caching/overview).
@@ -565,7 +565,7 @@ When the same module needs to serve different domains with different middleware 
 | Facade | [`HostRouting`](/system-reference/backend/facades/host-routing) |
 | Middleware | [`Hostable`](/system-reference/backend/http/middleware/hostable) |
 | Provider | [`RouteServiceProvider`](/system-reference/backend/providers/route-service-provider) |
-| Support | [`HostRouting / HostRouteRegistrar`](/system-reference/backend/support/host-routing), [`ModularityRoutes`](/system-reference/backend/support/modularity-routes) |
+| Support | [`HostRouting / HostRouteRegistrar`](/system-reference/backend/support/host-routing), [`ModularousRoutes`](/system-reference/backend/support/modularous-routes) |
 
 ### Real-time broadcasting
 

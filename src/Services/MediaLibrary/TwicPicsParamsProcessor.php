@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\MediaLibrary;
+namespace Unusualify\Modularous\Services\MediaLibrary;
 
 class TwicPicsParamsProcessor extends AbstractParamsProcessor
 {

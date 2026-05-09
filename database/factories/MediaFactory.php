@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Factories;
+namespace Unusualify\Modularous\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Unusualify\Modularity\Entities\Media;
+use Unusualify\Modularous\Entities\Media;
 
 class MediaFactory extends Factory
 {

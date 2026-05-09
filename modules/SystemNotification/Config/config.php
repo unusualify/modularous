@@ -1,6 +1,6 @@
 <?php
 
-use Unusualify\Modularity\View\Component;
+use Unusualify\Modularous\View\Component;
 
 return [
     'name' => 'SystemNotification',

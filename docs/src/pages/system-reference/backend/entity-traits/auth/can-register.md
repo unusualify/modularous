@@ -5,7 +5,7 @@ sidebarTitle: CanRegister
 
 # CanRegister
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Auth\CanRegister`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Auth\CanRegister`
 
 Plugs the `User` model into the email-verification registration flow managed by the `Register` facade and `RegisterBrokerManager`. Implements the two contract methods required by `RegisterBroker`.
 
@@ -16,7 +16,7 @@ Plugs the `User` model into the email-verification registration flow managed by 
 | Method | Signature | Description |
 |--------|-----------|-------------|
 | `getEmailForRegister` | `(): string` | Returns the email address to send the verification link to (`$this->email`) |
-| `sendRegisterNotification` | `(string $token, array $parameters = []): void` | Dispatches the `EmailVerification` notification (or a custom class from `modularity.verification_email_class`) |
+| `sendRegisterNotification` | `(string $token, array $parameters = []): void` | Dispatches the `EmailVerification` notification (or a custom class from `modularous.verification_email_class`) |
 
 ---
 
@@ -24,7 +24,7 @@ Plugs the `User` model into the email-verification registration flow managed by 
 
 | Config key | Default | Description |
 |------------|---------|-------------|
-| `modularity.verification_email_class` | `EmailVerification::class` | Notification class used for the verification email |
+| `modularous.verification_email_class` | `EmailVerification::class` | Notification class used for the verification email |
 
 ---
 
@@ -33,7 +33,7 @@ Plugs the `User` model into the email-verification registration flow managed by 
 This trait is placed on the `User` model. You rarely call these methods directly — they are invoked internally by `RegisterBrokerManager` when `Register::sendResetLink()` is called.
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;
+use Unusualify\Modularous\Entities\Traits\Auth\CanRegister;
 
 class User extends Authenticatable
 {

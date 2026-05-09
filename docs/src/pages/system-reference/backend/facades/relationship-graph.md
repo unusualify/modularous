@@ -5,11 +5,11 @@ sidebarTitle: RelationshipGraph
 
 # RelationshipGraph
 
-**Facade**: `Unusualify\Modularity\Facades\RelationshipGraph`  
-**Accessor**: `modularity.relationship.graph`  
-**Underlying**: `Unusualify\Modularity\Services\CacheRelationshipGraph`
+**Facade**: `Unusualify\Modularous\Facades\RelationshipGraph`  
+**Accessor**: `modularous.relationship.graph`  
+**Underlying**: `Unusualify\Modularous\Services\CacheRelationshipGraph`
 
-Builds and queries the model → module-route dependency graph used by `ModularityCache` to invalidate the right cache entries when a related model changes. See [CacheRelationshipGraph](/system-reference/backend/services/cache-relationship-graph) for implementation details.
+Builds and queries the model → module-route dependency graph used by `ModularousCache` to invalidate the right cache entries when a related model changes. See [CacheRelationshipGraph](/system-reference/backend/services/cache-relationship-graph) for implementation details.
 
 ## Methods
 
@@ -30,7 +30,7 @@ Builds and queries the model → module-route dependency graph used by `Modulari
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\RelationshipGraph;
+use Unusualify\Modularous\Facades\RelationshipGraph;
 
 // Find which routes cache should be invalidated when a User is updated
 $affected = RelationshipGraph::getAffectedSubmodules(\App\Models\User::class);

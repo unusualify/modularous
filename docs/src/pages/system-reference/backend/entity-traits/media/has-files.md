@@ -5,9 +5,9 @@ sidebarTitle: HasFiles
 
 # HasFiles
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasFiles`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasFiles`
 
-Attaches files from the `File` model via a `MorphToMany` through the `modularity_fileables` pivot table. Locale-aware: each file attachment stores a `role` and `locale` pivot column, so a model can have different files per language.
+Attaches files from the `File` model via a `MorphToMany` through the `modularous_fileables` pivot table. Locale-aware: each file attachment stores a `role` and `locale` pivot column, so a model can have different files per language.
 
 ---
 
@@ -35,7 +35,7 @@ Pivot columns: `role`, `locale`. Ordered by pivot `id` ascending.
 
 | Config key | Default | Description |
 |------------|---------|-------------|
-| `modularity.tables.fileables` | — | Pivot table name for file attachments |
+| `modularous.tables.fileables` | — | Pivot table name for file attachments |
 | `translatable.use_property_fallback` | `false` | Whether to fall back to `fallback_locale` when no file exists for the requested locale |
 | `translatable.fallback_locale` | — | Locale used when the primary locale file is missing |
 
@@ -44,7 +44,7 @@ Pivot columns: `role`, `locale`. Ordered by pivot `id` ascending.
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
 
 class Document extends Model
 {

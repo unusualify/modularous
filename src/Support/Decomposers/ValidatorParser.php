@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Support\Decomposers;
+namespace Unusualify\Modularous\Support\Decomposers;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class ValidatorParser implements Arrayable
 {

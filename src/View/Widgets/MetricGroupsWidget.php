@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\View\Widgets;
+namespace Unusualify\Modularous\View\Widgets;
 
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\View\ModularityWidget;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\View\ModularousWidget;
 
-class MetricGroupsWidget extends ModularityWidget
+class MetricGroupsWidget extends ModularousWidget
 {
     public $tag = 'ue-metric-groups';
 
@@ -41,7 +41,7 @@ class MetricGroupsWidget extends ModularityWidget
         $attributes = parent::hydrateAttributes($attributes);
 
         // $attributes = array_merge_recursive_preserve(
-        //     modularityConfig('default_table_attributes'),
+        //     modularousConfig('default_table_attributes'),
         //     $attributes
         // );
 

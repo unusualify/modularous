@@ -3,7 +3,7 @@
 namespace Modules\SystemNotification\Http\Controllers;
 
 use Illuminate\Support\Facades\Lang;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class MyNotificationController extends BaseController
 {

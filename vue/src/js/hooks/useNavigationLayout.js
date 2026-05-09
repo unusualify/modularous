@@ -53,7 +53,7 @@ export default function useNavigationLayout() {
         store.commit(CONFIG.SET_UI_PREFERENCES, data.ui_preferences)
       }
     } catch (e) {
-      console.warn('[Modularity] Failed to persist UI preferences:', e)
+      console.warn('[Modularous] Failed to persist UI preferences:', e)
     }
   }
 

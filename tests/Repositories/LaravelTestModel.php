@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 
 class LaravelTestModel extends Model
 {

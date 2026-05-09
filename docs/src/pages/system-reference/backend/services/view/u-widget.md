@@ -40,7 +40,7 @@ The resolved data is merged into the component's attribute array so the frontend
 ## Example
 
 ```php
-use Unusualify\Modularity\Services\View\UWidget;
+use Unusualify\Modularous\Services\View\UWidget;
 
 $widget = UWidget::makeVCol([
     'component'  => 'ue-table',

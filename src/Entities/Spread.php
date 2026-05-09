@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -29,6 +29,6 @@ class Spread extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.spreads', 'um_spreads');
+        return modularousConfig('tables.spreads', 'um_spreads');
     }
 }

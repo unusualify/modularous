@@ -4,8 +4,8 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
-- **Alias:** `modularity:create:theme` (deprecated, use `make:theme:folder`)
+- **Signature:** `modularous:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
+- **Alias:** `modularous:create:theme` (deprecated, use `make:theme:folder`)
 - **Category:** Generators
 
 
@@ -14,37 +14,37 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:theme:folder NAME
+php artisan modularous:make:theme:folder NAME
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:make:theme:folder --extend=EXTEND
+php artisan modularous:make:theme:folder --extend=EXTEND
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:theme:folder -f
+php artisan modularous:make:theme:folder -f
 
 # Using full option name
-php artisan modularity:make:theme:folder --force
+php artisan modularous:make:theme:folder --force
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:theme:folder NAME
+php artisan modularous:make:theme:folder NAME
 ```
 
-`modularity:make:theme:folder`
+`modularous:make:theme:folder`
 -------------------------
 
 Create custom theme folder.
 
 ### Usage
 
-* `modularity:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
+* `modularous:make:theme:folder [--extend [EXTEND]] [-f|--force] [--] <name>`
 
 Create custom theme folder.
 

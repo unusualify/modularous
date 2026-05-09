@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\RelationshipArguments;
-use Unusualify\Modularity\Traits\RelationshipMap;
+use Unusualify\Modularous\Exceptions\ModularousException;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\RelationshipArguments;
+use Unusualify\Modularous\Traits\RelationshipMap;
 
 class RelationshipTraitsTest extends TestCase
 {
@@ -16,7 +16,7 @@ class RelationshipTraitsTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.laravel-relationship-map', [
+        Config::set('modularous.laravel-relationship-map', [
             'belongsTo' => [
                 'related' => ['position' => 0, 'required' => true],
                 'foreignKey' => ['position' => 1, 'required' => false],
@@ -71,7 +71,7 @@ class RelationshipTraitsTest extends TestCase
         UFinder::shouldReceive('getPossibleModels')->andReturnUsing(function ($str) {
             return ['App\\Models\\' . ucfirst($str)];
         });
-        Modularity::shouldReceive('getModels')->andReturn([]);
+        Modularous::shouldReceive('getModels')->andReturn([]);
     }
 
     protected function createTester(string $model = 'Post'): object
@@ -83,7 +83,7 @@ class RelationshipTraitsTest extends TestCase
             public function boot($model)
             {
                 $this->model = $model;
-                $this->relationshipParametersMap = config('modularity.laravel-relationship-map');
+                $this->relationshipParametersMap = config('modularous.laravel-relationship-map');
             }
 
             public function runCreate($name, $rel, $args = [])
@@ -238,7 +238,7 @@ class RelationshipTraitsTest extends TestCase
     /** @test */
     public function it_throws_when_required_relationship_argument_is_missing()
     {
-        Config::set('modularity.laravel-relationship-map', [
+        Config::set('modularous.laravel-relationship-map', [
             'customRel' => [
                 'unknownParam' => ['position' => 0, 'required' => true],
             ],
@@ -251,12 +251,12 @@ class RelationshipTraitsTest extends TestCase
             public function boot()
             {
                 $this->model = 'Post';
-                $this->relationshipParametersMap = config('modularity.laravel-relationship-map');
+                $this->relationshipParametersMap = config('modularous.laravel-relationship-map');
             }
         };
         $tester->boot();
 
-        $this->expectException(ModularityException::class);
+        $this->expectException(ModularousException::class);
         $this->expectExceptionMessage("Missing required argument 'unknownParam'");
         $tester->createRelationshipSchema('Foo', 'customRel', []);
     }

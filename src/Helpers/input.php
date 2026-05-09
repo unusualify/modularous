@@ -3,9 +3,9 @@
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Hydrates\InputHydrator;
-use Unusualify\Modularity\Services\Connector;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Hydrates\InputHydrator;
+use Unusualify\Modularous\Services\Connector;
 
 if (! function_exists('configure_input')) {
     function configure_input(array $input)
@@ -24,17 +24,17 @@ if (! function_exists('configure_input')) {
     }
 }
 
-if (! function_exists('modularity_default_input')) {
-    function modularity_default_input()
+if (! function_exists('modularous_default_input')) {
+    function modularous_default_input()
     {
-        return (array) Config::get(modularityBaseKey() . '.default_input');
+        return (array) Config::get(modularousBaseKey() . '.default_input');
     }
 }
 
 if (! function_exists('hydrate_input_type')) {
     function hydrate_input_type(array $input)
     {
-        $inputTypes = modularityConfig('input_types', []);
+        $inputTypes = modularousConfig('input_types', []);
 
         try {
             if (array_key_exists($input['type'], $inputTypes)) {
@@ -64,7 +64,7 @@ if (! function_exists('hydrate_input_connector')) {
             $names = explode(':', array_shift($parts)); // moduleName:routeName
             $routeName = studlyName(array_pop($names));
             $targetModuleName = studlyName(! empty($names) ? array_pop($names) : $moduleName);
-            $targetModule = Modularity::find($targetModuleName);
+            $targetModule = Modularous::find($targetModuleName);
 
             $types = ! empty($parts) ? explode(':', array_shift($parts)) : ['uri', 'index']; // uri:edit
             // controller,repository,uri
@@ -99,7 +99,7 @@ if (! function_exists('hydrate_input_extension')) {
             if (isset($_input->type) && $_input->type === 'relationship') {
                 $additionalExt = [];
 
-                $foreignKeyExt = collect(Modularity::find($this->moduleName)->getRawRouteConfig(studlyName($_input->name) . '.inputs'))
+                $foreignKeyExt = collect(Modularous::find($this->moduleName)->getRawRouteConfig(studlyName($_input->name) . '.inputs'))
                     ->filter(fn ($_i) => $this->getCamelCase($_i['name'] ?? '') === $this->getCamelCase($this->routeName) . 'Id')
                     ->toArray()[1]['ext'] ?? '';
 
@@ -252,7 +252,7 @@ if (! function_exists('hydrate_input_extension')) {
 
                                 $routeName = $this->getStudlyName($r['_routeName'] ?? $r['name']);
                                 $targetModuleName = $this->getStudlyName($r['_moduleName'] ?? $this->moduleName);
-                                $targetModule = Modularity::find($targetModuleName);
+                                $targetModule = Modularous::find($targetModuleName);
 
                                 $routeName = $this->getStudlyName($r['name']);
 
@@ -263,7 +263,7 @@ if (! function_exists('hydrate_input_extension')) {
                         if (! $filterEndpoint && isset($input['_routeName'])) {
                             $routeName = $this->getStudlyName($input['_routeName']);
                             $targetModuleName = $this->getStudlyName($input['_moduleName'] ?? $this->moduleName);
-                            $targetModule = Modularity::find($targetModuleName);
+                            $targetModule = Modularous::find($targetModuleName);
 
                             if ($targetModule) {
                                 $filterEndpoint = $targetModule->getRouteActionUrl($routeName, 'show');
@@ -391,7 +391,7 @@ if (! function_exists('hydrate_input_extension')) {
                 $arrayable = true;
                 $_input = (array) ($data ?? $input);
                 $data = [];
-                $data = modularity_format_input($_input) + $extraInputs;
+                $data = modularous_format_input($_input) + $extraInputs;
             }
         }
     }
@@ -417,7 +417,7 @@ if (! function_exists('format_input')) {
         hydrate_input_connector($input);
 
         if (! in_array($input['type'], ['morphTo', 'relationship', 'repeater']) && isset($input['schema'])) {
-            $input['schema'] = modularity_format_inputs($input['schema'], $module, $routeName, $skipQueries);
+            $input['schema'] = modularous_format_inputs($input['schema'], $module, $routeName, $skipQueries);
         }
 
         switch ($input['type']) {
@@ -520,7 +520,7 @@ if (! function_exists('format_input')) {
                         if (isset($attachable['repository'])) {
                             $modelClass = App::make($attachable['repository'])->getModel();
                         } elseif (isset($attachable['_moduleName']) && isset($attachable['_routeName'])) {
-                            $modelClass = Modularity::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
+                            $modelClass = Modularous::find($attachable['_moduleName'])->getRepository($attachable['_routeName'])->getModel();
                         } else {
                             throw new Exception('Repository or connector not found on morphTo input: ' . $name);
                         }
@@ -758,10 +758,10 @@ if (! function_exists('format_input')) {
     }
 }
 
-if (! function_exists('modularity_format_input')) {
-    function modularity_format_input(array $input, $module = null, $routeName = null, $skipQueries = null, $inputs = [])
+if (! function_exists('modularous_format_input')) {
+    function modularous_format_input(array $input, $module = null, $routeName = null, $skipQueries = null, $inputs = [])
     {
-        $defaultInput = modularity_default_input();
+        $defaultInput = modularous_default_input();
         $input = transform_closure_values($input, forceArray: true);
 
         [$formatted, $spreaded] = format_input($input, $module, $routeName, $skipQueries, $inputs);
@@ -790,11 +790,11 @@ if (! function_exists('modularity_format_input')) {
     }
 }
 
-if (! function_exists('modularity_format_inputs')) {
-    function modularity_format_inputs(array $inputs, $module = null, $routeName = null, $skipQueries = null)
+if (! function_exists('modularous_format_inputs')) {
+    function modularous_format_inputs(array $inputs, $module = null, $routeName = null, $skipQueries = null)
     {
         return Collection::make($inputs)->mapWithKeys(function ($v, $k) use ($module, $routeName, $skipQueries, $inputs) {
-            return modularity_format_input($v, $module, $routeName, $skipQueries, inputs: $inputs);
+            return modularous_format_input($v, $module, $routeName, $skipQueries, inputs: $inputs);
         })->toArray();
     }
 }

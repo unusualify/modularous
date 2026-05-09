@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Carbon\Carbon;
 use Cartalyst\Tags\TaggableInterface;
@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Modules\Notification\Events\ModelCreated;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
-use Unusualify\Modularity\Contracts\ModuleableInterface;
-use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
-use Unusualify\Modularity\Entities\Traits\Core\LocaleTags;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\IsTranslatable;
-use Unusualify\Modularity\Traits\Traitify;
+use Unusualify\Modularous\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Entities\Traits\Core\HasCaching;
+use Unusualify\Modularous\Entities\Traits\Core\LocaleTags;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\IsTranslatable;
+use Unusualify\Modularous\Traits\Traitify;
 
 abstract class Model extends LaravelModel implements CacheableInterface, ModuleableInterface, TaggableInterface
 {
@@ -71,11 +71,11 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
             }
         }
 
-        if (in_array('Unusualify\Modularity\Entities\Traits\HasAuthorizable', class_uses_recursive(static::class))) {
+        if (in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive(static::class))) {
             $fillable = array_merge($fillable, static::$hasAuthorizableFillable ?? []);
         }
 
-        // if (in_array('Unusualify\Modularity\Entities\Traits\HasStateable', class_uses_recursive(static::class))) {
+        // if (in_array('Unusualify\Modularous\Entities\Traits\HasStateable', class_uses_recursive(static::class))) {
         //     $fillable = array_merge($fillable, static::$hasStateableFillable ?? []);
         // }
 
@@ -100,7 +100,7 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
         return $this->morphToMany(
             static::$tagsModel,
             'taggable',
-            modularityConfig('tables.tagged', 'tagged'),
+            modularousConfig('tables.tagged', 'tagged'),
             'taggable_id',
             'tag_id'
         );

@@ -16,8 +16,8 @@ Add the `HasStateable` trait to your model:
 
 namespace Modules\Article\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
 
 class Article extends Model
 {
@@ -65,8 +65,8 @@ Add `StateableTrait` to your repository:
 
 namespace Modules\Article\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\StateableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\StateableTrait;
 
 class ArticleRepository extends Repository
 {

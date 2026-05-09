@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\ProcessHistoryCreated;
 use Modules\SystemNotification\Events\ProcessHistoryUpdated;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Entities\Process;
-use Unusualify\Modularity\Entities\ProcessHistory;
-use Unusualify\Modularity\Entities\Scopes\ProcessableScopes;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\Processable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Process;
+use Unusualify\Modularous\Entities\ProcessHistory;
+use Unusualify\Modularous\Entities\Scopes\ProcessableScopes;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\Processable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ProcessableTest extends ModelTestCase
 {
@@ -481,8 +481,8 @@ class ProcessableTest extends ModelTestCase
         $this->model->delete();
 
         // Check that process still exists (no cascade from processable to process)
-        $this->assertDatabaseHas(modularityConfig('tables.processes', 'm_processes'), ['id' => $processId]);
-        $this->assertDatabaseHas(modularityConfig('tables.process_histories', 'm_process_histories'), ['id' => $historyId]);
+        $this->assertDatabaseHas(modularousConfig('tables.processes', 'm_processes'), ['id' => $processId]);
+        $this->assertDatabaseHas(modularousConfig('tables.process_histories', 'm_process_histories'), ['id' => $historyId]);
     }
 
     public function test_integration_with_process_scopes()

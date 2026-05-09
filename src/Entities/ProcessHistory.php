@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SystemNotification\Events\ProcessHistoryCreated;
 use Modules\SystemNotification\Events\ProcessHistoryUpdated;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
 
 class ProcessHistory extends Model
 {
@@ -58,6 +58,6 @@ class ProcessHistory extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.process_histories', 'm_process_histories');
+        return modularousConfig('tables.process_histories', 'm_process_histories');
     }
 }

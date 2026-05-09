@@ -1,16 +1,16 @@
 # Contributing
 
 ## Request for changes/ Pull Requests
-You first need to create a fork of the [modularity](https://github.com/unusualify/modularous/) repository to commit your changes to it. Methods to fork a repository can be found in the [GitHub Documentation](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
+You first need to create a fork of the [modularous](https://github.com/unusualify/modularous/) repository to commit your changes to it. Methods to fork a repository can be found in the [GitHub Documentation](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
 Then add your fork as a local project:
 
 ```sh
 # Using HTTPS
-git clone https://github.com/unusualify/modularity.git
+git clone https://github.com/unusualify/modularous.git
 
 # Using SSH
-git clone git@github.com:unusualify/modularity.git
+git clone git@github.com:unusualify/modularous.git
 ```
 
 > [Which remote URL should be used ?](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories)
@@ -18,20 +18,20 @@ git clone git@github.com:unusualify/modularity.git
 Then, go to your local folder
 
 ```sh
-cd modularity
+cd modularous
 ```
 
 Add git remote controls :
 
 ```sh
 # Using HTTPS
-git remote add fork https://github.com/YOUR-USERNAME/modularity.git
-git remote add upstream https://github.com/unusualify/modularity.git
+git remote add fork https://github.com/YOUR-USERNAME/modularous.git
+git remote add upstream https://github.com/unusualify/modularous.git
 
 
 # Using SSH
-git remote add fork git@github.com:YOUR-USERNAME/modularity.git
-git remote add upstream git@github.com:unusualify/modularity.git
+git remote add fork git@github.com:YOUR-USERNAME/modularous.git
+git remote add upstream git@github.com:unusualify/modularous.git
 ```
 
 You can now verify that you have your two git remotes:
@@ -69,4 +69,4 @@ git pull
 git switch --create patch/1234-name-issue
 ```
 
-Commit your changes, then push the branch to your fork with `git push -u fork` and open a pull request on [the modularity repository](https://github.com/unusualify/modularous/) following the template provided.
+Commit your changes, then push the branch to your fork with `git push -u fork` and open a pull request on [the modularous repository](https://github.com/unusualify/modularous/) following the template provided.

@@ -9,7 +9,7 @@ sidebarTitle: Make Controller API
 
 ## Command Information
 
-- **Signature:** `modularity:make:controller:api {module} {name}`
+- **Signature:** `modularous:make:controller:api {module} {name}`
 - **Category:** Generators
 
 ## Arguments
@@ -26,10 +26,10 @@ Creates an API controller stub that returns JSON responses. Use this when you ne
 ## Examples
 
 ```bash
-php artisan modularity:make:controller:api Blog Post
+php artisan modularous:make:controller:api Blog Post
 # → Modules/Blog/Http/Controllers/PostApiController.php
 
-php artisan modularity:make:controller:api Shop Product
+php artisan modularous:make:controller:api Shop Product
 ```
 
 ## Related

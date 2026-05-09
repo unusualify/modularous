@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
-use Unusualify\Modularity\Traits\Allowable;
-use Unusualify\Modularity\View\Component;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageUtilities;
+use Unusualify\Modularous\Traits\Allowable;
+use Unusualify\Modularous\View\Component;
 
 class DashboardController extends BaseController
 {
@@ -38,7 +38,7 @@ class DashboardController extends BaseController
 
     public function index($parentId = null)
     {
-        $blockItems = $this->app->config->get(modularityBaseKey() . '.ui_settings.dashboard.blocks');
+        $blockItems = $this->app->config->get(modularousBaseKey() . '.ui_settings.dashboard.blocks');
 
         foreach ($blockItems as $index => $blockItem) {
             if ($this->isAllowedItem($blockItem, 'allowedRoles')) {
@@ -47,7 +47,7 @@ class DashboardController extends BaseController
         }
 
         $endpoints = $this->getUrls();
-        $pageTitle = __('Dashboard') . ' - ' . Modularity::pageTitle();
+        $pageTitle = __('Dashboard') . ' - ' . Modularous::pageTitle();
         $headerTitle = __('Dashboard');
 
         if ($this->shouldUseInertia()) {

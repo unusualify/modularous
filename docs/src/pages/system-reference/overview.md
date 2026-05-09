@@ -5,7 +5,7 @@ sidebarTitle: System Reference
 
 # System Reference
 
-Modularity (Modularous) is a Laravel package that provides a modular admin panel powered by Vue.js, Vuetify, and Inertia. It uses the Repository pattern for data access, config-driven forms and tables, and a Hydrate system to transform module config into frontend schema.
+Modularous (Modularous) is a Laravel package that provides a modular admin panel powered by Vue.js, Vuetify, and Inertia. It uses the Repository pattern for data access, config-driven forms and tables, and a Hydrate system to transform module config into frontend schema.
 
 ## Documentation Index
 
@@ -27,16 +27,16 @@ Modularity (Modularous) is a Laravel package that provides a modular admin panel
 ## Quick Reference
 
 **Key config keys**
-- `modularity.services.*` — services (currency_exchange, etc.)
-- `modularity.roles` — role definitions
-- `modularity.traits` — entity traits
-- `modularity.paths` — base paths
-- `modularity.currency_provider` — currency provider FQCN
+- `modularous.services.*` — services (currency_exchange, etc.)
+- `modularous.roles` — role definitions
+- `modularous.traits` — entity traits
+- `modularous.paths` — base paths
+- `modularous.currency_provider` — currency provider FQCN
 
 **Key commands**
-- `modularity:build` — rebuild Vue assets
-- `modularity:route:enable` / `modularity:route:disable` — toggle routes
-- `modularity:route:status` — list route status per module
+- `modularous:build` — rebuild Vue assets
+- `modularous:route:enable` / `modularous:route:disable` — toggle routes
+- `modularous:route:status` — list route status per module
 
 **Paths**
 - Package source: `packages/modularous/src/`

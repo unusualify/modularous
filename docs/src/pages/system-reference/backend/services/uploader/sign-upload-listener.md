@@ -30,7 +30,7 @@ interface SignUploadListener
 ## Implementing in a Controller
 
 ```php
-use Unusualify\Modularity\Services\Uploader\SignUploadListener;
+use Unusualify\Modularous\Services\Uploader\SignUploadListener;
 
 class FileUploadController extends Controller implements SignUploadListener
 {

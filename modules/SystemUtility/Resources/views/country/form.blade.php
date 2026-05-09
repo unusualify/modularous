@@ -1,4 +1,4 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.master")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.master")
 
 @section('appTypeClass', 'body--form')
 
@@ -8,7 +8,7 @@
 
 @push('head_last_js')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-form.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-form.js'])
     }}
 @endpush
 
@@ -23,6 +23,6 @@
 @endpush
 
 @push('STORE')
-    window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
-    window['{{ modularityConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new StdClass()) !!}
+    window['{{ modularousConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!}
+    window['{{ modularousConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new StdClass()) !!}
 @endpush

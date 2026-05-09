@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Services\FileLibrary\FileService;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Services\FileLibrary\FileService;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class FileTest extends ModelTestCase
 {
@@ -29,7 +29,7 @@ class FileTest extends ModelTestCase
     public function test_get_table_file()
     {
         $file = new File;
-        $this->assertEquals(modularityConfig('tables.files', 'um_files'), $file->getTable());
+        $this->assertEquals(modularousConfig('tables.files', 'um_files'), $file->getTable());
     }
 
     public function test_fillable_attributes()
@@ -54,7 +54,7 @@ class FileTest extends ModelTestCase
     public function test_can_delete_safely_when_has_fileables()
     {
         // Insert a fileable record
-        DB::table(modularityConfig('tables.fileables'))->insert([
+        DB::table(modularousConfig('tables.fileables'))->insert([
             'file_id' => $this->file->id,
             'fileable_id' => 1,
             'fileable_type' => 'test_type',
@@ -71,7 +71,7 @@ class FileTest extends ModelTestCase
         $usedFile = File::factory()->create();
 
         // Make the file used by adding a fileable record
-        DB::table(modularityConfig('tables.fileables'))->insert([
+        DB::table(modularousConfig('tables.fileables'))->insert([
             'file_id' => $usedFile->id,
             'fileable_id' => 1,
             'fileable_type' => 'test_type',

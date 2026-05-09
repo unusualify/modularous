@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait TableAttributes
 {

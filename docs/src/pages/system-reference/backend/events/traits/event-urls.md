@@ -5,7 +5,7 @@ sidebarTitle: EventUrls
 
 # EventUrls
 
-`Unusualify\Modularity\Events\Traits\EventUrls`
+`Unusualify\Modularous\Events\Traits\EventUrls`
 
 Captures the current and previous HTTP request URLs when the event is constructed. Added to every `ModelEvent` subclass automatically.
 

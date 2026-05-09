@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use BadMethodCallException;
 use Illuminate\Foundation\Application;
@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class HostRouting
 {

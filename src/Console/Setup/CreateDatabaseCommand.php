@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Setup;
+namespace Unusualify\Modularous\Console\Setup;
 
 use Illuminate\Database\DatabaseManager;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class CreateDatabaseCommand extends BaseCommand
 {
@@ -13,7 +13,7 @@ class CreateDatabaseCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:create:database';
+    protected $name = 'modularous:create:database';
 
     /**
      * The console command description.

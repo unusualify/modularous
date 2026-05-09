@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\View;
+namespace Unusualify\Modularous\View;
 
 use BadMethodCallException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\Component as LaravelComponent;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageNames;
 
 /**
  * The View Component class for creating dynamic Vue components from PHP
@@ -116,7 +116,7 @@ class Component extends LaravelComponent
     {
         if (isset($config['widgetAlias'])) {
             $config = array_merge_recursive_preserve(
-                Config::get('modularity.widgets.' . $config['widgetAlias'], []),
+                Config::get('modularous.widgets.' . $config['widgetAlias'], []),
                 array_except($config, ['widgetAlias'])
             );
         }
@@ -128,7 +128,7 @@ class Component extends LaravelComponent
         $component = new static;
 
         if (isset($config['widget'])) {
-            $widgetClass = 'Unusualify\\Modularity\\View\\Widgets\\' . $config['widget'];
+            $widgetClass = 'Unusualify\\Modularous\\View\\Widgets\\' . $config['widget'];
             if (! class_exists($widgetClass)) {
                 throw new \Exception('Widget class ' . $widgetClass . ' does not exist');
             }

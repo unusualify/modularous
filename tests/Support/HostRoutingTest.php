@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Support\HostRouting;
-use Unusualify\Modularity\Tests\Support\Stubs\HostableStub;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Support\HostRouting;
+use Unusualify\Modularous\Tests\Support\Stubs\HostableStub;
+use Unusualify\Modularous\Tests\TestCase;
 
 class HostRoutingTest extends TestCase
 {

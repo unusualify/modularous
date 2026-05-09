@@ -12,14 +12,14 @@ final class CmsSitemapCacheService
 {
     public function getCommittedXml(): string
     {
-        $key = (string) modularityConfig('cms_sitemap.cache_key', 'modularity_cms_sitemap.committed_v1');
+        $key = (string) modularousConfig('cms_sitemap.cache_key', 'modularous_cms_sitemap.committed_v1');
         $raw = Cache::get($key);
 
         if (is_string($raw) && $raw !== '') {
             return $raw;
         }
 
-        if ((bool) modularityConfig('cms_sitemap.build_on_cache_miss', false)) {
+        if ((bool) modularousConfig('cms_sitemap.build_on_cache_miss', false)) {
             $xml = app(CmsSitemapBuildService::class)->buildXml();
             $this->commit($xml);
 
@@ -31,7 +31,7 @@ final class CmsSitemapCacheService
 
     public function commit(string $xml): void
     {
-        $key = (string) modularityConfig('cms_sitemap.cache_key', 'modularity_cms_sitemap.committed_v1');
+        $key = (string) modularousConfig('cms_sitemap.cache_key', 'modularous_cms_sitemap.committed_v1');
         Cache::forever($key, $xml);
     }
 

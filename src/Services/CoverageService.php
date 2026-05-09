@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use InvalidArgumentException;
-use Unusualify\Modularity\Support\CoverageAnalyzer;
+use Unusualify\Modularous\Support\CoverageAnalyzer;
 
 /**
  * Coverage Service
@@ -23,8 +23,8 @@ class CoverageService
 
     public function __construct(?string $cloverDir = null, ?string $cloverName = null)
     {
-        $this->cloverDir = $cloverDir ?? config('modularity-coverage.clover_dir');
-        $this->cloverName = $cloverName ?? config('modularity-coverage.clover_name');
+        $this->cloverDir = $cloverDir ?? config('modularous-coverage.clover_dir');
+        $this->cloverName = $cloverName ?? config('modularous-coverage.clover_name');
         $this->initializeAnalyzer();
     }
 

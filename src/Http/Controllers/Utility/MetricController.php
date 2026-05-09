@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Services\MessageStage;
 
 class MetricController extends Controller
 {

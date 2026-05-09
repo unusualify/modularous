@@ -13,7 +13,7 @@ Resolves frontend asset URLs for both **production** (compiled manifest lookup) 
 
 In **production**, `asset()` reads the compiled `unusual-manifest.json` from the public directory and returns the hashed/versioned asset path.
 
-In **local development** (when `modularity.is_development = true` and the environment is `local` or `development`), it fetches the manifest from the running Vite dev server and returns the dev server URL.
+In **local development** (when `modularous.is_development = true` and the environment is `local` or `development`), it fetches the manifest from the running Vite dev server and returns the dev server URL.
 
 ## Key Methods
 
@@ -28,28 +28,28 @@ In **local development** (when `modularity.is_development = true` and the enviro
 
 | Config key | Default | Description |
 |------------|---------|-------------|
-| `modularity.public_dir` | `'unusual'` | Public directory name under `public/` |
-| `modularity.manifest` | `'unusual-manifest.json'` | Manifest filename |
-| `modularity.development_url` | `'http://localhost:8080'` | Vite dev server base URL |
-| `modularity.is_development` | `false` | Enable dev mode asset resolution |
-| `modularity.vendor_path` | — | Path to the package vendor dir (used as fallback for manifest) |
+| `modularous.public_dir` | `'unusual'` | Public directory name under `public/` |
+| `modularous.manifest` | `'unusual-manifest.json'` | Manifest filename |
+| `modularous.development_url` | `'http://localhost:8080'` | Vite dev server base URL |
+| `modularous.is_development` | `false` | Enable dev mode asset resolution |
+| `modularous.vendor_path` | — | Path to the package vendor dir (used as fallback for manifest) |
 
 ## Dev Mode Detection
 
 Dev mode is active when **both** conditions are true:
 1. `app()->environment('local', 'development')` is `true`
-2. `modularity.is_development` config is `true`
+2. `modularous.is_development` config is `true`
 
 To enable local development asset serving:
 
 ```php
-// config/modularity.php
-'is_development' => env('MODULARITY_DEV', false),
-'development_url' => env('MODULARITY_DEV_URL', 'http://localhost:8080'),
+// config/modularous.php
+'is_development' => env('MODULAROUS_DEV', false),
+'development_url' => env('MODULAROUS_DEV_URL', 'http://localhost:8080'),
 ```
 
 ```dotenv
 # .env
-MODULARITY_DEV=true
-MODULARITY_DEV_URL=http://localhost:8080
+MODULAROUS_DEV=true
+MODULAROUS_DEV_URL=http://localhost:8080
 ```

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Event;
 use Modules\SystemNotification\Events\FilepondCreated;
 use Modules\SystemNotification\Events\FilepondDeleted;
 use Modules\SystemNotification\Events\FilepondUpdated;
-use Unusualify\Modularity\Entities\Filepond;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Filepond;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class FilepondTest extends ModelTestCase
 {
@@ -20,7 +20,7 @@ class FilepondTest extends ModelTestCase
     public function test_get_table_filepond()
     {
         $filepond = new Filepond;
-        $this->assertEquals(modularityConfig('tables.fileponds', 'um_fileponds'), $filepond->getTable());
+        $this->assertEquals(modularousConfig('tables.fileponds', 'um_fileponds'), $filepond->getTable());
     }
 
     public function test_fillable_attributes()

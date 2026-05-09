@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -16,7 +16,7 @@ class UserOauth extends BaseModel
 
     public function __construct(array $attributes = [])
     {
-        $this->table = modularityConfig('tables.user_oauths', 'um_user_oauths');
+        $this->table = modularousConfig('tables.user_oauths', 'um_user_oauths');
 
         parent::__construct($attributes);
     }

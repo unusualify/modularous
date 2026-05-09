@@ -5,9 +5,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Facades\ModularityLog;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Exceptions\ModularousException;
+use Unusualify\Modularous\Facades\ModularousLog;
 
 if (! function_exists('lowerName')) {
     function lowerName($string)
@@ -213,7 +213,7 @@ if (! function_exists('fileTrace')) {
                 'regex' => $regex,
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 'Could not find file or class matching pattern in debug backtrace.'
             );
         }
@@ -549,7 +549,7 @@ if (! function_exists('get_user_profile')) {
             'avatar_url' => $user->fileponds()
                 ->where('role', 'avatar')
                 ->first()
-                ?->mediableFormat()['source'] ?? '/vendor/modularity/jpg/anonymous.jpg',
+                ?->mediableFormat()['source'] ?? '/vendor/modularous/jpg/anonymous.jpg',
         ];
 
         if (isset($user->ui_preferences)) {
@@ -919,7 +919,7 @@ if (! function_exists('transform_closure_values')) {
 
         } catch (Throwable $th) {
             // throw $th;
-            ModularityLog::error('Error transforming closure values', [
+            ModularousLog::error('Error transforming closure values', [
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
                 'haystack' => $haystack,

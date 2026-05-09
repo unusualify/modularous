@@ -45,8 +45,8 @@ use Modules\Cms\Services\DbFullTextSearchDriver;
 use Modules\Cms\Services\DefaultCmsPromotionScopeApplier;
 use Modules\Cms\Services\NullLeadDelivery;
 use Modules\Cms\Services\RedirectValidationService;
-use Unusualify\Modularity\Services\Security\SecurityService;
-use Unusualify\Modularity\Services\SlugInputValidationService;
+use Unusualify\Modularous\Services\Security\SecurityService;
+use Unusualify\Modularous\Services\SlugInputValidationService;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -54,7 +54,7 @@ class CmsServiceProvider extends ServiceProvider
     {
         // $this->app->register(CmsRouteServiceProvider::class);
 
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
@@ -62,7 +62,7 @@ class CmsServiceProvider extends ServiceProvider
 
         $this->app->singleton(CmsLocalizationOverrideProviderInterface::class, NullCmsLocalizationOverrideProvider::class);
         $this->app->singleton(CmsLocalizationContract::class, function ($app) {
-            $driver = (string) modularityConfig('cms_routing.localization_driver', 'auto');
+            $driver = (string) modularousConfig('cms_routing.localization_driver', 'auto');
             $canonical = $app->make(CanonicalUrlResolverInterface::class);
 
             $inner = match (true) {
@@ -91,7 +91,7 @@ class CmsServiceProvider extends ServiceProvider
 
         $this->app->singleton(RedirectValidationServiceInterface::class, RedirectValidationService::class);
 
-        if (! modularityConfig('cms_features.register_contracts', true)) {
+        if (! modularousConfig('cms_features.register_contracts', true)) {
             return;
         }
 
@@ -107,31 +107,31 @@ class CmsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
-        if (modularityConfig('cms_features.register_commands', true)) {
+        if (modularousConfig('cms_features.register_commands', true)) {
             if ($this->app->runningInConsole()) {
                 $this->commands([RebuildCmsSitemapCommand::class]);
             }
         }
 
-        if (modularityConfig('cms_features.register_middlewares', true)) {
+        if (modularousConfig('cms_features.register_middlewares', true)) {
             Route::aliasMiddleware('modules.cms.canonical.locale', CanonicalLocaleMiddleware::class);
             Route::aliasMiddleware('modules.cms.fallback.slugless.canonical', FallbackLocaleSluglessCanonicalMiddleware::class);
             Route::aliasMiddleware('modules.cms.visitor.redirect', VisitorRedirectMiddleware::class);
         }
 
-        if (modularityConfig('cms_seo.robots.route_enabled', true)) {
+        if (modularousConfig('cms_seo.robots.route_enabled', true)) {
             Route::middleware('web')->get('/robots.txt', RobotsTxtController::class)->name('cms.robots_txt');
         }
 
-        if ((bool) modularityConfig('cms_sitemap.route_enabled', true)) {
+        if ((bool) modularousConfig('cms_sitemap.route_enabled', true)) {
             Route::middleware('web')->get('/sitemap.xml', PublicSitemapController::class)->name('cms.sitemap');
         }
 
-        if ((bool) modularityConfig('cms_routing.resync_registry_after_parent_segments_change', true)) {
+        if ((bool) modularousConfig('cms_routing.resync_registry_after_parent_segments_change', true)) {
             ParentSegment::observe(ParentSegmentUrlRouteObserver::class);
         }
 
@@ -141,17 +141,17 @@ class CmsServiceProvider extends ServiceProvider
 
     private function registerCmsSignedPreviewRoutes(): void
     {
-        if (! modularityConfig('cms_routing.signed_preview.enabled', true)) {
+        if (! modularousConfig('cms_routing.signed_preview.enabled', true)) {
             return;
         }
 
-        $prefix = trim((string) modularityConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
+        $prefix = trim((string) modularousConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
         if ($prefix === '') {
             return;
         }
 
-        $max = (int) modularityConfig('cms_routing.signed_preview.throttle_max_attempts', 120);
-        $decay = (int) modularityConfig('cms_routing.signed_preview.throttle_decay_minutes', 1);
+        $max = (int) modularousConfig('cms_routing.signed_preview.throttle_max_attempts', 120);
+        $decay = (int) modularousConfig('cms_routing.signed_preview.throttle_decay_minutes', 1);
         $throttle = 'throttle:' . max(1, $max) . ',' . max(1, $decay);
 
         $definition = static function () use ($prefix, $throttle): void {
@@ -175,13 +175,13 @@ class CmsServiceProvider extends ServiceProvider
 
     private function registerCmsPublishSchedule(): void
     {
-        if (! modularityConfig('cms_schedule.register_with_laravel_schedule', false)) {
+        if (! modularousConfig('cms_schedule.register_with_laravel_schedule', false)) {
             return;
         }
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $job = $schedule->job(new ScanCmsPublishWindowBoundariesJob);
-            $frequency = (string) modularityConfig('cms_schedule.frequency', 'everyFiveMinutes');
+            $frequency = (string) modularousConfig('cms_schedule.frequency', 'everyFiveMinutes');
 
             match ($frequency) {
                 'everyMinute' => $job->everyMinute(),

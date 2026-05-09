@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:event <name> [<module>] [--self] [-f|--force] [--should-broadcast] [--should-broadcast-now] [--should-dispatch-after-commit]`
+- **Signature:** `modularous:make:event <name> [<module>] [--self] [-f|--force] [--should-broadcast] [--should-broadcast-now] [--should-dispatch-after-commit]`
 - **Category:** Generators
 
 ## Examples
@@ -12,34 +12,34 @@
 ### Create an event in the default app path
 
 ```bash
-php artisan modularity:make:event OrderShipped
+php artisan modularous:make:event OrderShipped
 ```
 
 ### Create an event inside a module
 
 ```bash
-php artisan modularity:make:event OrderShipped Shop
+php artisan modularous:make:event OrderShipped Shop
 ```
 
 ### Create a broadcastable event
 
 ```bash
-php artisan modularity:make:event OrderShipped --should-broadcast
+php artisan modularous:make:event OrderShipped --should-broadcast
 ```
 
 ### Create an event that broadcasts immediately (no queue)
 
 ```bash
-php artisan modularity:make:event OrderShipped --should-broadcast-now
+php artisan modularous:make:event OrderShipped --should-broadcast-now
 ```
 
 ### Create an event that dispatches after database commit
 
 ```bash
-php artisan modularity:make:event OrderShipped --should-dispatch-after-commit
+php artisan modularous:make:event OrderShipped --should-dispatch-after-commit
 ```
 
-`modularity:make:event`
+`modularous:make:event`
 -----------------------
 
 Scaffolds a new Laravel Event class. When abstract event classes are found in `app/Events/`, the package's own `src/Events/`, or any module's Events directory, an **interactive prompt** lets you optionally extend one of them.
@@ -53,7 +53,7 @@ Output path resolution:
 
 ### Usage
 
-* `modularity:make:event <name> [<module>] [--self] [-f|--force] [--should-broadcast] [--should-broadcast-now] [--should-dispatch-after-commit]`
+* `modularous:make:event <name> [<module>] [--self] [-f|--force] [--should-broadcast] [--should-broadcast-now] [--should-dispatch-after-commit]`
 
 ### Arguments
 

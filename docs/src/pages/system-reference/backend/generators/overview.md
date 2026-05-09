@@ -34,8 +34,8 @@ Generators are not called directly in application code — they are orchestrated
 
 | Command | Generator |
 |---------|-----------|
-| `modularity:make:route` | `RouteGenerator` |
-| `modularity:fix:route` | `RouteGenerator` (with `--fix`) |
-| `modularity:make:stubs` | `StubsGenerator` |
-| `modularity:make:test:vue` | `VueTestGenerator` |
-| `modularity:make:test:laravel` | `LaravelTestGenerator` |
+| `modularous:make:route` | `RouteGenerator` |
+| `modularous:fix:route` | `RouteGenerator` (with `--fix`) |
+| `modularous:make:stubs` | `StubsGenerator` |
+| `modularous:make:test:vue` | `VueTestGenerator` |
+| `modularous:make:test:laravel` | `LaravelTestGenerator` |

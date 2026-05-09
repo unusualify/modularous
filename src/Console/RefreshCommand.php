@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console;
+namespace Unusualify\Modularous\Console;
 
 use Illuminate\Support\Facades\File;
 
@@ -11,14 +11,14 @@ class RefreshCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:refresh';
+    protected $name = 'modularous:refresh';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Move new modularity front sources';
+    protected $description = 'Move new modularous front sources';
 
     /**
      * Executes the console command.
@@ -27,7 +27,7 @@ class RefreshCommand extends BaseCommand
      */
     public function handle(): int
     {
-        File::deleteDirectory(public_path('vendor/modularity'));
+        File::deleteDirectory(public_path('vendor/modularous'));
 
         $this->publishAssets();
         $this->call('cache:clear');
@@ -44,8 +44,8 @@ class RefreshCommand extends BaseCommand
     private function publishAssets()
     {
         $this->call('vendor:publish', [
-            '--provider' => 'Unusualify\Modularity\LaravelServiceProvider',
-            '--tag' => 'modularity-assets',
+            '--provider' => 'Unusualify\Modularous\LaravelServiceProvider',
+            '--tag' => 'modularous-assets',
             '--force' => true,
         ]);
     }

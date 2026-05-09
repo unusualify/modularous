@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Entities\Casts;
+namespace Unusualify\Modularous\Tests\Entities\Casts;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Casts\LocaleTagsCast;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\Casts\LocaleTagsCast;
+use Unusualify\Modularous\Tests\TestCase;
 
 class LocaleTagsCastTest extends TestCase
 {

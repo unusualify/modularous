@@ -6,7 +6,7 @@ sidebarTitle: ApiController
 # ApiController
 
 **File**: `src/Http/Controllers/ApiController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `CoreController`  
 **Traits**: `ApiResponses`, `ApiVersioning`, `ApiAuthentication`, `ApiRateLimiting`, `ApiValidation`, `ApiPagination`, `ApiFiltering`, `ApiSorting`, `ApiRelationships`
 

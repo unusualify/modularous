@@ -5,7 +5,7 @@ sidebarTitle: HasCompany
 
 # Core\HasCompany
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\HasCompany`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\HasCompany`
 
 Associates a model (typically `User`) with a `Company` record. Auto-creates the `Company` on first save when a `saving_company_name` attribute is present. Appends several computed attributes for company display and billing state.
 
@@ -78,7 +78,7 @@ Registers `company_exists` via `addGlobalScopesHasCompany()`.
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\HasCompany;
+use Unusualify\Modularous\Entities\Traits\Core\HasCompany;
 
 class User extends Authenticatable
 {

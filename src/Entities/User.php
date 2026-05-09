@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Contracts\Translation\HasLocalePreference;
@@ -12,17 +12,17 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
-use Unusualify\Modularity\Database\Factories\UserFactory;
-use Unusualify\Modularity\Entities\Traits\Auth\CanRegister;
-use Unusualify\Modularity\Entities\Traits\Auth\HasOauth;
-use Unusualify\Modularity\Entities\Traits\Core\HasCompany;
-use Unusualify\Modularity\Entities\Traits\Core\HasCapabilities;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\Core\Rolable;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\IsTranslatable;
-use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
-use Unusualify\Modularity\Notifications\ResetPasswordNotification;
+use Unusualify\Modularous\Database\Factories\UserFactory;
+use Unusualify\Modularous\Entities\Traits\Auth\CanRegister;
+use Unusualify\Modularous\Entities\Traits\Auth\HasOauth;
+use Unusualify\Modularous\Entities\Traits\Core\HasCompany;
+use Unusualify\Modularous\Entities\Traits\Core\HasCapabilities;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\Rolable;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\IsTranslatable;
+use Unusualify\Modularous\Notifications\GeneratePasswordNotification;
+use Unusualify\Modularous\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
 {
@@ -122,13 +122,13 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return new Attribute(
             get: fn ($value) => $this->fileponds
                 ->filter(fn ($filepond) => $filepond->role === 'avatar')
-                ->first()?->mediableFormat()['source'] ?? '/vendor/modularity/jpg/anonymous.jpg',
+                ->first()?->mediableFormat()['source'] ?? '/vendor/modularous/jpg/anonymous.jpg',
         );
     }
 
     public function getTable()
     {
-        return modularityConfig('tables.users', parent::getTable());
+        return modularousConfig('tables.users', parent::getTable());
     }
 
     /**

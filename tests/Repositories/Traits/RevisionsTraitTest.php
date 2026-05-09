@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,10 +10,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Unusualify\Modularity\Entities\Revision;
-use Unusualify\Modularity\Entities\Traits\HasRevisions;
-use Unusualify\Modularity\Repositories\Traits\RevisionsTrait;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Revision;
+use Unusualify\Modularous\Entities\Traits\HasRevisions;
+use Unusualify\Modularous\Repositories\Traits\RevisionsTrait;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class RevisionsTraitTest extends RepositoryTestCase
 {

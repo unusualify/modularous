@@ -2,7 +2,7 @@
 
 namespace Nwidart\Modules\Contracts;
 
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Module;
 
 interface ActivatorInterface
 {

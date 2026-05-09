@@ -9,7 +9,7 @@ sidebarTitle: Make Controller
 
 ## Command Information
 
-- **Signature:** `modularity:make:controller {module} {name}`
+- **Signature:** `modularous:make:controller {module} {name}`
 - **Category:** Generators
 
 ## Arguments
@@ -26,10 +26,10 @@ Creates a `{Name}Controller.php` stub inside the module's `Http/Controllers/` di
 ## Examples
 
 ```bash
-php artisan modularity:make:controller Blog Post
+php artisan modularous:make:controller Blog Post
 # → Modules/Blog/Http/Controllers/PostController.php
 
-php artisan modularity:make:controller Shop Product
+php artisan modularous:make:controller Shop Product
 ```
 
 ## Related

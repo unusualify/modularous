@@ -6,7 +6,7 @@ sidebarTitle: VerificationController
 # VerificationController
 
 **File**: `src/Http/Controllers/VerificationController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Controller`  
 **Traits**: `ManageForm`
 

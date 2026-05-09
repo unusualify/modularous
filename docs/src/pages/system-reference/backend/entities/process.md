@@ -6,7 +6,7 @@ sidebarTitle: Process
 # Process
 
 **File**: `src/Entities/Process.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`  
 **Traits**: `ProcessScopes`
 

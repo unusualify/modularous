@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Http\Controllers\BaseController;
-use Unusualify\Modularity\Http\Requests\MediaRequest;
-use Unusualify\Modularity\Models\Media;
-use Unusualify\Modularity\Services\Uploader\SignAzureUpload;
-use Unusualify\Modularity\Services\Uploader\SignS3Upload;
-use Unusualify\Modularity\Services\Uploader\SignUploadListener;
+use Unusualify\Modularous\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Requests\MediaRequest;
+use Unusualify\Modularous\Models\Media;
+use Unusualify\Modularous\Services\Uploader\SignAzureUpload;
+use Unusualify\Modularous\Services\Uploader\SignS3Upload;
+use Unusualify\Modularous\Services\Uploader\SignUploadListener;
 
 class MediaLibraryController extends BaseController implements SignUploadListener
 {
@@ -31,7 +31,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
     /**
      * @var string
      */
-    protected $namespace = 'Unusualify\Modularity';
+    protected $namespace = 'Unusualify\Modularous';
 
     /**
      * @var array
@@ -89,8 +89,8 @@ class MediaLibraryController extends BaseController implements SignUploadListene
         // $this->removeMiddleware('can:edit');
         // $this->removeMiddleware('can:_create');
         // $this->middleware('can:edit', ['only' => ['signS3Upload', 'signAzureUpload', 'tags', 'store', 'singleUpdate', 'bulkUpdate']]);
-        $this->endpointType = $this->laravelConfig->get(modularityBaseKey() . '.media_library.endpoint_type');
-        $this->customFields = $this->laravelConfig->get(modularityBaseKey() . '.media_library.extra_metadatas_fields');
+        $this->endpointType = $this->laravelConfig->get(modularousBaseKey() . '.media_library.endpoint_type');
+        $this->customFields = $this->laravelConfig->get(modularousBaseKey() . '.media_library.extra_metadatas_fields');
     }
 
     /**
@@ -176,13 +176,13 @@ class MediaLibraryController extends BaseController implements SignUploadListene
 
         $uuid = $request->input('unique_folder_name') . '/' . $filename;
 
-        if ($this->laravelConfig->get(modularityBaseKey() . '.media_library.prefix_uuid_with_local_path', false)) {
-            $prefix = trim($this->laravelConfig->get(modularityBaseKey() . '.media_library.local_path'), '/ ') . '/';
+        if ($this->laravelConfig->get(modularousBaseKey() . '.media_library.prefix_uuid_with_local_path', false)) {
+            $prefix = trim($this->laravelConfig->get(modularousBaseKey() . '.media_library.local_path'), '/ ') . '/';
             $fileDirectory = $prefix . $fileDirectory;
             $uuid = $prefix . $uuid;
         }
 
-        $disk = $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk');
+        $disk = $this->laravelConfig->get(modularousBaseKey() . '.media_library.disk');
 
         $uploadedFile = $request->file('qqfile');
 
@@ -293,7 +293,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
      */
     public function signS3Upload(Request $request, SignS3Upload $signS3Upload)
     {
-        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk'));
+        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularousBaseKey() . '.media_library.disk'));
     }
 
     /**
@@ -301,7 +301,7 @@ class MediaLibraryController extends BaseController implements SignUploadListene
      */
     public function signAzureUpload(Request $request, SignAzureUpload $signAzureUpload)
     {
-        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularityBaseKey() . '.media_library.disk'));
+        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularousBaseKey() . '.media_library.disk'));
     }
 
     /**

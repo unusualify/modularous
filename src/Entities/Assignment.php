@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Modules\SystemNotification\Events\AssignmentCreated;
 use Modules\SystemNotification\Events\AssignmentUpdated;
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
-use Unusualify\Modularity\Entities\Scopes\AssignmentScopes;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Entities\Scopes\AssignmentScopes;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class Assignment extends Model
 {
@@ -211,6 +211,6 @@ class Assignment extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.assignments', 'um_assignments');
+        return modularousConfig('tables.assignments', 'um_assignments');
     }
 }

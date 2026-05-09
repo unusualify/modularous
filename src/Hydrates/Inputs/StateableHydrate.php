@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class StateableHydrate extends InputHydrate
 {
@@ -36,7 +36,7 @@ class StateableHydrate extends InputHydrate
         $module = null;
         $routeName = null;
         if (isset($input['_moduleName'])) {
-            $module = Modularity::find($input['_moduleName']);
+            $module = Modularous::find($input['_moduleName']);
         } elseif ($this->hasModule()) {
             $module = $this->module;
         } else {

@@ -2,7 +2,7 @@
 
 use Oobook\Snapshot\Traits\HasSnapshot;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Entities\Interfaces\Sortable;
+use Unusualify\Modularous\Entities\Interfaces\Sortable;
 
 return [
     'addTranslation' => [
@@ -148,8 +148,8 @@ return [
         ],
     ],
     'addPublishable' => [
-        'model' => \Unusualify\Modularity\Entities\Traits\Publishable::class,
-        'repository' => \Unusualify\Modularity\Repositories\Traits\PublishableTrait::class,
+        'model' => \Unusualify\Modularous\Entities\Traits\Publishable::class,
+        'repository' => \Unusualify\Modularous\Repositories\Traits\PublishableTrait::class,
         'question' => 'Do you need to add publishable feature on this module route?',
         'command_option' => [
             'shortcut' => null,

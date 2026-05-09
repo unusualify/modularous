@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
@@ -11,24 +11,24 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\Traits\CacheableResponse;
-use Unusualify\Modularity\Http\Controllers\Traits\MakesResponses;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageAppends;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageAuthorization;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageScopes;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageWiths;
-use Unusualify\Modularity\Transformers;
+use Unusualify\Modularous\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\Traits\CacheableResponse;
+use Unusualify\Modularous\Http\Controllers\Traits\MakesResponses;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageAppends;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageAuthorization;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageScopes;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageWiths;
+use Unusualify\Modularous\Transformers;
 
 abstract class PanelController extends CoreController implements CacheableInterface
 {
     use MakesResponses, ManageScopes, ManageAuthorization, CacheableResponse, ManageWiths, ManageAppends;
 
     /**
-     * @var Unusualify\Modularity\Entities\Model
+     * @var Unusualify\Modularous\Entities\Model
      */
     protected $user;
 
@@ -185,8 +185,8 @@ abstract class PanelController extends CoreController implements CacheableInterf
         Application $app,
         Request $request
     ) {
-        // if (modularityConfig('bind_exception_handler', true)) {
-        //     App::singleton(ExceptionHandler::class, ModularityHandler::class);
+        // if (modularousConfig('bind_exception_handler', true)) {
+        //     App::singleton(ExceptionHandler::class, ModularousHandler::class);
         // }
         parent::__construct($app, $request);
 
@@ -426,7 +426,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
             ];
 
             $authorized = ($this->isGateable() && array_key_exists($option, $authorizableOptions))
-                ? (($guard = Auth::guard(Modularity::getAuthGuardName()))
+                ? (($guard = Auth::guard(Modularous::getAuthGuardName()))
                     ? (($user = $guard->user())
                         ? $user->can($authorizableOptions[$option])
                         : false)
@@ -439,12 +439,12 @@ abstract class PanelController extends CoreController implements CacheableInterf
 
     /**
      * @param array $schema
-     * @return \Unusualify\Modularity\Http\Requests\Admin\Request::class
+     * @return \Unusualify\Modularous\Http\Requests\Admin\Request::class
      */
     protected function validateFormRequest($schema = [])
     {
         $unauthorizedFields = Collection::make($this->fieldsPermissions)->filter(function ($permission, $field) {
-            return Auth::guard(Modularity::getAuthGuardName())->user()->cannot($permission);
+            return Auth::guard(Modularous::getAuthGuardName())->user()->cannot($permission);
         })->keys();
 
         $unauthorizedFields->each(function ($field) {
@@ -529,7 +529,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
         if ($this->request->route() != null) {
             $routePrefix = ltrim(
                 str_replace(
-                    Config::get(modularityBaseKey() . '.admin_app_path'), // TODO uri segment control
+                    Config::get(modularousBaseKey() . '.admin_app_path'), // TODO uri segment control
                     '',
                     $this->request->route()->getPrefix()
                 ),
@@ -574,7 +574,7 @@ abstract class PanelController extends CoreController implements CacheableInterf
     }
 
     /**
-     * @return \Unusualify\Modularity\Transformers\
+     * @return \Unusualify\Modularous\Transformers\
      */
     protected function getTransformer($data = [])
     {

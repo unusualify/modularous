@@ -6,7 +6,7 @@ sidebarTitle: Overview
 # FileLibrary Services
 
 **Directory**: `src/Services/FileLibrary/`  
-**Facade**: `Unusualify\Modularity\Facades\FileService` (bound as `fileService`)
+**Facade**: `Unusualify\Modularous\Facades\FileService` (bound as `fileService`)
 
 The FileLibrary namespace provides a storage abstraction for **non-image file assets** — PDFs, documents, spreadsheets, and other binary files. It mirrors the MediaLibrary pattern with an interface + driver architecture.
 
@@ -21,7 +21,7 @@ The FileLibrary namespace provides a storage abstraction for **non-image file as
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'file_library' => [
     'disk' => env('FILE_LIBRARY_DISK', 'public'),
 ],
@@ -30,7 +30,7 @@ The FileLibrary namespace provides a storage abstraction for **non-image file as
 ## Facade Usage
 
 ```php
-use Unusualify\Modularity\Services\FileLibrary\FileService;
+use Unusualify\Modularous\Services\FileLibrary\FileService;
 
 $url = FileService::getUrl($file->uuid);
 ```

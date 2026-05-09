@@ -7,18 +7,18 @@ sidebarTitle: AuthorizationMiddleware
 
 **File**: `src/Http/Middleware/AuthorizationMiddleware.php`  
 **Alias**: `authorization`  
-**Part of**: `modularity.panel` group
+**Part of**: `modularous.panel` group
 
 Shares authorization-related view data with the Blade master layout. Runs only on authenticated panel routes.
 
 ## What It Does
 
-Registers a view composer for `modularity::layouts.master`:
+Registers a view composer for `modularous::layouts.master`:
 
 ```php
-view()->composer('modularity::layouts.master', function ($view) {
+view()->composer('modularous::layouts.master', function ($view) {
     $view->with([
-        'authorization'          => get_modularity_authorization_config(),
+        'authorization'          => get_modularous_authorization_config(),
         'profileShortcutSchema'  => $profileShortcutSchema,
         'profileShortcutModel'   => $profileShortcutModel,
         'loginShortcutSchema'    => $loginShortcutSchema,
@@ -29,7 +29,7 @@ view()->composer('modularity::layouts.master', function ($view) {
 
 | Variable | Source | Description |
 |----------|--------|-------------|
-| `authorization` | `get_modularity_authorization_config()` | Role/permission config used to control UI visibility |
+| `authorization` | `get_modularous_authorization_config()` | Role/permission config used to control UI visibility |
 | `profileShortcutSchema` | `getFormDraft('profile_shortcut')` | Form schema for the profile quick-edit panel |
 | `profileShortcutModel` | `UserRepository::getFormFields($user, $schema)` | Current user's profile field values |
 | `loginShortcutSchema` | `getFormDraft('login_shortcut')` | Form schema for the login shortcut widget |

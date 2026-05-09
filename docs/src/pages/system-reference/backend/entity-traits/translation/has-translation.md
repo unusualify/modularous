@@ -5,7 +5,7 @@ sidebarTitle: HasTranslation
 
 # HasTranslation
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasTranslation`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasTranslation`
 
 Extends `Astrotomic\Translatable\Translatable` with Modularous-aware overrides for locale-keyed attribute filling, attribute transformation, and translation class resolution.
 
@@ -62,7 +62,7 @@ protected bool $transformTranslatedAttributes = true;
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
 
 class Article extends Model
 {

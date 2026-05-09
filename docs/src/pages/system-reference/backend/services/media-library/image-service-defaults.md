@@ -27,7 +27,7 @@ protected $cropParamsKeys = ['crop_x', 'crop_y', 'crop_w', 'crop_h'];
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'seo' => [
     'image_default_id'     => null,           // UUID of the default social image
     'image_local_fallback' => '/img/og.jpg',  // static fallback path

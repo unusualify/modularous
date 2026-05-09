@@ -5,7 +5,7 @@ sidebarTitle: HasAuthorizable
 
 # HasAuthorizable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasAuthorizable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasAuthorizable`
 
 Attaches a per-record `Authorization` morph record, enabling fine-grained ownership and access control on individual model instances. Integrates with Spatie Permissions for role-based access checks.
 
@@ -89,7 +89,7 @@ Registers `authorization_record_exists` via `addGlobalScopesHasAuthorizable()`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
 
 class Report extends Model
 {

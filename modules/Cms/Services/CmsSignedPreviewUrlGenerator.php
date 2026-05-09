@@ -16,7 +16,7 @@ final class CmsSignedPreviewUrlGenerator
      */
     public function temporaryAbsoluteUrl(string $moduleName, string $routeKey, Model $model, string $locale): string
     {
-        $minutes = max(5, (int) modularityConfig('cms_routing.signed_preview.ttl_minutes', 60));
+        $minutes = max(5, (int) modularousConfig('cms_routing.signed_preview.ttl_minutes', 60));
         $expiresAt = now()->addMinutes($minutes);
 
         return URL::temporarySignedRoute(
@@ -34,6 +34,6 @@ final class CmsSignedPreviewUrlGenerator
 
     public function ttlMinutes(): int
     {
-        return max(5, (int) modularityConfig('cms_routing.signed_preview.ttl_minutes', 60));
+        return max(5, (int) modularousConfig('cms_routing.signed_preview.ttl_minutes', 60));
     }
 }

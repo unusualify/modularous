@@ -43,7 +43,7 @@ Returns all PHP timezone identifiers with their UTC offset, sorted alphabeticall
 getFormDraft(string $name, array $overwrites = [], array $excludes = [], bool $preserve = true): array
 ```
 
-Loads a named form draft from `modularity.form_drafts.{$name}` config, merges `$overwrites`, and optionally removes `$excludes` keys. When `$preserve = true` uses `array_merge_recursive_preserve`; otherwise uses plain `array_merge`.
+Loads a named form draft from `modularous.form_drafts.{$name}` config, merges `$overwrites`, and optionally removes `$excludes` keys. When `$preserve = true` uses `array_merge_recursive_preserve`; otherwise uses plain `array_merge`.
 
 ---
 
@@ -56,7 +56,7 @@ adminRouteNamePrefix(): string
 adminUrlPrefix(): string
 ```
 
-Return the configured admin route name prefix and URL prefix respectively. Thin wrappers over `Modularity::getAdminRouteNamePrefix()` and `Modularity::getAdminUrlPrefix()`.
+Return the configured admin route name prefix and URL prefix respectively. Thin wrappers over `Modularous::getAdminRouteNamePrefix()` and `Modularous::getAdminUrlPrefix()`.
 
 ---
 
@@ -73,23 +73,23 @@ Return the system-settings URL prefix (default: `'system-settings'`) and its sna
 
 ## Themes
 
-### `builtInModularityThemes`
+### `builtInModularousThemes`
 
 ```php
-builtInModularityThemes(): Collection
+builtInModularousThemes(): Collection
 ```
 
 Returns a `Collection` of built-in Modularous SASS themes as `['theme-name' => 'Theme Name']`, scanned from `vue/src/sass/themes/*/` (excluding `customs/`).
 
 ---
 
-### `customModularityThemes`
+### `customModularousThemes`
 
 ```php
-customModularityThemes(): Collection
+customModularousThemes(): Collection
 ```
 
-Returns custom themes from `resources/vendor/modularity/themes/*/` as `['theme-name' => 'Theme Name']`.
+Returns custom themes from `resources/vendor/modularous/themes/*/` as `['theme-name' => 'Theme Name']`.
 
 ---
 
@@ -101,7 +101,7 @@ Returns custom themes from `resources/vendor/modularity/themes/*/` as `['theme-n
 get_translations(): array
 ```
 
-Returns all registered translations from the Laravel translator. Cached in the file store under `modularity-languages` for 600 seconds.
+Returns all registered translations from the Laravel translator. Cached in the file store under `modularous-languages` for 600 seconds.
 
 ---
 
@@ -111,7 +111,7 @@ Returns all registered translations from the Laravel translator. Cached in the f
 clear_translations(): void
 ```
 
-Forgets the `modularity-languages` cache entry, forcing the next `get_translations()` call to rebuild.
+Forgets the `modularous-languages` cache entry, forcing the next `get_translations()` call to rebuild.
 
 ---
 
@@ -119,10 +119,10 @@ Forgets the `modularity-languages` cache entry, forcing the next `get_translatio
 
 The following functions each build one section of the data shared with every Inertia page. They are called from `HandleInertiaRequests::share()`.
 
-### `get_modularity_navigation_config`
+### `get_modularous_navigation_config`
 
 ```php
-get_modularity_navigation_config(): array
+get_modularous_navigation_config(): array
 ```
 
 Returns the navigation config for the current user's role:
@@ -139,10 +139,10 @@ Returns the navigation config for the current user's role:
 
 ---
 
-### `get_modularity_authorization_config`
+### `get_modularous_authorization_config`
 
 ```php
-get_modularity_authorization_config(): array
+get_modularous_authorization_config(): array
 ```
 
 Returns the user's authorization state:
@@ -160,10 +160,10 @@ All Gate abilities are evaluated and included as key → bool pairs.
 
 ---
 
-### `get_modularity_impersonation_config`
+### `get_modularous_impersonation_config`
 
 ```php
-get_modularity_impersonation_config(): array
+get_modularous_impersonation_config(): array
 ```
 
 Returns the impersonation state and endpoints:
@@ -181,10 +181,10 @@ Returns the impersonation state and endpoints:
 
 ---
 
-### `get_modularity_localization_config`
+### `get_modularous_localization_config`
 
 ```php
-get_modularity_localization_config(): array
+get_modularous_localization_config(): array
 ```
 
 Returns locale settings and the merged language strings:
@@ -199,20 +199,20 @@ Returns locale settings and the merged language strings:
 
 ---
 
-### `get_modularity_head_layout_config`
+### `get_modularous_head_layout_config`
 
 ```php
-get_modularity_head_layout_config(array $data): array
+get_modularous_head_layout_config(array $data): array
 ```
 
 Returns the page head data (title etc.) from `$data`, merging any `_headLayoutData` override.
 
 ---
 
-### `get_modularity_inertia_main_configuration`
+### `get_modularous_inertia_main_configuration`
 
 ```php
-get_modularity_inertia_main_configuration(array $data): array
+get_modularous_inertia_main_configuration(array $data): array
 ```
 
 Assembles the complete main layout configuration object shared with every Inertia page:
@@ -224,18 +224,18 @@ Assembles the complete main layout configuration object shared with every Inerti
     'fixedAppBar'       => false,
     'appBarOrder'       => 0,
     'sidebarAttributes' => ['logoSymbol' => '...'],
-    'navigation'        => get_modularity_navigation_config(),
-    'impersonation'     => get_modularity_impersonation_config(),
-    'authorization'     => get_modularity_authorization_config(),
+    'navigation'        => get_modularous_navigation_config(),
+    'impersonation'     => get_modularous_impersonation_config(),
+    'authorization'     => get_modularous_authorization_config(),
 ]
 ```
 
 ---
 
-### `get_modularity_ui_preferences`
+### `get_modularous_ui_preferences`
 
 ```php
-get_modularity_ui_preferences(): array
+get_modularous_ui_preferences(): array
 ```
 
 Merges PHP config defaults with the authenticated user's stored `ui_preferences`:

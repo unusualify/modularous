@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
 use App\Exceptions\Handler;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -17,36 +17,36 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Contracts\RepositoryInterface;
 use Torann\GeoIP\Facades\GeoIP;
-use Unusualify\Modularity\Brokers\RegisterBrokerManager;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
-use Unusualify\Modularity\Exceptions\AuthConfigurationException;
-use Unusualify\Modularity\Facades\ModularityVite;
-use Unusualify\Modularity\Http\Middleware\HandleInertiaRequests;
-use Unusualify\Modularity\Http\ViewComposers\CurrentUser;
-use Unusualify\Modularity\Http\ViewComposers\FilesUploaderConfig;
-use Unusualify\Modularity\Http\ViewComposers\Localization;
-use Unusualify\Modularity\Http\ViewComposers\MediasUploaderConfig;
-use Unusualify\Modularity\Http\ViewComposers\Urls;
-use Unusualify\Modularity\Logging\ModularityLogHandler;
-use Unusualify\Modularity\Modularity;
-use Unusualify\Modularity\Services\BulkCsv\BulkCsvImportOrchestrator;
-use Unusualify\Modularity\Services\BulkCsv\BulkImportService;
-use Unusualify\Modularity\Services\CacheRelationshipGraph;
-use Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
-use Unusualify\Modularity\Services\Currency\SystemPricingCurrencyProvider;
-use Unusualify\Modularity\Services\CurrencyExchangeService;
-use Unusualify\Modularity\Services\FilepondManager;
-use Unusualify\Modularity\Services\MigrationBackup;
-use Unusualify\Modularity\Services\ModularityCacheService;
-use Unusualify\Modularity\Services\RedirectService;
-use Unusualify\Modularity\Services\UtmParameters;
-use Unusualify\Modularity\Services\View\ModularityNavigation;
-use Unusualify\Modularity\Support\CommandDiscovery;
-use Unusualify\Modularity\Support\FileLoader;
-use Unusualify\Modularity\Support\HostRouteRegistrar;
-use Unusualify\Modularity\Support\HostRouting;
-use Unusualify\Modularity\Translation\Translator;
-use Unusualify\Modularity\Validation\Validator as ModularityValidator;
+use Unusualify\Modularous\Brokers\RegisterBrokerManager;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Exceptions\AuthConfigurationException;
+use Unusualify\Modularous\Facades\ModularousVite;
+use Unusualify\Modularous\Http\Middleware\HandleInertiaRequests;
+use Unusualify\Modularous\Http\ViewComposers\CurrentUser;
+use Unusualify\Modularous\Http\ViewComposers\FilesUploaderConfig;
+use Unusualify\Modularous\Http\ViewComposers\Localization;
+use Unusualify\Modularous\Http\ViewComposers\MediasUploaderConfig;
+use Unusualify\Modularous\Http\ViewComposers\Urls;
+use Unusualify\Modularous\Logging\ModularousLogHandler;
+use Unusualify\Modularous\Modularous;
+use Unusualify\Modularous\Services\BulkCsv\BulkCsvImportOrchestrator;
+use Unusualify\Modularous\Services\BulkCsv\BulkImportService;
+use Unusualify\Modularous\Services\CacheRelationshipGraph;
+use Unusualify\Modularous\Services\Currency\NullCurrencyProvider;
+use Unusualify\Modularous\Services\Currency\SystemPricingCurrencyProvider;
+use Unusualify\Modularous\Services\CurrencyExchangeService;
+use Unusualify\Modularous\Services\FilepondManager;
+use Unusualify\Modularous\Services\MigrationBackup;
+use Unusualify\Modularous\Services\ModularousCacheService;
+use Unusualify\Modularous\Services\RedirectService;
+use Unusualify\Modularous\Services\UtmParameters;
+use Unusualify\Modularous\Services\View\ModularousNavigation;
+use Unusualify\Modularous\Support\CommandDiscovery;
+use Unusualify\Modularous\Support\FileLoader;
+use Unusualify\Modularous\Support\HostRouteRegistrar;
+use Unusualify\Modularous\Support\HostRouting;
+use Unusualify\Modularous\Translation\Translator;
+use Unusualify\Modularous\Validation\Validator as ModularousValidator;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -59,25 +59,25 @@ class BaseServiceProvider extends ServiceProvider
     {
         $this->bootPackageConfigs();
 
-        if (modularityConfig('enabled.media-library')) {
+        if (modularousConfig('enabled.media-library')) {
             $this->app->singleton('imageService', function () {
                 return $this->app->make(config($this->baseKey . '.media_library.image_service'));
             });
         }
         if (
-            modularityConfig('media_library.endpoint_type') === 'local'
-            && modularityConfig('media_library.disk') === modularityBaseKey() . '_media_library'
+            modularousConfig('media_library.endpoint_type') === 'local'
+            && modularousConfig('media_library.disk') === modularousBaseKey() . '_media_library'
         ) {
             $this->setLocalDiskUrl('media');
         }
 
-        if (modularityConfig('enabled.file-library')) {
+        if (modularousConfig('enabled.file-library')) {
             $this->app->singleton('fileService', function () {
                 return $this->app->make(config($this->baseKey . '.file_library.file_service'));
             });
         }
-        if (modularityConfig('file_library.endpoint_type') === 'local'
-            && modularityConfig('file_library.disk') === modularityBaseKey() . '_file_library') {
+        if (modularousConfig('file_library.endpoint_type') === 'local'
+            && modularousConfig('file_library.disk') === modularousBaseKey() . '_file_library') {
             $this->setLocalDiskUrl('file');
         }
 
@@ -93,7 +93,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->bootBaseViewComponents();
 
-        $this->bootModularityLogChannel();
+        $this->bootModularousLogChannel();
 
         ResetPassword::createUrlUsing(function ($notifiable, string $token) {
             return url(route('admin.password.reset', [
@@ -104,20 +104,20 @@ class BaseServiceProvider extends ServiceProvider
 
         AboutCommand::add('Modularous', function () {
             return [
-                // 'Mode' => $this->app['modularity']->isDevelopment() ? 'development' : 'production',
-                'Cache' => $this->app['modularity']->config('cache.enabled') ? 'enabled' : 'disabled',
-                'Scan' => $this->app['modularity']->config('scan.enabled') ? 'enabled' : 'disabled',
-                'Theme' => modularityConfig('app_theme'),
-                'Url' => $this->app['modularity']->getAppUrl(),
-                'Url (Admin)' => $this->app['modularity']->getAdminAppUrl(),
-                'Vendor' => $this->app['modularity']->getVendorDir(),
+                // 'Mode' => $this->app['modularous']->isDevelopment() ? 'development' : 'production',
+                'Cache' => $this->app['modularous']->config('cache.enabled') ? 'enabled' : 'disabled',
+                'Scan' => $this->app['modularous']->config('scan.enabled') ? 'enabled' : 'disabled',
+                'Theme' => modularousConfig('app_theme'),
+                'Url' => $this->app['modularous']->getAppUrl(),
+                'Url (Admin)' => $this->app['modularous']->getAdminAppUrl(),
+                'Vendor' => $this->app['modularous']->getVendorDir(),
                 'Version' => get_package_version('unusualify/modularous'),
             ];
         });
 
         // Register scheduler class instead of direct command
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
-            $schedule->command('modularity:fileponds:scheduler --days=7')
+            $schedule->command('modularous:fileponds:scheduler --days=7')
                 ->daily();
             // ->everyFiveMinutes();
             // ->appendOutputTo(storage_path('logs/scheduler.log'));
@@ -126,7 +126,7 @@ class BaseServiceProvider extends ServiceProvider
                 ->daily()
                 ->appendOutputTo(storage_path('logs/scheduler.log'));
 
-            $schedule->command('modularity:scheduler:chatable')
+            $schedule->command('modularous:scheduler:chatable')
                 ->everyMinute();
         });
     }
@@ -145,29 +145,29 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->registerCommands();
 
-        // Register the modularity exception handler
+        // Register the modularous exception handler
         $this->registerExceptionHandler();
 
-        // $this->app->singleton('modularity', function (Application $app) {
+        // $this->app->singleton('modularous', function (Application $app) {
         //     $path = $app['config']->get('modules.paths.modules');
 
-        //     return new Modularity($app, $path);
+        //     return new Modularous($app, $path);
         // });
         // CANCEL \Nwidart\Modules\Laravel\LaravelFileRepository binding
         // and Nwidart\Modules\Laravel\Module binding in the LaravelFileRepository createModule method
         $this->app->singleton(RepositoryInterface::class, function ($app) {
             $path = $app['config']->get('modules.paths.modules');
 
-            return new Modularity($app, $path);
+            return new Modularous($app, $path);
         });
-        $this->app->alias(Modularity::class, 'modularity');
+        $this->app->alias(Modularous::class, 'modularous');
 
         // $this->app->singleton(FileActivator::class, function ($app) {
-        // $this->app->singleton('modularity.activator', function (Application $app) {
+        // $this->app->singleton('modularous.activator', function (Application $app) {
         //     return new ModuleActivator($app);
         // });
 
-        $this->app->singleton('modularity.navigation', ModularityNavigation::class);
+        $this->app->singleton('modularous.navigation', ModularousNavigation::class);
 
         $this->app->singleton('model.relation.namespace', function () {
             return "Illuminate\Database\Eloquent\Relations";
@@ -180,13 +180,13 @@ class BaseServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('unusualify.hosting', function (Application $app) {
-            // return new \Unusualify\Modularity\Support\HostRouting($app, modularityConfig('app_url'));
-            return new HostRouting($app, $app['modularity']->getAppHost());
+            // return new \Unusualify\Modularous\Support\HostRouting($app, modularousConfig('app_url'));
+            return new HostRouting($app, $app['modularous']->getAppHost());
         });
 
         $this->app->singleton('unusualify.hostRouting', function (Application $app) {
-            // return new \Unusualify\Modularity\Support\HostRouteRegistrar($app, modularityConfig('app_url'));
-            return new HostRouteRegistrar($app, $app['modularity']->getAppHost());
+            // return new \Unusualify\Modularous\Support\HostRouteRegistrar($app, modularousConfig('app_url'));
+            return new HostRouteRegistrar($app, $app['modularous']->getAppHost());
         });
 
         $this->app->singleton('Filepond', function (Application $app) {
@@ -198,7 +198,7 @@ class BaseServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(CurrencyProviderInterface::class, function (Application $app) {
-            $providerClass = config('modularity.currency_provider', null);
+            $providerClass = config('modularous.currency_provider', null);
             if ($providerClass && class_exists($providerClass)) {
                 return $app->make($providerClass);
             }
@@ -210,12 +210,12 @@ class BaseServiceProvider extends ServiceProvider
             return new NullCurrencyProvider;
         });
 
-        $this->app->singleton('modularity.relationship.graph', function (Application $app) {
+        $this->app->singleton('modularous.relationship.graph', function (Application $app) {
             return new CacheRelationshipGraph;
         });
 
-        $this->app->singleton('modularity.cache', function (Application $app) {
-            return new ModularityCacheService;
+        $this->app->singleton('modularous.cache', function (Application $app) {
+            return new ModularousCacheService;
         });
 
         $this->app->singleton('migration.backup', function (Application $app) {
@@ -226,11 +226,11 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->app->singleton(BulkImportService::class);
 
-        $this->app->singleton('modularity.redirect', function (Application $app) {
+        $this->app->singleton('modularous.redirect', function (Application $app) {
             return new RedirectService;
         });
 
-        $this->app->singleton('modularity.utm', function (Application $app) {
+        $this->app->singleton('modularous.utm', function (Application $app) {
             return new UtmParameters($app['request']);
         });
 
@@ -238,7 +238,7 @@ class BaseServiceProvider extends ServiceProvider
             return new RegisterBrokerManager($app);
         });
 
-        $this->app->alias(ModularityVite::class, 'ModularityVite');
+        $this->app->alias(ModularousVite::class, 'ModularousVite');
 
         $this->app->alias(GeoIP::class, 'GeoIP');
 
@@ -253,16 +253,16 @@ class BaseServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the modularity exception handler
+     * Register the modularous exception handler
      */
     private function registerExceptionHandler(): void
     {
-        // Register our modularity exception handler
+        // Register our modularous exception handler
         $this->app->extend(ExceptionHandler::class, function ($handler, $app) {
-            // If the current handler is the default app handler, wrap it with modularity functionality
+            // If the current handler is the default app handler, wrap it with modularous functionality
             if (get_class($handler) === Handler::class) {
-                if ($app['modularity']->isPanelUrl()) {
-                    return new \Unusualify\Modularity\Exceptions\Handler($app);
+                if ($app['modularous']->isPanelUrl()) {
+                    return new \Unusualify\Modularous\Exceptions\Handler($app);
                 }
             }
 
@@ -319,7 +319,7 @@ class BaseServiceProvider extends ServiceProvider
     public function registerTranslationService()
     {
         $this->app->extend('translation.loader', function ($service, $app) {
-            $ignoredModularousPath = base_path('modularity/lang');
+            $ignoredModularousPath = base_path('modularous/lang');
             $hasIgnoredModularousPath = file_exists($ignoredModularousPath);
             if ($hasIgnoredModularousPath) {
                 $app->useLangPath($ignoredModularousPath);
@@ -365,7 +365,7 @@ class BaseServiceProvider extends ServiceProvider
     {
         $this->callAfterResolving('validator', function ($factory) {
             $factory->resolver(function ($translator, $data, $rules, $messages, $attributes) {
-                return new ModularityValidator($translator, $data, $rules, $messages, $attributes);
+                return new ModularousValidator($translator, $data, $rules, $messages, $attributes);
             });
         });
     }
@@ -375,20 +375,20 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function bootPackageConfigs()
     {
-        if (modularityConfig('enabled.users-management') && ! $this->app->runningInConsole()) {
-            $modularityAuthGuardAbsent = blank(config('auth.guards.' . Modularity::getAuthGuardName()));
-            $modularityAuthProviderAbsent = blank(config('auth.providers.' . Modularity::getAuthProviderName()));
-            $modularityAuthPasswordAbsent = blank(config('auth.passwords.' . Modularity::getAuthProviderName()));
+        if (modularousConfig('enabled.users-management') && ! $this->app->runningInConsole()) {
+            $modularousAuthGuardAbsent = blank(config('auth.guards.' . Modularous::getAuthGuardName()));
+            $modularousAuthProviderAbsent = blank(config('auth.providers.' . Modularous::getAuthProviderName()));
+            $modularousAuthPasswordAbsent = blank(config('auth.passwords.' . Modularous::getAuthProviderName()));
 
-            if ($modularityAuthGuardAbsent) {
+            if ($modularousAuthGuardAbsent) {
                 throw AuthConfigurationException::guardMissing();
             }
 
-            if ($modularityAuthProviderAbsent) {
+            if ($modularousAuthProviderAbsent) {
                 throw AuthConfigurationException::providerMissing();
             }
 
-            if ($modularityAuthPasswordAbsent) {
+            if ($modularousAuthPasswordAbsent) {
                 throw AuthConfigurationException::passwordMissing();
             }
 
@@ -420,7 +420,7 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function bootMacros()
     {
-        Str::macro('modularitySlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
+        Str::macro('modularousSlug', function ($string, $separator = '-', $language = 'en', ?array $dictionary = null) {
             $dictionary = array_merge(Lang::get('slug-dictionary', locale: $language), $dictionary ?? []);
 
             if (array_key_exists($separator, $dictionary)) {
@@ -466,8 +466,8 @@ class BaseServiceProvider extends ServiceProvider
     {
         // LOAD BASE MIGRATIONS
         $this->loadMigrationsFrom(
-            // get_modularity_vendor_path('database/migrations/default')
-            \Unusualify\Modularity\Facades\Modularity::getVendorPath('database/migrations/default')
+            // get_modularous_vendor_path('database/migrations/default')
+            \Unusualify\Modularous\Facades\Modularous::getVendorPath('database/migrations/default')
         );
     }
 
@@ -480,7 +480,7 @@ class BaseServiceProvider extends ServiceProvider
         $this->loadViewsFrom(
             array_merge(
                 $this->getPublishableViewPaths($this->baseKey),
-                [resource_path('views/vendor/modularity')],
+                [resource_path('views/vendor/modularous')],
                 [$this->viewSourcePath],
             ),
             $this->baseKey
@@ -491,7 +491,7 @@ class BaseServiceProvider extends ServiceProvider
     {
 
         // $name = snakeCase( config($this->baseKey . '.name') );
-        $name = modularityBaseKey();
+        $name = modularousBaseKey();
         $langPath = base_path('lang/modules/' . $name);
         $laravelLangPath = base_path('lang');
 
@@ -528,10 +528,10 @@ class BaseServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view) {
             $view->with('BASE_KEY', $this->baseKey);
-            $view->with('MODULARITY_VIEW_NAMESPACE', $this->baseKey);
+            $view->with('MODULAROUS_VIEW_NAMESPACE', $this->baseKey);
             $view->with('SYSTEM_PACKAGE_VERSIONS', [
                 'APP_VERSION' => env('APP_VERSION', 'v0.0.1'),
-                'MODULARITY_VERSION' => env('MODULARITY_VERSION', 'Not Found'),
+                'MODULAROUS_VERSION' => env('MODULAROUS_VERSION', 'Not Found'),
                 'PAYABLE_VERSION' => env('PAYABLE_VERSION', 'Not Found'),
                 'SNAPSHOT_VERSION' => env('SNAPSHOT_VERSION', 'Not Found'),
                 'COMPOSER' => env('COMPOSER', 'Not Found'),
@@ -601,12 +601,12 @@ class BaseServiceProvider extends ServiceProvider
     private function setLocalDiskUrl($type): void
     {
         config([
-            'filesystems.disks.' . modularityBaseKey() . '_' . $type . '_library.url' => request()->getScheme()
+            'filesystems.disks.' . modularousBaseKey() . '_' . $type . '_library.url' => request()->getScheme()
             . '://'
             // . str_replace(['http://', 'https://'], '', config('app.url'))
             . request()->getHttpHost()
             . '/storage/'
-            . trim(modularityConfig($type . '_library.local_path'), '/ '),
+            . trim(modularousConfig($type . '_library.local_path'), '/ '),
         ]);
     }
 
@@ -619,29 +619,29 @@ class BaseServiceProvider extends ServiceProvider
         }
     }
 
-    private function bootModularityLogChannel()
+    private function bootModularousLogChannel()
     {
-        $this->addModularityLogChannels();
+        $this->addModularousLogChannels();
 
-        $this->app->singleton('modularity.log', function () {
-            return Log::channel('modularity');
+        $this->app->singleton('modularous.log', function () {
+            return Log::channel('modularous');
         });
     }
 
-    private function addModularityLogChannels()
+    private function addModularousLogChannels()
     {
-        $this->app['config']->set('logging.channels.modularity', [
+        $this->app['config']->set('logging.channels.modularous', [
             'driver' => 'monolog',
-            'handler' => ModularityLogHandler::class,
+            'handler' => ModularousLogHandler::class,
             'handler_with' => [
-                'level' => env('MODULARITY_LOG_LEVEL', 'debug'),
+                'level' => env('MODULAROUS_LOG_LEVEL', 'debug'),
                 'maxFiles' => 14, // Keep 14 days of logs
             ],
         ]);
-        $this->app['config']->set('logging.channels.modularity-notification-failure', [
+        $this->app['config']->set('logging.channels.modularous-notification-failure', [
             'driver' => 'daily',
-            'path' => storage_path('logs/modularity-notification-failure.log'),
-            'level' => env('MODULARITY_NOTIFICATION_FAILURE_LOG_LEVEL', 'error'),
+            'path' => storage_path('logs/modularous-notification-failure.log'),
+            'level' => env('MODULAROUS_NOTIFICATION_FAILURE_LOG_LEVEL', 'error'),
             'days' => 14,
         ]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +14,7 @@ trait UrlUtility
      */
     protected function getUrls()
     {
-        return getModularityDefaultUrls();
+        return getModularousDefaultUrls();
     }
 
     /**

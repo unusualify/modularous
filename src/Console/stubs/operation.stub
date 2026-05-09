@@ -35,6 +35,6 @@ return new class extends OneTimeOperation
     {
 
 
-        $this->output->writeln('Modularity: $NAME$ operation processed');
+        $this->output->writeln('Modularous: $NAME$ operation processed');
     }
 };

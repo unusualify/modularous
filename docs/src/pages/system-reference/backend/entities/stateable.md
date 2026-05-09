@@ -6,7 +6,7 @@ sidebarTitle: Stateable
 # Stateable
 
 **File**: `src/Entities/Stateable.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Polymorphic pivot model that links a [State](./state) to any model using the `HasStateable` trait. Timestamps are enabled to track when a state was assigned.
@@ -23,11 +23,11 @@ Polymorphic pivot model that links a [State](./state) to any model using the `Ha
 
 ### `state(): BelongsTo`
 
-The state definition. The model class is resolved from `modularity.models.state`, defaulting to `Unusualify\Modularity\Entities\State`.
+The state definition. The model class is resolved from `modularous.models.state`, defaulting to `Unusualify\Modularous\Entities\State`.
 
 ## Table
 
-Resolved from `modularity.tables.stateables`, defaults to `um_stateables`.
+Resolved from `modularous.tables.stateables`, defaults to `um_stateables`.
 
 ## Related
 

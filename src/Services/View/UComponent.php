@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Services\View;
+namespace Unusualify\Modularous\Services\View;
 
 use BadMethodCallException;
 use Illuminate\Support\Arr;
 use Illuminate\View\Component;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class UComponent extends Component
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Translations;
+namespace Unusualify\Modularous\Entities\Translations;
 
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class SettingTranslation extends Model
 {
@@ -15,7 +15,7 @@ class SettingTranslation extends Model
 
     public function getTable()
     {
-        $twillSettingsTable = modularityConfig('settings_table', 'twill_settings');
+        $twillSettingsTable = modularousConfig('settings_table', 'twill_settings');
 
         return Str::singular($twillSettingsTable) . '_translations';
     }

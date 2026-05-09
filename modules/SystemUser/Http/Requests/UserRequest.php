@@ -2,7 +2,7 @@
 
 namespace Modules\SystemUser\Http\Requests;
 
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class UserRequest extends Request
 {

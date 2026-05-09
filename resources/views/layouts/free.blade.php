@@ -1,8 +1,8 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.master")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.master")
 
 @push('extra_js_head')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-free.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-free.js'])
     }}
 @endpush
 
@@ -13,9 +13,9 @@
 @stop
 
 @push('STORE')
-    window['{{ modularityConfig('js_namespace') }}'].STORE.medias.crops = {!! json_encode(modularityConfig('settings.crops') ?? []) !!}
-    window['{{ modularityConfig('js_namespace') }}'].STORE.medias.selected = {}
+    window['{{ modularousConfig('js_namespace') }}'].STORE.medias.crops = {!! json_encode(modularousConfig('settings.crops') ?? []) !!}
+    window['{{ modularousConfig('js_namespace') }}'].STORE.medias.selected = {}
 
-    window['{{ modularityConfig('js_namespace') }}'].STORE.browser = {}
-    window['{{ modularityConfig('js_namespace') }}'].STORE.browser.selected = {}
+    window['{{ modularousConfig('js_namespace') }}'].STORE.browser = {}
+    window['{{ modularousConfig('js_namespace') }}'].STORE.browser.selected = {}
 @endpush

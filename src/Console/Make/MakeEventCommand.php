@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Finder\Finder;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -20,10 +20,10 @@ class MakeEventCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:event
+    protected $signature = 'modularous:make:event
 		{name : The name of event}
 		{module? : The name of module}
-        {--self : The path of the modularity}
+        {--self : The path of the modularous}
         {--f|force : Overwrite existing file}
         {--should-broadcast : Should the event broadcast}
         {--should-broadcast-now : Should the event broadcast now}
@@ -65,19 +65,19 @@ class MakeEventCommand extends BaseCommand
         $methods = [];
 
         if ($self) {
-            $namespace = 'Unusualify\Modularity\Events';
+            $namespace = 'Unusualify\Modularous\Events';
 
         } elseif ($moduleName) {
-            $module = Modularity::findOrFail($moduleName);
+            $module = Modularous::findOrFail($moduleName);
             $namespace = $module->getTargetClassNamespace('event');
         }
 
         $abstractEventPaths = [
             base_path('app/Events'),
-            Modularity::getVendorPath('/src/Events'),
+            Modularous::getVendorPath('/src/Events'),
         ];
 
-        $allModules = Modularity::all();
+        $allModules = Modularous::all();
 
         foreach ($allModules as $module) {
             if (file_exists($moduleEventsPath = $module->getTargetClassPath('event'))) {
@@ -187,17 +187,17 @@ class MakeEventCommand extends BaseCommand
         $self = $this->option('self');
 
         if ($self) {
-            if (Modularity::isProduction()) {
+            if (Modularous::isProduction()) {
                 throw new \Exception('You cannot create an event in the vendor path in production');
             }
 
-            return Modularity::getVendorPath('src/Events/') . "{$fileName}";
+            return Modularous::getVendorPath('src/Events/') . "{$fileName}";
 
         } elseif (! $moduleName) {
             return base_path("app/Events/{$fileName}");
         }
 
-        $module = Modularity::findOrFail($moduleName);
+        $module = Modularous::findOrFail($moduleName);
 
         $targetClassPath = $module->getTargetClassPath('event', $fileName);
 

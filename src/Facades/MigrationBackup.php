@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Services\MigrationBackupService;
+use Unusualify\Modularous\Services\MigrationBackupService;
 
 /**
  * @method static void backup(string $table, ?array $columns = null)

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware\Concerns;
+namespace Unusualify\Modularous\Http\Middleware\Concerns;
 
 use Closure;
 use Illuminate\Auth\AuthenticationException;

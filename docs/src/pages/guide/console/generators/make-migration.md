@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:migration [--fields [FIELDS]] [--route [ROUTE]] [--plain] [-f|--force] [--relational] [--notAsk] [--no-defaults] [--all] [--table-name [TABLE-NAME]] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <name> [<module>]`
+- **Signature:** `modularous:make:migration [--fields [FIELDS]] [--route [ROUTE]] [--plain] [-f|--force] [--relational] [--notAsk] [--no-defaults] [--all] [--table-name [TABLE-NAME]] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <name> [<module>]`
 - **Category:** Generators
 
 
@@ -13,141 +13,141 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:migration NAME MODULE
+php artisan modularous:make:migration NAME MODULE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:make:migration --fields=FIELDS
+php artisan modularous:make:migration --fields=FIELDS
 ```
 
 ```bash
-php artisan modularity:make:migration --route=ROUTE
+php artisan modularous:make:migration --route=ROUTE
 ```
 
 ```bash
-php artisan modularity:make:migration --plain
-```
-
-```bash
-# Using shortcut
-php artisan modularity:make:migration -f
-
-# Using full option name
-php artisan modularity:make:migration --force
-```
-
-```bash
-php artisan modularity:make:migration --relational
-```
-
-```bash
-php artisan modularity:make:migration --notAsk
-```
-
-```bash
-php artisan modularity:make:migration --no-defaults
-```
-
-```bash
-php artisan modularity:make:migration --all
-```
-
-```bash
-php artisan modularity:make:migration --table-name=TABLE-NAME
-```
-
-```bash
-php artisan modularity:make:migration --test
+php artisan modularous:make:migration --plain
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -T
+php artisan modularous:make:migration -f
 
 # Using full option name
-php artisan modularity:make:migration --addTranslation
+php artisan modularous:make:migration --force
+```
+
+```bash
+php artisan modularous:make:migration --relational
+```
+
+```bash
+php artisan modularous:make:migration --notAsk
+```
+
+```bash
+php artisan modularous:make:migration --no-defaults
+```
+
+```bash
+php artisan modularous:make:migration --all
+```
+
+```bash
+php artisan modularous:make:migration --table-name=TABLE-NAME
+```
+
+```bash
+php artisan modularous:make:migration --test
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -M
+php artisan modularous:make:migration -T
 
 # Using full option name
-php artisan modularity:make:migration --addMedia
+php artisan modularous:make:migration --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -F
+php artisan modularous:make:migration -M
 
 # Using full option name
-php artisan modularity:make:migration --addFile
+php artisan modularous:make:migration --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -P
+php artisan modularous:make:migration -F
 
 # Using full option name
-php artisan modularity:make:migration --addPosition
+php artisan modularous:make:migration --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -S
+php artisan modularous:make:migration -P
 
 # Using full option name
-php artisan modularity:make:migration --addSlug
-```
-
-```bash
-php artisan modularity:make:migration --addPrice
+php artisan modularous:make:migration --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -A
+php artisan modularous:make:migration -S
 
 # Using full option name
-php artisan modularity:make:migration --addAuthorized
+php artisan modularous:make:migration --addSlug
+```
+
+```bash
+php artisan modularous:make:migration --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -FP
+php artisan modularous:make:migration -A
 
 # Using full option name
-php artisan modularity:make:migration --addFilepond
-```
-
-```bash
-php artisan modularity:make:migration --addUuid
+php artisan modularous:make:migration --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:migration -SS
+php artisan modularous:make:migration -FP
 
 # Using full option name
-php artisan modularity:make:migration --addSnapshot
+php artisan modularous:make:migration --addFilepond
+```
+
+```bash
+php artisan modularous:make:migration --addUuid
+```
+
+```bash
+# Using shortcut
+php artisan modularous:make:migration -SS
+
+# Using full option name
+php artisan modularous:make:migration --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:migration NAME
+php artisan modularous:make:migration NAME
 ```
 
-`modularity:make:migration`
+`modularous:make:migration`
 ---------------------------
 
 Create a new migration for the specified module.
 
 ### Usage
 
-* `modularity:make:migration [--fields [FIELDS]] [--route [ROUTE]] [--plain] [-f|--force] [--relational] [--notAsk] [--no-defaults] [--all] [--table-name [TABLE-NAME]] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <name> [<module>]`
+* `modularous:make:migration [--fields [FIELDS]] [--route [ROUTE]] [--plain] [-f|--force] [--relational] [--notAsk] [--no-defaults] [--all] [--table-name [TABLE-NAME]] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <name> [<module>]`
 * `mod:m:migration`
 
 Create a new migration for the specified module.

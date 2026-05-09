@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
@@ -19,10 +19,10 @@ class MakeThemeFolderCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:theme:folder';
+    protected $name = 'modularous:make:theme:folder';
 
     protected $aliases = [
-        'modularity:create:theme',
+        'modularous:create:theme',
     ];
 
     /**
@@ -64,16 +64,16 @@ class MakeThemeFolderCommand extends BaseCommand
 
         $success = true;
 
-        if (! file_exists(resource_path('vendor/modularity/themes'))) {
-            $this->filesystem->makeDirectory(resource_path('vendor/modularity/themes'));
-            $this->filesystem->put(resource_path('vendor/modularity/themes/.keep'), '');
+        if (! file_exists(resource_path('vendor/modularous/themes'))) {
+            $this->filesystem->makeDirectory(resource_path('vendor/modularous/themes'));
+            $this->filesystem->put(resource_path('vendor/modularous/themes/.keep'), '');
 
         }
 
         $extendTheme = $this->option('extend');
 
-        $sassPath = get_modularity_vendor_path("vue/src/sass/themes/{$extendTheme}");
-        $jsPath = get_modularity_vendor_path("vue/src/js/config/themes/{$extendTheme}.js");
+        $sassPath = get_modularous_vendor_path("vue/src/sass/themes/{$extendTheme}");
+        $jsPath = get_modularous_vendor_path("vue/src/js/config/themes/{$extendTheme}.js");
 
         if (! $extendTheme || ! ($this->filesystem->exists($sassPath) && $this->filesystem->exists($jsPath))) {
             warning('Theme name to be extended');
@@ -84,7 +84,7 @@ class MakeThemeFolderCommand extends BaseCommand
             //     no: 'No, select another theme',
             //     // hint: 'Default e-mail address: software-dev@unusualgrowth.com',
             // );
-            $themes = builtInModularityThemes();
+            $themes = builtInModularousThemes();
 
             $extendTheme = select(
                 label: 'Which theme to be extended?',
@@ -92,11 +92,11 @@ class MakeThemeFolderCommand extends BaseCommand
                 default: 'unusualify'
             );
 
-            $sassPath = get_modularity_vendor_path("vue/src/sass/themes/{$extendTheme}");
-            $jsPath = get_modularity_vendor_path("vue/src/js/config/themes/{$extendTheme}.js");
+            $sassPath = get_modularous_vendor_path("vue/src/sass/themes/{$extendTheme}");
+            $jsPath = get_modularous_vendor_path("vue/src/js/config/themes/{$extendTheme}.js");
         }
 
-        $destination = resource_path('vendor/modularity/themes/' . $name);
+        $destination = resource_path('vendor/modularous/themes/' . $name);
 
         $this->filesystem->copyDirectory(
             $sassPath, $destination . '/sass'

@@ -13,7 +13,7 @@
     "principles": [
       "Modules are self-contained and register via their ServiceProvider.",
       "Config keys are namespaced under the module name to avoid collisions.",
-      "Public assets are exposed via the package Vite bridge (ModularityVite)."
+      "Public assets are exposed via the package Vite bridge (ModularousVite)."
     ]
   },
   "service_provider_patterns": {
@@ -35,7 +35,7 @@
       "Vuetify components follow composition API and are small, single-responsibility"
     ],
     "build": [
-      "Expose module entrypoints to host Vite build via ModularityVite helper.",
+      "Expose module entrypoints to host Vite build via ModularousVite helper.",
       "Keep CSS scoped at component level and use Vuetify theme tokens."
     ],
     "naming": [

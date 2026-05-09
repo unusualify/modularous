@@ -5,7 +5,7 @@ sidebarTitle: InspectTraits
 
 # InspectTraits
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\InspectTraits`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\InspectTraits`
 
 Runtime trait introspection for the repository and its model. Used internally by the base `Repository` to discover which lifecycle hooks are available.
 
@@ -45,7 +45,7 @@ if ($repo->isSoftDeletable()) {
 }
 
 // Check for a specific model trait
-if ($repo->hasModelTrait('Unusualify\Modularity\Entities\Traits\HasStateable')) {
+if ($repo->hasModelTrait('Unusualify\Modularous\Entities\Traits\HasStateable')) {
     // show state filters
 }
 ```

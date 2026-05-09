@@ -2,7 +2,7 @@
 
 namespace TestModules\SystemModule\Controllers;
 
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class ItemController extends BaseController
 {

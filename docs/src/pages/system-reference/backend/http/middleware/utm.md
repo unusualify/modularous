@@ -6,8 +6,8 @@ sidebarTitle: UtmMiddleware
 # UtmMiddleware
 
 **File**: `src/Http/Middleware/UtmMiddleware.php`  
-**Alias**: `modularity.utm`  
-**Part of**: `modularity.core` group
+**Alias**: `modularous.utm`  
+**Part of**: `modularous.core` group
 
 Captures UTM tracking parameters from the incoming request and shares them with Blade layout views.
 
@@ -17,8 +17,8 @@ Captures UTM tracking parameters from the incoming request and shares them with 
 2. Registers a view composer for both layout views:
    ```php
    view()->composer([
-       'modularity::layouts.app-inertia',
-       'modularity::layouts.master',
+       'modularous::layouts.app-inertia',
+       'modularous::layouts.master',
    ], function ($view) {
        $view->with('utmParameters', Utm::getParameters());
    });

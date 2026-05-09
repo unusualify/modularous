@@ -3,10 +3,10 @@
 namespace Modules\SystemPayment\Repositories;
 
 use Modules\SystemPayment\Entities\Payment;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\CreatorTrait;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
 
 class PaymentRepository extends Repository
 {

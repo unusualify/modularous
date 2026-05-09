@@ -1,16 +1,16 @@
 <?php
 
 declare(strict_types=1);
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\AuthFormBuilder;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\AuthFormBuilder;
 
 /**
  * Auth pages configuration (deferred - loaded when translator is ready).
  *
- * Override in modularity/auth_pages.php. All auth component attributes
+ * Override in modularous/auth_pages.php. All auth component attributes
  * (bannerDescription, bannerSubDescription, redirectUrl, etc.) are custom
  * and come from app config, not this package.
  *
- * App config structure (in modularity/auth_pages.php):
+ * App config structure (in modularous/auth_pages.php):
  *   attributes       - global attributes for all auth pages
  *   pages.[key].attributes - per-page overrides
  *
@@ -148,7 +148,7 @@ return [
     | Layout presets (structural flags only)
     |--------------------------------------------------------------------------
     | Content attributes (bannerDescription, bannerSubDescription, redirectUrl, etc.)
-    | come from app config: modularity/auth_pages.php attributes and pages.[page].attributes
+    | come from app config: modularous/auth_pages.php attributes and pages.[page].attributes
     */
     'layoutPresets' => [
         'banner' => [

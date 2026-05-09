@@ -1,6 +1,6 @@
 <?php
 
-use Unusualify\Modularity\Entities\Observers\PriceableObserver;
+use Unusualify\Modularous\Entities\Observers\PriceableObserver;
 
 return [
     'prices_are_including_vat' => false,

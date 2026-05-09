@@ -7,7 +7,7 @@ sidebarTitle: Overview
 
 **Directory**: `src/Services/Concerns/`
 
-The Cache Concerns are three PHP traits that compose the caching behaviour used by `ModularityCacheService`. They separate the cache layer into distinct responsibilities:
+The Cache Concerns are three PHP traits that compose the caching behaviour used by `ModularousCacheService`. They separate the cache layer into distinct responsibilities:
 
 | Trait | File | Purpose | Page |
 |-------|------|---------|------|
@@ -18,7 +18,7 @@ The Cache Concerns are three PHP traits that compose the caching behaviour used 
 ## Composition
 
 ```
-ModularityCacheService
+ModularousCacheService
   └── uses CacheHelpers
         └── uses CacheTags
         └── uses CacheInvalidation
@@ -27,7 +27,7 @@ ModularityCacheService
               └── uses ModularModel
 ```
 
-`CacheHelpers` is the entry point — it composes `CacheTags` and `CacheInvalidation` into a single unified interface. `ModularityCacheService` only needs to `use CacheHelpers` to get all three.
+`CacheHelpers` is the entry point — it composes `CacheTags` and `CacheInvalidation` into a single unified interface. `ModularousCacheService` only needs to `use CacheHelpers` to get all three.
 
 ## Required Interface
 

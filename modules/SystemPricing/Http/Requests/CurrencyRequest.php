@@ -2,7 +2,7 @@
 
 namespace Modules\SystemPricing\Http\Requests;
 
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class CurrencyRequest extends Request
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\Factory as ViewFactory;
-use Unusualify\Modularity\Http\Controllers\Auth\Controller;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Controllers\Auth\Controller;
+use Unusualify\Modularous\Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Database\Eloquent\Model;
 

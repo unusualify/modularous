@@ -9,8 +9,8 @@ sidebarTitle: Create Model Trait
 
 ## Command Information
 
-- **Signature:** `modularity:make:model:trait {name}`
-- **Aliases:** `modularity:create:model:trait`, `mod:c:model:trait`
+- **Signature:** `modularous:make:model:trait {name}`
+- **Aliases:** `modularous:create:model:trait`, `mod:c:model:trait`
 - **Category:** Generators
 
 ## Arguments
@@ -26,7 +26,7 @@ Creates a PHP trait file from a stub template with the StudlyCase name applied. 
 ## Examples
 
 ```bash
-php artisan modularity:make:model:trait HasAnalytics
+php artisan modularous:make:model:trait HasAnalytics
 php artisan mod:c:model:trait HasPricing
 ```
 
@@ -41,4 +41,4 @@ Modules/{Module}/Traits/{StudlyName}Trait.php
 ## Related
 
 - [create:repository-trait](./create-repository-trait) — same pattern for repository traits
-- [Entity Traits reference](/system-reference/backend/entity-traits/overview) — built-in model traits shipped with Modularity
+- [Entity Traits reference](/system-reference/backend/entity-traits/overview) — built-in model traits shipped with Modularous

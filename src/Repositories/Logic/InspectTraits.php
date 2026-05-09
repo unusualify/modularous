@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Logic;
+namespace Unusualify\Modularous\Repositories\Logic;
 
 use Illuminate\Support\Str;
 
@@ -12,7 +12,7 @@ trait InspectTraits
      */
     public function hasBehavior($behavior)
     {
-        $hasBehavior = classHasTrait($this, 'Unusualify\Modularity\Repositories\Traits\\' . ucfirst($behavior) . 'Trait');
+        $hasBehavior = classHasTrait($this, 'Unusualify\Modularous\Repositories\Traits\\' . ucfirst($behavior) . 'Trait');
         // dd($behavior, $hasBehavior, Str::startsWith($behavior, 'translation'));
         if (Str::startsWith($behavior, 'translation')) {
             $hasBehavior = $hasBehavior && $this->model->isTranslatable();

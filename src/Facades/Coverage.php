@@ -1,19 +1,19 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Services\CoverageService;
+use Unusualify\Modularous\Services\CoverageService;
 
 /**
  * Coverage Analysis Facade
  *
- * @method static \Unusualify\Modularity\Services\CoverageService setCloverPath(string $path)
- * @method static \Unusualify\Modularity\Services\CoverageService filterByFiles(array $files)
- * @method static \Unusualify\Modularity\Services\CoverageService setCoverageThreshold(float $threshold)
- * @method static \Unusualify\Modularity\Services\CoverageService skipMagicMethods(bool $skip = true)
- * @method static \Unusualify\Modularity\Services\CoverageService skipPrivateMethods(bool $skip = true)
- * @method static \Unusualify\Modularity\Services\CoverageService skipProtectedMethods(bool $skip = true)
+ * @method static \Unusualify\Modularous\Services\CoverageService setCloverPath(string $path)
+ * @method static \Unusualify\Modularous\Services\CoverageService filterByFiles(array $files)
+ * @method static \Unusualify\Modularous\Services\CoverageService setCoverageThreshold(float $threshold)
+ * @method static \Unusualify\Modularous\Services\CoverageService skipMagicMethods(bool $skip = true)
+ * @method static \Unusualify\Modularous\Services\CoverageService skipPrivateMethods(bool $skip = true)
+ * @method static \Unusualify\Modularous\Services\CoverageService skipProtectedMethods(bool $skip = true)
  * @method static array analyze()
  * @method static array analyzeFile(string $filePath)
  * @method static array|null getMethodCoverage(string $filePath, string $methodName)

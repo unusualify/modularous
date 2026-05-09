@@ -6,7 +6,7 @@ sidebarTitle: User
 # User
 
 **File**: `src/Entities/User.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Foundation\Auth\User` (Authenticatable)  
 **Implements**: `HasLocalePreference`, `MustVerifyEmail`  
 **Traits**: `HasApiTokens`, `HasFactory`, `HasRoles`, `IsTranslatable`, `ModelHelpers`, `Notifiable`, `HasFileponds`, `HasOauth`, `CanRegister`, `HasCompany`

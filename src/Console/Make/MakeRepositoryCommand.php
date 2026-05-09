@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -8,19 +8,19 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MakeRepositoryCommand extends BaseCommand
 {
-    protected $name = 'modularity:make:repository';
+    protected $name = 'modularous:make:repository';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'modularity:make:repository
+    protected $signature = 'modularous:make:repository
         {repository : The name of the repository class}
         {module : The name of module will be used}
         {--f|force : Force the operation to run when the route files already exist}
@@ -59,7 +59,7 @@ class MakeRepositoryCommand extends BaseCommand
         $this->setAskability();
 
         // $this->defaultConsent = false;
-        foreach (getModularityTraits() as $_trait) {
+        foreach (getModularousTraits() as $_trait) {
             $this->responses[$_trait] = $this->checkOption($_trait);
         }
 
@@ -93,7 +93,7 @@ class MakeRepositoryCommand extends BaseCommand
     protected function getTemplateContents()
     {
         $repository = $this->argument('repository');
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         $modelName = $this->getFileName() ?? '';
         $modelClass = $this->getModelClass() ?? '';
@@ -121,11 +121,11 @@ class MakeRepositoryCommand extends BaseCommand
      */
     protected function getDestinationFilePath()
     {
-        $path = Modularity::getModulePath($this->getModuleName());
+        $path = Modularous::getModulePath($this->getModuleName());
 
         $repositoryPath = GenerateConfigReader::read('repository');
 
-        // dd($path, $repositoryPath->getPath(), Modularity::getModulePath($this->getModuleName()) );
+        // dd($path, $repositoryPath->getPath(), Modularous::getModulePath($this->getModuleName()) );
         return $path . $repositoryPath->getPath() . '/' . $this->getFileName() . 'Repository.php';
     }
 
@@ -156,7 +156,7 @@ class MakeRepositoryCommand extends BaseCommand
      */
     private function getModelClass()
     {
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         // dd( config('modules.namespace'), $module->getName(), get_class_methods($module));
         $module_name = $module->getStudlyName();

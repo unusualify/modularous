@@ -6,14 +6,14 @@ sidebarTitle: FileRequest
 # FileRequest
 
 **File**: `src/Http/Requests/FileRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: [`Request`](./request)
 
-Validates the payload posted to the file-library upload endpoint. The required fields depend on which backend is configured via `modularity.file_library.endpoint_type`.
+Validates the payload posted to the file-library upload endpoint. The required fields depend on which backend is configured via `modularous.file_library.endpoint_type`.
 
 ## Endpoint-specific rules
 
-`rules()` reads `modularityConfig('file_library.endpoint_type')` and returns one of three rule sets:
+`rules()` reads `modularousConfig('file_library.endpoint_type')` and returns one of three rule sets:
 
 | `endpoint_type` | Required fields |
 |-----------------|-----------------|

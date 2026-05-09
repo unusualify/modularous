@@ -16,7 +16,7 @@ final class CmsSluglessFallbackLocale
      */
     public static function enabled(): bool
     {
-        return (bool) modularityConfig('cms_routing.fallback_locale_optional_path_segment', false);
+        return (bool) modularousConfig('cms_routing.fallback_locale_optional_path_segment', false);
     }
 
     /**
@@ -24,7 +24,7 @@ final class CmsSluglessFallbackLocale
      */
     public static function resolvedCode(): string
     {
-        $override = modularityConfig('cms_routing.fallback_locale_optional_path_segment_locale');
+        $override = modularousConfig('cms_routing.fallback_locale_optional_path_segment_locale');
         if (is_string($override) && trim($override) !== '') {
             return trim($override);
         }
@@ -34,7 +34,7 @@ final class CmsSluglessFallbackLocale
             return $trans;
         }
 
-        return (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
+        return (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
     }
 
     public static function sameLocale(string $localeA, string $localeB): bool
@@ -61,7 +61,7 @@ final class CmsSluglessFallbackLocale
     /** HTTP redirect when stripping {@code /{slugless}/...}; defaults to permanent (301). */
     public static function explicitSegmentRedirectStatus(): int
     {
-        $code = (int) modularityConfig('cms_routing.fallback_locale_explicit_segment_redirect_status', 301);
+        $code = (int) modularousConfig('cms_routing.fallback_locale_explicit_segment_redirect_status', 301);
         if ($code < 300 || $code > 399) {
             return 301;
         }

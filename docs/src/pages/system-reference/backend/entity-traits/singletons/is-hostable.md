@@ -5,7 +5,7 @@ sidebarTitle: IsHostable
 
 # IsHostable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\IsHostable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\IsHostable`
 
 Extends `HasSlug` and `Core\ModelHelpers` to support multi-level hostable slug routing. Traverses `BelongsTo` and `HasMany` relationship chains to build full slug paths including all ancestor segments. Useful for nested page hierarchies where each level has its own slug.
 
@@ -54,7 +54,7 @@ Automatically composes:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\IsHostable;
+use Unusualify\Modularous\Entities\Traits\IsHostable;
 
 class Page extends Model
 {

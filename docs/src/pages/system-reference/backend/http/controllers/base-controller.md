@@ -6,7 +6,7 @@ sidebarTitle: BaseController
 # BaseController
 
 **File**: `src/Http/Controllers/BaseController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `PanelController`  
 **Traits**: `ManageIndexAjax`, `ManagePrevious`, `ManageUtilities`, `ManageSingleton`, `ManageInertia`, `ManageTranslations`
 

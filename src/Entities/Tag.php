@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Cartalyst\Tags\IlluminateTag;
 
@@ -23,6 +23,6 @@ class Tag extends IlluminateTag
 
     public function getTable()
     {
-        return modularityConfig('tables.tags', parent::getTable());
+        return modularousConfig('tables.tags', parent::getTable());
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support\Decomposers;
+namespace Unusualify\Modularous\Tests\Support\Decomposers;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Support\Decomposers\SchemaParser;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Support\Decomposers\SchemaParser;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SchemaParserTest extends TestCase
 {
@@ -15,10 +15,10 @@ class SchemaParserTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('modularity.schemas.default_inputs', []);
-        Config::set('modularity.schemas.default_pre_headers', []);
-        Config::set('modularity.schemas.default_post_headers', []);
-        Config::set('modularity.default_header', []);
+        Config::set('modularous.schemas.default_inputs', []);
+        Config::set('modularous.schemas.default_pre_headers', []);
+        Config::set('modularous.schemas.default_post_headers', []);
+        Config::set('modularous.default_header', []);
 
         // Mock UFinder to return null for repository lookups by default
         UFinder::shouldReceive('getRouteRepository')->andReturn(null);

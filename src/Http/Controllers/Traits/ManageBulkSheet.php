@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -9,20 +9,20 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Services\BulkCsv\BulkImportService;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Services\BulkCsv\BulkImportService;
 
 /**
  * CSV bulk sheet: index toolbar action + panel routes ({@see bulkSheetTool}, dry-run, commit, export).
  *
  * Requires the host controller to implement {@see CanBulkSheet} and define {@see $moduleName} / {@see $routeName}
- * (see {@see \Unusualify\Modularity\Http\Controllers\CoreController}).
+ * (see {@see \Unusualify\Modularous\Http\Controllers\CoreController}).
  *
  * Optional overrides: protected hooks {@see bulkSheetToolbarIntroFallback}, {@see bulkSheetToolHeadlineFallback},
  * {@see bulkSheetBreadcrumbsItems}, or extend public methods after composing this trait.
  *
- * {@see \Unusualify\Modularity\Http\Controllers\Traits\Table\TableActions::setTableActions()} invokes
+ * {@see \Unusualify\Modularous\Http\Controllers\Traits\Table\TableActions::setTableActions()} invokes
  * {@see setTableActionsManageBulkSheet()} when this trait is used.
  */
 trait ManageBulkSheet
@@ -327,7 +327,7 @@ trait ManageBulkSheet
         $names = $this->bulkSheetWebRouteNames();
         $toolKey = $this->bulkSheetToolKey();
 
-        $pageTitle = $this->bulkSheetToolBrowserTitle() . ' - ' . Modularity::pageTitle();
+        $pageTitle = $this->bulkSheetToolBrowserTitle() . ' - ' . Modularous::pageTitle();
         $data = [
             'pageTitle' => $pageTitle,
             'headerTitle' => $this->bulkSheetToolHeadline(),
@@ -424,7 +424,7 @@ trait ManageBulkSheet
      */
     protected function bulkSheetNavigationWithBreadcrumbs(): array
     {
-        $navigation = get_modularity_navigation_config();
+        $navigation = get_modularous_navigation_config();
         $navigation['breadcrumbs'] = $this->bulkSheetBreadcrumbsItems();
 
         return $navigation;

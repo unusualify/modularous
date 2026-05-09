@@ -3,7 +3,7 @@
 namespace Modules\SystemUser\Repositories;
 
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class RoleRepository extends Repository
 {

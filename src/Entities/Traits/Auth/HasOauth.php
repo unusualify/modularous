@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Auth;
+namespace Unusualify\Modularous\Entities\Traits\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Socialite\Contracts\User;
-use Unusualify\Modularity\Entities\UserOauth;
+use Unusualify\Modularous\Entities\UserOauth;
 
 trait HasOauth
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
-use Unusualify\Modularity\Services\MediaLibrary\AbstractParamsProcessor;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\AbstractParamsProcessor;
+use Unusualify\Modularous\Tests\TestCase;
 
 class AbstractParamsProcessorTest extends TestCase
 {

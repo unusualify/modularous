@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Middleware;
+namespace Unusualify\Modularous\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Facades\ModularityLog;
+use Unusualify\Modularous\Facades\ModularousLog;
 
 class LogMiddleware
 {
@@ -12,7 +12,7 @@ class LogMiddleware
     {
         $requestId = (string) Str::uuid();
 
-        ModularityLog::withContext([
+        ModularousLog::withContext([
             'request_id' => $requestId,
         ]);
 

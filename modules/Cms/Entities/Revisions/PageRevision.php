@@ -3,7 +3,7 @@
 namespace Modules\Cms\Entities\Revisions;
 
 use Modules\Cms\Entities\Page;
-use Unusualify\Modularity\Entities\Revision;
+use Unusualify\Modularous\Entities\Revision;
 
 class PageRevision extends Revision
 {
@@ -24,6 +24,6 @@ class PageRevision extends Revision
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions');
+        return modularousConfig('tables.cms_pages_revisions', 'um_cms_pages_revisions');
     }
 }

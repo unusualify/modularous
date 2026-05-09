@@ -5,7 +5,7 @@ sidebarTitle: EventUser
 
 # EventUser
 
-`Unusualify\Modularity\Events\Traits\EventUser`
+`Unusualify\Modularous\Events\Traits\EventUser`
 
 Captures the currently authenticated user at the moment the event is constructed. Added to every `ModelEvent` subclass automatically.
 

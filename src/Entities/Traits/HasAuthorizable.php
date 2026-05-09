@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Entities\Authorization;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Entities\Authorization;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait HasAuthorizable
 {

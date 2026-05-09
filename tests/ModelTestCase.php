@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use Oobook\Database\Eloquent\ManageEloquentServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Spatie\Activitylog\Models\Activity;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Entities\User;
 
 abstract class ModelTestCase extends TestCase
 {
@@ -44,16 +44,16 @@ abstract class ModelTestCase extends TestCase
             'database_connection' => 'testdb',
         ]);
 
-        $app['config']->set('auth.guards.modularity', [
+        $app['config']->set('auth.guards.modularous', [
             'driver' => 'session',
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
         ]);
-        $app['config']->set('auth.providers.modularity_users', [
+        $app['config']->set('auth.providers.modularous_users', [
             'driver' => 'eloquent',
             'model' => User::class,
         ]);
-        $app['config']->set('auth.passwords.modularity_users', [
-            'provider' => 'modularity_users',
+        $app['config']->set('auth.passwords.modularous_users', [
+            'provider' => 'modularous_users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

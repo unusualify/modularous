@@ -5,11 +5,11 @@ sidebarTitle: BaseServiceProvider
 
 # BaseServiceProvider
 
-**Class**: `Unusualify\Modularity\Providers\BaseServiceProvider`  
+**Class**: `Unusualify\Modularous\Providers\BaseServiceProvider`  
 **Source**: `src/Providers/BaseServiceProvider.php`  
 **Extends**: [`ServiceProvider`](./service-provider)
 
-The core provider that handles all container bindings, macro registration, view composers, log channels, and the application scheduler. It is the heaviest provider in the stack and is registered by [`ModularityProvider`](./modularity-provider).
+The core provider that handles all container bindings, macro registration, view composers, log channels, and the application scheduler. It is the heaviest provider in the stack and is registered by [`ModularousProvider`](./modularous-provider).
 
 ## `register()`
 
@@ -21,29 +21,29 @@ All PHP files in `src/Helpers/` are required in sequence so global helper functi
 
 | Source | Merged into |
 |--------|------------|
-| `config/config.php` | `modularity.*` |
-| `config/merges/*.php` | `modularity.{filename}.*` |
+| `config/config.php` | `modularous.*` |
+| `config/merges/*.php` | `modularous.{filename}.*` |
 | `config/disks.php` | `filesystems.disks.*` |
 
 ### Container bindings (singletons)
 
 | Binding key | Class | Description |
 |-------------|-------|-------------|
-| `RepositoryInterface` | `Modularity` | Overrides nwidart's `LaravelFileRepository` with the Modularity-extended implementation |
-| `modularity` | alias for `Modularity` | Convenience alias |
-| `modularity.navigation` | `ModularityNavigation` | Admin navigation service |
+| `RepositoryInterface` | `Modularous` | Overrides nwidart's `LaravelFileRepository` with the Modularous-extended implementation |
+| `modularous` | alias for `Modularous` | Convenience alias |
+| `modularous.navigation` | `ModularousNavigation` | Admin navigation service |
 | `model.relation.namespace` | — | Eloquent relations namespace string |
 | `model.relation.pattern` | — | Regex pattern derived from relation namespace |
 | `unusualify.hosting` | `HostRouting` | Host-based routing helper |
 | `unusualify.hostRouting` | `HostRouteRegistrar` | Host-based route registrar |
 | `Filepond` | `FilepondManager` | Filepond upload manager |
 | `currency.exchange` | `CurrencyExchangeService` | Currency exchange rates |
-| `CurrencyProviderInterface` | Resolved at runtime | Uses `modularity.currency_provider` config; falls back to `SystemPricingCurrencyProvider` then `NullCurrencyProvider` |
-| `modularity.relationship.graph` | `CacheRelationshipGraph` | Relationship dependency graph for cache invalidation |
-| `modularity.cache` | `ModularityCacheService` | Package-level cache service |
+| `CurrencyProviderInterface` | Resolved at runtime | Uses `modularous.currency_provider` config; falls back to `SystemPricingCurrencyProvider` then `NullCurrencyProvider` |
+| `modularous.relationship.graph` | `CacheRelationshipGraph` | Relationship dependency graph for cache invalidation |
+| `modularous.cache` | `ModularousCacheService` | Package-level cache service |
 | `migration.backup` | `MigrationBackup` | Migration backup utility |
-| `modularity.redirect` | `RedirectService` | Redirect management |
-| `modularity.utm` | `UtmParameters` | UTM parameter tracking |
+| `modularous.redirect` | `RedirectService` | Redirect management |
+| `modularous.utm` | `UtmParameters` | UTM parameter tracking |
 | `auth.register` | `RegisterBrokerManager` | Auth registration broker |
 | `inertia.middleware` | `HandleInertiaRequests` | Inertia request handler |
 
@@ -51,7 +51,7 @@ All PHP files in `src/Helpers/` are required in sequence so global helper functi
 
 | Alias | Class |
 |-------|-------|
-| `ModularityVite` | `Facades\ModularityVite` |
+| `ModularousVite` | `Facades\ModularousVite` |
 | `GeoIP` | `Torann\GeoIP\Facades\GeoIP` |
 
 ### Translation service
@@ -59,7 +59,7 @@ All PHP files in `src/Helpers/` are required in sequence so global helper functi
 Extends Laravel's `translation.loader` with a multi-path `FileLoader` that searches:
 1. `vendor/laravel/framework/.../Translation/lang`
 2. Package `lang/`
-3. Application `lang/` (when not overridden by `modularity/lang/`)
+3. Application `lang/` (when not overridden by `modularous/lang/`)
 4. `app['path.lang']`
 
 Extends `translator` with a custom `Translator` instance that reads from these paths in order.
@@ -68,7 +68,7 @@ Extends `translator` with a custom `Translator` instance that reads from these p
 
 ### Auth config validation
 
-When `enabled.users-management` is on and not running in console, validates that the Modularity auth guard, provider, and password config all exist in `config/auth`. Throws `AuthConfigurationException` with a descriptive message if any are missing.
+When `enabled.users-management` is on and not running in console, validates that the Modularous auth guard, provider, and password config all exist in `config/auth`. Throws `AuthConfigurationException` with a descriptive message if any are missing.
 
 ### Media and file service singletons
 
@@ -83,7 +83,7 @@ Local disk URL is auto-configured when endpoint type is `local` and disk matches
 
 | Macro | Target | Description |
 |-------|--------|-------------|
-| `Str::modularitySlug()` | `Illuminate\Support\Str` | Slug with locale-aware dictionary from `slug-dictionary` translations |
+| `Str::modularousSlug()` | `Illuminate\Support\Str` | Slug with locale-aware dictionary from `slug-dictionary` translations |
 | `Collection::recursive()` | `Illuminate\Support\Collection` | Recursively converts all nested arrays/objects to Collections |
 | `Request::getCachedUserCurrency()` | `Illuminate\Support\Facades\Request` | Returns user's currency from session or the default pricing currency |
 
@@ -93,7 +93,7 @@ Registered on `'*'` (all views) or specific layout views:
 
 | Composer | Views | Condition |
 |----------|-------|-----------|
-| Inline | `*` | Always — injects `BASE_KEY`, `MODULARITY_VIEW_NAMESPACE`, `SYSTEM_PACKAGE_VERSIONS` |
+| Inline | `*` | Always — injects `BASE_KEY`, `MODULAROUS_VIEW_NAMESPACE`, `SYSTEM_PACKAGE_VERSIONS` |
 | [`Urls`](../http/view-composers/urls) | `*` | Always |
 | [`CurrentUser`](../http/view-composers/current-user) | `admin.*`, `{baseKey}::*` | `enabled.users-management` = true |
 | [`MediasUploaderConfig`](../http/view-composers/medias-uploader-config) | master/app-inertia layouts | `enabled.media-library` = true |
@@ -105,16 +105,16 @@ Registered on `'*'` (all views) or specific layout views:
 
 | Command | Schedule |
 |---------|----------|
-| `modularity:fileponds:scheduler --days=7` | Daily |
+| `modularous:fileponds:scheduler --days=7` | Daily |
 | `telescope:prune --hours=168` | Daily (appends to `logs/scheduler.log`) |
-| `modularity:scheduler:chatable` | Every minute |
+| `modularous:scheduler:chatable` | Every minute |
 
 ### Log channels
 
 | Channel | Driver | Description |
 |---------|--------|-------------|
-| `modularity` | `monolog` with `ModularityLogHandler` | Package debug log; retention 14 days; level from `MODULARITY_LOG_LEVEL` env |
-| `modularity-notification-failure` | `daily` | Notification failure log; `storage/logs/modularity-notification-failure.log`; 14-day retention |
+| `modularous` | `monolog` with `ModularousLogHandler` | Package debug log; retention 14 days; level from `MODULAROUS_LOG_LEVEL` env |
+| `modularous-notification-failure` | `daily` | Notification failure log; `storage/logs/modularous-notification-failure.log`; 14-day retention |
 
 ### Password reset URL
 

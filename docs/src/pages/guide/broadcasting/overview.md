@@ -44,12 +44,12 @@ The broadcast event name is derived from the class name:
 ```
 ClassName            →  broadcast event name
 ────────────────────────────────────────────
-OrderShippedEvent    →  modularity.order.shipped
-ModelCreated         →  modularity.model.created
-StateableUpdated     →  modularity.stateable.updated
+OrderShippedEvent    →  modularous.order.shipped
+ModelCreated         →  modularous.model.created
+StateableUpdated     →  modularous.stateable.updated
 ```
 
-The rule: strip `_event` suffix, convert to snake_case, replace `_` with `.`, prepend `modularity.`.
+The rule: strip `_event` suffix, convert to snake_case, replace `_` with `.`, prepend `modularous.`.
 
 ---
 
@@ -103,7 +103,7 @@ To make a `ModelEvent` subclass broadcast, add `ShouldBroadcast` and `InteractsW
 ```php
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 
 class OrderShipped extends ModelEvent implements ShouldBroadcast
 {
@@ -154,7 +154,7 @@ class OrderShipped extends ModelEvent implements ShouldBroadcast
 `BroadcastManager::forModel()` inspects a list of event classes for a given model and returns a structured config array that can be passed to the frontend so Laravel Echo can subscribe dynamically.
 
 ```php
-use Unusualify\Modularity\Services\BroadcastManager;
+use Unusualify\Modularous\Services\BroadcastManager;
 use Modules\SystemNotification\Events\ModelCreated;
 use Modules\SystemNotification\Events\ModelUpdated;
 use Modules\SystemNotification\Events\StateableUpdated;
@@ -174,9 +174,9 @@ The returned array has the shape:
         'name'   => 'private-orders.42',
         'type'   => 'private',
         'events' => [
-            ['event' => 'modularity.model.created'],
-            ['event' => 'modularity.model.updated'],
-            ['event' => 'modularity.stateable.updated'],
+            ['event' => 'modularous.model.created'],
+            ['event' => 'modularous.model.updated'],
+            ['event' => 'modularous.stateable.updated'],
         ],
     ],
     [
@@ -250,7 +250,7 @@ subscribeToBroadcast(broadcastConfig)
 ```
 
 ::: tip Event name prefix
-Laravel Echo requires a leading `.` before custom event names: `.modularity.model.created`. Without it, Echo treats the name as a Laravel event class string.
+Laravel Echo requires a leading `.` before custom event names: `.modularous.model.created`. Without it, Echo treats the name as a Laravel event class string.
 :::
 
 ### 4. Authorizing Private Channels

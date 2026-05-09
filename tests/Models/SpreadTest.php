@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\Spread;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\Spread;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class SpreadTest extends ModelTestCase
 {
@@ -18,7 +18,7 @@ class SpreadTest extends ModelTestCase
     public function test_get_table_spread()
     {
         $spread = new Spread;
-        $this->assertEquals(modularityConfig('tables.spreads', 'modularity_spreads'), $spread->getTable());
+        $this->assertEquals(modularousConfig('tables.spreads', 'modularous_spreads'), $spread->getTable());
     }
 
     public function test_fillable_attributes()
@@ -712,7 +712,7 @@ class SpreadTest extends ModelTestCase
         // Test that spread can be deleted independently
         $spread->delete();
 
-        $this->assertDatabaseMissing(modularityConfig('tables.spreads', 'modularity_spreads'), ['id' => $spreadId]);
+        $this->assertDatabaseMissing(modularousConfig('tables.spreads', 'modularous_spreads'), ['id' => $spreadId]);
 
         // Original user should still exist
         $this->assertDatabaseHas('um_users', ['id' => $user->id]);

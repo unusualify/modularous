@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Requests;
+namespace Unusualify\Modularous\Http\Requests;
 
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularous\Traits\ManageTraits;
 
 abstract class Request extends FormRequest
 {

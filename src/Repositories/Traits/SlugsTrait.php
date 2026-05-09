@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 trait SlugsTrait
 {
@@ -23,7 +23,7 @@ trait SlugsTrait
             return;
         }
 
-        $object->modularitySkipAutomaticSlugSync = $this->shouldSkipAutomaticSlugSyncOnSave($object, $fields);
+        $object->modularousSkipAutomaticSlugSync = $this->shouldSkipAutomaticSlugSyncOnSave($object, $fields);
     }
 
     /**
@@ -112,7 +112,7 @@ trait SlugsTrait
         }
 
         if ($this->mergedSlugPayloadRequestsExplicitManagement($fields)) {
-            $object->modularitySkipAutomaticSlugSync = true;
+            $object->modularousSkipAutomaticSlugSync = true;
         }
 
         return $fields;

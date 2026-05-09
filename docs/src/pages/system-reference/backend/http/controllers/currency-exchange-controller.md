@@ -6,7 +6,7 @@ sidebarTitle: CurrencyExchangeController
 # CurrencyExchangeController
 
 **File**: `src/Http/Controllers/CurrencyExchangeController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Illuminate\Routing\Controller`
 
 Manages currency exchange rates and performs currency conversions. Delegates all business logic to the injected `CurrencyExchangeService`.

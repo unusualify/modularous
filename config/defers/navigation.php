@@ -1,6 +1,6 @@
 <?php
 
-use Unusualify\Modularity\Facades\Navigation;
+use Unusualify\Modularous\Facades\Navigation;
 
 return [
     /*

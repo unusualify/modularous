@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
-use Unusualify\Modularity\Services\SlugInputValidationService;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\SlugInputValidationService;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SlugInputValidationServiceTest extends TestCase
 {

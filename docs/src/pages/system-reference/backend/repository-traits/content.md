@@ -11,7 +11,7 @@ These traits handle slug persistence, JSON spread attributes, tagging, and multi
 
 ## SlugsTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\SlugsTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\SlugsTrait`
 
 Persists locale-aware URL slugs after save, removes them on delete, restores them on restore, and provides slug-based model lookup methods.
 
@@ -43,7 +43,7 @@ Persists locale-aware URL slugs after save, removes them on delete, restores the
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\SlugsTrait;
+use Unusualify\Modularous\Repositories\Traits\SlugsTrait;
 
 class PageRepository extends Repository
 {
@@ -61,7 +61,7 @@ $draft = $repo->existsSlugPreview('upcoming-feature');
 
 ## SpreadableTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\SpreadableTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\SpreadableTrait`
 
 Moves form fields marked as `spreadable` into and out of the model's JSON `Spread` morph record. This trait bridges the gap between flat form fields and the `HasSpreadable` entity trait's JSON storage.
 
@@ -95,7 +95,7 @@ Form Load (getFormFields)
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\SpreadableTrait;
+use Unusualify\Modularous\Repositories\Traits\SpreadableTrait;
 
 class ProductRepository extends Repository
 {
@@ -113,7 +113,7 @@ class ProductRepository extends Repository
 
 ## TagsTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\TagsTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\TagsTrait`
 
 Handles tag synchronization (create, remove, bulk), locale-aware tags, tag querying, and data table filtering by tag.
 
@@ -148,7 +148,7 @@ The trait distinguishes two modes:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\TagsTrait;
+use Unusualify\Modularous\Repositories\Traits\TagsTrait;
 
 class ArticleRepository extends Repository
 {
@@ -169,7 +169,7 @@ $grouped = $repo->getTags('', [], true);
 
 ## TranslationsTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\TranslationsTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\TranslationsTrait`
 
 Handles the full translation lifecycle: preparing per-locale fields before save, hydrating translated fields for form editing, filtering/searching across translations, and ordering by translated columns.
 
@@ -219,7 +219,7 @@ When an order column is a translated attribute:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
 
 class ArticleRepository extends Repository
 {

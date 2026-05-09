@@ -5,7 +5,7 @@ sidebarTitle: Overview
 
 # Components Overview
 
-Modularity ships with 50+ Vue components covering forms, tables, modals, navigation, layouts, and more. All components live in `vue/src/js/components/`.
+Modularous ships with 50+ Vue components covering forms, tables, modals, navigation, layouts, and more. All components live in `vue/src/js/components/`.
 
 See [Components Overview](./overview) for how components are organized in the source tree, the input registry, and labs/experimental conventions.
 

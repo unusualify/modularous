@@ -335,7 +335,7 @@ return [
             'col' => [
                 'lg' => 12,
             ],
-            'length' => env('MODULARITY_SECURITY_MFA_EMAIL_OTP_LENGTH', 6),
+            'length' => env('MODULAROUS_SECURITY_MFA_EMAIL_OTP_LENGTH', 6),
             'rules' => 'required',
         ],
     ],

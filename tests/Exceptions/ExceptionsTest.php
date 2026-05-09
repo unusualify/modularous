@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Exceptions;
+namespace Unusualify\Modularous\Tests\Exceptions;
 
-use Unusualify\Modularity\Exceptions\AuthConfigurationException;
-use Unusualify\Modularity\Exceptions\ModularitySystemPathException;
-use Unusualify\Modularity\Exceptions\ModuleNotFoundException;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Exceptions\AuthConfigurationException;
+use Unusualify\Modularous\Exceptions\ModularousSystemPathException;
+use Unusualify\Modularous\Exceptions\ModuleNotFoundException;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ExceptionsTest extends TestCase
 {
@@ -26,9 +26,9 @@ class ExceptionsTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_modularity_system_path_exception()
+    public function it_can_create_modularous_system_path_exception()
     {
-        $e = new ModularitySystemPathException;
+        $e = new ModularousSystemPathException;
         $this->assertStringContainsString('system modules path', $e->getMessage());
     }
 

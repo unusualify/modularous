@@ -9,7 +9,7 @@ sidebarTitle: Remove Module
 
 ## Command Information
 
-- **Signature:** `modularity:remove:module {module}`
+- **Signature:** `modularous:remove:module {module}`
 - **Aliases:** `mod:r:module`, `unusual:remove:module`, `m:r:m`
 - **Category:** Module
 
@@ -22,8 +22,8 @@ sidebarTitle: Remove Module
 ## What It Does
 
 1. Disables the Modularous cache.
-2. Rolls back all of the module's migrations (`modularity:migrate:rollback`).
-3. Calls `Modularity::deleteModule()` to remove the module directory and unregister it.
+2. Rolls back all of the module's migrations (`modularous:migrate:rollback`).
+3. Calls `Modularous::deleteModule()` to remove the module directory and unregister it.
 
 ::: danger Destructive
 This permanently deletes the module directory and its database tables. There is no undo.
@@ -32,7 +32,7 @@ This permanently deletes the module directory and its database tables. There is 
 ## Example
 
 ```bash
-php artisan modularity:remove:module Blog
+php artisan modularous:remove:module Blog
 ```
 
 ## Related

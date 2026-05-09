@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Generators;
+namespace Unusualify\Modularous\Tests\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
-use Unusualify\Modularity\Generators\LaravelTestGenerator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Generators\LaravelTestGenerator;
+use Unusualify\Modularous\Tests\TestCase;
 
 class LaravelTestGeneratorTest extends TestCase
 {

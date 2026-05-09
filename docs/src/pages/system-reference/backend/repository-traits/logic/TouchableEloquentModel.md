@@ -5,7 +5,7 @@ sidebarTitle: TouchableEloquentModel
 
 # TouchableEloquentModel
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\TouchableEloquentModel`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\TouchableEloquentModel`
 
 Deferred timestamp touching for parent models. Tracks whether a relationship sync produced changes and calls `$object->touch()` at the end of the save cycle rather than after each individual sync.
 

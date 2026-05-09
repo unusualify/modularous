@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Seeders;
+namespace Unusualify\Modularous\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class DefaultPermissionsSeeder extends Seeder
 {
@@ -27,15 +27,15 @@ class DefaultPermissionsSeeder extends Seeder
 
         Schema::enableForeignKeyConstraints();
 
-        $modularityAuthGuardName = Modularity::getAuthGuardName();
+        $modularousAuthGuardName = Modularous::getAuthGuardName();
         DB::table($table)->insert([
             [
                 'name' => 'dashboard',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             [
                 'name' => 'mediaLibrary',
-                'guard_name' => $modularityAuthGuardName,
+                'guard_name' => $modularousAuthGuardName,
             ],
             ...permissionRecordsFromRoutes([
                 'User',
@@ -49,7 +49,7 @@ class DefaultPermissionsSeeder extends Seeder
                 'Notification',
                 'MyNotification',
                 'Country',
-            ], $modularityAuthGuardName),
+            ], $modularousAuthGuardName),
         ]);
 
         $roleInstances = Role::all()->keyBy('name');

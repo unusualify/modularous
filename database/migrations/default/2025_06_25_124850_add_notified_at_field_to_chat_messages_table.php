@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $chatMessagesTable = modularityConfig('tables.chat_messages', 'um_chat_messages');
+        $chatMessagesTable = modularousConfig('tables.chat_messages', 'um_chat_messages');
         Schema::table($chatMessagesTable, function (Blueprint $table) {
             $table->timestamp('notified_at')->nullable()->after('edited_at');
         });
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $chatMessagesTable = modularityConfig('tables.chat_messages', 'um_chat_messages');
+        $chatMessagesTable = modularousConfig('tables.chat_messages', 'um_chat_messages');
         Schema::table($chatMessagesTable, function (Blueprint $table) {
             $table->dropColumn('notified_at');
         });

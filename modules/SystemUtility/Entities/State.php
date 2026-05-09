@@ -2,10 +2,10 @@
 
 namespace Modules\SystemUtility\Entities;
 
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\IsTranslatable;
 
-class State extends \Unusualify\Modularity\Entities\State
+class State extends \Unusualify\Modularous\Entities\State
 {
     use IsTranslatable, ModelHelpers;
 }

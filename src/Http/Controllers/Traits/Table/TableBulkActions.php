@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
-use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularous\Entities\Enums\Permission;
 
 trait TableBulkActions
 {

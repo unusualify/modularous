@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
@@ -12,11 +12,11 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use Modules\SystemUser\Repositories\UserRepository;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Events\ModularityUserRegistered;
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Requests\OauthRequest;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Events\ModularousUserRegistered;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Requests\OauthRequest;
 
 /**
  * Provides OAuth authentication flow: redirect, callback, password confirmation, and provider linking.
@@ -54,7 +54,7 @@ trait HandlesOAuth
         if ($user = $repository->oauthUser($oauthUser)) {
             if ($repository->oauthIsUserLinked($oauthUser, $provider)) {
                 $user = $repository->oauthUpdateProvider($oauthUser, $provider);
-                $this->authManager->guard(Modularity::getAuthGuardName())->login($user);
+                $this->authManager->guard(Modularous::getAuthGuardName())->login($user);
 
                 return $this->afterAuthentication($request, $user);
             }
@@ -68,7 +68,7 @@ trait HandlesOAuth
             }
 
             $user->linkProvider($oauthUser, $provider);
-            $this->authManager->guard(Modularity::getAuthGuardName())->login($user);
+            $this->authManager->guard(Modularous::getAuthGuardName())->login($user);
 
             return $this->afterAuthentication($request, $user);
         }
@@ -79,14 +79,14 @@ trait HandlesOAuth
             'surname' => $oauthUser->surname ?? $oauthUser->family_name ?? '',
         ]);
 
-        event(new ModularityUserRegistering($request, isOauth: true));
+        event(new ModularousUserRegistering($request, isOauth: true));
 
         $user = $repository->oauthCreateUser($oauthUser);
 
-        event(new ModularityUserRegistered($user, $request, isOauth: true));
+        event(new ModularousUserRegistered($user, $request, isOauth: true));
 
         $user->linkProvider($oauthUser, $provider);
-        $this->authManager->guard(Modularity::getAuthGuardName())->login($user);
+        $this->authManager->guard(Modularous::getAuthGuardName())->login($user);
 
         return $this->redirector->intended($this->redirectTo);
     }
@@ -143,7 +143,7 @@ trait HandlesOAuth
             ),
         ]);
 
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.login', $viewData);
+        return $this->viewFactory->make(modularousBaseKey() . '::auth.login', $viewData);
     }
 
     /**
@@ -156,7 +156,7 @@ trait HandlesOAuth
             $user = User::findOrFail($userId);
 
             $user->linkProvider($request->session()->get('oauth:user'), $request->session()->get('oauth:provider'));
-            $this->authManager->guard(Modularity::getAuthGuardName())->login($user);
+            $this->authManager->guard(Modularous::getAuthGuardName())->login($user);
 
             $request->session()->forget(['oauth:user_id', 'oauth:user', 'oauth:provider']);
 
@@ -173,7 +173,7 @@ trait HandlesOAuth
      */
     protected function oauthErrorRedirect(string $title, string $description)
     {
-        $modalService = modularity_modal_service(
+        $modalService = modularous_modal_service(
             'error',
             'mdi-alert-circle-outline',
             $title,

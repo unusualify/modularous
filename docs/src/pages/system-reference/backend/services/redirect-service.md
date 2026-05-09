@@ -6,7 +6,7 @@ sidebarTitle: RedirectService
 # RedirectService
 
 **File**: `src/Services/RedirectService.php`  
-**Facade**: `Unusualify\Modularity\Facades\Redirect`
+**Facade**: `Unusualify\Modularous\Facades\Redirect`
 
 A minimal service for storing and retrieving a **post-authentication redirect URL** across requests. Supports both session and cache storage so the intended destination survives a redirect to the login page.
 
@@ -25,12 +25,12 @@ When a guest visits a protected route, the URL is saved via `set()`. After succe
 
 ## Session & Cache Keys
 
-Both storage modes use the same key: `modularity.redirect_url`.
+Both storage modes use the same key: `modularous.redirect_url`.
 
 ## Typical Usage
 
 ```php
-use Unusualify\Modularity\Facades\Redirect;
+use Unusualify\Modularous\Facades\Redirect;
 
 // In a middleware — save the intended URL before redirecting to login
 public function handle($request, Closure $next)

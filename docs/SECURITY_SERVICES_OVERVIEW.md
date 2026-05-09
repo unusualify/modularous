@@ -1,18 +1,18 @@
 # Middleware ve servisler — özet
 
-Bu dosya, Modularity / CMS tarafında öne çıkan **middleware** ve **servislerin** ne işe yaradığını tek yerde toplar. (Yönetim paneli kullanıcıları ve veri modeli odaklı; ziyaretçi tarafında henüz tamamlanmamış parçalar aşağıda not edilir.)
+Bu dosya, Modularous / CMS tarafında öne çıkan **middleware** ve **servislerin** ne işe yaradığını tek yerde toplar. (Yönetim paneli kullanıcıları ve veri modeli odaklı; ziyaretçi tarafında henüz tamamlanmamış parçalar aşağıda not edilir.)
 
 ---
 
 ## 1. Güvenlik (core — `src/`)
 
-`SecurityServiceProvider` yalnızca `modularityConfig('security.enabled')` açıkken devreye girer. Varsayılan panel route yığınına üç alias eklenir:
+`SecurityServiceProvider` yalnızca `modularousConfig('security.enabled')` açıkken devreye girer. Varsayılan panel route yığınına üç alias eklenir:
 
 | Alias | Sınıf | Amaç |
 |--------|--------|------|
-| `modularity.security.session` | `SessionSecurityMiddleware` | Oturum **idle timeout** (yapılandırılabilir dakika). Süre aşılırsa çıkış + oturum invalidate; JSON isteklerinde 401, formda login’e yönlendirme. Her istekte `security_last_seen_at` güncellenir. |
-| `modularity.security.require_mfa` | `RequireMfaMiddleware` | Kullanıcının rolü **MFA gerektiriyorsa** ve MFA etkin değilse isteği keser (JSON’da 403; web’de logout + login formu). |
-| `modularity.security.step_up` | `StepUpMiddleware` | `security.step_up.enabled` açıksa, route **capability** ile eşleşiyorsa ve kullanıcı son doğrulamayı TTL içinde yapmamışsa `StepUpService` ile akışı keser (ek doğrulama). TTL session’da `security_step_up_verified_at` ile tutulur. |
+| `modularous.security.session` | `SessionSecurityMiddleware` | Oturum **idle timeout** (yapılandırılabilir dakika). Süre aşılırsa çıkış + oturum invalidate; JSON isteklerinde 401, formda login’e yönlendirme. Her istekte `security_last_seen_at` güncellenir. |
+| `modularous.security.require_mfa` | `RequireMfaMiddleware` | Kullanıcının rolü **MFA gerektiriyorsa** ve MFA etkin değilse isteği keser (JSON’da 403; web’de logout + login formu). |
+| `modularous.security.step_up` | `StepUpMiddleware` | `security.step_up.enabled` açıksa, route **capability** ile eşleşiyorsa ve kullanıcı son doğrulamayı TTL içinde yapmamışsa `StepUpService` ile akışı keser (ek doğrulama). TTL session’da `security_step_up_verified_at` ile tutulur. |
 
 **İlişkili servisler (özet):** `SecurityService` (MFA / step-up eşleştirme), `StepUpService` (kesinti / doğrulama UI’si). Detay: capability tabanlı route eşlemesi, cache vb. `HANDOFF.md` ve güvenlik dokümantasyonu.
 
@@ -34,7 +34,7 @@ Bu dosya, Modularity / CMS tarafında öne çıkan **middleware** ve **servisler
 
 ### 2.3 `CmsUrlRouteRegistry` (+ core `PublicUrlRegistryContract`)
 
-- **Ne işe yarar:** `UrlRoute` tablosunu **Page** public path’leri ve **Redirect** kaynak path’leri ile senkron tutar (çakışma önleme / tek kaynak registry). Uygular: `Unusualify\Modularity\Contracts\PublicUrlRegistryContract` (container’da bu arayüze `CmsUrlRouteRegistry` bağlanır).
+- **Ne işe yarar:** `UrlRoute` tablosunu **Page** public path’leri ve **Redirect** kaynak path’leri ile senkron tutar (çakışma önleme / tek kaynak registry). Uygular: `Unusualify\Modularous\Contracts\PublicUrlRegistryContract` (container’da bu arayüze `CmsUrlRouteRegistry` bağlanır).
 - **Ne zaman:** `Modules\Cms\Repositories\Traits\UrlRouteRegistrySyncTrait` → core `PublicUrlRegistrySyncDispatchTrait` ile sınıf bazlı handler haritası; repository `afterSave` / `afterDelete` / `afterRestore`.
 - **Slug doğrulama (panel):** `ExtendsSlugValidationWithPublicUrlRegistry` (`src/Services/Concerns/`) — `CmsSlugInputValidationService` içinde kullanılır; başka modüller aynı trait + kendi `PublicUrlRegistryContract` implementasyonu ile tekrar kullanabilir.
 - **Not:** Bu **veri senkronu**dur; ziyaretçi HTTP isteğinde otomatik 302 üretmek için ayrıca bir middleware/route bağlanması gerekir (aşağıda).
@@ -51,7 +51,7 @@ Bu dosya, Modularity / CMS tarafında öne çıkan **middleware** ve **servisler
 - **İç path (`CmsFrontPath`):** Modülün public route öneki (ör. `/cms/…`, `cms_routing.front_route_prefix` ile uyumlu) istekten çıkarılır; böylece kayıtlı `UrlRoute` satırları (önek **olmadan**) ile eşleşir.
 - **Eşleştirme:** İç path normalize edilir; URL’de locale prefix varsa ayrıştırılır (`/tr/foo` → locale `tr`, iç path `/foo`). Önce **`UrlRoute`** (`kind = redirect_source`) ile indeksli arama; tablo yoksa veya satır yoksa **`Redirect`** modelinde locale + normalize `from_path` ile tarama.
 - **Öncelik:** Aynı `locale` + path için **`UrlRoute` `page_public`** (yayın sayfası) varsa yönlendirme **uygulanmaz** (sayfa kazanır).
-- **Hariç:** `modularity.admin_app_path` altı (panel), `system_prefix`, `cms_routing.visitor_redirect_exclude_prefixes` (varsayılan: `api`, `sanctum`, `livewire`).
+- **Hariç:** `modularous.admin_app_path` altı (panel), `system_prefix`, `cms_routing.visitor_redirect_exclude_prefixes` (varsayılan: `api`, `sanctum`, `livewire`).
 - **Config:** `cms_routing.visitor_redirects_enabled` (varsayılan `true`).
 
 ### 2.6 CMS `front.php` — public sayfa (catch-all)
@@ -60,14 +60,14 @@ Bu dosya, Modularity / CMS tarafında öne çıkan **middleware** ve **servisler
 - **Rota:** Modül URL öneki altında `GET /{path?}` (`path` = `.*`), isim: `…cms.page` (`curtModuleRouteNamePrefix` ile).
 - **`CmsPublicPageResolver`:** `CmsFrontPath::innerNormalizedPath` → `CmsVisitorRedirectResolver::resolveLocaleAndInnerPath` (locale segmenti yoksa *implicit* mod; uzun locale kodları önce eşlenir, örn. `pt-BR` / `pt`) → `UrlRoute` (`page_public`) → **yayınlanmış ve görünür** `Page`. URL’de locale yokken yalnızca varsayılan locale ile eşleşmezse, aynı path için tek kayıt (veya çokluysa `default_locale` öncelikli) ile devam edilir.
 - **View:** `cms::page.custom` (public) — `CmsPublicSeo` ile `<title>`, meta description, `<link rel="canonical">`, `meta name="robots"` (çeviri `canonical_url`, `robots_index` / `robots_follow`); yoksa `CanonicalUrlResolver` ile kanonik URL.
-- **Config:** `cms_routing.front_route_prefix` (env: `MODULARITY_CMS_FRONT_ROUTE_PREFIX`, varsayılan `cms`) — `UrlRoute` kayıtları bu segmenti **içermez**; ziyaretçi URL’si `/cms/tr/...` olsa bile iç eşleştirme `/tr/...` üzerinden yapılır.
+- **Config:** `cms_routing.front_route_prefix` (env: `MODULAROUS_CMS_FRONT_ROUTE_PREFIX`, varsayılan `cms`) — `UrlRoute` kayıtları bu segmenti **içermez**; ziyaretçi URL’si `/cms/tr/...` olsa bile iç eşleştirme `/tr/...` üzerinden yapılır.
 
 ---
 
 ## 3. Inertia — paylaşılan flash (`src/Http/Middleware/HandleInertiaRequests.php`)
 
 - **Genel:** Tüm Inertia sayfalarına `auth`, `flash`, `config`, vb. paylaşılır.
-- **Uyarılar (stack):** `flash.warnings` — session anahtarı `modularity.flash_warnings` (`Unusualify\Modularity\Support\ModularityFlashWarnings::SESSION_KEY`, tek seferlik `pull`). Birden fazla kaynak aynı istekte `ModularityFlashWarnings::merge()` ile ekleyebilir; Inertia sonraki yüklemede `MainLayout` içinde sırayla toast gösterir. AJAX yanıtlarında aynı anlam `response.data.warnings` dizisiyle taşınır.
+- **Uyarılar (stack):** `flash.warnings` — session anahtarı `modularous.flash_warnings` (`Unusualify\Modularous\Support\ModularousFlashWarnings::SESSION_KEY`, tek seferlik `pull`). Birden fazla kaynak aynı istekte `ModularousFlashWarnings::merge()` ile ekleyebilir; Inertia sonraki yüklemede `MainLayout` içinde sırayla toast gösterir. AJAX yanıtlarında aynı anlam `response.data.warnings` dizisiyle taşınır.
 
 ---
 
@@ -94,4 +94,4 @@ Bu dosya, Modularity / CMS tarafında öne çıkan **middleware** ve **servisler
 
 ---
 
-*Son güncelleme: 2026-04 — Modularity paketi (`packages/modularous`).*
+*Son güncelleme: 2026-04 — Modularous paketi (`packages/modularous`).*

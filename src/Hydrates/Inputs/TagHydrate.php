@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Tag;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Tag;
+use Unusualify\Modularous\Facades\Modularous;
 
 class TagHydrate extends InputHydrate
 {
@@ -37,7 +37,7 @@ class TagHydrate extends InputHydrate
         $input['multiple'] ??= false;
 
         if (isset($input['_moduleName'])) {
-            $module = Modularity::find($input['_moduleName']);
+            $module = Modularous::find($input['_moduleName']);
 
             $repository = $module->getRouteClass($input['_routeName'], 'repository');
             $repository = App::make($repository);

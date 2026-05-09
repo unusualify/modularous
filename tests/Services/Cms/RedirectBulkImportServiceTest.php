@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Cms\Entities\Redirect;
 use Modules\Cms\Http\Controllers\RedirectController;
 use Modules\Cms\Providers\CmsServiceProvider;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
-use Unusualify\Modularity\Services\BulkCsv\BulkImportService;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Services\BulkCsv\BulkImportService;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class RedirectBulkImportServiceTest extends ModelTestCase
 {
@@ -24,10 +24,10 @@ class RedirectBulkImportServiceTest extends ModelTestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('modularity.cms_features.enabled', true);
-        $this->app['config']->set('modularity.cms_features.register_contracts', false);
-        $this->app['config']->set('modularity.tables.cms_redirects', 'um_cms_redirects');
-        $this->app['config']->set('modularity.tables.cms_url_routes', 'um_cms_url_routes');
+        $this->app['config']->set('modularous.cms_features.enabled', true);
+        $this->app['config']->set('modularous.cms_features.register_contracts', false);
+        $this->app['config']->set('modularous.tables.cms_redirects', 'um_cms_redirects');
+        $this->app['config']->set('modularous.tables.cms_url_routes', 'um_cms_url_routes');
 
         $this->createRedirectsTable();
         $this->createUrlRoutesTable();

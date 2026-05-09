@@ -2,7 +2,7 @@
 
 namespace Modules\SystemUser\Entities\Traits;
 
-use Unusualify\Modularity\Services\Security\SecurityService;
+use Unusualify\Modularous\Services\Security\SecurityService;
 
 trait FlushesSecurityCache
 {

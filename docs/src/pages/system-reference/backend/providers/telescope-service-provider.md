@@ -5,11 +5,11 @@ sidebarTitle: TelescopeServiceProvider
 
 # TelescopeServiceProvider
 
-**Class**: `Unusualify\Modularity\Providers\TelescopeServiceProvider`  
+**Class**: `Unusualify\Modularous\Providers\TelescopeServiceProvider`  
 **Source**: `src/Providers/TelescopeServiceProvider.php`  
 **Extends**: `Laravel\Telescope\TelescopeApplicationServiceProvider`
 
-Configures Laravel Telescope access control and entry filtering. Registered automatically by [`BaseServiceProvider`](./base-service-provider) — not listed in `ModularityProvider`'s provider array.
+Configures Laravel Telescope access control and entry filtering. Registered automatically by [`BaseServiceProvider`](./base-service-provider) — not listed in `ModularousProvider`'s provider array.
 
 ## `boot()`
 

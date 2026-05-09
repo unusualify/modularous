@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Services\MessageStage;
-use Unusualify\Modularity\Services\Security\SecurityService;
+use Unusualify\Modularous\Services\MessageStage;
+use Unusualify\Modularous\Services\Security\SecurityService;
 
 trait EnforcesMfaSetupOnLogin
 {
@@ -20,9 +20,9 @@ trait EnforcesMfaSetupOnLogin
 
         if (
             $securityService === null
-            || ! modularityConfig('security.enabled', false)
-            || ! modularityConfig('security.mfa.enabled', false)
-            || ! modularityConfig('security.mfa.strict', true)
+            || ! modularousConfig('security.enabled', false)
+            || ! modularousConfig('security.mfa.enabled', false)
+            || ! modularousConfig('security.mfa.strict', true)
             || ! $securityService->userRequiresMfa($user)
             || $securityService->userHasEnabledMfa($user)
         ) {

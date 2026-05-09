@@ -42,16 +42,16 @@ vue/
 ### 2.1 ue-alert.test.js & ue-callout.test.js
 **Error**: `[Vuetify] Could not find defaults instance`
 
-**Cause**: The `vuetify` import from `../../src/js/plugins/vuetify` exports a **function** (`createModularityVuetify`), not a Vuetify instance. Tests use `plugins: [vuetify]` but must use `plugins: [vuetify()]` or `plugins: [createModularityVuetify()]`.
+**Cause**: The `vuetify` import from `../../src/js/plugins/vuetify` exports a **function** (`createModularousVuetify`), not a Vuetify instance. Tests use `plugins: [vuetify]` but must use `plugins: [vuetify()]` or `plugins: [createModularousVuetify()]`.
 
 **Fix**:
 ```js
-import createModularityVuetify from '../../src/js/plugins/vuetify'
-const vuetify = createModularityVuetify()
+import createModularousVuetify from '../../src/js/plugins/vuetify'
+const vuetify = createModularousVuetify()
 // Then: plugins: [vuetify]
 ```
 
-**Note**: The modularity vuetify plugin may have side effects (require.context, theme loading) that fail in Vitest. If so, use a minimal `createVuetify({ components, directives })` like v-custom-form-base.test.js.
+**Note**: The modularous vuetify plugin may have side effects (require.context, theme loading) that fail in Vitest. If so, use a minimal `createVuetify({ components, directives })` like v-custom-form-base.test.js.
 
 ---
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Services\CacheRelationshipGraph;
+use Unusualify\Modularous\Services\CacheRelationshipGraph;
 
 /**
  * @method static bool isEnabled()
@@ -24,6 +24,6 @@ class RelationshipGraph extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'modularity.relationship.graph';
+        return 'modularous.relationship.graph';
     }
 }

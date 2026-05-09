@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Traits;
+namespace Unusualify\Modularous\Traits;
 
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 trait ManageModuleRoute
 {
@@ -22,7 +22,7 @@ trait ManageModuleRoute
             return false;
         }
 
-        if (! Modularity::find($moduleName)?->hasRoute($routeName)) {
+        if (! Modularous::find($moduleName)?->hasRoute($routeName)) {
             return false;
         }
 
@@ -54,7 +54,7 @@ trait ManageModuleRoute
      */
     public function getModule()
     {
-        return Modularity::find($this->getModuleName());
+        return Modularous::find($this->getModuleName());
     }
 
     /**

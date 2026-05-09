@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\Stateable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\Stateable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class StateableTest extends ModelTestCase
 {
@@ -17,7 +17,7 @@ class StateableTest extends ModelTestCase
     public function test_get_table_stateable()
     {
         $stateable = new Stateable;
-        $this->assertEquals(modularityConfig('tables.stateables', 'um_stateables'), $stateable->getTable());
+        $this->assertEquals(modularousConfig('tables.stateables', 'um_stateables'), $stateable->getTable());
     }
 
     public function test_fillable_attributes()

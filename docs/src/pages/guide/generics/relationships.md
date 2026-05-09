@@ -40,7 +40,7 @@ Model Relationships parameter add only methods to parent model, so it matters me
 <!-- "Model Relationships" => "belongsToMany:PackageFeature,position:integer,active:string|belongsToMany:PackageLanguage" -->
 ### Synopsis
 ```bash
-php artisan modularity:make:model <modelName> <moduleName> [--relationships=<MODELRELATIONSHIPS>] [options]
+php artisan modularous:make:model <modelName> <moduleName> [--relationships=<MODELRELATIONSHIPS>] [options]
 ```
 
 ```bash
@@ -93,7 +93,7 @@ Route relationships parameter is more complex than model relationships, as it do
   <!-- package_feature:belongsToMany,position:integer:unsigned:index,active:string:default(true)|package_language:belongsToMany -->
   <!-- [--relationships=[{routeName|columnName}:{relationshipCamelName|migrationMethodName}:{migrationChainMethod[:...]}[,...]][|...]] -->
 ```bash
-php artisan modularity:make:route <moduleName> <routeName> [--relationships=<ROUTERELATIONSHIPS>] [options]
+php artisan modularous:make:route <moduleName> <routeName> [--relationships=<ROUTERELATIONSHIPS>] [options]
 ```
 
 ```bash
@@ -188,7 +188,7 @@ $country->posts;  // all posts by users in this country
 ### 1. Simple many-to-many (Package ↔ Feature)
 
 ```bash
-php artisan modularity:make:route Billing packages \
+php artisan modularous:make:route Billing packages \
   --relationships="Feature:belongsToMany"
 ```
 
@@ -202,7 +202,7 @@ $feature->packages;      // Collection<Package>
 ### 2. Ordered many-to-many with pivot fields
 
 ```bash
-php artisan modularity:make:route Billing packages \
+php artisan modularous:make:route Billing packages \
   --relationships="Feature:belongsToMany,position:integer:unsigned:index,active:string:default(true)"
 ```
 
@@ -218,7 +218,7 @@ $package->features()
 ### 3. Polymorphic tagging
 
 ```bash
-php artisan modularity:make:route Content tags \
+php artisan modularous:make:route Content tags \
   --relationships="Taggable:morphToMany"
 ```
 
@@ -239,7 +239,7 @@ $post->tags()->attach($tagIds);
 ### 4. Model-only relation (no pivot generation)
 
 ```bash
-php artisan modularity:make:model Comment Blog \
+php artisan modularous:make:model Comment Blog \
   --relationships="belongsToMany:Post"
 ```
 

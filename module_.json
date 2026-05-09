@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "Modules\\Base\\Providers\\ModularityProvider"
+        "Modules\\Base\\Providers\\ModularousProvider"
     ],
     "aliases": {},
     "files": [],

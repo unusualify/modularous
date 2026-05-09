@@ -5,7 +5,7 @@ sidebarTitle: EventStateable
 
 # EventStateable
 
-`Unusualify\Modularity\Events\Traits\EventStateable`
+`Unusualify\Modularous\Events\Traits\EventStateable`
 
 Captures state machine transition data when the model uses the `HasStateable` entity trait. Added to every `ModelEvent` subclass automatically. Properties are only meaningful when `$hasStateable` is `true`.
 

@@ -6,7 +6,7 @@ sidebarTitle: FrontController
 # FrontController
 
 **File**: `src/Http/Controllers/FrontController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `CoreController`
 
 Abstract base controller for public-facing (non-authenticated) frontend routes within a Modularous module.
@@ -20,7 +20,7 @@ Generate a front controller for a module by extending this class directly:
 ```php
 namespace Modules\Blog\Http\Controllers;
 
-use Unusualify\Modularity\Http\Controllers\FrontController;
+use Unusualify\Modularous\Http\Controllers\FrontController;
 
 class PostController extends FrontController
 {

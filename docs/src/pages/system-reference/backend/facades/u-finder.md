@@ -5,26 +5,26 @@ sidebarTitle: UFinder (deprecated)
 
 # UFinder *(deprecated)*
 
-**Facade**: `Unusualify\Modularity\Facades\UFinder`  
-**Accessor**: `Unusualify\Modularity\Support\Finder::class`  
-**Underlying**: `Unusualify\Modularity\Support\Finder`
+**Facade**: `Unusualify\Modularous\Facades\UFinder`  
+**Accessor**: `Unusualify\Modularous\Support\Finder::class`  
+**Underlying**: `Unusualify\Modularous\Support\Finder`
 
 ::: warning Deprecated
-`UFinder` is deprecated. Use [`ModularityFinder`](./modularity-finder) instead. Both facades resolve to the same underlying `Finder` class — `UFinder` exists only for backwards compatibility.
+`UFinder` is deprecated. Use [`ModularousFinder`](./modularous-finder) instead. Both facades resolve to the same underlying `Finder` class — `UFinder` exists only for backwards compatibility.
 :::
 
 ## Migration
 
-Replace all usages of `UFinder` with `ModularityFinder`:
+Replace all usages of `UFinder` with `ModularousFinder`:
 
 ```php
 // Before (deprecated)
-use Unusualify\Modularity\Facades\UFinder;
+use Unusualify\Modularous\Facades\UFinder;
 $model = UFinder::getModel('blog_posts');
 
 // After
-use Unusualify\Modularity\Facades\ModularityFinder;
-$model = ModularityFinder::getModel('blog_posts');
+use Unusualify\Modularous\Facades\ModularousFinder;
+$model = ModularousFinder::getModel('blog_posts');
 ```
 
-All methods are identical. See [ModularityFinder](./modularity-finder) for the full method reference.
+All methods are identical. See [ModularousFinder](./modularous-finder) for the full method reference.

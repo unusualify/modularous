@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $usersTable = modularityConfig('tables.users', 'um_users');
+        $usersTable = modularousConfig('tables.users', 'um_users');
 
         if (Schema::hasTable($usersTable) && ! Schema::hasColumn($usersTable, 'ui_preferences')) {
             Schema::table($usersTable, function (Blueprint $table) {
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $usersTable = modularityConfig('tables.users', 'um_users');
+        $usersTable = modularousConfig('tables.users', 'um_users');
 
         if (Schema::hasTable($usersTable) && Schema::hasColumn($usersTable, 'ui_preferences')) {
             Schema::table($usersTable, function (Blueprint $table) {

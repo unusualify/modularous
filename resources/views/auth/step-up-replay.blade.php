@@ -1,4 +1,4 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.base")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.base")
 
 @section('body')
     @php

@@ -23,7 +23,7 @@
       class="mb-6"
       border="start"
     >
-      {{ $t('messages.promotion_disabled_hint', 'CMS promotion is turned off. Set MODULARITY_CMS_PROMOTION_ENABLED=true in the environment and clear config cache.') }}
+      {{ $t('messages.promotion_disabled_hint', 'CMS promotion is turned off. Set MODULAROUS_CMS_PROMOTION_ENABLED=true in the environment and clear config cache.') }}
     </v-alert>
 
     <template v-else>
@@ -94,7 +94,7 @@
       <v-card>
         <v-card-title>{{ $t('messages.promotion_confirm_title', 'Run promotion execute?') }}</v-card-title>
         <v-card-text>
-          {{ $t('messages.promotion_confirm_body', 'This will flush Modularity cache when not in dry-run mode. Data is not copied between environments.') }}
+          {{ $t('messages.promotion_confirm_body', 'This will flush Modularous cache when not in dry-run mode. Data is not copied between environments.') }}
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -181,7 +181,7 @@ const confirmExecute = ref(false)
 const introText = computed(() =>
   te('messages.promotion_intro')
     ? t('messages.promotion_intro')
-    : 'Preview counts for the current database (dry-run). Execute flushes the Modularity cache; it does not sync data between servers.'
+    : 'Preview counts for the current database (dry-run). Execute flushes the Modularous cache; it does not sync data between servers.'
 )
 
 function labelFor (key) {

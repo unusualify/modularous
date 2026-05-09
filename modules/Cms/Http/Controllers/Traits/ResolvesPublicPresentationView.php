@@ -14,7 +14,7 @@ trait ResolvesPublicPresentationView
     /**
      * Optional override for the Blade used for public display and admin preview.
      * When null or empty, {@see presentationViewName()} uses {@see presentationViewPrefix()} + ".custom"
-     * or the legacy {@code modularity.frontend.views_path}.{singular module}.
+     * or the legacy {@code modularous.frontend.views_path}.{singular module}.
      *
      * @var string|null
      */
@@ -22,7 +22,7 @@ trait ResolvesPublicPresentationView
 
     /**
      * Snake-case module::route namespace (e.g. cms::page), aligned with
-     * {@see \Unusualify\Modularity\Http\Controllers\BaseController::getViewPrefix()}.
+     * {@see \Unusualify\Modularous\Http\Controllers\BaseController::getViewPrefix()}.
      */
     protected function presentationViewPrefix(): string
     {
@@ -38,7 +38,7 @@ trait ResolvesPublicPresentationView
 
     /**
      * Dot-separated route-name prefix (e.g. cms.page) for public helpers; mirrors admin
-     * {@see \Unusualify\Modularity\Http\Controllers\PanelController::$routePrefix} shape.
+     * {@see \Unusualify\Modularous\Http\Controllers\PanelController::$routePrefix} shape.
      */
     protected function presentationRoutePrefix(): string
     {
@@ -68,6 +68,6 @@ trait ResolvesPublicPresentationView
 
         $moduleKey = $this->getModuleName() ?? '';
 
-        return Config::get('modularity.frontend.views_path', 'site') . '.' . Str::singular($moduleKey);
+        return Config::get('modularous.frontend.views_path', 'site') . '.' . Str::singular($moduleKey);
     }
 }

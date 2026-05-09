@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Password;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Brokers\RegisterBrokerManager;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Brokers\RegisterBrokerManager;
 
 /**
  * @method static \Illuminate\Contracts\Auth\PasswordBroker broker(string|null $name = null)

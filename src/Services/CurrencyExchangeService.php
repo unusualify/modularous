@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -20,11 +20,11 @@ class CurrencyExchangeService
     public function __construct()
     {
         // $this->endpoint = 'https://openexchangerates.org/api/latest.json';
-        $this->endpoint = config('modularity.services.currency_exchange.endpoint');
-        $this->apiKey = config('modularity.services.currency_exchange.api_key');
-        $this->baseCurrency = config('modularity.services.currency_exchange.base_currency', 'EUR');
-        $this->parameters = config('modularity.services.currency_exchange.parameters');
-        $this->ratesKey = config('modularity.services.currency_exchange.rates_key');
+        $this->endpoint = config('modularous.services.currency_exchange.endpoint');
+        $this->apiKey = config('modularous.services.currency_exchange.api_key');
+        $this->baseCurrency = config('modularous.services.currency_exchange.base_currency', 'EUR');
+        $this->parameters = config('modularous.services.currency_exchange.parameters');
+        $this->ratesKey = config('modularous.services.currency_exchange.rates_key');
     }
 
     /**

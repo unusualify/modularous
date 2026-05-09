@@ -6,32 +6,32 @@
 
 | Signature Part | Class Name Part | Example |
 |----------------|-----------------|---------|
-| `modularity:make:module` | MakeModuleCommand | make + module |
-| `modularity:cache:clear` | CacheClearCommand | cache + clear |
-| `modularity:route:disable` | RouteDisableCommand | route + disable |
-| `modularity:replace:regex` | ReplaceRegexCommand | replace + regex |
+| `modularous:make:module` | MakeModuleCommand | make + module |
+| `modularous:cache:clear` | CacheClearCommand | cache + clear |
+| `modularous:route:disable` | RouteDisableCommand | route + disable |
+| `modularous:replace:regex` | ReplaceRegexCommand | replace + regex |
 
 ## Semantic Rules
 
-### `modularity:make:*` — Artifact generators
+### `modularous:make:*` — Artifact generators
 Commands that **scaffold or generate files**. All live in `Console/Make/`.
 
 - **Class:** `Make*Command` (e.g. `MakeModuleCommand`, `MakeControllerCommand`)
 - **Examples:** `make:module`, `make:controller`, `make:migration`
 
-### `modularity:create:*` — Runtime creation
+### `modularous:create:*` — Runtime creation
 Commands that **create runtime records** (DB entries, users).
 
 - **Class:** `Create*Command` (e.g. `CreateSuperAdminCommand`)
 - **Examples:** `create:superadmin`
 
 ### Other namespaces
-- `modularity:cache:*` → `Cache*Command` (CacheClearCommand, CacheListCommand)
-- `modularity:migrate:*` → `Migrate*Command` (MigrateCommand, MigrateRefreshCommand)
-- `modularity:flush:*` → `Flush*Command` (FlushCommand, FlushSessionsCommand)
-- `modularity:route:*` → `Route*Command` (RouteDisableCommand, RouteEnableCommand)
-- `modularity:sync:*` → `Sync*Command` (SyncTranslationsCommand, SyncStatesCommand)
-- `modularity:replace:*` → `Replace*Command` (ReplaceRegexCommand)
+- `modularous:cache:*` → `Cache*Command` (CacheClearCommand, CacheListCommand)
+- `modularous:migrate:*` → `Migrate*Command` (MigrateCommand, MigrateRefreshCommand)
+- `modularous:flush:*` → `Flush*Command` (FlushCommand, FlushSessionsCommand)
+- `modularous:route:*` → `Route*Command` (RouteDisableCommand, RouteEnableCommand)
+- `modularous:sync:*` → `Sync*Command` (SyncTranslationsCommand, SyncStatesCommand)
+- `modularous:replace:*` → `Replace*Command` (ReplaceRegexCommand)
 
 ## Class Naming Pattern by Folder
 
@@ -50,23 +50,23 @@ Commands that **create runtime records** (DB entries, users).
 
 | Signature | Class |
 |-----------|-------|
-| modularity:make:* | Make*Command |
-| modularity:create:superadmin | CreateSuperAdminCommand |
-| modularity:create:database | CreateDatabaseCommand |
-| modularity:install | InstallCommand |
-| modularity:setup:development | SetupModularityDevelopmentCommand |
-| modularity:cache:list | CacheListCommand |
-| modularity:cache:clear | CacheClearCommand |
-| modularity:cache:versions | CacheVersionsCommand |
-| modularity:cache:graph | CacheGraphCommand |
-| modularity:cache:stats | CacheStatsCommand |
-| modularity:cache:warm | CacheWarmCommand |
-| modularity:flush | FlushCommand |
-| modularity:flush:sessions | FlushSessionsCommand |
-| modularity:flush:filepond | FlushFilepondCommand |
-| modularity:route:disable | RouteDisableCommand |
-| modularity:route:enable | RouteEnableCommand |
-| modularity:fix:module | FixModuleCommand |
-| modularity:remove:module | RemoveModuleCommand |
-| modularity:replace:regex | ReplaceRegexCommand |
-| modularity:db:check-collation | CheckDatabaseCollationCommand |
+| modularous:make:* | Make*Command |
+| modularous:create:superadmin | CreateSuperAdminCommand |
+| modularous:create:database | CreateDatabaseCommand |
+| modularous:install | InstallCommand |
+| modularous:setup:development | SetupModularousDevelopmentCommand |
+| modularous:cache:list | CacheListCommand |
+| modularous:cache:clear | CacheClearCommand |
+| modularous:cache:versions | CacheVersionsCommand |
+| modularous:cache:graph | CacheGraphCommand |
+| modularous:cache:stats | CacheStatsCommand |
+| modularous:cache:warm | CacheWarmCommand |
+| modularous:flush | FlushCommand |
+| modularous:flush:sessions | FlushSessionsCommand |
+| modularous:flush:filepond | FlushFilepondCommand |
+| modularous:route:disable | RouteDisableCommand |
+| modularous:route:enable | RouteEnableCommand |
+| modularous:fix:module | FixModuleCommand |
+| modularous:remove:module | RemoveModuleCommand |
+| modularous:replace:regex | ReplaceRegexCommand |
+| modularous:db:check-collation | CheckDatabaseCollationCommand |

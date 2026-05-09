@@ -16,8 +16,8 @@ Add the `HasPosition` trait to your model:
 
 namespace Modules\Category\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasPosition;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasPosition;
 
 class Category extends Model
 {

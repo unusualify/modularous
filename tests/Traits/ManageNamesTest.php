@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class ManageNamesTest extends TestCase
 {

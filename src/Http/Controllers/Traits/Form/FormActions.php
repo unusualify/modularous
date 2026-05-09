@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Form;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Form;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Traits\Allowable;
-use Unusualify\Modularity\Traits\ResponsiveVisibility;
+use Unusualify\Modularous\Traits\Allowable;
+use Unusualify\Modularous\Traits\ResponsiveVisibility;
 
 trait FormActions
 {
@@ -32,7 +32,7 @@ trait FormActions
 
     public function preloadFormActions()
     {
-        $this->defaultFormActions = (array) Config::get(modularityBaseKey() . '.default_form_actions', []);
+        $this->defaultFormActions = (array) Config::get(modularousBaseKey() . '.default_form_actions', []);
 
         $formActions = [];
 
@@ -60,7 +60,7 @@ trait FormActions
 
     public function getFormActions($type = 'index'): array
     {
-        $default_action = (array) Config::get(modularityBaseKey() . '.default_form_action');
+        $default_action = (array) Config::get(modularousBaseKey() . '.default_form_action');
 
         $editOnModal = $this->tableAttributes['editOnModal'] ?? true;
         $createOnModal = $this->tableAttributes['createOnModal'] ?? true;

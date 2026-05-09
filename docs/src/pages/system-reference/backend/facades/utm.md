@@ -5,16 +5,16 @@ sidebarTitle: Utm
 
 # Utm
 
-**Facade**: `Unusualify\Modularity\Facades\Utm`  
-**Accessor**: `modularity.utm`  
-**Underlying**: `Unusualify\Modularity\Services\UtmParameters`
+**Facade**: `Unusualify\Modularous\Facades\Utm`  
+**Accessor**: `modularous.utm`  
+**Underlying**: `Unusualify\Modularous\Services\UtmParameters`
 
 Captures and persists UTM tracking parameters from the request. See [UtmParameters](/system-reference/backend/services/utm-parameters) for implementation details.
 
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Utm;
+use Unusualify\Modularous\Facades\Utm;
 
 // Capture UTM params from the current request and store in session
 Utm::getParameters();

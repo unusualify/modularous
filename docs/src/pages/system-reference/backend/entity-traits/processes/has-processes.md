@@ -5,7 +5,7 @@ sidebarTitle: HasProcesses
 
 # HasProcesses
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasProcesses`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasProcesses`
 
 Aggregates `Process` records from configured child (relationship) models into a parent model. Useful when a parent entity (e.g., a `Project`) needs to see all processes across its child entities (e.g., `pressReleasePackages`, `addons`). Uses raw SQL subqueries to avoid standard `HasMany` constraint conflicts.
 
@@ -48,7 +48,7 @@ These relationships use `Relation::noConstraints()` with a raw SQL subquery. The
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasProcesses;
+use Unusualify\Modularous\Entities\Traits\HasProcesses;
 
 class Project extends Model
 {

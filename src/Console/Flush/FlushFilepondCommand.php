@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Flush;
+namespace Unusualify\Modularous\Console\Flush;
 
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Filepond;
 
 class FlushFilepondCommand extends BaseCommand
 {
@@ -14,12 +14,12 @@ class FlushFilepondCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:flush:filepond
+    protected $signature = 'modularous:flush:filepond
         {days=7 : The number of days to keep temporary fileponds}
     ';
 
     protected $aliases = [
-        'modularity:filepond:flush',
+        'modularous:filepond:flush',
     ];
 
     /**

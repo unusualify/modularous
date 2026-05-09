@@ -16,8 +16,8 @@ Add the `HasCreator` trait to your model:
 
 namespace Modules\Ticket\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
 
 class Ticket extends Model
 {
@@ -55,8 +55,8 @@ Add `CreatorTrait` to your repository:
 
 namespace Modules\Ticket\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\CreatorTrait;
 
 class TicketRepository extends Repository
 {

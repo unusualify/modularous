@@ -6,7 +6,7 @@ sidebarTitle: ProfileController
 # ProfileController
 
 **File**: `src/Http/Controllers/ProfileController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `BaseController`  
 **Traits**: `ManageUtilities`
 
@@ -46,7 +46,7 @@ Displays the profile edit page with three form sections:
 | **Security** | current password, new password, confirmation |
 | **Company** | company name, tax ID, address, billing details |
 
-When the user's email is unverified, a "Verify Email" button is injected into the user info form. The company form section is hidden if `modularity.lock_company_edit` is `true`.
+When the user's email is unverified, a "Verify Email" button is injected into the user info form. The company form section is hidden if `modularous.lock_company_edit` is `true`.
 
 Delegates to `renderInertiaProfile()` when Inertia is active.
 

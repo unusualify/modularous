@@ -16,8 +16,8 @@ Add the `Assignable` trait to your model:
 
 namespace Modules\Task\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\Assignable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\Assignable;
 
 class Task extends Model
 {
@@ -46,8 +46,8 @@ Add `AssignmentTrait` to your repository:
 
 namespace Modules\Task\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\AssignmentTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\AssignmentTrait;
 
 class TaskRepository extends Repository
 {

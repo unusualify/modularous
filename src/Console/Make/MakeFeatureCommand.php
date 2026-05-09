@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
@@ -17,12 +17,12 @@ class MakeFeatureCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:feature
+    protected $signature = 'modularous:make:feature
         {name? : The name of the feature to be created.}';
 
     protected $aliases = [
         'mod:c:feature',
-        'modularity:create:feature',
+        'modularous:create:feature',
     ];
 
     /**
@@ -30,7 +30,7 @@ class MakeFeatureCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Create a modularity feature';
+    protected $description = 'Create a modularous feature';
 
     /**
      * Create a new command instance.
@@ -62,7 +62,7 @@ class MakeFeatureCommand extends BaseCommand
             label: 'Do you want to create a repository trait for this feature?',
             default: false
         )) {
-            $this->call('modularity:make:repository:trait', ['name' => $name]);
+            $this->call('modularous:make:repository:trait', ['name' => $name]);
         }
 
         // Model Trait
@@ -70,7 +70,7 @@ class MakeFeatureCommand extends BaseCommand
             label: 'Do you want to create a model trait for this feature?',
             default: false
         )) {
-            $this->call('modularity:make:model:trait', ['name' => $name]);
+            $this->call('modularous:make:model:trait', ['name' => $name]);
         }
 
         // Model and Migration
@@ -80,11 +80,11 @@ class MakeFeatureCommand extends BaseCommand
         )) {
             $modelName = Str::studly(text('What will be the name of the model?'));
 
-            $this->call('modularity:make:model', ['model' => $modelName, '--self' => true, '--no-defaults' => true]);
+            $this->call('modularous:make:model', ['model' => $modelName, '--self' => true, '--no-defaults' => true]);
 
             $tableName = tableName($modelName);
 
-            $this->call('modularity:make:migration', ['name' => "create_modularity_{$tableName}_table", '--self' => true, '--no-defaults' => true]);
+            $this->call('modularous:make:migration', ['name' => "create_modularous_{$tableName}_table", '--self' => true, '--no-defaults' => true]);
         }
 
         // Vue Input Component
@@ -94,14 +94,14 @@ class MakeFeatureCommand extends BaseCommand
         )) {
             $componentName = Str::studly(text('What will be the name of the input component?', default: $studlyName));
 
-            $this->call('modularity:make:vue:input', ['name' => $componentName]);
+            $this->call('modularous:make:vue:input', ['name' => $componentName]);
 
             // Vue Component Test
             if (confirm(
                 label: 'Do you want to create a vue component test for this input component?',
                 default: false
             )) {
-                $this->call('modularity:make:vue:test', ['name' => Str::kebab("VInput$componentName"), 'type' => 'component']);
+                $this->call('modularous:make:vue:test', ['name' => Str::kebab("VInput$componentName"), 'type' => 'component']);
             }
 
             // Input Hydrate Class
@@ -111,7 +111,7 @@ class MakeFeatureCommand extends BaseCommand
             )) {
                 // $hydrateName = Str::studly(text('What will be the name of the input hydrate class?'));
 
-                $this->call('modularity:make:input:hydrate', ['name' => $componentName]);
+                $this->call('modularous:make:input:hydrate', ['name' => $componentName]);
             }
         }
 

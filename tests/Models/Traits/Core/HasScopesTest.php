@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits\Core;
+namespace Unusualify\Modularous\Tests\Models\Traits\Core;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Mockery;
 use PDO;
-use Unusualify\Modularity\Entities\Traits\Core\HasScopes;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Traits\Core\HasScopes;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasScopesTest extends ModelTestCase
 {

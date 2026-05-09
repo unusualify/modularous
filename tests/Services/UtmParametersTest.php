@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Services\UtmParameters;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\UtmParameters;
+use Unusualify\Modularous\Tests\TestCase;
 
 class UtmParametersTest extends TestCase
 {
@@ -13,9 +13,9 @@ class UtmParametersTest extends TestCase
         $request = Request::create('/', 'GET', $requestData);
 
         // Set env variables for testing
-        putenv('MODULARITY_UTM_DISABLED=false');
-        putenv('MODULARITY_UTM_TEMPORARY=true'); // Don't persist
-        putenv('MODULARITY_UTM_HANDLE_REQUEST=false'); // Don't auto-handle
+        putenv('MODULAROUS_UTM_DISABLED=false');
+        putenv('MODULAROUS_UTM_TEMPORARY=true'); // Don't persist
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST=false'); // Don't auto-handle
 
         return new UtmParameters($request);
     }
@@ -33,7 +33,7 @@ class UtmParametersTest extends TestCase
     {
         $service = $this->createService();
 
-        // We set MODULARITY_UTM_TEMPORARY=true in createService
+        // We set MODULAROUS_UTM_TEMPORARY=true in createService
         $this->assertFalse($service->isPersisted());
     }
 
@@ -132,9 +132,9 @@ class UtmParametersTest extends TestCase
             'other_param' => 'ignored', // This should be filtered out
         ]);
 
-        putenv('MODULARITY_UTM_DISABLED=false');
-        putenv('MODULARITY_UTM_TEMPORARY=true'); // Don't persist
-        putenv('MODULARITY_UTM_HANDLE_REQUEST=true'); // Enable auto-handle
+        putenv('MODULAROUS_UTM_DISABLED=false');
+        putenv('MODULAROUS_UTM_TEMPORARY=true'); // Don't persist
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST=true'); // Enable auto-handle
 
         $service = new UtmParameters($request);
 
@@ -151,9 +151,9 @@ class UtmParametersTest extends TestCase
     {
         $request = Request::create('/', 'GET', ['other_param' => 'value']);
 
-        putenv('MODULARITY_UTM_DISABLED=false');
-        putenv('MODULARITY_UTM_TEMPORARY=true');
-        putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
+        putenv('MODULAROUS_UTM_DISABLED=false');
+        putenv('MODULAROUS_UTM_TEMPORARY=true');
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST=true');
 
         $service = new UtmParameters($request);
 
@@ -167,9 +167,9 @@ class UtmParametersTest extends TestCase
             'utm_source' => 'facebook',
         ]);
 
-        putenv('MODULARITY_UTM_DISABLED=false');
-        putenv('MODULARITY_UTM_TEMPORARY=false'); // Enable persistence
-        putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
+        putenv('MODULAROUS_UTM_DISABLED=false');
+        putenv('MODULAROUS_UTM_TEMPORARY=false'); // Enable persistence
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST=true');
 
         // First, set some existing data
         session()->put('utm_parameters.utm_medium', 'email');
@@ -189,9 +189,9 @@ class UtmParametersTest extends TestCase
             'utm_source' => 'twitter',
         ]);
 
-        putenv('MODULARITY_UTM_DISABLED=false');
-        putenv('MODULARITY_UTM_TEMPORARY=true'); // Disable persistence
-        putenv('MODULARITY_UTM_HANDLE_REQUEST=true');
+        putenv('MODULAROUS_UTM_DISABLED=false');
+        putenv('MODULAROUS_UTM_TEMPORARY=true'); // Disable persistence
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST=true');
 
         // Set some existing data that should be cleared
         session()->put('utm_parameters.utm_medium', 'old_value');
@@ -279,9 +279,9 @@ class UtmParametersTest extends TestCase
     protected function tearDown(): void
     {
         // Clean up env vars
-        putenv('MODULARITY_UTM_DISABLED');
-        putenv('MODULARITY_UTM_TEMPORARY');
-        putenv('MODULARITY_UTM_HANDLE_REQUEST');
+        putenv('MODULAROUS_UTM_DISABLED');
+        putenv('MODULAROUS_UTM_TEMPORARY');
+        putenv('MODULAROUS_UTM_HANDLE_REQUEST');
 
         \Mockery::close();
         parent::tearDown();

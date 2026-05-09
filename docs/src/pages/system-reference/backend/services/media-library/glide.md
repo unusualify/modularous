@@ -14,7 +14,7 @@ The `Glide` driver provides **server-side, on-the-fly image transformation** usi
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'media_library' => [
     'image_service' => 'glide',
 ],
@@ -53,7 +53,7 @@ Register the Glide render route so the server can handle transformation requests
 
 ```php
 Route::get('/img/{path}', function ($path) {
-    return app(\Unusualify\Modularity\Services\MediaLibrary\Glide::class)->render($path);
+    return app(\Unusualify\Modularous\Services\MediaLibrary\Glide::class)->render($path);
 })->where('path', '.*');
 ```
 

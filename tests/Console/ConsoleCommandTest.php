@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Console;
+namespace Unusualify\Modularous\Tests\Console;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use JoeDixon\Translation\Drivers\Translation;
 use Laravel\Prompts\ConfirmPrompt;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ConsoleCommandTest extends TestCase
 {
@@ -51,7 +51,7 @@ class ConsoleCommandTest extends TestCase
         // $routeName = 'Post';
 
         // // 1. Create Module
-        // $this->artisan('modularity:make:module', [
+        // $this->artisan('modularous:make:module', [
         //     'module' => $moduleName,
         //     '--all' => true,
         //     '--notAsk' => true,
@@ -62,7 +62,7 @@ class ConsoleCommandTest extends TestCase
         // $modulePath = $this->modulesPath . '/' . $moduleName;
         // $this->assertTrue(File::isDirectory($modulePath), "Module directory {$modulePath} was not created.");
 
-        // // Modularity usually creates Config/config.php (Uppercase)
+        // // Modularous usually creates Config/config.php (Uppercase)
         // // But nwidart might create config/ (lowercase) initially
         // $configPath = $modulePath . '/Config/config.php';
         // if (!File::exists($configPath)) {
@@ -71,7 +71,7 @@ class ConsoleCommandTest extends TestCase
         // $this->assertTrue(File::exists($configPath), "Module config file not found at " . $configPath);
 
         // // 2. Create Route
-        // $this->artisan('modularity:make:route', [
+        // $this->artisan('modularous:make:route', [
         //     'module' => $moduleName,
         //     'route' => $routeName,
         //     '--all' => true,
@@ -84,12 +84,12 @@ class ConsoleCommandTest extends TestCase
         // $this->assertTrue(File::exists($controllerPath), "Route controller {$controllerPath} was not created.");
 
         // // 3. Fix Module
-        // $this->artisan('modularity:fix:module', [
+        // $this->artisan('modularous:fix:module', [
         //     'module' => $moduleName,
         // ])->assertExitCode(0);
 
         // // 4. Remove Module
-        // $this->artisan('modularity:remove:module', [
+        // $this->artisan('modularous:remove:module', [
         //     'module' => $moduleName,
         // ])->assertExitCode(0);
 

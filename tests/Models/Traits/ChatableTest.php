@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Schema;
 use Modules\SystemNotification\Events\UnreadChatMessage;
 use Modules\SystemNotification\Notifications\ChatableUnreadNotification;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\ChatMessage;
-use Unusualify\Modularity\Entities\Traits\Chatable;
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\Traits\Chatable;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ChatableTest extends ModelTestCase
 {
@@ -39,10 +39,10 @@ class ChatableTest extends ModelTestCase
             $table->timestamps();
         });
 
-        Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'modularity']);
-        Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'modularity']);
-        Role::firstOrCreate(['name' => 'client-manager', 'guard_name' => 'modularity']);
-        Role::firstOrCreate(['name' => 'client-assistant', 'guard_name' => 'modularity']);
+        Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'modularous']);
+        Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'modularous']);
+        Role::firstOrCreate(['name' => 'client-manager', 'guard_name' => 'modularous']);
+        Role::firstOrCreate(['name' => 'client-assistant', 'guard_name' => 'modularous']);
 
         $this->testModel = new TestChatableModel(['name' => 'Test Model']);
         $this->testModel->save();
@@ -53,7 +53,7 @@ class ChatableTest extends ModelTestCase
     {
         $model = new TestChatableModel;
         $traits = class_uses_recursive($model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\Chatable', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\Chatable', $traits);
     }
 
     public function test_model_boot_chatable()
@@ -523,7 +523,7 @@ class ChatableTest extends ModelTestCase
     {
         $model = new TestChatableModel;
         $traits = class_uses_recursive($model);
-        $this->assertContains('Unusualify\Modularity\Entities\Scopes\ChatableScopes', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Scopes\ChatableScopes', $traits);
     }
 
     public function test_scope_has_chat_messages()
@@ -747,7 +747,7 @@ class ChatableTest extends ModelTestCase
 
         Notification::fake();
         config([
-            'modularity.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
+            'modularous.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
         ]);
         $chatableModel->handleChatableNotification();
         Notification::assertSentTimes(ChatableUnreadNotification::class, 1);
@@ -800,7 +800,7 @@ class ChatableTest extends ModelTestCase
 
         Notification::fake();
         config([
-            'modularity.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
+            'modularous.notifications.Modules\SystemNotification\Notifications\ChatableUnreadNotification.channels' => 'database',
         ]);
         $chatableAuthorizedModel->handleChatableNotification();
         Notification::assertSentTimes(ChatableUnreadNotification::class, 1);

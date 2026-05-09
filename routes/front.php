@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Http\Controllers\API\LanguageController;
-use Unusualify\Modularity\Http\Controllers\Utility\CurrencyExchangeController;
-use Unusualify\Modularity\Http\Controllers\Utility\FilepondController;
+use Unusualify\Modularous\Http\Controllers\API\LanguageController;
+use Unusualify\Modularous\Http\Controllers\Utility\CurrencyExchangeController;
+use Unusualify\Modularous\Http\Controllers\Utility\FilepondController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,9 +47,9 @@ Route::group(['prefix' => 'api'], function () {
     });
 });
 
-if (!modularityConfig('cms.enabled')) {
+if (!modularousConfig('cms.enabled')) {
     Route::get('/', function (Request $request) {
         return redirect()->route(Route::hasAdmin('login.form'));
-    })->name('modularity.home');
+    })->name('modularous.home');
 }
 

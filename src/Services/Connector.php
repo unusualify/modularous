@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Exceptions\ModuleNotFoundException;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Exceptions\ModuleNotFoundException;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 class Connector
 {
@@ -127,11 +127,11 @@ class Connector
             throw ModuleNotFoundException::moduleMissing('Missing module name for connector ' . $this->connector);
         }
 
-        if (! Modularity::hasModule($moduleName)) {
+        if (! Modularous::hasModule($moduleName)) {
             throw ModuleNotFoundException::moduleNotFound("Module $moduleName not found for connector " . $this->connector);
         }
 
-        $this->module = Modularity::find($moduleName);
+        $this->module = Modularous::find($moduleName);
 
         $routeName = $exploded[1] ?? $moduleName;
 

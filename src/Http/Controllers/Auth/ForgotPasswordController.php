@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Services\MessageStage;
 
 class ForgotPasswordController extends Controller
 {
@@ -18,12 +18,12 @@ class ForgotPasswordController extends Controller
 
     public function broker()
     {
-        return Password::broker(Modularity::getAuthProviderName());
+        return Password::broker(Modularous::getAuthProviderName());
     }
 
     public function showLinkRequestForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.passwords.email', $this->buildAuthViewData('forgot_password'));
+        return $this->viewFactory->make(modularousBaseKey() . '::auth.passwords.email', $this->buildAuthViewData('forgot_password'));
     }
 
     protected function sendResetLinkResponse(Request $request, $response): JsonResponse|RedirectResponse

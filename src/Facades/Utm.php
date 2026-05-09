@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,6 +8,6 @@ class Utm extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'modularity.utm';
+        return 'modularous.utm';
     }
 }

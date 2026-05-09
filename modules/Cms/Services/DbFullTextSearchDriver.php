@@ -9,7 +9,7 @@ class DbFullTextSearchDriver implements CmsSearchDriverInterface
 {
     protected function searchIndexesTable(): string
     {
-        return modularityConfig('tables.cms_search_indexes', 'um_cms_search_indexes');
+        return modularousConfig('tables.cms_search_indexes', 'um_cms_search_indexes');
     }
 
     public function index(string $entityType, int|string $entityId, array $document): void

@@ -6,7 +6,7 @@ sidebarTitle: MediaLibraryController
 # MediaLibraryController
 
 **File**: `src/Http/Controllers/MediaLibraryController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `BaseController`  
 **Implements**: `SignUploadListener`
 

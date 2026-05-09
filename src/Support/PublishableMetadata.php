@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Publishable metadata columns (SEO title/description, canonical, robots, sitemap inclusion) for
- * {@see \Unusualify\Modularity\Entities\Traits\Publishable}.
+ * {@see \Unusualify\Modularous\Entities\Traits\Publishable}.
  *
- * Repository form inputs: {@see \Unusualify\Modularity\Repositories\Traits\PublishableTrait}.
+ * Repository form inputs: {@see \Unusualify\Modularous\Repositories\Traits\PublishableTrait}.
  */
 final class PublishableMetadata
 {
@@ -28,7 +28,7 @@ final class PublishableMetadata
     }
 
     /**
-     * Default Modularity form input definitions (usually appended via {@see PublishableTrait}).
+     * Default Modularous form input definitions (usually appended via {@see PublishableTrait}).
      *
      * @return list<array<string, mixed>>
      */

@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Providers;
+namespace Unusualify\Modularous\Providers;
 
-// use Unusualify\Modularity\Models\Enums\UserRole;
+// use Unusualify\Modularous\Models\Enums\UserRole;
 
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Laravel\Horizon\Horizon;
 use Spatie\Permission\Models\Permission;
-use Unusualify\Modularity\Entities\User;
+use Unusualify\Modularous\Entities\User;
 
 class AuthServiceProvider extends ServiceProvider implements DeferrableProvider
 {

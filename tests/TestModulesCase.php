@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
-use Unusualify\Modularity\Activators\ModularityActivator;
+use Unusualify\Modularous\Activators\ModularousActivator;
 
 abstract class TestModulesCase extends TestCase
 {
@@ -44,16 +44,16 @@ abstract class TestModulesCase extends TestCase
             'provider' => ['path' => 'Providers', 'generate' => true],
         ];
 
-        $modularityGeneratorPaths = array_merge(config('modules.paths.generator'), $generatorPaths, [
+        $modularousGeneratorPaths = array_merge(config('modules.paths.generator'), $generatorPaths, [
             'route-controller' => ['path' => 'Http/Controllers', 'generate' => true],
             'route-request' => ['path' => 'Http/Requests', 'generate' => true],
             'route-resource' => ['path' => 'Transformers', 'generate' => true],
         ]);
 
-        $app['config']->set('modules.paths.generator', $modularityGeneratorPaths);
-        $app['config']->set('modularity.paths.generator', $modularityGeneratorPaths);
-        $app['config']->set('modularity.base_key', 'modularity');
-        $app['config']->set('modularity.stubs.path', realpath(__DIR__ . '/../src/Console/stubs'));
+        $app['config']->set('modules.paths.generator', $modularousGeneratorPaths);
+        $app['config']->set('modularous.paths.generator', $modularousGeneratorPaths);
+        $app['config']->set('modularous.base_key', 'modularous');
+        $app['config']->set('modularous.stubs.path', realpath(__DIR__ . '/../src/Console/stubs'));
 
         $statusesFile = 'modules_statuses.json';
         if (getenv('TEST_TOKEN')) {
@@ -68,10 +68,10 @@ abstract class TestModulesCase extends TestCase
             'TestModule' => true,
             'SystemModule' => true,
         ]));
-        $app['config']->set('modules.activators.modularity', [
-            'class' => ModularityActivator::class,
+        $app['config']->set('modules.activators.modularous', [
+            'class' => ModularousActivator::class,
             'statuses-file' => $this->statusesFilePath,
-            'cache-key' => 'modularity.activator.installed',
+            'cache-key' => 'modularous.activator.installed',
             'cache-lifetime' => 604800,
         ]);
     }

@@ -10,5 +10,5 @@ These traits handle models that exist as a single instance (site settings, homep
 
 | Trait | Description |
 |-------|-------------|
-| [IsSingular](./is-singular) | Stores all fillable fields as JSON in a shared `modularity_singletons` table |
+| [IsSingular](./is-singular) | Stores all fillable fields as JSON in a shared `modularous_singletons` table |
 | [IsHostable](./is-hostable) | Multi-level slug routing across a `BelongsTo`/`HasMany` hierarchy |

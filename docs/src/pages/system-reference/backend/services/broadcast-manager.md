@@ -39,7 +39,7 @@ Given a model and a list of event class names, `BroadcastManager` instantiates e
 ## Example
 
 ```php
-use Unusualify\Modularity\Services\BroadcastManager;
+use Unusualify\Modularous\Services\BroadcastManager;
 use Modules\SystemNotification\Events\ModelCreated;
 use Modules\SystemNotification\Events\ModelUpdated;
 
@@ -62,7 +62,7 @@ Each event class passed to `forModel` must:
 
 ```php
 use Illuminate\Broadcasting\PrivateChannel;
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 
 class OrderCreated extends ModelEvent
 {

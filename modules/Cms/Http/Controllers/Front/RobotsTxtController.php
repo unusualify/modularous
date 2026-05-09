@@ -48,7 +48,7 @@ class RobotsTxtController extends Controller
     public static function resolvedBodyFromConfigOnly(): string
     {
         $default = "User-agent: *\nAllow: /";
-        $raw = trim((string) modularityConfig('cms_seo.robots.global_robots_txt', $default));
+        $raw = trim((string) modularousConfig('cms_seo.robots.global_robots_txt', $default));
 
         if ($raw === '') {
             $raw = trim($default);

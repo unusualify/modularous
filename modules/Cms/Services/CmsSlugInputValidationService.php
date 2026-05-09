@@ -3,9 +3,9 @@
 namespace Modules\Cms\Services;
 
 use Modules\Cms\Entities\UrlRoute;
-use Unusualify\Modularity\Entities\Traits\HasParentSegment;
+use Unusualify\Modularous\Entities\Traits\HasParentSegment;
 use Modules\Cms\Services\Concerns\ExtendsSlugValidationWithPublicUrlRegistry;
-use Unusualify\Modularity\Services\SlugInputValidationService;
+use Unusualify\Modularous\Services\SlugInputValidationService;
 
 /**
  * CMS slug validation: core uniqueness + {@see \Modules\Cms\Contracts\PublicUrlRegistryContract} (path collision + nested path hints).
@@ -26,7 +26,7 @@ class CmsSlugInputValidationService extends SlugInputValidationService
     /**
      * {@inheritdoc}
      *
-     * Enforces optional {@see modularityConfig('cms_routing.admin.slug_max_path_segments')} before uniqueness/registry checks.
+     * Enforces optional {@see modularousConfig('cms_routing.admin.slug_max_path_segments')} before uniqueness/registry checks.
      */
     public function validateModelSlug(
         string $modelClass,
@@ -48,12 +48,12 @@ class CmsSlugInputValidationService extends SlugInputValidationService
     }
 
     /**
-     * When {@see modularityConfig('cms_routing.admin.slug_max_path_segments')} is set, reject raw values whose
+     * When {@see modularousConfig('cms_routing.admin.slug_max_path_segments')} is set, reject raw values whose
      * slash-separated segment count exceeds the limit (admin path policy).
      */
     protected function slugPathSegmentPolicyFailure(string $rawValue): ?string
     {
-        $max = modularityConfig('cms_routing.admin.slug_max_path_segments');
+        $max = modularousConfig('cms_routing.admin.slug_max_path_segments');
         if ($max === null || $max === '') {
             return null;
         }
@@ -85,7 +85,7 @@ class CmsSlugInputValidationService extends SlugInputValidationService
 
     protected function nestedPublicUrlRegistryWarningsEnabled(): bool
     {
-        return (bool) modularityConfig('cms_routing.admin.slug_nested_path_warnings', true);
+        return (bool) modularousConfig('cms_routing.admin.slug_nested_path_warnings', true);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Contracts\Auth\Guard;
@@ -12,15 +12,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Modules\SystemUser\Entities\Role;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Events\ModularityUserRegistered;
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Events\VerifiedEmailRegister;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\Http\Controllers\ControllerUsingCreateVerifiedEmailAccount;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Events\ModularousUserRegistered;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Events\VerifiedEmailRegister;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\Http\Controllers\ControllerUsingCreateVerifiedEmailAccount;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class CreateVerifiedEmailAccountTest extends ModelTestCase
 {
@@ -40,15 +40,15 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
 
         $this->controller = new ControllerUsingCreateVerifiedEmailAccount;
 
-        config(['auth.passwords.modularity_users' => [
-            'provider' => 'modularity_users',
+        config(['auth.passwords.modularous_users' => [
+            'provider' => 'modularous_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ]]);
 
         config(['auth.passwords.register_verified_users' => [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'um_email_verification_tokens',
             'expire' => 60,
             'throttle' => 60,
@@ -67,7 +67,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
 
         $this->broker = new RegisterBroker(
             $this->tokens,
-            $this->app['auth']->createUserProvider('modularity_users'),
+            $this->app['auth']->createUserProvider('modularous_users'),
             $this->app['db']->connection(),
             $this->brokerConfig,
         );
@@ -75,7 +75,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
         Role::updateOrCreate([
             'name' => 'client-manager',
         ], [
-            'guard_name' => Modularity::getAuthGuardName(),
+            'guard_name' => Modularous::getAuthGuardName(),
         ]);
     }
 
@@ -150,8 +150,8 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
     public function test_register_email()
     {
         Event::fake([
-            ModularityUserRegistering::class,
-            ModularityUserRegistered::class,
+            ModularousUserRegistering::class,
+            ModularousUserRegistered::class,
             VerifiedEmailRegister::class,
         ]);
 
@@ -166,7 +166,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
 
         $this->controller->registerEmail($credentials);
 
-        $this->assertDatabaseHas(modularityConfig('tables.users', 'um_users'), [
+        $this->assertDatabaseHas(modularousConfig('tables.users', 'um_users'), [
             'name' => $credentials['name'],
             'surname' => $credentials['surname'],
             'email' => $credentials['email'],
@@ -174,13 +174,13 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
         ]);
 
         // Check password separately
-        $user = DB::table(modularityConfig('tables.users', 'um_users'))->where('email', $credentials['email'])->first();
+        $user = DB::table(modularousConfig('tables.users', 'um_users'))->where('email', $credentials['email'])->first();
         $this->assertTrue(Hash::check($credentials['password'], $user->password));
 
         // Test that events were dispatched
         Event::assertDispatched(VerifiedEmailRegister::class);
-        Event::assertDispatched(ModularityUserRegistered::class);
-        Event::assertDispatched(ModularityUserRegistering::class);
+        Event::assertDispatched(ModularousUserRegistered::class);
+        Event::assertDispatched(ModularousUserRegistering::class);
     }
 
     public function test_register_email_creates_company_with_spread_data()
@@ -197,7 +197,7 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
         $this->controller->registerEmail($credentials);
 
         // Verify company was created
-        $this->assertDatabaseHas(modularityConfig('tables.companies', 'um_companies'), [
+        $this->assertDatabaseHas(modularousConfig('tables.companies', 'um_companies'), [
             'name' => 'Test Company',
         ]);
 

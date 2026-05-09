@@ -11,7 +11,7 @@ These traits manage price record persistence and payment workflow orchestration.
 
 ## PricesTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\PricesTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\PricesTrait`
 
 Creates, updates, and deletes morphed `Price` records for the model. Supports automatic currency exchange conversion when the currency exchange service is active.
 
@@ -61,7 +61,7 @@ When no price exists for a role, a default structure is returned:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\PricesTrait;
+use Unusualify\Modularous\Repositories\Traits\PricesTrait;
 
 class ProductRepository extends Repository
 {
@@ -77,7 +77,7 @@ class ProductRepository extends Repository
 
 ## PaymentTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\PaymentTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\PaymentTrait`
 
 Orchestrates the full payment lifecycle: calculating totals from related priceable models, creating payment records via payment services, and rendering a payment modal action on forms. Internally uses `PricesTrait`.
 
@@ -151,7 +151,7 @@ The button is hidden when payment status is `COMPLETED`, `PROVISION`, or `REFUND
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\PaymentTrait;
+use Unusualify\Modularous\Repositories\Traits\PaymentTrait;
 
 class OrderRepository extends Repository
 {

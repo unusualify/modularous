@@ -6,8 +6,8 @@ sidebarTitle: ImpersonateMiddleware
 # ImpersonateMiddleware
 
 **File**: `src/Http/Middleware/ImpersonateMiddleware.php`  
-**Alias**: `modularity.impersonate`  
-**Part of**: `modularity.core` group
+**Alias**: `modularous.impersonate`  
+**Part of**: `modularous.core` group
 
 Activates user impersonation for the current request and shares the impersonation config with the master Blade layout.
 
@@ -16,12 +16,12 @@ Activates user impersonation for the current request and shares the impersonatio
 When an admin starts impersonating another user, the target user's ID is stored in the session under the `'impersonate'` key. On every subsequent request this middleware:
 
 1. Checks for `session('impersonate')`.
-2. If present, calls `auth()->guard(Modularity::getAuthGuardName())->onceUsingId($targetId)` — this swaps the authenticated user **for the current request only**, without affecting the session's real authenticated user.
-3. Composes `modularity::layouts.master` with the impersonation config (`get_modularity_impersonation_config()`), which provides the frontend with the data needed to render the "stop impersonating" banner.
+2. If present, calls `auth()->guard(Modularous::getAuthGuardName())->onceUsingId($targetId)` — this swaps the authenticated user **for the current request only**, without affecting the session's real authenticated user.
+3. Composes `modularous::layouts.master` with the impersonation config (`get_modularous_impersonation_config()`), which provides the frontend with the data needed to render the "stop impersonating" banner.
 
 ## Impersonation Config
 
-`get_modularity_impersonation_config()` returns an array used by the admin panel to:
+`get_modularous_impersonation_config()` returns an array used by the admin panel to:
 
 - Show or hide the impersonation banner.
 - Provide the "stop impersonating" route.

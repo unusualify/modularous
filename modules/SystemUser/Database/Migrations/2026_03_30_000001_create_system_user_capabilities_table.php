@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $capabilitiesTable = modularityConfig('tables.capabilities', 'um_capabilities');
-        $capabilityRoutesTable = modularityConfig('tables.capability_routes', 'um_capability_routes');
-        $pivotTable = modularityConfig('tables.role_capability', 'um_role_capability');
-        $capabilityRoutePivotTable = modularityConfig('tables.capability_capability_route', 'um_capability_capability_route');
+        $capabilitiesTable = modularousConfig('tables.capabilities', 'um_capabilities');
+        $capabilityRoutesTable = modularousConfig('tables.capability_routes', 'um_capability_routes');
+        $pivotTable = modularousConfig('tables.role_capability', 'um_role_capability');
+        $capabilityRoutePivotTable = modularousConfig('tables.capability_capability_route', 'um_capability_capability_route');
         $rolesTable = config('permission.table_names.roles', 'roles');
 
         if (! Schema::hasTable($capabilitiesTable)) {
@@ -70,9 +70,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(modularityConfig('tables.capability_capability_route', 'um_capability_capability_route'));
-        Schema::dropIfExists(modularityConfig('tables.capability_routes', 'um_capability_routes'));
-        Schema::dropIfExists(modularityConfig('tables.role_capability', 'um_role_capability'));
-        Schema::dropIfExists(modularityConfig('tables.capabilities', 'um_capabilities'));
+        Schema::dropIfExists(modularousConfig('tables.capability_capability_route', 'um_capability_capability_route'));
+        Schema::dropIfExists(modularousConfig('tables.capability_routes', 'um_capability_routes'));
+        Schema::dropIfExists(modularousConfig('tables.role_capability', 'um_role_capability'));
+        Schema::dropIfExists(modularousConfig('tables.capabilities', 'um_capabilities'));
     }
 };

@@ -5,7 +5,7 @@ sidebarTitle: HasCaching
 
 # Core\HasCaching
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\HasCaching`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\HasCaching`
 
 Wires up automatic cache invalidation via `CacheObserver` on model events (`created`, `updated`, `deleted`, `restored`, `forceDeleted`). Composites `Cacheable` for the underlying cache key/store management.
 
@@ -30,7 +30,7 @@ Wires up automatic cache invalidation via `CacheObserver` on model events (`crea
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\HasCaching;
+use Unusualify\Modularous\Entities\Traits\Core\HasCaching;
 
 class Article extends Model
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Docs;
+namespace Unusualify\Modularous\Tests\Docs;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
-use Unusualify\Modularity\Console\Docs\DocsAuditCommand;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Console\Docs\DocsAuditCommand;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Ensures every tracked source file in the Modularous package has a
@@ -64,14 +64,14 @@ class DocsAuditTest extends TestCase
             $this->markTestSkipped('Skipped because there are currently undocumented files — fix those first.');
         }
 
-        $this->artisan('modularity:docs:audit', ['--fail-on-missing' => true])
+        $this->artisan('modularous:docs:audit', ['--fail-on-missing' => true])
             ->assertExitCode(0);
     }
 
     /** @test */
     public function docs_audit_command_runs_without_errors(): void
     {
-        $this->artisan('modularity:docs:audit')
+        $this->artisan('modularous:docs:audit')
             ->assertExitCode(0);
     }
 

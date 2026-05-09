@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Exceptions;
+namespace Unusualify\Modularous\Exceptions;
 
 use Exception;
 

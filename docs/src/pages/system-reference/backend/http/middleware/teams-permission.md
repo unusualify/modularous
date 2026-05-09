@@ -32,10 +32,10 @@ Add it to the panel middleware stack:
 
 ```php
 // In a service provider or RouteServiceProvider
-Route::middlewareGroup('modularity.panel', [
+Route::middlewareGroup('modularous.panel', [
     'authorization',
-    'modularity.company.registration',
-    'modularity.redirector',
+    'modularous.company.registration',
+    'modularous.redirector',
     TeamsPermissionMiddleware::class,
 ]);
 ```

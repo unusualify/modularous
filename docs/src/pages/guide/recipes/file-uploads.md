@@ -25,7 +25,7 @@ This recipe covers **Filepond**, which is right for 90% of cases. For the others
 ## 1. Add the trait to your model
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class Ticket extends Model
 {
@@ -38,7 +38,7 @@ This installs a `morphMany(Filepond::class, 'filepondable')` relation and the ac
 ## 2. Add the trait to your repository
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
 
 class TicketRepository extends Repository
 {
@@ -147,13 +147,13 @@ Use `HasImages` + `input-image` instead. See [Files and Media — Media / Images
 Temporary Filepond rows that never get saved accumulate over time. Schedule the cleanup command:
 
 ```bash
-php artisan modularity:flush:filepond
+php artisan modularous:flush:filepond
 ```
 
 Or add it to `app/Console/Kernel.php`:
 
 ```php
-$schedule->command('modularity:flush:filepond')->daily();
+$schedule->command('modularous:flush:filepond')->daily();
 ```
 
 See [flush:filepond](/guide/console/flush/flush-filepond).

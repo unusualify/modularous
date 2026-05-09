@@ -1,8 +1,8 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::layouts.base")
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::layouts.base")
 
 @push('head_last_js')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-auth.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-auth.js'])
     }}
 @endpush
 
@@ -11,7 +11,7 @@
     $formAttributes = $formAttributes ?? [];
     $formSlots = $formSlots ?? [];
     $slots = $slots ?? [];
-    $authComponentName = modularityConfig('auth_pages.component_name', 'ue-auth');
+    $authComponentName = modularousConfig('auth_pages.component_name', 'ue-auth');
 @endphp
 
 @section('body')
@@ -65,10 +65,10 @@
 @endsection
 
 @push('STORE')
-    window['{{ modularityConfig('js_namespace') }}'].STORE.config = { test: false };
-    window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new stdClass()) !!};
-    window['{{ modularityConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new stdClass()) !!};
-    window['{{ modularityConfig('js_namespace') }}'].AUTH_COMPONENT = {!! json_encode(modularityConfig('auth_component', [])) !!};
-    window.__MODULARITY_AUTH_CONFIG__ = {!! json_encode(modularityConfig('auth_component', [])) !!};
+    window['{{ modularousConfig('js_namespace') }}'].STORE.config = { test: false };
+    window['{{ modularousConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new stdClass()) !!};
+    window['{{ modularousConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new stdClass()) !!};
+    window['{{ modularousConfig('js_namespace') }}'].AUTH_COMPONENT = {!! json_encode(modularousConfig('auth_component', [])) !!};
+    window.__MODULAROUS_AUTH_CONFIG__ = {!! json_encode(modularousConfig('auth_component', [])) !!};
 @endpush
 

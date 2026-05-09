@@ -5,17 +5,17 @@ sidebarTitle: Refresh
 
 # Refresh
 
-> Republish Modularous frontend assets to `public/vendor/modularity` and clear view/application caches.
+> Republish Modularous frontend assets to `public/vendor/modularous` and clear view/application caches.
 
 ## Command Information
 
-- **Signature:** `modularity:refresh`
+- **Signature:** `modularous:refresh`
 - **Category:** Module
 
 ## What It Does
 
-1. Deletes `public/vendor/modularity` entirely.
-2. Runs `vendor:publish --provider=LaravelServiceProvider --tag=modularity-assets --force` to copy fresh assets.
+1. Deletes `public/vendor/modularous` entirely.
+2. Runs `vendor:publish --provider=LaravelServiceProvider --tag=modularous-assets --force` to copy fresh assets.
 3. Calls `cache:clear` and `view:clear`.
 
 Run this after upgrading the Modularous package to ensure the browser receives the updated JS/CSS files.
@@ -23,7 +23,7 @@ Run this after upgrading the Modularous package to ensure the browser receives t
 ## Example
 
 ```bash
-php artisan modularity:refresh
+php artisan modularous:refresh
 ```
 
 ## Related

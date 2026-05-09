@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits\Core;
+namespace Unusualify\Modularous\Tests\Models\Traits\Core;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\Traits\Core\ChangeRelationships;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\Traits\Core\ChangeRelationships;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ChangeRelationshipsTest extends ModelTestCase
 {

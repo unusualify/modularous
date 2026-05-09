@@ -11,7 +11,7 @@ These traits handle persistence of file and image attachments from forms into pi
 
 ## FilepondsTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\FilepondsTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\FilepondsTrait`
 
 Persists Filepond temporary uploads to permanent storage via the `Filepond` facade after a model is saved. Supports nested repeater files, locale-separated uploads, and associative (translated) file arrays.
 
@@ -49,7 +49,7 @@ When editing an existing record, the trait loads `$object->fileponds` grouped by
 
 ```php
 // In your repository — just use the trait
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
 
 class ArticleRepository extends Repository
 {
@@ -65,7 +65,7 @@ class ArticleRepository extends Repository
 
 ## FilesTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\FilesTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\FilesTrait`
 
 Syncs `File` model attachments through the `fileables` pivot table. Handles locale-aware file assignment, pivot record creation/update, and in-memory hydration for preview.
 
@@ -107,7 +107,7 @@ Groups `$object->files` by `pivot.role`, then:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\FilesTrait;
+use Unusualify\Modularous\Repositories\Traits\FilesTrait;
 
 class DocumentRepository extends Repository
 {
@@ -123,7 +123,7 @@ class DocumentRepository extends Repository
 
 ## ImagesTrait
 
-**Namespace**: `Unusualify\Modularity\Repositories\Traits\ImagesTrait`
+**Namespace**: `Unusualify\Modularous\Repositories\Traits\ImagesTrait`
 
 Syncs `Media` model attachments through the `mediables` pivot table. Structurally similar to `FilesTrait` but handles image-specific metadata (crop settings, image metadatas).
 
@@ -164,7 +164,7 @@ Same grouping strategy as `FilesTrait`:
 ### Usage
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\ImagesTrait;
+use Unusualify\Modularous\Repositories\Traits\ImagesTrait;
 
 class ProductRepository extends Repository
 {

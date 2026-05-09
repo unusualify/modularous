@@ -7,10 +7,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Modules\Cms\Entities\Concerns\HasParentSegment;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Support\ModularityFlashWarnings;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Support\ModularousFlashWarnings;
 
 
 trait ManageCms
@@ -22,11 +22,11 @@ trait ManageCms
      */
     protected function __beforeConstructManageCms($app, $request)
     {
-        if (modularityConfig('security.enabled', false)) {
+        if (modularousConfig('security.enabled', false)) {
             $this->fieldsPermissions = [
-                'canonical_url' => modularityConfig('security.critical_field_permissions.canonical_url', 'page_edit'),
-                'robots_index' => modularityConfig('security.critical_field_permissions.robots_index', 'page_edit'),
-                'robots_follow' => modularityConfig('security.critical_field_permissions.robots_follow', 'page_edit'),
+                'canonical_url' => modularousConfig('security.critical_field_permissions.canonical_url', 'page_edit'),
+                'robots_index' => modularousConfig('security.critical_field_permissions.robots_index', 'page_edit'),
+                'robots_follow' => modularousConfig('security.critical_field_permissions.robots_follow', 'page_edit'),
             ];
         }
     }
@@ -57,7 +57,7 @@ trait ManageCms
         }
 
         if ($response instanceof RedirectResponse) {
-            ModularityFlashWarnings::merge($warnings);
+            ModularousFlashWarnings::merge($warnings);
         }
 
         return $response;
@@ -75,7 +75,7 @@ trait ManageCms
             return null;
         }
 
-        if (! modularityConfig('cms_routing.signed_preview.enabled', true)) {
+        if (! modularousConfig('cms_routing.signed_preview.enabled', true)) {
             return null;
         }
 
@@ -94,7 +94,7 @@ trait ManageCms
             return null;
         }
 
-        $cmsModule = Collection::make(Modularity::allEnabled())->first(
+        $cmsModule = Collection::make(Modularous::allEnabled())->first(
             fn ($m) => studlyName($m->getName()) === 'Cms'
         );
         if ($cmsModule === null) {
@@ -127,7 +127,7 @@ trait ManageCms
             return null;
         }
 
-        if (! modularityConfig('cms_routing.public_pages_enabled', true)) {
+        if (! modularousConfig('cms_routing.public_pages_enabled', true)) {
             return null;
         }
 

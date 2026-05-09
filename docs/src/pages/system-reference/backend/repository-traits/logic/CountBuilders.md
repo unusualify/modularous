@@ -5,7 +5,7 @@ sidebarTitle: CountBuilders
 
 # CountBuilders
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\CountBuilders`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\CountBuilders`
 
 Provides cached aggregate count queries for the standard record status tabs (all, published, draft, trash) and a generic status-by-method helper. Composes `MethodTransformers`.
 

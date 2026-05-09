@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Listeners;
+namespace Unusualify\Modularous\Tests\Listeners;
 
 use Illuminate\Support\Facades\Notification;
 use Mockery;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Listeners\Listener;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Listeners\Listener;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ListenerTest extends TestCase
 {
@@ -21,14 +21,14 @@ class ListenerTest extends TestCase
      */
     public function it_initializes_with_mail_enabled_from_config()
     {
-        config(['modularity.mail.enabled' => true]);
+        config(['modularous.mail.enabled' => true]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/path/to/notifications');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -46,14 +46,14 @@ class ListenerTest extends TestCase
      */
     public function it_initializes_with_mail_disabled_from_config()
     {
-        config(['modularity.mail.enabled' => false]);
+        config(['modularous.mail.enabled' => false]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/path/to/notifications');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -71,14 +71,14 @@ class ListenerTest extends TestCase
      */
     public function it_can_add_notification_path()
     {
-        config(['modularity.mail.enabled' => false]);
+        config(['modularous.mail.enabled' => false]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/initial/path');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -98,14 +98,14 @@ class ListenerTest extends TestCase
      */
     public function it_can_merge_notification_paths()
     {
-        config(['modularity.mail.enabled' => false]);
+        config(['modularous.mail.enabled' => false]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/initial/path');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -126,14 +126,14 @@ class ListenerTest extends TestCase
      */
     public function it_returns_null_when_notification_class_not_found()
     {
-        config(['modularity.mail.enabled' => false]);
+        config(['modularous.mail.enabled' => false]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/non/existent/path');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -150,14 +150,14 @@ class ListenerTest extends TestCase
      */
     public function it_handles_event_without_sending_email_when_mail_disabled()
     {
-        config(['modularity.mail.enabled' => false]);
+        config(['modularous.mail.enabled' => false]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/path/to/notifications');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 
@@ -180,14 +180,14 @@ class ListenerTest extends TestCase
      */
     public function it_skips_notification_when_no_matching_class_found()
     {
-        config(['modularity.mail.enabled' => true]);
+        config(['modularous.mail.enabled' => true]);
 
-        $module = Mockery::mock(\Unusualify\Modularity\Module::class);
+        $module = Mockery::mock(\Unusualify\Modularous\Module::class);
         $module->shouldReceive('getDirectoryPath')
             ->with('Notifications')
             ->andReturn('/non/existent/path');
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('SystemNotification')
             ->andReturn($module);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Unusualify\Modularity\Entities\Repeater;
+use Unusualify\Modularous\Entities\Repeater;
 
 /**
  * @author Hazarcan Doğa
@@ -37,7 +37,7 @@ trait HasRepeaters
      * Defines the one-to-many relationship between the module and Repeater.
      * Get all repeaters belonging to a module.
      *
-     * @uses  Unusualify\Modularity\Entities\Repeater::class
+     * @uses  Unusualify\Modularous\Entities\Repeater::class
      */
     public function repeaters($role = null, $locale = null): MorphMany
     {

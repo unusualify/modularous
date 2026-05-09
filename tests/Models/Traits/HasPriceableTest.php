@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -17,9 +17,9 @@ use Oobook\Priceable\Facades\PriceService;
 use Oobook\Priceable\Models\Currency as PriceableCurrency;
 use Oobook\Priceable\Models\PriceType;
 use Oobook\Priceable\Models\VatRate;
-use Unusualify\Modularity\Entities\Mutators\HasPriceableMutators;
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Mutators\HasPriceableMutators;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasPriceableTest extends ModelTestCase
 {
@@ -198,8 +198,8 @@ class HasPriceableTest extends ModelTestCase
     public function test_base_price_relationship_with_get_language_based_price_query()
     {
         // Set language based prices to true
-        Config::set('modularity.use_language_based_prices', true);
-        Config::set('modularity.language_currencies', ['en' => 'USD']);
+        Config::set('modularous.use_language_based_prices', true);
+        Config::set('modularous.language_currencies', ['en' => 'USD']);
 
         Cache::put('exchange_rates', ['USD' => 1.15]);
 
@@ -237,8 +237,8 @@ class HasPriceableTest extends ModelTestCase
     public function test_base_price_relationship_without_get_language_based_price_query()
     {
         // Set language based prices to true
-        Config::set('modularity.use_language_based_prices', true);
-        Config::set('modularity.language_currencies', ['en' => 'USD']);
+        Config::set('modularous.use_language_based_prices', true);
+        Config::set('modularous.language_currencies', ['en' => 'USD']);
 
         Cache::put('exchange_rates', ['USD' => 1.15]);
 

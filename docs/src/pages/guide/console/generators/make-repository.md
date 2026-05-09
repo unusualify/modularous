@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:repository [-f|--force] [--custom-model [CUSTOM-MODEL]] [--notAsk] [--all] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <repository>`
+- **Signature:** `modularous:make:repository [-f|--force] [--custom-model [CUSTOM-MODEL]] [--notAsk] [--all] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <repository>`
 - **Category:** Generators
 
 
@@ -13,117 +13,117 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:repository MODULE REPOSITORY
+php artisan modularous:make:repository MODULE REPOSITORY
 ```
 
 ### With Options
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -f
+php artisan modularous:make:repository -f
 
 # Using full option name
-php artisan modularity:make:repository --force
+php artisan modularous:make:repository --force
 ```
 
 ```bash
-php artisan modularity:make:repository --custom-model=CUSTOM-MODEL
+php artisan modularous:make:repository --custom-model=CUSTOM-MODEL
 ```
 
 ```bash
-php artisan modularity:make:repository --notAsk
+php artisan modularous:make:repository --notAsk
 ```
 
 ```bash
-php artisan modularity:make:repository --all
+php artisan modularous:make:repository --all
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -T
+php artisan modularous:make:repository -T
 
 # Using full option name
-php artisan modularity:make:repository --addTranslation
+php artisan modularous:make:repository --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -M
+php artisan modularous:make:repository -M
 
 # Using full option name
-php artisan modularity:make:repository --addMedia
+php artisan modularous:make:repository --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -F
+php artisan modularous:make:repository -F
 
 # Using full option name
-php artisan modularity:make:repository --addFile
+php artisan modularous:make:repository --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -P
+php artisan modularous:make:repository -P
 
 # Using full option name
-php artisan modularity:make:repository --addPosition
+php artisan modularous:make:repository --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -S
+php artisan modularous:make:repository -S
 
 # Using full option name
-php artisan modularity:make:repository --addSlug
+php artisan modularous:make:repository --addSlug
 ```
 
 ```bash
-php artisan modularity:make:repository --addPrice
+php artisan modularous:make:repository --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -A
+php artisan modularous:make:repository -A
 
 # Using full option name
-php artisan modularity:make:repository --addAuthorized
+php artisan modularous:make:repository --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -FP
+php artisan modularous:make:repository -FP
 
 # Using full option name
-php artisan modularity:make:repository --addFilepond
+php artisan modularous:make:repository --addFilepond
 ```
 
 ```bash
-php artisan modularity:make:repository --addUuid
+php artisan modularous:make:repository --addUuid
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:repository -SS
+php artisan modularous:make:repository -SS
 
 # Using full option name
-php artisan modularity:make:repository --addSnapshot
+php artisan modularous:make:repository --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:repository MODULE
+php artisan modularous:make:repository MODULE
 ```
 
-`modularity:make:repository`
+`modularous:make:repository`
 ----------------------------
 
 Create a new repository class for the specified module.
 
 ### Usage
 
-* `modularity:make:repository [-f|--force] [--custom-model [CUSTOM-MODEL]] [--notAsk] [--all] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <repository>`
+* `modularous:make:repository [-f|--force] [--custom-model [CUSTOM-MODEL]] [--notAsk] [--all] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <repository>`
 
 Create a new repository class for the specified module.
 

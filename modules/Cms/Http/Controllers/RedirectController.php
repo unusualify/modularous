@@ -13,9 +13,9 @@ use Illuminate\Validation\ValidationException;
 use Modules\Cms\Contracts\CanonicalUrlResolverInterface;
 use Modules\Cms\Contracts\RedirectValidationServiceInterface;
 use Modules\Cms\Entities\Redirect;
-use Unusualify\Modularity\Contracts\CanBulkSheet;
-use Unusualify\Modularity\Http\Controllers\BaseController;
-use Unusualify\Modularity\Support\ModularityFlashWarnings;
+use Unusualify\Modularous\Contracts\CanBulkSheet;
+use Unusualify\Modularous\Http\Controllers\BaseController;
+use Unusualify\Modularous\Support\ModularousFlashWarnings;
 
 class RedirectController extends BaseController implements CanBulkSheet
 {
@@ -36,12 +36,12 @@ class RedirectController extends BaseController implements CanBulkSheet
 
     public function __construct(Application $app, Request $request)
     {
-        if (modularityConfig('security.enabled', false)) {
-            $permission = modularityConfig('security.critical_field_permissions.redirect_from', 'redirect_edit');
+        if (modularousConfig('security.enabled', false)) {
+            $permission = modularousConfig('security.critical_field_permissions.redirect_from', 'redirect_edit');
             $this->fieldsPermissions = [
                 'from_path' => $permission,
-                'to_path' => modularityConfig('security.critical_field_permissions.redirect_to', $permission),
-                'status_code' => modularityConfig('security.critical_field_permissions.status_code', $permission),
+                'to_path' => modularousConfig('security.critical_field_permissions.redirect_to', $permission),
+                'status_code' => modularousConfig('security.critical_field_permissions.status_code', $permission),
             ];
         }
 
@@ -90,7 +90,7 @@ class RedirectController extends BaseController implements CanBulkSheet
         }
 
         if ($response instanceof RedirectResponse) {
-            ModularityFlashWarnings::merge($warnings);
+            ModularousFlashWarnings::merge($warnings);
         }
 
         return $response;

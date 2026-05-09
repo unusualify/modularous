@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories;
+namespace Unusualify\Modularous\Repositories;
 
 use Exception;
 use Illuminate\Database\Query\Builder;
@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
 use Spatie\Activitylog\Facades\LogBatch;
-use Unusualify\Modularity\Contracts\Cache\CacheableInterface;
-use Unusualify\Modularity\Contracts\Cache\UserAwareCacheInterface;
-use Unusualify\Modularity\Contracts\ModuleableInterface;
-use Unusualify\Modularity\Models\Model;
-use Unusualify\Modularity\Repositories\Contracts\Repository as RepositoryContract;
-use Unusualify\Modularity\Repositories\Traits\Concerns\InteractsWithAttachmentPayloads;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Contracts\Cache\CacheableInterface;
+use Unusualify\Modularous\Contracts\Cache\UserAwareCacheInterface;
+use Unusualify\Modularous\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Models\Model;
+use Unusualify\Modularous\Repositories\Contracts\Repository as RepositoryContract;
+use Unusualify\Modularous\Repositories\Traits\Concerns\InteractsWithAttachmentPayloads;
+use Unusualify\Modularous\Traits\ManageNames;
 
 abstract class Repository implements CacheableInterface, ModuleableInterface, RepositoryContract, UserAwareCacheInterface
 {
@@ -203,7 +203,7 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
         return DB::transaction(function () use ($id, $fields, $options) {
             LogBatch::startBatch();
 
-            if (classHasTrait($this->model, 'Unusualify\Modularity\Entities\Traits\IsSingular')) {
+            if (classHasTrait($this->model, 'Unusualify\Modularous\Entities\Traits\IsSingular')) {
                 $object = $this->model->single();
             } else {
                 $object = $this->model->findOrFail($id);

@@ -3,7 +3,7 @@
 namespace Modules\SystemPricing\Entities\Mutators;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
 
 trait PriceMutators
 {

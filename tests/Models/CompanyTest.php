@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\SystemUser\Entities\Company;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class CompanyTest extends ModelTestCase
 {
@@ -15,7 +15,7 @@ class CompanyTest extends ModelTestCase
     {
         $company = new Company;
 
-        $this->assertEquals(modularityConfig('tables.companies', 'um_companies'), $company->getTable());
+        $this->assertEquals(modularousConfig('tables.companies', 'um_companies'), $company->getTable());
     }
 
     public function test_create_company_with_factory()

@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories;
+namespace Unusualify\Modularous\Repositories;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Repositories\Traits\CreatorTrait;
-use Unusualify\Modularity\Repositories\Traits\TagsTrait;
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Repositories\Traits\CreatorTrait;
+use Unusualify\Modularous\Repositories\Traits\TagsTrait;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
 
 class MediaRepository extends Repository
 {

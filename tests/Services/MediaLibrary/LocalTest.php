@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Services\MediaLibrary\Local;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\Local;
+use Unusualify\Modularous\Tests\TestCase;
 
 class LocalTest extends TestCase
 {
@@ -15,7 +15,7 @@ class LocalTest extends TestCase
     {
         parent::setUp();
 
-        Config::set(modularityBaseKey() . '.media_library.disk', 'public');
+        Config::set(modularousBaseKey() . '.media_library.disk', 'public');
         Storage::fake('public');
 
         $this->service = new Local;

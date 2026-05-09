@@ -3,7 +3,7 @@
 namespace Modules\Cms\Http\Requests;
 
 use Closure;
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class PageRequest extends Request
 {

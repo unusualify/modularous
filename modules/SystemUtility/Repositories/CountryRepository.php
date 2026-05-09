@@ -3,8 +3,8 @@
 namespace Modules\SystemUtility\Repositories;
 
 use Modules\SystemUtility\Entities\Country;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\TranslationsTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\TranslationsTrait;
 
 class CountryRepository extends Repository
 {

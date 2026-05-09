@@ -55,8 +55,8 @@ public function getSasUrl(Request $request, SignUploadListener $listener, string
 ## Example Controller
 
 ```php
-use Unusualify\Modularity\Services\Uploader\SignAzureUpload;
-use Unusualify\Modularity\Services\Uploader\SignUploadListener;
+use Unusualify\Modularous\Services\Uploader\SignAzureUpload;
+use Unusualify\Modularous\Services\Uploader\SignUploadListener;
 
 class MediaController extends Controller implements SignUploadListener
 {

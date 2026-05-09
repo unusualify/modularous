@@ -6,7 +6,7 @@ sidebarTitle: RegisterBrokerManager
 # RegisterBrokerManager
 
 **File**: `src/Brokers/RegisterBrokerManager.php`  
-**Namespace**: `Unusualify\Modularity\Brokers`  
+**Namespace**: `Unusualify\Modularous\Brokers`  
 **Extends**: `Illuminate\Auth\Passwords\PasswordBrokerManager`
 
 `RegisterBrokerManager` is the broker factory behind the `auth.register` binding. It resolves named registration brokers and builds `RegisterBroker` instances with the configured provider/connection/token settings.

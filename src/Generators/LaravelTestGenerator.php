@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Generators;
+namespace Unusualify\Modularous\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Module;
 
 class LaravelTestGenerator extends Generator
 {
@@ -170,7 +170,7 @@ class LaravelTestGenerator extends Generator
 
     public function getTargetPath(): string
     {
-        return get_modularity_vendor_path('src/Tests');
+        return get_modularous_vendor_path('src/Tests');
     }
 
     public function getTestFileName()

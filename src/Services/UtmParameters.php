@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Http\Request;
 use Unusualify\Payable\Services\Paypal\Str;
@@ -50,11 +50,11 @@ class UtmParameters
 
     public function __construct(Request $request)
     {
-        $this->isEnabled = ! (bool) env('MODULARITY_UTM_DISABLED', false);
+        $this->isEnabled = ! (bool) env('MODULAROUS_UTM_DISABLED', false);
 
-        $this->persisted = ! (bool) env('MODULARITY_UTM_TEMPORARY', false);
+        $this->persisted = ! (bool) env('MODULAROUS_UTM_TEMPORARY', false);
 
-        $this->shouldHandleRequest = (bool) env('MODULARITY_UTM_HANDLE_REQUEST', false);
+        $this->shouldHandleRequest = (bool) env('MODULAROUS_UTM_HANDLE_REQUEST', false);
 
         $this->request = $request;
 

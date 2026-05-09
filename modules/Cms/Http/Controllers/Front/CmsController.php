@@ -11,14 +11,14 @@ use Modules\Cms\Entities\UrlRoute;
 use Modules\Cms\Http\Controllers\Traits\ResolvesPublicPresentationView;
 use Modules\Cms\Services\CmsPublicModelResolver;
 use Modules\Cms\Support\CmsPublicSeo;
-use Unusualify\Modularity\Http\Controllers\CoreController;
+use Unusualify\Modularous\Http\Controllers\CoreController;
 
 /**
- * Public CMS front (non-Inertia) base controller: extends {@see CoreController} so {@see \Unusualify\Modularity\Traits\Moduleable}
+ * Public CMS front (non-Inertia) base controller: extends {@see CoreController} so {@see \Unusualify\Modularous\Traits\Moduleable}
  * {@code $moduleName} / {@code $routeName} match admin controllers (e.g. {@see \Modules\Cms\Http\Controllers\PageController}).
  *
- * Presentation (aligned with {@see \Unusualify\Modularity\Http\Controllers\BaseController::getViewPrefix()} /
- * {@see \Unusualify\Modularity\Http\Controllers\PanelController::$routePrefix} semantics for the submodule):
+ * Presentation (aligned with {@see \Unusualify\Modularous\Http\Controllers\BaseController::getViewPrefix()} /
+ * {@see \Unusualify\Modularous\Http\Controllers\PanelController::$routePrefix} semantics for the submodule):
  * - {@code $viewPrefix}: {@code snake(module)::snake(route)} (e.g. {@code cms::page})
  * - {@code $routePrefix}: {@code snake(module).snake(route)} (e.g. {@code cms.page})
  *
@@ -31,12 +31,12 @@ abstract class CmsController extends CoreController
     use ResolvesPublicPresentationView;
 
     /**
-     * Blade view namespace fragment (e.g. {@code cms::page}), same pattern as admin {@see \Unusualify\Modularity\Http\Controllers\BaseController::$viewPrefix}.
+     * Blade view namespace fragment (e.g. {@code cms::page}), same pattern as admin {@see \Unusualify\Modularous\Http\Controllers\BaseController::$viewPrefix}.
      */
     protected $viewPrefix;
 
     /**
-     * Dot-separated route-name prefix for this submodule (e.g. {@code cms.page}); mirrors admin {@see \Unusualify\Modularity\Http\Controllers\PanelController::$routePrefix} shape for public helpers.
+     * Dot-separated route-name prefix for this submodule (e.g. {@code cms.page}); mirrors admin {@see \Unusualify\Modularous\Http\Controllers\PanelController::$routePrefix} shape for public helpers.
      */
     protected $routePrefix;
 
@@ -56,13 +56,13 @@ abstract class CmsController extends CoreController
     }
 
     /**
-     * Resolves the published model: optional {@see modularityConfig('cms_routing.public_item_resolvers')} invokable override,
+     * Resolves the published model: optional {@see modularousConfig('cms_routing.public_item_resolvers')} invokable override,
      * otherwise {@see CmsPublicModelResolver} with {@see getPublicCmsEntityClass()} and {@see publicCmsUrlRouteKind()}.
      */
     protected function resolvePublicItem(Request $request): ?Model
     {
         $key = $this->publicCmsModuleRouteKey();
-        $handler = data_get((array) modularityConfig('cms_routing.public_item_resolvers', []), $key);
+        $handler = data_get((array) modularousConfig('cms_routing.public_item_resolvers', []), $key);
         if (is_string($handler) && class_exists($handler)) {
             return app($handler)($request);
         }
@@ -101,7 +101,7 @@ abstract class CmsController extends CoreController
     {
         $key = $this->publicCmsModuleRouteKey();
 
-        return (string) modularityConfig(
+        return (string) modularousConfig(
             'cms_routing.public_url_route_kind.' . $key,
             UrlRoute::KIND_PAGE_PUBLIC
         );

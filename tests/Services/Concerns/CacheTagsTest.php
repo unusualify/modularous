@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Concerns;
+namespace Unusualify\Modularous\Tests\Services\Concerns;
 
-use Unusualify\Modularity\Services\Concerns\CacheTags;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\Concerns\CacheTags;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CacheTagsTest extends TestCase
 {
@@ -21,8 +21,8 @@ class CacheTagsTest extends TestCase
         $tags = $this->tagService->getModuleTags('test-module');
 
         $this->assertIsArray($tags);
-        $this->assertContains('modularity', $tags);
-        $this->assertContains('modularity:TestModule', $tags);
+        $this->assertContains('modularous', $tags);
+        $this->assertContains('modularous:TestModule', $tags);
         $this->assertCount(2, $tags);
     }
 
@@ -32,8 +32,8 @@ class CacheTagsTest extends TestCase
         $tags = $this->tagService->getModuleTags('test-module', onlyModule: true);
 
         $this->assertIsArray($tags);
-        $this->assertNotContains('modularity', $tags);
-        $this->assertContains('modularity:TestModule', $tags);
+        $this->assertNotContains('modularous', $tags);
+        $this->assertContains('modularous:TestModule', $tags);
         $this->assertCount(1, $tags);
     }
 
@@ -43,9 +43,9 @@ class CacheTagsTest extends TestCase
         $tags = $this->tagService->getModuleRouteTags('test-module', 'test-route');
 
         $this->assertIsArray($tags);
-        $this->assertContains('modularity', $tags);
-        $this->assertContains('modularity:TestModule', $tags);
-        $this->assertContains('modularity:TestModule:TestRoute', $tags);
+        $this->assertContains('modularous', $tags);
+        $this->assertContains('modularous:TestModule', $tags);
+        $this->assertContains('modularous:TestModule:TestRoute', $tags);
         $this->assertCount(3, $tags);
     }
 
@@ -55,9 +55,9 @@ class CacheTagsTest extends TestCase
         $tags = $this->tagService->getModuleRouteTags('test-module', 'test-route', onlyRoute: true);
 
         $this->assertIsArray($tags);
-        $this->assertNotContains('modularity', $tags);
-        $this->assertNotContains('modularity:TestModule', $tags);
-        $this->assertContains('modularity:TestModule:TestRoute', $tags);
+        $this->assertNotContains('modularous', $tags);
+        $this->assertNotContains('modularous:TestModule', $tags);
+        $this->assertContains('modularous:TestModule:TestRoute', $tags);
         $this->assertCount(1, $tags);
     }
 
@@ -66,7 +66,7 @@ class CacheTagsTest extends TestCase
     {
         $tags = $this->tagService->getModuleTags('test-module-name');
 
-        $this->assertContains('modularity:TestModuleName', $tags);
+        $this->assertContains('modularous:TestModuleName', $tags);
     }
 
     /** @test */
@@ -74,7 +74,7 @@ class CacheTagsTest extends TestCase
     {
         $tags = $this->tagService->getModuleRouteTags('test-module', 'test-route-name');
 
-        $this->assertContains('modularity:TestModule:TestRouteName', $tags);
+        $this->assertContains('modularous:TestModule:TestRouteName', $tags);
     }
 
     /** @test */
@@ -83,10 +83,10 @@ class CacheTagsTest extends TestCase
         $tags = $this->tagService->getTypeTags('test-module', 'test-route', 'count');
 
         $this->assertIsArray($tags);
-        $this->assertContains('modularity', $tags);
-        $this->assertContains('modularity:TestModule', $tags);
-        $this->assertContains('modularity:TestModule:TestRoute', $tags);
-        $this->assertContains('modularity:TestModule:TestRoute:count', $tags);
+        $this->assertContains('modularous', $tags);
+        $this->assertContains('modularous:TestModule', $tags);
+        $this->assertContains('modularous:TestModule:TestRoute', $tags);
+        $this->assertContains('modularous:TestModule:TestRoute:count', $tags);
         $this->assertCount(4, $tags);
     }
 
@@ -95,7 +95,7 @@ class CacheTagsTest extends TestCase
     {
         $tag = $this->tagService->generateRelationTag('Company', 1);
 
-        $this->assertEquals('modularity:rel:Company:1', $tag);
+        $this->assertEquals('modularous:rel:Company:1', $tag);
     }
 
     /** @test */
@@ -103,7 +103,7 @@ class CacheTagsTest extends TestCase
     {
         $tag = $this->tagService->generateRelationTag('App\\Models\\Company', 1);
 
-        $this->assertEquals('modularity:rel:Company:1', $tag);
+        $this->assertEquals('modularous:rel:Company:1', $tag);
     }
 
     /** @test */
@@ -116,8 +116,8 @@ class CacheTagsTest extends TestCase
 
         $this->assertIsArray($tags);
         $this->assertCount(2, $tags);
-        $this->assertContains('modularity:rel:Company:1', $tags);
-        $this->assertContains('modularity:rel:User:2', $tags);
+        $this->assertContains('modularous:rel:Company:1', $tags);
+        $this->assertContains('modularous:rel:User:2', $tags);
     }
 
     /** @test */
@@ -129,9 +129,9 @@ class CacheTagsTest extends TestCase
 
         $this->assertIsArray($tags);
         $this->assertCount(3, $tags);
-        $this->assertContains('modularity:rel:Company:1', $tags);
-        $this->assertContains('modularity:rel:Company:2', $tags);
-        $this->assertContains('modularity:rel:Company:3', $tags);
+        $this->assertContains('modularous:rel:Company:1', $tags);
+        $this->assertContains('modularous:rel:Company:2', $tags);
+        $this->assertContains('modularous:rel:Company:3', $tags);
     }
 
     /** @test */
@@ -144,8 +144,8 @@ class CacheTagsTest extends TestCase
 
         $this->assertIsArray($tags);
         $this->assertCount(2, $tags);
-        $this->assertContains('modularity:rel:Company:1', $tags);
-        $this->assertContains('modularity:rel:Company:3', $tags);
+        $this->assertContains('modularous:rel:Company:1', $tags);
+        $this->assertContains('modularous:rel:Company:3', $tags);
     }
 
     /** @test */
@@ -167,10 +167,10 @@ class CacheTagsTest extends TestCase
         ]);
 
         $this->assertCount(4, $tags);
-        $this->assertContains('modularity:rel:Company:1', $tags);
-        $this->assertContains('modularity:rel:User:2', $tags);
-        $this->assertContains('modularity:rel:User:3', $tags);
-        $this->assertContains('modularity:rel:Product:4', $tags);
+        $this->assertContains('modularous:rel:Company:1', $tags);
+        $this->assertContains('modularous:rel:User:2', $tags);
+        $this->assertContains('modularous:rel:User:3', $tags);
+        $this->assertContains('modularous:rel:Product:4', $tags);
     }
 }
 
@@ -181,7 +181,7 @@ class ConcreteTagService
 {
     use CacheTags;
 
-    protected $prefix = 'modularity';
+    protected $prefix = 'modularous';
 
     protected function getPrefix(): string
     {

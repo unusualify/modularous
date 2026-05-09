@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Modules\Cms\Contracts\CanonicalUrlResolverInterface;
 
 /**
- * Strips the CMS public route prefix (e.g. {@see modularityConfig('cms_routing.front_route_prefix')})
+ * Strips the CMS public route prefix (e.g. {@see modularousConfig('cms_routing.front_route_prefix')})
  * so {@see \Modules\Cms\Entities\UrlRoute} rows (stored without that segment) match the request.
  */
 final class CmsFrontPath
@@ -22,7 +22,7 @@ final class CmsFrontPath
     public static function innerNormalizedPath(Request $request, CanonicalUrlResolverInterface $canonical): string
     {
         $full = $canonical->normalizePath($request->path());
-        $segment = trim((string) modularityConfig('cms_routing.front_route_prefix', 'cms'), '/');
+        $segment = trim((string) modularousConfig('cms_routing.front_route_prefix', 'cms'), '/');
 
         if ($segment === '') {
             return $full;
@@ -56,9 +56,9 @@ final class CmsFrontPath
     ): string {
         $canonical ??= app(CanonicalUrlResolverInterface::class);
 
-        $front = trim((string) modularityConfig('cms_routing.front_route_prefix', 'cms'), '/');
-        $defaultLocale = (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
-        $hideDefaultLocale = (bool) modularityConfig('cms_routing.hide_default_locale_segment', false);
+        $front = trim((string) modularousConfig('cms_routing.front_route_prefix', 'cms'), '/');
+        $defaultLocale = (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
+        $hideDefaultLocale = (bool) modularousConfig('cms_routing.hide_default_locale_segment', false);
 
         $locale = trim($locale, '/');
         $segments = [];

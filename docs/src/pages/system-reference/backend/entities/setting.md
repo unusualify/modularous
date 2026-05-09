@@ -6,7 +6,7 @@ sidebarTitle: Setting
 # Setting
 
 **File**: `src/Entities/Setting.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`  
 **Traits**: `HasImages`, `HasTranslation`
 
@@ -30,11 +30,11 @@ Key-value settings model with translation support and image attachments. Setting
 ## Configuration
 
 - `$useTranslationFallback` is enabled — missing translations fall back to the default locale.
-- Translation model: `Unusualify\Modularity\Entities\Translations\SettingTranslation`
+- Translation model: `Unusualify\Modularous\Entities\Translations\SettingTranslation`
 
 ## Table
 
-Resolved from `modularity.settings_table`, defaults to `twill_settings`.
+Resolved from `modularous.settings_table`, defaults to `twill_settings`.
 
 ## Related
 

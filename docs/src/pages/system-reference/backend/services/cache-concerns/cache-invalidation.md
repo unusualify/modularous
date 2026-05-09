@@ -47,10 +47,10 @@ This is the primary entry point called from model observers. It:
 
 ```php
 // After saving an Order model
-app(ModularityCacheService::class)->invalidateForModel($order);
+app(ModularousCacheService::class)->invalidateForModel($order);
 
 // Selectively — only invalidate index and count caches
-app(ModularityCacheService::class)->invalidateForModel($order, [
+app(ModularousCacheService::class)->invalidateForModel($order, [
     'index'  => true,
     'counts' => true,
     'formattedItem' => false,
@@ -58,5 +58,5 @@ app(ModularityCacheService::class)->invalidateForModel($order, [
 ], ['warmup' => false]);
 
 // Granular — flush only caches that referenced Company:5
-app(ModularityCacheService::class)->invalidateByRelatedModel(Company::class, 5);
+app(ModularousCacheService::class)->invalidateByRelatedModel(Company::class, 5);
 ```

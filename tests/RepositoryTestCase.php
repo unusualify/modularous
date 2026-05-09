@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 abstract class RepositoryTestCase extends ModelTestCase
 {

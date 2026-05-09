@@ -14,9 +14,9 @@ use Modules\Cms\Entities\UrlRoute;
 use Modules\Cms\Support\CmsFrontPath;
 use Modules\Cms\Support\CmsParentSegmentRegistryGate;
 use Modules\Cms\Support\CmsPublicSiteUrl;
-use Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
 
 /**
  * Discovers public page URLs from {@see UrlRoute} (kind = page_public) and builds sitemap.org XML
@@ -184,7 +184,7 @@ final class CmsSitemapBuildService
      */
     private function loadSitemapableItemIdsByGroup(): array
     {
-        $sitemapId = (int) modularityConfig('cms_sitemap.default_sitemap_id', 1);
+        $sitemapId = (int) modularousConfig('cms_sitemap.default_sitemap_id', 1);
         $t = (new CmsSitemapableItem)->getTable();
         if (! Schema::hasTable($t)) {
             return [];
@@ -255,7 +255,7 @@ final class CmsSitemapBuildService
      */
     private function defaultOverride(): array
     {
-        $defaults = (array) modularityConfig('cms_sitemap.defaults', []);
+        $defaults = (array) modularousConfig('cms_sitemap.defaults', []);
 
         $changefreq = (string) data_get($defaults, 'changefreq', 'weekly');
         $priority = data_get($defaults, 'priority', 0.5);
@@ -334,7 +334,7 @@ final class CmsSitemapBuildService
      */
     private function loadOverrides(): array
     {
-        $sitemapId = (int) modularityConfig('cms_sitemap.default_sitemap_id', 1);
+        $sitemapId = (int) modularousConfig('cms_sitemap.default_sitemap_id', 1);
         $t = (new CmsSitemapableItem)->getTable();
         if (! Schema::hasTable($t)) {
             return [];

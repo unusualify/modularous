@@ -6,10 +6,10 @@ sidebarTitle: LogMiddleware
 # LogMiddleware
 
 **File**: `src/Http/Middleware/LogMiddleware.php`  
-**Alias**: `modularity.log`  
+**Alias**: `modularous.log`  
 **Part of**: default stack (applied to ALL Modularous routes)
 
-Assigns a unique UUID to every request, attaches it to the `ModularityLog` context, and adds it to the HTTP response headers.
+Assigns a unique UUID to every request, attaches it to the `ModularousLog` context, and adds it to the HTTP response headers.
 
 ## What It Does
 
@@ -18,7 +18,7 @@ Request in  →  generate UUID  →  attach to log context  →  [next]  →  se
 ```
 
 1. Generates a UUID v4 string: `$requestId = Str::uuid()`.
-2. Calls `ModularityLog::withContext(['request_id' => $requestId])` — all log entries emitted during this request will include the `request_id` field.
+2. Calls `ModularousLog::withContext(['request_id' => $requestId])` — all log entries emitted during this request will include the `request_id` field.
 3. After the request is handled, sets `Request-Id: {uuid}` on the response headers.
 
 ## Response Header
@@ -38,4 +38,4 @@ The `Request-Id` header allows:
 ## Notes
 
 - `LogMiddleware` is the first middleware in the default stack (`defaultMiddlewares`), so the UUID is available from the very first log call in any subsequent middleware.
-- The context is attached via `ModularityLog::withContext()` which typically wraps a Laravel `Log::withContext()` call, making the UUID available in all Laravel log channels (file, Slack, etc.).
+- The context is attached via `ModularousLog::withContext()` which typically wraps a Laravel `Log::withContext()` call, making the UUID available in all Laravel log channels (file, Slack, etc.).

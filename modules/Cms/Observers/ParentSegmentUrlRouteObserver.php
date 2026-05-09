@@ -162,6 +162,6 @@ final class ParentSegmentUrlRouteObserver
 
     private function resyncEnabled(): bool
     {
-        return (bool) modularityConfig('cms_routing.resync_registry_after_parent_segments_change', true);
+        return (bool) modularousConfig('cms_routing.resync_registry_after_parent_segments_change', true);
     }
 }

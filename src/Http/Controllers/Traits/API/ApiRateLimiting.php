@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\API;
+namespace Unusualify\Modularous\Http\Controllers\Traits\API;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\RateLimiter;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait ApiRateLimiting
 {
@@ -48,7 +48,7 @@ trait ApiRateLimiting
      */
     protected function isRateLimitingEnabled(): bool
     {
-        return modularityConfig('api.rate_limiting.enabled', true);
+        return modularousConfig('api.rate_limiting.enabled', true);
     }
 
     /**
@@ -56,7 +56,7 @@ trait ApiRateLimiting
      */
     protected function getRateLimit(): int
     {
-        return modularityConfig('api.rate_limiting.per_minute', $this->rateLimit);
+        return modularousConfig('api.rate_limiting.per_minute', $this->rateLimit);
     }
 
     /**
@@ -64,7 +64,7 @@ trait ApiRateLimiting
      */
     protected function getRateLimitPerHour(): int
     {
-        return modularityConfig('api.rate_limiting.per_hour', $this->rateLimitPerHour);
+        return modularousConfig('api.rate_limiting.per_hour', $this->rateLimitPerHour);
     }
 
     /**
@@ -72,7 +72,7 @@ trait ApiRateLimiting
      */
     protected function getRateLimitBlockingTime(): int
     {
-        return modularityConfig('api.rate_limiting.blocking_time', $this->rateLimitBlockingTime);
+        return modularousConfig('api.rate_limiting.blocking_time', $this->rateLimitBlockingTime);
     }
 
     /**
@@ -80,7 +80,7 @@ trait ApiRateLimiting
      */
     protected function getBlockingMaximumAttempts(): int
     {
-        return modularityConfig('api.rate_limiting.blocking_maximum_attempts', $this->rateLimitBlockingMaximumAttempts);
+        return modularousConfig('api.rate_limiting.blocking_maximum_attempts', $this->rateLimitBlockingMaximumAttempts);
     }
 
     /**
@@ -88,7 +88,7 @@ trait ApiRateLimiting
      */
     protected function getBlockingTimeThreshold(): int
     {
-        return modularityConfig('api.rate_limiting.blocking_time_threshold', $this->rateLimitBlockingTimeThreshold);
+        return modularousConfig('api.rate_limiting.blocking_time_threshold', $this->rateLimitBlockingTimeThreshold);
     }
 
     /**
@@ -180,7 +180,7 @@ trait ApiRateLimiting
         // get request origin
         $host = $this->request->header('host');
 
-        if (str_contains($host, Modularity::getAppHost()) || str_contains($host, Modularity::getAdminAppHost())) {
+        if (str_contains($host, Modularous::getAppHost()) || str_contains($host, Modularous::getAdminAppHost())) {
             return null;
         }
 

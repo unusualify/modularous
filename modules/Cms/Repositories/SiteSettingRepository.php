@@ -3,7 +3,7 @@
 namespace Modules\Cms\Repositories;
 
 use Modules\Cms\Entities\SiteSetting;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class SiteSettingRepository extends Repository
 {

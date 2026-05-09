@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class MakeThemeCommand extends BaseCommand
 {
@@ -15,7 +15,7 @@ class MakeThemeCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:theme';
+    protected $name = 'modularous:make:theme';
 
     /**
      * The console command description.
@@ -56,22 +56,22 @@ class MakeThemeCommand extends BaseCommand
 
         $success = true;
 
-        $jsSource = resource_path("vendor/modularity/themes/{$name}/{$name}.js");
+        $jsSource = resource_path("vendor/modularous/themes/{$name}/{$name}.js");
         if (! $this->filesystem->isFile($jsSource)) {
             $this->comment("{$jsSource} file not exists");
 
             return E_ERROR;
         }
 
-        $sassSource = resource_path("vendor/modularity/themes/{$name}/sass");
+        $sassSource = resource_path("vendor/modularous/themes/{$name}/sass");
         if (! $this->filesystem->isDirectory($sassSource)) {
             $this->comment("{$sassSource} directory not exists");
 
             return E_ERROR;
         }
 
-        $jsTarget = get_modularity_vendor_path("vue/src/js/config/themes/{$name}.js");
-        $sassTarget = get_modularity_vendor_path("vue/src/sass/themes/{$name}");
+        $jsTarget = get_modularous_vendor_path("vue/src/js/config/themes/{$name}.js");
+        $sassTarget = get_modularous_vendor_path("vue/src/sass/themes/{$name}");
 
         $this->filesystem->copy(
             $jsSource, $jsTarget
@@ -81,12 +81,12 @@ class MakeThemeCommand extends BaseCommand
             $sassSource, $sassTarget
         );
 
-        // delete custom modularity paths
-        $this->filesystem->delete(get_modularity_vendor_path("vue/src/js/config/themes/customs/{$name}.js"));
-        $this->filesystem->deleteDirectory(get_modularity_vendor_path("vue/src/sass/themes/customs/{$name}"));
+        // delete custom modularous paths
+        $this->filesystem->delete(get_modularous_vendor_path("vue/src/js/config/themes/customs/{$name}.js"));
+        $this->filesystem->deleteDirectory(get_modularous_vendor_path("vue/src/sass/themes/customs/{$name}"));
 
         // delete custom resource path
-        $this->filesystem->deleteDirectory(resource_path("vendor/modularity/themes/{$name}"));
+        $this->filesystem->deleteDirectory(resource_path("vendor/modularous/themes/{$name}"));
 
         $this->writeThemeExport($name);
 
@@ -121,7 +121,7 @@ class MakeThemeCommand extends BaseCommand
 
     protected function writeThemeExport($themeName)
     {
-        $filePath = get_modularity_vendor_path('vue/src/js/config/themes/index.js');
+        $filePath = get_modularous_vendor_path('vue/src/js/config/themes/index.js');
 
         $content = get_file_string($filePath);
 

@@ -6,7 +6,7 @@ sidebarTitle: MetricController
 # MetricController
 
 **File**: `src/Http/Controllers/MetricController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Illuminate\Routing\Controller`
 
 Single-action invokable controller that resolves metric values for dashboard widgets. Supports connector-based metric providers and date-range filtering.

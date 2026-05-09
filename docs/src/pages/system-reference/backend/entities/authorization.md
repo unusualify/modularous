@@ -6,7 +6,7 @@ sidebarTitle: Authorization
 # Authorization
 
 **File**: `src/Entities/Authorization.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Polymorphic pivot model that links an authorized entity (e.g. a user) to an authorizable model. Dispatches notification events when records are created or the authorized party changes.
@@ -39,7 +39,7 @@ The model this authorization applies to.
 
 ## Table
 
-Resolved from `modularity.tables.authorizations`, defaults to `modularity_authorizations`.
+Resolved from `modularous.tables.authorizations`, defaults to `modularous_authorizations`.
 
 ## Related
 

@@ -6,7 +6,7 @@ sidebarTitle: State
 # State
 
 **File**: `src/Entities/State.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`  
 **Traits**: `HasTranslation`
 
@@ -30,7 +30,7 @@ A translatable state definition (e.g. Draft, Active, In Review, Closed). States 
 
 ## Table
 
-Resolved from `modularity.tables.states`, defaults to `um_states`.
+Resolved from `modularous.tables.states`, defaults to `um_states`.
 
 ## Related
 

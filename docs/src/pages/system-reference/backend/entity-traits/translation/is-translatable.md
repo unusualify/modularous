@@ -5,7 +5,7 @@ sidebarTitle: IsTranslatable
 
 # IsTranslatable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\IsTranslatable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\IsTranslatable`
 
 A single-method detection helper. Does not add relationships, boot hooks, or any storage. Use it alongside `HasTranslation` to safely check at runtime whether a model is translatable without assuming the trait is present.
 
@@ -19,7 +19,7 @@ A single-method detection helper. Does not add relationships, boot hooks, or any
 
 ### Checks performed
 
-1. Model uses `Unusualify\Modularity\Entities\Traits\HasTranslation`
+1. Model uses `Unusualify\Modularous\Entities\Traits\HasTranslation`
 2. Model has the `translatedAttributes` property
 3. If `$columns` is given, at least one column must be in `translatedAttributes`
 
@@ -28,8 +28,8 @@ A single-method detection helper. Does not add relationships, boot hooks, or any
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
-use Unusualify\Modularity\Entities\Traits\IsTranslatable;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Traits\IsTranslatable;
 
 class Article extends Model
 {

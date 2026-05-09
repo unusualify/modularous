@@ -8,8 +8,8 @@ return new class extends Migration
 {
     public function up()
     {
-        $countryTable = modularityConfig('tables.countries', 'um_countries');
-        $countryTranslationTable = modularityConfig('tables.country_translations', 'um_country_translations');
+        $countryTable = modularousConfig('tables.countries', 'um_countries');
+        $countryTranslationTable = modularousConfig('tables.country_translations', 'um_country_translations');
 
         Schema::create($countryTable, function (Blueprint $table) {
             // this will create an id, name field
@@ -30,8 +30,8 @@ return new class extends Migration
 
     public function down()
     {
-        $countryTable = modularityConfig('tables.countries', 'um_countries');
-        $countryTranslationTable = modularityConfig('tables.country_translations', 'um_country_translations');
+        $countryTable = modularousConfig('tables.countries', 'um_countries');
+        $countryTranslationTable = modularousConfig('tables.country_translations', 'um_country_translations');
 
         Schema::dropIfExists($countryTranslationTable);
         Schema::dropIfExists($countryTable);

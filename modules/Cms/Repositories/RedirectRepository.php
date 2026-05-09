@@ -4,7 +4,7 @@ namespace Modules\Cms\Repositories;
 
 use Modules\Cms\Entities\Redirect;
 use Modules\Cms\Repositories\Traits\CmsRedirectUrlRouteRegistryTrait;
-use Unusualify\Modularity\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Repository;
 
 class RedirectRepository extends Repository
 {

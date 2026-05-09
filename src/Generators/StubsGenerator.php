@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Generators;
+namespace Unusualify\Modularous\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
 use Illuminate\Filesystem\Filesystem;
 use Nwidart\Modules\FileRepository;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Module;
 
 class StubsGenerator extends Generator
 {

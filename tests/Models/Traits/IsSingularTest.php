@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Scopes\SingularScope;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Scopes\SingularScope;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class IsSingularTest extends ModelTestCase
 {
@@ -22,7 +22,7 @@ class IsSingularTest extends ModelTestCase
     {
         $model = new TestSingularModel;
         $traits = class_uses_recursive($model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\IsSingular', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\IsSingular', $traits);
     }
 
     public function test_boot_is_singular_adds_global_scope()
@@ -219,7 +219,7 @@ class IsSingularTest extends ModelTestCase
     {
         $model = new TestSingularModel;
 
-        $expectedTable = Modularity::config('tables.singletons', 'modularity_singletons');
+        $expectedTable = Modularous::config('tables.singletons', 'modularous_singletons');
         $this->assertEquals($expectedTable, $model->getTable());
     }
 

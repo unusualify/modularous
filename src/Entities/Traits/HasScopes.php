@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
-use Unusualify\Modularity\Entities\Traits\Core\HasScopes as CoreHasScopes;
+use Unusualify\Modularous\Entities\Traits\Core\HasScopes as CoreHasScopes;
 
 /**
- * @deprecated Use Unusualify\Modularity\Entities\Traits\Core\HasScopes instead
- * @see Unusualify\Modularity\Entities\Traits\Core\HasScopes
+ * @deprecated Use Unusualify\Modularous\Entities\Traits\Core\HasScopes instead
+ * @see Unusualify\Modularous\Entities\Traits\Core\HasScopes
  */
 trait HasScopes
 {

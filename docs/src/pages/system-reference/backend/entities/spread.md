@@ -6,7 +6,7 @@ sidebarTitle: Spread
 # Spread
 
 **File**: `src/Entities/Spread.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Stores dynamic key-value JSON data attached to a parent model via a polymorphic relationship. Acts as an extension mechanism to add arbitrary fields to a model without schema changes.
@@ -27,7 +27,7 @@ The parent model this spread data belongs to.
 
 ## Table
 
-Resolved from `modularity.tables.spreads`, defaults to `um_spreads`.
+Resolved from `modularous.tables.spreads`, defaults to `um_spreads`.
 
 ## Related
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PDO;
-use Unusualify\Modularity\Traits\Traitify;
+use Unusualify\Modularous\Traits\Traitify;
 
 trait HasScopes
 {

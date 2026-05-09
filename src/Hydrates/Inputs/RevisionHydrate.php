@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
-use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularous\Entities\Enums\Permission;
 
 class RevisionHydrate extends InputHydrate
 {

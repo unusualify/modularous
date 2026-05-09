@@ -5,7 +5,7 @@ sidebarTitle: HasCreator
 
 # HasCreator
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasCreator`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasCreator`
 
 Records which authenticated user created the model via a `CreatorRecord` morph. Supports custom creator overrides for admin-on-behalf-of workflows. Integrates with Spatie Permissions for company-level access control.
 
@@ -90,7 +90,7 @@ Registers `creator_record_exists` via `addGlobalScopesHasCreator()`.
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
 
 class Article extends Model
 {

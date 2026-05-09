@@ -33,7 +33,7 @@ composer require unusualify/modularous:^0.58 --update-with-all-dependencies
 ### 2. Republish configuration (if prompted)
 
 ```bash
-php artisan vendor:publish --tag=modularity-config --force
+php artisan vendor:publish --tag=modularous-config --force
 ```
 
 Diff the result against your existing config before committing — `--force` overwrites.
@@ -41,7 +41,7 @@ Diff the result against your existing config before committing — `--force` ove
 ### 3. Re-sync host Laravel configs
 
 ```bash
-php artisan modularity:update:laravel:configs
+php artisan modularous:update:laravel:configs
 ```
 
 Patches `config/auth.php` guards and related files. See [update:laravel:configs](/guide/console/update/update-laravel-configs).
@@ -49,13 +49,13 @@ Patches `config/auth.php` guards and related files. See [update:laravel:configs]
 ### 4. Run migrations
 
 ```bash
-php artisan modularity:migrate
+php artisan modularous:migrate
 ```
 
 ### 5. Republish stubs (if you generate code)
 
 ```bash
-php artisan modularity:make:stubs --force
+php artisan modularous:make:stubs --force
 ```
 
 Only needed if you have published stubs locally. Skip otherwise.
@@ -64,13 +64,13 @@ Only needed if you have published stubs locally. Skip otherwise.
 
 ```bash
 npm install
-php artisan modularity:build
+php artisan modularous:build
 ```
 
 ### 7. Clear caches
 
 ```bash
-php artisan modularity:cache:clear
+php artisan modularous:cache:clear
 php artisan config:clear
 php artisan view:clear
 ```
@@ -94,24 +94,24 @@ Feature release with substantial additions — review these before upgrading.
 
 - **Currency provider interface** — modules can now provide their own currency data source. See [Currency providers](/system-reference/backend/services/currency/overview).
 - **2FA login routes** — enable via the auth component config.
-- **Command discovery** — `php artisan modularity:list` now scans all registered commands.
-- **Route status command** — `php artisan modularity:route:status` lists enable/disable status per module.
+- **Command discovery** — `php artisan modularous:list` now scans all registered commands.
+- **Route status command** — `php artisan modularous:route:status` lists enable/disable status per module.
 - **Ziggy integration** — Laravel routes are exposed to the Vue side via Ziggy.
 - **Custom exception class** — `Unusualify\Modularous\Exceptions\*` replaces direct `\Exception` throws.
-- **Deferred auth config** — auth component and pages now use deferred config. Re-run `modularity:update:laravel:configs` to pick up defaults.
+- **Deferred auth config** — auth component and pages now use deferred config. Re-run `modularous:update:laravel:configs` to pick up defaults.
 - **InputRenderer + registry** — dynamic component mapping for form inputs. Existing `registerInputType` calls keep working.
 
 #### Breaking / behaviour changes
 
 - Composition API is now enforced for new Vue components. Existing Options API components keep working; new generator output is Composition.
-- Auth views are published separately — run `php artisan vendor:publish --tag=modularity-auth-views` if you customised them.
+- Auth views are published separately — run `php artisan vendor:publish --tag=modularous-auth-views` if you customised them.
 
 #### Migration checklist
 
 - [ ] Run the general upgrade procedure above
 - [ ] If you rely on currency exchange, either install `SystemPricing` or implement a custom `CurrencyProviderInterface` binding
-- [ ] If you customised auth views, republish with `--tag=modularity-auth-views`
-- [ ] Review `config/modularity.php` for new keys after `--force` republish
+- [ ] If you customised auth views, republish with `--tag=modularous-auth-views`
+- [ ] Review `config/modularous.php` for new keys after `--force` republish
 
 ### v0.57.x
 
@@ -137,7 +137,7 @@ composer require unusualify/modularous:0.58.0 --update-with-all-dependencies
 ### 2. Roll back migrations
 
 ```bash
-php artisan modularity:migrate:rollback
+php artisan modularous:migrate:rollback
 ```
 
 Rollback only undoes the **last batch**. For multiple batches, run repeatedly — or check the migration table and target specific ones.
@@ -145,7 +145,7 @@ Rollback only undoes the **last batch**. For multiple batches, run repeatedly �
 ### 3. Clear all caches
 
 ```bash
-php artisan modularity:cache:clear
+php artisan modularous:cache:clear
 php artisan config:clear
 php artisan view:clear
 ```
@@ -155,7 +155,7 @@ php artisan view:clear
 If `vendor:publish --force` overwrote a customised file and you didn't diff before committing, restore it from git:
 
 ```bash
-git checkout HEAD -- config/modularity.php
+git checkout HEAD -- config/modularous.php
 ```
 
 ---
@@ -179,8 +179,8 @@ Check `database/migrations/` and `modules/*/Database/Migrations/` for duplicate 
 The input registry may not have loaded. Clear and rebuild:
 
 ```bash
-php artisan modularity:cache:clear
-php artisan modularity:build
+php artisan modularous:cache:clear
+php artisan modularous:build
 ```
 
 ### Echo / broadcast events stop firing

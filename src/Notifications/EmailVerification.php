@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Notifications;
+namespace Unusualify\Modularous\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;

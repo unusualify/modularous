@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Contracts;
+namespace Unusualify\Modularous\Repositories\Contracts;
 
 use Illuminate\Database\Eloquent\Model;
 

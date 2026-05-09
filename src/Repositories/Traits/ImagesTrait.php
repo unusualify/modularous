@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Entities\Model;
 
 trait ImagesTrait
 {
@@ -134,7 +134,7 @@ trait ImagesTrait
                 return;
             }
 
-            $pivot = $newMedia->newPivot($object, Arr::except($spec, ['id']), modularityConfig('tables.mediables', 'umod_mediables'), true);
+            $pivot = $newMedia->newPivot($object, Arr::except($spec, ['id']), modularousConfig('tables.mediables', 'umod_mediables'), true);
             $newMedia->setRelation('pivot', $pivot);
             $mediasCollection->push($newMedia);
         });
@@ -202,7 +202,7 @@ trait ImagesTrait
         $relatedKey = $object->medias()->getRelated()->getQualifiedKeyName();
         $relation = $object->medias()->wherePivot('role', $role);
 
-        if (modularityConfig('media_library.translated_form_fields', false)) {
+        if (modularousConfig('media_library.translated_form_fields', false)) {
             $relation->wherePivot('locale', $locale);
         }
 
@@ -282,7 +282,7 @@ trait ImagesTrait
 
     public function pushImage($object, $images, $imagesData, $role, $locale, $index = null)
     {
-        $mediablesTable = modularityConfig('tables.mediables', 'um_mediables');
+        $mediablesTable = modularousConfig('tables.mediables', 'um_mediables');
         Collection::make($imagesData)->each(function ($image) use ($object, $mediablesTable, &$images, $role, $locale, $index) {
             if (! is_array($image) || ! isset($image['id'])) {
                 return;

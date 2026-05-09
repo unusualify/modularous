@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\TemporaryFilepond;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\TemporaryFilepond;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class TemporaryFilepondTest extends ModelTestCase
 {
@@ -15,7 +15,7 @@ class TemporaryFilepondTest extends ModelTestCase
     {
         $temporaryFilepond = new TemporaryFilepond;
         $this->assertEquals(
-            modularityConfig('tables.filepond_temporaries', 'temporary_fileponds'),
+            modularousConfig('tables.filepond_temporaries', 'temporary_fileponds'),
             $temporaryFilepond->getTable()
         );
     }

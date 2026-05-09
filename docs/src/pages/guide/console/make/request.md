@@ -7,7 +7,7 @@ sidebarTitle: make:request
 
 > Create a Form Request class for a module
 
-**Signature**: `modularity:make:request`
+**Signature**: `modularous:make:request`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Generates a Form Request extending the configured `base_request`. The `--rules` 
 ## Usage
 
 ```
-modularity:make:request [options] <module> <request>
+modularous:make:request [options] <module> <request>
 ```
 
 ### Arguments
@@ -45,14 +45,14 @@ modularity:make:request [options] <module> <request>
 ### Basic request
 
 ```bash
-php artisan modularity:make:request Blog Post
+php artisan modularous:make:request Blog Post
 # → Blog/Http/Requests/PostRequest.php
 ```
 
 ### Request with inline rules
 
 ```bash
-php artisan modularity:make:request Blog Post \
+php artisan modularous:make:request Blog Post \
     --rules="title:required|string|max:255,body:required|string,published_at:nullable|date"
 ```
 

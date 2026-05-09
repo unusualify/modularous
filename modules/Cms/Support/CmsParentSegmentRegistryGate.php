@@ -27,7 +27,7 @@ final class CmsParentSegmentRegistryGate
         }
 
         if (! classHasTrait($modelClass, \Modules\Cms\Entities\Concerns\HasParentSegment::class)
-        && ! classHasTrait($modelClass, \Unusualify\Modularity\Entities\Traits\IsSingular::class)) {
+        && ! classHasTrait($modelClass, \Unusualify\Modularous\Entities\Traits\IsSingular::class)) {
             return false;
         }
 

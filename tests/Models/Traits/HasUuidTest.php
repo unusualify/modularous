@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Entities\Traits\HasUuid;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Traits\HasUuid;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasUuidTest extends ModelTestCase
 {
@@ -30,7 +30,7 @@ class HasUuidTest extends ModelTestCase
     {
         $model = new TestUuidModel;
         $traits = class_uses_recursive($model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasUuid', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasUuid', $traits);
     }
 
     public function test_boot_has_uuid_generates_ordered_uuid_on_creating()

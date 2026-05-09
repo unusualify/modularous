@@ -7,7 +7,7 @@ sidebarTitle: make:stubs
 
 > Selectively regenerate stub files for an existing route
 
-**Signature**: `modularity:make:stubs`
+**Signature**: `modularous:make:stubs`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Re-runs stub generation for an existing module route without creating migrations
 ## Usage
 
 ```
-modularity:make:stubs [options] <module> <route>
+modularous:make:stubs [options] <module> <route>
 ```
 
 ### Arguments
@@ -48,19 +48,19 @@ modularity:make:stubs [options] <module> <route>
 ### Regenerate all stubs for a route
 
 ```bash
-php artisan modularity:make:stubs Blog Post --force
+php artisan modularous:make:stubs Blog Post --force
 ```
 
 ### Regenerate only the controller stubs
 
 ```bash
-php artisan modularity:make:stubs Blog Post --only=controller,controller-api
+php artisan modularous:make:stubs Blog Post --only=controller,controller-api
 ```
 
 ### Regenerate all except migration
 
 ```bash
-php artisan modularity:make:stubs Blog Post --except=migration
+php artisan modularous:make:stubs Blog Post --except=migration
 ```
 
 ---

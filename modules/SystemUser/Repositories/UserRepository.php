@@ -2,11 +2,11 @@
 
 namespace Modules\SystemUser\Repositories;
 
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
-use Unusualify\Modularity\Repositories\Traits\OauthTrait;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Repositories\Traits\OauthTrait;
 
 class UserRepository extends Repository
 {

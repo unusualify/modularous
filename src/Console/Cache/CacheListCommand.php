@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Cache;
+namespace Unusualify\Modularous\Console\Cache;
 
 use Illuminate\Cache\FileStore;
 use Illuminate\Console\Command;
@@ -21,7 +21,7 @@ class CacheListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'modularity:cache:list {--limit=20 : Limit the number of items to display}';
+    protected $signature = 'modularous:cache:list {--limit=20 : Limit the number of items to display}';
 
     /**
      * The console command description.

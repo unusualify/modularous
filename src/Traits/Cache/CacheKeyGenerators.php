@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Traits\Cache;
+namespace Unusualify\Modularous\Traits\Cache;
 
 use Illuminate\Support\Arr;
-use Unusualify\Modularity\Facades\ModularityCache;
+use Unusualify\Modularous\Facades\ModularousCache;
 
 /**
  * Cache key generator methods.
@@ -17,7 +17,7 @@ trait CacheKeyGenerators
      */
     public function generateRecordKey(string $moduleName, string $moduleRouteName, $id): string
     {
-        return ModularityCache::generateCacheKey($moduleName, $moduleRouteName, 'record', ['id' => $id]);
+        return ModularousCache::generateCacheKey($moduleName, $moduleRouteName, 'record', ['id' => $id]);
     }
 
     /**
@@ -25,7 +25,7 @@ trait CacheKeyGenerators
      */
     protected function createCacheKey($moduleName, $moduleRouteName, string $specifierKey, array $specifierData): string
     {
-        return ModularityCache::generateCacheKey($moduleName, $moduleRouteName, $specifierKey, $specifierData);
+        return ModularousCache::generateCacheKey($moduleName, $moduleRouteName, $specifierKey, $specifierData);
     }
 
     /**

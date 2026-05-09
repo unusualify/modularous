@@ -1,8 +1,8 @@
-@extends($MODULARITY_VIEW_NAMESPACE . '::layouts.master')
+@extends($MODULAROUS_VIEW_NAMESPACE . '::layouts.master')
 
 @push('head_last_js')
     {{
-        ModularityVite::useHotFile(public_path('modularity.hot'))->withEntryPoints(['src/js/core-free.js'])
+        ModularousVite::useHotFile(public_path('modularous.hot'))->withEntryPoints(['src/js/core-free.js'])
     }}
 @endpush
 
@@ -15,7 +15,7 @@
                     status-code="404"
                     status-text="Page Not Found"
                     description="Sorry, the page you are looking for could not be found."
-                    alert-text="This is a custom 404 page for modularity authenticated users."
+                    alert-text="This is a custom 404 page for modularous authenticated users."
                     alert="error"
                 >
             </v-col>

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Application;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\SendsEmailVerificationRegister;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\SendsEmailVerificationRegister;
 
 class PreRegisterController extends Controller
 {
@@ -24,6 +24,6 @@ class PreRegisterController extends Controller
 
     public function showEmailForm()
     {
-        return $this->viewFactory->make(modularityBaseKey() . '::auth.register', $this->buildAuthViewData('pre_register'));
+        return $this->viewFactory->make(modularousBaseKey() . '::auth.register', $this->buildAuthViewData('pre_register'));
     }
 }

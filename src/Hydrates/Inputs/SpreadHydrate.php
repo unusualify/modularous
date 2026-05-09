@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class SpreadHydrate extends InputHydrate
 {
@@ -36,7 +36,7 @@ class SpreadHydrate extends InputHydrate
         }
 
         if (isset($input['_moduleName']) && isset($input['_routeName'])) {
-            $module = Modularity::find($input['_moduleName']);
+            $module = Modularous::find($input['_moduleName']);
             $model = App::make($module->getRouteClass($input['_routeName'], 'model'));
 
             if (! isset($input['reservedKeys'])) {

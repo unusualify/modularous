@@ -3,7 +3,7 @@
 namespace Modules\Cms\Entities\Slugs;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\Model;
 
 class PageSlug extends Model
 {
@@ -22,6 +22,6 @@ class PageSlug extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.cms_page_slugs', 'um_cms_page_slugs');
+        return modularousConfig('tables.cms_page_slugs', 'um_cms_page_slugs');
     }
 }

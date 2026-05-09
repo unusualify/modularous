@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void addRoute(string $host, string $action)
  * @method static void removeRoute(string $host)
  *
- * @see \Unusualify\Modularity\Suppo\HostRouting
+ * @see \Unusualify\Modularous\Suppo\HostRouting
  */
 class HostRouting extends Facade
 {

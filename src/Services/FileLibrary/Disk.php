@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services\FileLibrary;
+namespace Unusualify\Modularous\Services\FileLibrary;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManager;
@@ -29,6 +29,6 @@ class Disk implements FileServiceInterface
      */
     public function getUrl($id)
     {
-        return $this->filesystemManager->disk($this->config->get(modularityBaseKey() . '.file_library.disk'))->url($id);
+        return $this->filesystemManager->disk($this->config->get(modularousBaseKey() . '.file_library.disk'))->url($id);
     }
 }

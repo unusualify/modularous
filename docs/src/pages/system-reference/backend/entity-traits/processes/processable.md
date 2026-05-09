@@ -5,7 +5,7 @@ sidebarTitle: Processable
 
 # Processable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Processable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Processable`
 
 Single-process workflow: models go through a `preparing → waiting_for_confirmation → confirmed / rejected` lifecycle. Uses `HasFileponds` (for evidence file uploads) and `ProcessableScopes` for query filtering.
 
@@ -68,7 +68,7 @@ Provided by `ProcessableScopes`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Processable;
+use Unusualify\Modularous\Entities\Traits\Processable;
 
 class Application extends Model
 {

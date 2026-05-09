@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Entities\ChatMessage;
+use Unusualify\Modularous\Entities\ChatMessage;
 
 trait ChatableScopes
 {
@@ -63,7 +63,7 @@ trait ChatableScopes
      */
     public function scopeHasUnansweredChatMessageFromCreator(Builder $query): Builder
     {
-        $creatorRecordTable = modularityConfig('tables.creator_records', 'um_creator_records');
+        $creatorRecordTable = modularousConfig('tables.creator_records', 'um_creator_records');
         $chatMessageTable = (new ChatMessage)->getTable();
 
         // return $query->whereHas('latestChatMessage', function ($messageQuery) use ($creatorRecordTable, $chatMessageTable) {

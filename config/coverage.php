@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'clover_dir' => env('COVERAGE_CLOVER_DIR', get_modularity_vendor_path()),
+    'clover_dir' => env('COVERAGE_CLOVER_DIR', get_modularous_vendor_path()),
 
     /*
     |--------------------------------------------------------------------------
@@ -150,9 +150,9 @@ return [
         'comment_on_pr' => env('COVERAGE_PR_CHECK_COMMENT', true),
     ],
 
-    'gemini_api_key' => env('MODULARITY_COVERAGE_GEMINI_API_KEY'),
-    'anthropic_api_key' => env('MODULARITY_COVERAGE_ANTHROPIC_API_KEY'),
-    'openai_api_key' => env('MODULARITY_COVERAGE_OPENAI_API_KEY'),
-    'ollama_endpoint' => env('MODULARITY_COVERAGE_OLLAMA_ENDPOINT', 'http://localhost:11434'),
+    'gemini_api_key' => env('MODULAROUS_COVERAGE_GEMINI_API_KEY'),
+    'anthropic_api_key' => env('MODULAROUS_COVERAGE_ANTHROPIC_API_KEY'),
+    'openai_api_key' => env('MODULAROUS_COVERAGE_OPENAI_API_KEY'),
+    'ollama_endpoint' => env('MODULAROUS_COVERAGE_OLLAMA_ENDPOINT', 'http://localhost:11434'),
 
 ];

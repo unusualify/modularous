@@ -9,10 +9,10 @@ class CanonicalUrlResolver implements CanonicalUrlResolverInterface
 {
     public function resolve(?string $host, string $path, ?string $locale = null, array $options = []): array
     {
-        $canonicalHost = (string) ($options['canonical_host'] ?? modularityConfig('cms_routing.canonical_host', request()->getHost()));
-        $defaultLocale = (string) ($options['default_locale'] ?? modularityConfig('cms_routing.default_locale', app()->getLocale()));
-        $hideDefaultLocale = (bool) ($options['hide_default_locale_segment'] ?? modularityConfig('cms_routing.hide_default_locale_segment', false));
-        $redirectToCanonical = (bool) ($options['redirect_to_canonical'] ?? modularityConfig('cms_routing.redirect_to_canonical', true));
+        $canonicalHost = (string) ($options['canonical_host'] ?? modularousConfig('cms_routing.canonical_host', request()->getHost()));
+        $defaultLocale = (string) ($options['default_locale'] ?? modularousConfig('cms_routing.default_locale', app()->getLocale()));
+        $hideDefaultLocale = (bool) ($options['hide_default_locale_segment'] ?? modularousConfig('cms_routing.hide_default_locale_segment', false));
+        $redirectToCanonical = (bool) ($options['redirect_to_canonical'] ?? modularousConfig('cms_routing.redirect_to_canonical', true));
 
         $locale = $locale ?: $defaultLocale;
         $normalizedPath = $this->normalizePath($path);
@@ -49,13 +49,13 @@ class CanonicalUrlResolver implements CanonicalUrlResolverInterface
         $path = trim($path);
         $path = '/' . ltrim($path, '/');
 
-        if (modularityConfig('cms_seo.canonical.force_lowercase_path', true)) {
+        if (modularousConfig('cms_seo.canonical.force_lowercase_path', true)) {
             $path = mb_strtolower($path);
         }
 
         $path = preg_replace('#/+#', '/', $path) ?: '/';
 
-        if (modularityConfig('cms_seo.canonical.trim_trailing_slash', true) && mb_strlen($path) > 1) {
+        if (modularousConfig('cms_seo.canonical.trim_trailing_slash', true) && mb_strlen($path) > 1) {
             $path = rtrim($path, '/');
         }
 

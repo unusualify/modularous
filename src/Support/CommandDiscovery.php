@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use Illuminate\Console\Command;
 

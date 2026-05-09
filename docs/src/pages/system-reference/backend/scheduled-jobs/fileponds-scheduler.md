@@ -5,14 +5,14 @@ sidebarTitle: FilepondsScheduler
 
 # FilepondsScheduler
 
-`Unusualify\Modularity\Schedulers\FilepondsScheduler`
+`Unusualify\Modularous\Schedulers\FilepondsScheduler`
 
 Artisan command that cleans up abandoned filepond uploads. It runs **daily** via the Modularous scheduler registration and can also be triggered manually at any time.
 
 ## Signature
 
 ```
-modularity:fileponds:scheduler {--days=7}
+modularous:fileponds:scheduler {--days=7}
 ```
 
 | Option | Default | Description |
@@ -49,20 +49,20 @@ Steps performed:
 Registered as `->daily()` in `BaseServiceProvider`. The default `--days=7` retention period is baked into the schedule entry:
 
 ```php
-$schedule->command('modularity:fileponds:scheduler --days=7')->daily();
+$schedule->command('modularous:fileponds:scheduler --days=7')->daily();
 ```
 
 ## Manual Usage
 
 ```bash
 # Use the default 7-day retention
-php artisan modularity:fileponds:scheduler
+php artisan modularous:fileponds:scheduler
 
 # Extend retention to 30 days
-php artisan modularity:fileponds:scheduler --days=30
+php artisan modularous:fileponds:scheduler --days=30
 
 # Aggressive cleanup: delete anything older than 1 day
-php artisan modularity:fileponds:scheduler --days=1
+php artisan modularous:fileponds:scheduler --days=1
 ```
 
 ## Logging
@@ -70,7 +70,7 @@ php artisan modularity:fileponds:scheduler --days=1
 On completion, writes an info entry to the `scheduler` log channel:
 
 ```
-Modularity: Deleted {N} expired temporary fileponds in last {days} days
+Modularous: Deleted {N} expired temporary fileponds in last {days} days
 ```
 
 No error handling wraps this command — exceptions propagate to the scheduler and are captured by Laravel's default scheduler error handling.

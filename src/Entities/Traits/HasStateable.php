@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Modules\SystemNotification\Events\StateableUpdated;
-use Unusualify\Modularity\Entities\Scopes\StateableScopes;
-use Unusualify\Modularity\Entities\State;
-use Unusualify\Modularity\Entities\Stateable;
+use Unusualify\Modularous\Entities\Scopes\StateableScopes;
+use Unusualify\Modularous\Entities\State;
+use Unusualify\Modularous\Entities\Stateable;
 
 trait HasStateable
 {
@@ -118,7 +118,7 @@ trait HasStateable
             'id',
             'state_id'
         )
-        // ->where(modularityConfig('tables.stateables', 'um_stateables') . '.is_active', 1)
+        // ->where(modularousConfig('tables.stateables', 'um_stateables') . '.is_active', 1)
             ->where($stateableTable . '.stateable_type', get_class($this));
     }
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Entities\Media;
-use Unusualify\Modularity\Repositories\MediaRepository;
-use Unusualify\Modularity\Services\MediaLibrary\ImageService;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Media;
+use Unusualify\Modularous\Repositories\MediaRepository;
+use Unusualify\Modularous\Services\MediaLibrary\ImageService;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class MediaRepositoryTest extends RepositoryTestCase
 {

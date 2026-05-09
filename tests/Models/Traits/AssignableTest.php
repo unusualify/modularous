@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
-use Unusualify\Modularity\Entities\Traits\Assignable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Entities\Traits\Assignable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class AssignableTest extends ModelTestCase
 {
@@ -69,7 +69,7 @@ class AssignableTest extends ModelTestCase
     public function test_model_uses_assignable_trait()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\Assignable', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\Assignable', $traits);
     }
 
     public function test_assignments_relationship_exists()
@@ -116,7 +116,7 @@ class AssignableTest extends ModelTestCase
 
         $assignment = $this->model->assignments()->create($assignmentData);
 
-        $assignmentTable = modularityConfig('tables.assignments', 'm_assignments');
+        $assignmentTable = modularousConfig('tables.assignments', 'm_assignments');
         $this->assertDatabaseHas($assignmentTable, [
             'assignable_id' => $this->model->id,
             'assignable_type' => get_class($this->model),
@@ -199,7 +199,7 @@ class AssignableTest extends ModelTestCase
 
         // Check if assignment still exists (depends on cascade configuration)
         // Note: Without foreign key constraints, assignments won't be automatically deleted
-        $assignmentTable = modularityConfig('tables.assignments', 'm_assignments');
+        $assignmentTable = modularousConfig('tables.assignments', 'm_assignments');
         $this->assertDatabaseMissing($assignmentTable, [
             'id' => $assignmentId,
         ]);
@@ -239,7 +239,7 @@ class AssignableTest extends ModelTestCase
 
         // Check if assignment still exists (depends on cascade configuration)
         // Note: Without foreign key constraints, assignments won't be automatically deleted
-        $assignmentTable = modularityConfig('tables.assignments', 'm_assignments');
+        $assignmentTable = modularousConfig('tables.assignments', 'm_assignments');
         $this->assertDatabaseHas($assignmentTable, [
             'id' => $assignmentId,
         ]);
@@ -275,7 +275,7 @@ class AssignableTest extends ModelTestCase
 
         $this->softDeletesModel->forceDelete();
 
-        $assignmentTable = modularityConfig('tables.assignments', 'm_assignments');
+        $assignmentTable = modularousConfig('tables.assignments', 'm_assignments');
         $this->assertDatabaseMissing($assignmentTable, [
             'id' => $assignmentId,
         ]);
@@ -520,7 +520,7 @@ class AssignableTest extends ModelTestCase
     public function test_assignable_scopes_trait_is_used()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Scopes\AssignableScopes', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Scopes\AssignableScopes', $traits);
     }
 
     public function test_get_user_for_assignable_returns_null_when_no_auth()
@@ -981,8 +981,8 @@ class AssignableTest extends ModelTestCase
     public function test_scope_is_active_assignee_for_your_role()
     {
         // Create roles
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         // Create users with roles
         $manager1 = User::create(['name' => 'Manager 1', 'email' => 'manager1@example.com', 'published' => true]);
@@ -1044,7 +1044,7 @@ class AssignableTest extends ModelTestCase
     public function test_scope_team_completed_assignments()
     {
         // Create roles
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
 
         // Create users with same role
         $manager1 = User::create(['name' => 'Manager 1', 'email' => 'manager1@example.com', 'published' => true]);
@@ -1079,7 +1079,7 @@ class AssignableTest extends ModelTestCase
     public function test_scope_team_pending_assignments()
     {
         // Create roles
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         // Create users with same role
         $editor1 = User::create(['name' => 'Editor 1', 'email' => 'editor1@example.com', 'published' => true]);
@@ -1114,8 +1114,8 @@ class AssignableTest extends ModelTestCase
     public function test_scope_ever_assigned_to_your_role()
     {
         // Create roles
-        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularity']);
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
+        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularous']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
 
         // Create users with roles
         $reporter1 = User::create(['name' => 'Reporter 1', 'email' => 'reporter1@example.com', 'published' => true]);
@@ -1166,8 +1166,8 @@ class AssignableTest extends ModelTestCase
     public function test_scope_role_based_assignments_with_latest_assignment_logic()
     {
         // Create roles
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
 
         // Create users
         $manager = User::create(['name' => 'Manager', 'email' => 'manager@example.com', 'published' => true]);

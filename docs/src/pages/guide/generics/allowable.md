@@ -49,7 +49,7 @@ $allowedItems = $this->getAllowableItems($menuItems);
 
 namespace App\Http\Controllers;
 
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Traits\Allowable;
 
 class NavigationController extends Controller
 {

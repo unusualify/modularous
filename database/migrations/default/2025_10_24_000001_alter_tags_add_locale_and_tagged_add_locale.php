@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $tagsTable = modularityConfig('tables.tags', 'um_tags');
+        $tagsTable = modularousConfig('tables.tags', 'um_tags');
 
         if (Schema::hasTable($tagsTable)) {
             Schema::table($tagsTable, function (Blueprint $table) use ($tagsTable) {
@@ -23,7 +23,7 @@ return new class extends Migration
 
     public function down()
     {
-        $tagsTable = modularityConfig('tables.tags', 'um_tags');
+        $tagsTable = modularousConfig('tables.tags', 'um_tags');
 
         if (Schema::hasTable($tagsTable)) {
             Schema::table($tagsTable, function (Blueprint $table) use ($tagsTable) {

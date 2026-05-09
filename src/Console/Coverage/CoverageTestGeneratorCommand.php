@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Coverage;
+namespace Unusualify\Modularous\Console\Coverage;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use Unusualify\Modularity\Facades\Coverage;
+use Unusualify\Modularous\Facades\Coverage;
 
 /**
  * Generate test files for uncovered methods using AI or templates
@@ -290,7 +290,7 @@ class CoverageTestGeneratorCommand extends Command
         }
 
         // Check config file
-        $configKey = "modularity-coverage.{$provider['config_key']}";
+        $configKey = "modularous-coverage.{$provider['config_key']}";
         if ($apiKey = config($configKey)) {
             $this->apiKey = $apiKey;
             $this->line("Using API key from config: {$configKey}");
@@ -349,9 +349,9 @@ class CoverageTestGeneratorCommand extends Command
     private function getUncoveredMethods(): array
     {
         $coverageService = Coverage::make(
-            $this->option('cloverDir') ?? config('modularity-coverage.clover_dir'),
-            $this->option('cloverName') ?? config('modularity-coverage.clover_name')
-        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularity-coverage.coverage_threshold'));
+            $this->option('cloverDir') ?? config('modularous-coverage.clover_dir'),
+            $this->option('cloverName') ?? config('modularous-coverage.clover_name')
+        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularous-coverage.coverage_threshold'));
 
         if ($git = $this->option('git')) {
             $this->line("Analyzing changes vs <fg=cyan>{$git}</>");
@@ -702,7 +702,7 @@ class CoverageTestGeneratorCommand extends Command
 
     private function callOllamaAPI(string $prompt): string
     {
-        $endpoint = config('modularity-coverage.ollama_endpoint') ??
+        $endpoint = config('modularous-coverage.ollama_endpoint') ??
                     env('OLLAMA_ENDPOINT', 'http://localhost:11434');
 
         $response = Http::timeout(180)->post("{$endpoint}/api/generate", [
@@ -758,9 +758,9 @@ class CoverageTestGeneratorCommand extends Command
     private function getRelativePath(string $file): string
     {
         $coverageService = Coverage::make(
-            $this->option('cloverDir') ?? config('modularity-coverage.clover_dir'),
-            $this->option('cloverName') ?? config('modularity-coverage.clover_name')
-        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularity-coverage.coverage_threshold'));
+            $this->option('cloverDir') ?? config('modularous-coverage.clover_dir'),
+            $this->option('cloverName') ?? config('modularous-coverage.clover_name')
+        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularous-coverage.coverage_threshold'));
 
         return $coverageService->getRelativePath($file);
     }
@@ -804,9 +804,9 @@ class CoverageTestGeneratorCommand extends Command
     private function writeTestFile(string $path, string $content): void
     {
         $coverageService = Coverage::make(
-            $this->option('cloverDir') ?? config('modularity-coverage.clover_dir'),
-            $this->option('cloverName') ?? config('modularity-coverage.clover_name')
-        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularity-coverage.coverage_threshold'));
+            $this->option('cloverDir') ?? config('modularous-coverage.clover_dir'),
+            $this->option('cloverName') ?? config('modularous-coverage.clover_name')
+        )->setCoverageThreshold((float) $this->option('threshold') ?? config('modularous-coverage.coverage_threshold'));
 
         $path = concatenate_path($coverageService->getBaseDirectory(), $path);
         $dir = dirname($path);

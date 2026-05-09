@@ -6,7 +6,7 @@ sidebarTitle: CoreController
 # CoreController
 
 **File**: `src/Http/Controllers/CoreController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Controller`  
 **Traits**: `AuthorizesRequests`, `DispatchesJobs`, `ValidatesRequests`, `ManageNames`, `Moduleable`, `ManageModuleRoute`, `ManageTraits`
 

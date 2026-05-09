@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait HasCompany
 {
@@ -142,10 +142,10 @@ trait HasCompany
     protected function showBillingBanner(): Attribute
     {
         return Attribute::make(
-            get: fn () => ! modularityConfig('disable_billing_banner', false)
+            get: fn () => ! modularousConfig('disable_billing_banner', false)
                 && $this->is_client
                 && ! $this->validCompany
-                && Modularity::shouldUseCountryBasedVatRates()
+                && Modularous::shouldUseCountryBasedVatRates()
         );
     }
 

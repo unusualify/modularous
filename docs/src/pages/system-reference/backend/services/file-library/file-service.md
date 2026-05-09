@@ -27,7 +27,7 @@ interface FileServiceInterface
 ## Implementing a Custom Driver
 
 ```php
-use Unusualify\Modularity\Services\FileLibrary\FileServiceInterface;
+use Unusualify\Modularous\Services\FileLibrary\FileServiceInterface;
 
 class MyCloudStorage implements FileServiceInterface
 {
@@ -49,7 +49,7 @@ $this->app->bind('fileService', MyCloudStorage::class);
 The `FileService` Laravel Facade resolves to whatever class is bound to `fileService` in the container. The default binding is the [Disk](/system-reference/backend/services/file-library/disk) driver.
 
 ```php
-use Unusualify\Modularity\Facades\FileService;
+use Unusualify\Modularous\Facades\FileService;
 
 $url = FileService::getUrl($file->uuid);
 ```

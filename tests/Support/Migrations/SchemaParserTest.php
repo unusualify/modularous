@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support\Migrations;
+namespace Unusualify\Modularous\Tests\Support\Migrations;
 
 use Nwidart\Modules\Support\Migrations\SchemaParser;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class SchemaParserTest extends TestCase
 {

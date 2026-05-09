@@ -21,10 +21,10 @@ Returns the current application host URL (`scheme://host`) without a trailing sl
 
 ---
 
-### `getModularityDefaultUrls`
+### `getModularousDefaultUrls`
 
 ```php
-getModularityDefaultUrls(): array
+getModularousDefaultUrls(): array
 ```
 
 Returns an array of default URLs that the Modularous frontend injects into its global configuration:
@@ -33,36 +33,36 @@ Returns an array of default URLs that the Modularous frontend injects into its g
 [
     'admin'  => adminUrlPrefix(),
     'system' => systemUrlPrefix(),
-    // additional entries from modularity config
+    // additional entries from modularous config
 ]
 ```
 
 ---
 
-### `modularity_svg_symbol_exists`
+### `modularous_svg_symbol_exists`
 
 ```php
-modularity_svg_symbol_exists(string $symbol): bool
+modularous_svg_symbol_exists(string $symbol): bool
 ```
 
 Checks whether an SVG symbol with the given identifier exists in the compiled Modularous sprite sheet. Returns `true` if the symbol is found.
 
 ---
 
-### `get_modularity_logo_symbol`
+### `get_modularous_logo_symbol`
 
 ```php
-get_modularity_logo_symbol(string|array $candidates): string
+get_modularous_logo_symbol(string|array $candidates): string
 ```
 
 Accepts a single symbol name or an ordered list of candidates and returns the first one that exists in the SVG sprite. Falls back to `'main-logo'` if no candidate is found. Used for locale-specific logo variants (e.g. `mini-logo-dark-tr`, then `mini-logo-dark`).
 
 ---
 
-### `get_modularity_locale_symbol`
+### `get_modularous_locale_symbol`
 
 ```php
-get_modularity_locale_symbol(string $locale): string
+get_modularous_locale_symbol(string $locale): string
 ```
 
 Returns the SVG symbol identifier for a given locale flag icon. Falls back to a generic globe symbol if no locale-specific flag is registered.

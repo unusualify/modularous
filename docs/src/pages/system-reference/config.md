@@ -13,7 +13,7 @@ Modularous uses a layered configuration system. Understanding the layers helps w
 
 **Location**: `config/merges/*.php`  
 **Loaded**: At bootstrap (BaseServiceProvider::registerBaseConfigs)  
-**Key**: `modularity.{filename}` (e.g. `modularity.services`, `modularity.roles`)
+**Key**: `modularous.{filename}` (e.g. `modularous.services`, `modularous.roles`)
 
 Package defaults that do not depend on the translator. Merged recursively with `array_merge_recursive_preserve()`.
 
@@ -22,8 +22,8 @@ Package defaults that do not depend on the translator. Merged recursively with `
 ### 2. defers (Localized Config)
 
 **Location**: `config/defers/*.php`  
-**Loaded**: Per request via `LoadLocalizedConfig` middleware (runs in `modularity.core` group)  
-**Key**: `modularity.{filename}`
+**Loaded**: Per request via `LoadLocalizedConfig` middleware (runs in `modularous.core` group)  
+**Key**: `modularous.{filename}`
 
 Config that needs the translator (e.g. `__()`, `___()`). Loaded after the translator is available.
 
@@ -31,16 +31,16 @@ Config that needs the translator (e.g. `__()`, `___()`). Loaded after the transl
 
 ### 3. publishes (App Overrides)
 
-**Location**: Published to `config/` via `php artisan vendor:publish --tag=modularity-config`  
+**Location**: Published to `config/` via `php artisan vendor:publish --tag=modularous-config`  
 **Loaded**: Standard Laravel config loading
 
 App-level overrides. Published files take precedence when merged.
 
-**Common published configs**: `config/modularity.php`, `config/modules.php`, `config/permission.php`, `config/auth.php`
+**Common published configs**: `config/modularous.php`, `config/modules.php`, `config/permission.php`, `config/auth.php`
 
 ### 4. App Override Path
 
-**Location**: `base_path('modularity/*.php')`  
+**Location**: `base_path('modularous/*.php')`  
 **Loaded**: By `LoadLocalizedConfig` middleware when files exist
 
 Optional app-specific config files that override deferred config.
@@ -48,19 +48,19 @@ Optional app-specific config files that override deferred config.
 ## Base Config
 
 **File**: `config/config.php`  
-**Key**: `modularity` (via `$baseKey`)
+**Key**: `modularous` (via `$baseKey`)
 
 Core package settings: app_url, admin paths, theme, enabled features, etc.
 
 ## Currency Provider
 
-**Config**: `modularity.currency_provider`  
-**Env**: `MODULARITY_CURRENCY_PROVIDER`
+**Config**: `modularous.currency_provider`  
+**Env**: `MODULAROUS_CURRENCY_PROVIDER`
 
 Optional FQCN of a class implementing `CurrencyProviderInterface`. When null, Modularous uses `SystemPricingCurrencyProvider` if the SystemPricing module is present, else `NullCurrencyProvider`.
 
 ## Paths
 
-**Config**: `modularity.paths` (from merges/paths.php)
+**Config**: `modularous.paths` (from merges/paths.php)
 
 Defines base paths for modules, vendor assets, and published resources.

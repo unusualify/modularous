@@ -9,8 +9,8 @@ sidebarTitle: Create Repository Trait
 
 ## Command Information
 
-- **Signature:** `modularity:make:repository:trait {name}`
-- **Aliases:** `modularity:create:repository:trait`, `mod:c:repo:trait`
+- **Signature:** `modularous:make:repository:trait {name}`
+- **Aliases:** `modularous:create:repository:trait`, `mod:c:repo:trait`
 - **Category:** Generators
 
 ## Arguments
@@ -26,7 +26,7 @@ Creates a PHP trait file from a stub template with the StudlyCase name applied. 
 ## Examples
 
 ```bash
-php artisan modularity:make:repository:trait HasSearch
+php artisan modularous:make:repository:trait HasSearch
 php artisan mod:c:repo:trait HasBulkActions
 ```
 

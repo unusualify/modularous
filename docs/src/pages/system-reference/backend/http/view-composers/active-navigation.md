@@ -5,7 +5,7 @@ sidebarTitle: ActiveNavigation
 
 # ActiveNavigation
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\ActiveNavigation`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\ActiveNavigation`  
 **Source**: `src/Http/ViewComposers/ActiveNavigation.php`
 
 Parses the current route name into up to three navigation depth markers and injects them into every view. The frontend uses these variables to highlight the correct sidebar menu items.

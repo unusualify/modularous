@@ -5,7 +5,7 @@ sidebarTitle: AuthServiceProvider
 
 # AuthServiceProvider
 
-**Class**: `Unusualify\Modularity\Providers\AuthServiceProvider`  
+**Class**: `Unusualify\Modularous\Providers\AuthServiceProvider`  
 **Source**: `src/Providers/AuthServiceProvider.php`  
 **Extends**: `Illuminate\Foundation\Support\Providers\AuthServiceProvider`  
 **Implements**: `Illuminate\Contracts\Support\DeferrableProvider`

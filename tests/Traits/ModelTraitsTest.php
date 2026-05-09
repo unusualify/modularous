@@ -1,19 +1,19 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Modules\TestModule\Entities\StubModel;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\Allowable;
-use Unusualify\Modularity\Traits\ManageModuleRoute;
-use Unusualify\Modularity\Traits\ModularModel;
-use Unusualify\Modularity\Traits\Moduleable;
-use Unusualify\Modularity\Traits\ResponsiveVisibility;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\Allowable;
+use Unusualify\Modularous\Traits\ManageModuleRoute;
+use Unusualify\Modularous\Traits\ModularModel;
+use Unusualify\Modularous\Traits\Moduleable;
+use Unusualify\Modularous\Traits\ResponsiveVisibility;
 
 class ModelTraitsTest extends TestCase
 {
@@ -339,7 +339,7 @@ class ModelTraitsTest extends TestCase
         $module = \Mockery::mock(Module::class);
         $module->shouldReceive('getRawRouteConfig')->with('Post')->andReturn(['title_column_key' => 'title']);
 
-        Modularity::shouldReceive('find')->with('Blog')->andReturn($module);
+        Modularous::shouldReceive('find')->with('Blog')->andReturn($module);
 
         $this->assertEquals('title', $tester->getRouteTitleColumnKey());
     }

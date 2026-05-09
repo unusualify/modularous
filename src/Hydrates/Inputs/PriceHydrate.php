@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
 use Modules\SystemPricing\Entities\Price;
 use Modules\SystemPricing\Repositories\VatRateRepository;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
-use Unusualify\Modularity\Http\Requests\Request;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Http\Requests\Request;
 
 class PriceHydrate extends InputHydrate
 {

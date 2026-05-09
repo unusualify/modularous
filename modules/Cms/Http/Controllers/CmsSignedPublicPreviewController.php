@@ -7,7 +7,7 @@ use Modules\Cms\Contracts\CanonicalUrlResolverInterface;
 use Modules\Cms\Http\Controllers\Front\CmsController;
 use Modules\Cms\Services\CmsPublicModelResolver;
 use Modules\Cms\Services\CmsSignedPreviewTargetResolver;
-use Unusualify\Modularity\Http\Controllers\Controller;
+use Unusualify\Modularous\Http\Controllers\Controller;
 
 /**
  * Public signed URL: resolves {@code module} + {@code route} + {@code id} to the correct {@see CmsController} presentation
@@ -27,7 +27,7 @@ final class CmsSignedPublicPreviewController extends Controller
         $localeRaw = $request->route('locale');
         $locale = $localeRaw !== null && $localeRaw !== ''
             ? (string) $localeRaw
-            : (string) modularityConfig('cms_routing.default_locale', config('app.locale'));
+            : (string) modularousConfig('cms_routing.default_locale', config('app.locale'));
 
         $target = $targetResolver->resolve($moduleSeg, $routeSeg);
         if ($target === null) {

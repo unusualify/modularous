@@ -5,9 +5,9 @@ sidebarTitle: Register
 
 # Register
 
-**Facade**: `Unusualify\Modularity\Facades\Register`  
+**Facade**: `Unusualify\Modularous\Facades\Register`  
 **Accessor**: `auth.register`  
-**Underlying**: `Unusualify\Modularity\Brokers\RegisterBrokerManager`
+**Underlying**: `Unusualify\Modularous\Brokers\RegisterBrokerManager`
 
 Extends Laravel's `Password` facade to provide an email-verification-based registration flow. Works like `Password::broker()` but for the registration verification pipeline.
 
@@ -38,7 +38,7 @@ Inherits the full `Password` facade interface plus:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Register;
+use Unusualify\Modularous\Facades\Register;
 
 $status = Register::sendResetLink(['email' => $request->email]);
 

@@ -2,28 +2,28 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
-use Unusualify\Modularity\Support\PublishableMetadata;
-use Unusualify\Modularity\Support\TranslatableMetadata;
+use Unusualify\Modularous\Support\PublishableMetadata;
+use Unusualify\Modularous\Support\TranslatableMetadata;
 
-if (! function_exists('modularityIncrementsMethod')) {
+if (! function_exists('modularousIncrementsMethod')) {
     /**
      * @return string
      */
-    function modularityIncrementsMethod()
+    function modularousIncrementsMethod()
     {
-        return modularityConfig('use_big_integers_on_migrations')
+        return modularousConfig('use_big_integers_on_migrations')
             ? 'bigIncrements'
             : 'increments';
     }
 }
 
-if (! function_exists('modularityIntegerMethod')) {
+if (! function_exists('modularousIntegerMethod')) {
     /**
      * @return string
      */
-    function modularityIntegerMethod()
+    function modularousIntegerMethod()
     {
-        return modularityConfig('use_big_integers_on_migrations')
+        return modularousConfig('use_big_integers_on_migrations')
             ? 'bigInteger'
             : 'integer';
     }
@@ -40,7 +40,7 @@ if (! function_exists('createDefaultFields')) {
      */
     function createDefaultTableFields($table, $has_name = true)
     {
-        $table->{modularityIncrementsMethod()}('id');
+        $table->{modularousIncrementsMethod()}('id');
         // $table->string('name');
     }
 }
@@ -87,8 +87,8 @@ if (! function_exists('createDefaultTranslationsTableFields')) {
 
         $foreignKey ??= "{$modelSnakeName}_id";
 
-        $table->{modularityIncrementsMethod()}('id');
-        $table->{modularityIntegerMethod()}($foreignKey)->unsigned();
+        $table->{modularousIncrementsMethod()}('id');
+        $table->{modularousIntegerMethod()}($foreignKey)->unsigned();
 
         $table->softDeletes();
         $table->timestamps();
@@ -124,8 +124,8 @@ if (! function_exists('createDefaultSlugsTableFields')) {
             $tableNamePlural = Str::plural($tableNameSingular);
         }
 
-        $table->{modularityIncrementsMethod()}('id');
-        $table->{modularityIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
+        $table->{modularousIncrementsMethod()}('id');
+        $table->{modularousIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
 
         $table->softDeletes();
         $table->timestamps();
@@ -157,8 +157,8 @@ if (! function_exists('createDefaultRelationshipTableFields')) {
         $table1ForeignKey = "{$table1NameSingular}_id";
         $table2ForeignKey = "{$table2NameSingular}_id";
 
-        // $table->{modularityIntegerMethod()}("{$table1NameSingular}_id")->unsigned();
-        // $table->{modularityIntegerMethod()}("{$table2NameSingular}_id")->unsigned();
+        // $table->{modularousIntegerMethod()}("{$table1NameSingular}_id")->unsigned();
+        // $table->{modularousIntegerMethod()}("{$table2NameSingular}_id")->unsigned();
         // $table1IndexName = $table1NameSingular;
         // $table2IndexName = $table2NameSingular;
         // if( strlen($table1IndexName) > 12){
@@ -242,20 +242,20 @@ if (! function_exists('createDefaultRevisionsTableFields')) {
             $tableNamePlural = Str::plural($tableNameSingular);
         }
 
-        $table->{modularityIncrementsMethod()}('id');
-        $table->{modularityIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
-        $table->{modularityIntegerMethod()}('user_id')->unsigned()->nullable();
+        $table->{modularousIncrementsMethod()}('id');
+        $table->{modularousIntegerMethod()}("{$tableNameSingular}_id")->unsigned();
+        $table->{modularousIntegerMethod()}('user_id')->unsigned()->nullable();
         $table->unsignedBigInteger('source_id')->nullable();
 
         $table->string('status', 32)->default('approved');
         $table->timestamp('approved_at')->nullable();
-        $table->{modularityIntegerMethod()}('approved_by')->unsigned()->nullable();
+        $table->{modularousIntegerMethod()}('approved_by')->unsigned()->nullable();
 
         $table->timestamps();
         $table->json('payload');
         $table->foreign("{$tableNameSingular}_id")->references('id')->on("{$tableNamePlural}")->onDelete('cascade');
-        $table->foreign('user_id')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
-        $table->foreign('approved_by')->references('id')->on(modularityConfig('tables.users', 'um_users'))->onDelete('set null');
+        $table->foreign('user_id')->references('id')->on(modularousConfig('tables.users', 'um_users'))->onDelete('set null');
+        $table->foreign('approved_by')->references('id')->on(modularousConfig('tables.users', 'um_users'))->onDelete('set null');
     }
 }
 
@@ -263,7 +263,7 @@ if (! function_exists('createTranslatableMetadataFields')) {
     /**
      * Translatable metadata (SEO, canonical, robots, sitemap flag) columns for {@code *_translations} tables.
      *
-     * Mirrors {@see TranslatableMetadata::TRANSLATED_ATTRIBUTES}; use with {@see \Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata}.
+     * Mirrors {@see TranslatableMetadata::TRANSLATED_ATTRIBUTES}; use with {@see \Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata}.
      *
      * @param bool $withSitemapInclude When false, omits sitemap_include (not recommended for new modules).
      */

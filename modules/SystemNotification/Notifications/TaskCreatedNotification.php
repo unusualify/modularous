@@ -17,7 +17,7 @@ class TaskCreatedNotification extends FeatureNotification implements ShouldQueue
      * @param Assignment $model
      * @return void
      */
-    public function __construct(\Unusualify\Modularity\Entities\Assignment $model)
+    public function __construct(\Unusualify\Modularous\Entities\Assignment $model)
     {
         // $model is a assignment model
         parent::__construct($model);

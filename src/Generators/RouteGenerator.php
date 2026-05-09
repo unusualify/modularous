@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Generators;
+namespace Unusualify\Modularous\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
@@ -17,13 +17,13 @@ use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\LaravelServiceProvider;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Services\FileTranslation;
-use Unusualify\Modularity\Support\Decomposers\SchemaParser;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\LaravelServiceProvider;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Services\FileTranslation;
+use Unusualify\Modularous\Support\Decomposers\SchemaParser;
+use Unusualify\Modularous\Traits\ManageNames;
 
 use function Laravel\Prompts\confirm;
 
@@ -169,7 +169,7 @@ class RouteGenerator extends Generator
     /**
      * modelRelationParser
      *
-     * @var Unusualify\Modularity\Support\Decomposers\ModelRelationParser::class
+     * @var Unusualify\Modularous\Support\Decomposers\ModelRelationParser::class
      */
     protected $modelRelationParser;
 
@@ -347,9 +347,9 @@ class RouteGenerator extends Generator
      */
     public function setModule($moduleName)
     {
-        $modularity = App::makeWith(\Unusualify\Modularity\Modularity::class, ['app' => $this->app]);
+        $modularous = App::makeWith(\Unusualify\Modularous\Modularous::class, ['app' => $this->app]);
 
-        $this->module = $modularity->find($moduleName);
+        $this->module = $modularous->find($moduleName);
 
         $this->moduleName = $this->module->getName();
 
@@ -360,8 +360,8 @@ class RouteGenerator extends Generator
 
     public function createTranslation()
     {
-        $langPath = $this->module->isModularityModule()
-            ? Modularity::getVendorPath('lang')
+        $langPath = $this->module->isModularousModule()
+            ? Modularous::getVendorPath('lang')
             : base_path('lang');
 
         if (! file_exists($langPath)) {
@@ -411,7 +411,7 @@ class RouteGenerator extends Generator
      */
     public function getFolders()
     {
-        return $this->config->get(modularityBaseKey() . '.paths.generator');
+        return $this->config->get(modularousBaseKey() . '.paths.generator');
     }
 
     /**
@@ -421,7 +421,7 @@ class RouteGenerator extends Generator
      */
     public function getFiles()
     {
-        return $this->config->get(modularityBaseKey() . '.stubs.files');
+        return $this->config->get(modularousBaseKey() . '.stubs.files');
     }
 
     /**
@@ -688,7 +688,7 @@ class RouteGenerator extends Generator
 
                 if ($this->migrate && ! $this->fix) { // !$this->module->isRouteTableExists($name)
 
-                    $this->console->call('modularity:migrate', [
+                    $this->console->call('modularous:migrate', [
                         'module' => $this->module->getStudlyName(),
                     ]);
 
@@ -747,7 +747,7 @@ class RouteGenerator extends Generator
                 } else {
                     $this->filesystem->makeDirectory($path, 0755, true);
 
-                    if ($this->config->get(modularityBaseKey() . '.stubs.gitkeep')) {
+                    if ($this->config->get(modularousBaseKey() . '.stubs.gitkeep')) {
                         $this->generateGitKeep($path);
                     }
                 }
@@ -799,7 +799,7 @@ class RouteGenerator extends Generator
 
         // add controller
         if ($this->generatorConfig('route-controller')->generate()) {
-            $this->console->call('modularity:make:controller', [
+            $this->console->call('modularous:make:controller', [
                 'module' => $this->module->getStudlyName(),
                 'name' => $this->getName(),
             ]);
@@ -807,7 +807,7 @@ class RouteGenerator extends Generator
 
         // add controller api
         if ($this->generatorConfig('route-controller-api')->generate()) {
-            $this->console->call('modularity:make:controller:api', [
+            $this->console->call('modularous:make:controller:api', [
                 'module' => $this->module->getStudlyName(),
                 'name' => $this->getName(),
             ]);
@@ -815,7 +815,7 @@ class RouteGenerator extends Generator
 
         // add controller front
         if ($this->generatorConfig('route-controller-front')->generate()) {
-            $this->console->call('modularity:make:controller:front', [
+            $this->console->call('modularous:make:controller:front', [
                 'module' => $this->module->getStudlyName(),
                 'name' => $this->getName(),
             ]);
@@ -828,7 +828,7 @@ class RouteGenerator extends Generator
         $hasCustomModel = $this->getCustomModel() && @class_exists($this->getCustomModel());
 
         // add model
-        $this->console->call('modularity:make:model', [
+        $this->console->call('modularous:make:model', [
             'model' => $this->getName(),
             'module' => $this->module->getStudlyName(),
         ]
@@ -847,7 +847,7 @@ class RouteGenerator extends Generator
         if (! $hasCustomModel) {
             if (! $this->module->isFileExists("create_{$tableName}_table") && ! $this->fix) {
                 $this->console->call(
-                    'modularity:make:migration',
+                    'modularous:make:migration',
                     [
                         'module' => $this->module->getStudlyName(),
                         'name' => "create_{$tableName}_table",
@@ -861,7 +861,7 @@ class RouteGenerator extends Generator
         } elseif ($this->migration) {
             if (! $this->module->isFileExists("add_{$tableName}_table") && ! $this->fix) {
                 $this->console->call(
-                    'modularity:make:migration',
+                    'modularous:make:migration',
                     [
                         'module' => $this->module->getStudlyName(),
                         'name' => "add_{$tableName}_table",
@@ -880,7 +880,7 @@ class RouteGenerator extends Generator
         // add repository
         if ($this->generatorConfig('repository')->generate()) {
             // $this->console->call('module:make-repository', [
-            $this->console->call('modularity:make:repository', [
+            $this->console->call('modularous:make:repository', [
                 'module' => $this->module->getStudlyName(),
                 'repository' => $this->getName(),
             ]
@@ -893,7 +893,7 @@ class RouteGenerator extends Generator
         // add request
         if ($this->generatorConfig('route-request')->generate()) {
 
-            $this->console->call('modularity:make:request', [
+            $this->console->call('modularous:make:request', [
                 'request' => $this->getName(),
                 'module' => $this->module->getStudlyName(),
             ]
@@ -932,7 +932,7 @@ class RouteGenerator extends Generator
      */
     public function updateRoutesStatuses()
     {
-        $module = Modularity::findOrFail($this->module);
+        $module = Modularous::findOrFail($this->module);
 
         // $module->setModuleActivator($this->module);
 
@@ -963,7 +963,7 @@ class RouteGenerator extends Generator
             $config['name'] = $config['name'] ?? $studlyName;
             $config['system_prefix'] = $config['system_prefix'] ?? $config['base_prefix'] ?? false;
             $config['headline'] = $config['headline'] ?? pluralize($headline);
-            if ($this->module->isModularityModule()) {
+            if ($this->module->isModularousModule()) {
                 $config['group'] = 'system';
                 $config['system_prefix'] = true;
             }
@@ -992,8 +992,8 @@ class RouteGenerator extends Generator
                 'icon' => '$submodule', // '$modules',
                 'title_column_key' => $titleColumnKey,
                 'table_options' => static::$defaultTableOptions,
-                'headers' => $headers, // in Unusualify\Modularity\Support\Migrations\SchemaParser::class
-                'inputs' => $inputs, // in Unusualify\Modularity\Support\Migrations\SchemaParser::class
+                'headers' => $headers, // in Unusualify\Modularous\Support\Migrations\SchemaParser::class
+                'inputs' => $inputs, // in Unusualify\Modularous\Support\Migrations\SchemaParser::class
             ];
 
             if ($runnable && $this->getTest()) {
@@ -1100,20 +1100,20 @@ class RouteGenerator extends Generator
 
             $repository = App::make($repo);
 
-            $modularityAuthGuardName = Modularity::getAuthGuardName();
+            $modularousAuthGuardName = Modularous::getAuthGuardName();
             // default permissions of a module
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CREATE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::VIEW->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::EDIT->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DELETE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::FORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::RESTORE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DUPLICATE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::REORDER->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULK->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKFORCEDELETE->value, 'guard_name' => $modularityAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKRESTORE->value, 'guard_name' => $modularityAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CREATE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::VIEW->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::EDIT->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DELETE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::FORCEDELETE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::RESTORE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DUPLICATE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::REORDER->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULK->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKDELETE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKFORCEDELETE->value, 'guard_name' => $modularousAuthGuardName]);
+            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKRESTORE->value, 'guard_name' => $modularousAuthGuardName]);
 
         } catch (\Throwable $e) {
             return true;
@@ -1142,7 +1142,7 @@ class RouteGenerator extends Generator
 
                         $pivot_table_name = snakeCase($this->name) . '_' . snakeCase($route_name);
                         if (! $this->module->isFileExists("create_{$pivot_table_name}_table")) {
-                            $this->console->call('modularity:make:migration', [
+                            $this->console->call('modularous:make:migration', [
                                 '--relational' => 'BelongsToMany',
                                 '--no-defaults' => true,
                                 '--route' => $this->name,
@@ -1165,7 +1165,7 @@ class RouteGenerator extends Generator
 
                         if (! $this->module->isFileExists("create_{$pivot_table_name}_table")) {
 
-                            $this->console->call('modularity:make:migration', [
+                            $this->console->call('modularous:make:migration', [
                                 '--relational' => 'MorphedByMany',
                                 '--no-defaults' => true,
                                 '--route' => $this->name,
@@ -1189,7 +1189,7 @@ class RouteGenerator extends Generator
 
     public function generatorConfig($generator)
     {
-        return new GeneratorPath($this->config->get(modularityBaseKey() . '.paths.generator.' . $generator));
+        return new GeneratorPath($this->config->get(modularousBaseKey() . '.paths.generator.' . $generator));
     }
 
     /**
@@ -1212,7 +1212,7 @@ class RouteGenerator extends Generator
      */
     public function getReplacements()
     {
-        return $this->config->get(modularityBaseKey() . '.stubs.replacements');
+        return $this->config->get(modularousBaseKey() . '.stubs.replacements');
     }
 
     /**
@@ -1351,7 +1351,7 @@ class RouteGenerator extends Generator
      */
     protected function getVendorReplacement()
     {
-        return modularityConfig('composer.vendor');
+        return modularousConfig('composer.vendor');
     }
 
     /**
@@ -1371,7 +1371,7 @@ class RouteGenerator extends Generator
      */
     protected function getAuthorReplacement()
     {
-        return modularityConfig('composer.author.name');
+        return modularousConfig('composer.author.name');
     }
 
     /**
@@ -1381,7 +1381,7 @@ class RouteGenerator extends Generator
      */
     protected function getAuthorEmailReplacement()
     {
-        return modularityConfig('composer.author.email');
+        return modularousConfig('composer.author.email');
     }
 
     public function setTableName($tableName)
@@ -1410,7 +1410,7 @@ class RouteGenerator extends Generator
 
             $hasCustomModel = $this->getCustomModel() && @class_exists($this->getCustomModel());
 
-            $this->console->call('modularity:make:model', [
+            $this->console->call('modularous:make:model', [
                 'module' => $this->module->getStudlyName(),
                 'model' => $this->getName(),
             ]
@@ -1428,7 +1428,7 @@ class RouteGenerator extends Generator
 
             if (! $hasCustomModel) {
                 if (! $this->module->isFileExists("create_{$tableName}_table") && ! $this->fix) {
-                    $this->console->call('modularity:make:migration', [
+                    $this->console->call('modularous:make:migration', [
                         'module' => $this->module->getStudlyName(),
                         'name' => "create_{$tableName}_table",
                     ]
@@ -1442,7 +1442,7 @@ class RouteGenerator extends Generator
             } elseif ($this->migration) {
                 if (! $this->module->isFileExists("add_{$tableName}_table") && ! $this->fix) {
                     $this->console->call(
-                        'modularity:make:migration',
+                        'modularous:make:migration',
                         [
                             'module' => $this->module->getStudlyName(),
                             'name' => "add_{$tableName}_table",

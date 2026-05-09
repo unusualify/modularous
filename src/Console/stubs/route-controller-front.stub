@@ -3,7 +3,7 @@
 namespace $NAMESPACE$;
 
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 use Illuminate\Contracts\Foundation\Application;
 
 class $CLASS$ extends BaseController

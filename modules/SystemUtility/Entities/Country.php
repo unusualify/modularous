@@ -4,8 +4,8 @@ namespace Modules\SystemUtility\Entities;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SystemUser\Entities\Company;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasTranslation;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasTranslation;
 
 class Country extends Model
 {
@@ -39,6 +39,6 @@ class Country extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.countries', 'um_countries');
+        return modularousConfig('tables.countries', 'um_countries');
     }
 }

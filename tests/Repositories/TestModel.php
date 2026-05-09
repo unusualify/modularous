@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories;
+namespace Unusualify\Modularous\Tests\Repositories;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Unusualify\Modularity\Entities\Interfaces\Sortable;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Entities\Traits\HasFiles;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Entities\Traits\HasPosition;
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Entities\Interfaces\Sortable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Traits\HasFiles;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasPosition;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
 
 class TestModel extends Model implements Sortable
 {

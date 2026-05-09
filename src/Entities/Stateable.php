@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,11 +22,11 @@ class Stateable extends Model
 
     public function state(): BelongsTo
     {
-        return $this->belongsTo(modularityConfig('models.state', 'Unusualify\Modularity\Entities\State'));
+        return $this->belongsTo(modularousConfig('models.state', 'Unusualify\Modularous\Entities\State'));
     }
 
     public function getTable()
     {
-        return modularityConfig('tables.stateables', 'um_stateables');
+        return modularousConfig('tables.stateables', 'um_stateables');
     }
 }

@@ -56,7 +56,7 @@ Layout presets define structural flags (e.g. single vs split column). They do no
 $attributes = array_merge(
     $layoutConfig,
     $layoutPreset,  // e.g. noSecondSection: false
-    modularityConfig('auth_pages.attributes', []),
+    modularousConfig('auth_pages.attributes', []),
     $pageConfig['attributes'] ?? [],
     $overrides['attributes'] ?? []
 );
@@ -66,7 +66,7 @@ $attributes = array_merge(
 
 ## Custom Presets
 
-Add your own in `modularity/auth_pages.php`:
+Add your own in `modularous/auth_pages.php`:
 
 ```php
 'layoutPresets' => [

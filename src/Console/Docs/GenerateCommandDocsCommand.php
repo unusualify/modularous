@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Docs;
+namespace Unusualify\Modularous\Console\Docs;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Descriptor\MarkdownDescriptor;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class GenerateCommandDocsCommand extends BaseCommand
 {
@@ -18,7 +18,7 @@ class GenerateCommandDocsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:generate:command:docs
+    protected $signature = 'modularous:generate:command:docs
         {--output= : Output directory for markdown files}
         {--f|force : Force overwrite existing files}
     ';
@@ -50,7 +50,7 @@ class GenerateCommandDocsCommand extends BaseCommand
     public function handle(): int
     {
         // handle command
-        $outputPath = $this->option('output') ?? get_modularity_vendor_path('docs/src/pages/advanced-guide/commands');
+        $outputPath = $this->option('output') ?? get_modularous_vendor_path('docs/src/pages/advanced-guide/commands');
         $force = $this->option('force');
 
         if (! Str::startsWith($outputPath, '/')) {
@@ -64,9 +64,9 @@ class GenerateCommandDocsCommand extends BaseCommand
 
         // Get all registered commands
         $commands = $this->getLaravel()->make('Illuminate\Contracts\Console\Kernel')->all();
-        // Filter only modularity commands
+        // Filter only modularous commands
         $commands = array_filter($commands, function ($command) {
-            return Str::startsWith($command->getName(), 'modularity:') ||
+            return Str::startsWith($command->getName(), 'modularous:') ||
                    Str::startsWith($command->getName(), 'mod:');
         });
 
@@ -107,7 +107,7 @@ class GenerateCommandDocsCommand extends BaseCommand
 
                 $content = $this->formatMarkdown($content, $command);
                 // Save to markdown file
-                $_name = str_replace('modularity:', '', $realName);
+                $_name = str_replace('modularous:', '', $realName);
                 $filename = str_replace(':', '-', $_name) . '.md';
 
                 $category = $this->getCommandCategory($command);
@@ -159,7 +159,7 @@ class GenerateCommandDocsCommand extends BaseCommand
 
     private function formatMarkdown($content, $command)
     {
-        $headerName = Str::headline(Str::replace(':', '_', Str::replace('modularity:', '', $command->getName())));
+        $headerName = Str::headline(Str::replace(':', '_', Str::replace('modularous:', '', $command->getName())));
         $header = sprintf("# `%s`\n\n", $headerName);
         $header .= sprintf("> %s\n\n", $command->getDescription());
 
@@ -179,7 +179,7 @@ class GenerateCommandDocsCommand extends BaseCommand
         $name = $command->getName();
 
         // Define category patterns
-        $utilName = str_replace('modularity:', '', $name);
+        $utilName = str_replace('modularous:', '', $name);
 
         $categories = [
             'Generators' => [

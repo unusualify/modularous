@@ -23,7 +23,7 @@ final class McamaraCmsLocalizationAdapter implements CmsLocalizationContract
 
     public function pathSegmentLocales(): array
     {
-        $configured = modularityConfig('cms_routing.path_segment_locales');
+        $configured = modularousConfig('cms_routing.path_segment_locales');
         if (is_array($configured) && $configured !== []) {
             return $this->sortedLongestFirst(array_values(array_unique(array_filter(array_map('strval', $configured)))));
         }
@@ -56,7 +56,7 @@ final class McamaraCmsLocalizationAdapter implements CmsLocalizationContract
 
     public function defaultLocale(): string
     {
-        $cms = (string) modularityConfig('cms_routing.default_locale', '');
+        $cms = (string) modularousConfig('cms_routing.default_locale', '');
         if ($cms !== '') {
             return $cms;
         }
@@ -74,10 +74,10 @@ final class McamaraCmsLocalizationAdapter implements CmsLocalizationContract
 
     public function hideDefaultLocaleInUrl(): bool
     {
-        $source = (string) modularityConfig('cms_routing.localization_hide_default_source', 'mcamara');
+        $source = (string) modularousConfig('cms_routing.localization_hide_default_source', 'mcamara');
 
         if ($source === 'cms') {
-            return (bool) modularityConfig('cms_routing.hide_default_locale_segment', false);
+            return (bool) modularousConfig('cms_routing.hide_default_locale_segment', false);
         }
 
         try {
@@ -86,9 +86,9 @@ final class McamaraCmsLocalizationAdapter implements CmsLocalizationContract
                 return $mcamara;
             }
 
-            return $mcamara || (bool) modularityConfig('cms_routing.hide_default_locale_segment', false);
+            return $mcamara || (bool) modularousConfig('cms_routing.hide_default_locale_segment', false);
         } catch (\Throwable) {
-            return (bool) modularityConfig('cms_routing.hide_default_locale_segment', false);
+            return (bool) modularousConfig('cms_routing.hide_default_locale_segment', false);
         }
     }
 

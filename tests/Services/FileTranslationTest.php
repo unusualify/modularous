@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use JoeDixon\Translation\Scanner;
 use Mockery;
-use Unusualify\Modularity\Services\FileTranslation;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\FileTranslation;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FileTranslationTest extends TestCase
 {

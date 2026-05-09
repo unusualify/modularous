@@ -6,7 +6,7 @@ sidebarTitle: TokenRepositoryInterface
 # TokenRepositoryInterface
 
 **File**: `src/Brokers/TokenRepositoryInterface.php`  
-**Namespace**: `Unusualify\Modularity\Brokers`  
+**Namespace**: `Unusualify\Modularous\Brokers`  
 **Extends**: `Illuminate\Auth\Passwords\TokenRepositoryInterface`
 
 Modularous token repository contract used by registration broker flow. It extends Laravel's token repository interface with email-oriented method signatures.

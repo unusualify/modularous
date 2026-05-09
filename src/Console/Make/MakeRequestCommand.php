@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Support\Decomposers\ValidatorParser;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Support\Decomposers\ValidatorParser;
 
 class MakeRequestCommand extends BaseCommand
 {
@@ -18,7 +18,7 @@ class MakeRequestCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:request';
+    protected $name = 'modularous:make:request';
 
     /**
      * The console command description.
@@ -83,7 +83,7 @@ class MakeRequestCommand extends BaseCommand
     {
         $request = $this->argument('request');
 
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
             'BASE_REQUEST_CLASS' => $this->baseConfig('base_request'),
@@ -100,7 +100,7 @@ class MakeRequestCommand extends BaseCommand
      */
     protected function getDestinationFilePath()
     {
-        $path = Modularity::getModulePath($this->getModuleName());
+        $path = Modularous::getModulePath($this->getModuleName());
 
         $prePath = new GeneratorPath($this->baseConfig('paths.generator.route-request'));
 

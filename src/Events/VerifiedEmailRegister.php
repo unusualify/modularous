@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Events;
+namespace Unusualify\Modularous\Events;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;

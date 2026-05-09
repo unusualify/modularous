@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Generators\RouteGenerator;
-use Unusualify\Modularity\Support\Decomposers\ValidatorParser;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Generators\RouteGenerator;
+use Unusualify\Modularous\Support\Decomposers\ValidatorParser;
 
 class MakeRoutePermissionsCommand extends BaseCommand
 {
@@ -15,10 +15,10 @@ class MakeRoutePermissionsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:make:route:permissions';
+    protected $name = 'modularous:make:route:permissions';
 
     protected $aliases = [
-        'modularity:create:route:permissions',
+        'modularous:create:route:permissions',
     ];
 
     /**

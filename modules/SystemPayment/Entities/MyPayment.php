@@ -2,7 +2,7 @@
 
 namespace Modules\SystemPayment\Entities;
 
-use Unusualify\Modularity\Entities\Traits\Core\ModelHelpers;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 
 class MyPayment extends Payment
 {

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 final class RedirectService
 {
-    public const SESSION_KEY = 'modularity.redirect_url';
+    public const SESSION_KEY = 'modularous.redirect_url';
 
-    public const CACHE_KEY = 'modularity.redirect_url';
+    public const CACHE_KEY = 'modularous.redirect_url';
 
     public function set(string $url, ?int $ttlSeconds = null, bool $useCache = false): void
     {

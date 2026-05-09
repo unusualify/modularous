@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ModuleHelpersTest extends TestCase
 {
     /** @test */
-    public function test_modularity_base_key_returns_base_key()
+    public function test_modularous_base_key_returns_base_key()
     {
-        $result = modularityBaseKey();
+        $result = modularousBaseKey();
 
         $this->assertIsString($result);
     }
@@ -42,17 +42,17 @@ class ModuleHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_config_retrieves_config()
+    public function test_modularous_config_retrieves_config()
     {
-        $result = modularityConfig();
+        $result = modularousConfig();
 
         $this->assertIsArray($result);
     }
 
     /** @test */
-    public function test_modularity_config_with_key()
+    public function test_modularous_config_with_key()
     {
-        $result = modularityConfig('package_generator.default');
+        $result = modularousConfig('package_generator.default');
 
         // May return null if config not set
         $this->assertTrue(is_null($result) || is_string($result) || is_array($result));

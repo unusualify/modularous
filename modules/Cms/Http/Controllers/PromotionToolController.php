@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 /**
  * Inertia shell for CMS promotion dry-run / execute (POST targets session web routes, not api/v1).
- * Extends {@see BaseController} so {@see \Unusualify\Modularity\Http\Controllers\Traits\ManageInertia}
+ * Extends {@see BaseController} so {@see \Unusualify\Modularous\Http\Controllers\Traits\ManageInertia}
  * supplies the same mainConfiguration / headLayoutData as index screens (sidebar, navigation).
  */
 class PromotionToolController extends BaseController
@@ -32,9 +32,9 @@ class PromotionToolController extends BaseController
 
     public function __invoke(Request $request): Response
     {
-        $enabled = modularityConfig('cms_promotion.enabled', false);
+        $enabled = modularousConfig('cms_promotion.enabled', false);
 
-        $pageTitle = __('CMS promotion') . ' - ' . Modularity::pageTitle();
+        $pageTitle = __('CMS promotion') . ' - ' . Modularous::pageTitle();
         $headerTitle = __('CMS promotion');
 
         $data = [
@@ -50,7 +50,7 @@ class PromotionToolController extends BaseController
         return Inertia::render('Promotion', [
             'promotionDisabled' => ! $enabled,
             'promotionEndpoints' => $enabled ? $this->promotionSessionEndpoints() : ['dryRun' => '', 'execute' => ''],
-            'defaultScope' => (array) modularityConfig('cms_promotion.scope', []),
+            'defaultScope' => (array) modularousConfig('cms_promotion.scope', []),
             'endpoints' => new \stdClass,
             'mainConfiguration' => $this->getInertiaMainConfiguration($data),
             'headLayoutData' => $this->getHeadLayoutData($data),
@@ -58,7 +58,7 @@ class PromotionToolController extends BaseController
     }
 
     /**
-     * URLs for POST actions that run under {@see \Unusualify\Modularity\Facades\ModularityRoutes::webPanelMiddlewares()}
+     * URLs for POST actions that run under {@see \Unusualify\Modularous\Facades\ModularousRoutes::webPanelMiddlewares()}
      * so the panel session authenticates the request (see modules/Cms/Routes/web.php).
      *
      * @return array{dryRun: string, execute: string}
@@ -74,13 +74,13 @@ class PromotionToolController extends BaseController
     }
 
     /**
-     * Full navigation config with breadcrumbs for {@see get_modularity_inertia_main_configuration()}.
+     * Full navigation config with breadcrumbs for {@see get_modularous_inertia_main_configuration()}.
      *
      * @return array<string, mixed>
      */
     protected function promotionNavigationWithBreadcrumbs(): array
     {
-        $navigation = get_modularity_navigation_config();
+        $navigation = get_modularous_navigation_config();
 
         $pageIndexRoute = $this->module->panelRouteNamePrefix() . '.page.index';
         $cmsCrumb = [

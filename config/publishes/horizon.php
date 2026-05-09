@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'auth:modularity'],
+    'middleware' => ['web', 'auth:modularous'],
 
     /*
     |--------------------------------------------------------------------------
@@ -193,7 +193,7 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
-        'modularity-high' => [
+        'modularous-high' => [
             'connection' => 'redis',
             'queue' => ['high'],
             'balance' => 'auto',
@@ -207,14 +207,14 @@ return [
             'memory' => 256,
             // 'nice' => -19,  // Highest process priority
         ],
-        'modularity-low' => [
+        'modularous-low' => [
             'connection' => 'redis',
             'queue' => ['low'],
             'balance' => 'auto',
             'maxProcesses' => 1,
             'nice' => 19,  // Lowest process priority
         ],
-        'modularity-mail' => [
+        'modularous-mail' => [
             'connection' => 'redis',
             'queue' => ['mail'],
             'balance' => 'simple',
@@ -234,18 +234,18 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'modularity-high' => [
+            'modularous-high' => [
                 'maxProcesses' => 10,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'minProcesses' => 2,
             ],
-            'modularity-low' => [
+            'modularous-low' => [
                 'maxProcesses' => 3,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'modularity-mail' => [
+            'modularous-mail' => [
                 'maxProcesses' => 4,
                 'minProcesses' => 1,
                 'balanceCooldown' => 5,
@@ -262,19 +262,19 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'modularity-high' => [
+            'modularous-high' => [
                 'maxProcesses' => 6,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'minProcesses' => 2,
                 'memory' => 128,
             ],
-            'modularity-low' => [
+            'modularous-low' => [
                 'maxProcesses' => 3,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'modularity-mail' => [
+            'modularous-mail' => [
                 'maxProcesses' => 3,
                 'minProcesses' => 1,
                 'balanceCooldown' => 5,

@@ -13,7 +13,7 @@ use Modules\Cms\Support\CmsPublicSeo;
 /**
  * Single public catch-all invokable for the CMS module: resolves the entity from {@see \Modules\Cms\Entities\UrlRoute}
  * for any model that is both on the {@see \Modules\Cms\Entities\ParentSegment} registry and uses
- * {@see \Unusualify\Modularity\Entities\Traits\HasParentSegment} — no “first front controller in route order”
+ * {@see \Unusualify\Modularous\Entities\Traits\HasParentSegment} — no “first front controller in route order”
  * ambiguity. See {@see \Modules\Cms\Routing\CmsFrontRouteRegistrar::resolveFrontControllerForModule()}.
  */
 final class CmsPublicFrontController extends CmsController
@@ -34,13 +34,13 @@ final class CmsPublicFrontController extends CmsController
     protected function resolvePublicItem(Request $request): ?Model
     {
         $key = $this->publicCmsModuleRouteKey();
-        $handler = data_get((array) modularityConfig('cms_routing.public_item_resolvers', []), $key);
+        $handler = data_get((array) modularousConfig('cms_routing.public_item_resolvers', []), $key);
 
         if (is_string($handler) && class_exists($handler)) {
             return app($handler)($request);
         }
 
-        $kind = (string) modularityConfig(
+        $kind = (string) modularousConfig(
             'cms_routing.public_url_route_kind.' . $key,
             UrlRoute::KIND_PAGE_PUBLIC
         );

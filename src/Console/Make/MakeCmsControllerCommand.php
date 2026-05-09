@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Exceptions\FileAlreadyExistException;
 use Nwidart\Modules\Generators\FileGenerator;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 /**
  * Scaffolds an invokable CMS public controller extending {@see \Modules\Cms\Http\Controllers\Front\CmsController}.
@@ -16,7 +16,7 @@ use Unusualify\Modularity\Facades\Modularity;
  */
 class MakeCmsControllerCommand extends Command
 {
-    protected $signature = 'modularity:make:cms-controller
+    protected $signature = 'modularous:make:cms-controller
         {module : Module name (e.g. Cms)}
         {route : Route/submodule key (e.g. page)}
         {--force : Overwrite if the file already exists}';
@@ -29,13 +29,13 @@ class MakeCmsControllerCommand extends Command
 
     public function handle(): int
     {
-        if (!modularityConfig('cms_features.enabled')) {
+        if (!modularousConfig('cms_features.enabled')) {
             $this->error('CMS features are not enabled.');
 
             return self::FAILURE;
         }
 
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         $routeKey = trim((string) $this->argument('route'));
         if ($routeKey === '') {

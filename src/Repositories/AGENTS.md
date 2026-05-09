@@ -1,6 +1,6 @@
 # Repository Instructions
 
-Short guidelines for Modularity repositories.
+Short guidelines for Modularous repositories.
 
 - Purpose: Encapsulate data access and query logic for entities.
 - Location: `src/Repositories/` — name classes `SomethingRepository`.

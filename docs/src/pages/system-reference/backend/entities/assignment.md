@@ -6,7 +6,7 @@ sidebarTitle: Assignment
 # Assignment
 
 **File**: `src/Entities/Assignment.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`  
 **Traits**: `SoftDeletes`, `AssignmentScopes`, `HasFileponds`
 

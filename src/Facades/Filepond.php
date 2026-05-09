@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool delete(string $path)
  * @method static array getServerConfig()
  *
- * @see \Unusualify\Modularity\Services\Filepond
+ * @see \Unusualify\Modularous\Services\Filepond
  */
 class Filepond extends Facade
 {

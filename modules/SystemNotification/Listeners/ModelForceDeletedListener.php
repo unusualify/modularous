@@ -2,7 +2,7 @@
 
 namespace Modules\SystemNotification\Listeners;
 
-use Unusualify\Modularity\Listeners\Listener;
+use Unusualify\Modularous\Listeners\Listener;
 
 class ModelForceDeletedListener extends Listener
 {

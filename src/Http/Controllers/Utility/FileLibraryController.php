@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Http\Controllers\BaseController;
-use Unusualify\Modularity\Http\Requests\FileRequest;
-use Unusualify\Modularity\Models\File;
-use Unusualify\Modularity\Services\Uploader\SignAzureUpload;
-use Unusualify\Modularity\Services\Uploader\SignS3Upload;
-use Unusualify\Modularity\Services\Uploader\SignUploadListener;
+use Unusualify\Modularous\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Requests\FileRequest;
+use Unusualify\Modularous\Models\File;
+use Unusualify\Modularous\Services\Uploader\SignAzureUpload;
+use Unusualify\Modularous\Services\Uploader\SignS3Upload;
+use Unusualify\Modularous\Services\Uploader\SignUploadListener;
 
 class FileLibraryController extends BaseController implements SignUploadListener
 {
@@ -37,8 +37,8 @@ class FileLibraryController extends BaseController implements SignUploadListener
     /**
      * @var string
      */
-    // protected $namespace = 'Unusualify\Modularity';
-    protected $namespace = 'Unusualify\Modularity';
+    // protected $namespace = 'Unusualify\Modularous';
+    protected $namespace = 'Unusualify\Modularous';
 
     /**
      * @var array
@@ -97,7 +97,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
 
         // $this->removeMiddleware('can:edit');
         // $this->middleware('can:edit', ['only' => ['signS3Upload', 'signAzureUpload', 'tags', 'store', 'singleUpdate', 'bulkUpdate']]);
-        $this->endpointType = $this->laravelConfig->get(modularityBaseKey() . '.file_library.endpoint_type');
+        $this->endpointType = $this->laravelConfig->get(modularousBaseKey() . '.file_library.endpoint_type');
     }
 
     /**
@@ -204,13 +204,13 @@ class FileLibraryController extends BaseController implements SignUploadListener
 
         $uuid = $request->input('unique_folder_name') . '/' . $cleanFilename;
 
-        if ($this->laravelConfig->get(modularityBaseKey() . '.file_library.prefix_uuid_with_local_path', false)) {
-            $prefix = trim($this->laravelConfig->get(modularityBaseKey() . '.file_library.local_path'), '/ ') . '/';
+        if ($this->laravelConfig->get(modularousBaseKey() . '.file_library.prefix_uuid_with_local_path', false)) {
+            $prefix = trim($this->laravelConfig->get(modularousBaseKey() . '.file_library.local_path'), '/ ') . '/';
             $fileDirectory = $prefix . $fileDirectory;
             $uuid = $prefix . $uuid;
         }
 
-        $disk = $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk');
+        $disk = $this->laravelConfig->get(modularousBaseKey() . '.file_library.disk');
 
         $request->file('qqfile')->storeAs($fileDirectory, $cleanFilename, $disk);
 
@@ -296,7 +296,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
      */
     public function signS3Upload(Request $request, SignS3Upload $signS3Upload)
     {
-        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk'));
+        return $signS3Upload->fromPolicy($request->getContent(), $this, $this->laravelConfig->get(modularousBaseKey() . '.file_library.disk'));
     }
 
     /**
@@ -304,7 +304,7 @@ class FileLibraryController extends BaseController implements SignUploadListener
      */
     public function signAzureUpload(Request $request, SignAzureUpload $signAzureUpload)
     {
-        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularityBaseKey() . '.file_library.disk'));
+        return $signAzureUpload->getSasUrl($request, $this, $this->laravelConfig->get(modularousBaseKey() . '.file_library.disk'));
     }
 
     /**

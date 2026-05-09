@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Unusualify\Modularity\Services\CurrencyExchangeService;
+use Unusualify\Modularous\Services\CurrencyExchangeService;
 
 class CurrencyExchangeController extends Controller
 {

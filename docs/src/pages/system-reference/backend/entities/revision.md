@@ -6,7 +6,7 @@ sidebarTitle: Revision
 # Revision
 
 **File**: `src/Entities/Revision.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Abstract base for revision-tracking models. Each module that enables the `HasRevisions` trait generates a `{Model}Revision` class extending this. Stores a JSON snapshot of the model's state at the time of the revision.

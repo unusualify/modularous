@@ -6,7 +6,7 @@ sidebarTitle: ChatMessage
 # ChatMessage
 
 **File**: `src/Entities/ChatMessage.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`  
 **Traits**: `HasCreator`, `HasFileponds`, `ChatMessageScopes`
 
@@ -45,7 +45,7 @@ The parent [Chat](./chat) this message belongs to.
 
 ## Table
 
-Resolved from `modularity.tables.chat_messages`.
+Resolved from `modularous.tables.chat_messages`.
 
 ## Related
 

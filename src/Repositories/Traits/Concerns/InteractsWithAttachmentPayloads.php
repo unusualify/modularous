@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits\Concerns;
+namespace Unusualify\Modularous\Repositories\Traits\Concerns;
 
 /**
- * Shared helpers for file / image (and similar) payload shapes on {@see \Unusualify\Modularity\Repositories\Repository}.
+ * Shared helpers for file / image (and similar) payload shapes on {@see \Unusualify\Modularous\Repositories\Repository}.
  *
  * Payloads may be top-level (`photos`) or nested per locale (`en.photos`) after form preparation.
  */
@@ -323,7 +323,7 @@ trait InteractsWithAttachmentPayloads
     }
 
     /**
-     * Exclude from {@see \Unusualify\Modularity\Repositories\Traits\FilesTrait} so media IDs are not written as {@code file_id}.
+     * Exclude from {@see \Unusualify\Modularous\Repositories\Traits\FilesTrait} so media IDs are not written as {@code file_id}.
      *
      * @param  array<string, mixed>  $fields
      */

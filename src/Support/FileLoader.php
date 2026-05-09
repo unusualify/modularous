@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader as LaravelFileLoader;

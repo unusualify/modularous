@@ -6,7 +6,7 @@ sidebarTitle: FileLibraryController
 # FileLibraryController
 
 **File**: `src/Http/Controllers/FileLibraryController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `BaseController`  
 **Implements**: `SignUploadListener`
 

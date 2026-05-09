@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Core;
+namespace Unusualify\Modularous\Entities\Traits\Core;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Casts\LocaleTagsCast;
+use Unusualify\Modularous\Entities\Casts\LocaleTagsCast;
 
 trait LocaleTags
 {
@@ -233,7 +233,7 @@ trait LocaleTags
         return $this->morphToMany(
             static::$tagsModel,
             'taggable',
-            modularityConfig('tables.tagged', 'tagged'),
+            modularousConfig('tables.tagged', 'tagged'),
             'taggable_id',
             'tag_id'
             // )->withPivot(['locale']);
@@ -269,7 +269,7 @@ trait LocaleTags
 
         $dictionary = $this->getLocaleTagsDictionary() ?? [];
 
-        return call_user_func(static::$localeTagsSlugGenerator ?? 'Illuminate\Support\Str::modularitySlug', ...[
+        return call_user_func(static::$localeTagsSlugGenerator ?? 'Illuminate\Support\Str::modularousSlug', ...[
             $name,
             'language' => $locale,
             'dictionary' => $dictionary,

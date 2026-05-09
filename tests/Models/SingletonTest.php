@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Singleton;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Singleton;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class SingletonTest extends ModelTestCase
 {
@@ -15,7 +15,7 @@ class SingletonTest extends ModelTestCase
     public function test_get_table_singleton()
     {
         $singleton = new Singleton;
-        $this->assertEquals(Modularity::config('tables.singletons', 'modularity_singletons'), $singleton->getTable());
+        $this->assertEquals(Modularous::config('tables.singletons', 'modularous_singletons'), $singleton->getTable());
     }
 
     public function test_fillable_attributes()

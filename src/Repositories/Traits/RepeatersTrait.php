@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Repeater;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Repeater;
 
 /**
  * This trait is used for repeaters that may or may not have files or images in them.
@@ -44,7 +44,7 @@ trait RepeatersTrait
     }
 
     /**
-     * Preview / {@see \Unusualify\Modularity\Repositories\Traits\RevisionsTrait::previewForRevision}: populate `repeaters`
+     * Preview / {@see \Unusualify\Modularous\Repositories\Traits\RevisionsTrait::previewForRevision}: populate `repeaters`
      * from the revision payload so presenters and forms see the same shape as after a normal load.
      *
      * @param  Model  $object
@@ -57,7 +57,7 @@ trait RepeatersTrait
             return $object;
         }
 
-        if (! classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') || ! method_exists($object, 'repeaters')) {
+        if (! classHasTrait($object, 'Unusualify\Modularous\Entities\Traits\HasRepeaters') || ! method_exists($object, 'repeaters')) {
             return $object;
         }
 
@@ -273,7 +273,7 @@ trait RepeatersTrait
     public function getFormFieldsRepeatersTrait($object, $fields, $schema = null)
     {
         // not possess any repeater data
-        if (classHasTrait($object, 'Unusualify\Modularity\Entities\Traits\HasRepeaters') && method_exists($object, 'repeaters')) {
+        if (classHasTrait($object, 'Unusualify\Modularous\Entities\Traits\HasRepeaters') && method_exists($object, 'repeaters')) {
             $schema = $schema ?? $this->getRawInputs();
 
             $repeaterInputs = $this->getRepeaterInputs($schema);

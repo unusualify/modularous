@@ -23,7 +23,7 @@
       class="mb-6"
       border="start"
     >
-      {{ $t('messages.site_seo_db_disabled', 'Database-backed site SEO is disabled (MODULARITY_CMS_SEO_ROBOTS_USE_SITE_SETTINGS=false). The editor shows the env fallback; saving is ignored until this is enabled.') }}
+      {{ $t('messages.site_seo_db_disabled', 'Database-backed site SEO is disabled (MODULAROUS_CMS_SEO_ROBOTS_USE_SITE_SETTINGS=false). The editor shows the env fallback; saving is ignored until this is enabled.') }}
     </v-alert>
 
     <v-alert

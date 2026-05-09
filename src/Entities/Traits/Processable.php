@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Auth;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Entities\Process;
-use Unusualify\Modularity\Entities\ProcessHistory;
-use Unusualify\Modularity\Entities\Scopes\ProcessableScopes;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Process;
+use Unusualify\Modularous\Entities\ProcessHistory;
+use Unusualify\Modularous\Entities\Scopes\ProcessableScopes;
 
 trait Processable
 {
@@ -60,7 +60,7 @@ trait Processable
             'process_id',     // Foreign key on process_histories table
             'id',             // Local key on the model using this trait
             'id'              // Local key on processes table
-        )->where(modularityConfig('tables.processes', 'um_processes') . '.processable_type', static::class);
+        )->where(modularousConfig('tables.processes', 'um_processes') . '.processable_type', static::class);
     }
 
     /**
@@ -90,7 +90,7 @@ trait Processable
             'process_id',
             'id',
             'id'
-        )->where(modularityConfig('tables.processes', 'um_processes') . '.processable_type', static::class)->latest();
+        )->where(modularousConfig('tables.processes', 'um_processes') . '.processable_type', static::class)->latest();
     }
 
     protected function hasProcessHistory(): Attribute

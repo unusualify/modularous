@@ -117,7 +117,7 @@ it('authorizes the owning user for their model channel', function () {
 ## BroadcastManager Tests
 
 ```php
-use Unusualify\Modularity\Services\BroadcastManager;
+use Unusualify\Modularous\Services\BroadcastManager;
 
 it('builds a broadcast config for a model and event list', function () {
     $order = Order::factory()->create();

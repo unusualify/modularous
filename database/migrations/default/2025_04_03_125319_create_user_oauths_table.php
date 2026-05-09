@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $userOauthTable = modularityConfig('tables.user_oauths', 'um_user_oauths');
-        $usersTable = modularityConfig('tables.users', 'um_users');
+        $userOauthTable = modularousConfig('tables.user_oauths', 'um_user_oauths');
+        $usersTable = modularousConfig('tables.users', 'um_users');
 
         Schema::create($userOauthTable, function (Blueprint $table) use ($usersTable) {
             $table->bigIncrements('id');
@@ -32,7 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $userOauthTable = modularityConfig('tables.user_oauths', 'um_user_oauths');
+        $userOauthTable = modularousConfig('tables.user_oauths', 'um_user_oauths');
         Schema::dropIfExists($userOauthTable);
     }
 };

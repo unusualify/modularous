@@ -6,7 +6,7 @@ sidebarTitle: RegisterController
 # RegisterController
 
 **File**: `src/Http/Controllers/Auth/RegisterController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`
 
 Handles direct user registration (without email pre-verification). When the `email_verified_register` config option is enabled, this controller redirects users to the [PreRegisterController](./pre-register-controller) flow instead.
@@ -15,7 +15,7 @@ Handles direct user registration (without email pre-verification). When the `ema
 
 ### `showForm(): View|RedirectResponse`
 
-Displays the registration form. If `modularity.email_verified_register` is `true`, redirects to the email verification form (`PreRegisterController::showEmailForm`).
+Displays the registration form. If `modularous.email_verified_register` is `true`, redirects to the email verification form (`PreRegisterController::showEmailForm`).
 
 ### `register(Request $request): JsonResponse|RedirectResponse`
 
@@ -23,11 +23,11 @@ Processes the registration submission:
 
 1. If `email_verified_register` is enabled, returns an error and redirects to the email form.
 2. Validates the request via `validator()`.
-3. Fires `ModularityUserRegistering` event.
+3. Fires `ModularousUserRegistering` event.
 4. Creates a `Company` record (personal if no company name provided).
 5. Creates a `User` record attached to the company.
 6. Assigns the `client-manager` role.
-7. Fires `ModularityUserRegistered` event.
+7. Fires `ModularousUserRegistered` event.
 8. Returns a success response with redirect to the registration success page.
 
 ### `validator(array $data): Validator`
@@ -49,7 +49,7 @@ Renders a success page after registration, with a button linking to the login fo
 
 ## Registration Modes
 
-Modularous supports two registration flows controlled by `modularity.email_verified_register`:
+Modularous supports two registration flows controlled by `modularous.email_verified_register`:
 
 | Mode | Flow |
 |------|------|

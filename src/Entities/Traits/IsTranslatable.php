@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 trait IsTranslatable
 {
@@ -13,7 +13,7 @@ trait IsTranslatable
     public function isTranslatable($columns = null)
     {
         // Model must have the trait
-        if (! classHasTrait($this, 'Unusualify\Modularity\Entities\Traits\HasTranslation')) {
+        if (! classHasTrait($this, 'Unusualify\Modularous\Entities\Traits\HasTranslation')) {
             return false;
         }
 

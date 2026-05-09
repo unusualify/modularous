@@ -6,7 +6,7 @@
     "keywords": [
         "unusual",
         "unusualify",
-        "modularity",
+        "modularous",
         "modularous",
         "laravel",
         "vuetify"
@@ -80,26 +80,26 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Unusualify\\Modularity\\LaravelServiceProvider",
-                "Unusualify\\Modularity\\Providers\\ModularityProvider"
+                "Unusualify\\Modularous\\LaravelServiceProvider",
+                "Unusualify\\Modularous\\Providers\\ModularousProvider"
             ],
             "aliases": {
-                "ModularityVite": "Unusualify\\Modularity\\Facades\\ModularityVite"
+                "ModularousVite": "Unusualify\\Modularous\\Facades\\ModularousVite"
             }
         },
         "packages": []
     },
     "autoload": {
         "psr-4": {
-            "Unusualify\\Modularity\\": "src",
-            "Unusualify\\Modularity\\Database\\Seeders\\": "database/seeders",
-            "Unusualify\\Modularity\\Database\\Factories\\": "database/factories",
+            "Unusualify\\Modularous\\": "src",
+            "Unusualify\\Modularous\\Database\\Seeders\\": "database/seeders",
+            "Unusualify\\Modularous\\Database\\Factories\\": "database/factories",
             "Modules\\": "modules"
         },
         "files": [
             "src/Support/Migrations/SchemaParser.php",
             "src/Services/Translation.php",
-            "src/Support/ModularityVite.php"
+            "src/Support/ModularousVite.php"
         ],
         "exclude-from-classmap": [
             "../../../vendor/nwidart/laravel-modules/src/Support/Migrations/SchemaParser.php",
@@ -108,7 +108,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Unusualify\\Modularity\\Tests\\": "tests",
+            "Unusualify\\Modularous\\Tests\\": "tests",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",

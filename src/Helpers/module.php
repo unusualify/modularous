@@ -8,23 +8,23 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\VarDumper\VarDumper;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Exceptions\ModularityException;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Exceptions\ModularousException;
+use Unusualify\Modularous\Facades\Modularous;
 
 /*
 |--------------------------------------------------------------------------
 | #curt is abbreviation of current
-| #umod is abbreviation of unusualify/modularity
+| #umod is abbreviation of unusualify/modularous
 |--------------------------------------------------------------------------
 */
 
-if (! function_exists('modularityBaseKey')) {
-    function modularityBaseKey($notation = null)
+if (! function_exists('modularousBaseKey')) {
+    function modularousBaseKey($notation = null)
     {
         $notation = ! $notation ? $notation : '.' . $notation;
 
-        return Str::snake(env('MODULARITY_BASE_NAME', 'Modularity')) . $notation;
+        return Str::snake(env('MODULAROUS_BASE_NAME', 'Modularous')) . $notation;
     }
 }
 
@@ -33,7 +33,7 @@ if (! function_exists('curtModule')) {
     {
         $name = curtModuleName($file);
 
-        return Modularity::find(studlyName($name));
+        return Modularous::find(studlyName($name));
     }
 }
 
@@ -62,7 +62,7 @@ if (! function_exists('curtModuleName')) {
                 'dir' => $dir,
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 'Could not determine current module from file path. Ensure the path contains a valid module directory (e.g. Modules/ModuleName/).'
             );
         }
@@ -188,7 +188,7 @@ if (! function_exists('moduleRoute')) {
 
         // Prefix it with module name only if prefix doesn't contains it already
         if (
-            modularityConfig('allow_duplicates_on_route_names', false) ||
+            modularousConfig('allow_duplicates_on_route_names', false) ||
             ($prefix !== $moduleName &&
                 ! Str::endsWith($prefix, '.' . $moduleName))
         ) {
@@ -217,7 +217,7 @@ if (! function_exists('moduleRoute')) {
         try {
             return route($routeName, $parameters, $absolute);
         } catch (Throwable $th) {
-            Log::error('modularityRoute: Route generation failed', [
+            Log::error('modularousRoute: Route generation failed', [
                 'routeName' => $routeName,
                 'moduleName' => $moduleName,
                 'prefix' => $prefix,
@@ -226,7 +226,7 @@ if (! function_exists('moduleRoute')) {
                 'exception' => $th->getMessage(),
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 "Failed to generate route '{$routeName}': {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -235,7 +235,7 @@ if (! function_exists('moduleRoute')) {
     }
 }
 
-if (! function_exists('modularityRoute')) {
+if (! function_exists('modularousRoute')) {
     /**
      * @param string $routeName
      * @param string $prefix
@@ -244,7 +244,7 @@ if (! function_exists('modularityRoute')) {
      * @param bool $absolute
      * @return string
      */
-    function modularityRoute($route, $prefix, $action = '', $parameters = [], $absolute = true)
+    function modularousRoute($route, $prefix, $action = '', $parameters = [], $absolute = true)
     {
         // Fix module name case
         $route = Str::camel($route);
@@ -255,7 +255,7 @@ if (! function_exists('modularityRoute')) {
 
         // Prefix it with module name only if prefix doesn't contains it already
         if (
-            modularityConfig('allow_duplicates_on_route_names', false) ||
+            modularousConfig('allow_duplicates_on_route_names', false) ||
             ($prefix !== $route &&
                 ! Str::endsWith($prefix, '.' . $route))
         ) {
@@ -270,38 +270,38 @@ if (! function_exists('modularityRoute')) {
     }
 }
 
-if (! function_exists('getModularityTraits')) {
+if (! function_exists('getModularousTraits')) {
     /**
      * @return array
      */
-    function getModularityTraits()
+    function getModularousTraits()
     {
-        return array_keys(Config::get(modularityBaseKey() . '.traits'));
+        return array_keys(Config::get(modularousBaseKey() . '.traits'));
     }
 }
 
-if (! function_exists('activeModularityTraits')) {
+if (! function_exists('activeModularousTraits')) {
     /**
      * @return Collection
      */
-    function activeModularityTraits($traitOptions)
+    function activeModularousTraits($traitOptions)
     {
         return Collection::make($traitOptions)
-            ->only(getModularityTraits())
+            ->only(getModularousTraits())
             ->filter(function ($enabled) {
                 return $enabled;
             });
     }
 }
 
-if (! function_exists('modularityTraitOptions')) {
+if (! function_exists('modularousTraitOptions')) {
     /**
      * @param bool $asSignature Return as command signature string instead of array
      * @return array|string
      */
-    function modularityTraitOptions($asSignature = false)
+    function modularousTraitOptions($asSignature = false)
     {
-        $options = Collection::make(Config::get(modularityBaseKey() . '.traits'))->map(function ($trait, $key) use ($asSignature) {
+        $options = Collection::make(Config::get(modularousBaseKey() . '.traits'))->map(function ($trait, $key) use ($asSignature) {
             if ($asSignature) {
                 $shortcut = isset($trait['command_option']['shortcut']) ? $trait['command_option']['shortcut'] . '|' . $key : '--' . $key;
                 $valueType = ($trait['command_option']['input_type'] ?? InputOption::VALUE_NONE) !== InputOption::VALUE_NONE ? '=' : '';
@@ -322,16 +322,16 @@ if (! function_exists('modularityTraitOptions')) {
     }
 }
 
-if (! function_exists('modularityConfig')) {
+if (! function_exists('modularousConfig')) {
     /**
      * @return string|array
      */
-    function modularityConfig($notation = null, $default = '')
+    function modularousConfig($notation = null, $default = '')
     {
         if (! $notation) {
-            return config(modularityBaseKey());
+            return config(modularousBaseKey());
         } else {
-            return config(modularityBaseKey($notation), $default);
+            return config(modularousBaseKey($notation), $default);
         }
     }
 }
@@ -428,10 +428,10 @@ if (! function_exists('exceptionalRunningInConsole')) {
     function exceptionalRunningInConsole()
     {
         return ! (App::runningInConsole() && App::runningConsoleCommand([
-            'modularity:make:module',
-            'modularity:fix:module',
-            'modularity:make:route',
-            'modularity:dev',
+            'modularous:make:module',
+            'modularous:fix:module',
+            'modularous:make:route',
+            'modularous:dev',
         ]));
     }
 }
@@ -450,7 +450,7 @@ if (! function_exists('backtrace_formatter')) {
                 'exception' => $th->getMessage(),
             ]);
 
-            throw new ModularityException(
+            throw new ModularousException(
                 "Failed to format backtrace: {$th->getMessage()}",
                 (int) $th->getCode(),
                 $th
@@ -487,7 +487,7 @@ if (! function_exists('benchmark')) {
             throw new Exception('Label is required');
         }
 
-        if (! $die && ! modularityConfig('benchmark_enabled', false)) {
+        if (! $die && ! modularousConfig('benchmark_enabled', false)) {
             return $callback();
         }
 
@@ -511,41 +511,41 @@ if (! function_exists('benchmark')) {
         $elapsedString = $elapsed . ' in ' . $unit;
 
         if ($die) {
-            throw new ModularityException(
+            throw new ModularousException(
                 "Benchmark stopped: {$elapsedString}"
             );
         }
 
-        // $modularityLogDir = concatenate_path(modularityConfig('log_dir', storage_path('logs/modularity')), 'benchmarks');
+        // $modularousLogDir = concatenate_path(modularousConfig('log_dir', storage_path('logs/modularous')), 'benchmarks');
         // $channel = [
         //     'driver' => 'single'
         // ];
 
-        $emergencyThreshold = (int) modularityConfig('benchmark_emergency_time', 1000);
+        $emergencyThreshold = (int) modularousConfig('benchmark_emergency_time', 1000);
         $elapsedMs = $elapsed * 1000;
         $logged = false;
         $logEvent = null;
 
         if ($elapsedMs > $emergencyThreshold) {
-            // $modularityLogPath = concatenate_path($modularityLogDir, 'emergency.log');
-            // $channel['path'] = $modularityLogPath;
+            // $modularousLogPath = concatenate_path($modularousLogDir, 'emergency.log');
+            // $channel['path'] = $modularousLogPath;
             $logEvent = 'emergency';
             $message = "BENCHMARK: {$elapsedMs}ms exceeded emergency threshold ({$emergencyThreshold}ms) for {$label}";
             $logged = true;
         }
 
-        if (! $logged && modularityConfig('benchmark_log_level') === 'debug') {
-            // $modularityLogPath = concatenate_path($modularityLogDir, 'debug.log');
-            // $channel['path'] = $modularityLogPath;
+        if (! $logged && modularousConfig('benchmark_log_level') === 'debug') {
+            // $modularousLogPath = concatenate_path($modularousLogDir, 'debug.log');
+            // $channel['path'] = $modularousLogPath;
 
             $logEvent = 'debug';
             $message = "BENCHMARK: {$elapsedString} elapsed for {$label}";
             $logged = true;
         }
 
-        // if(!$logged && modularityConfig('benchmark_log_level') === 'info'){
-        //     // $modularityLogPath = concatenate_path($modularityLogDir, 'info.log');
-        //     // $channel['path'] = $modularityLogPath;
+        // if(!$logged && modularousConfig('benchmark_log_level') === 'info'){
+        //     // $modularousLogPath = concatenate_path($modularousLogDir, 'info.log');
+        //     // $channel['path'] = $modularousLogPath;
 
         //     $logEvent = 'info';
         //     $message = "BENCHMARK: {$elapsed} elapsed for {$label}";
@@ -554,7 +554,7 @@ if (! function_exists('benchmark')) {
 
         if ($logged && $logEvent) {
             // Log::build($channel)
-            Log::channel('modularity-benchmark')
+            Log::channel('modularous-benchmark')
                 ->{$logEvent}($message);
         }
 

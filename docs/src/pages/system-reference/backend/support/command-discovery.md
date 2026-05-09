@@ -5,7 +5,7 @@ sidebarTitle: CommandDiscovery
 
 # CommandDiscovery
 
-`Unusualify\Modularity\Support\CommandDiscovery`
+`Unusualify\Modularous\Support\CommandDiscovery`
 
 Scans one or more glob paths and returns an array of fully qualified class names (FQCNs) for concrete, instantiable `Illuminate\Console\Command` subclasses. Used by the Modularous service provider to register all artisan commands without a hand-maintained list.
 
@@ -36,7 +36,7 @@ Comments and string literals are stripped before checking declarations to avoid 
 ## Example
 
 ```php
-use Unusualify\Modularity\Support\CommandDiscovery;
+use Unusualify\Modularous\Support\CommandDiscovery;
 
 $commands = CommandDiscovery::discover([
     __DIR__ . '/Console/Cache/*.php',

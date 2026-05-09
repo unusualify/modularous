@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\VatRate;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 
 class PaymentCurrency extends Currency
 {
@@ -134,7 +134,7 @@ class PaymentCurrency extends Currency
 
     public function isUserCorporateVatRate()
     {
-        return $this->hasUserCorporateVatRate() && ($user = Auth::guard('modularity')->user()) && $user->isClient() && ($user->validCompany) && $user->company->isCorporateCompany;
+        return $this->hasUserCorporateVatRate() && ($user = Auth::guard('modularous')->user()) && $user->isClient() && ($user->validCompany) && $user->company->isCorporateCompany;
     }
 
     /**
@@ -187,7 +187,7 @@ class PaymentCurrency extends Currency
      */
     public function setCompanyVatRate()
     {
-        if (Auth::guard('modularity')->check() && ($user = Auth::guard('modularity')->user()) && $user->is_client && ($user->validCompany)) {
+        if (Auth::guard('modularous')->check() && ($user = Auth::guard('modularous')->user()) && $user->is_client && ($user->validCompany)) {
             if ($user->company->isCorporateCompany) {
                 $this->setCorporateVatRate();
             } elseif ($user->company->isPersonalCompany) {

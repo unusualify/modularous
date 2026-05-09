@@ -1,15 +1,15 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Services\CmsSignedPreviewUrlGenerator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsSignedPreviewUrlGeneratorTest extends TestCase
 {
     public function test_ttl_minutes_respects_config_minimum(): void
     {
-        $this->app['config']->set('modularity.cms_routing.signed_preview.ttl_minutes', 3);
+        $this->app['config']->set('modularous.cms_routing.signed_preview.ttl_minutes', 3);
 
         $generator = new CmsSignedPreviewUrlGenerator;
 
@@ -18,7 +18,7 @@ class CmsSignedPreviewUrlGeneratorTest extends TestCase
 
     public function test_ttl_minutes_uses_config_when_above_minimum(): void
     {
-        $this->app['config']->set('modularity.cms_routing.signed_preview.ttl_minutes', 90);
+        $this->app['config']->set('modularous.cms_routing.signed_preview.ttl_minutes', 90);
 
         $generator = new CmsSignedPreviewUrlGenerator;
 

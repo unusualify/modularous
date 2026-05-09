@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Process;
+use Unusualify\Modularous\Entities\Process;
 
 trait HasProcesses
 {

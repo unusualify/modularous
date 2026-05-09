@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers;
+namespace Unusualify\Modularous\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Modules\Cms\Http\Controllers\Traits\ManageCms;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageBulkSheet;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageIndexAjax;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageInertia;
-use Unusualify\Modularity\Http\Controllers\Traits\ManagePreview;
-use Unusualify\Modularity\Http\Controllers\Traits\ManagePrevious;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageSingleton;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageTranslations;
-use Unusualify\Modularity\Http\Controllers\Traits\ManageUtilities;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageBulkSheet;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageIndexAjax;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageInertia;
+use Unusualify\Modularous\Http\Controllers\Traits\ManagePreview;
+use Unusualify\Modularous\Http\Controllers\Traits\ManagePrevious;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageSingleton;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageTranslations;
+use Unusualify\Modularous\Http\Controllers\Traits\ManageUtilities;
+use Unusualify\Modularous\Services\MessageStage;
 
 abstract class BaseController extends PanelController
 {
@@ -339,7 +339,7 @@ abstract class BaseController extends PanelController
                         ['openCreate' => true]
                     ));
                 } elseif ($input['cmsSaveType'] === 'restore') {
-                    Session::flash('status', modularityTrans("$this->baseKey::lang.publisher.restore-success"));
+                    Session::flash('status', modularousTrans("$this->baseKey::lang.publisher.restore-success"));
 
                     return $this->respondWithRedirect(moduleRoute($this->routeName,
                         $this->routePrefix,
@@ -415,7 +415,7 @@ abstract class BaseController extends PanelController
         ], ['modelTitle' => $this->modelTitle]);
 
         return $this->respondWithError($message);
-        // return $this->respondWithError(modularityTrans("$this->baseKey::lang.listing.delete.error", ['modelTitle' => $this->modelTitle]));
+        // return $this->respondWithError(modularousTrans("$this->baseKey::lang.listing.delete.error", ['modelTitle' => $this->modelTitle]));
     }
 
     /**

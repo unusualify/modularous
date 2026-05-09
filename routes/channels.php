@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 /*
 |--------------------------------------------------------------------------
-| Modularity Broadcast Channels
+| Modularous Broadcast Channels
 |--------------------------------------------------------------------------
 |
 | Here you may register all of the event broadcasting channels that your
@@ -18,14 +18,14 @@ Broadcast::channel('models.{modelId}', function ($user, $modelId) {
     return $user->id == $modelId;
 
     return $user->id === $modelType::findOrNew($modelId);
-}, ['guards' => ['web', Modularity::getAuthGuardName()]]);
+}, ['guards' => ['web', Modularous::getAuthGuardName()]]);
 
 // Broadcast::channel('chatable', function ($user, $modelId) {
 //     return $user->id == $modelId;
 //     return $user->id === $modelType::findOrNew($modelId);
-// }, ['guards' => ['web', Modularity::getAuthGuardName()]]);
+// }, ['guards' => ['web', Modularous::getAuthGuardName()]]);
 
 // Broadcast::channel('stateable', function ($user, $modelId) {
 //     return $user->id == $modelId;
 //     return $user->id === $modelType::findOrNew($modelId);
-// }, ['guards' => ['web', Modularity::getAuthGuardName()]]);
+// }, ['guards' => ['web', Modularous::getAuthGuardName()]]);

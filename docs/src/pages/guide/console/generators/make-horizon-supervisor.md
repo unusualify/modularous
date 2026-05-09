@@ -4,8 +4,8 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:horizon:supervisor`
-- **Alias:** `modularity:create:horizon:supervisor`
+- **Signature:** `modularous:make:horizon:supervisor`
+- **Alias:** `modularous:create:horizon:supervisor`
 - **Category:** Generators
 
 ## Examples
@@ -13,10 +13,10 @@
 ### Run the interactive setup
 
 ```bash
-php artisan modularity:make:horizon:supervisor
+php artisan modularous:make:horizon:supervisor
 ```
 
-`modularity:make:horizon:supervisor`
+`modularous:make:horizon:supervisor`
 -------------------------------------
 
 Interactively generates a Supervisor `.conf` file for Laravel Horizon. The command:
@@ -44,8 +44,8 @@ After the file is written, the command prints the `supervisorctl reread`, `updat
 
 ### Usage
 
-* `modularity:make:horizon:supervisor`
-* `modularity:create:horizon:supervisor`
+* `modularous:make:horizon:supervisor`
+* `modularous:create:horizon:supervisor`
 
 ### Options
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Support\Decomposers;
+namespace Unusualify\Modularous\Support\Decomposers;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Support\Finder;
-use Unusualify\Modularity\Traits\ManageNames;
-use Unusualify\Modularity\Traits\RelationshipMap;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Support\Finder;
+use Unusualify\Modularous\Traits\ManageNames;
+use Unusualify\Modularous\Traits\RelationshipMap;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\info;
@@ -81,7 +81,7 @@ class ModelRelationParser implements Arrayable
 
         $this->relationships = $relationships;
 
-        $this->relationshipParametersMap = modularityConfig('laravel-relationship-map', []);
+        $this->relationshipParametersMap = modularousConfig('laravel-relationship-map', []);
     }
 
     /**

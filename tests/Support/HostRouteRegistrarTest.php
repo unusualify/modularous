@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Support\HostRouteRegistrar;
-use Unusualify\Modularity\Tests\Support\Stubs\HostableStub;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Support\HostRouteRegistrar;
+use Unusualify\Modularous\Tests\Support\Stubs\HostableStub;
+use Unusualify\Modularous\Tests\TestCase;
 
 class HostRouteRegistrarTest extends TestCase
 {

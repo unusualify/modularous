@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Migration;
+namespace Unusualify\Modularous\Console\Migration;
 
 use Illuminate\Console\Command;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MigrateCommand extends Command
 {
@@ -14,7 +14,7 @@ class MigrateCommand extends Command
      *
      * @var string
      */
-    protected $name = 'modularity:migrate';
+    protected $name = 'modularous:migrate';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class MigrateCommand extends Command
     public function handle(): int
     {
         /** @var Module $module */
-        $module = Modularity::findOrFail($this->argument('module'));
+        $module = Modularous::findOrFail($this->argument('module'));
 
         $this->call('migrate', [
             '--path' => $module->getDirectoryPath('Database/Migrations', true),

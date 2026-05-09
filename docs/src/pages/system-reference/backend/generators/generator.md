@@ -5,7 +5,7 @@ sidebarTitle: Generator
 
 # Generator
 
-**Class**: `Unusualify\Modularity\Generators\Generator`  
+**Class**: `Unusualify\Modularous\Generators\Generator`  
 **Source**: `src/Generators/Generator.php`  
 **Extends**: `Nwidart\Modules\Generators\Generator`  
 **Uses**: `ReplacementTrait`
@@ -51,14 +51,14 @@ $generator->setModule('Posts'); // resolves by name via Modularous::find()
 $generator->getModule();        // returns Module instance
 ```
 
-`setModule()` calls `Modularity::find($module)` and also re-initialises any module-dependent state (e.g. translation paths in `RouteGenerator`).
+`setModule()` calls `Modularous::find($module)` and also re-initialises any module-dependent state (e.g. translation paths in `RouteGenerator`).
 
 ### Config helpers
 
 | Method | Description |
 |--------|-------------|
 | `generatorConfig($key)` | Returns a `GeneratorPath` object for the generator config key (e.g. `'repository'`, `'route-controller'`) |
-| `getModularityGeneratorConfig($key)` | Raw config value from `modularity.paths.generator.{key}` |
+| `getModularousGeneratorConfig($key)` | Raw config value from `modularous.paths.generator.{key}` |
 | `getTargetPath()` | Returns `$module->getPath()` or `false` if no module is set |
 
 ### Fluent setters
@@ -83,7 +83,7 @@ $generator = new RouteGenerator(
     config: app('config'),
     filesystem: app('files'),
     console: $this, // Artisan command instance
-    module: Modularity::find('Blog'),
+    module: Modularous::find('Blog'),
 );
 
 $generator->setSchema('title:string,body:text')

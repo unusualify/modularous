@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\View\Widgets;
+namespace Unusualify\Modularous\View\Widgets;
 
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\View\ModularityWidget;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\View\ModularousWidget;
 
-class MetricsWidget extends ModularityWidget
+class MetricsWidget extends ModularousWidget
 {
     public $tag = 'ue-metrics';
 
@@ -61,7 +61,7 @@ class MetricsWidget extends ModularityWidget
             }, $attributes['items']);
         }
 
-        $attributes['endpoint'] = route('admin.modularity.metrics');
+        $attributes['endpoint'] = route('admin.modularous.metrics');
 
         return $attributes;
     }

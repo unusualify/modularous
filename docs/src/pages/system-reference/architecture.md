@@ -12,7 +12,7 @@ Modularous is a modular Laravel admin package with Vue/Vuetify and Inertia. It u
 ```
 packages/modularous/
 ├── src/                    # PHP package source
-│   ├── Modularity.php      # Module manager (extends Nwidart FileRepository)
+│   ├── Modularous.php      # Module manager (extends Nwidart FileRepository)
 │   ├── Module.php          # Single module representation
 │   ├── Console/            # Artisan commands (Make, Cache, Migration, etc.)
 │   ├── Hydrates/           # Schema hydration (InputHydrator → *Hydrate)
@@ -85,7 +85,7 @@ flowchart LR
 
 | Class | Purpose |
 |-------|---------|
-| **Modularity** | Module manager; scan, cache, paths, auth names |
+| **Modularous** | Module manager; scan, cache, paths, auth names |
 | **Module** | Single module; config, route names, getRepository(), getModel() |
 | **Finder** | Resolve model/repository/controller from route or table |
 | **Repository** | Data access; create/update lifecycle, Logic traits |

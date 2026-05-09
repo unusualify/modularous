@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\View\Widgets;
+namespace Unusualify\Modularous\View\Widgets;
 
 use Illuminate\Support\Arr;
-use Unusualify\Modularity\View\ModularityWidget;
+use Unusualify\Modularous\View\ModularousWidget;
 
-class BoardInformationWidget extends ModularityWidget
+class BoardInformationWidget extends ModularousWidget
 {
     public $tag = 'ue-board-information-plus';
 

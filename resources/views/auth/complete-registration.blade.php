@@ -1,4 +1,4 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::auth.layout", [
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::auth.layout", [
     'pageTitle' => ___('authentication.complete-registration')
 ])
 @section('appTypeClass', 'body--form')
@@ -16,6 +16,6 @@
 @endpush
 
 @push('STORE')
-    {{-- window['{{ modularityConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!} --}}
-    {{-- window['{{ modularityConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new StdClass()) !!} --}}
+    {{-- window['{{ modularousConfig('js_namespace') }}'].ENDPOINTS = {!! json_encode($endpoints ?? new StdClass()) !!} --}}
+    {{-- window['{{ modularousConfig('js_namespace') }}'].STORE.form = {!! json_encode($formStore ?? new StdClass()) !!} --}}
 @endpush

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Mockery as m;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Hydrates\Inputs\InputHydrate;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Hydrates\Inputs\InputHydrate;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Concrete implementation of InputHydrate for testing abstract class
@@ -287,9 +287,9 @@ class InputHydrateTest extends TestCase
         $input = ['_moduleName' => 'TestModule'];
         $h = new ConcreteInputHydrate($input, null, null, true);
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('TestModule')
-            ->andReturn(m::mock(\Unusualify\Modularity\Module::class));
+            ->andReturn(m::mock(\Unusualify\Modularous\Module::class));
 
         $reflection = new \ReflectionClass($h);
         $method = $reflection->getMethod('getModule');
@@ -493,7 +493,7 @@ class InputHydrateTest extends TestCase
         ];
         $h = new ConcreteInputHydrate($input, null, null, true);
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('TestModule')
             ->andReturn(m::mock(Module::class));
 
@@ -700,7 +700,7 @@ class InputHydrateTest extends TestCase
         $module = m::mock(Module::class);
         $h = new ConcreteInputHydrate($input, $module, null, true);
 
-        Modularity::shouldReceive('find')
+        Modularous::shouldReceive('find')
             ->with('CustomModule')
             ->andReturn(m::mock(Module::class));
 

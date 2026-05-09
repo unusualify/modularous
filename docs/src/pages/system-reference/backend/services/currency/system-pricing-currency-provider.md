@@ -30,7 +30,7 @@ sidebarTitle: SystemPricingCurrencyProvider
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'services' => [
     'currency_exchange' => [
         'active'        => true,

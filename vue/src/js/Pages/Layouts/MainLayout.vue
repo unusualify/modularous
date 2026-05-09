@@ -15,7 +15,7 @@ const headData = computed(() => {
 
 const mainConfiguration = computed(() => {
   const defaultConfig = {
-    headerTitle: 'Modularity',
+    headerTitle: 'Modularous',
     hideDefaultSidebar: false,
     fixedAppBar: false,
     appBarOrder: 0,

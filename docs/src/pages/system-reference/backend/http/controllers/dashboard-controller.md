@@ -6,7 +6,7 @@ sidebarTitle: DashboardController
 # DashboardController
 
 **File**: `src/Http/Controllers/DashboardController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `BaseController`  
 **Traits**: `ManageUtilities`, `Allowable`
 
@@ -31,7 +31,7 @@ Removes the default `view` permission middleware (dashboard is accessible to all
 
 ### `index($parentId = null): View|Response`
 
-Renders the dashboard. Collects block items from `modularity.ui_settings.dashboard.blocks`, filters them by `allowedRoles` for the current user, renders each block's component, then passes the result to the view.
+Renders the dashboard. Collects block items from `modularous.ui_settings.dashboard.blocks`, filters them by `allowedRoles` for the current user, renders each block's component, then passes the result to the view.
 
 **Passed to view**:
 
@@ -49,7 +49,7 @@ Renders the dashboard using Inertia with shared store variables and metadata req
 
 ## Block Configuration
 
-Blocks are defined in `config/modularity.php` under `ui_settings.dashboard.blocks`:
+Blocks are defined in `config/modularous.php` under `ui_settings.dashboard.blocks`:
 
 ```php
 'blocks' => [

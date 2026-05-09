@@ -15,7 +15,7 @@ describe('errors utils', () => {
         }
       }
     }
-    window[import.meta.env?.VUE_APP_NAME || 'MODULARITY'] = { vm: { notif: vi.fn() } }
+    window[import.meta.env?.VUE_APP_NAME || 'MODULAROUS'] = { vm: { notif: vi.fn() } }
   })
 
   afterEach(() => {

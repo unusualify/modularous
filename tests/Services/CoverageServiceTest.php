@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Unusualify\Modularity\Services\CoverageService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\CoverageService;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CoverageServiceTest extends TestCase
 {

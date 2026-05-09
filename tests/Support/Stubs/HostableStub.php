@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support\Stubs;
+namespace Unusualify\Modularous\Tests\Support\Stubs;
 
 use Illuminate\Support\Collection;
 

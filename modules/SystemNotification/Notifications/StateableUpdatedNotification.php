@@ -76,7 +76,7 @@ class StateableUpdatedNotification extends FeatureNotification implements Should
         $mailRedirector = $this->getNotificationMailRedirector($notifiable, $this->getModel());
 
         $mailMessage = $mailMessage
-            ->markdown('modularity::mails.stateable', [
+            ->markdown('modularous::mails.stateable', [
                 'userName' => $notifiable->name,
                 'message' => $this->getNotificationMessage($notifiable, $this->getModel()),
                 'state' => $this->newState->name,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits;
+namespace Unusualify\Modularous\Http\Controllers\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Modules\SystemUser\Repositories\UserRepository;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 trait ManageInertia
 {
@@ -17,7 +17,7 @@ trait ManageInertia
      */
     protected function shouldUseInertia(): bool
     {
-        return Modularity::shouldUseInertia() || $this->isInertiaRequest();
+        return Modularous::shouldUseInertia() || $this->isInertiaRequest();
     }
 
     /**
@@ -166,12 +166,12 @@ trait ManageInertia
      */
     protected function getInertiaMainConfiguration(array $data): array
     {
-        return get_modularity_inertia_main_configuration($data);
+        return get_modularous_inertia_main_configuration($data);
     }
 
     protected function getHeadLayoutData(array $data): array
     {
-        return get_modularity_head_layout_config($data);
+        return get_modularous_head_layout_config($data);
     }
 
     /**
@@ -179,20 +179,20 @@ trait ManageInertia
      */
     public function shareInertiaStoreVariables()
     {
-        view()->composer(modularityBaseKey() . '::layouts.app-inertia', function ($view) {
+        view()->composer(modularousBaseKey() . '::layouts.app-inertia', function ($view) {
             $user = $this->user;
 
             $userRepository = app()->make(UserRepository::class);
-            $profileShortcutSchema = modularity_format_inputs(getFormDraft('profile_shortcut'));
+            $profileShortcutSchema = modularous_format_inputs(getFormDraft('profile_shortcut'));
             $profileShortcutModel = $userRepository->getFormFields($user, $profileShortcutSchema);
-            $loginShortcutSchema = modularity_format_inputs(getFormDraft('login_shortcut'));
+            $loginShortcutSchema = modularous_format_inputs(getFormDraft('login_shortcut'));
 
             $view->with(array_merge($view->getData(), [
                 'profileShortcutModel' => $profileShortcutModel,
                 'profileShortcutSchema' => $profileShortcutSchema,
                 'loginShortcutModel' => [],
                 'loginShortcutSchema' => $loginShortcutSchema,
-                'authorization' => get_modularity_authorization_config(),
+                'authorization' => get_modularous_authorization_config(),
             ]));
         });
     }

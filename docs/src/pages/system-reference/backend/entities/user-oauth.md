@@ -6,7 +6,7 @@ sidebarTitle: UserOauth
 # UserOauth
 
 **File**: `src/Entities/UserOauth.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Stores an OAuth provider link for a user. Each record represents one linked provider (e.g. Google, GitHub) with the provider's unique ID and access token.
@@ -29,7 +29,7 @@ The Modularous user this OAuth link belongs to.
 
 ## Table
 
-Resolved from `modularity.tables.user_oauths`, defaults to `um_user_oauths`.
+Resolved from `modularous.tables.user_oauths`, defaults to `um_user_oauths`.
 
 ## Related
 

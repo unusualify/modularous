@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 // use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Entities\Scopes\ProcessScopes;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Scopes\ProcessScopes;
 
 class Process extends Model
 {
@@ -170,6 +170,6 @@ class Process extends Model
 
     public function getTable(): string
     {
-        return modularityConfig('tables.processes', 'm_processes');
+        return modularousConfig('tables.processes', 'm_processes');
     }
 }

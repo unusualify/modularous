@@ -6,7 +6,7 @@ sidebarTitle: BaseFormRequest
 # BaseFormRequest
 
 **File**: `src/Http/Requests/BaseFormRequest.php`
-**Namespace**: `Unusualify\Modularity\Http\Requests`
+**Namespace**: `Unusualify\Modularous\Http\Requests`
 **Extends**: `Illuminate\Foundation\Http\FormRequest`
 
 A thin convenience base for writing form requests where validation differs by HTTP method. Instead of overriding `rules()` with a branching `switch`, subclasses implement one small method per verb.

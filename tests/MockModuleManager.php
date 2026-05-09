@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class MockModuleManager
 {
@@ -32,7 +32,7 @@ class MockModuleManager
      */
     public static function all()
     {
-        return Modularity::all();
+        return Modularous::all();
     }
 
     /**
@@ -40,7 +40,7 @@ class MockModuleManager
      */
     public static function get($moduleName)
     {
-        return Modularity::find($moduleName);
+        return Modularous::find($moduleName);
     }
 
     /**
@@ -48,7 +48,7 @@ class MockModuleManager
      */
     public static function has($moduleName)
     {
-        return Modularity::has($moduleName);
+        return Modularous::has($moduleName);
     }
 
     /**

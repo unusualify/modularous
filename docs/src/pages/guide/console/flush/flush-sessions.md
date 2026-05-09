@@ -9,8 +9,8 @@ sidebarTitle: Flush Sessions
 
 ## Command Information
 
-- **Signature:** `modularity:flush:sessions [--driver[=DRIVER]]`
-- **Alias:** `modularity:session:flush`
+- **Signature:** `modularous:flush:sessions [--driver[=DRIVER]]`
+- **Alias:** `modularous:session:flush`
 - **Category:** Flush
 
 ## Examples
@@ -18,36 +18,36 @@ sidebarTitle: Flush Sessions
 ### Flush sessions using the app's configured driver
 
 ```bash
-php artisan modularity:flush:sessions
+php artisan modularous:flush:sessions
 ```
 
 ### Flush database sessions explicitly
 
 ```bash
-php artisan modularity:flush:sessions --driver=database
+php artisan modularous:flush:sessions --driver=database
 ```
 
 ### Flush file sessions explicitly
 
 ```bash
-php artisan modularity:flush:sessions --driver=file
+php artisan modularous:flush:sessions --driver=file
 ```
 
 ### Flush both database and file sessions
 
 ```bash
-php artisan modularity:flush:sessions --driver=all
+php artisan modularous:flush:sessions --driver=all
 ```
 
-`modularity:flush:sessions`
+`modularous:flush:sessions`
 ---------------------------
 
 Clears all active user sessions. The driver is read from `config('session.driver')` when `--driver` is not specified. Supports `database` (truncates the sessions table), `file` (deletes all files in the session path), and `all` (both).
 
 ### Usage
 
-* `modularity:flush:sessions [--driver[=DRIVER]]`
-* `modularity:session:flush [--driver[=DRIVER]]`
+* `modularous:flush:sessions [--driver[=DRIVER]]`
+* `modularous:session:flush [--driver[=DRIVER]]`
 
 ### Options
 

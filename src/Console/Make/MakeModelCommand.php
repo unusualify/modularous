@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -8,11 +8,11 @@ use Illuminate\Support\Str;
 use Nwidart\Modules\Generators\FileGenerator;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\UFinder;
-use Unusualify\Modularity\Support\Decomposers\ModelRelationParser;
-use Unusualify\Modularity\Support\Decomposers\SchemaParser;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\UFinder;
+use Unusualify\Modularous\Support\Decomposers\ModelRelationParser;
+use Unusualify\Modularous\Support\Decomposers\SchemaParser;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
@@ -24,12 +24,12 @@ class MakeModelCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:model
+    protected $signature = 'modularous:make:model
         {model : The name of model will be created}
         {module? : The name of module will be used}
         {--fillable= : The fillable attributes}
         {--relationships= : The relationship attributes}
-        {--self : Create a modularity model}
+        {--self : Create a modularous model}
         {--override-model= : The override model for extension}
         {--f|force : Force the operation to run when the route files already exist}
         {--notAsk : Don\'t ask for trait questions}
@@ -39,7 +39,7 @@ class MakeModelCommand extends BaseCommand
         {--all : Add all traits}
         {--test : Test the Route Generator}';
 
-    protected $name = 'modularity:make:model';
+    protected $name = 'modularous:make:model';
 
     protected $aliases = [
         'mod:m:model',
@@ -86,7 +86,7 @@ class MakeModelCommand extends BaseCommand
             ? $this->option('override-model')
             : null;
 
-        foreach (getModularityTraits() as $_trait) {
+        foreach (getModularousTraits() as $_trait) {
             $this->responses[$_trait] = $this->checkOption($_trait);
         }
 
@@ -149,10 +149,10 @@ class MakeModelCommand extends BaseCommand
         $module = null;
 
         if ($moduleName) {
-            $module = Modularity::findOrFail($moduleName);
+            $module = Modularous::findOrFail($moduleName);
             $namespace = $this->getClassNamespace($module);
         } elseif ($this->option('self')) {
-            $namespace = Modularity::getVendorNamespace($modelGeneratorPath->getNamespace());
+            $namespace = Modularous::getVendorNamespace($modelGeneratorPath->getNamespace());
         }
 
         $class_namespaces = implode("\n", [
@@ -192,9 +192,9 @@ class MakeModelCommand extends BaseCommand
         $modelDir = concatenate_path($modelDir, $fileName);
 
         if ($this->getModuleName() != '') {
-            $path = Modularity::getModulePath($this->getModuleName());
+            $path = Modularous::getModulePath($this->getModuleName());
         } elseif ($this->option('self')) {
-            $path = Modularity::getVendorPath('/src');
+            $path = Modularous::getVendorPath('/src');
         }
 
         if ($this->option('self') || $this->getModuleName() != '') {
@@ -489,7 +489,7 @@ class MakeModelCommand extends BaseCommand
         $methods = [];
 
         if ($this->option('has-factory')) {
-            $module_namespace = Modularity::config('namespace');
+            $module_namespace = Modularous::config('namespace');
             $module = $this->getModuleName();
             $name = $this->getModelName();
 
@@ -625,13 +625,13 @@ class MakeModelCommand extends BaseCommand
 
     private function createPivotModels()
     {
-        Modularity::scan();
+        Modularous::scan();
 
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         $overwriteFile = $this->hasOption('force') ? $this->option('force') : false;
 
-        $path = Modularity::getModulePath($this->getModuleName());
+        $path = Modularous::getModulePath($this->getModuleName());
 
         $modelPath = new GeneratorPath($this->baseConfig('paths.generator.model'));
 
@@ -668,13 +668,13 @@ class MakeModelCommand extends BaseCommand
 
     private function createAdditionalModels()
     {
-        Modularity::scan();
+        Modularous::scan();
 
-        $module = Modularity::findOrFail($this->getModuleName());
+        $module = Modularous::findOrFail($this->getModuleName());
 
         $overwriteFile = $this->hasOption('force') ? $this->option('force') : false;
 
-        $path = Modularity::getModulePath($this->getModuleName());
+        $path = Modularous::getModulePath($this->getModuleName());
 
         $modelPath = new GeneratorPath($this->baseConfig('paths.generator.model'));
 

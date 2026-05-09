@@ -7,13 +7,13 @@ sidebarTitle: HostRouting
 
 These two classes implement Modularous **multi-tenant host-based routing** — the ability to scope route groups by the incoming request's `Host` header, automatically resolving the active tenant model.
 
-Both classes live in `Unusualify\Modularity\Support` and are constructed with the application instance and a base host name.
+Both classes live in `Unusualify\Modularous\Support` and are constructed with the application instance and a base host name.
 
 ---
 
 ## HostRouting
 
-`Unusualify\Modularity\Support\HostRouting`
+`Unusualify\Modularous\Support\HostRouting`
 
 The primary class. It holds the active tenant model, builds the `Route::group()` options (domain, prefix, middleware), and exposes methods for registering host-aware route groups.
 
@@ -64,7 +64,7 @@ $hostRouting->setModel(Tenant::class)->group(function () {
 
 ## HostRouteRegistrar
 
-`Unusualify\Modularity\Support\HostRouteRegistrar`
+`Unusualify\Modularous\Support\HostRouteRegistrar`
 
 An older, more opaque variant used internally by Modularous own route files. It exposes only two fluent callables (`host()` and `group()`) and a set of `allowedAttributes` (`middleware`, `name`). Prefer `HostRouting` for new code.
 
@@ -92,5 +92,5 @@ Regardless of which class is used, the resolved options follow this shape:
 
 ## Related
 
-- [ModularityRoutes](./modularity-routes) — registers the `hostable` middleware alias
+- [ModularousRoutes](./modularous-routes) — registers the `hostable` middleware alias
 - [`HasHostable` trait](/system-reference/backend/entity-traits/overview) — models must implement `hostables()`, `hostableRouteArguments()`, etc.

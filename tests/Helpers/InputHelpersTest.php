@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class InputHelpersTest extends TestCase
 {
@@ -21,9 +21,9 @@ class InputHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_default_input_returns_default_structure()
+    public function test_modularous_default_input_returns_default_structure()
     {
-        $result = modularity_default_input();
+        $result = modularous_default_input();
 
         $this->assertIsArray($result);
         // Default input should have standard keys
@@ -66,27 +66,27 @@ class InputHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_modularity_format_input_wraps_format_input()
+    public function test_modularous_format_input_wraps_format_input()
     {
         $input = [
             'name' => 'status',
             'type' => 'select',
         ];
 
-        $result = modularity_format_input($input);
+        $result = modularous_format_input($input);
 
         $this->assertIsArray($result);
     }
 
     /** @test */
-    public function test_modularity_format_inputs_processes_multiple_inputs()
+    public function test_modularous_format_inputs_processes_multiple_inputs()
     {
         $inputs = [
             ['name' => 'field1', 'type' => 'text'],
             ['name' => 'field2', 'type' => 'number'],
         ];
 
-        $result = modularity_format_inputs($inputs);
+        $result = modularous_format_inputs($inputs);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);

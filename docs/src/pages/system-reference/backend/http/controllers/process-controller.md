@@ -6,7 +6,7 @@ sidebarTitle: ProcessController
 # ProcessController
 
 **File**: `src/Http/Controllers/ProcessController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Illuminate\Routing\Controller`
 
 Manages process workflow instances — retrieving their state with optional eager-loaded relationships and updating their status, reason, or processable-model fields.

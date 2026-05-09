@@ -9,10 +9,10 @@ Create a new console command. Lives in `Console/Make/` (class: `MakeConsoleComma
 ## Signature
 
 ```
-modularity:make:command {name} {signature} {--d|description=}
+modularous:make:command {name} {signature} {--d|description=}
 ```
 
-**Aliases:** `mod:c:cmd`, `modularity:create:command` (deprecated)
+**Aliases:** `mod:c:cmd`, `modularous:create:command` (deprecated)
 
 ## Arguments
 
@@ -30,8 +30,8 @@ modularity:make:command {name} {signature} {--d|description=}
 ## Examples
 
 ```bash
-php artisan modularity:make:command MyAction "my:action {arg}"
-php artisan modularity:make:command CacheWarm "cache:warm" -d "Warm the cache"
+php artisan modularous:make:command MyAction "my:action {arg}"
+php artisan modularous:make:command CacheWarm "cache:warm" -d "Warm the cache"
 ```
 
 ## Output

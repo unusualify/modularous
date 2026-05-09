@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits\Secondary;
+namespace Unusualify\Modularous\Entities\Traits\Secondary;
 
 // use Kalnoy\Nestedset\NodeTrait;
-use Unusualify\Modularity\Entities\NestedsetCollection;
+use Unusualify\Modularous\Entities\NestedsetCollection;
 
 trait HasNesting
 {

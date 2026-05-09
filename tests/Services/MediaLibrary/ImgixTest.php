@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Services\MediaLibrary\Imgix;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\Imgix;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ImgixTest extends TestCase
 {
@@ -14,15 +14,15 @@ class ImgixTest extends TestCase
     {
         parent::setUp();
 
-        Config::set(modularityBaseKey() . '.imgix.source_host', 'test.imgix.net');
-        Config::set(modularityBaseKey() . '.imgix.use_https', true);
-        Config::set(modularityBaseKey() . '.imgix.use_signed_urls', false);
-        Config::set(modularityBaseKey() . '.imgix.sign_key', null);
-        Config::set(modularityBaseKey() . '.imgix.default_params', ['auto' => 'compress', 'q' => 80]);
-        Config::set(modularityBaseKey() . '.imgix.lqip_default_params', ['w' => 50, 'blur' => 10]);
-        Config::set(modularityBaseKey() . '.imgix.social_default_params', ['w' => 1200, 'h' => 630]);
-        Config::set(modularityBaseKey() . '.imgix.cms_default_params', ['w' => 800]);
-        Config::set(modularityBaseKey() . '.imgix.add_params_to_svgs', false);
+        Config::set(modularousBaseKey() . '.imgix.source_host', 'test.imgix.net');
+        Config::set(modularousBaseKey() . '.imgix.use_https', true);
+        Config::set(modularousBaseKey() . '.imgix.use_signed_urls', false);
+        Config::set(modularousBaseKey() . '.imgix.sign_key', null);
+        Config::set(modularousBaseKey() . '.imgix.default_params', ['auto' => 'compress', 'q' => 80]);
+        Config::set(modularousBaseKey() . '.imgix.lqip_default_params', ['w' => 50, 'blur' => 10]);
+        Config::set(modularousBaseKey() . '.imgix.social_default_params', ['w' => 1200, 'h' => 630]);
+        Config::set(modularousBaseKey() . '.imgix.cms_default_params', ['w' => 800]);
+        Config::set(modularousBaseKey() . '.imgix.add_params_to_svgs', false);
 
         $this->service = new Imgix(app('config'));
     }

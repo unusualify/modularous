@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
-use Unusualify\Modularity\Database\Factories\FileFactory;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Services\FileLibrary\FileService;
+use Unusualify\Modularous\Database\Factories\FileFactory;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Services\FileLibrary\FileService;
 
 class File extends Model
 {
@@ -43,12 +43,12 @@ class File extends Model
 
     public function canDeleteSafely()
     {
-        return DB::table(modularityConfig('tables.fileables'))->where('file_id', $this->id)->count() === 0;
+        return DB::table(modularousConfig('tables.fileables'))->where('file_id', $this->id)->count() === 0;
     }
 
     public function scopeUnused($query)
     {
-        $usedIds = DB::table(modularityConfig('tables.fileables'))->get()->pluck('file_id');
+        $usedIds = DB::table(modularousConfig('tables.fileables'))->get()->pluck('file_id');
 
         return $query->whereNotIn('id', $usedIds->toArray())->get();
     }
@@ -67,6 +67,6 @@ class File extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.files', parent::getTable());
+        return modularousConfig('tables.files', parent::getTable());
     }
 }

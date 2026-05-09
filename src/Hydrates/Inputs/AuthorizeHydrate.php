@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class AuthorizeHydrate extends InputHydrate
 {
@@ -40,16 +40,16 @@ class AuthorizeHydrate extends InputHydrate
             $authorizedModel = $input['authorized_type'];
             $authorizedModel = new $authorizedModel;
         } elseif ($input['_module'] && $input['_route']) {
-            $module = Modularity::find($input['_module']);
+            $module = Modularous::find($input['_module']);
             $selfModel = $module->getRouteClass($input['_routeName'], 'model');
-            if (in_array('Unusualify\Modularity\Entities\Traits\HasAuthorizable', class_uses_recursive($selfModel))) {
+            if (in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive($selfModel))) {
                 $selfModel = new $selfModel;
                 $authorizedModel = $selfModel->getAuthorizedModel();
                 // $input['items'] = $selfModel::all();
             }
         } elseif (isset($input['routeName'])) {
             $selfModel = $this->module->getRouteClass($input['routeName'], 'model');
-            if (in_array('Unusualify\Modularity\Entities\Traits\HasAuthorizable', class_uses_recursive($selfModel))) {
+            if (in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive($selfModel))) {
                 $selfModel = new $selfModel;
                 $authorizedModel = $selfModel->getAuthorizedModel();
                 // $input['items'] = $selfModel::all();

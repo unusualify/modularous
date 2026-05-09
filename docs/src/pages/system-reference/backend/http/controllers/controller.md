@@ -6,7 +6,7 @@ sidebarTitle: Controller
 # Controller
 
 **File**: `src/Http/Controllers/Controller.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `Illuminate\Routing\Controller`  
 **Traits**: `AuthorizesRequests`, `DispatchesJobs`, `ValidatesRequests`
 
@@ -18,7 +18,7 @@ Root controller for the Modularous package. Provides two behaviours on top of La
 public function __construct()
 ```
 
-When `modularity.bind_exception_handler` is `true` in the application config, binds Modularous's own exception handler into the container so that API and admin-panel errors are formatted consistently.
+When `modularous.bind_exception_handler` is `true` in the application config, binds Modularous's own exception handler into the container so that API and admin-panel errors are formatted consistently.
 
 ## Methods
 

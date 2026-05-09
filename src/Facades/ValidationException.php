@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Services\ValidationExceptionFactory;
+use Unusualify\Modularous\Services\ValidationExceptionFactory;
 
 /**
- * @method static \Unusualify\Modularity\Exceptions\ValidationException withMessages(array $messages)
+ * @method static \Unusualify\Modularous\Exceptions\ValidationException withMessages(array $messages)
  *
  * @see ValidationExceptionFactory
  */

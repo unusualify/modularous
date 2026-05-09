@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Modules\Cms\Localization\TranslatableCmsLocalizationAdapter;
 use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsVisitorRedirectResolver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsVisitorRedirectResolverTest extends TestCase
 {
@@ -21,7 +21,7 @@ class CmsVisitorRedirectResolverTest extends TestCase
     public function test_resolve_locale_and_inner_path_strips_locale_prefix(): void
     {
         config(['translatable.locales' => ['en', 'tr']]);
-        config(['modularity.cms_routing.default_locale' => 'en']);
+        config(['modularous.cms_routing.default_locale' => 'en']);
 
         $resolver = $this->makeResolver();
 
@@ -35,7 +35,7 @@ class CmsVisitorRedirectResolverTest extends TestCase
     public function test_resolve_locale_and_inner_path_uses_default_when_no_prefix(): void
     {
         config(['translatable.locales' => ['en', 'tr']]);
-        config(['modularity.cms_routing.default_locale' => 'en']);
+        config(['modularous.cms_routing.default_locale' => 'en']);
 
         $resolver = $this->makeResolver();
 
@@ -49,7 +49,7 @@ class CmsVisitorRedirectResolverTest extends TestCase
     public function test_resolve_locale_prefers_longer_locale_codes_first(): void
     {
         config(['translatable.locales' => ['pt', 'pt-br']]);
-        config(['modularity.cms_routing.default_locale' => 'en']);
+        config(['modularous.cms_routing.default_locale' => 'en']);
 
         $resolver = $this->makeResolver();
 
@@ -63,7 +63,7 @@ class CmsVisitorRedirectResolverTest extends TestCase
     public function test_resolve_locale_path_key_prefers_route_locale_and_path_parameters(): void
     {
         config(['translatable.locales' => ['en', 'tr']]);
-        config(['modularity.cms_routing.default_locale' => 'en']);
+        config(['modularous.cms_routing.default_locale' => 'en']);
 
         $resolver = $this->makeResolver();
 
@@ -83,7 +83,7 @@ class CmsVisitorRedirectResolverTest extends TestCase
     public function test_resolve_locale_path_key_falls_back_when_route_locale_not_in_allowed_locales(): void
     {
         config(['translatable.locales' => ['en', 'tr']]);
-        config(['modularity.cms_routing.default_locale' => 'en']);
+        config(['modularous.cms_routing.default_locale' => 'en']);
 
         $resolver = $this->makeResolver();
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
-use Unusualify\Modularity\Services\BroadcastManager;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\BroadcastManager;
+use Unusualify\Modularous\Tests\TestCase;
 
 class BroadcastManagerTest extends TestCase
 {

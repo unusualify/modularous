@@ -5,7 +5,7 @@ sidebarTitle: Listener
 
 # Listener
 
-`Unusualify\Modularity\Listeners\Listener`
+`Unusualify\Modularous\Listeners\Listener`
 
 Abstract base class for all Modularous listeners. Extend this class when creating listeners for `ModelEvent` subclasses. It handles mail-enabled notification dispatch using a convention-based class resolution.
 
@@ -26,7 +26,7 @@ abstract class Listener
 
 On instantiation the listener:
 
-1. Reads `config('modularity.mail.enabled')` and sets `$mailEnabled`.
+1. Reads `config('modularous.mail.enabled')` and sets `$mailEnabled`.
 2. Adds the `SystemNotification` module's `Notifications/` directory to `$notificationPaths`.
 
 ## Notification Resolution Convention
@@ -70,7 +70,7 @@ Create a concrete listener for your module's events:
 ```php
 namespace App\Modules\Orders\Listeners;
 
-use Unusualify\Modularity\Listeners\Listener;
+use Unusualify\Modularous\Listeners\Listener;
 use App\Modules\Orders\Events\OrderShippedEvent;
 
 class OrderShippedListener extends Listener
@@ -113,7 +113,7 @@ $this->mergeNotificationPaths([
 
 | Config key | Type | Effect |
 |------------|------|--------|
-| `modularity.mail.enabled` | `bool` | When `true`, the listener will attempt to send a notification email. When `false`, `handle()` is a no-op. |
+| `modularous.mail.enabled` | `bool` | When `true`, the listener will attempt to send a notification email. When `false`, `handle()` is a no-op. |
 
 ## Methods Reference
 

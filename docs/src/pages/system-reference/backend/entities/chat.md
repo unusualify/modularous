@@ -6,7 +6,7 @@ sidebarTitle: Chat
 # Chat
 
 **File**: `src/Entities/Chat.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Model`
 
 Chat room attached to a parent model via a polymorphic relationship. A chat contains ordered messages, supports pinned messages, and exposes file attachments collected from its messages.
@@ -45,7 +45,7 @@ All Filepond uploads through messages in this chat.
 
 ## Table
 
-Resolved from `modularity.tables.chats`.
+Resolved from `modularous.tables.chats`.
 
 ## Related
 

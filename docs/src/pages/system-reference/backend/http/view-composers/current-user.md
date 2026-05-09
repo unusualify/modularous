@@ -5,7 +5,7 @@ sidebarTitle: CurrentUser
 
 # CurrentUser
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\CurrentUser`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\CurrentUser`  
 **Source**: `src/Http/ViewComposers/CurrentUser.php`
 
 Injects the authenticated user into every view as `$currentUser`. Uses Modularous configured auth guard rather than the default Laravel guard, ensuring the correct user is resolved in multi-guard setups.
@@ -18,7 +18,7 @@ Injects the authenticated user into every view as `$currentUser`. Uses Modularou
 
 ## Behaviour
 
-1. Resolves the auth guard name from `Modularity::getAuthGuardName()`.
+1. Resolves the auth guard name from `Modularous::getAuthGuardName()`.
 2. Retrieves the authenticated user via `AuthFactory::guard($guardName)->user()`.
 3. If a user is found, passes it through the `get_user_profile($user)` helper, which normalises the model into a plain array with the fields expected by the frontend (name, email, avatar, role, etc.).
 4. Exposes the result as `compact('currentUser')` — `null` when unauthenticated.
@@ -42,8 +42,8 @@ const { currentUser } = usePage().props
 The guard name is read from the Modularous config:
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'auth' => [
-    'guard' => 'web',   // used by Modularity::getAuthGuardName()
+    'guard' => 'web',   // used by Modularous::getAuthGuardName()
 ],
 ```

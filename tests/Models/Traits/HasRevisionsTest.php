@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,9 +9,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Revision;
-use Unusualify\Modularity\Entities\Traits\HasRevisions;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Revision;
+use Unusualify\Modularous\Entities\Traits\HasRevisions;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasRevisionsTest extends ModelTestCase
 {
@@ -283,7 +283,7 @@ class HasRevisionsTest extends ModelTestCase
             'payload' => json_encode(['title' => 'Theirs']),
         ]);
 
-        Auth::guard('modularity')->loginUsingId($userId);
+        Auth::guard('modularous')->loginUsingId($userId);
 
         $mine = TestHrArticle::mine()->get();
 

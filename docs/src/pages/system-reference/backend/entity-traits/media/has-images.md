@@ -5,9 +5,9 @@ sidebarTitle: HasImages
 
 # HasImages
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasImages`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasImages`
 
-Attaches images from the `Media` model via a `MorphToMany` through the `modularity_mediables` pivot table. Handles crop variants, alt text, captions, video URLs, LQIP placeholders, and social images.
+Attaches images from the `Media` model via a `MorphToMany` through the `modularous_mediables` pivot table. Handles crop variants, alt text, captions, video URLs, LQIP placeholders, and social images.
 
 ---
 
@@ -60,14 +60,14 @@ Pivot columns: `crop`, `role`, `crop_w`, `crop_h`, `crop_x`, `crop_y`, `lqip_dat
 |----------|------|---------|-------------|
 | `cropParamsKeys` | `array` | `['crop_x','crop_y','crop_w','crop_h']` | Pivot columns extracted for crop transforms |
 
-Set `media_library.translated_form_fields = true` in `modularity.php` to enable per-locale media.
+Set `media_library.translated_form_fields = true` in `modularous.php` to enable per-locale media.
 
 ---
 
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasImages;
 
 class Article extends Model
 {

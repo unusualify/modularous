@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class Singleton extends Model
 {
@@ -18,6 +18,6 @@ class Singleton extends Model
 
     public function getTable()
     {
-        return Modularity::config('tables.singletons', 'modularity_singletons');
+        return Modularous::config('tables.singletons', 'modularous_singletons');
     }
 }

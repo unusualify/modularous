@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import { createStore } from 'vuex'
 import { CONFIG } from '@/store/mutations'
 import Sidebar from '@/components/layouts/Sidebar.vue'
-import createModularityVuetify from '@/plugins/vuetify'
+import createModularousVuetify from '@/plugins/vuetify'
 
-const vuetify = createModularityVuetify()
+const vuetify = createModularousVuetify()
 
 beforeEach(() => {
   window.$ = vi.fn(() => [])

@@ -9,14 +9,14 @@ sidebarTitle: Make Theme
 
 ## Command Information
 
-- **Signature:** `modularity:make:theme {name} [--force]`
+- **Signature:** `modularous:make:theme {name} [--force]`
 - **Category:** Generators
 
 ## Arguments
 
 | Argument | Required | Description |
 |----------|----------|-------------|
-| `name` | Yes | Name of the custom theme to generalise (must already exist under `resources/vendor/modularity/themes/{name}/`) |
+| `name` | Yes | Name of the custom theme to generalise (must already exist under `resources/vendor/modularous/themes/{name}/`) |
 
 ## Options
 
@@ -26,7 +26,7 @@ sidebarTitle: Make Theme
 
 ## What It Does
 
-Reads the theme's JS entry point at `resources/vendor/modularity/themes/{name}/{name}.js` and appends a named export to the Modularous themes index file:
+Reads the theme's JS entry point at `resources/vendor/modularous/themes/{name}/{name}.js` and appends a named export to the Modularous themes index file:
 
 ```js
 // vue/src/js/config/themes/index.js
@@ -38,8 +38,8 @@ This makes the theme available to Modularous theme system without manual edits t
 ## Examples
 
 ```bash
-php artisan modularity:make:theme corporate
-php artisan modularity:make:theme dark-mode --force
+php artisan modularous:make:theme corporate
+php artisan modularous:make:theme dark-mode --force
 ```
 
 ## Related

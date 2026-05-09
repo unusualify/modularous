@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
-use Unusualify\Modularity\Services\RedirectService;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\RedirectService;
+use Unusualify\Modularous\Tests\TestCase;
 
 class RedirectServiceTest extends TestCase
 {

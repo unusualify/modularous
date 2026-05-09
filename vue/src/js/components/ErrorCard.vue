@@ -30,7 +30,7 @@
     },
     alertText: {
       type: String,
-      default: 'This action is restricted for modularity authenticated users.'
+      default: 'This action is restricted for modularous authenticated users.'
     },
     alert: {
       type: String,

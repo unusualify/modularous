@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Events\ModularityUserVerification;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Events\ModularousUserVerification;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Services\MessageStage;
 
 trait SendsEmailVerificationRegister
 {
@@ -49,7 +49,7 @@ trait SendsEmailVerificationRegister
         });
 
         if ($response == RegisterBroker::VERIFICATION_LINK_SENT) {
-            event(new ModularityUserVerification($request));
+            event(new ModularousUserVerification($request));
         }
 
         return $response == RegisterBroker::VERIFICATION_LINK_SENT
@@ -66,7 +66,7 @@ trait SendsEmailVerificationRegister
     {
         $previousUrl = url()->previous();
         $description = $previousUrl === route('admin.register.verification') ? __('authentication.pre-register-description') : __('authentication.pre-register-description-from-website');
-        $modalService = modularity_new_modal_service(
+        $modalService = modularous_new_modal_service(
             'success',
             'mdi-check-circle-outline',
             __('authentication.pre-register-title'),
@@ -78,7 +78,7 @@ trait SendsEmailVerificationRegister
             ],
         );
 
-        $useRegistrationRedirectWithModal = (bool) env('MODULARITY_USE_REGISTRATION_REDIRECT_WITH_MODAL', true);
+        $useRegistrationRedirectWithModal = (bool) env('MODULAROUS_USE_REGISTRATION_REDIRECT_WITH_MODAL', true);
 
         return $request->wantsJson()
             ? new JsonResponse([
@@ -115,7 +115,7 @@ trait SendsEmailVerificationRegister
 
     public function showSuccessForm()
     {
-        return view(modularityBaseKey() . '::auth.success', [
+        return view(modularousBaseKey() . '::auth.success', [
             'taskState' => [
                 'status' => 'success',
                 'title' => __('authentication.pre-register-title'),

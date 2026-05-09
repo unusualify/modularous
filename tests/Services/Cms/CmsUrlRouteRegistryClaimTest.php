@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,7 +12,7 @@ use Modules\Cms\Services\CanonicalUrlResolver;
 use Modules\Cms\Services\CmsParentSegmentResolver;
 use Modules\Cms\Services\CmsUrlRouteRegistry;
 use ReflectionMethod;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsUrlRouteRegistryClaimTest extends TestCase
 {
@@ -62,8 +62,8 @@ class CmsUrlRouteRegistryClaimTest extends TestCase
     public function test_desired_public_paths_use_fallback_leaf_when_locale_slug_is_inactive(): void
     {
         $this->app['config']->set('translatable.locales', ['tr', 'en']);
-        $this->app['config']->set('modularity.cms_parent_segments.enabled', false);
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'en');
+        $this->app['config']->set('modularous.cms_parent_segments.enabled', false);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'en');
         $this->app['config']->set('translatable.fallback_locale', null);
 
         $canonical = app(CanonicalUrlResolverInterface::class);
@@ -92,8 +92,8 @@ class CmsUrlRouteRegistryClaimTest extends TestCase
     public function test_desired_public_paths_emit_all_get_locales_when_only_subset_has_slug_rows(): void
     {
         $this->app['config']->set('translatable.locales', ['tr', 'en']);
-        $this->app['config']->set('modularity.cms_parent_segments.enabled', false);
-        $this->app['config']->set('modularity.cms_routing.default_locale', 'en');
+        $this->app['config']->set('modularous.cms_parent_segments.enabled', false);
+        $this->app['config']->set('modularous.cms_routing.default_locale', 'en');
 
         $canonical = app(CanonicalUrlResolverInterface::class);
         $registry = new CmsUrlRouteRegistry($canonical, new CmsParentSegmentResolver($canonical));
@@ -119,7 +119,7 @@ class CmsUrlRouteRegistryClaimTest extends TestCase
 
     public function test_desired_public_paths_empty_when_no_active_slug_segments(): void
     {
-        $this->app['config']->set('modularity.cms_parent_segments.enabled', false);
+        $this->app['config']->set('modularous.cms_parent_segments.enabled', false);
         $canonical = app(CanonicalUrlResolverInterface::class);
         $registry = new CmsUrlRouteRegistry($canonical, new CmsParentSegmentResolver($canonical));
 
@@ -165,7 +165,7 @@ class CmsUrlRouteRegistryClaimTest extends TestCase
 
     protected function createUrlRoutesTable(): void
     {
-        $t = modularityConfig('tables.cms_url_routes', 'um_cms_url_routes');
+        $t = modularousConfig('tables.cms_url_routes', 'um_cms_url_routes');
         Schema::dropIfExists($t);
         Schema::create($t, function (Blueprint $table): void {
             $table->id();

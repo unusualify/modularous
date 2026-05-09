@@ -9,7 +9,7 @@ sidebarTitle: Migrate Rollback
 
 ## Command Information
 
-- **Signature:** `modularity:migrate:rollback {module}`
+- **Signature:** `modularous:migrate:rollback {module}`
 - **Category:** Database
 
 ## Arguments
@@ -25,7 +25,7 @@ Finds all migration files under `Modules/{Module}/Database/Migrations/`, looks u
 ## Examples
 
 ```bash
-php artisan modularity:migrate:rollback Blog
+php artisan modularous:migrate:rollback Blog
 ```
 
 ## Related

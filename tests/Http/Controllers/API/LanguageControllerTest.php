@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\API;
+namespace Unusualify\Modularous\Tests\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Unusualify\Modularity\Http\Controllers\API\LanguageController;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Translation\Translator;
+use Unusualify\Modularous\Http\Controllers\API\LanguageController;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Translation\Translator;
 
 class LanguageControllerTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +10,7 @@ use Modules\Cms\Entities\Page;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Observers\ParentSegmentUrlRouteObserver;
 use Modules\Cms\Services\CanonicalUrlResolver;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class ParentSegmentUrlRouteObserverTest extends TestCase
 {
@@ -18,7 +18,7 @@ class ParentSegmentUrlRouteObserverTest extends TestCase
     {
         parent::setUp();
 
-        $table = modularityConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
+        $table = modularousConfig('tables.cms_parent_segment_bindings', 'um_cms_parent_segment_bindings');
         Schema::dropIfExists($table);
         Schema::create($table, function (Blueprint $table): void {
             $table->id();
@@ -31,8 +31,8 @@ class ParentSegmentUrlRouteObserverTest extends TestCase
             $table->timestamps();
         });
 
-        $this->app['config']->set('modularity.cms_parent_segments.enabled', true);
-        $this->app['config']->set('modularity.cms_routing.resync_registry_after_parent_segments_change', true);
+        $this->app['config']->set('modularous.cms_parent_segments.enabled', true);
+        $this->app['config']->set('modularous.cms_routing.resync_registry_after_parent_segments_change', true);
         $this->app->singleton(CanonicalUrlResolverInterface::class, CanonicalUrlResolver::class);
     }
 
@@ -146,7 +146,7 @@ class ParentSegmentUrlRouteObserverTest extends TestCase
 
     public function test_observer_skips_when_resync_disabled_in_config(): void
     {
-        $this->app['config']->set('modularity.cms_routing.resync_registry_after_parent_segments_change', false);
+        $this->app['config']->set('modularous.cms_routing.resync_registry_after_parent_segments_change', false);
 
         $registry = $this->createMock(PublicUrlRegistryContract::class);
         $registry->expects($this->never())->method('syncPublicPageRoutesForAllModelsOfClass');
@@ -166,8 +166,8 @@ class ParentSegmentUrlRouteObserverTest extends TestCase
     /** Smoke: container binds {@see ParentSegmentUrlRouteObserver} via {@see CmsServiceProvider}. */
     public function test_cms_service_provider_resolves_observer(): void
     {
-        $this->app['config']->set('modularity.cms_features.enabled', true);
-        $this->app['config']->set('modularity.cms_routing.resync_registry_after_parent_segments_change', true);
+        $this->app['config']->set('modularous.cms_features.enabled', true);
+        $this->app['config']->set('modularous.cms_routing.resync_registry_after_parent_segments_change', true);
 
         $this->app->register(\Modules\Cms\Providers\CmsServiceProvider::class);
 

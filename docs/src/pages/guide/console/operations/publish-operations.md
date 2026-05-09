@@ -13,7 +13,7 @@ This command has `$hidden = true` and does not appear in `php artisan list`. It 
 
 ## Command Information
 
-- **Signature:** `modularity:publish:operations`
+- **Signature:** `modularous:publish:operations`
 - **Category:** Operations
 
 ## What It Does
@@ -25,9 +25,9 @@ Run this once after installing or upgrading Modularous if your application uses 
 ## Example
 
 ```bash
-php artisan modularity:publish:operations
+php artisan modularous:publish:operations
 ```
 
 ## Related
 
-- [modularity:operations:process](/guide/console/operations/process-operations) — process pending operations
+- [modularous:operations:process](/guide/console/operations/process-operations) — process pending operations

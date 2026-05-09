@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Utility;
+namespace Unusualify\Modularous\Http\Controllers\Utility;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Unusualify\Modularity\Entities\Chat;
-use Unusualify\Modularity\Entities\ChatMessage;
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Entities\Chat;
+use Unusualify\Modularous\Entities\ChatMessage;
+use Unusualify\Modularous\Facades\Filepond;
 
 class ChatController extends Controller
 {

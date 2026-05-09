@@ -5,7 +5,7 @@ sidebarTitle: HasNesting
 
 # Secondary\HasNesting
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Secondary\HasNesting`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Secondary\HasNesting`
 
 Adds nested-set slug traversal and tree persistence for hierarchical models (e.g., category trees, menu items). Builds full slug paths by walking up the ancestor chain and provides a static method to persist reordered trees.
 
@@ -25,7 +25,7 @@ Adds nested-set slug traversal and tree persistence for hierarchical models (e.g
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Secondary\HasNesting;
+use Unusualify\Modularous\Entities\Traits\Secondary\HasNesting;
 
 class Category extends Model
 {

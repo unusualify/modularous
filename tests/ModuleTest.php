@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests;
+namespace Unusualify\Modularous\Tests;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 class ModuleTest extends TestCase
 {
@@ -27,7 +27,7 @@ class ModuleTest extends TestCase
         $app['config']->set('modules.paths.generator.repository', ['path' => 'Repositories', 'namespace' => 'Repositories', 'generate' => false]);
         $app['config']->set('modules.paths.generator.controller', ['path' => 'Controllers', 'namespace' => 'Controllers', 'generate' => false]);
 
-        Modularity::boot();
+        Modularous::boot();
     }
 
     protected function setUp(): void
@@ -379,9 +379,9 @@ class ModuleTest extends TestCase
         $this->assertIsArray($aliases);
     }
 
-    public function test_is_modularity_module(): void
+    public function test_is_modularous_module(): void
     {
-        $result = $this->module->isModularityModule();
+        $result = $this->module->isModularousModule();
         $this->assertIsBool($result);
     }
 

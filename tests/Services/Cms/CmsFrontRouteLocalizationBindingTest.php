@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Modules\Cms\Routing\CmsFrontRouteLocalizationBinding;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsFrontRouteLocalizationBindingTest extends TestCase
 {
@@ -18,15 +18,15 @@ class CmsFrontRouteLocalizationBindingTest extends TestCase
 
     public function test_should_use_locale_prefix_route_group_is_false_when_mode_is_catch_all(): void
     {
-        $this->app['config']->set('modularity.cms_routing.public_front_route_group_mode', 'catch_all');
+        $this->app['config']->set('modularous.cms_routing.public_front_route_group_mode', 'catch_all');
 
         $this->assertFalse(CmsFrontRouteLocalizationBinding::shouldUseLocalePrefixRouteGroup());
     }
 
     public function test_should_use_locale_prefix_route_group_is_false_when_driver_is_translatable(): void
     {
-        $this->app['config']->set('modularity.cms_routing.public_front_route_group_mode', 'locale_param');
-        $this->app['config']->set('modularity.cms_routing.localization_driver', 'translatable');
+        $this->app['config']->set('modularous.cms_routing.public_front_route_group_mode', 'locale_param');
+        $this->app['config']->set('modularous.cms_routing.localization_driver', 'translatable');
 
         $this->assertFalse(CmsFrontRouteLocalizationBinding::shouldUseLocalePrefixRouteGroup());
     }

@@ -73,7 +73,7 @@ Each auth page (login, register, forgot_password, etc.) is defined under `auth_p
 
 ## Overriding in App Config
 
-Override any page in `modularity/auth_pages.php`:
+Override any page in `modularous/auth_pages.php`:
 
 ```php
 return [

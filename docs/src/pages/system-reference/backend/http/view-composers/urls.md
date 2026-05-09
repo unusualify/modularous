@@ -5,7 +5,7 @@ sidebarTitle: Urls
 
 # Urls
 
-**Class**: `Unusualify\Modularity\Http\ViewComposers\Urls`  
+**Class**: `Unusualify\Modularous\Http\ViewComposers\Urls`  
 **Source**: `src/Http/ViewComposers/Urls.php`
 
 Injects a `$urls` array of commonly used admin route URLs into every view. Centralises route URL generation so frontend components can reference named routes without hardcoding paths or calling `route()` in multiple places.

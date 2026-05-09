@@ -13,7 +13,7 @@ The `src/Services/` directory contains the top-level service classes that power 
 |---------|--------|-------------|
 | [Connector](/system-reference/backend/services/connector) | — | Parses connector strings in input configs into data source calls |
 | [FilepondManager](/system-reference/backend/services/filepond-manager) | `Filepond` | Manages the full FilePond upload lifecycle |
-| [ModularityCacheService](/system-reference/backend/services/modularity-cache-service) | `ModularityCache` | Tag-aware, module-scoped cache layer |
+| [ModularousCacheService](/system-reference/backend/services/modularous-cache-service) | `ModularousCache` | Tag-aware, module-scoped cache layer |
 | [RedirectService](/system-reference/backend/services/redirect-service) | `Redirect` | Stores and retrieves post-auth redirect URLs |
 | [BroadcastManager](/system-reference/backend/services/broadcast-manager) | — | Extracts WebSocket channel config from event classes |
 | [MigrationBackup](/system-reference/backend/services/migration-backup) | `MigrationBackup` | Snapshots table data before destructive migrations |

@@ -15,11 +15,11 @@ use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
 use Modules\SystemPricing\Entities\Currency;
 use Modules\SystemPricing\Entities\Price;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Facades\CurrencyExchange;
-use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Facades\CurrencyExchange;
+use Unusualify\Modularous\Facades\Filepond;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Services\MessageStage;
 use Unusualify\Payable\Payable;
 
 class PriceController extends Controller
@@ -39,7 +39,7 @@ class PriceController extends Controller
         $previousUrl = url()->previous();
 
         if ($price->payment && $price->payment->status == PaymentStatus::COMPLETED) {
-            $modalService = modularity_modal_service('warning', 'mdi-alert-circle-outline', __('Paid Before'), __('This price has already been paid! Please check the payment status.'), [
+            $modalService = modularous_modal_service('warning', 'mdi-alert-circle-outline', __('Paid Before'), __('This price has already been paid! Please check the payment status.'), [
                 'noCancelButton' => true,
             ]);
 
@@ -112,7 +112,7 @@ class PriceController extends Controller
             $requestCurrencyIso4217 = $params['payment_service']['currency']['iso_4217'];
         }
 
-        $useCountryBasedVatRates = Modularity::shouldUseCountryBasedVatRates();
+        $useCountryBasedVatRates = Modularous::shouldUseCountryBasedVatRates();
 
         $rawAmount = $price->discounted_raw_amount;
         $totalAmount = $price->total_amount;
@@ -182,7 +182,7 @@ class PriceController extends Controller
         }
 
         $orderId = uniqid('ORD');
-        $modularityPayload = [
+        $modularousPayload = [
             'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
@@ -231,7 +231,7 @@ class PriceController extends Controller
             }
         } else {
             // get the url host
-            $modularityPayload['previous_url'] = $request->header('referer');
+            $modularousPayload['previous_url'] = $request->header('referer');
 
             $paymentPayload = [
                 'amount' => $totalAmount,
@@ -244,7 +244,7 @@ class PriceController extends Controller
                 'payment_gateway' => $paymentService->key,
                 'payment_service_id' => $paymentService->id,
                 'parameters' => [
-                    'modularity' => $modularityPayload,
+                    'modularous' => $modularousPayload,
                 ],
                 'response' => [],
             ];
@@ -268,19 +268,19 @@ class PriceController extends Controller
                 return response()->json([
                     'status' => MessageStage::SUCCESS,
                     'message' => 'Payment created',
-                    'redirector' => merge_url_query($modularityPayload['previous_url'] ?? route('admin.dashboard'), [
-                        'modalService' => modularity_modal_service($color, $icon, $title, $description, $modalProps),
+                    'redirector' => merge_url_query($modularousPayload['previous_url'] ?? route('admin.dashboard'), [
+                        'modalService' => modularous_modal_service($color, $icon, $title, $description, $modalProps),
                     ]),
                     // 'payment' => $payment,
                 ]);
             }
 
-            return redirect(merge_url_query($modularityPayload['previous_url'] ?? route('admin.dashboard'), [
-                'modalService' => modularity_modal_service($color, $icon, $title, $description, $modalProps),
+            return redirect(merge_url_query($modularousPayload['previous_url'] ?? route('admin.dashboard'), [
+                'modalService' => modularous_modal_service($color, $icon, $title, $description, $modalProps),
             ]));
         }
 
-        $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
+        $hasTransactionFee = Modularous::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
         $transactionFeePercentage = 0.0;
         $transactionFeeAmount = 0.0;
         $totalAmountWithoutTransactionFee = $totalAmount;
@@ -292,11 +292,11 @@ class PriceController extends Controller
 
         }
 
-        $modularityPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
-        $modularityPayload['transaction_fee_exists'] = $hasTransactionFee;
-        $modularityPayload['transaction_fee_percentage'] = $transactionFeePercentage;
-        $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
-        $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
+        $modularousPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
+        $modularousPayload['transaction_fee_exists'] = $hasTransactionFee;
+        $modularousPayload['transaction_fee_percentage'] = $transactionFeePercentage;
+        $modularousPayload['transaction_fee_amount'] = $transactionFeeAmount;
+        $modularousPayload['total_amount_with_transaction_fee'] = $totalAmount;
 
         $payable = new Payable($paymentService->key);
         Session::put('payable_payment_service', $paymentService->key);
@@ -343,7 +343,7 @@ class PriceController extends Controller
                 ],
             ],
 
-            'modularity' => $modularityPayload,
+            'modularous' => $modularousPayload,
         ];
 
         $paymentPayload = [
@@ -374,7 +374,7 @@ class PriceController extends Controller
         $previousUrl = url()->previous();
 
         if ($price->payment && $price->payment->status == PaymentStatus::COMPLETED) {
-            $modalService = modularity_modal_service('warning', 'mdi-alert-circle-outline', __('Paid Before'), __('This price has already been paid! Please check the payment status.'), [
+            $modalService = modularous_modal_service('warning', 'mdi-alert-circle-outline', __('Paid Before'), __('This price has already been paid! Please check the payment status.'), [
                 'noCancelButton' => true,
             ]);
 
@@ -412,7 +412,7 @@ class PriceController extends Controller
             $requestCurrencyIso4217 = $params['payment_service']['currency']['iso_4217'];
         }
 
-        $useCountryBasedVatRates = Modularity::shouldUseCountryBasedVatRates();
+        $useCountryBasedVatRates = Modularous::shouldUseCountryBasedVatRates();
 
         $rawAmount = $price->discounted_raw_amount;
         $totalAmount = $price->total_amount;
@@ -504,7 +504,7 @@ class PriceController extends Controller
         }
 
         $orderId = uniqid('ORD');
-        $modularityPayload = [
+        $modularousPayload = [
             'locale' => app()->getLocale(),
             'previous_url' => url()->previous(),
             'datetime' => now()->format('Y-m-d H:i:s'),
@@ -540,7 +540,7 @@ class PriceController extends Controller
             'exchange_rate' => $exchangeRate,
         ];
 
-        $hasTransactionFee = Modularity::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
+        $hasTransactionFee = Modularous::shouldIncludeTransactionFee() && $paymentService->has_transaction_fee;
         $transactionFeePercentage = 0.0;
         $transactionFeeAmount = 0.0;
         $totalAmountWithoutTransactionFee = $totalAmount;
@@ -550,11 +550,11 @@ class PriceController extends Controller
             $totalAmount = $totalAmount + $transactionFeeAmount;
         }
 
-        $modularityPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
-        $modularityPayload['transaction_fee_exists'] = $hasTransactionFee;
-        $modularityPayload['transaction_fee_percentage'] = $transactionFeePercentage;
-        $modularityPayload['transaction_fee_amount'] = $transactionFeeAmount;
-        $modularityPayload['total_amount_with_transaction_fee'] = $totalAmount;
+        $modularousPayload['total_amount_without_transaction_fee'] = $totalAmountWithoutTransactionFee;
+        $modularousPayload['transaction_fee_exists'] = $hasTransactionFee;
+        $modularousPayload['transaction_fee_percentage'] = $transactionFeePercentage;
+        $modularousPayload['transaction_fee_amount'] = $transactionFeeAmount;
+        $modularousPayload['total_amount_with_transaction_fee'] = $totalAmount;
 
         $payable = new Payable($paymentService->key);
         Session::put('payable_payment_service', $paymentService->key);
@@ -601,7 +601,7 @@ class PriceController extends Controller
                 ],
             ],
 
-            'modularity' => $modularityPayload,
+            'modularous' => $modularousPayload,
         ];
 
         $paymentPayload = [
@@ -631,13 +631,13 @@ class PriceController extends Controller
     public function response(Request $request)
     {
         $payment = null;
-        $modularityPayload = new \stdClass;
+        $modularousPayload = new \stdClass;
         if ($request->get('id')) {
             $payment = Payment::find($request->get('id'));
             if ($payment && $payment->parameters) {
-                $modularityPayload = $payment->parameters->modularity ?? new \stdClass;
-                if (isset($modularityPayload->locale)) {
-                    app()->setLocale($modularityPayload->locale);
+                $modularousPayload = $payment->parameters->modularous ?? new \stdClass;
+                if (isset($modularousPayload->locale)) {
+                    app()->setLocale($modularousPayload->locale);
                 }
             }
         }
@@ -694,14 +694,14 @@ class PriceController extends Controller
                 'variant' => $color,
                 'message' => $description,
                 'timeout' => 1000,
-                'redirector' => merge_url_query($modularityPayload->previous_url ?? route('admin.dashboard'), [
-                    'modalService' => modularity_modal_service($color, $icon, $title, $description, $modalProps),
+                'redirector' => merge_url_query($modularousPayload->previous_url ?? route('admin.dashboard'), [
+                    'modalService' => modularous_modal_service($color, $icon, $title, $description, $modalProps),
                 ]),
             ]);
         }
 
-        return redirect(merge_url_query($modularityPayload->previous_url ?? route('admin.dashboard'), [
-            'modalService' => modularity_modal_service($color, $icon, $title, $description, $modalProps),
+        return redirect(merge_url_query($modularousPayload->previous_url ?? route('admin.dashboard'), [
+            'modalService' => modularous_modal_service($color, $icon, $title, $description, $modalProps),
         ]));
     }
 }

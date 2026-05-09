@@ -1,8 +1,8 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 /**
  * Select options built from all module routes that define an Eloquent model.
@@ -33,7 +33,7 @@ class ModuleRouteModelHydrate extends SelectHydrate
         $this->input['itemTitle'] = 'title';
 
         $onlyParentSegmentModels = (bool) ($this->input['onlyParentSegmentModels'] ?? false);
-        $this->input['items'] = Modularity::getModuleRouteModelSelectItems($onlyParentSegmentModels);
+        $this->input['items'] = Modularous::getModuleRouteModelSelectItems($onlyParentSegmentModels);
 
         return parent::hydrate();
     }

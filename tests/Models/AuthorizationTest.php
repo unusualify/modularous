@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Authorization;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Authorization;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class AuthorizationTest extends ModelTestCase
 {
@@ -16,7 +16,7 @@ class AuthorizationTest extends ModelTestCase
     public function test_get_table_authorization()
     {
         $authorization = new Authorization;
-        $this->assertEquals(modularityConfig('tables.authorizations', 'modularity_authorizations'), $authorization->getTable());
+        $this->assertEquals(modularousConfig('tables.authorizations', 'modularous_authorizations'), $authorization->getTable());
     }
 
     public function test_fillable_attributes()
@@ -333,7 +333,7 @@ class AuthorizationTest extends ModelTestCase
         // Test that authorization can be deleted independently
         $authorization->delete();
 
-        $this->assertDatabaseMissing(modularityConfig('tables.authorizations', 'um_authorizations'), ['id' => $authorizationId]);
+        $this->assertDatabaseMissing(modularousConfig('tables.authorizations', 'um_authorizations'), ['id' => $authorizationId]);
 
         // Original models should still exist
         $this->assertDatabaseHas('um_users', ['id' => $authorizedUser->id]);

@@ -8,5 +8,5 @@ return [
      * @see \Modules\Cms\Services\CmsParentSegmentResolver
      * @see \Modules\Cms\Entities\ParentSegment
      */
-    'enabled' => env('MODULARITY_CMS_PARENT_SEGMENTS_ENABLED', true),
+    'enabled' => env('MODULAROUS_CMS_PARENT_SEGMENTS_ENABLED', true),
 ];

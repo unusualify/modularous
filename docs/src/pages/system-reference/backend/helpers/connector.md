@@ -27,7 +27,7 @@ Main entrypoint. Resolves the module and route, then delegates to `find_target` 
 find_module_and_route(string $moduleName, string $routeName): array
 ```
 
-Looks up the module via `Modularity::find()` and returns `[$module, $route]`. Throws if either cannot be resolved.
+Looks up the module via `Modularous::find()` and returns `[$module, $route]`. Throws if either cannot be resolved.
 
 ---
 
@@ -37,7 +37,7 @@ Looks up the module via `Modularity::find()` and returns `[$module, $route]`. Th
 find_module_route_names(string $moduleName): array
 ```
 
-Returns all route names registered in a module. Uses `Modularity::find($moduleName)->getRouteNames()`.
+Returns all route names registered in a module. Uses `Modularous::find($moduleName)->getRouteNames()`.
 
 ---
 

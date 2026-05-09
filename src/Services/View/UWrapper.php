@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Services\View;
+namespace Unusualify\Modularous\Services\View;
 
 use BadMethodCallException;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Traits\ManageNames;
+use Unusualify\Modularous\Traits\ManageNames;
 
 class UWrapper
 {
@@ -53,7 +53,7 @@ class UWrapper
                     $col->addChildren($contents[0]);
                 }
 
-            } elseif (get_class($element) === 'Unusualify\Modularity\Services\View\UComponent') {
+            } elseif (get_class($element) === 'Unusualify\Modularous\Services\View\UComponent') {
                 $col->addChildren($element);
             }
 

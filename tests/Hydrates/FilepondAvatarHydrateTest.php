@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\FilepondAvatarHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\FilepondAvatarHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FilepondAvatarHydrateTest extends TestCase
 {

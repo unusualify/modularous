@@ -6,7 +6,7 @@ sidebarTitle: Feature
 # Feature
 
 **File**: `src/Entities/Feature.php`  
-**Namespace**: `Unusualify\Modularity\Entities`  
+**Namespace**: `Unusualify\Modularous\Entities`  
 **Extends**: `Illuminate\Database\Eloquent\Model`
 
 Stores featured/starred content for bucket-based content curation. Each feature record links a target model to a named bucket with a sort position and an optional starred flag.
@@ -35,7 +35,7 @@ Returns all featured models for a given bucket key, filtering out null (deleted)
 
 ## Table
 
-Resolved from `modularity.features_table`, defaults to `twill_features`.
+Resolved from `modularous.features_table`, defaults to `twill_features`.
 
 ## Related
 

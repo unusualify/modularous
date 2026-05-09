@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create(modularousConfig('tables.companies', 'um_companies'), function (Blueprint $table) {
+            // this will create an id, a "published" column, and soft delete and timestamps columns
+            createDefaultTableFields($table);
+            // $table->{modularousIntegerMethod()}("_id")->unsigned();
+            $table->string('name', 99)->nullable();
+            $table->text('address')->nullable();
+            $table->string('city', 50)->nullable();
+            $table->string('state', 50)->nullable();
+            $table->integer('country_id')->nullable();
+            $table->string('zip_code', 10)->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('vat_number', 20)->nullable();
+            $table->string('tax_id', 30)->nullable();
+
+            $table->timestamps();
+            $table->softDeletes();
+
+        });
+
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists(modularousConfig('tables.companies', 'modularous_companies'));
+    }
+};

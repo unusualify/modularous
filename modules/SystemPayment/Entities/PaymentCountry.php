@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\SystemPricing\Entities\VatRate;
 use Modules\SystemUtility\Entities\Country;
 use Modules\SystemUtility\Entities\Translations\CountryTranslation;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 
 class PaymentCountry extends Country
 {

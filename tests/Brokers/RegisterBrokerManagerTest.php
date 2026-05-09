@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Brokers;
+namespace Unusualify\Modularous\Tests\Brokers;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Brokers\RegisterBrokerManager;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Brokers\RegisterBrokerManager;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class RegisterBrokerManagerTest extends ModelTestCase
 {
@@ -20,15 +20,15 @@ class RegisterBrokerManagerTest extends ModelTestCase
     {
         parent::setUp();
 
-        config(['auth.passwords.modularity_users' => [
-            'provider' => 'modularity_users',
+        config(['auth.passwords.modularous_users' => [
+            'provider' => 'modularous_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ]]);
 
         config(['auth.passwords.register_verified_users' => [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'um_email_verification_tokens',
             'expire' => 60,
             'throttle' => 60,

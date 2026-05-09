@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
-use Unusualify\Modularity\Facades\CurrencyExchange;
-use Unusualify\Modularity\Repositories\Traits\PricesTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Facades\CurrencyExchange;
+use Unusualify\Modularous\Repositories\Traits\PricesTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class PricesTraitTest extends RepositoryTestCase
 {
@@ -158,7 +158,7 @@ class PricesTraitTest extends RepositoryTestCase
 
     public function test_get_form_fields_prices_trait_with_deleting_prices(): void
     {
-        config(['modularity.services.currency_exchange.active' => false]);
+        config(['modularous.services.currency_exchange.active' => false]);
         $object = $this->repository->create([
             'name' => 'Test Priceable',
             'prices' => [

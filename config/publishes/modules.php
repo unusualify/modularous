@@ -2,7 +2,7 @@
 
 use Nwidart\Modules\Activators\FileActivator;
 use Nwidart\Modules\Providers\ConsoleServiceProvider;
-use Unusualify\Modularity\Activators\ModularityActivator;
+use Unusualify\Modularous\Activators\ModularousActivator;
 
 return [
 
@@ -195,10 +195,10 @@ return [
     |
     */
     'cache' => [
-        'enabled' => env('MODULARITY_CACHE_ENABLED', true),
-        'driver' => env('MODULARITY_CACHE_DRIVER', 'file'),
-        'key' => env('MODULARITY_CACHE_KEY', 'modularity'),
-        'lifetime' => env('MODULARITY_CACHE_LIFETIME', 600),
+        'enabled' => env('MODULAROUS_CACHE_ENABLED', true),
+        'driver' => env('MODULAROUS_CACHE_DRIVER', 'file'),
+        'key' => env('MODULAROUS_CACHE_KEY', 'modularous'),
+        'lifetime' => env('MODULAROUS_CACHE_LIFETIME', 600),
     ],
     /*
     |--------------------------------------------------------------------------
@@ -235,13 +235,13 @@ return [
             'cache-key' => 'activator.installed',
             'cache-lifetime' => 604800,
         ],
-        'modularity' => [
-            'class' => ModularityActivator::class,
+        'modularous' => [
+            'class' => ModularousActivator::class,
             'statuses-file' => base_path('modules_statuses.json'),
-            'cache-key' => 'modularity.activator.installed',
+            'cache-key' => 'modularous.activator.installed',
             'cache-lifetime' => 604800,
         ],
     ],
 
-    'activator' => 'modularity',
+    'activator' => 'modularous',
 ];

@@ -9,8 +9,8 @@ sidebarTitle: Create Vue Input
 
 ## Command Information
 
-- **Signature:** `modularity:make:vue:input {name}`
-- **Aliases:** `modularity:create:vue:input`, `mod:c:vue:input`
+- **Signature:** `modularous:make:vue:input {name}`
+- **Aliases:** `modularous:create:vue:input`, `mod:c:vue:input`
 - **Category:** Generators
 
 ## Arguments
@@ -24,7 +24,7 @@ sidebarTitle: Create Vue Input
 Creates a `.vue` file from the `input-component.vue` stub in:
 
 ```
-vendor/modularity/vue/src/js/components/inputs/{StudlyName}.vue
+vendor/modularous/vue/src/js/components/inputs/{StudlyName}.vue
 ```
 
 The component is registered in the input registry with a kebab-case tag name prefixed `v-input-`. If the file already exists the command skips creation and reports a warning.
@@ -32,7 +32,7 @@ The component is registered in the input registry with a kebab-case tag name pre
 ## Examples
 
 ```bash
-php artisan modularity:make:vue:input ColorPicker
+php artisan modularous:make:vue:input ColorPicker
 # → creates ColorPicker.vue, registered as v-input-color-picker
 
 php artisan mod:c:vue:input RatingStars

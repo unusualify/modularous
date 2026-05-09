@@ -6,7 +6,7 @@ sidebarTitle: NestedsetCollection
 # NestedsetCollection
 
 **File**: `src/Entities/NestedsetCollection.php`
-**Namespace**: `Unusualify\Modularity\Entities`
+**Namespace**: `Unusualify\Modularous\Entities`
 **Extends**: `Kalnoy\Nestedset\Collection`
 
 Custom Eloquent collection for nested-set models. Extends the Kalnoy nested-set collection with a more permissive `toTree()` that handles partial trees where some parent nodes are missing from the result set.

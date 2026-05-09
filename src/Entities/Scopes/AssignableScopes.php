@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\PermissionRegistrar;
-use Unusualify\Modularity\Entities\Assignment;
-use Unusualify\Modularity\Entities\Enums\AssignmentStatus;
+use Unusualify\Modularous\Entities\Assignment;
+use Unusualify\Modularous\Entities\Enums\AssignmentStatus;
 
 trait AssignableScopes
 {

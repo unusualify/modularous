@@ -5,7 +5,7 @@ sidebarTitle: HasScopes
 
 # Core\HasScopes
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\Core\HasScopes`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\Core\HasScopes`
 
 Provides the standard visibility scopes used across all Modularous models. Integrates with `Traitify` for conditional global scope registration. Also provides `handleScopes` for applying an array of named scopes to a query.
 
@@ -66,7 +66,7 @@ public static function addGlobalScopesHasX(): array
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Core\HasScopes;
+use Unusualify\Modularous\Entities\Traits\Core\HasScopes;
 
 class Article extends Model
 {

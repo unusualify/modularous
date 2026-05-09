@@ -1,5 +1,5 @@
-@extends("{$MODULARITY_VIEW_NAMESPACE}::auth.layout", [
-    'pageTitle' => ($pageTitle ?? ___('authentication.register')) . ' | ' . \Unusualify\Modularity\Facades\Modularity::pageTitle(),
+@extends("{$MODULAROUS_VIEW_NAMESPACE}::auth.layout", [
+    'pageTitle' => ($pageTitle ?? ___('authentication.register')) . ' | ' . \Unusualify\Modularous\Facades\Modularous::pageTitle(),
 ])
 
 

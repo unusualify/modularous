@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\Cms;
+namespace Unusualify\Modularous\Tests\Services\Cms;
 
 use Carbon\Carbon;
 use Modules\Cms\Contracts\CanonicalUrlResolverInterface;
@@ -9,7 +9,7 @@ use Modules\Cms\Services\CmsAdminWarnings;
 use Modules\Cms\Services\CmsParentSegmentResolver;
 use Modules\Cms\Services\CmsUrlRouteRegistry;
 use ReflectionClass;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CmsAdminWarningsTest extends TestCase
 {
@@ -39,8 +39,8 @@ class CmsAdminWarningsTest extends TestCase
     public function test_gather_includes_schedule_warning_before_start(): void
     {
         config([
-            'modularity.cms_seo.admin.publish_schedule_warnings' => true,
-            'modularity.cms_seo.admin.publish_soft_warnings' => false,
+            'modularous.cms_seo.admin.publish_schedule_warnings' => true,
+            'modularous.cms_seo.admin.publish_soft_warnings' => false,
         ]);
 
         $service = $this->makeWarningsService();
@@ -63,8 +63,8 @@ class CmsAdminWarningsTest extends TestCase
     public function test_gather_includes_schedule_warning_after_end(): void
     {
         config([
-            'modularity.cms_seo.admin.publish_schedule_warnings' => true,
-            'modularity.cms_seo.admin.publish_soft_warnings' => false,
+            'modularous.cms_seo.admin.publish_schedule_warnings' => true,
+            'modularous.cms_seo.admin.publish_soft_warnings' => false,
         ]);
 
         $service = $this->makeWarningsService();
@@ -84,8 +84,8 @@ class CmsAdminWarningsTest extends TestCase
     public function test_schedule_warnings_disabled_emits_none_for_schedule_only(): void
     {
         config([
-            'modularity.cms_seo.admin.publish_schedule_warnings' => false,
-            'modularity.cms_seo.admin.publish_soft_warnings' => false,
+            'modularous.cms_seo.admin.publish_schedule_warnings' => false,
+            'modularous.cms_seo.admin.publish_soft_warnings' => false,
         ]);
 
         $service = $this->makeWarningsService();

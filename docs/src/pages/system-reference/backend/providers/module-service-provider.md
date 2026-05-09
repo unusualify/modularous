@@ -5,12 +5,12 @@ sidebarTitle: ModuleServiceProvider
 
 # ModuleServiceProvider
 
-**Class**: `Unusualify\Modularity\Providers\ModuleServiceProvider`  
+**Class**: `Unusualify\Modularous\Providers\ModuleServiceProvider`  
 **Source**: `src/Providers/ModuleServiceProvider.php`  
 **Extends**: [`ServiceProvider`](./service-provider)  
 **Implements**: `Illuminate\Contracts\Support\DeferrableProvider`
 
-Bootstraps every enabled nwidart module. Iterates `Modularity::allEnabled()` and registers each module's providers, config, commands, migrations, views, Blade components, and translations.
+Bootstraps every enabled nwidart module. Iterates `Modularous::allEnabled()` and registers each module's providers, config, commands, migrations, views, Blade components, and translations.
 
 ## `bootModules()`
 

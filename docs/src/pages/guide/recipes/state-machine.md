@@ -24,7 +24,7 @@ This recipe covers **both** — start with `HasStateable` and escalate to `Proce
 ## 1. Add `HasStateable` to your model
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
 
 class Article extends Model
 {
@@ -41,7 +41,7 @@ This installs:
 ## 2. Add the repository trait
 
 ```php
-use Unusualify\Modularity\Repositories\Traits\StateableTrait;
+use Unusualify\Modularous\Repositories\Traits\StateableTrait;
 
 class ArticleRepository extends Repository
 {
@@ -96,7 +96,7 @@ $article->stateable_status;        // accessor
 Create a broadcast event that fires on state changes:
 
 ```bash
-php artisan modularity:make:event StateableUpdated Blog
+php artisan modularous:make:event StateableUpdated Blog
 ```
 
 Then in the event (already extends `ModelEvent`):
@@ -104,7 +104,7 @@ Then in the event (already extends `ModelEvent`):
 ```php
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
-use Unusualify\Modularity\Events\ModelEvent;
+use Unusualify\Modularous\Events\ModelEvent;
 
 class StateableUpdated extends ModelEvent implements ShouldBroadcast
 {
@@ -181,7 +181,7 @@ Use `Processable` when you need:
 - **Conditional transitions** with explicit `advance()` / `rollback()` calls
 
 ```php
-use Unusualify\Modularity\Entities\Traits\Processable;
+use Unusualify\Modularous\Entities\Traits\Processable;
 
 class Claim extends Model
 {

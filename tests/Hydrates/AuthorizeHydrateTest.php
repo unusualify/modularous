@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\Inputs\AuthorizeHydrate;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\Inputs\AuthorizeHydrate;
+use Unusualify\Modularous\Tests\TestCase;
 
 // simple stub model to satisfy ::query()
 class AuthorizeStubModel

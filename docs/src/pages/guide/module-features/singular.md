@@ -16,8 +16,8 @@ Add the `IsSingular` trait to your model:
 
 namespace Modules\Settings\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
 
 class SiteSettings extends Model
 {
@@ -30,7 +30,7 @@ class SiteSettings extends Model
 ### How It Works
 
 - Uses a global scope `SingularScope` so only one record exists per type
-- Stores data in a `modularity_singletons` table (configurable via `tables.singletons`)
+- Stores data in a `modularous_singletons` table (configurable via `tables.singletons`)
 - `singleton_type` stores the model class
 - `content` stores fillable attributes as JSON (excluding `singleton_type`, `content`)
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Notifications;
+namespace Unusualify\Modularous\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;

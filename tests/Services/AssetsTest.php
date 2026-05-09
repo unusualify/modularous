@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services;
+namespace Unusualify\Modularous\Tests\Services;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Services\Assets;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\Assets;
+use Unusualify\Modularous\Tests\TestCase;
 
 class AssetsTest extends TestCase
 {
@@ -66,7 +66,7 @@ class AssetsTest extends TestCase
                     return 'unusual-manifest.json';
                 }
                 if (str_contains($key, 'vendor_path')) {
-                    return 'vendor/unusualify/modularity';
+                    return 'vendor/unusualify/modularous';
                 }
 
                 return $default;

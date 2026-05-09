@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:route:status`
+- **Signature:** `modularous:route:status`
 - **Category:** Module
 
 ## Examples
@@ -12,10 +12,10 @@
 ### List all route statuses
 
 ```bash
-php artisan modularity:route:status
+php artisan modularous:route:status
 ```
 
-`modularity:route:status`
+`modularous:route:status`
 -------------------------
 
 Outputs a table showing every enabled module alongside each of its routes and whether that route is currently `enabled` or `disabled`. Modules with no tracked routes are shown with a `(no routes tracked)` note.
@@ -26,11 +26,11 @@ Outputs a table showing every enabled module alongside each of its routes and wh
 | Blog | categories | disabled |
 | Shop | products | enabled |
 
-Use [`modularity:route:enable`](/guide/console/module/route-enable) and [`modularity:route:disable`](/guide/console/module/route-disable) to change a route's status.
+Use [`modularous:route:enable`](/guide/console/module/route-enable) and [`modularous:route:disable`](/guide/console/module/route-disable) to change a route's status.
 
 ### Usage
 
-* `modularity:route:status`
+* `modularous:route:status`
 
 ### Options
 

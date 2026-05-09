@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -9,9 +9,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Unusualify\Modularity\Entities\Filepond;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Filepond;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasFilepondsTest extends ModelTestCase
 {
@@ -39,7 +39,7 @@ class HasFilepondsTest extends ModelTestCase
     public function test_model_uses_has_fileponds_trait()
     {
         $traits = class_uses_recursive($this->model);
-        $this->assertContains('Unusualify\Modularity\Entities\Traits\HasFileponds', $traits);
+        $this->assertContains('Unusualify\Modularous\Entities\Traits\HasFileponds', $traits);
     }
 
     public function test_fileponds_relationship_exists()

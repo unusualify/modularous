@@ -2,10 +2,10 @@
 
 namespace Modules\SystemSetting\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasImages;
-use Unusualify\Modularity\Entities\Traits\HasSpreadable;
-use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasImages;
+use Unusualify\Modularous\Entities\Traits\HasSpreadable;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
 
 class General extends Model
 {

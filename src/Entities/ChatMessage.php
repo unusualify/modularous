@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Unusualify\Modularity\Entities\Scopes\ChatMessageScopes;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\Traits\HasFileponds;
+use Unusualify\Modularous\Entities\Scopes\ChatMessageScopes;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasFileponds;
 
 class ChatMessage extends Model
 {
@@ -95,6 +95,6 @@ class ChatMessage extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.chat_messages', parent::getTable());
+        return modularousConfig('tables.chat_messages', parent::getTable());
     }
 }

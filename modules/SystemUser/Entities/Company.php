@@ -2,14 +2,14 @@
 
 namespace Modules\SystemUser\Entities;
 
-use Unusualify\Modularity\Entities\Company as ModularityCompany;
+use Unusualify\Modularous\Entities\Company as ModularousCompany;
 
-class Company extends ModularityCompany
+class Company extends ModularousCompany
 {
     /**
      * The class that is used to spread the company.
      *
      * @var string
      */
-    public static $spreadableClass = ModularityCompany::class;
+    public static $spreadableClass = ModularousCompany::class;
 }

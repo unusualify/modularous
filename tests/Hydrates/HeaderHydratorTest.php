@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Hydrates;
+namespace Unusualify\Modularous\Tests\Hydrates;
 
-use Unusualify\Modularity\Hydrates\HeaderHydrator;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Hydrates\HeaderHydrator;
+use Unusualify\Modularous\Tests\TestCase;
 
 class HeaderHydratorTest extends TestCase
 {

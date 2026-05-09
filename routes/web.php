@@ -3,14 +3,14 @@
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use Unusualify\Modularity\Http\Controllers\Utility\ChatController;
-use Unusualify\Modularity\Http\Controllers\Utility\ProcessController;
-use Unusualify\Modularity\Http\Controllers\Utility\TagController;
+use Unusualify\Modularous\Http\Controllers\Utility\ChatController;
+use Unusualify\Modularous\Http\Controllers\Utility\ProcessController;
+use Unusualify\Modularous\Http\Controllers\Utility\TagController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
-| Middlewares : [ 'web.auth', ...\Unusualify\Modularity\Facades\ModularityRoutes::defaultMiddlewares(), \Unusualify\Modularity\Facades\ModularityRoutes::defaultPanelMiddlewares()]
+| Middlewares : [ 'web.auth', ...\Unusualify\Modularous\Facades\ModularousRoutes::defaultMiddlewares(), \Unusualify\Modularous\Facades\ModularousRoutes::defaultPanelMiddlewares()]
 |
 |--------------------------------------------------------------------------
 |
@@ -28,8 +28,8 @@ Route::get('/email/verification-notification', 'VerificationController@send')
     ->name('verification.send');
 
 Route::prefix('register')->as('register.')
-    ->middleware(['web', 'modularity.core'])
-    ->withoutMiddleware(['modularity.panel', 'web.auth'])
+    ->middleware(['web', 'modularous.core'])
+    ->withoutMiddleware(['modularous.panel', 'web.auth'])
     ->group(function () {
 
         Route::get('/password/generate/{token}', 'PasswordController@showForm')
@@ -49,7 +49,7 @@ Route::get('users/impersonate/{id}', 'Utility\ImpersonateController@impersonate'
 
 // system internal api routes (for ajax web routes)
 Route::prefix('api')->group(function () {
-    Route::withoutMiddleware(['modularity.panel', 'web.auth', 'modularity.core'])->get('modal-service/{key}', function (Request $request, string $key) {
+    Route::withoutMiddleware(['modularous.panel', 'web.auth', 'modularous.core'])->get('modal-service/{key}', function (Request $request, string $key) {
         $modalService = Session::get($key);
 
         if (! $modalService) {
@@ -81,7 +81,7 @@ Route::prefix('api')->group(function () {
         Route::put('update', 'update')->name('update');
     });
 
-    if (modularityConfig('enabled.media-library')) {
+    if (modularousConfig('enabled.media-library')) {
         Route::group(['prefix' => 'media-library', 'as' => 'media-library.'], function () {
             Route::post('sign-s3-upload', ['as' => 'sign-s3-upload', 'uses' => 'Utility\MediaLibraryController@signS3Upload']);
             Route::get('sign-azure-upload', ['as' => 'sign-azure-upload', 'uses' => 'Utility\MediaLibraryController@signAzureUpload']);
@@ -93,7 +93,7 @@ Route::prefix('api')->group(function () {
         });
     }
 
-    if (modularityConfig('enabled.file-library')) {
+    if (modularousConfig('enabled.file-library')) {
         Route::group(['prefix' => 'file-library', 'as' => 'file-library.'], function () {
             Route::post('sign-s3-upload', ['as' => 'sign-s3-upload', 'uses' => 'Utility\FileLibraryController@signS3Upload']);
             Route::get('sign-azure-upload', ['as' => 'sign-azure-upload', 'uses' => 'Utility\FileLibraryController@signAzureUpload']);
@@ -106,4 +106,4 @@ Route::prefix('api')->group(function () {
     }
 });
 
-Route::post('modularity/metrics', 'Utility\MetricController')->name('modularity.metrics');
+Route::post('modularous/metrics', 'Utility\MetricController')->name('modularous.metrics');

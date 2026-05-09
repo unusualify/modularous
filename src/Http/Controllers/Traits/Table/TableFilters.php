@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Services\Connector;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Services\Connector;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait TableFilters
 {
@@ -18,7 +18,7 @@ trait TableFilters
 
         $scope = $this->nestedParentScopes() + $scopes;
         $statusFilters[] = [
-            // 'name' => modularityTrans("{$this->baseKey}::lang.listing.filter.all-items"),
+            // 'name' => modularousTrans("{$this->baseKey}::lang.listing.filter.all-items"),
             'name' => ___('listing.filter.all-items'),
             'slug' => 'all',
             'methods' => 'getCountByStatusSlug',
@@ -28,7 +28,7 @@ trait TableFilters
 
         // if ($this->routeHasTrait('revisions') && $this->getIndexOption('create')) {
         //     $statusFilters[] = [
-        //         'name' => modularityTrans("$this->baseKey::lang.listing.filter.mine"),
+        //         'name' => modularousTrans("$this->baseKey::lang.listing.filter.mine"),
         //         'slug' => 'mine',
         //         'number' => $this->repository->getCountByStatusSlug('mine', $scope),
         //     ];

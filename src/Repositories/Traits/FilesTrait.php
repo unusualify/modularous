@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\File;
-use Unusualify\Modularity\Entities\Model;
+use Unusualify\Modularous\Entities\File;
+use Unusualify\Modularous\Entities\Model;
 
 trait FilesTrait
 {
@@ -270,7 +270,7 @@ trait FilesTrait
     private function collectPivotSpecsForFileRows($object, array $rows, string $role, string $locale): Collection
     {
         $specs = Collection::make();
-        $fileablesTable = modularityConfig('tables.fileables', 'um_fileables');
+        $fileablesTable = modularousConfig('tables.fileables', 'um_fileables');
 
         Collection::make($rows)->each(function ($file) use ($object, $fileablesTable, $specs, $role, $locale) {
             if (! is_array($file) || ! isset($file['id'])) {

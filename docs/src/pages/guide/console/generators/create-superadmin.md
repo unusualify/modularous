@@ -3,12 +3,12 @@
 > Creates the superadmin account
 
 ::: tip Setup command
-Although this page is listed under Generators, `modularity:create:superadmin` lives in `Console/Setup/` and is typically run as part of the initial [Setup](/guide/console/setup/overview) workflow.
+Although this page is listed under Generators, `modularous:create:superadmin` lives in `Console/Setup/` and is typically run as part of the initial [Setup](/guide/console/setup/overview) workflow.
 :::
 
 ## Command Information
 
-- **Signature:** `modularity:create:superadmin [-d|--default] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] [<email> [<password>]]`
+- **Signature:** `modularous:create:superadmin [-d|--default] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] [<email> [<password>]]`
 - **Category:** Setup / Generators
 
 
@@ -17,105 +17,105 @@ Although this page is listed under Generators, `modularity:create:superadmin` li
 ### With Arguments
 
 ```bash
-php artisan modularity:create:superadmin EMAIL PASSWORD
+php artisan modularous:create:superadmin EMAIL PASSWORD
 ```
 
 ### With Options
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -d
+php artisan modularous:create:superadmin -d
 
 # Using full option name
-php artisan modularity:create:superadmin --default
+php artisan modularous:create:superadmin --default
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -T
+php artisan modularous:create:superadmin -T
 
 # Using full option name
-php artisan modularity:create:superadmin --addTranslation
+php artisan modularous:create:superadmin --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -M
+php artisan modularous:create:superadmin -M
 
 # Using full option name
-php artisan modularity:create:superadmin --addMedia
+php artisan modularous:create:superadmin --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -F
+php artisan modularous:create:superadmin -F
 
 # Using full option name
-php artisan modularity:create:superadmin --addFile
+php artisan modularous:create:superadmin --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -P
+php artisan modularous:create:superadmin -P
 
 # Using full option name
-php artisan modularity:create:superadmin --addPosition
+php artisan modularous:create:superadmin --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -S
+php artisan modularous:create:superadmin -S
 
 # Using full option name
-php artisan modularity:create:superadmin --addSlug
+php artisan modularous:create:superadmin --addSlug
 ```
 
 ```bash
-php artisan modularity:create:superadmin --addPrice
+php artisan modularous:create:superadmin --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -A
+php artisan modularous:create:superadmin -A
 
 # Using full option name
-php artisan modularity:create:superadmin --addAuthorized
+php artisan modularous:create:superadmin --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -FP
+php artisan modularous:create:superadmin -FP
 
 # Using full option name
-php artisan modularity:create:superadmin --addFilepond
+php artisan modularous:create:superadmin --addFilepond
 ```
 
 ```bash
-php artisan modularity:create:superadmin --addUuid
+php artisan modularous:create:superadmin --addUuid
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:create:superadmin -SS
+php artisan modularous:create:superadmin -SS
 
 # Using full option name
-php artisan modularity:create:superadmin --addSnapshot
+php artisan modularous:create:superadmin --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:create:superadmin EMAIL
+php artisan modularous:create:superadmin EMAIL
 ```
 
-`modularity:create:superadmin`
+`modularous:create:superadmin`
 ------------------------------
 
 Creates the superadmin account
 
 ### Usage
 
-* `modularity:create:superadmin [-d|--default] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] [<email> [<password>]]`
+* `modularous:create:superadmin [-d|--default] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] [<email> [<password>]]`
 
 Creates the superadmin account
 

@@ -26,7 +26,7 @@ final class FallbackLocaleSluglessCanonicalMiddleware
     {
         if (
             ! CmsSluglessFallbackLocale::enabled()
-            || ! modularityConfig('cms_routing.public_pages_enabled', true)
+            || ! modularousConfig('cms_routing.public_pages_enabled', true)
         ) {
             return $next($request);
         }

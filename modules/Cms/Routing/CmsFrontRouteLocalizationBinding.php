@@ -47,7 +47,7 @@ final class CmsFrontRouteLocalizationBinding
 
     public static function shouldUseLocalePrefixRouteGroup(): bool
     {
-        if ((string) modularityConfig('cms_routing.public_front_route_group_mode', 'catch_all') !== 'locale_param') {
+        if ((string) modularousConfig('cms_routing.public_front_route_group_mode', 'catch_all') !== 'locale_param') {
             return false;
         }
 
@@ -56,7 +56,7 @@ final class CmsFrontRouteLocalizationBinding
 
     public static function isMcamaraLocalizationStackAvailable(): bool
     {
-        $driver = (string) modularityConfig('cms_routing.localization_driver', 'auto');
+        $driver = (string) modularousConfig('cms_routing.localization_driver', 'auto');
 
         if ($driver === 'mcamara') {
             return class_exists(LaravelLocalization::class);

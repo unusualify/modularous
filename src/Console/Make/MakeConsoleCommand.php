@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 
 class MakeConsoleCommand extends BaseCommand
 {
@@ -14,14 +14,14 @@ class MakeConsoleCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:make:command
+    protected $signature = 'modularous:make:command
         {name}
         {signature}
         {--d|description= : The description of the command}';
 
     protected $aliases = [
         'mod:c:cmd',
-        'modularity:create:command',
+        'modularous:create:command',
     ];
 
     /**
@@ -69,7 +69,7 @@ class MakeConsoleCommand extends BaseCommand
             . "\t *\n"
             . "\t * @var string\n"
             . "\t */\n"
-            . "\tprotected \$signature = 'modularity:{$signature}';";
+            . "\tprotected \$signature = 'modularous:{$signature}';";
 
         $replacements = [
             'STUDLY_NAME' => $studlyName,
@@ -79,7 +79,7 @@ class MakeConsoleCommand extends BaseCommand
 
         $content = (new Stub('/scaffold/command.stub', $replacements))->render();
 
-        $path = get_modularity_vendor_path('src/Console/' . $studlyName . 'Command.php');
+        $path = get_modularous_vendor_path('src/Console/' . $studlyName . 'Command.php');
 
         $this->filesystem->put($path, $content);
 

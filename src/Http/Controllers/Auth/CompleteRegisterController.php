@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
-use Unusualify\Modularity\Events\ModularityUserRegistering;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
+use Unusualify\Modularous\Events\ModularousUserRegistering;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\CreateVerifiedEmailAccount;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
 
 class CompleteRegisterController extends Controller
 {
@@ -34,7 +34,7 @@ class CompleteRegisterController extends Controller
         $email = $request->email;
 
         if ($email && $token && Register::broker('register_verified_users')->emailTokenExists(email: $email, token: $token)) {
-            event(new ModularityUserRegistering($request));
+            event(new ModularousUserRegistering($request));
 
             $rawSchema = getFormDraft('complete_register_form');
             $keys = array_map(fn ($key) => $key['name'], $rawSchema);
@@ -53,7 +53,7 @@ class CompleteRegisterController extends Controller
                 'formSlots' => $this->restartOptionSlot(),
             ]);
 
-            return $this->viewFactory->make(modularityBaseKey() . '::auth.register')->with($viewData);
+            return $this->viewFactory->make(modularousBaseKey() . '::auth.register')->with($viewData);
         }
 
         return $this->redirector->to(route(Route::hasAdmin('register.email_form')))->withErrors([

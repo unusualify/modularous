@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Facades;
+namespace Unusualify\Modularous\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Unusualify\Modularity\Suppo\HostRouting;
+use Unusualify\Modularous\Suppo\HostRouting;
 
 /**
  * @method static void registerRoutes()

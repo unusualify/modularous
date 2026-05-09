@@ -51,7 +51,7 @@ $responsiveItems = $this->getResponsiveItems($menuItems);
 
 namespace App\Http\Controllers;
 
-use Unusualify\Modularity\Traits\ResponsiveVisibility;
+use Unusualify\Modularous\Traits\ResponsiveVisibility;
 
 class NavigationController extends Controller
 {

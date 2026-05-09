@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -16,10 +16,10 @@ use Oobook\Priceable\Facades\PriceService;
 use Oobook\Priceable\Models\Currency as PriceableCurrency;
 use Oobook\Priceable\Models\PriceType;
 use Oobook\Priceable\Models\VatRate;
-use Unusualify\Modularity\Entities\Enums\PaymentStatus;
-use Unusualify\Modularity\Entities\Traits\HasPayment;
-use Unusualify\Modularity\Entities\Traits\HasPriceable;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Enums\PaymentStatus;
+use Unusualify\Modularous\Entities\Traits\HasPayment;
+use Unusualify\Modularous\Entities\Traits\HasPriceable;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasPaymentTest extends ModelTestCase
 {

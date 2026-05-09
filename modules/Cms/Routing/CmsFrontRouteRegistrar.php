@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Http\Controllers\Front\CmsController;
 use Modules\Cms\Http\Controllers\Front\CmsPublicFrontController;
-use Unusualify\Modularity\Entities\Traits\HasParentSegment;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Entities\Traits\HasParentSegment;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
 
 /**
  * Registers the CMS public catch-all route when {@see ParentSegment} has enabled rows for a routable model.
@@ -18,13 +18,13 @@ use Unusualify\Modularity\Module;
  * Front invokable controllers are resolved per module route via {@see Module::getTargetClassNamespace()} with
  * {@code front-controller} + {@code {StudlyRoute}Controller} (see {@code config/publishes/modules.php} generator map).
  * The class must exist and extend {@see CmsController}. Optional overrides:
- * {@see modularityConfig('cms_routing.public_front_handlers')} keyed by model FQCN.
+ * {@see modularousConfig('cms_routing.public_front_handlers')} keyed by model FQCN.
  *
  * **Mcamara docs vs this stack:** mcamara often shows LaravelLocalization::setLocale() plus per-route
  * transRoute() keys backed by per-locale routes.php under resources/lang — one named route per translated URL shape.
  * Here we register GET catch-all(s); with {@see CmsFrontRouteLocalizationBinding} the route may use a real
- * locale segment plus path. The `{path}` wildcard intentionally **does not** match {@see modularityConfig('cms_routing.signed_preview.path_prefix')}
- * (and optional {@see modularityConfig('cms_routing.public_front_catch_all_exclude_path_prefixes')}) so signed preview URLs resolve to
+ * locale segment plus path. The `{path}` wildcard intentionally **does not** match {@see modularousConfig('cms_routing.signed_preview.path_prefix')}
+ * (and optional {@see modularousConfig('cms_routing.public_front_catch_all_exclude_path_prefixes')}) so signed preview URLs resolve to
  * {@see \Modules\Cms\Http\Controllers\CmsSignedPublicPreviewController} instead of being eaten by the CMS page resolver. Resolution runs in {@see \Modules\Cms\Services\CmsPublicModelResolver} against
  * {@see \Modules\Cms\Entities\UrlRoute} (per-locale normalized_path) and optional {@see \Modules\Cms\Entities\ParentSegment}
  * prefixes. Translated segments and slug binding live in the CMS data model, not duplicated Route definitions or lang route files.
@@ -32,7 +32,7 @@ use Unusualify\Modularity\Module;
  * Auto-registration: {@see registerAutoForQualifiedModules()} — {@see \Modules\Cms\Providers\CmsRouteServiceProvider}.
  * Legacy macro: {@see Route::cmsPublicFrontRoutes()} — inner group only; wrap with {@code Route::prefix(...)} if needed.
  *
- * When {@see modularityConfig('cms_routing.universal_cms_public_front')} is true and the {@link ParentSegment} table
+ * When {@see modularousConfig('cms_routing.universal_cms_public_front')} is true and the {@link ParentSegment} table
  * has enabled rows, the Cms module uses {@see CmsPublicFrontController} (one invokable for all {@link UrlRoute} lines
  * whose {@code urlable} is on the registry) instead of the first {@code front-controller/...} match.
  */
@@ -41,16 +41,16 @@ final class CmsFrontRouteRegistrar
     /**
      * Hostname for {@see Route::domain()} when public routes must not respond on every incoming Host header.
      *
-     * Priority: explicit {@see modularityConfig('cms_routing.public_front_route_domain')} → else {@code null} only when
-     * {@see publicFrontRoutesAllowAnyHost()} is true ({@see modularityConfig('cms_routing.public_front_routes_allow_any_host')}
-     * or deprecated inverted {@see modularityConfig('cms_routing.bind_public_routes_to_app_url_host')} when set).
+     * Priority: explicit {@see modularousConfig('cms_routing.public_front_route_domain')} → else {@code null} only when
+     * {@see publicFrontRoutesAllowAnyHost()} is true ({@see modularousConfig('cms_routing.public_front_routes_allow_any_host')}
+     * or deprecated inverted {@see modularousConfig('cms_routing.bind_public_routes_to_app_url_host')} when set).
      * Otherwise reads the host from {@code config('app.url')}.
      *
      * Laravel expects only the host, not a full URL.
      */
     public static function resolvePublicFrontRouteDomain(): ?string
     {
-        $configured = modularityConfig('cms_routing.public_front_route_domain');
+        $configured = modularousConfig('cms_routing.public_front_route_domain');
         if (is_string($configured) && trim($configured) !== '') {
             return trim($configured);
         }
@@ -72,17 +72,17 @@ final class CmsFrontRouteRegistrar
     /**
      * True when CMS catch-all routes should match any incoming Host header (no {@see Route::domain()}).
      *
-     * {@see modularityConfig('cms_routing.public_front_routes_allow_any_host')} wins when {@code true}.
-     * Deprecated: when {@see modularityConfig('cms_routing.bind_public_routes_to_app_url_host')} is non-null,
+     * {@see modularousConfig('cms_routing.public_front_routes_allow_any_host')} wins when {@code true}.
+     * Deprecated: when {@see modularousConfig('cms_routing.bind_public_routes_to_app_url_host')} is non-null,
      * {@code false} means “match any host” (legacy default) and {@code true} binds to {@code APP_URL} host — inverted.
      */
     private static function publicFrontRoutesAllowAnyHost(): bool
     {
-        if ((bool) modularityConfig('cms_routing.public_front_routes_allow_any_host', false)) {
+        if ((bool) modularousConfig('cms_routing.public_front_routes_allow_any_host', false)) {
             return true;
         }
 
-        $bindLegacy = config('modularity.cms_routing.bind_public_routes_to_app_url_host');
+        $bindLegacy = config('modularous.cms_routing.bind_public_routes_to_app_url_host');
         if ($bindLegacy !== null) {
             return ! (bool) $bindLegacy;
         }
@@ -95,7 +95,7 @@ final class CmsFrontRouteRegistrar
      */
     public static function registerAutoForQualifiedModules(): void
     {
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
@@ -103,7 +103,7 @@ final class CmsFrontRouteRegistrar
             return;
         }
 
-        foreach (Modularity::allEnabled() as $module) {
+        foreach (Modularous::allEnabled() as $module) {
             if (! $module instanceof Module) {
                 continue;
             }
@@ -176,7 +176,7 @@ final class CmsFrontRouteRegistrar
      */
     private static function shouldUseUniversalCmsPublicFrontForModule(Module $module): bool
     {
-        if (! (bool) modularityConfig('cms_routing.universal_cms_public_front', true)) {
+        if (! (bool) modularousConfig('cms_routing.universal_cms_public_front', true)) {
             return false;
         }
 
@@ -257,7 +257,7 @@ final class CmsFrontRouteRegistrar
      */
     public static function register(): void
     {
-        if (! modularityConfig('cms_features.enabled', true)) {
+        if (! modularousConfig('cms_features.enabled', true)) {
             return;
         }
 
@@ -291,7 +291,7 @@ final class CmsFrontRouteRegistrar
             self::registerPathCatchAllRoute($controller, $middlewares, 'page.locale');
         });
 
-        if ((bool) modularityConfig('cms_routing.fallback_locale_optional_path_segment', false)) {
+        if ((bool) modularousConfig('cms_routing.fallback_locale_optional_path_segment', false)) {
             self::registerPathCatchAllRoute($controller, $middlewares, 'page');
         }
     }
@@ -317,14 +317,14 @@ final class CmsFrontRouteRegistrar
     {
         $blocked = [];
 
-        if (modularityConfig('cms_routing.signed_preview.enabled', true)) {
-            $preview = trim((string) modularityConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
+        if (modularousConfig('cms_routing.signed_preview.enabled', true)) {
+            $preview = trim((string) modularousConfig('cms_routing.signed_preview.path_prefix', 'cms/preview'), '/');
             if ($preview !== '') {
                 $blocked[] = preg_quote($preview, '/');
             }
         }
 
-        foreach ((array) modularityConfig('cms_routing.public_front_catch_all_exclude_path_prefixes', []) as $raw) {
+        foreach ((array) modularousConfig('cms_routing.public_front_catch_all_exclude_path_prefixes', []) as $raw) {
             if (! is_string($raw)) {
                 continue;
             }
@@ -349,16 +349,16 @@ final class CmsFrontRouteRegistrar
      */
     private static function resolveMiddlewareStack(): array
     {
-        $register = modularityConfig('cms_features.register_middlewares', true);
+        $register = modularousConfig('cms_features.register_middlewares', true);
 
         $useCanonicalLocaleMiddleware = $register
-            && modularityConfig('cms_routing.redirect_to_canonical', false);
+            && modularousConfig('cms_routing.redirect_to_canonical', false);
 
         $useFallbackSluglessCanonicalMiddleware = $register
-            && (bool) modularityConfig('cms_routing.fallback_locale_optional_path_segment', false);
+            && (bool) modularousConfig('cms_routing.fallback_locale_optional_path_segment', false);
 
         $useVisitorRedirect = $register
-            && modularityConfig('cms_routing.visitor_redirects_enabled', true);
+            && modularousConfig('cms_routing.visitor_redirects_enabled', true);
 
         $useMcamaraRoutesMiddleware = $register && self::shouldAppendMcamaraRoutesMiddleware();
 
@@ -378,10 +378,10 @@ final class CmsFrontRouteRegistrar
         }
 
         if (CmsFrontRouteLocalizationBinding::shouldUseLocalePrefixRouteGroup()) {
-            return (bool) modularityConfig('cms_routing.public_front_mcamara_middleware_with_locale_param', true);
+            return (bool) modularousConfig('cms_routing.public_front_mcamara_middleware_with_locale_param', true);
         }
 
-        return (bool) modularityConfig('cms_routing.public_front_mcamara_middleware_with_catch_all', false);
+        return (bool) modularousConfig('cms_routing.public_front_mcamara_middleware_with_catch_all', false);
     }
 
     /**
@@ -391,7 +391,7 @@ final class CmsFrontRouteRegistrar
      */
     public static function resolveControllerClassOrNull(): ?string
     {
-        if (! modularityConfig('cms_routing.public_pages_enabled', true)) {
+        if (! modularousConfig('cms_routing.public_pages_enabled', true)) {
             return null;
         }
 
@@ -403,7 +403,7 @@ final class CmsFrontRouteRegistrar
             return null;
         }
 
-        if ((bool) modularityConfig('cms_routing.universal_cms_public_front', true) && class_exists(CmsPublicFrontController::class)) {
+        if ((bool) modularousConfig('cms_routing.universal_cms_public_front', true) && class_exists(CmsPublicFrontController::class)) {
             return CmsPublicFrontController::class;
         }
 
@@ -434,7 +434,7 @@ final class CmsFrontRouteRegistrar
 
     /**
      * Resolve invokable front controller for a concrete model class (ParentSegment {@code target_model_class}).
-     * Uses {@see modularityConfig('cms_routing.public_front_handlers')} override when set, otherwise
+     * Uses {@see modularousConfig('cms_routing.public_front_handlers')} override when set, otherwise
      * {@see Module::getTargetClassNamespace()} + {@see CmsController} subclass check.
      *
      * @param class-string $modelClass
@@ -442,7 +442,7 @@ final class CmsFrontRouteRegistrar
      */
     public static function resolveFrontControllerForModelClass(string $modelClass): ?string
     {
-        $configured = modularityConfig('cms_routing.public_front_handlers', []);
+        $configured = modularousConfig('cms_routing.public_front_handlers', []);
         if (is_array($configured) && isset($configured[$modelClass])) {
             $override = $configured[$modelClass];
             if (is_string($override) && $override !== '' && class_exists($override)
@@ -451,7 +451,7 @@ final class CmsFrontRouteRegistrar
             }
         }
 
-        foreach (Modularity::allEnabled() as $module) {
+        foreach (Modularous::allEnabled() as $module) {
             if (! $module instanceof Module) {
                 continue;
             }

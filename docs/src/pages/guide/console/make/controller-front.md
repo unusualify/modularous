@@ -7,7 +7,7 @@ sidebarTitle: make:controller:front
 
 > Create a front-end (public-facing) controller for a module
 
-**Signature**: `modularity:make:controller:front`
+**Signature**: `modularous:make:controller:front`
 
 **Category**: Make
 
@@ -22,7 +22,7 @@ Generates a front-end controller in the module's `Http/Controllers/Front/` path.
 ## Usage
 
 ```
-modularity:make:controller:front <module> <name>
+modularous:make:controller:front <module> <name>
 ```
 
 ### Arguments
@@ -37,7 +37,7 @@ modularity:make:controller:front <module> <name>
 ## Examples
 
 ```bash
-php artisan modularity:make:controller:front Blog Post
+php artisan modularous:make:controller:front Blog Post
 # → Blog/Http/Controllers/Front/PostController.php
 ```
 

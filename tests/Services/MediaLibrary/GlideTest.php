@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Services\MediaLibrary;
+namespace Unusualify\Modularous\Tests\Services\MediaLibrary;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Unusualify\Modularity\Services\MediaLibrary\Glide;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Services\MediaLibrary\Glide;
+use Unusualify\Modularous\Tests\TestCase;
 
 class GlideTest extends TestCase
 {
@@ -18,21 +18,21 @@ class GlideTest extends TestCase
         parent::setUp();
 
         // Mock config
-        Config::set(modularityBaseKey() . '.glide.base_url', 'http://localhost');
-        Config::set(modularityBaseKey() . '.glide.base_path', '/img');
-        Config::set(modularityBaseKey() . '.glide.source', storage_path('app/public'));
-        Config::set(modularityBaseKey() . '.glide.cache', storage_path('app/glide'));
-        Config::set(modularityBaseKey() . '.glide.cache_path_prefix', '.cache');
-        Config::set(modularityBaseKey() . '.glide.driver', 'gd');
-        Config::set(modularityBaseKey() . '.glide.use_signed_urls', false);
-        Config::set(modularityBaseKey() . '.glide.default_params', ['fm' => 'jpg', 'q' => 80]);
-        Config::set(modularityBaseKey() . '.glide.lqip_default_params', ['w' => 50, 'blur' => 10]);
-        Config::set(modularityBaseKey() . '.glide.social_default_params', ['w' => 1200, 'h' => 630]);
-        Config::set(modularityBaseKey() . '.glide.cms_default_params', ['w' => 800]);
-        Config::set(modularityBaseKey() . '.glide.presets', ['thumbnail' => ['w' => 100, 'h' => 100]]);
-        Config::set(modularityBaseKey() . '.glide.original_media_for_extensions', ['.svg', '.gif']);
-        Config::set(modularityBaseKey() . '.glide.add_params_to_svgs', false);
-        Config::set(modularityBaseKey() . '.media_library.disk', 'public');
+        Config::set(modularousBaseKey() . '.glide.base_url', 'http://localhost');
+        Config::set(modularousBaseKey() . '.glide.base_path', '/img');
+        Config::set(modularousBaseKey() . '.glide.source', storage_path('app/public'));
+        Config::set(modularousBaseKey() . '.glide.cache', storage_path('app/glide'));
+        Config::set(modularousBaseKey() . '.glide.cache_path_prefix', '.cache');
+        Config::set(modularousBaseKey() . '.glide.driver', 'gd');
+        Config::set(modularousBaseKey() . '.glide.use_signed_urls', false);
+        Config::set(modularousBaseKey() . '.glide.default_params', ['fm' => 'jpg', 'q' => 80]);
+        Config::set(modularousBaseKey() . '.glide.lqip_default_params', ['w' => 50, 'blur' => 10]);
+        Config::set(modularousBaseKey() . '.glide.social_default_params', ['w' => 1200, 'h' => 630]);
+        Config::set(modularousBaseKey() . '.glide.cms_default_params', ['w' => 800]);
+        Config::set(modularousBaseKey() . '.glide.presets', ['thumbnail' => ['w' => 100, 'h' => 100]]);
+        Config::set(modularousBaseKey() . '.glide.original_media_for_extensions', ['.svg', '.gif']);
+        Config::set(modularousBaseKey() . '.glide.add_params_to_svgs', false);
+        Config::set(modularousBaseKey() . '.media_library.disk', 'public');
 
         Storage::fake('public');
 

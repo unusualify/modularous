@@ -5,7 +5,7 @@ sidebarTitle: HasPayment
 
 # HasPayment
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasPayment`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasPayment`
 
 Full payment lifecycle management. Internally uses `HasPriceable`. Tracks payment relationships and exposes human-readable status computed attributes. Provides global scopes that prefetch payment existence flags to avoid lazy-load queries.
 
@@ -86,7 +86,7 @@ Registers via `addGlobalScopesHasPayment()`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasPayment;
+use Unusualify\Modularous\Entities\Traits\HasPayment;
 
 class Order extends Model
 {

@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:pint [--test] [--dirty] [--repair] [-s|--self]`
+- **Signature:** `modularous:pint [--test] [--dirty] [--repair] [-s|--self]`
 - **Category:** Other
 
 ## Examples
@@ -12,35 +12,35 @@
 ### Format all module files
 
 ```bash
-php artisan modularity:pint
+php artisan modularous:pint
 ```
 
 ### Check for formatting issues without fixing them
 
 ```bash
-php artisan modularity:pint --test
+php artisan modularous:pint --test
 ```
 
 ### Format only files modified since the last commit
 
 ```bash
-php artisan modularity:pint --dirty
+php artisan modularous:pint --dirty
 ```
 
 ### Format the Modularous package source (dev only)
 
 ```bash
-php artisan modularity:pint --self
+php artisan modularous:pint --self
 ```
 
-`modularity:pint`
+`modularous:pint`
 -----------------
 
 Runs `./vendor/bin/pint` against the modules directory (read from `config('modules.paths.modules')`). With `--self`, it targets the Modularous package source using the package's own `pint.json` config — this is only available in non-production environments.
 
 ### Usage
 
-* `modularity:pint [--test] [--dirty] [--repair] [-s|--self]`
+* `modularous:pint [--test] [--dirty] [--repair] [-s|--self]`
 
 ### Options
 

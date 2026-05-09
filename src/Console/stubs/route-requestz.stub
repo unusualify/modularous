@@ -2,7 +2,7 @@
 
 namespace $NAMESPACE$;
 
-use Unusualify\Modularity\Http\Requests\BaseFormRequest as FormRequest;
+use Unusualify\Modularous\Http\Requests\BaseFormRequest as FormRequest;
 
 class $CLASS$ extends FormRequest
 {

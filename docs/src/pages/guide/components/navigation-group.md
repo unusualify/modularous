@@ -38,13 +38,13 @@ Each item in the `items` array is a plain object. The component determines how t
 | `badgeProps` | `Object` | Additional props forwarded to the `v-badge` |
 | `is_active` | `Boolean\|Number` | Pre-selects this item as active and auto-opens any parent group |
 | `blank` | `Boolean` | If `true`, the link opens in a new tab |
-| `is_modularity_route` | `Boolean` | Marks the link as an in-app Inertia route |
+| `is_modularous_route` | `Boolean` | Marks the link as an in-app Inertia route |
 
 ## Example
 
 ```js
 const navItems = [
-  { name: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard', is_modularity_route: true },
+  { name: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard', is_modularous_route: true },
   {
     name: 'Settings',
     icon: 'mdi-cog',

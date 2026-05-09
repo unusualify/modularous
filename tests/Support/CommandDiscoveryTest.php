@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
-use Unusualify\Modularity\Support\CommandDiscovery;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Support\CommandDiscovery;
+use Unusualify\Modularous\Tests\TestCase;
 
 class CommandDiscoveryTest extends TestCase
 {
@@ -18,8 +18,8 @@ class CommandDiscoveryTest extends TestCase
         $commands = CommandDiscovery::discover($paths);
 
         $this->assertNotEmpty($commands);
-        $this->assertContains('Unusualify\Modularity\Console\Coverage\CoverageWatchCommand', $commands);
-        $this->assertContains('Unusualify\Modularity\Console\Coverage\CoverageReportCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\Coverage\CoverageWatchCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\Coverage\CoverageReportCommand', $commands);
     }
 
     /** @test */
@@ -30,7 +30,7 @@ class CommandDiscoveryTest extends TestCase
 
         $commands = CommandDiscovery::discover($paths);
 
-        $this->assertNotContains('Unusualify\Modularity\Console\BaseCommand', $commands);
+        $this->assertNotContains('Unusualify\Modularous\Console\BaseCommand', $commands);
     }
 
     /** @test */
@@ -67,9 +67,9 @@ class CommandDiscoveryTest extends TestCase
         $commands = CommandDiscovery::discover($paths);
 
         $this->assertNotEmpty($commands);
-        $this->assertContains('Unusualify\Modularity\Console\Make\MakeModuleCommand', $commands);
-        $this->assertContains('Unusualify\Modularity\Console\Make\MakeRouteCommand', $commands);
-        $this->assertContains('Unusualify\Modularity\Console\Make\MakeCmsControllerCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\Make\MakeModuleCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\Make\MakeRouteCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\Make\MakeCmsControllerCommand', $commands);
     }
 
     /** @test */
@@ -81,7 +81,7 @@ class CommandDiscoveryTest extends TestCase
         $commands = CommandDiscovery::discover($paths);
 
         $this->assertNotEmpty($commands);
-        $this->assertContains('Unusualify\Modularity\Console\PintCommand', $commands);
-        $this->assertContains('Unusualify\Modularity\Console\BuildCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\PintCommand', $commands);
+        $this->assertContains('Unusualify\Modularous\Console\BuildCommand', $commands);
     }
 }

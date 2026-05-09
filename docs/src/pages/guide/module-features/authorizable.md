@@ -16,8 +16,8 @@ Add the `HasAuthorizable` trait to your model:
 
 namespace Modules\Ticket\Entities;
 
-use Unusualify\Modularity\Entities\Model;
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
 
 class Ticket extends Model
 {
@@ -57,8 +57,8 @@ Add `AuthorizableTrait` to your repository:
 
 namespace Modules\Ticket\Repositories;
 
-use Unusualify\Modularity\Repositories\Repository;
-use Unusualify\Modularity\Repositories\Traits\AuthorizableTrait;
+use Unusualify\Modularous\Repositories\Repository;
+use Unusualify\Modularous\Repositories\Traits\AuthorizableTrait;
 
 class TicketRepository extends Repository
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Services\Currency;
+namespace Unusualify\Modularous\Services\Currency;
 
 use Illuminate\Support\Facades\Cache;
 use Modules\SystemPricing\Entities\Currency;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 /**
  * Currency provider using Modules\SystemPricing\Entities\Currency.
@@ -47,8 +47,8 @@ class SystemPricingCurrencyProvider implements CurrencyProviderInterface
         return Currency::query()
             ->select(['id', 'symbol as name', 'iso_4217 as iso'])
             ->when(
-                modularityConfig('services.currency_exchange.active'),
-                fn ($q) => $q->where('iso_4217', mb_strtoupper(modularityConfig('services.currency_exchange.base_currency', 'EUR')))
+                modularousConfig('services.currency_exchange.active'),
+                fn ($q) => $q->where('iso_4217', mb_strtoupper(modularousConfig('services.currency_exchange.base_currency', 'EUR')))
             )
             ->get()
             ->toArray();

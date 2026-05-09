@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Support;
+namespace Unusualify\Modularous\Tests\Support;
 
 use Illuminate\Support\Facades\File;
 use TestModules\TestModule\Entities\Item;
 use TestModules\TestModule\Repositories\ItemRepository;
-use Unusualify\Modularity\Support\Finder;
-use Unusualify\Modularity\Tests\MockModuleManager;
-use Unusualify\Modularity\Tests\TestModulesCase;
+use Unusualify\Modularous\Support\Finder;
+use Unusualify\Modularous\Tests\MockModuleManager;
+use Unusualify\Modularous\Tests\TestModulesCase;
 
 class FinderTest extends TestModulesCase
 {
@@ -20,7 +20,7 @@ class FinderTest extends TestModulesCase
         MockModuleManager::initialize();
 
         // Only enable TestModule so getRouteModel/getRouteRepository return TestModule's Item (not SystemModule's)
-        $statusFilePath = config('modules.activators.modularity.statuses-file');
+        $statusFilePath = config('modules.activators.modularous.statuses-file');
         File::put($statusFilePath, json_encode(['TestModule' => true], JSON_PRETTY_PRINT));
 
         $module = MockModuleManager::getTestModule();

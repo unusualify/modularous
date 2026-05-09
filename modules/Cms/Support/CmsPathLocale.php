@@ -29,7 +29,7 @@ final class CmsPathLocale
      */
     private static function legacyPathSegmentLocales(): array
     {
-        $configured = modularityConfig('cms_routing.path_segment_locales');
+        $configured = modularousConfig('cms_routing.path_segment_locales');
         if (is_array($configured) && $configured !== []) {
             return self::sortedLongestFirst(array_values(array_unique(array_filter(array_map('strval', $configured)))));
         }

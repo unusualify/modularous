@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
-use Unusualify\Modularity\Entities\Process;
-use Unusualify\Modularity\Entities\ProcessHistory;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Process;
+use Unusualify\Modularous\Entities\ProcessHistory;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class ProcessTest extends ModelTestCase
 {
@@ -20,7 +20,7 @@ class ProcessTest extends ModelTestCase
     public function test_get_table_process()
     {
         $process = new Process;
-        $this->assertEquals(modularityConfig('tables.processes', 'm_processes'), $process->getTable());
+        $this->assertEquals(modularousConfig('tables.processes', 'm_processes'), $process->getTable());
     }
 
     public function test_fillable_attributes()
@@ -219,7 +219,7 @@ class ProcessTest extends ModelTestCase
         ]);
 
         // Test that ProcessScopes trait is used
-        $this->assertTrue(classHasTrait($process, 'Unusualify\Modularity\Entities\Scopes\ProcessScopes'));
+        $this->assertTrue(classHasTrait($process, 'Unusualify\Modularous\Entities\Scopes\ProcessScopes'));
     }
 
     public function test_process_with_processable_model_using_trait()

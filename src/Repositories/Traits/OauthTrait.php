@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Repositories\Traits;
+namespace Unusualify\Modularous\Repositories\Traits;
 
 use Laravel\Socialite\Contracts\User;
 
@@ -8,7 +8,7 @@ trait OauthTrait
 {
     /**
      * @param User $oauthUser
-     * @return \Unusualify\Modularity\Entities\User
+     * @return \Unusualify\Modularous\Entities\User
      */
     public function oauthUser($oauthUser)
     {
@@ -32,7 +32,7 @@ trait OauthTrait
     /**
      * @param User $oauthUser
      * @param string $provider
-     * @return \Unusualify\Modularity\Entities\User
+     * @return \Unusualify\Modularous\Entities\User
      */
     public function oauthUpdateProvider($oauthUser, $provider)
     {
@@ -50,7 +50,7 @@ trait OauthTrait
 
     /**
      * @param User $oauthUser
-     * @return \Unusualify\Modularity\Entities\User
+     * @return \Unusualify\Modularous\Entities\User
      */
     public function oauthCreateUser($oauthUser)
     {
@@ -59,7 +59,7 @@ trait OauthTrait
         ], [
             'name' => $oauthUser?->user['given_name'] ?? $oauthUser->name,
             'surname' => $oauthUser?->user['family_name'] ?? '',
-            'role' => modularityConfig('oauth.default_role'),
+            'role' => modularousConfig('oauth.default_role'),
             'published' => true,
         ]);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Utilities;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Utilities;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -12,89 +12,89 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PragmaRX\Google2FA\Google2FA;
-use Unusualify\Modularity\Brokers\RegisterBroker;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Register;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Notifications\LoginMfaCodeNotification;
-use Unusualify\Modularity\Services\MessageStage;
+use Unusualify\Modularous\Brokers\RegisterBroker;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Register;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Notifications\LoginMfaCodeNotification;
+use Unusualify\Modularous\Services\MessageStage;
 
 trait HandlesMfaAuthentication
 {
     protected function shouldUseMfaLoginFlow(): bool
     {
         return $this->isMfaEnabled()
-            && (bool) modularityConfig('security.mfa.remove_password_login', true);
+            && (bool) modularousConfig('security.mfa.remove_password_login', true);
     }
 
     protected function isMfaEnabled(): bool
     {
-        return (bool) modularityConfig('security.mfa.enabled', false);
+        return (bool) modularousConfig('security.mfa.enabled', false);
     }
 
     protected function mfaProvider(): string
     {
-        return (string) modularityConfig('security.mfa.provider', 'email_otp');
+        return (string) modularousConfig('security.mfa.provider', 'email_otp');
     }
 
     protected function mfaSessionKey(): string
     {
-        return (string) modularityConfig('security.mfa.session_key', '2fa:user:id');
+        return (string) modularousConfig('security.mfa.session_key', '2fa:user:id');
     }
 
     protected function mfaFlowSessionKey(): string
     {
-        return (string) modularityConfig('security.mfa.flow_session_key', '2fa:flow:key');
+        return (string) modularousConfig('security.mfa.flow_session_key', '2fa:flow:key');
     }
 
     protected function mfaOtpField(): string
     {
-        return (string) modularityConfig('security.mfa.otp_field', 'verify-code');
+        return (string) modularousConfig('security.mfa.otp_field', 'verify-code');
     }
 
     protected function mfaChallengePageKey(): string
     {
-        return (string) modularityConfig('security.mfa.challenge_page', 'login_2fa');
+        return (string) modularousConfig('security.mfa.challenge_page', 'login_2fa');
     }
 
     protected function mfaLoginPageKey(): string
     {
-        return (string) modularityConfig('security.mfa.login_page', 'login_mfa');
+        return (string) modularousConfig('security.mfa.login_page', 'login_mfa');
     }
 
     protected function mfaChallengeFormRoute(): string
     {
-        return (string) modularityConfig('security.mfa.challenge_form_route', Route::hasAdmin('login-2fa.form'));
+        return (string) modularousConfig('security.mfa.challenge_form_route', Route::hasAdmin('login-2fa.form'));
     }
 
     protected function mfaRegistrationSuccessRoute(): string
     {
-        return (string) modularityConfig('security.mfa.registration_success_route', Route::hasAdmin('register.verification.success'));
+        return (string) modularousConfig('security.mfa.registration_success_route', Route::hasAdmin('register.verification.success'));
     }
 
     protected function mfaCodeLength(): int
     {
-        return (int) modularityConfig('security.mfa.email_otp.length', 6);
+        return (int) modularousConfig('security.mfa.email_otp.length', 6);
     }
 
     protected function mfaCodeExpiryMinutes(): int
     {
-        return (int) modularityConfig('security.mfa.email_otp.expire_minutes', 10);
+        return (int) modularousConfig('security.mfa.email_otp.expire_minutes', 10);
     }
 
     protected function mfaCodeMaxAttempts(): int
     {
-        return (int) modularityConfig('security.mfa.email_otp.max_attempts', 5);
+        return (int) modularousConfig('security.mfa.email_otp.max_attempts', 5);
     }
 
     protected function mfaCachePrefix(): string
     {
-        return (string) modularityConfig('security.mfa.email_otp.cache_prefix', 'mfa:email-otp');
+        return (string) modularousConfig('security.mfa.email_otp.cache_prefix', 'mfa:email-otp');
     }
 
     protected function mfaAllowsRegistrationFromLogin(): bool
     {
-        return (bool) modularityConfig('security.mfa.register_first_time', true);
+        return (bool) modularousConfig('security.mfa.register_first_time', true);
     }
 
     protected function usesEmailOtpMfaProvider(): bool
@@ -324,7 +324,7 @@ trait HandlesMfaAuthentication
 
     protected function completeMfaLogin(Request $request, User $user): JsonResponse|RedirectResponse
     {
-        $this->authManager->guard(Modularity::getAuthGuardName())->loginUsingId($user->id);
+        $this->authManager->guard(Modularous::getAuthGuardName())->loginUsingId($user->id);
         $this->clearMfaSession($request);
 
         $redirectUrl = redirect()->intended($this->redirectTo)->getTargetUrl();

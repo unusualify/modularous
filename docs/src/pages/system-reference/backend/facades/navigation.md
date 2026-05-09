@@ -5,22 +5,22 @@ sidebarTitle: Navigation
 
 # Navigation
 
-**Facade**: `Unusualify\Modularity\Facades\Navigation`  
-**Accessor**: `modularity.navigation`  
-**Underlying**: `Unusualify\Modularity\Services\View\ModularityNavigation`
+**Facade**: `Unusualify\Modularous\Facades\Navigation`  
+**Accessor**: `modularous.navigation`  
+**Underlying**: `Unusualify\Modularous\Services\View\ModularousNavigation`
 
-Builds and formats the navigation data (sidebar, profile menu, bottom navigation) shared with Inertia pages. See [ModularityNavigation](/system-reference/backend/services/view/modularity-navigation) for implementation details.
+Builds and formats the navigation data (sidebar, profile menu, bottom navigation) shared with Inertia pages. See [ModularousNavigation](/system-reference/backend/services/view/modularous-navigation) for implementation details.
 
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Navigation;
+use Unusualify\Modularous\Facades\Navigation;
 
 // Format a raw navigation config array for the sidebar
-$sidebar = Navigation::formatSidebarMenu(config('modularity.navigation.sidebar.default'));
+$sidebar = Navigation::formatSidebarMenu(config('modularous.navigation.sidebar.default'));
 ```
 
-The `get_modularity_navigation_config()` helper in `sources.php` uses this facade internally to assemble the full navigation object shared with every Inertia page.
+The `get_modularous_navigation_config()` helper in `sources.php` uses this facade internally to assemble the full navigation object shared with every Inertia page.
 
 ## Notes
 

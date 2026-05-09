@@ -4,7 +4,7 @@
 
 ## Command Information
 
-- **Signature:** `modularity:make:route [--schema [SCHEMA]] [--rules [RULES]] [--custom-model [CUSTOM-MODEL]] [--relationships [RELATIONSHIPS]] [-f|--force] [-p|--plain] [--notAsk] [--all] [--no-migrate] [--no-defaults] [--fix] [--table-name [TABLE-NAME]] [--no-migration] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <route>`
+- **Signature:** `modularous:make:route [--schema [SCHEMA]] [--rules [RULES]] [--custom-model [CUSTOM-MODEL]] [--relationships [RELATIONSHIPS]] [-f|--force] [-p|--plain] [--notAsk] [--all] [--no-migrate] [--no-defaults] [--fix] [--table-name [TABLE-NAME]] [--no-migration] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <route>`
 - **Category:** Generators
 
 
@@ -13,161 +13,161 @@
 ### With Arguments
 
 ```bash
-php artisan modularity:make:route MODULE ROUTE
+php artisan modularous:make:route MODULE ROUTE
 ```
 
 ### With Options
 
 ```bash
-php artisan modularity:make:route --schema=SCHEMA
+php artisan modularous:make:route --schema=SCHEMA
 ```
 
 ```bash
-php artisan modularity:make:route --rules=RULES
+php artisan modularous:make:route --rules=RULES
 ```
 
 ```bash
-php artisan modularity:make:route --custom-model=CUSTOM-MODEL
+php artisan modularous:make:route --custom-model=CUSTOM-MODEL
 ```
 
 ```bash
-php artisan modularity:make:route --relationships=RELATIONSHIPS
-```
-
-```bash
-# Using shortcut
-php artisan modularity:make:route -f
-
-# Using full option name
-php artisan modularity:make:route --force
+php artisan modularous:make:route --relationships=RELATIONSHIPS
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -p
+php artisan modularous:make:route -f
 
 # Using full option name
-php artisan modularity:make:route --plain
-```
-
-```bash
-php artisan modularity:make:route --notAsk
-```
-
-```bash
-php artisan modularity:make:route --all
-```
-
-```bash
-php artisan modularity:make:route --no-migrate
-```
-
-```bash
-php artisan modularity:make:route --no-defaults
-```
-
-```bash
-php artisan modularity:make:route --fix
-```
-
-```bash
-php artisan modularity:make:route --table-name=TABLE-NAME
-```
-
-```bash
-php artisan modularity:make:route --no-migration
-```
-
-```bash
-php artisan modularity:make:route --test
+php artisan modularous:make:route --force
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -T
+php artisan modularous:make:route -p
 
 # Using full option name
-php artisan modularity:make:route --addTranslation
+php artisan modularous:make:route --plain
+```
+
+```bash
+php artisan modularous:make:route --notAsk
+```
+
+```bash
+php artisan modularous:make:route --all
+```
+
+```bash
+php artisan modularous:make:route --no-migrate
+```
+
+```bash
+php artisan modularous:make:route --no-defaults
+```
+
+```bash
+php artisan modularous:make:route --fix
+```
+
+```bash
+php artisan modularous:make:route --table-name=TABLE-NAME
+```
+
+```bash
+php artisan modularous:make:route --no-migration
+```
+
+```bash
+php artisan modularous:make:route --test
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -M
+php artisan modularous:make:route -T
 
 # Using full option name
-php artisan modularity:make:route --addMedia
+php artisan modularous:make:route --addTranslation
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -F
+php artisan modularous:make:route -M
 
 # Using full option name
-php artisan modularity:make:route --addFile
+php artisan modularous:make:route --addMedia
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -P
+php artisan modularous:make:route -F
 
 # Using full option name
-php artisan modularity:make:route --addPosition
+php artisan modularous:make:route --addFile
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -S
+php artisan modularous:make:route -P
 
 # Using full option name
-php artisan modularity:make:route --addSlug
-```
-
-```bash
-php artisan modularity:make:route --addPrice
+php artisan modularous:make:route --addPosition
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -A
+php artisan modularous:make:route -S
 
 # Using full option name
-php artisan modularity:make:route --addAuthorized
+php artisan modularous:make:route --addSlug
+```
+
+```bash
+php artisan modularous:make:route --addPrice
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -FP
+php artisan modularous:make:route -A
 
 # Using full option name
-php artisan modularity:make:route --addFilepond
-```
-
-```bash
-php artisan modularity:make:route --addUuid
+php artisan modularous:make:route --addAuthorized
 ```
 
 ```bash
 # Using shortcut
-php artisan modularity:make:route -SS
+php artisan modularous:make:route -FP
 
 # Using full option name
-php artisan modularity:make:route --addSnapshot
+php artisan modularous:make:route --addFilepond
+```
+
+```bash
+php artisan modularous:make:route --addUuid
+```
+
+```bash
+# Using shortcut
+php artisan modularous:make:route -SS
+
+# Using full option name
+php artisan modularous:make:route --addSnapshot
 ```
 
 ### Common Combinations
 
 ```bash
-php artisan modularity:make:route MODULE
+php artisan modularous:make:route MODULE
 ```
 
-`modularity:make:route`
+`modularous:make:route`
 -----------------------
 
 Create files for routes.
 
 ### Usage
 
-* `modularity:make:route [--schema [SCHEMA]] [--rules [RULES]] [--custom-model [CUSTOM-MODEL]] [--relationships [RELATIONSHIPS]] [-f|--force] [-p|--plain] [--notAsk] [--all] [--no-migrate] [--no-defaults] [--fix] [--table-name [TABLE-NAME]] [--no-migration] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <route>`
+* `modularous:make:route [--schema [SCHEMA]] [--rules [RULES]] [--custom-model [CUSTOM-MODEL]] [--relationships [RELATIONSHIPS]] [-f|--force] [-p|--plain] [--notAsk] [--all] [--no-migrate] [--no-defaults] [--fix] [--table-name [TABLE-NAME]] [--no-migration] [--test] [-T|--addTranslation] [-M|--addMedia] [-F|--addFile] [-P|--addPosition] [-S|--addSlug] [--addPrice] [-A|--addAuthorized] [-FP|--addFilepond] [--addUuid] [-SS|--addSnapshot] [--] <module> <route>`
 * `m:m:r`
 * `u:m:r`
 * `unusual:make:route`

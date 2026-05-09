@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Helpers;
+namespace Unusualify\Modularous\Tests\Helpers;
 
 use Illuminate\Support\Facades\Config;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Tests\TestCase;
 
 class FrontHelpersTest extends TestCase
 {
@@ -28,9 +28,9 @@ class FrontHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_get_modularity_default_urls_returns_array()
+    public function test_get_modularous_default_urls_returns_array()
     {
-        $result = getModularityDefaultUrls();
+        $result = getModularousDefaultUrls();
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('languages', $result);
@@ -38,42 +38,42 @@ class FrontHelpersTest extends TestCase
     }
 
     /** @test */
-    public function test_get_modularity_default_urls_base_permalinks_is_array()
+    public function test_get_modularous_default_urls_base_permalinks_is_array()
     {
-        $result = getModularityDefaultUrls();
+        $result = getModularousDefaultUrls();
 
         $this->assertIsArray($result['base_permalinks']);
     }
 
     /** @test */
-    public function test_get_modularity_logo_symbol_returns_first_existing_symbol()
+    public function test_get_modularous_logo_symbol_returns_first_existing_symbol()
     {
         $symbols = ['test-logo', 'fallback-logo'];
 
         // In test environment, symbols may not exist, so just test the function returns a value
-        $result = get_modularity_logo_symbol($symbols);
+        $result = get_modularous_logo_symbol($symbols);
 
         // Result can be null if no symbols exist, or a string if found
         $this->assertTrue(is_null($result) || is_string($result));
     }
 
     /** @test */
-    public function test_get_modularity_locale_symbol_with_locale()
+    public function test_get_modularous_locale_symbol_with_locale()
     {
         app()->setLocale('en');
 
-        $result = get_modularity_locale_symbol('logo', 'default-logo');
+        $result = get_modularous_locale_symbol('logo', 'default-logo');
 
         // Result can be null if no symbols exist, or a string if found
         $this->assertTrue(is_null($result) || is_string($result));
     }
 
     /** @test */
-    public function test_get_modularity_locale_symbol_with_array_defaults()
+    public function test_get_modularous_locale_symbol_with_array_defaults()
     {
         app()->setLocale('en');
 
-        $result = get_modularity_locale_symbol('logo', ['fallback1', 'fallback2']);
+        $result = get_modularous_locale_symbol('logo', ['fallback1', 'fallback2']);
 
         // Result can be null if no symbols exist, or a string if found
         $this->assertTrue(is_null($result) || is_string($result));

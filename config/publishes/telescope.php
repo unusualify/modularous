@@ -93,7 +93,7 @@ return [
 
     'middleware' => [
         'web',
-        'auth:modularity',
+        'auth:modularous',
         Authorize::class,
     ],
 

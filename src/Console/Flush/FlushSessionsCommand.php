@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Flush;
+namespace Unusualify\Modularous\Console\Flush;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +14,10 @@ class FlushSessionsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'modularity:flush:sessions {--driver=}';
+    protected $signature = 'modularous:flush:sessions {--driver=}';
 
     protected $aliases = [
-        'modularity:session:flush',
+        'modularous:session:flush',
     ];
 
     /**

@@ -7,7 +7,7 @@ sidebarTitle: Configuration
 
 ## auth_pages
 
-Primary config for auth pages. Override in `modularity/auth_pages.php` or merge into `config/modularity.php`.
+Primary config for auth pages. Override in `modularous/auth_pages.php` or merge into `config/modularous.php`.
 
 ### Top-Level Keys
 
@@ -19,7 +19,7 @@ Primary config for auth pages. Override in `modularity/auth_pages.php` or merge 
 | `pages` | array | Per-page definitions (login, register, forgot_password, etc.) |
 | `layoutPresets` | array | Reusable structural presets (banner, minimal) |
 
-### Example: modularity/auth_pages.php
+### Example: modularous/auth_pages.php
 
 ```php
 <?php
@@ -39,11 +39,11 @@ return [
 When using `__()` or `___()` in attributes, load auth config via defers so the translator is available:
 
 - `config/defers/auth_pages.php` — merged by `LoadLocalizedConfig` middleware
-- Or use `modularity/auth_pages.php` which is typically loaded after translator
+- Or use `modularous/auth_pages.php` which is typically loaded after translator
 
 ## auth_component
 
-UI and styling config. Passed to Vue via `window.__MODULARITY_AUTH_CONFIG__`.
+UI and styling config. Passed to Vue via `window.__MODULAROUS_AUTH_CONFIG__`.
 
 | Key | Type | Description |
 |-----|------|-------------|

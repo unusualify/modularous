@@ -10,16 +10,16 @@ Run Modularous-aware migrations. These wrap Laravel's migration commands with aw
 
 | Command | Signature | Description |
 |---------|-----------|-------------|
-| [migrate](./migrate) | `modularity:migrate` | Run all module migrations |
-| [migrate:refresh](./migrate-refresh) | `modularity:migrate:refresh` | Rollback and re-run all module migrations |
-| [migrate:rollback](./migrate-rollback) | `modularity:migrate:rollback` | Rollback the last batch of module migrations |
+| [migrate](./migrate) | `modularous:migrate` | Run all module migrations |
+| [migrate:refresh](./migrate-refresh) | `modularous:migrate:refresh` | Rollback and re-run all module migrations |
+| [migrate:rollback](./migrate-rollback) | `modularous:migrate:rollback` | Rollback the last batch of module migrations |
 
 ## Common Workflows
 
 ### Apply new migrations during development
 
 ```bash
-php artisan modularity:migrate
+php artisan modularous:migrate
 ```
 
 Runs any unmigrated files across all modules. Safe to re-run; already-applied migrations are skipped.
@@ -27,7 +27,7 @@ Runs any unmigrated files across all modules. Safe to re-run; already-applied mi
 ### Reset and re-seed a local database
 
 ```bash
-php artisan modularity:migrate:refresh
+php artisan modularous:migrate:refresh
 php artisan db:seed
 ```
 
@@ -36,7 +36,7 @@ Rolls back everything and migrates fresh. **Never use on production** — this d
 ### Revert a mistake
 
 ```bash
-php artisan modularity:migrate:rollback
+php artisan modularous:migrate:rollback
 ```
 
 Rolls back the **last batch** of migrations. Run repeatedly to roll back further batches.

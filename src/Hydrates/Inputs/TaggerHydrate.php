@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Hydrates\Inputs;
+namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class TaggerHydrate extends InputHydrate
 {
@@ -37,11 +37,11 @@ class TaggerHydrate extends InputHydrate
 
         // add your logic
         if (isset($input['_moduleName']) && isset($input['_routeName'])) {
-            $module = Modularity::find($input['_moduleName']);
+            $module = Modularous::find($input['_moduleName']);
             $repository = $module->getRouteClass($input['_routeName'], 'repository');
             $repository = App::make($repository);
 
-            if (! classHasTrait($repository, 'Unusualify\Modularity\Repositories\Traits\TagsTrait')) {
+            if (! classHasTrait($repository, 'Unusualify\Modularous\Repositories\Traits\TagsTrait')) {
                 throw new \Exception('Repository ' . $repository . ' does not have TagsTrait in ' . $this->input['name'] . ' input');
             }
 

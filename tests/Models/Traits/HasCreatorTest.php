@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models\Traits;
+namespace Unusualify\Modularous\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Schema;
 use Mockery;
 use Modules\SystemUser\Entities\Company;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Entities\CreatorRecord;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\CreatorRecord;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class HasCreatorTest extends ModelTestCase
 {
@@ -75,7 +75,7 @@ class HasCreatorTest extends ModelTestCase
         $this->model->creatorRecord()->create([
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Test the hasOneThrough relationship
@@ -115,7 +115,7 @@ class HasCreatorTest extends ModelTestCase
         // Create a proper mock for the guard
         $guardMock = Mockery::mock();
         $guardMock->shouldReceive('id')->andReturn($user->id);
-        $guardMock->name = 'modularity'; // Set as property, not method
+        $guardMock->name = 'modularous'; // Set as property, not method
 
         $providerMock = Mockery::mock();
         $providerMock->shouldReceive('getModel')->andReturn(get_class($user));
@@ -130,12 +130,12 @@ class HasCreatorTest extends ModelTestCase
         $newModel->save();
 
         // Check that creator record was created
-        $this->assertDatabaseHas(modularityConfig('tables.creator_records', 'um_creator_records'), [
+        $this->assertDatabaseHas(modularousConfig('tables.creator_records', 'um_creator_records'), [
             'creatable_id' => $newModel->id,
             'creatable_type' => get_class($newModel),
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
     }
 
@@ -149,17 +149,17 @@ class HasCreatorTest extends ModelTestCase
             'name' => 'Model with Custom Creator',
             'custom_creator_id' => $customCreator->id,
             'custom_creator_type' => get_class($customCreator),
-            'custom_guard_name' => 'modularity',
+            'custom_guard_name' => 'modularous',
         ]);
         $modelWithCustomCreator->save();
 
         // Check that creator record was created with custom values
-        $this->assertDatabaseHas(modularityConfig('tables.creator_records', 'um_creator_records'), [
+        $this->assertDatabaseHas(modularousConfig('tables.creator_records', 'um_creator_records'), [
             'creatable_id' => $modelWithCustomCreator->id,
             'creatable_type' => get_class($modelWithCustomCreator),
             'creator_id' => $customCreator->id,
             'creator_type' => get_class($customCreator),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Check that custom fields were removed from model attributes
@@ -174,12 +174,12 @@ class HasCreatorTest extends ModelTestCase
             'custom_creator_id' => $customCreator2->id,
         ]);
 
-        $this->assertDatabaseHas(modularityConfig('tables.creator_records', 'um_creator_records'), [
+        $this->assertDatabaseHas(modularousConfig('tables.creator_records', 'um_creator_records'), [
             'creatable_id' => $modelWithCustomCreator->id,
             'creatable_type' => get_class($modelWithCustomCreator),
             'creator_id' => $customCreator2->id,
             'creator_type' => get_class($customCreator2),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
     }
 
@@ -191,7 +191,7 @@ class HasCreatorTest extends ModelTestCase
         $this->model->creatorRecord()->create([
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         $creatorRecordId = $this->model->creatorRecord->id;
@@ -220,7 +220,7 @@ class HasCreatorTest extends ModelTestCase
         $model->creatorRecord()->create([
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         $creatorRecordId = $model->creatorRecord->id;
@@ -229,7 +229,7 @@ class HasCreatorTest extends ModelTestCase
 
         $deletedModel = TestCreatorModelWithoutSoftDeletes::find($model->id);
         $this->assertNull($deletedModel);
-        $this->assertDatabaseMissing(modularityConfig('tables.creator_records', 'um_creator_records'), [
+        $this->assertDatabaseMissing(modularousConfig('tables.creator_records', 'um_creator_records'), [
             'id' => $creatorRecordId,
         ]);
     }
@@ -246,7 +246,7 @@ class HasCreatorTest extends ModelTestCase
         $model1->creatorRecord()->create([
             'creator_id' => $creator1->id,
             'creator_type' => get_class($creator1),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         $model2 = new TestCreatorModel(['name' => 'Model 2']);
@@ -254,15 +254,15 @@ class HasCreatorTest extends ModelTestCase
         $model2->creatorRecord()->create([
             'creator_id' => $creator2->id,
             'creator_type' => get_class($creator2),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Test scope filtering by creator
-        $creator1Models = TestCreatorModel::isCreator($creator1->id, 'modularity')->get();
+        $creator1Models = TestCreatorModel::isCreator($creator1->id, 'modularous')->get();
         $this->assertCount(1, $creator1Models);
         $this->assertEquals($model1->id, $creator1Models->first()->id);
 
-        $creator2Models = TestCreatorModel::isCreator($creator2->id, 'modularity')->get();
+        $creator2Models = TestCreatorModel::isCreator($creator2->id, 'modularous')->get();
         $this->assertCount(1, $creator2Models);
         $this->assertEquals($model2->id, $creator2Models->first()->id);
     }
@@ -274,7 +274,7 @@ class HasCreatorTest extends ModelTestCase
 
         // // Create a proper mock for the guard
         // $guardMock = Mockery::mock();
-        // $guardMock->name = 'modularity'; // Set as property, not method
+        // $guardMock->name = 'modularous'; // Set as property, not method
 
         // // Mock authentication
         // Auth::shouldReceiveOnce('check')->andReturn(true);
@@ -285,7 +285,7 @@ class HasCreatorTest extends ModelTestCase
         $this->model->creatorRecord()->create([
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Create another model with different creator
@@ -296,11 +296,11 @@ class HasCreatorTest extends ModelTestCase
         $otherModel->creatorRecord()->create([
             'creator_id' => $otherUser->id,
             'creator_type' => get_class($otherUser),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Test scope
-        $myCreations = TestCreatorModel::isMyCreation($user, 'modularity')->get();
+        $myCreations = TestCreatorModel::isMyCreation($user, 'modularous')->get();
         $this->assertCount(1, $myCreations);
         $this->assertEquals($this->model->id, $myCreations->first()->id);
     }
@@ -331,11 +331,11 @@ class HasCreatorTest extends ModelTestCase
         };
 
         // Create roles similar to ModelHelpers.php
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularity']);
-        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularity']);
-        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularity']);
-        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $managerRole = Role::create(['name' => 'manager', 'guard_name' => 'modularous']);
+        $editorRole = Role::create(['name' => 'editor', 'guard_name' => 'modularous']);
+        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularous']);
+        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularous']);
 
         // Create users with different roles
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@example.com', 'published' => true]);
@@ -357,7 +357,7 @@ class HasCreatorTest extends ModelTestCase
         $this->model->creatorRecord()->create([
             'creator_id' => $clientManager->id,
             'creator_type' => get_class($clientManager),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Test access with different roles using anonymous model
@@ -366,7 +366,7 @@ class HasCreatorTest extends ModelTestCase
         $modelWithRoles->creatorRecord()->create([
             'creator_id' => $clientManager->id,
             'creator_type' => get_class($clientManager),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Admin should have access (authorized role)
@@ -410,7 +410,7 @@ class HasCreatorTest extends ModelTestCase
 
         // Create roles
         $company = Company::create(['name' => 'Company']);
-        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularity']);
+        $clientManagerRole = Role::create(['name' => 'client-manager', 'guard_name' => 'modularous']);
 
         // Create users in the same company
         $clientManager1 = User::create([
@@ -445,7 +445,7 @@ class HasCreatorTest extends ModelTestCase
         $modelWithCompany->creatorRecord()->create([
             'creator_id' => $clientManager1->id,
             'creator_type' => get_class($clientManager1),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Client manager 2 should have access (same company)
@@ -473,8 +473,8 @@ class HasCreatorTest extends ModelTestCase
         };
 
         // Test with model that aborts role exceptions
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularity']);
-        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularity']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'modularous']);
+        $reporterRole = Role::create(['name' => 'reporter', 'guard_name' => 'modularous']);
 
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@example.com', 'published' => true]);
         $admin->assignRole($adminRole);
@@ -488,7 +488,7 @@ class HasCreatorTest extends ModelTestCase
         $strictModel->creatorRecord()->create([
             'creator_id' => $reporter->id,
             'creator_type' => get_class($reporter),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Admin should not have access when role exceptions are aborted
@@ -559,7 +559,7 @@ class HasCreatorTest extends ModelTestCase
         $this->model->creatorRecord()->create([
             'creator_id' => $user->id,
             'creator_type' => get_class($user),
-            'guard_name' => 'modularity',
+            'guard_name' => 'modularous',
         ]);
 
         // Test that the creator relationship returns the correct user

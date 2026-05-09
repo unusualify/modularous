@@ -6,9 +6,9 @@ sidebarTitle: RegisterBroker
 # RegisterBroker
 
 **File**: `src/Brokers/RegisterBroker.php`  
-**Namespace**: `Unusualify\Modularity\Brokers`  
+**Namespace**: `Unusualify\Modularous\Brokers`  
 **Extends**: `Illuminate\Auth\Passwords\PasswordBroker`  
-**Implements**: `Unusualify\Modularity\Contracts\RegisterBroker`
+**Implements**: `Unusualify\Modularous\Contracts\RegisterBroker`
 
 `RegisterBroker` performs the actual registration verification workflow: sending verification links, validating email+token pairs, and finalizing registration callbacks.
 

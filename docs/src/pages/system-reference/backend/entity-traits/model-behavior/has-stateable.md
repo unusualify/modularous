@@ -5,7 +5,7 @@ sidebarTitle: HasStateable
 
 # HasStateable
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasStateable`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasStateable`
 
 Implements a configurable state machine backed by a `Stateable` morph record and a shared `states` table. Dispatches `StateableUpdated` on every transition and provides appended attributes for the current state.
 
@@ -99,7 +99,7 @@ protected static $stateModel = State::class;
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasStateable;
+use Unusualify\Modularous\Entities\Traits\HasStateable;
 
 class Article extends Model
 {

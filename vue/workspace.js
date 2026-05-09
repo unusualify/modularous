@@ -1,3 +1,3 @@
 export default [
-  'jakomeet-panel/packages/modularity/vue/*'
+  'jakomeet-panel/packages/modularous/vue/*'
 ]

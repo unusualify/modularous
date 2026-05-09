@@ -1,13 +1,13 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Sync;
+namespace Unusualify\Modularous\Console\Sync;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
 use JoeDixon\Translation\Scanner;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Services\FileTranslation;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Services\FileTranslation;
 
 class SyncTranslationsCommand extends BaseCommand
 {
@@ -18,7 +18,7 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'modularity:sync:translations
+    protected $signature = 'modularous:sync:translations
                             {--dry-run : Show missing keys without syncing}
                             {--only-languages= : Sync only specific languages}
                             {--exclude-languages= : Exclude specific languages}
@@ -31,7 +31,7 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Sync missing translation keys from Laravel lang path to Modularity lang path';
+    protected $description = 'Sync missing translation keys from Laravel lang path to Modularous lang path';
 
     /**
      * Create a new command instance.
@@ -52,7 +52,7 @@ class SyncTranslationsCommand extends BaseCommand
     public function handle(): int
     {
         $laravelLangPath = base_path('lang');
-        $modularityLangPath = base_path('modularity/lang');
+        $modularousLangPath = base_path('modularous/lang');
 
         $translationFileClass = new FileTranslation(
             new Filesystem,
@@ -68,8 +68,8 @@ class SyncTranslationsCommand extends BaseCommand
         $onlyLanguages = $this->option('only-languages');
         $excludeLanguages = $this->option('exclude-languages');
 
-        // Ensure modularity lang path and language folders exist
-        $this->ensureLanguageFoldersExist($translationFileClass, $laravelLangPath, $modularityLangPath, $specificLanguage);
+        // Ensure modularous lang path and language folders exist
+        $this->ensureLanguageFoldersExist($translationFileClass, $laravelLangPath, $modularousLangPath, $specificLanguage);
 
         $this->info('🔍 Analyzing translation files...');
         $this->newLine();
@@ -79,7 +79,7 @@ class SyncTranslationsCommand extends BaseCommand
             $this->handleLanguageSync(
                 $translationFileClass,
                 $laravelLangPath,
-                $modularityLangPath,
+                $modularousLangPath,
                 $specificLanguage,
                 $isDryRun
             );
@@ -97,7 +97,7 @@ class SyncTranslationsCommand extends BaseCommand
                 $this->handleLanguageSync(
                     $translationFileClass,
                     $laravelLangPath,
-                    $modularityLangPath,
+                    $modularousLangPath,
                     $language,
                     $isDryRun
                 );
@@ -107,7 +107,7 @@ class SyncTranslationsCommand extends BaseCommand
             $this->handleAllLanguagesSync(
                 $translationFileClass,
                 $laravelLangPath,
-                $modularityLangPath,
+                $modularousLangPath,
                 $isDryRun
             );
         }
@@ -120,18 +120,18 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
-     * @param string $modularityLangPath
+     * @param string $modularousLangPath
      * @param string $language
      * @param bool $isDryRun
      * @return void
      */
-    protected function handleLanguageSync($translationFileClass, $laravelLangPath, $modularityLangPath, $language, $isDryRun)
+    protected function handleLanguageSync($translationFileClass, $laravelLangPath, $modularousLangPath, $language, $isDryRun)
     {
         $this->info("Language: {$language}");
 
         $missingKeys = $translationFileClass->findMissingKeysFromPath(
             $laravelLangPath,
-            $modularityLangPath,
+            $modularousLangPath,
             $language
         );
 
@@ -149,7 +149,7 @@ class SyncTranslationsCommand extends BaseCommand
             $this->info('📝 Syncing missing keys...');
             $translationFileClass->syncMissingKeysToPath(
                 $laravelLangPath,
-                $modularityLangPath,
+                $modularousLangPath,
                 $language,
                 $missingKeys
             );
@@ -162,15 +162,15 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
-     * @param string $modularityLangPath
+     * @param string $modularousLangPath
      * @param bool $isDryRun
      * @return void
      */
-    protected function handleAllLanguagesSync($translationFileClass, $laravelLangPath, $modularityLangPath, $isDryRun)
+    protected function handleAllLanguagesSync($translationFileClass, $laravelLangPath, $modularousLangPath, $isDryRun)
     {
         $allMissingKeys = $translationFileClass->findAllMissingKeys(
             $laravelLangPath,
-            $modularityLangPath
+            $modularousLangPath
         );
 
         if (empty($allMissingKeys)) {
@@ -191,7 +191,7 @@ class SyncTranslationsCommand extends BaseCommand
             $this->info('📝 Syncing all missing keys...');
             $stats = $translationFileClass->syncAllMissingKeys(
                 $laravelLangPath,
-                $modularityLangPath
+                $modularousLangPath
             );
 
             $this->newLine();
@@ -209,12 +209,12 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
-     * @param string $modularityLangPath
+     * @param string $modularousLangPath
      * @param array $languages
      * @param bool $isDryRun
      * @return void
      */
-    protected function handleSpecificLanguagesSync($translationFileClass, $laravelLangPath, $modularityLangPath, $languages, $isDryRun)
+    protected function handleSpecificLanguagesSync($translationFileClass, $laravelLangPath, $modularousLangPath, $languages, $isDryRun)
     {
         $this->info('Languages: ' . implode(', ', $languages));
 
@@ -222,7 +222,7 @@ class SyncTranslationsCommand extends BaseCommand
             $this->handleLanguageSync(
                 $translationFileClass,
                 $laravelLangPath,
-                $modularityLangPath,
+                $modularousLangPath,
                 $language,
                 $isDryRun
             );
@@ -236,7 +236,7 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
-     * @param string $modularityLangPath
+     * @param string $modularousLangPath
     /**
      * Display missing keys for a language.
      * @param array $missingKeys
@@ -280,18 +280,18 @@ class SyncTranslationsCommand extends BaseCommand
      *
      * @param FileTranslation $translationFileClass
      * @param string $laravelLangPath
-     * @param string $modularityLangPath
+     * @param string $modularousLangPath
      * @param string|null $specificLanguage
      * @return void
      */
-    protected function ensureLanguageFoldersExist($translationFileClass, $laravelLangPath, $modularityLangPath, $specificLanguage = null)
+    protected function ensureLanguageFoldersExist($translationFileClass, $laravelLangPath, $modularousLangPath, $specificLanguage = null)
     {
         $disk = new Filesystem;
 
-        // Ensure the main modularity lang path exists
-        if (! $disk->exists($modularityLangPath)) {
-            $this->warn("📁 Creating modularity lang directory: {$modularityLangPath}");
-            $disk->makeDirectory($modularityLangPath, 0755, true);
+        // Ensure the main modularous lang path exists
+        if (! $disk->exists($modularousLangPath)) {
+            $this->warn("📁 Creating modularous lang directory: {$modularousLangPath}");
+            $disk->makeDirectory($modularousLangPath, 0755, true);
         }
 
         // Get languages to check/create
@@ -310,7 +310,7 @@ class SyncTranslationsCommand extends BaseCommand
 
         // Create language folders if they don't exist
         foreach ($languages as $language) {
-            $languageFolder = $modularityLangPath . DIRECTORY_SEPARATOR . $language;
+            $languageFolder = $modularousLangPath . DIRECTORY_SEPARATOR . $language;
 
             if (! $disk->exists($languageFolder)) {
                 $this->warn("📁 Creating language folder: {$language}");

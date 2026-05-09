@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Entities\Traits\HasRepeaters;
-use Unusualify\Modularity\Repositories\Traits\RepeatersTrait;
-use Unusualify\Modularity\Tests\Repositories\Owner;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Traits\HasRepeaters;
+use Unusualify\Modularous\Repositories\Traits\RepeatersTrait;
+use Unusualify\Modularous\Tests\Repositories\Owner;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class RepeatersTraitTest extends RepositoryTestCase
 {

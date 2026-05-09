@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Database\Seeders;
+namespace Unusualify\Modularous\Database\Seeders;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
@@ -18,7 +18,7 @@ class DefaultUsersSeeder extends Seeder
     {
         Model::unguard();
 
-        $table = modularityConfig('tables.users');
+        $table = modularousConfig('tables.users');
 
         Schema::disableForeignKeyConstraints();
 

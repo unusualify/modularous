@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Traits\Cache;
+namespace Unusualify\Modularous\Traits\Cache;
 
 use Illuminate\Database\Eloquent\Model;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Facades\ModularityCache;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Facades\ModularousCache;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 trait WarmupCache
 {
@@ -65,8 +65,8 @@ trait WarmupCache
         $controller->preload();
         $repository = $controller->getRepository();
 
-        $cacheFormItem = ModularityCache::isEnabled($controller->getModuleName(), $controller->getRouteName(), 'formItem');
-        $cacheFormattedItem = ModularityCache::isEnabled($controller->getModuleName(), $controller->getRouteName(), 'formattedItem');
+        $cacheFormItem = ModularousCache::isEnabled($controller->getModuleName(), $controller->getRouteName(), 'formItem');
+        $cacheFormattedItem = ModularousCache::isEnabled($controller->getModuleName(), $controller->getRouteName(), 'formattedItem');
 
         $repository->getModel()->each(function ($item, $key) use ($controller, $cacheFormItem, $cacheFormattedItem) {
             $this->warmupControllerItem($controller, $item, $cacheFormItem, $cacheFormattedItem);
@@ -87,7 +87,7 @@ trait WarmupCache
         }
         $moduleRouteName = method_exists($model, 'getCacheModuleRouteName') ? $model->getCacheModuleRouteName() : (method_exists($model, 'getRouteName') ? $model->getModuleRouteName() : null);
 
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
 
         if (! $module) {
             return;
@@ -105,12 +105,12 @@ trait WarmupCache
             throw new \Exception("Controller not found: {$moduleRouteName}");
         }
 
-        if (ModularityCache::isEnabled($moduleName, $moduleRouteName, 'counts')) {
+        if (ModularousCache::isEnabled($moduleName, $moduleRouteName, 'counts')) {
             $this->warmupControllerCounts($controller);
         }
 
-        $cacheFormItem = ModularityCache::isEnabled($moduleName, $moduleRouteName, 'formItem');
-        $cacheFormattedItem = ModularityCache::isEnabled($moduleName, $moduleRouteName, 'formattedItem');
+        $cacheFormItem = ModularousCache::isEnabled($moduleName, $moduleRouteName, 'formItem');
+        $cacheFormattedItem = ModularousCache::isEnabled($moduleName, $moduleRouteName, 'formattedItem');
 
         $this->warmupControllerItem($controller, $model, $cacheFormItem, $cacheFormattedItem);
     }
@@ -124,7 +124,7 @@ trait WarmupCache
      */
     public function warmupModuleRouteCacheCounts($moduleName, $routeName)
     {
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
 
         if (! $module) {
             return;
@@ -141,7 +141,7 @@ trait WarmupCache
             throw new \Exception("Controller not found: {$routeName}");
         }
 
-        if (! ModularityCache::isEnabled($moduleName, $routeName, 'counts')) {
+        if (! ModularousCache::isEnabled($moduleName, $routeName, 'counts')) {
             return;
         }
 
@@ -158,7 +158,7 @@ trait WarmupCache
      */
     public function warmupModuleRouteCacheItems($moduleName, $routeName, $chunkSize = 100)
     {
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
         if (! $module) {
             return;
             throw new \Exception("Module not found: {$moduleName}");
@@ -173,8 +173,8 @@ trait WarmupCache
             throw new \Exception("Controller not found: {$routeName}");
         }
 
-        $cacheFormItem = ModularityCache::isEnabled($moduleName, $routeName, 'formItem');
-        $cacheFormattedItem = ModularityCache::isEnabled($moduleName, $routeName, 'formattedItem');
+        $cacheFormItem = ModularousCache::isEnabled($moduleName, $routeName, 'formItem');
+        $cacheFormattedItem = ModularousCache::isEnabled($moduleName, $routeName, 'formattedItem');
 
         if (! $cacheFormItem && ! $cacheFormattedItem) {
             return;

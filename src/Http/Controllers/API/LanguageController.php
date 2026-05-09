@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\API;
+namespace Unusualify\Modularous\Http\Controllers\API;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class LanguageController extends Controller
      */
     public function index(Request $request)
     {
-        $cache_key = 'modularity-languages';
+        $cache_key = 'modularous-languages';
         $cache = Cache::store('file');
 
         if ($cache->has($cache_key) && false) {

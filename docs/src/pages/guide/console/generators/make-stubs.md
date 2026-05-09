@@ -9,7 +9,7 @@ sidebarTitle: Make Stubs
 
 ## Command Information
 
-- **Signature:** `modularity:make:stubs {module} {route} [--only=] [--except=] [--force] [--fix]`
+- **Signature:** `modularous:make:stubs {module} {route} [--only=] [--except=] [--force] [--fix]`
 - **Category:** Generators
 
 ## Arguments
@@ -36,16 +36,16 @@ Delegates to `StubsGenerator`, which writes the Blade views, Vue page components
 
 ```bash
 # Generate all stubs for Blog/posts
-php artisan modularity:make:stubs Blog posts
+php artisan modularous:make:stubs Blog posts
 
 # Regenerate only the view stubs, overwriting existing
-php artisan modularity:make:stubs Blog posts --only=view --force
+php artisan modularous:make:stubs Blog posts --only=view --force
 
 # Regenerate everything except the JS stubs
-php artisan modularity:make:stubs Blog posts --except=js
+php artisan modularous:make:stubs Blog posts --except=js
 
 # Fix config errors without regenerating
-php artisan modularity:make:stubs Blog posts --fix
+php artisan modularous:make:stubs Blog posts --fix
 ```
 
 ## Related

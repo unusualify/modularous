@@ -5,9 +5,9 @@ sidebarTitle: Filepond
 
 # Filepond
 
-**Facade**: `Unusualify\Modularity\Facades\Filepond`  
+**Facade**: `Unusualify\Modularous\Facades\Filepond`  
 **Accessor**: `Filepond`  
-**Underlying**: `Unusualify\Modularity\Services\FilepondManager`
+**Underlying**: `Unusualify\Modularous\Services\FilepondManager`
 
 Provides the server-side handling for FilePond file uploads — processing temporary uploads, generating signed URLs, and managing the temporary file lifecycle.
 
@@ -24,7 +24,7 @@ Provides the server-side handling for FilePond file uploads — processing tempo
 ## Usage
 
 ```php
-use Unusualify\Modularity\Facades\Filepond;
+use Unusualify\Modularous\Facades\Filepond;
 
 // In a FilePond process endpoint
 public function process(Request $request)
@@ -39,5 +39,5 @@ $serverConfig = Filepond::getServerConfig();
 ## Notes
 
 - The `getServerConfig()` return value is injected into the Inertia page props and consumed by the `ue-filepond` Vue component to configure upload endpoints automatically.
-- Temporary files are stored in the disk defined by `modularity.filepond.disk` config (default: `local`).
+- Temporary files are stored in the disk defined by `modularous.filepond.disk` config (default: `local`).
 - `flush:filepond` artisan command clears abandoned temporary files.

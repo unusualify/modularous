@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -33,6 +33,6 @@ class CreatorRecord extends Model
 
     public function getTable()
     {
-        return modularityConfig('tables.creator_records', 'um_creator_records');
+        return modularousConfig('tables.creator_records', 'um_creator_records');
     }
 }

@@ -12,8 +12,8 @@ Modularous registers its own recurring jobs directly against Laravel's `Schedule
 
 | Command | Class | Frequency | Purpose |
 |---------|-------|-----------|---------|
-| `modularity:fileponds:scheduler` | [FilepondsScheduler](./fileponds-scheduler) | Daily | Delete expired temporary filepond uploads and orphaned storage folders |
-| `modularity:scheduler:chatable` | [ChatableScheduler](./chatable-scheduler) | Every minute | Send unread-chat notifications for all `Chatable` models |
+| `modularous:fileponds:scheduler` | [FilepondsScheduler](./fileponds-scheduler) | Daily | Delete expired temporary filepond uploads and orphaned storage folders |
+| `modularous:scheduler:chatable` | [ChatableScheduler](./chatable-scheduler) | Every minute | Send unread-chat notifications for all `Chatable` models |
 | `telescope:prune` | Laravel Telescope | Daily | Prune Telescope entries older than 168 hours (7 days) |
 
 ## How They Are Registered
@@ -23,14 +23,14 @@ The schedule is wired up in `BaseServiceProvider::boot()` using `callAfterResolv
 ```php
 $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
 
-    $schedule->command('modularity:fileponds:scheduler --days=7')
+    $schedule->command('modularous:fileponds:scheduler --days=7')
         ->daily();
 
     $schedule->command('telescope:prune --hours=168')
         ->daily()
         ->appendOutputTo(storage_path('logs/scheduler.log'));
 
-    $schedule->command('modularity:scheduler:chatable')
+    $schedule->command('modularous:scheduler:chatable')
         ->everyMinute();
 });
 ```
@@ -38,8 +38,8 @@ $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
 Both scheduler classes (`ChatableScheduler`, `FilepondsScheduler`) are discovered automatically from `src/Schedulers/*.php` via `CommandDiscovery` and registered as Artisan commands, so they can also be run manually:
 
 ```bash
-php artisan modularity:fileponds:scheduler
-php artisan modularity:scheduler:chatable
+php artisan modularous:fileponds:scheduler
+php artisan modularous:scheduler:chatable
 ```
 
 ## Prerequisites

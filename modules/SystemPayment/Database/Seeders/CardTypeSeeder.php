@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\SystemPayment\Entities\CardType;
 use Modules\SystemPayment\Entities\PaymentCurrency;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Http\Controllers\MediaLibraryController;
-use Unusualify\Modularity\Http\Requests\MediaRequest;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Http\Controllers\MediaLibraryController;
+use Unusualify\Modularous\Http\Requests\MediaRequest;
 
 class CardTypeSeeder extends Seeder
 {
@@ -50,7 +50,7 @@ class CardTypeSeeder extends Seeder
             ],
         ];
 
-        $superadmin = User::role('superadmin', Modularity::getAuthGuardName())->first();
+        $superadmin = User::role('superadmin', Modularous::getAuthGuardName())->first();
 
         if (! $superadmin) {
             $this->command->error('Admin user not found. Please ensure the admin user exists in the database.');
@@ -58,7 +58,7 @@ class CardTypeSeeder extends Seeder
             return;
         }
 
-        Auth::guard(Modularity::getAuthGuardName())->login($superadmin);
+        Auth::guard(Modularous::getAuthGuardName())->login($superadmin);
 
         foreach ($cardTypes as $types) {
             $cardType = CardType::create([
@@ -94,7 +94,7 @@ class CardTypeSeeder extends Seeder
             $imagePath = $base_path . $imageName;
 
         } else {
-            $imagePath = base_path('vendor/unusualify/modularity/resources/assets/images/card-types/' . $imageName);
+            $imagePath = base_path('vendor/unusualify/modularous/resources/assets/images/card-types/' . $imageName);
         }
         if (file_exists($imagePath)) {
             $file = new UploadedFile($imagePath, $imageName, null, null, true);

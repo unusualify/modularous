@@ -1,7 +1,7 @@
 <?php
 
-use Unusualify\Modularity\Hydrates\HeaderHydrator;
-use Unusualify\Modularity\Module;
+use Unusualify\Modularous\Hydrates\HeaderHydrator;
+use Unusualify\Modularous\Module;
 
 if (! function_exists('configure_table_columns')) {
     function configure_table_columns(array $columns, ?Module $module = null, ?string $routeName = null)

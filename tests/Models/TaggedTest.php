@@ -1,10 +1,10 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Unusualify\Modularity\Entities\Tagged;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Tagged;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class TaggedTest extends ModelTestCase
 {
@@ -13,6 +13,6 @@ class TaggedTest extends ModelTestCase
     public function test_get_table_tagged()
     {
         $tagged = new Tagged;
-        $this->assertEquals(modularityConfig('tables.tagged', 'tagged'), $tagged->getTable());
+        $this->assertEquals(modularousConfig('tables.tagged', 'tagged'), $tagged->getTable());
     }
 }

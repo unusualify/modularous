@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\Table;
+namespace Unusualify\Modularous\Http\Controllers\Traits\Table;
 
 use Illuminate\Support\Collection;
-use Unusualify\Modularity\Entities\Enums\Permission;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Traits\Allowable;
+use Unusualify\Modularous\Entities\Enums\Permission;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Traits\Allowable;
 
 trait TableRows
 {
@@ -26,7 +26,7 @@ trait TableRows
             if (! $noDefaultTableRowActions) {
                 $model = $this->repository->getModel();
                 // if $this->repository has hasPayment
-                if (classHasTrait($this->repository->getModel(), 'Unusualify\Modularity\Entities\Traits\HasPayment')) {
+                if (classHasTrait($this->repository->getModel(), 'Unusualify\Modularous\Entities\Traits\HasPayment')) {
                     $tableActions[] = [
                         'name' => 'pay',
                         'icon' => 'mdi-contactless-payment',
@@ -170,7 +170,7 @@ trait TableRows
                 }
             }
     
-            $tableNavigationActions = Modularity::find($this->moduleName)->getNavigationActions($this->routeName);
+            $tableNavigationActions = Modularous::find($this->moduleName)->getNavigationActions($this->routeName);
             $tableActionsCollection = collect($tableActions);
     
             foreach ($tableNavigationActions as $key => $navigationAction) {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
-use Unusualify\Modularity\Facades\Filepond;
-use Unusualify\Modularity\Repositories\Traits\FilepondsTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Facades\Filepond;
+use Unusualify\Modularous\Repositories\Traits\FilepondsTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class FilepondsTraitTest extends RepositoryTestCase
 {
@@ -31,7 +31,7 @@ class FilepondsTraitTest extends RepositoryTestCase
         ];
 
         $this->repository->setColumns($schema);
-        $columns = $this->repository->getColumns('Unusualify\\Modularity\\Repositories\\Traits\\FilepondsTrait');
+        $columns = $this->repository->getColumns('Unusualify\\Modularous\\Repositories\\Traits\\FilepondsTrait');
 
         $this->assertSame(['pond-1'], $columns);
     }

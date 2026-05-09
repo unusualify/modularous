@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Entities;
+namespace Unusualify\Modularous\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -26,6 +26,6 @@ class RelatedItem extends BaseModel
 
     public function getTable()
     {
-        return modularityConfig('related_table', 'twill_related');
+        return modularousConfig('related_table', 'twill_related');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
-use Unusualify\Modularity\Entities\Enums\ProcessStatus;
+use Unusualify\Modularous\Entities\Enums\ProcessStatus;
 
 trait ProcessScopes
 {

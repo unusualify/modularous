@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Unusualify\Modularity\Entities\Traits\HasSlug;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Entities\Traits\HasSlug;
+use Unusualify\Modularous\Facades\Modularous;
 
 /**
  * Validates slug strings for admin form inputs (uniqueness against slug tables, optional locale scope).
@@ -99,7 +99,7 @@ class SlugInputValidationService
      */
     public function resolveModelClass(string $moduleName, string $routeName): string
     {
-        $module = Modularity::find($moduleName);
+        $module = Modularous::find($moduleName);
 
         if ($module === null) {
             throw new InvalidArgumentException(__('The specified module was not found.'));
@@ -184,7 +184,7 @@ class SlugInputValidationService
             return '';
         }
 
-        if (in_array($locale, modularityConfig('slug_utf8_languages', []), true)) {
+        if (in_array($locale, modularousConfig('slug_utf8_languages', []), true)) {
             return $model->getUtf8Slug($trimmed);
         }
 

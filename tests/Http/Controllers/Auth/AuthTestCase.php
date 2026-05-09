@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Database\Schema\Blueprint;
 use Spatie\Activitylog\Models\Activity;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Base test case for auth controllers. Sets up auth guards, providers, and password brokers.
@@ -18,29 +18,29 @@ abstract class AuthTestCase extends TestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app['config']->set('modularity.enabled.users-management', true);
-        $app['config']->set('auth.guards.modularity', [
+        $app['config']->set('modularous.enabled.users-management', true);
+        $app['config']->set('auth.guards.modularous', [
             'driver' => 'session',
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
         ]);
-        $app['config']->set('auth.providers.modularity_users', [
+        $app['config']->set('auth.providers.modularous_users', [
             'driver' => 'eloquent',
             'model' => User::class,
         ]);
-        $app['config']->set('auth.passwords.modularity_users', [
-            'provider' => 'modularity_users',
+        $app['config']->set('auth.passwords.modularous_users', [
+            'provider' => 'modularous_users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ]);
         $app['config']->set('auth.passwords.users', [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ]);
         $app['config']->set('auth.passwords.register_verified_users', [
-            'provider' => 'modularity_users',
+            'provider' => 'modularous_users',
             'table' => 'register_verified_users',
             'expire' => 60,
             'throttle' => 60,

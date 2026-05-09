@@ -6,7 +6,7 @@ sidebarTitle: PanelController
 # PanelController
 
 **File**: `src/Http/Controllers/PanelController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers`  
 **Extends**: `CoreController`  
 **Implements**: `CacheableInterface`  
 **Traits**: `MakesResponses`, `ManageScopes`, `ManageAuthorization`, `CacheableResponse`, `ManageWiths`, `ManageAppends`
@@ -21,7 +21,7 @@ All generated module admin controllers extend `BaseController` which extends thi
 public function __construct(Application $app, Request $request)
 ```
 
-1. Applies `auth.modularity` and `verified` middleware.
+1. Applies `auth.modularous` and `verified` middleware.
 2. Calls `preload()` (which triggers `CoreController::preload()` and adds nested/scope setup).
 3. Calls `setMiddlewarePermission()` if `$setDefaultPermissions` is `true`.
 

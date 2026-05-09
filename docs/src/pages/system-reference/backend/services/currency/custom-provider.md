@@ -30,7 +30,7 @@ namespace App\Services\Currency;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 class ExternalApiCurrencyProvider implements CurrencyProviderInterface
 {
@@ -90,7 +90,7 @@ Add to `AppServiceProvider::register()` (or any other service provider that runs
 
 ```php
 use App\Services\Currency\ExternalApiCurrencyProvider;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 public function register(): void
 {
@@ -114,7 +114,7 @@ If you want to fall back to the package default when your configuration is incom
 ```php
 $this->app->bind(CurrencyProviderInterface::class, function ($app) {
     if (empty(config('services.example_currency.api_key'))) {
-        return new \Unusualify\Modularity\Services\Currency\NullCurrencyProvider;
+        return new \Unusualify\Modularous\Services\Currency\NullCurrencyProvider;
     }
 
     return new ExternalApiCurrencyProvider;
@@ -128,7 +128,7 @@ Tinker session:
 ```php
 php artisan tinker
 
->>> $p = app(\Unusualify\Modularity\Contracts\CurrencyProviderInterface::class);
+>>> $p = app(\Unusualify\Modularous\Contracts\CurrencyProviderInterface::class);
 >>> get_class($p);
 => "App\\Services\\Currency\\ExternalApiCurrencyProvider"
 
@@ -159,7 +159,7 @@ Break the shape and consumers (select inputs, `PricesTrait`) silently misbehave.
 ```php
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
-use Unusualify\Modularity\Contracts\CurrencyProviderInterface;
+use Unusualify\Modularous\Contracts\CurrencyProviderInterface;
 
 class ExternalApiCurrencyProviderTest extends TestCase
 {

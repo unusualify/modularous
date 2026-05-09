@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Facades\Cache;
 
@@ -19,22 +19,22 @@ class Assets
             return $manifest[$file];
         }
 
-        return '/' . modularityConfig('public_dir', 'unusual') . '/' . $file;
+        return '/' . modularousConfig('public_dir', 'unusual') . '/' . $file;
     }
 
     public function getManifestFilename()
     {
         $fileName =
-            public_path(modularityConfig('public_dir', 'unusual')) .
+            public_path(modularousConfig('public_dir', 'unusual')) .
             '/' .
-            modularityConfig('manifest', 'unusual-manifest.json');
+            modularousConfig('manifest', 'unusual-manifest.json');
 
         if (file_exists($fileName)) {
             return $fileName;
         }
 
         return base_path(
-            modularityConfig('vendor_path') . '/vue/dist/' . modularityConfig('public_dir') . '/' . modularityConfig('manifest')
+            modularousConfig('vendor_path') . '/vue/dist/' . modularousConfig('public_dir') . '/' . modularousConfig('manifest')
         );
     }
 
@@ -44,22 +44,22 @@ class Assets
             return null;
         }
 
-        $devServerUrl = modularityConfig('development_url', 'http://localhost:8080');
+        $devServerUrl = modularousConfig('development_url', 'http://localhost:8080');
         try {
             $manifest = $this->readJson(
                 'http://workspace:8080' .
                     '/' .
-                    modularityConfig('public_dir') .
+                    modularousConfig('public_dir') .
                     '/' .
-                    modularityConfig('manifest', 'unusual-manifest.json')
+                    modularousConfig('manifest', 'unusual-manifest.json')
             );
         } catch (\Exception $e) {
             dd(
                 $devServerUrl .
                 '/' .
-                modularityConfig('public_dir') .
+                modularousConfig('public_dir') .
                 '/' .
-                modularityConfig('manifest', 'unusual-manifest.json'),
+                modularousConfig('manifest', 'unusual-manifest.json'),
 
                 $file,
                 debug_backtrace()
@@ -102,6 +102,6 @@ class Assets
     private function devMode()
     {
         return app()->environment('local', 'development') &&
-            modularityConfig('is_development', false);
+            modularousConfig('is_development', false);
     }
 }

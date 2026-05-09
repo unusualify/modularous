@@ -14,7 +14,7 @@ The `Imgix` driver generates [Imgix](https://imgix.com/) CDN URLs with optional 
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'imgix' => [
     'source_host'         => env('IMGIX_SOURCE_HOST', 'your-source.imgix.net'),
     'use_https'           => true,

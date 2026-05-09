@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Repositories\Traits;
+namespace Unusualify\Modularous\Tests\Repositories\Traits;
 
 use Illuminate\Support\Facades\App;
 use Mockery\MockInterface;
-use Unusualify\Modularity\Entities\Traits\HasAuthorizable;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Repositories\Traits\AuthorizableTrait;
-use Unusualify\Modularity\Tests\Repositories\RepositorySources;
-use Unusualify\Modularity\Tests\Repositories\TestModel;
-use Unusualify\Modularity\Tests\Repositories\TestRepository;
-use Unusualify\Modularity\Tests\RepositoryTestCase;
+use Unusualify\Modularous\Entities\Traits\HasAuthorizable;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Repositories\Traits\AuthorizableTrait;
+use Unusualify\Modularous\Tests\Repositories\RepositorySources;
+use Unusualify\Modularous\Tests\Repositories\TestModel;
+use Unusualify\Modularous\Tests\Repositories\TestRepository;
+use Unusualify\Modularous\Tests\RepositoryTestCase;
 
 class AuthorizableTraitTest extends RepositoryTestCase
 {

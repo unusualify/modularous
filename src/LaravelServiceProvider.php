@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity;
+namespace Unusualify\Modularous;
 
 use Illuminate\Support\ServiceProvider;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 final class LaravelServiceProvider extends ServiceProvider
 {
@@ -31,18 +31,18 @@ final class LaravelServiceProvider extends ServiceProvider
     private function publishAssets(): void
     {
         $this->publishes([
-            __DIR__ . '/../vue/dist/modularity' => public_path('vendor/modularity'),
-            __DIR__ . '/../resources/assets/images' => public_path('vendor/modularity/assets/images'),
+            __DIR__ . '/../vue/dist/modularous' => public_path('vendor/modularous'),
+            __DIR__ . '/../resources/assets/images' => public_path('vendor/modularous/assets/images'),
             __DIR__ . '/../vue/dist/telescope' => public_path('vendor/telescope'),
 
-        ], 'modularity-assets');
+        ], 'modularous-assets');
     }
 
     private function publishConfigs(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/publishes/publish.php' => config_path(modularityBaseKey() . '.php'),
-            // __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularityBaseKey() . '-navigation.php'),
+            __DIR__ . '/../config/publishes/publish.php' => config_path(modularousBaseKey() . '.php'),
+            // __DIR__ . '/../config/publishes/navigation-publish.php' => config_path(modularousBaseKey() . '-navigation.php'),
             __DIR__ . '/../config/publishes/activitylog.php' => config_path('activitylog.php'),
             // __DIR__ . '/../config/publishes/geoip.php' => config_path('geoip.php'),
             __DIR__ . '/../config/publishes/modules.php' => config_path('modules.php'),
@@ -71,7 +71,7 @@ final class LaravelServiceProvider extends ServiceProvider
         ], 'views');
 
         $this->publishes([
-            __DIR__ . '/../vue/dist/modularity/assets/icons' => resource_path('views/vendor/modularity/partials/icons'),
+            __DIR__ . '/../vue/dist/modularous/assets/icons' => resource_path('views/vendor/modularous/partials/icons'),
         ], 'views');
 
         $this->publishes([
@@ -80,15 +80,15 @@ final class LaravelServiceProvider extends ServiceProvider
 
 
         $this->publishes([
-            __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/modularity/auth'),
-        ], 'modularity-auth-views');
+            __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/modularous/auth'),
+        ], 'modularous-auth-views');
 
     }
 
     private function publishResources(): void
     {
         $this->publishes([
-            __DIR__ . '/../vue/drafts/components' => resource_path(modularityConfig('custom_components_resource_path', 'vendor/modularity/js/components')),
+            __DIR__ . '/../vue/drafts/components' => resource_path(modularousConfig('custom_components_resource_path', 'vendor/modularous/js/components')),
         ], 'custom-components');
     }
 
@@ -103,21 +103,21 @@ final class LaravelServiceProvider extends ServiceProvider
     {
         $langPath = file_exists(base_path('lang')) ? base_path('lang') : __DIR__ . '/../lang';
         $this->publishes([
-            $langPath => base_path('modularity/lang'),
+            $langPath => base_path('modularous/lang'),
         ], 'ignored-lang');
     }
 
     private function publishOperations(): void
     {
         $this->publishes([
-            Modularity::getVendorPath('operations') => base_path('operations'),
+            Modularous::getVendorPath('operations') => base_path('operations'),
         ], 'operations');
     }
 
     private function publishMigrations(): void
     {
         $this->publishes([
-            Modularity::getVendorPath('database/migrations/default') => $this->app->databasePath('migrations'),
-        ], 'modularity-migrations');
+            Modularous::getVendorPath('database/migrations/default') => $this->app->databasePath('migrations'),
+        ], 'modularous-migrations');
     }
 }

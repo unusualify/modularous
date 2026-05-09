@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Http\Controllers\Traits\API;
+namespace Unusualify\Modularous\Http\Controllers\Traits\API;
 
 trait ApiSorting
 {

@@ -7,7 +7,7 @@ sidebarGroupTitle: Brokers
 # Brokers
 
 **Directory**: `src/Brokers/`  
-**Namespace**: `Unusualify\Modularity\Brokers`
+**Namespace**: `Unusualify\Modularous\Brokers`
 
 The broker layer powers Modularous registration verification flow behind the [`Register` facade](/system-reference/backend/facades/register). It mirrors Laravel's password broker design, but adapts it for email-verification-based registration.
 

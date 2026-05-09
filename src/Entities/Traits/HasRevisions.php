@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Traits;
+namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use RuntimeException;
-use Unusualify\Modularity\Entities\Enums\RevisionStatus;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Entities\Enums\Permission;
+use Unusualify\Modularous\Entities\Enums\RevisionStatus;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Entities\Enums\Permission;
 
 trait HasRevisions
 {
@@ -132,7 +132,7 @@ trait HasRevisions
             return true;
         }
 
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_APPROVE', $this->revisionPermissionPrefix()));
     }
@@ -143,7 +143,7 @@ trait HasRevisions
             return true;
         }
 
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_REJECT', $this->revisionPermissionPrefix()));
     }
@@ -154,7 +154,7 @@ trait HasRevisions
             return true;
         }
 
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_RESTORE', $this->revisionPermissionPrefix()));
     }
@@ -167,14 +167,14 @@ trait HasRevisions
      */
     public function scopeMine($query)
     {
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         if (! $user) {
             return $query->whereRaw('1 = 0');
         }
 
         return $query->whereHas('revisions', function ($query) {
-            $query->where('user_id', Auth::guard(Modularity::getAuthGuardName())->id());
+            $query->where('user_id', Auth::guard(Modularous::getAuthGuardName())->id());
         });
     }
 
@@ -234,7 +234,7 @@ trait HasRevisions
         $modelClass = get_class($this);
         $candidates = [
             preg_replace('/\\\\Entities\\\\([^\\\\]+)$/', '\\Entities\\Revisions\\$1Revision', $modelClass),
-            modularityConfig('namespace') . "\\Models\\Revisions\\" . class_basename($this) . 'Revision',
+            modularousConfig('namespace') . "\\Models\\Revisions\\" . class_basename($this) . 'Revision',
         ];
 
         foreach ($candidates as $candidate) {

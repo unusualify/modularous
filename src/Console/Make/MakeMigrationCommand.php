@@ -1,17 +1,17 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Make;
+namespace Unusualify\Modularous\Console\Make;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Migrations\NameParser;
 use Nwidart\Modules\Support\Migrations\SchemaParser as NwidartSchemaParser;
 use Nwidart\Modules\Support\Stub;
-use Unusualify\Modularity\Console\BaseCommand;
+use Unusualify\Modularous\Console\BaseCommand;
 // use Nwidart\Modules\Support\Migrations\SchemaParser;
 
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Support\Decomposers\SchemaParser;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Support\Decomposers\SchemaParser;
 
 class MakeMigrationCommand extends BaseCommand
 {
@@ -20,17 +20,17 @@ class MakeMigrationCommand extends BaseCommand
      *
      * @var string
      */
-    // protected $name = 'modularity:make:migration';
+    // protected $name = 'modularous:make:migration';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'modularity:make:migration
+    protected $signature = 'modularous:make:migration
         {name : The migration name will be created}
         {module? : The name of module that the migration will be created in}
-        {--self : Create a modularity migration}
+        {--self : Create a modularous migration}
         {--fields= : The specified fields table}
         {--route= : The route name for pivot table}
         {--plain : Create plain migration}
@@ -195,12 +195,12 @@ class MakeMigrationCommand extends BaseCommand
         $fileName = $this->getFileName();
 
         if ($moduleName != '') {
-            $path = Modularity::getModulePath($moduleName);
+            $path = Modularous::getModulePath($moduleName);
             $migrationGeneratorPath = GenerateConfigReader::read('migration');
             $migrationFolder = $migrationGeneratorPath->getPath();
         } else {
             if ($this->option('self')) {
-                $path = Modularity::getVendorPath('');
+                $path = Modularous::getVendorPath('');
                 $migrationFolder = 'database/migrations/default';
             }
         }

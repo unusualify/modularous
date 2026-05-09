@@ -6,7 +6,7 @@ sidebarTitle: GlideController
 # GlideController
 
 **File**: `src/Http/Controllers/GlideController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers`
+**Namespace**: `Unusualify\Modularous\Http\Controllers`
 
 Single-action invokable controller that serves on-the-fly image transformations via the [Glide](https://glide.thephpleague.com/) library.
 
@@ -34,7 +34,7 @@ See the [Glide documentation](https://glide.thephpleague.com/2.0/api/quick-refer
 
 ## URL Signing
 
-Glide URLs are signed by default to prevent abuse. The signing key is taken from `modularity.glide.sign_key`. Requests with an invalid signature return a 403 response.
+Glide URLs are signed by default to prevent abuse. The signing key is taken from `modularous.glide.sign_key`. Requests with an invalid signature return a 403 response.
 
 ## Related
 

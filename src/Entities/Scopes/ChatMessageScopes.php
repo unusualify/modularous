@@ -1,9 +1,9 @@
 <?php
 
-namespace Unusualify\Modularity\Entities\Scopes;
+namespace Unusualify\Modularous\Entities\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
-use Unusualify\Modularity\Entities\Traits\HasCreator;
+use Unusualify\Modularous\Entities\Traits\HasCreator;
 
 trait ChatMessageScopes
 {

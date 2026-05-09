@@ -6,7 +6,7 @@ sidebarTitle: Block
 # Block
 
 **File**: `src/Entities/Block.php`
-**Namespace**: `Unusualify\Modularity\Entities`
+**Namespace**: `Unusualify\Modularous\Entities`
 **Extends**: `Illuminate\Database\Eloquent\Model`
 **Traits**: `HasFiles`, `HasImages`, `HasPresenter`, `HasRelated`
 
@@ -14,7 +14,7 @@ Eloquent model that backs the block content system. Extends Laravel's base `Mode
 
 ## Database Table
 
-Configurable via `modularityConfig('blocks_table', 'twill_blocks')`. Defaults to `twill_blocks` for compatibility with Twill-based setups.
+Configurable via `modularousConfig('blocks_table', 'twill_blocks')`. Defaults to `twill_blocks` for compatibility with Twill-based setups.
 
 ### Columns
 
@@ -135,7 +135,7 @@ For each root block in the named editor, `renderNamedBlocks()`:
 
 ### Presenter
 
-When `modularityConfig('block_editor.block_presenter_path')` is set, the `$presenter` attribute resolves to that class path. This follows the standard Modularous presenter pattern.
+When `modularousConfig('block_editor.block_presenter_path')` is set, the `$presenter` attribute resolves to that class path. This follows the standard Modularous presenter pattern.
 
 ## Parent / Child Nesting
 
@@ -157,8 +157,8 @@ Block { id: 10, type: 'columns', parent_id: null }   ← root
 
 | Config key | Default | Description |
 |------------|---------|-------------|
-| `modularity.blocks_table` | `'twill_blocks'` | Database table name |
-| `modularity.block_editor.block_presenter_path` | `null` | Presenter class path for block models |
+| `modularous.blocks_table` | `'twill_blocks'` | Database table name |
+| `modularous.block_editor.block_presenter_path` | `null` | Presenter class path for block models |
 
 ## Related
 

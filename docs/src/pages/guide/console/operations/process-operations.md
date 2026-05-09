@@ -13,7 +13,7 @@ This command has `$hidden = true` and does not appear in `php artisan list`. It 
 
 ## Command Information
 
-- **Signature:** `modularity:operations:process [--s|sync] [--a|async] [--queue=] [--t|test] [--i|isolated] [--l|local]`
+- **Signature:** `modularous:operations:process [--s|sync] [--a|async] [--queue=] [--t|test] [--i|isolated] [--l|local]`
 - **Alias:** `mod:operations:process`
 - **Category:** Operations
 
@@ -36,15 +36,15 @@ Delegates to the underlying `operations:process` Artisan command with the option
 
 ```bash
 # Run all pending operations synchronously
-php artisan modularity:operations:process --sync
+php artisan modularous:operations:process --sync
 
 # Dispatch operations onto the "low" queue
-php artisan modularity:operations:process --async --queue=low
+php artisan modularous:operations:process --async --queue=low
 
 # Dry-run to see what would be processed
-php artisan modularity:operations:process --test
+php artisan modularous:operations:process --test
 ```
 
 ## Related
 
-- [modularity:publish:operations](/guide/console/operations/publish-operations) — publish vendor assets
+- [modularous:publish:operations](/guide/console/operations/publish-operations) — publish vendor assets

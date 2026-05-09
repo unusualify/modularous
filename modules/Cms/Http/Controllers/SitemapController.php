@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Cms\Http\Requests\SitemapItemUpsertRequest;
 use Modules\Cms\Http\Requests\SitemapRequest;
 use Modules\Cms\Repositories\SitemapRepository;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 /**
  * Modül Inertia index; özel arayüz {@see Sitemap/Index.vue}. JSON: {@see CmsSitemapPanelController} (dry-run, commit, item upsert).

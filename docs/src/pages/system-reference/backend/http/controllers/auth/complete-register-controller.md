@@ -6,7 +6,7 @@ sidebarTitle: CompleteRegisterController
 # CompleteRegisterController
 
 **File**: `src/Http/Controllers/Auth/CompleteRegisterController.php`  
-**Namespace**: `Unusualify\Modularity\Http\Controllers\Auth`  
+**Namespace**: `Unusualify\Modularous\Http\Controllers\Auth`  
 **Extends**: `Auth\Controller`  
 **Traits**: `CreateVerifiedEmailAccount`, `RespondsWithJsonOrRedirect`
 
@@ -24,7 +24,7 @@ Displays the complete registration form if the email/token combination is valid.
 
 1. Extracts `token` from the route and `email` from the query string.
 2. Validates the token exists for the email via `Register::broker('register_verified_users')->emailTokenExists()`.
-3. Fires the `ModularityUserRegistering` event.
+3. Fires the `ModularousUserRegistering` event.
 4. Builds the form schema from `getFormDraft('complete_register_form')`, pre-filling fields from the request (excluding password fields).
 5. Renders the registration view.
 
@@ -40,7 +40,7 @@ Processes the registration form submission:
    - Creates the `User` record with hashed password and verified email.
    - Creates a `Company` record.
    - Assigns the `client-manager` role.
-   - Fires `ModularityUserRegistered` and `VerifiedEmailRegister` events.
+   - Fires `ModularousUserRegistered` and `VerifiedEmailRegister` events.
    - Logs the user in automatically.
 4. Returns a success or failure response.
 

@@ -5,7 +5,7 @@ sidebarTitle: HasUuid
 
 # HasUuid
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\HasUuid`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\HasUuid`
 
 Replaces the auto-increment primary key with an ordered UUID string. Uses `Str::orderedUuid()` so UUIDs sort chronologically in the database.
 
@@ -45,7 +45,7 @@ public static string $uuidColumn = 'uuid';
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\HasUuid;
+use Unusualify\Modularous\Entities\Traits\HasUuid;
 
 class Session extends Model
 {

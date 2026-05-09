@@ -5,7 +5,7 @@ sidebarTitle: RelationshipHelpers
 
 # RelationshipHelpers
 
-**Namespace**: `Unusualify\Modularity\Repositories\Logic\RelationshipHelpers`
+**Namespace**: `Unusualify\Modularous\Repositories\Logic\RelationshipHelpers`
 
 Utility methods for discovering relationships on a model and resolving foreign key names. Used internally by `Relationships` and `MethodTransformers`.
 

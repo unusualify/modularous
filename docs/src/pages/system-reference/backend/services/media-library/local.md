@@ -19,7 +19,7 @@ The `Local` driver serves images directly from the configured Laravel storage di
 ## Configuration
 
 ```php
-// config/modularity.php
+// config/modularous.php
 'media_library' => [
     'image_service' => 'local',
     'disk'          => 'public',   // any Laravel filesystem disk
@@ -31,7 +31,7 @@ The `Local` driver serves images directly from the configured Laravel storage di
 All interface methods (`getUrl`, `getUrlWithCrop`, `getUrlWithFocalCrop`, `getLQIPUrl`, `getSocialUrl`, `getCmsUrl`) delegate to `getRawUrl()`, which returns:
 
 ```php
-Storage::disk(config('modularity.media_library.disk'))->url($id)
+Storage::disk(config('modularous.media_library.disk'))->url($id)
 ```
 
 `getDimensions()` is not supported and returns `null`.

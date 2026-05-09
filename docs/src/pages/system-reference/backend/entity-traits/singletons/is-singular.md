@@ -5,9 +5,9 @@ sidebarTitle: IsSingular
 
 # IsSingular
 
-**Namespace**: `Unusualify\Modularity\Entities\Traits\IsSingular`
+**Namespace**: `Unusualify\Modularous\Entities\Traits\IsSingular`
 
-Stores all fillable fields for a model as a JSON blob in the shared `modularity_singletons` table. There is exactly one record per model type — no dedicated table or migration is required.
+Stores all fillable fields for a model as a JSON blob in the shared `modularous_singletons` table. There is exactly one record per model type — no dedicated table or migration is required.
 
 ---
 
@@ -28,7 +28,7 @@ Also registers `SingularScope` as a global scope to ensure queries only return t
 | Method | Signature | Description |
 |--------|-----------|-------------|
 | `single` | `(): static` (static) | Returns the singleton record, creating it if it doesn't exist |
-| `getTable` | `(): string` (final) | Always returns the `modularity_singletons` table name (configurable via `modularity.tables.singletons`) |
+| `getTable` | `(): string` (final) | Always returns the `modularous_singletons` table name (configurable via `modularous.tables.singletons`) |
 | `isPublished` | `(): bool` | Returns the `published` field value (from JSON content) |
 
 ---
@@ -43,10 +43,10 @@ Also registers `SingularScope` as a global scope to ensure queries only return t
 
 ## Configuration
 
-The table name can be overridden in `config/modularity.php`:
+The table name can be overridden in `config/modularous.php`:
 ```php
 'tables' => [
-    'singletons' => 'modularity_singletons',
+    'singletons' => 'modularous_singletons',
 ]
 ```
 
@@ -55,7 +55,7 @@ The table name can be overridden in `config/modularity.php`:
 ## Usage
 
 ```php
-use Unusualify\Modularity\Entities\Traits\IsSingular;
+use Unusualify\Modularous\Entities\Traits\IsSingular;
 
 class SiteSettings extends Model
 {
@@ -81,5 +81,5 @@ SiteSettings::published()->first();
 ```
 
 ::: info No migration needed
-`IsSingular` models share the `modularity_singletons` table. A `type` column discriminates between different singletons. No additional migration is required beyond the package install.
+`IsSingular` models share the `modularous_singletons` table. A `type` column discriminates between different singletons. No additional migration is required beyond the package install.
 :::

@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Services;
+namespace Unusualify\Modularous\Services;
 
 use Illuminate\Support\Facades\Cache;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class CacheRelationshipGraph
 {
     /**
      * Cache key for the relationship graph.
      */
-    protected const GRAPH_CACHE_KEY = 'modularity:cache:relationship_graph';
+    protected const GRAPH_CACHE_KEY = 'modularous:cache:relationship_graph';
 
     /**
      * The relationship graph.
@@ -31,7 +31,7 @@ class CacheRelationshipGraph
      */
     public function isEnabled(): bool
     {
-        return config('modularity.cache.graph.enabled', true);
+        return config('modularous.cache.graph.enabled', true);
     }
 
     /**
@@ -39,7 +39,7 @@ class CacheRelationshipGraph
      */
     protected function getGraphTtl(): int
     {
-        return (int) config('modularity.cache.graph.ttl', 86400);
+        return (int) config('modularous.cache.graph.ttl', 86400);
     }
 
     /**
@@ -138,7 +138,7 @@ class CacheRelationshipGraph
             'submodule_to_module' => [],    // Submodule name => Parent module name
         ];
 
-        $modules = Modularity::allEnabled();
+        $modules = Modularous::allEnabled();
 
         foreach ($modules as $module) {
             $moduleName = $module->getStudlyName();

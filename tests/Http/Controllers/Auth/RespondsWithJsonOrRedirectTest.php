@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Tests\Http\Controllers\Auth;
+namespace Unusualify\Modularous\Tests\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Unusualify\Modularity\Http\Controllers\Auth\Controller;
-use Unusualify\Modularity\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Http\Controllers\Auth\Controller;
+use Unusualify\Modularous\Http\Controllers\Traits\Utilities\RespondsWithJsonOrRedirect;
+use Unusualify\Modularous\Tests\TestCase;
 
 /**
  * Test controller that uses RespondsWithJsonOrRedirect for testing.

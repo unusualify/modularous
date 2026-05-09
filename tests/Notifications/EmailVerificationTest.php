@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Notifications;
+namespace Unusualify\Modularous\Tests\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Notifications\EmailVerification;
-use Unusualify\Modularity\Tests\TestCase;
+use Unusualify\Modularous\Notifications\EmailVerification;
+use Unusualify\Modularous\Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
 {

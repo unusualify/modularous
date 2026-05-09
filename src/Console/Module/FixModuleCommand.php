@@ -1,11 +1,11 @@
 <?php
 
-namespace Unusualify\Modularity\Console\Module;
+namespace Unusualify\Modularous\Console\Module;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Unusualify\Modularity\Console\BaseCommand;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Console\BaseCommand;
+use Unusualify\Modularous\Facades\Modularous;
 
 class FixModuleCommand extends BaseCommand
 {
@@ -14,7 +14,7 @@ class FixModuleCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'modularity:fix:module';
+    protected $name = 'modularous:fix:module';
 
     /**
      * The console command description.
@@ -29,11 +29,11 @@ class FixModuleCommand extends BaseCommand
     public function handle(): int
     {
         $moduleName = studlyName($this->argument('module'));
-        $routes = Modularity::find($moduleName)->getRoutes();
+        $routes = Modularous::find($moduleName)->getRoutes();
 
         foreach ($routes as $key => $routeName) {
 
-            $this->call('modularity:make:route', [
+            $this->call('modularous:make:route', [
                 'module' => $moduleName,
                 'route' => $routeName,
                 '--fix' => true,
@@ -57,6 +57,6 @@ class FixModuleCommand extends BaseCommand
         return array_merge([
             ['migration', null, InputOption::VALUE_NONE, 'Fix will create migrations'],
 
-        ], modularityTraitOptions());
+        ], modularousTraitOptions());
     }
 }

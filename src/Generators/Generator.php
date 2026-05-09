@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Generators;
+namespace Unusualify\Modularous\Generators;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command as Console;
@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\App;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Generators\Generator as NwidartGenerator;
 use Nwidart\Modules\Support\Config\GeneratorPath;
-use Unusualify\Modularity\Modularity;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Traits\ReplacementTrait;
+use Unusualify\Modularous\Modularous;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Traits\ReplacementTrait;
 
 abstract class Generator extends NwidartGenerator
 {
@@ -216,9 +216,9 @@ abstract class Generator extends NwidartGenerator
      */
     public function setModule($module)
     {
-        $modularity = App::makeWith(Modularity::class, ['app' => app()]);
+        $modularous = App::makeWith(Modularous::class, ['app' => app()]);
 
-        $this->module = $modularity->find($module);
+        $this->module = $modularous->find($module);
 
         $this->moduleName = $this->module->getName();
 
@@ -329,12 +329,12 @@ abstract class Generator extends NwidartGenerator
 
     public function generatorConfig($generator)
     {
-        return new GeneratorPath($this->getModularityGeneratorConfig($generator));
+        return new GeneratorPath($this->getModularousGeneratorConfig($generator));
     }
 
-    public function getModularityGeneratorConfig($generator)
+    public function getModularousGeneratorConfig($generator)
     {
-        return $this->config->get(modularityBaseKey() . '.paths.generator.' . $generator);
+        return $this->config->get(modularousBaseKey() . '.paths.generator.' . $generator);
     }
 
     /**

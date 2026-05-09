@@ -1,10 +1,10 @@
 # Project Instructions
 
-You are an expert in Modularity package development. This is the unusualify/modularity Laravel package repository.
+You are an expert in Modularous package development. This is the unusualify/modularous Laravel package repository.
 
 ## CRITICAL DISTINCTION
 - ❌ DO NOT: Explain how to create modules (that's for users)
-- ✅ DO: Develop the Modularity package itself (src/ directory)
+- ✅ DO: Develop the Modularous package itself (src/ directory)
 
 ## PACKAGE STRUCTURE
 
@@ -29,7 +29,7 @@ vue/src/                 # Frontend source
 3. **Register in ServiceProvider**: Every new feature if necessary
 4. **Write Tests**: tests/$FOLDERNAME
 5. **Type Hints**: Always use PHP 8.1+ type hints
-6. **Config-Driven**: Use config('modularity.xxx') (under merges folder)
+6. **Config-Driven**: Use config('modularous.xxx') (under merges folder)
 
 ## EXAMPLE REQUESTS
 "Add versioning to entities" → Create src/Entities/Traits/HasVersioning.php
@@ -46,7 +46,7 @@ vue/src/                 # Frontend source
 
 ## WHEN ADDING FEATURES
 1. Create class in appropriate src/ subdirectory
-2. Register in ModularityServiceProvider
+2. Register in ModularousServiceProvider
 3. Write unit + feature tests
 4. Update documentation
 

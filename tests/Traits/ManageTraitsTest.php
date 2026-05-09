@@ -1,12 +1,12 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Traits;
+namespace Unusualify\Modularous\Tests\Traits;
 
 use Illuminate\Support\Facades\Hash;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Module;
-use Unusualify\Modularity\Tests\TestCase;
-use Unusualify\Modularity\Traits\ManageTraits;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Tests\TestCase;
+use Unusualify\Modularous\Traits\ManageTraits;
 
 class ManageTraitsTest extends TestCase
 {
@@ -94,8 +94,8 @@ class ManageTraitsTest extends TestCase
         $module->shouldReceive('hasRoute')->with('TestRoute')->andReturn(true);
         $module->shouldReceive('getModel')->with('TestRoute')->once()->andReturn('TestModel');
 
-        // isModuleRouteClass() and getModule() each call Modularity::find() with the same name.
-        Modularity::shouldReceive('find')->with('TestModule')->andReturn($module);
+        // isModuleRouteClass() and getModule() each call Modularous::find() with the same name.
+        Modularous::shouldReceive('find')->with('TestModule')->andReturn($module);
 
         $this->assertEquals('TestModel', $this->target->model());
     }

@@ -1,16 +1,16 @@
 <?php
 
-namespace Unusualify\Modularity\Support;
+namespace Unusualify\Modularous\Support;
 
 use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Translatable public metadata columns (SEO title/description, canonical, robots, sitemap inclusion) for
- * {@see \Unusualify\Modularity\Entities\Traits\HasTranslation} models that opt in via
- * {@see \Unusualify\Modularity\Entities\Traits\HasTranslatableMetadata}.
+ * {@see \Unusualify\Modularous\Entities\Traits\HasTranslation} models that opt in via
+ * {@see \Unusualify\Modularous\Entities\Traits\HasTranslatableMetadata}.
  *
  * Migrations: {@see createTranslatableMetadataFields()}.
- * Repository form inputs: {@see \Unusualify\Modularity\Repositories\Traits\TranslatableMetadataTrait}.
+ * Repository form inputs: {@see \Unusualify\Modularous\Repositories\Traits\TranslatableMetadataTrait}.
  */
 final class TranslatableMetadata
 {
@@ -59,7 +59,7 @@ final class TranslatableMetadata
     }
 
     /**
-     * Default Modularity form input definitions (usually appended via {@see TranslatableMetadataTrait}).
+     * Default Modularous form input definitions (usually appended via {@see TranslatableMetadataTrait}).
      *
      * @return list<array<string, mixed>>
      */

@@ -4,7 +4,7 @@ namespace Modules\SystemUser\Http\Controllers;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Unusualify\Modularity\Http\Controllers\BaseController;
+use Unusualify\Modularous\Http\Controllers\BaseController;
 
 class CompanyController extends BaseController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unusualify\Modularity\Tests\Models;
+namespace Unusualify\Modularous\Tests\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
-use Unusualify\Modularity\Entities\Company;
-use Unusualify\Modularity\Entities\Filepond;
-use Unusualify\Modularity\Entities\User;
-use Unusualify\Modularity\Facades\Modularity;
-use Unusualify\Modularity\Notifications\EmailVerification;
-use Unusualify\Modularity\Notifications\GeneratePasswordNotification;
-use Unusualify\Modularity\Notifications\ResetPasswordNotification;
-use Unusualify\Modularity\Tests\ModelTestCase;
+use Unusualify\Modularous\Entities\Company;
+use Unusualify\Modularous\Entities\Filepond;
+use Unusualify\Modularous\Entities\User;
+use Unusualify\Modularous\Facades\Modularous;
+use Unusualify\Modularous\Notifications\EmailVerification;
+use Unusualify\Modularous\Notifications\GeneratePasswordNotification;
+use Unusualify\Modularous\Notifications\ResetPasswordNotification;
+use Unusualify\Modularous\Tests\ModelTestCase;
 
 class UserTest extends ModelTestCase
 {
@@ -25,7 +25,7 @@ class UserTest extends ModelTestCase
     public function test_get_table_user()
     {
         $user = new User;
-        $this->assertEquals(modularityConfig('tables.users', 'users'), $user->getTable());
+        $this->assertEquals(modularousConfig('tables.users', 'users'), $user->getTable());
     }
 
     public function test_create_user_with_factory()
@@ -152,7 +152,7 @@ class UserTest extends ModelTestCase
 
     public function test_valid_company_with_respect_to_company_type()
     {
-        $role = Role::create(['name' => 'client', 'guard_name' => 'modularity']);
+        $role = Role::create(['name' => 'client', 'guard_name' => 'modularous']);
         $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -194,7 +194,7 @@ class UserTest extends ModelTestCase
         $this->assertFalse($user->valid_company);
         $this->assertFalse($user->show_billing_banner);
 
-        config(['modularity.use_country_based_vat_rates' => true]);
+        config(['modularous.use_country_based_vat_rates' => true]);
         $this->assertTrue($user->show_billing_banner);
 
         // for corporate company, name, tax_id, email, address, country_id, city, state, zip_code are required
@@ -286,7 +286,7 @@ class UserTest extends ModelTestCase
     public function test_role_types()
     {
 
-        $this->authGuardName = Modularity::getAuthGuardName();
+        $this->authGuardName = Modularous::getAuthGuardName();
 
         // Create the roles
         Role::create(['name' => 'superadmin', 'guard_name' => $this->authGuardName]);
@@ -422,7 +422,7 @@ class UserTest extends ModelTestCase
     {
         // without any related filepond
         $userWithoutFilepond = User::factory()->create();
-        $this->assertEquals('/vendor/modularity/jpg/anonymous.jpg', $userWithoutFilepond->avatar);
+        $this->assertEquals('/vendor/modularous/jpg/anonymous.jpg', $userWithoutFilepond->avatar);
 
         // Create a filepond with role 'avatar' for this user
         $user = User::factory()->create();
@@ -564,7 +564,7 @@ class UserTest extends ModelTestCase
             return $notification->token === $token;
         });
 
-        $emailVerificationConfigClass = config('modularity.verification_email_class');
+        $emailVerificationConfigClass = config('modularous.verification_email_class');
         $user->sendRegisterNotification($token);
         Notification::assertSentTo($user, $emailVerificationConfigClass, function ($notification, $channels, $notifiable) use ($token) {
             return $notification->token === $token;

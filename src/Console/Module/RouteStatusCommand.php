@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Unusualify\Modularity\Console\Module;
+namespace Unusualify\Modularous\Console\Module;
 
 use Illuminate\Console\Command;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class RouteStatusCommand extends Command
 {
-    protected $name = 'modularity:route:status';
+    protected $name = 'modularous:route:status';
 
     protected $description = 'List route enable/disable status per module.';
 
     public function handle(): int
     {
-        $enabled = Modularity::allEnabled();
+        $enabled = Modularous::allEnabled();
 
         if (empty($enabled)) {
             $this->warn('No enabled modules found.');
