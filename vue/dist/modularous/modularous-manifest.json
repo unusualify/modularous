@@ -1,0 +1,201 @@
+{
+  "_UEConfig.!~{00b}~.js": {
+    "file": "css/UEConfig.TVeY1PfP.css",
+    "src": "_UEConfig.!~{00b}~.js"
+  },
+  "_UEConfig.CqHs9vc6.js": {
+    "file": "js/UEConfig.CqHs9vc6.js",
+    "name": "UEConfig",
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_vuetify.oRP6HbQw.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ],
+    "css": [
+      "css/UEConfig.TVeY1PfP.css"
+    ],
+    "assets": [
+      "fonts/fa-brands-400.D_cYUPeE.woff2",
+      "fonts/fa-brands-400.D1LuMI3I.ttf",
+      "fonts/fa-regular-400.BjRzuEpd.woff2",
+      "fonts/fa-regular-400.DZaxPHgR.ttf",
+      "fonts/fa-solid-900.CTAAxXor.woff2",
+      "fonts/fa-solid-900.D0aA9rwL.ttf",
+      "fonts/fa-v4compatibility.C9RhG_FT.woff2",
+      "fonts/fa-v4compatibility.CCth-dXg.ttf",
+      "fonts/materialdesignicons-webfont.ltXzaLmB.eot",
+      "fonts/materialdesignicons-webfont.B4kKRV84.woff2",
+      "fonts/materialdesignicons-webfont.a0GcWJ7o.woff",
+      "fonts/materialdesignicons-webfont.jCYKvYgh.ttf"
+    ]
+  },
+  "_awesome-phonenumber.6EcdwO3D.js": {
+    "file": "js/awesome-phonenumber.6EcdwO3D.js",
+    "name": "awesome-phonenumber",
+    "imports": [
+      "_vendor.B2nSWMRi.js"
+    ]
+  },
+  "_fine-uploader.BwvI3_t9.js": {
+    "file": "js/fine-uploader.BwvI3_t9.js",
+    "name": "fine-uploader",
+    "imports": [
+      "_vendor.B2nSWMRi.js"
+    ]
+  },
+  "_vendor.B2nSWMRi.js": {
+    "file": "js/vendor.B2nSWMRi.js",
+    "name": "vendor",
+    "imports": [
+      "_fine-uploader.BwvI3_t9.js"
+    ]
+  },
+  "_vuetify.!~{009}~.js": {
+    "file": "css/vuetify.Zvzm34mZ.css",
+    "src": "_vuetify.!~{009}~.js"
+  },
+  "_vuetify.oRP6HbQw.js": {
+    "file": "js/vuetify.oRP6HbQw.js",
+    "name": "vuetify",
+    "imports": [
+      "_vendor.B2nSWMRi.js"
+    ],
+    "css": [
+      "css/vuetify.Zvzm34mZ.css"
+    ]
+  },
+  "icons-theme.svg": {
+    "file": "assets/icons/svg-theme.blade.php",
+    "src": "icons-theme.svg"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
+    "file": "fonts/fa-brands-400.D1LuMI3I.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "fonts/fa-brands-400.D_cYUPeE.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
+    "file": "fonts/fa-regular-400.DZaxPHgR.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "fonts/fa-regular-400.BjRzuEpd.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "fonts/fa-solid-900.D0aA9rwL.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "fonts/fa-solid-900.CTAAxXor.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.ttf": {
+    "file": "fonts/fa-v4compatibility.CCth-dXg.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
+    "file": "fonts/fa-v4compatibility.C9RhG_FT.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot": {
+    "file": "fonts/materialdesignicons-webfont.ltXzaLmB.eot",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf": {
+    "file": "fonts/materialdesignicons-webfont.jCYKvYgh.ttf",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff": {
+    "file": "fonts/materialdesignicons-webfont.a0GcWJ7o.woff",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2": {
+    "file": "fonts/materialdesignicons-webfont.B4kKRV84.woff2",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
+  },
+  "src/js/core-auth.js": {
+    "file": "entries/core-auth.CBbw00gG.js",
+    "name": "core-auth",
+    "src": "src/js/core-auth.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_vuetify.oRP6HbQw.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ]
+  },
+  "src/js/core-dashboard.js": {
+    "file": "entries/core-dashboard.CN3fQPSx.js",
+    "name": "core-dashboard",
+    "src": "src/js/core-dashboard.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_vuetify.oRP6HbQw.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ]
+  },
+  "src/js/core-form.js": {
+    "file": "entries/core-form.CN3fQPSx.js",
+    "name": "core-form",
+    "src": "src/js/core-form.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_vuetify.oRP6HbQw.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ]
+  },
+  "src/js/core-free.js": {
+    "file": "entries/core-free.X6h-b-E1.js",
+    "name": "core-free",
+    "src": "src/js/core-free.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_vuetify.oRP6HbQw.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ]
+  },
+  "src/js/core-index.js": {
+    "file": "entries/core-index.CN3fQPSx.js",
+    "name": "core-index",
+    "src": "src/js/core-index.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_vuetify.oRP6HbQw.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ]
+  },
+  "src/js/core-inertia.js": {
+    "file": "entries/core-inertia.BtnVlgPc.js",
+    "name": "core-inertia",
+    "src": "src/js/core-inertia.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.B2nSWMRi.js",
+      "_UEConfig.CqHs9vc6.js",
+      "_vuetify.oRP6HbQw.js",
+      "_fine-uploader.BwvI3_t9.js",
+      "_awesome-phonenumber.6EcdwO3D.js"
+    ],
+    "css": [
+      "css/core-inertia.DhT7azqN.css"
+    ]
+  }
+}
