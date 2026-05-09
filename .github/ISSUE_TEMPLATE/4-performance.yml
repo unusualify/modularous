@@ -13,6 +13,19 @@ body:
       placeholder: Explain what performance problem you're experiencing...
     validations:
       required: true
+  - type: dropdown
+    id: affected_version
+    attributes:
+      label: "Affected version line"
+      description: >
+        Which maintained branch line does this affect (matches repo branches like 0.x, 11.x)?
+        GitHub issue forms cannot load tags/releases automatically; options are updated manually when support lines change.
+      options:
+        - "0.x"
+        - "10.x"
+        - "11.x"
+    validations:
+      required: true
   - type: textarea
     id: current_behavior
     attributes:

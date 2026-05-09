@@ -20,29 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.issue.labels.*.name, 'planned') &&
-      (contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'test'))
+      (contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'performance') || contains(github.event.issue.labels.*.name, 'test'))
     steps:
-      - name: Detect Version Label
-        id: version_detection
-        run: |
-          # Get all label names from the issue
-          LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
-          echo "All labels: $LABELS"
-
-          # Extract version label matching pattern [digit].x (e.g., 0.x, 1.x, 2.x)
-          VERSION_LABEL=$(echo "$LABELS" | jq -r '.[] | select(test("^[0-9]+\\.x$"))' | head -n 1)
-
-          if [ -n "$VERSION_LABEL" ]; then
-            echo "Found version label: $VERSION_LABEL"
-            echo "version_label=$VERSION_LABEL" >> $GITHUB_OUTPUT
-            echo "has_version=true" >> $GITHUB_OUTPUT
-          else
-            echo "No version label found"
-            echo "version_label=" >> $GITHUB_OUTPUT
-            echo "has_version=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Install GitHub CLI'
         run: |
           if ! command -v gh &> /dev/null; then
@@ -67,14 +46,59 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Parse Issue
+        if: |
+          contains(github.event.issue.labels.*.name, 'bug') ||
+          contains(github.event.issue.labels.*.name, 'performance')
+        uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+
+      - name: Print Issue Body
+        if: |
+          contains(github.event.issue.labels.*.name, 'bug') ||
+          contains(github.event.issue.labels.*.name, 'performance')
+        run: cat ${HOME}/issue-parser-result.json
+
+      - name: Detect version (labels or issue form)
+        id: version_detection
+        env:
+          PARSED: ${{ (contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'performance')) && steps.issue-parser.outputs.issueparser_affected_version || '' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
+          echo "All labels: $LABELS"
+
+          # Prefer an existing N.x label on the issue
+          VERSION_LABEL=$(echo "$LABELS" | jq -r '.[] | select(test("^[0-9]+\\.x$"))' | head -n 1)
+
+          # Else use bug/performance form field "Affected version line" parsed from the body
+          if [ -z "$VERSION_LABEL" ]; then
+            IS_BUG="${{ contains(github.event.issue.labels.*.name, 'bug') }}"
+            IS_PERF="${{ contains(github.event.issue.labels.*.name, 'performance') }}"
+            if { [ "$IS_BUG" = "true" ] || [ "$IS_PERF" = "true" ]; } && [ -n "$PARSED" ]; then
+              if echo "$PARSED" | grep -qE '^[0-9]+\.[xX]$'; then
+                VERSION_LABEL=$(echo "$PARSED" | tr '[:upper:]' '[:lower:]')
+                echo "Using parsed affected_version from issue form: $VERSION_LABEL"
+              fi
+            fi
+          fi
+
+          if [ -n "$VERSION_LABEL" ]; then
+            echo "Resolved version line: $VERSION_LABEL"
+            echo "version_label=$VERSION_LABEL" >> $GITHUB_OUTPUT
+            echo "has_version=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version label or form version found"
+            echo "version_label=" >> $GITHUB_OUTPUT
+            echo "has_version=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check Version Branch Existence
         id: version_branch
         if: steps.version_detection.outputs.has_version == 'true'
         run: |
           VERSION_LABEL="${{ steps.version_detection.outputs.version_label }}"
-
-          # Check if the branch exists
-          if git ls-remote --heads origin "$VERSION_LABEL" | grep -q "$VERSION_LABEL"; then
+          if gh api "repos/${{ github.repository }}/branches/${VERSION_LABEL}" --silent 2>/dev/null; then
             echo "Branch $VERSION_LABEL exists"
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "branch=$VERSION_LABEL" >> $GITHUB_OUTPUT
@@ -85,17 +109,6 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Parse Issue
-        if: contains(github.event.issue.labels.*.name, 'bug')
-        uses: stefanbuck/github-issue-parser@v3
-        id: issue-parser
-        # with:
-        #   template-path: .github/ISSUE_TEMPLATE/1-bug.yml # optional but recommended
-
-      - name: Print Issue Body
-        if: contains(github.event.issue.labels.*.name, 'bug')
-        run: cat ${HOME}/issue-parser-result.json
 
       - name: Extract Issue Details
         id: extract
@@ -141,6 +154,8 @@ jobs:
             else
               PREFIX="bugfix/"
             fi
+          elif [[ "${{ contains(github.event.issue.labels.*.name, 'performance') }}" == "true" ]]; then
+            PREFIX="perf/"
           elif [[ "${{ contains(github.event.issue.labels.*.name, 'test') }}" == "true" ]]; then
             PREFIX="test/"
           else
