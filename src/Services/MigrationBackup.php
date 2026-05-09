@@ -66,7 +66,7 @@ class MigrationBackup
                 }
 
                 // Get incoming foreign keys
-                $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+                $tables = Schema::getTableNames();
                 foreach ($tables as $otherTable) {
                     if ($otherTable === $table) {
                         continue;
@@ -409,7 +409,11 @@ class MigrationBackup
             return false;
         }
 
-        foreach ($backup['tables'] as $table => $tableData) {
+        // Tabloları dependency sırasına göre sırala (parent önce, child sonra)
+        $tables = $backup['tables'];
+        $sorted = $this->sortTablesByDependency($tables);
+
+        foreach ($sorted as $table => $tableData) {
             if (! Schema::hasTable($table)) {
                 continue;
             }
@@ -427,6 +431,36 @@ class MigrationBackup
         }
 
         return true;
+    }
+
+    protected function sortTablesByDependency(array $tables): array
+    {
+        $sorted = [];
+        $visited = [];
+
+        $visit = function (string $table) use (&$visit, &$sorted, &$visited, $tables) {
+            if (isset($visited[$table])) {
+                return;
+            }
+            $visited[$table] = true;
+
+            if (isset($tables[$table])) {
+                $foreignKeys = $tables[$table]['schema']['foreign_keys'] ?? [];
+                foreach ($foreignKeys as $fk) {
+                    $parentTable = $fk['foreign_table'];
+                    if (isset($tables[$parentTable]) && ! isset($visited[$parentTable])) {
+                        $visit($parentTable);
+                    }
+                }
+                $sorted[$table] = $tables[$table];
+            }
+        };
+
+        foreach (array_keys($tables) as $table) {
+            $visit($table);
+        }
+
+        return $sorted;
     }
 
     /**
