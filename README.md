@@ -38,7 +38,7 @@ Modularous is a Laravel and Vuetify powered, developer toolkit that aims to impr
 
 Modularous has the most extensive and thorough [documentation](https://modularous.unusualify.com).
 
-# Upgrade Guide
+## Upgrade Guide
 
 If you are upgrading from an older version of Modularous, please refer to our [Upgrade Guide](UPGRADE.md) for detailed instructions and automated scripts.
 
