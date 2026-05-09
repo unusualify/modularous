@@ -174,7 +174,7 @@ class CoverageService
     /**
      * Analyze files changed in git compared to base branch
      */
-    public function git(string $baseBranch = '0.x'): array
+    public function git(string $baseBranch = '11.x'): array
     {
         $changedFiles = $this->getGitChangedFiles($baseBranch);
 

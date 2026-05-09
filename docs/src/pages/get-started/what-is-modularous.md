@@ -35,7 +35,7 @@ Open a GitHub issue at [unusualify/modularous](https://github.com/unusualify/mod
 
 ## Future Work
 
-Planned improvements are tracked in the repository's GitHub Issues and Milestones. Community contributions are welcome — See [CONTRIBUTING.md](https://github.com/unusualify/modularous/blob/0.x/.github/CONTRIBUTING.md) in the repository for guidelines.
+Planned improvements are tracked in the repository's GitHub Issues and Milestones. Community contributions are welcome — See [CONTRIBUTING.md](https://github.com/unusualify/modularous/blob/11.x/.github/CONTRIBUTING.md) in the repository for guidelines.
 
 ## Main Contributors
 

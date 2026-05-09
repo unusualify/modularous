@@ -46,7 +46,7 @@
             "labels": [
               {"name": "test"},
               {"name": "planned"},
-              {"name": "0.x"}
+              {"name": "11.x"}
             ]
           },
           "severity": "Low"

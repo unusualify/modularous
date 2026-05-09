@@ -76,7 +76,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           # branch: ${{ github.event.inputs.major_version }}
-          branch: '0.x'
+          branch: '11.x'
           force: true
       - uses: oobook/autonomous-tag@v1
         id: tag-generation
