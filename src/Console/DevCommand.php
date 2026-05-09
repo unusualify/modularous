@@ -12,7 +12,7 @@ class DevCommand extends BaseCommand
     protected $signature = 'modularous:dev {--noInstall}';
 
     protected $aliases = [
-        'unusual:dev',
+        'modularity:dev',
     ];
 
     /**
