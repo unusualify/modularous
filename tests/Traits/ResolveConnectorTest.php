@@ -50,8 +50,8 @@ class ResolveConnectorTest extends TestModulesCase
 
     public function test_find_connector_repository_returns_repository_from_module(): void
     {
-        $mockModule = \Mockery::mock();
-        $mockRepo = \Mockery::mock(Repository::class);
+        $mockModule = \Mockery::mock(\Unusualify\Modularity\Module::class);
+        $mockRepo = \Mockery::mock(\Unusualify\Modularity\Repositories\Repository::class);
         $mockModule->shouldReceive('getRepository')->with('Payment')->once()->andReturn($mockRepo);
 
         Modularity::shouldReceive('findOrFail')->with('SystemPayment')->once()->andReturn($mockModule);
@@ -67,7 +67,7 @@ class ResolveConnectorTest extends TestModulesCase
         $mockRepo = \Mockery::mock(Repository::class);
         Modularity::shouldReceive('hasModule')->with('SystemPayment')->andReturn(true);
         Modularity::shouldReceive('find')->with('SystemPayment')->andReturnUsing(function () use ($mockRepo) {
-            $module = \Mockery::mock();
+            $module = \Mockery::mock(\Unusualify\Modularity\Module::class);
             $module->shouldReceive('hasRoute')->with('Payment')->andReturn(true);
             $module->shouldReceive('getRepository')->with('Payment', true)->andReturn($mockRepo);
 

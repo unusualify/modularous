@@ -26,7 +26,7 @@ class StateableHydrateTest extends TestCase
         ]);
 
         // Mock module
-        $moduleMock = m::mock();
+        $moduleMock = m::mock(\Unusualify\Modularity\Module::class);
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'repository')->andReturn(get_class($repositoryMock));
 
         Modularity::shouldReceive('find')

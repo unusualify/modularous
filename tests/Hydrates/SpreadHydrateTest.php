@@ -28,7 +28,7 @@ class SpreadHydrateTest extends TestCase
         ]);
         $modelMock->shouldReceive('getSpreadableSavingKey')->andReturn('spread_data');
 
-        $moduleMock = m::mock();
+        $moduleMock = m::mock(\Unusualify\Modularity\Module::class);
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'model')->andReturn(get_class($modelMock));
 
         Modularity::shouldReceive('find')

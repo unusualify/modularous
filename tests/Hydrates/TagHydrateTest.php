@@ -31,7 +31,7 @@ class TagHydrateTest extends TestCase
             }
         });
 
-        $moduleMock = m::mock();
+        $moduleMock = m::mock(\Unusualify\Modularity\Module::class);
         $moduleMock->shouldReceive('getRouteClass')->with('testRoute', 'repository')->andReturn(get_class($repositoryMock));
         $moduleMock->shouldReceive('getRouteActionUrl')->andReturn('/tags');
 

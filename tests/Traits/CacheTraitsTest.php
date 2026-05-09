@@ -329,14 +329,14 @@ class CacheTraitsTest extends TestCase
             use WarmupCache;
         };
 
-        $mockController = \Mockery::mock();
-        $mockRepo = \Mockery::mock();
+        $mockController = \Mockery::mock(\Unusualify\Modularity\Http\Controllers\BaseController::class);
+        $mockRepo = \Mockery::mock(\Unusualify\Modularity\Repositories\Repository::class);
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(false);
         $mockController->shouldReceive('getRepository')->andReturn($mockRepo);
         $mockController->shouldReceive('preload')->once();
         $mockController->shouldReceive('getMainCountsList')->andReturn([]);
 
-        $mockModule = \Mockery::mock();
+        $mockModule = \Mockery::mock(\Unusualify\Modularity\Module::class);
         $mockModule->shouldReceive('getRoute')->with('Post')->andReturn(true);
         $mockModule->shouldReceive('getController')->with('Post')->andReturn($mockController);
 
@@ -354,8 +354,8 @@ class CacheTraitsTest extends TestCase
             use WarmupCache;
         };
 
-        $mockController = \Mockery::mock();
-        $mockRepo = \Mockery::mock();
+        $mockController = \Mockery::mock(\Unusualify\Modularity\Http\Controllers\BaseController::class);
+        $mockRepo = \Mockery::mock(\Unusualify\Modularity\Repositories\Repository::class);
         $mockRepo->shouldReceive('shouldUseUserAwareCache')->andReturn(false);
         $mockController->shouldReceive('getRepository')->andReturn($mockRepo);
         $mockController->shouldReceive('preload')->once();
@@ -370,7 +370,7 @@ class CacheTraitsTest extends TestCase
         $mockController->shouldReceive('getFormattedIndexItem')->once();
         $mockController->shouldReceive('getFormItem')->once();
 
-        $mockModule = \Mockery::mock();
+        $mockModule = \Mockery::mock(\Unusualify\Modularity\Module::class);
         $mockModule->shouldReceive('getRoute')->with('Post')->andReturn(true);
         $mockModule->shouldReceive('getController')->with('Post')->andReturn($mockController);
 
