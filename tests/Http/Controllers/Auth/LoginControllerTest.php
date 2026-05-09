@@ -62,7 +62,7 @@ class LoginControllerTest extends AuthTestCase
     public function it_returns_logout_redirect(): void
     {
         $request = Request::create('/logout', 'POST');
-        $request->setLaravelSession(session());
+        $request->setLaravelSession(app('session.store'));
 
         $response = $this->controller->logout($request);
 
@@ -170,7 +170,7 @@ class LoginControllerTest extends AuthTestCase
             'email' => 'user@example.com',
             'password' => 'password',
         ]);
-        $request->setLaravelSession(session());
+        $request->setLaravelSession(app('session.store'));
 
         $reflection = new \ReflectionClass($this->controller);
         $method = $reflection->getMethod('authenticated');
@@ -198,7 +198,7 @@ class LoginControllerTest extends AuthTestCase
             'password' => 'password',
         ]);
         $request->headers->set('Accept', 'application/json');
-        $request->setLaravelSession(session());
+        $request->setLaravelSession(app('session.store'));
 
         $reflection = new \ReflectionClass($this->controller);
         $method = $reflection->getMethod('authenticated');
