@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $tagsTable = modularityConfig('tables.tags', 'modularity_tags');
+        $tagsTable = modularityConfig('tables.tags', 'um_tags');
 
         if (Schema::hasTable($tagsTable)) {
             Schema::table($tagsTable, function (Blueprint $table) use ($tagsTable) {
@@ -23,17 +23,17 @@ return new class extends Migration
 
     public function down()
     {
-        $tagsTable = modularityConfig('tables.tags', 'modularity_tags');
+        $tagsTable = modularityConfig('tables.tags', 'um_tags');
 
         if (Schema::hasTable($tagsTable)) {
             Schema::table($tagsTable, function (Blueprint $table) use ($tagsTable) {
-                if (Schema::hasColumn($tagsTable, 'locale')) {
-                    $table->dropColumn('locale');
-                }
                 // drop index if exists
                 try {
                     $table->dropIndex($tagsTable . '_ns_slug_locale_idx');
                 } catch (Throwable $e) {
+                }
+                if (Schema::hasColumn($tagsTable, 'locale')) {
+                    $table->dropColumn('locale');
                 }
             });
         }
