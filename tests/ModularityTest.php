@@ -43,13 +43,13 @@ class ModularityTest extends TestModulesCase
 
         $allModules = $modularity->all();
 
-        $this->assertArrayHasKey('SystemModule', $allModules);
-        $this->assertArrayHasKey('TestModule', $allModules);
+        $this->assertArrayHasKey('systemmodule', $allModules);
+        $this->assertArrayHasKey('testmodule', $allModules);
     }
 
     public function test_has_module()
     {
-        $this->assertTrue($this->modularity->has('SystemModule'));
+        $this->assertTrue($this->modularity->has('systemmodule'));
         $this->assertFalse($this->modularity->has('NonExistentModule'));
     }
 
@@ -62,8 +62,8 @@ class ModularityTest extends TestModulesCase
 
         $activeModules = $this->modularity->getByStatus(true);
 
-        $this->assertArrayHasKey('SystemModule', $activeModules);
-        $this->assertArrayNotHasKey('TestModule', $activeModules);
+        $this->assertArrayHasKey('systemmodule', $activeModules);
+        $this->assertArrayNotHasKey('testmodule', $activeModules);
     }
 
     public function test_development_production()
