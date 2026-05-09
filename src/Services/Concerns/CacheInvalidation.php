@@ -145,10 +145,15 @@ trait CacheInvalidation
      */
     public function invalidateByPattern(string $pattern): int
     {
-        // Pattern invalidation doesn't work with tagged caches
         if ($this->usesTags()) {
             logger()->warning('invalidateByPattern() called with tags enabled. This will not work for tagged keys. Use tag-based invalidation instead.');
+            return 0;
+        }
 
+        // Redis dışı driver'larda pattern invalidation desteklenmiyor
+        $driver = config('modularity.cache.driver', config('cache.default'));
+        if (! in_array($driver, ['redis', 'predis'])) {
+            logger()->warning("invalidateByPattern() is only supported with Redis. Current driver: {$driver}");
             return 0;
         }
 
@@ -156,7 +161,6 @@ trait CacheInvalidation
         $storePrefix = $this->getStore()->getStore()->getPrefix();
         $prefix = config('database.redis.options.prefix', '') . $storePrefix;
 
-        // Use Redis SCAN to find and delete keys matching the pattern
         try {
             $redis = Redis::connection('cache');
             $cursor = config('database.redis.client') == 'predis' ? '0' : null;
@@ -169,7 +173,6 @@ trait CacheInvalidation
 
                 if (! empty($keys)) {
                     foreach ($keys as $key) {
-                        // Remove the Redis prefix to get the cache key
                         $cacheKey = str_replace($prefix, '', $key);
                         $this->getStore()->forget($cacheKey);
                         $count++;
@@ -177,7 +180,6 @@ trait CacheInvalidation
                 }
             } while ($cursor != 0);
         } catch (\Exception $e) {
-            // Log error but don't throw - cache invalidation should be non-blocking
             logger()->warning('Cache pattern invalidation failed: ' . $e->getMessage());
         }
 
