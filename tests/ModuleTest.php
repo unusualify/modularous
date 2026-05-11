@@ -281,7 +281,7 @@ class ModuleTest extends TestCase
         // No routes are registered in test app, so getRouteActionUrl throws when no match
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Route not found');
-        $this->module->getRouteActionUrl('Item', 'index', [], false, true);
+        $this->module->getRouteActionUrl('Item', 'indexx', [], false, true);
     }
 
     public function test_get_parent_namespace(): void
