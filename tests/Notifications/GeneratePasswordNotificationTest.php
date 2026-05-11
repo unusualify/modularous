@@ -34,14 +34,12 @@ class GeneratePasswordNotificationTest extends TestCase
     /** @test */
     public function test_to_mail_returns_mail_message()
     {
-        Config::shouldReceive('get')
-            ->andReturnUsing(function ($key, $default = null) {
-                if ($key === 'app.name') {
-                    return 'Test App';
-                }
-
-                return $default;
-            });
+        // Set real config values instead of mocking the facade
+        config([
+            'app.name'            => 'Test App',
+            'app.locale'          => 'en',
+            'app.fallback_locale' => 'en',
+        ]);
 
         Lang::shouldReceive('get')
             ->andReturnUsing(function ($key, $params = []) {
@@ -59,14 +57,12 @@ class GeneratePasswordNotificationTest extends TestCase
     /** @test */
     public function test_build_mail_message_has_correct_subject()
     {
-        Config::shouldReceive('get')
-            ->andReturnUsing(function ($key, $default = null) {
-                if ($key === 'app.name') {
-                    return 'MyApp';
-                }
-
-                return $default;
-            });
+        // Set real config values instead of mocking the facade
+        config([
+            'app.name'            => 'MyApp',
+            'app.locale'          => 'en',
+            'app.fallback_locale' => 'en',
+        ]);
 
         Lang::shouldReceive('get')
             ->with('Generate Your Password For New Account')
