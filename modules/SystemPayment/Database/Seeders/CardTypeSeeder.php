@@ -7,10 +7,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\SystemPayment\Entities\CardType;
-use Modules\SystemPayment\Entities\PaymentCurrency;
 use Unusualify\Modularous\Entities\User;
 use Unusualify\Modularous\Facades\Modularous;
-use Unusualify\Modularous\Http\Controllers\MediaLibraryController;
+use Unusualify\Modularous\Http\Controllers\Utility\MediaLibraryController;
 use Unusualify\Modularous\Http\Requests\MediaRequest;
 
 class CardTypeSeeder extends Seeder

@@ -11,7 +11,7 @@ use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
 use Unusualify\Modularous\Entities\User;
 use Unusualify\Modularous\Facades\Modularous;
-use Unusualify\Modularous\Http\Controllers\MediaLibraryController;
+use Unusualify\Modularous\Http\Controllers\Utility\MediaLibraryController;
 use Unusualify\Modularous\Http\Requests\MediaRequest;
 
 class PaymentServiceSeeder extends Seeder
