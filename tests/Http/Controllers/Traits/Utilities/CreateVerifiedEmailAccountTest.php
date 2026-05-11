@@ -149,12 +149,6 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
 
     public function test_register_email()
     {
-        Event::fake([
-            ModularousUserRegistering::class,
-            ModularousUserRegistered::class,
-            VerifiedEmailRegister::class,
-        ]);
-
         $credentials = [
             'name' => 'Name',
             'surname' => 'Surname',
@@ -176,6 +170,26 @@ class CreateVerifiedEmailAccountTest extends ModelTestCase
         // Check password separately
         $user = DB::table(modularousConfig('tables.users', 'um_users'))->where('email', $credentials['email'])->first();
         $this->assertTrue(Hash::check($credentials['password'], $user->password));
+    }
+
+    public function test_register_email_events()
+    {
+        Event::fake([
+            ModularousUserRegistering::class,
+            ModularousUserRegistered::class,
+            VerifiedEmailRegister::class,
+        ]);
+
+        $credentials = [
+            'name' => 'Name',
+            'surname' => 'Surname',
+            'email' => 'email@email.com',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'company' => 'Test Company', // Add company for spread_payload test
+        ];
+
+        $this->controller->registerEmail($credentials);
 
         // Test that events were dispatched
         Event::assertDispatched(VerifiedEmailRegister::class);
