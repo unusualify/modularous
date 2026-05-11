@@ -509,4 +509,9 @@ trait TableItem
 
         return $paginator->toArray();
     }
+
+    public function addIndexAppendsTableItem(): array
+    {
+        return $this->getConfigFieldsByRoute('index_appends', []);
+    }
 }
