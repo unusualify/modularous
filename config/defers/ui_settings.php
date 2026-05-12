@@ -6,7 +6,7 @@ return [
     ],
     'sidebar' => [
         'width' => 264,
-        'expandHover' => 'hidden', // 'mini' | 'hidden'
+        'expandHover' => 'mini', // 'mini' | 'hidden'
         'expandOnHover' => true,
         'rail' => false,
         'location' => 'left', // 'left' | 'right'
