@@ -2,6 +2,24 @@
 
 All notable changes to `modularous` will be documented in this file
 
+## v11.0.1 - 2026-05-12
+
+### :rocket: Features
+
+- add method to retrieve index appends configuration by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/55826a8aa1bfe69c9894d2ae817c5fa52d1ca415
+- enhance setup command with repository and timeout options by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/04f2d0214220dd73d3a23341bc9789f9cd092236
+
+### :wrench: Bug Fixes
+
+- update sidebar expandHover setting to 'mini' by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/eeb1ab9254e8f756710cfd713874e41df702e866
+- update middleware references to include modularous prefix by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/867273e32ef08356a150e1398fc45f718d3ffc1b
+- update cache check to include console environment by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/4bd518c16ddbf043c89169b01fa49116b732a9b0
+- update parent segment trait and add database existence check by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/bea2e95cd2779bbd59d59697cd51e9de57323fab
+
+### :memo: Documentation
+
+- correct toolkit name in README from 'Modularty' to 'Modularous' by @oguzhanbukcuoglu in https://github.com/unusualify/modularous/commit/3cc29870dd9d8dfbd06157d4f09faa1eb9103baa
+
 ## v11.0.0 - 2026-05-09
 
 ### :rocket: Features
