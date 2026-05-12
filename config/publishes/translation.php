@@ -26,10 +26,10 @@ return [
         'middleware' => [
             'web',
             'modularous.auth:modularous',
-            'language',
+            'modularous.language',
             'auth',
-            'navigation',
-            'impersonate',
+            'modularous.navigation',
+            'modularous.impersonate',
         ],
     ],
 

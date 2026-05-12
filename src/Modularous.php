@@ -245,7 +245,7 @@ class Modularous extends FileRepository
      */
     public function all(): array
     {
-        if (! $this->config('cache.enabled')) {
+        if ($this->app->runningInConsole() || ! $this->config('cache.enabled')) {
             return $this->scan();
         }
 

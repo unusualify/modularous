@@ -18,6 +18,8 @@ class SetupModularousDevelopmentCommand extends BaseCommand
      */
     protected $signature = 'modularous:setup:development
         {branch? : The name of branch to work.}
+        {repo?=unusualify/modularous : The name of repository to work.}
+        {timeout?=240 : The timeout for the git clone command.}
     ';
 
     /**
@@ -67,9 +69,12 @@ class SetupModularousDevelopmentCommand extends BaseCommand
                 ],
             ],
         ];
+        $repo = $this->argument('repo') ?? 'unusualify/modularous';
+        $folderName = explode('/', $repo)[1];
+        $timeout = $this->argument('timeout') ?? 240;
 
         $composer['require'] = array_merge_recursive_preserve($composer['require'], [
-            'unusualify/modularous' => '*',
+            $repo => '*',
         ]);
 
         $packagesFolder = base_path('packages');
@@ -78,13 +83,28 @@ class SetupModularousDevelopmentCommand extends BaseCommand
             $this->laravel['files']->makeDirectory($packagesFolder);
         }
 
-        if ($this->laravel['files']->isDirectory(base_path('packages/modularous'))) {
+
+        if ($this->laravel['files']->isDirectory(base_path('packages/' . $folderName))) {
             $this->alert("Repository cannot be cloned! '" . base_path('packages/modularous') . "' folder already exists.");
 
             return 0;
         }
 
-        Process::timeout(120)->path(base_path('packages'))->run('git clone https://github.com/unusualify/modularous.git modularous');
+        $result = Process::timeout(240)
+            ->path(base_path('packages'))
+            ->run('git clone --progress https://github.com/' . $repo . '.git ' . $folderName, function (string $type, string $output) {
+                if ($type === 'err') {
+                    // git clone ilerleme bilgisini stderr'e yazar!
+                    $this->getOutput()->write("<comment>{$output}</comment>");
+                } else {
+                    $this->getOutput()->write($output);
+                }
+            });
+
+        if ($result->failed()) {
+            $this->alert("Repository couldn't be cloned! Try Later again.");
+            return 0;
+        }
 
         if (! $this->laravel['files']->isDirectory(base_path('packages/modularous'))) {
             $this->alert("Repository couldn't be cloned! Try Later again.");
@@ -92,9 +112,9 @@ class SetupModularousDevelopmentCommand extends BaseCommand
             return 0;
         }
 
-        Process::path(base_path('packages/modularous'))->run('git fetch');
+        Process::path(base_path('packages/' . $folderName))->run('git fetch');
 
-        $result = Process::path(base_path('packages/modularous'))->run("git checkout {$branch}");
+        $result = Process::path(base_path('packages/' . $folderName))->run("git checkout {$branch}");
 
         $this->info($result->output());
 

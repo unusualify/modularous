@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Modules\Cms\Entities\ParentSegment;
 use Modules\Cms\Http\Controllers\Front\CmsController;
 use Modules\Cms\Http\Controllers\Front\CmsPublicFrontController;
-use Unusualify\Modularous\Entities\Traits\HasParentSegment;
+use Modules\Cms\Entities\Concerns\HasParentSegment;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Module;
 
@@ -392,6 +392,10 @@ final class CmsFrontRouteRegistrar
     public static function resolveControllerClassOrNull(): ?string
     {
         if (! modularousConfig('cms_routing.public_pages_enabled', true)) {
+            return null;
+        }
+
+        if (! database_exists()) {
             return null;
         }
 
