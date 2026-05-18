@@ -40,6 +40,12 @@
     preserveInitialValues: {
       type: Boolean,
       default: true
+    },
+    recentItems: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   })
 
@@ -292,6 +298,19 @@
     if (!elements.value.length) {
       fetchInitialItems()
     }
+
+    // Seed the list with "recent" shortcuts when nothing else is showing.
+    // Skipped if the consumer has a current modelValue (fetchInitialItems
+    // will populate the list) or if results are already loaded.
+    if (!input.value && !elements.value.length && props.recentItems.length) {
+      setElements([...props.recentItems])
+    }
+  }
+
+  const isRecentItem = (item) => {
+    const latest = props.recentItems[0]
+    if (!latest) return false
+    return latest[props.itemValue] === item[props.itemValue]
   }
 
   const itemIsSelected = (item) => {
@@ -414,6 +433,27 @@
     }
   })
 
+    // When the search box is cleared after a query, the previous results
+  // (or a "No items found" empty list) would otherwise stay visible until
+  // the modal was closed and reopened. Restore the dialog's default view
+  // — recent items, initial selection, or empty — as soon as the input
+  // goes back to blank. Scoped to consumers that opt into recentItems so
+  // existing usages keep their prior behavior untouched.
+  watch(searchModel, (newVal, oldVal) => {
+    if (!dialog.value) return
+    if (!props.recentItems.length) return
+    if (!oldVal || (newVal && newVal.trim())) return
+
+    setActivePage(1)
+    setActiveLastPage(-1)
+
+    if (input.value) {
+      fetchInitialItems()
+    } else {
+      setElements([...props.recentItems])
+    }
+  })
+
   onMounted(() => {
     fetchInitialItems()
   })
@@ -500,6 +540,8 @@
               v-bind="$lodash.pick(boundProps, ['color'])"
               :variant="variant"
               :density="density"
+              clearable
+              clear-icon="mdi-close"
               @keyup.enter="performSearch"
               @click:append-inner="performSearch"
               append-inner-icon="mdi-magnify"
@@ -565,6 +607,14 @@
                       class="ml-2"
                     >
                       New
+                    </v-chip>
+                    <v-chip
+                      v-if="isRecentItem(item) && !isInitialItem(item)"
+                      color="blue-lighten-3"
+                      size="x-small"
+                      class="ml-2"
+                    >
+                      Recent
                     </v-chip>
                   </v-list-item-title>
                 </v-list-item>
