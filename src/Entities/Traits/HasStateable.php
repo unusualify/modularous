@@ -397,7 +397,10 @@ trait HasStateable
 
         $oldState = $this->state;
 
-        $this->stateable()->update(['state_id' => $newState->id]);
+        // only write on a real state change, so stateables.updated_at keeps marking when the current state started
+        $this->stateable()
+            ->where('state_id', '!=', $newState->id)
+            ->update(['state_id' => $newState->id]);
 
         // If the state has changed, dispatch the event
         if ($oldState && $oldState->code !== $newState->code) {
