@@ -146,7 +146,9 @@ export default {
     const valids = computed(() => allActions.value.map(action => true))
 
     const createModel = (schema, action) => {
-      const model = getModel(schema, props.modelValue)
+      // the parent item is used for checking conditions (e.g. is_chat_closed);
+      // the schema fields still win, and only schema fields are submitted
+      const model = { ...props.modelValue, ...getModel(schema, props.modelValue) }
       if (action.isEditing === false) {
         delete model.id
       }
