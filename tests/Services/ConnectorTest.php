@@ -519,10 +519,23 @@ class ConnectorTest extends TestModulesCase
 
         $events = $connector->getEvents();
 
-        // Should create default uri event
+        $this->assertEquals('uri', $connector->getTargetTypeKey());
+        $this->assertTrue($connector->isLinkTarget());
         $this->assertCount(1, $events);
-        $this->assertEquals('uri', $events[0]['name']);
-        $this->assertEquals(['index'], $events[0]['args']);
+        $this->assertEquals('getRouteActionUrl', $events[0]['name']);
+        $this->assertEquals(['Item', 'index'], $events[0]['args']);
+    }
+
+    /** @test */
+    public function it_runs_connector_without_second_part()
+    {
+        $connector = new Connector('TestModule|Item');
+
+        $item = [];
+        $result = $connector->run($item);
+
+        $this->assertIsString($result);
+        $this->assertEquals($result, $item['endpoint']);
     }
 
     /** @test */
