@@ -25,6 +25,8 @@ const mainStubs = {
   'ue-navigation-group': true,
   'ue-title': true,
   'ue-form': true,
+  'ue-broadcast-toasts': true,
+  'ue-retainable-notifications': true,
 }
 
 function createTestStore() {
