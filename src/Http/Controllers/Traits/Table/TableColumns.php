@@ -34,7 +34,7 @@ trait TableColumns
             return [];
         } else {
             $headers = Collection::make($this->getConfigFieldsByRoute('headers'))
-                ->map(fn ($item) => (object) [...(array) $item, 'visible' => true]);
+                ->map(fn ($item) => (object) [...(array) $item, 'visible' => ((array) $item)['visible'] ?? true]);
 
             $headers = method_exists($this, 'tableHeaders')
                 ? $this->tableHeaders($headers)

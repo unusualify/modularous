@@ -18,6 +18,7 @@ final class PaymentIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'price.priceable',
                 'itemTitle' => 'id',
                 'allowedRoles' => ['superadmin'],
+                'visible' => false,
                 'formatter' => [
                     'edit',
                 ],
@@ -28,6 +29,7 @@ final class PaymentIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'price',
                 'itemTitle' => 'priceable_type',
                 'allowedRoles' => ['superadmin'],
+                'visible' => false,
                 'groupable' => true,
                 'groupOrder' => 'asc',
                 // 'itemTitle' => 'content->headline',
@@ -37,6 +39,7 @@ final class PaymentIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'paymentable',
                 'itemTitle' => 'id',
                 'allowedRoles' => ['superadmin'],
+                'visible' => false,
             ],
             [
                 'title' => 'Company',
@@ -87,7 +90,6 @@ final class PaymentIndexColumns implements ModuleRouteHeadersProvider
             [
                 'title' => 'Created Time',
                 'key' => 'created_at',
-                'visible' => false,
                 'formatter' => [
                     'date',
                     'medium',
@@ -100,8 +102,9 @@ final class PaymentIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'updated_at',
                 'formatter' => [
                     'date',
-                    'long',
+                    'medium-time',
                 ],
+                'minWidth' => 120,
                 'searchable' => false,
                 'sortable' => true,
             ],

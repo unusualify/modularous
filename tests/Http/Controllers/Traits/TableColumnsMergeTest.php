@@ -73,4 +73,36 @@ class TableColumnsMergeTest extends TestCase
             array_map(fn ($h) => is_array($h) ? $h['key'] : $h->key, $merged),
         );
     }
+
+    public function test_index_table_columns_keep_configured_visibility(): void
+    {
+        $stub = new class
+        {
+            use TableColumns;
+
+            public $config = true;
+
+            public $module = null;
+
+            public $repository = null;
+
+            public function getConfigFieldsByRoute($key, $default = null)
+            {
+                return [
+                    ['key' => 'name'],
+                    ['key' => 'icon', 'visible' => false],
+                ];
+            }
+
+            protected function getHeader($header)
+            {
+                return $header;
+            }
+        };
+
+        $this->assertSame(
+            ['name' => true, 'icon' => false],
+            array_column($stub->getIndexTableColumns(), 'visible', 'key'),
+        );
+    }
 }

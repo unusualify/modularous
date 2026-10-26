@@ -248,7 +248,7 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return new Attribute(
             get: fn ($value) => $this->status
-                ? "<v-chip variant='text' color='{$this->status_color}' prepend-icon='{$this->status_icon}'>{$this->status_label}</v-chip>"
+                ? modularous_chip($this->status_label, $this->status_color, $this->status_icon)
                 : null
         );
     }

@@ -256,7 +256,7 @@
       <v-switch
         :model-value="resolvedValue"
         color="success"
-        :true-value="$lodash.isBoolean(resolvedValue) ? true : 0"
+        :true-value="$lodash.isBoolean(resolvedValue) ? true : 1"
         :false-value="$lodash.isBoolean(resolvedValue) ? false : 0"
         hide-details
         :readonly="groupContext"

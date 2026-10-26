@@ -70,6 +70,19 @@ Define `formatter` on a header object in your module config:
 ],
 ```
 
+`date` formats come from `datetimeFormats` in `vue/src/js/config/i18n.js`:
+
+| Format | en example |
+|---|---|
+| `numeric` | 3/20/2026 |
+| `numeric-full` | 3/20/2026, 8:43:58 AM |
+| `short` | Mar 20, 26 |
+| `medium` | Mar 20, 2026 |
+| `medium-time` | Mar 20, 2026, 8:43:58 AM |
+| `long` | Friday, March 20, 2026 at 8:43 AM |
+
+A header with `'visible' => false` stays available in the column picker but is hidden until the user enables it. Once the user saves a column selection for the page (localStorage `table_unvisible_columns_{path}`), that selection wins over the config.
+
 ## Render descriptor shape
 
 `handleFormatter` returns:
