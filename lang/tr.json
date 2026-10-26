@@ -16,6 +16,7 @@
     "Choose Date": "Tarih Seç",
     "CLIENTS": "MÜŞTERİLER",
     "COMPANIES": "ŞİRKETLER",
+    "Company": "Şirket",
     "Company Information": "Şirket Bilgileri",
     "Complete": "Tamamla",
     "Complete Request": "Talebi Tamamla",
@@ -42,6 +43,7 @@
 
     "Generate Password": "Şifre Oluştur",
     "Generate Your Password For New Account": "Yeni Hesap İçin Şifre Oluştur",
+    "Go to user": "Kullanıcıya git",
 
     "Hello!": "Merhaba!",
     "Hi :name,": "Merhaba :name,",

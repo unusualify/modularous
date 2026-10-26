@@ -13,6 +13,7 @@ return [
             'index' => [
                 'options' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexOptions::class,
                 'columns' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexColumns::class,
+                'with' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexWith::class,
             ],
             'form' => [
                 'inputs' => \Modules\SystemNotification\Blueprint\Notification\Form\NotificationFormInputs::class,

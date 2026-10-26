@@ -17,6 +17,7 @@
     "Choose Date": "Choose Date",
     "CLIENTS": "CLIENTS",
     "COMPANIES": "COMPANIES",
+    "Company": "Company",
     "Company Information": "Company Information",
     "Complete": "Complete",
     "Complete Request": "Complete Request",
@@ -43,6 +44,7 @@
 
     "Generate Password": "Generate Password",
     "Generate Your Password For New Account": "Generate Your Password For New Account",
+    "Go to user": "Go to user",
 
     "Hello!": "Hello!",
     "Hi :name,": "Hi :name,",

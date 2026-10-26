@@ -17,6 +17,7 @@ Renders a single cell in the data table, applying the correct formatter strategy
 | `'edit'` / `'activate'` | Clickable primary-colour text. Clicking calls `itemAction` |
 | `'switch'` | `v-switch` that calls `itemAction` on change |
 | `'dynamic'` | Delegates to `ue-dynamic-component-renderer` |
+| `['hoverCard', options]` | [`ue-hover-card`](./hover-card) with `options` as props; the cell value (a preloaded object) is the `item` |
 | Any other / array | Delegates to `ue-recursive-stuff` via `handleFormatter()` |
 
 ### Key Props

@@ -1,6 +1,7 @@
 <script setup>
   import { computed } from 'vue'
-  import { shorten } from '@/utils/helpers'
+  import { shorten, isObject } from '@/utils/helpers'
+  import HoverCard from '__components/shared/HoverCard.vue'
 
   /** Max length for `shorten` formatter in table group header row only (default column behavior unchanged). */
   const GROUP_TITLE_SHORTEN_FORMATTER_MAX = 40
@@ -94,6 +95,19 @@
     const f = props.col.formatter
     const head = Array.isArray(f) ? f[0] : f
     return head === 'edit' || head === 'activate'
+  })
+
+  /**
+   * `['hoverCard', { title, subtitle, avatar, fields, actions, ... }]` → HoverCard props.
+   * Rows already carry the eager-loaded object, so remote fetching options are dropped.
+   */
+  const hoverCardOptions = computed(() => {
+    const f = props.col.formatter
+    if (!Array.isArray(f) || !isObject(f[1])) {
+      return {}
+    }
+    const { endpoint, params, itemKey, ...options } = f[1]
+    return options
   })
 
   const formatterSpread = computed(() => {
@@ -272,6 +286,13 @@
       <ue-dynamic-component-renderer
         :subject="resolvedValue"
         :key="String(resolvedValue)"
+      />
+    </template>
+    <template v-else-if="formatterName === 'hoverCard'">
+      <HoverCard
+        v-bind="hoverCardOptions"
+        :item="isObject(resolvedValue) ? resolvedValue : null"
+        :open-on-hover="!disableTooltip && (hoverCardOptions.openOnHover ?? true)"
       />
     </template>
     <template v-else>
