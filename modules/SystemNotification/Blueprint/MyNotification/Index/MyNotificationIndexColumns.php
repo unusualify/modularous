@@ -45,8 +45,9 @@ final class MyNotificationIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'created_at',
                 'formatter' => [
                     'date',
-                    'long',
+                    'medium-time',
                 ],
+                'minWidth' => 120,
                 'searchable' => true,
             ],
             [

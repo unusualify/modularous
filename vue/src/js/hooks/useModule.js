@@ -76,6 +76,7 @@ export default function useModule (props, context) {
     ),
     transNamePlural: computed(() => t(tableTranslationNotation, 1)),
     permissionName: computed(() => _.kebabCase(props.isModuleRoute ? props.routeName : props.name)),
+    moduleTitle: computed(() => (props.titlePrefix ?? '') + (props.customTitle ?? state.transNamePlural)),
 
 
     // snakeName: _.snakeCase(props.name),

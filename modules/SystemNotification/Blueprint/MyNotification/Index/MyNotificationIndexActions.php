@@ -17,7 +17,7 @@ final class MyNotificationIndexActions implements ModuleRouteBlueprintProvider
                 'label' => __('Mark All as Read'),
                 'forceLabel' => true,
                 'icon' => 'mdi-check',
-                'color' => 'success',
+                'color' => 'primary-darken-1',
                 'variant' => 'outlined',
                 'density' => 'comfortable',
                 'href' => 'admin.system.system_notification.my_notification.bulkMarkRead',

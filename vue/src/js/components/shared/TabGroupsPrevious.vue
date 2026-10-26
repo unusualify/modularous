@@ -1,41 +1,43 @@
 <template>
-  <v-sheet class="fill-height">
+  <div class="ue-tab-groups d-flex flex-column fill-height">
 
-    <div class="py-4 d-flex justify-space-between flex-wrap ga-2">
+    <div class="ue-tab-groups__header d-flex justify-space-between align-start flex-wrap ga-2">
       <div class="flex-1-0" style="max-width: 100%;">
-        <ue-title :text="moduleTitle" :classes="[]" padding='a-0'></ue-title>
-        <ue-title class="text-wrap" v-if="subtitle" :text="subtitle" :classes="[]" padding='a-0' weight='regular' transform='none' type='subtitle-2'></ue-title>
+        <ue-title v-bind="titleAttributes" :text="moduleTitle"></ue-title>
+        <ue-title class="text-wrap" v-if="subtitle" v-bind="subtitleAttributes" :text="subtitle"></ue-title>
       </div>
-      <div v-if="!noSearch" class="flex-1-1">
-        <v-text-field
-          v-model="searchModel"
-          label="Search"
-          variant="outlined"
-          density="compact"
-          color="primary"
-          hide-details
-          style="min-width: 300px;"
-          @keydown.enter="enterSearch"
-          >
-          <template v-slot:append-inner>
-            <v-icon v-if="searchable" icon="mdi-magnify" variant="text" @click="enterSearch"></v-icon>
-          </template>
-        </v-text-field>
-      </div>
+      <v-text-field
+        v-if="!noSearch"
+        v-model="searchModel"
+        :placeholder="searchPlaceholder"
+        variant="outlined"
+        density="compact"
+        rounded="xl"
+        color="primary"
+        hide-details
+        single-line
+        class="ue-tab-groups__search flex-grow-0"
+        @keydown.enter="enterSearch"
+        >
+        <template v-slot:append-inner>
+          <v-btn :disabled="!searchable" icon="mdi-magnify" variant="plain" size="compact" color="grey-darken-5" rounded @click="enterSearch" />
+        </template>
+      </v-text-field>
     </div>
 
-    <v-divider></v-divider>
-    <div class="text-center pa-8" v-if="loading">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
-    <ue-tabs-previous v-else :items="groupedItems" v-model="activeTab">
-      <template v-for="(_, name) in $slots" v-slot:[name]="slotData"><slot :name="name" v-bind="slotData"></slot></template>
-    </ue-tabs-previous>
-  </v-sheet>
+    <v-sheet class="ue-tab-groups__card flex-grow-1">
+      <div class="text-center pa-8" v-if="loading">
+        <v-progress-circular
+          :size="50"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
+      <ue-tabs-previous v-else :items="groupedItems" v-model="activeTab">
+        <template v-for="(_, name) in $slots" v-slot:[name]="slotData"><slot :name="name" v-bind="slotData"></slot></template>
+      </ue-tabs-previous>
+    </v-sheet>
+  </div>
 </template>
 <script>
   import { get } from 'lodash-es'
@@ -43,6 +45,7 @@
     makeModuleProps,
     useModule,
   } from '@/hooks'
+  import { resolveTableTitleAttributes, resolveTableSubtitleAttributes } from '@/hooks/table/tableTitleAttributes'
 
   import api from '@/store/api/datatable'
 
@@ -110,6 +113,8 @@
 
       return {
         ...useModule(props, context),
+        titleAttributes: resolveTableTitleAttributes('outside'),
+        subtitleAttributes: resolveTableSubtitleAttributes('outside'),
       }
     },
     data () {
@@ -192,5 +197,37 @@
 </script>
 
 <style lang="sass">
+  .ue-tab-groups
+    &__header
+      padding-bottom: 16px
 
+    &__search
+      min-width: 200px
+      max-width: 300px
+
+    &__card
+      border: thin solid rgba(var(--v-border-color), var(--v-border-opacity))
+      border-radius: 12px
+      overflow: hidden
+
+      .v-window-item
+        padding: 8px 28px !important
+
+      .v-expansion-panel-title__overlay
+        display: none
+
+      .v-expansion-panel
+        border: thin solid rgba(var(--v-border-color), var(--v-border-opacity))
+        border-radius: 8px !important
+        background-color: rgb(var(--v-theme-surface))
+
+        &::after
+          display: none
+
+        .v-expansion-panel__shadow
+          display: none
+
+        &--active
+          border-color: rgb(var(--v-theme-primary-darken-1))
+          background-color: rgba(var(--v-theme-primary-darken-1), 0.06)
 </style>
