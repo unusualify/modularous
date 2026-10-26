@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Unusualify\Modularous\Services\MessageStage;
+use Unusualify\Modularous\Traits\Traitify;
 
 trait MakesResponses
 {
+    use Traitify;
+
     /**
      * @param string|null $back_link
      * @param array $params
