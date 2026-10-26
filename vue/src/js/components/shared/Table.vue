@@ -1011,9 +1011,9 @@
                     :disabled="isTableBusy"
                     @click="itemAction(item, action)"
                     >
-                      <v-icon small :color="action.iconColor" left>
-                        {{ action.icon }}
-                      </v-icon>
+                      <template v-if="action.icon" #prepend>
+                        <v-icon size="small" :color="action.menuIconColor ?? action.iconColor" :icon="action.icon" />
+                      </template>
                       {{ $t( action.label ) }}
                   </v-list-item>
                 </template>

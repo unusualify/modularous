@@ -482,11 +482,16 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
         action.componentProps = componentProps
         action.label = action.label ?? headline(action.name)
 
+        // `iconColor` styles the icon inside a filled v-btn (often white); dropdown items sit on the menu surface.
+        const menuIconColor = action.menuIconColor
+          ?? (component === 'v-btn' ? (action.color ?? 'primary') : iconColor)
+
         acc.push({
           ...action,
           is: component,
           icon,
           iconColor,
+          menuIconColor,
           hasTooltip,
         })
 

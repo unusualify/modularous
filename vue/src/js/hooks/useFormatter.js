@@ -111,10 +111,8 @@ export default function useFormatter (props, context, headers = null) {
           tag: 'v-icon',
           attributes : {
             size: 'small',
-            style: {
-              color: trueValue ? 'green' : 'red'
-            },
-            icon: trueValue ? 'mdi-check' : 'mdi-close'
+            color: trueValue ? 'success' : 'error',
+            icon: trueValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'
           },
         }
 

@@ -169,16 +169,16 @@ describe('useFormatter', () => {
     const wrapper = await factory()
     for (const val of [true, 'true', 1, '1']) {
       const result = wrapper.vm.statusFormatter(val)
-      expect(result.configuration.attributes.icon).toBe('mdi-check')
-      expect(result.configuration.attributes.style.color).toBe('green')
+      expect(result.configuration.attributes.icon).toBe('mdi-check-circle-outline')
+      expect(result.configuration.attributes.color).toBe('success')
     }
   })
 
   test('statusFormatter returns close icon for falsy', async () => {
     const wrapper = await factory()
     const result = wrapper.vm.statusFormatter(false)
-    expect(result.configuration.attributes.icon).toBe('mdi-close')
-    expect(result.configuration.attributes.style.color).toBe('red')
+    expect(result.configuration.attributes.icon).toBe('mdi-close-circle-outline')
+    expect(result.configuration.attributes.color).toBe('error')
   })
 
   test('shortenFormatter shortens value', async () => {

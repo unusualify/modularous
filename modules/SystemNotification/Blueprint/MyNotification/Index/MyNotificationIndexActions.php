@@ -18,7 +18,7 @@ final class MyNotificationIndexActions implements ModuleRouteBlueprintProvider
                 'forceLabel' => true,
                 'icon' => 'mdi-check',
                 'color' => 'primary-darken-1',
-                'variant' => 'outlined',
+                'variant' => 'flat',
                 'density' => 'comfortable',
                 'href' => 'admin.system.system_notification.my_notification.bulkMarkRead',
                 'target' => '_self',
