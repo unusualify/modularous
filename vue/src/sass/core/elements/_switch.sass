@@ -1,0 +1,36 @@
+@use '../abstract' as *
+
+// Pill track with a small inner thumb. Thumb stays white only with `inset`
+// (VSwitch default in plugins/vuetify.js); without it Vuetify paints the thumb
+// with the color class.
+.v-switch:not(.v-switch--indeterminate)
+  --v-switch-track-height: #{$ue-switch-track-height}
+  --v-switch-thumb-height: #{$ue-switch-thumb-size}
+  --v-switch-thumb-width: #{$ue-switch-thumb-size}
+  --v-switch-inset-thumb-off-scale: 1
+  --ue-switch-thumb-shift: #{$ue-switch-track-width * .5 - $ue-switch-thumb-offset - $ue-switch-thumb-size * .5}
+
+  .v-switch__track
+    min-width: $ue-switch-track-width
+    padding: 0
+    opacity: 1
+    background-color: $ue-switch-track-background
+
+  .v-selection-control--dirty .v-switch__track
+    background-color: $ue-switch-track-active-background
+
+  .v-switch__thumb
+    box-shadow: none
+
+  .v-selection-control__input
+    transform: translateX(calc(var(--ue-switch-thumb-shift) * -1))
+
+  .v-selection-control--dirty .v-selection-control__input
+    transform: translateX(var(--ue-switch-thumb-shift))
+
+.v-locale--is-rtl .v-switch:not(.v-switch--indeterminate)
+  .v-selection-control__input
+    transform: translateX(var(--ue-switch-thumb-shift))
+
+  .v-selection-control--dirty .v-selection-control__input
+    transform: translateX(calc(var(--ue-switch-thumb-shift) * -1))

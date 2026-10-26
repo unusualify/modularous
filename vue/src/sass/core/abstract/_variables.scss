@@ -117,6 +117,13 @@ $sidebar-user-name-font-size: 1.25rem !default;
 $sidebar-scrollbar-width: 4px !default;
 $sidebar-scrollbar-thumb-color: rgba(var(--v-theme-on-surface), 0.2) !default;
 
+$ue-switch-track-width: 34px !default;
+$ue-switch-track-height: 20px !default;
+$ue-switch-thumb-size: 10px !default;
+$ue-switch-thumb-offset: 5px !default;
+$ue-switch-track-background: rgba(var(--v-theme-on-surface), 0.24) !default;
+$ue-switch-track-active-background: rgb(var(--v-theme-primary)) !default;
+
 $stepper-form-summary-final-background: #005868 !default;
 
 /* STEPPER — header surface (VStepperHeader has no Vuetify props; styled via core/components/VStepper.sass) */

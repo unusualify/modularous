@@ -91,6 +91,9 @@ const baseDefaults = {
   VImgIcon: {
     height: '2.5rem',
   },
+  VSwitch: {
+    inset: true
+  },
   VRowSecondary: {
     'class': 'v-row-secondary'
   },
