@@ -464,7 +464,7 @@
       }
     },
     setup (props, context) {
-      const { invokeRule } = useValidation()
+      const { invokeRule } = useValidation(props)
       return {
         ...useInput(props, context),
         invokeRule
