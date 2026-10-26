@@ -132,20 +132,20 @@ trait ModelHelpers
 
     public function setStateablePreview(State $state)
     {
-        return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
+        return modularous_chip((string) $state->translatedAttribute('name', app()->getLocale()), $state->color, $state->icon);
     }
 
     public function setStateablePreviewNull()
     {
-        return "<v-chip  color='' prepend-icon=''>" . __('No Status') . '</v-chip>';
+        return modularous_chip(__('No Status'));
     }
 
     public function setStateFormatted($state)
     {
         if ($state) {
-            return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
+            return modularous_chip((string) $state->translatedAttribute('name', app()->getLocale()), $state->color, $state->icon);
         } else {
-            return "<v-chip variant='text' color='grey' prepend-icon='mdi-alert-circle-outline'>" . __('No Status') . '</v-chip>';
+            return modularous_chip(__('No Status'), 'grey', 'mdi-alert-circle-outline');
         }
     }
 

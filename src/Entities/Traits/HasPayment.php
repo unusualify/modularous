@@ -342,41 +342,16 @@ trait HasPayment
     {
         return Attribute::make(
             get: function ($value) {
-                $color = 'grey';
-                $label = '';
-                switch (true) {
-                    case $this->is_refunded:
-                        $color = 'error';
-                        $label = __(PaymentStatus::REFUNDED->label());
+                [$label, $color, $icon] = match (true) {
+                    $this->is_refunded => [__(PaymentStatus::REFUNDED->label()), 'error', 'mdi-cash-refund'],
+                    $this->is_provided => [__(PaymentStatus::PROVISION->label()), 'info', 'mdi-clock-outline'],
+                    $this->is_paid => [__('Paid'), 'success', 'mdi-check-circle-outline'],
+                    $this->is_partially_paid => [__('Partially Paid'), 'warning', 'mdi-circle-half-full'],
+                    $this->is_unpaid => [__('Unpaid'), 'error', 'mdi-close-circle-outline'],
+                    default => [__('Not Ready'), 'grey', 'mdi-minus-circle-outline'],
+                };
 
-                        break;
-                    case $this->is_provided:
-                        $color = 'info';
-                        $label = __(PaymentStatus::PROVISION->label());
-
-                        break;
-                    case $this->is_paid:
-                        $color = 'success';
-                        $label = __('Paid');
-
-                        break;
-                    case $this->is_partially_paid:
-                        $color = 'warning';
-                        $label = __('Partially Paid');
-
-                        break;
-                    case $this->is_unpaid:
-                        $color = 'error';
-                        $label = __('Unpaid');
-
-                        break;
-                    default:
-                        $label = __('Not Ready');
-
-                        break;
-                }
-
-                return '<v-chip color="' . $color . '">' . $label . '</v-chip>';
+                return modularous_chip($label, $color, $icon);
             },
         );
     }

@@ -149,9 +149,10 @@ class ModelHelpersTest extends ModelTestCase
 
         $preview = $model->setStateablePreview($state);
 
-        $this->assertStringContainsString("color='green'", $preview);
-        $this->assertStringContainsString("prepend-icon='mdi-check-circle'", $preview);
+        $this->assertStringContainsString('color="green"', $preview);
+        $this->assertStringContainsString('prepend-icon="mdi-check-circle"', $preview);
         $this->assertStringContainsString('In Review', $preview);
+        $this->assertStringNotContainsString('variant=', $preview);
     }
 
     public function test_set_stateable_preview_null()
@@ -161,8 +162,8 @@ class ModelHelpersTest extends ModelTestCase
         $preview = $model->setStateablePreviewNull();
 
         $this->assertStringContainsString('No Status', $preview);
-        $this->assertStringContainsString("color=''", $preview);
-        $this->assertStringContainsString("prepend-icon=''", $preview);
+        $this->assertStringNotContainsString('color=', $preview);
+        $this->assertStringNotContainsString('prepend-icon=', $preview);
     }
 
     public function test_set_state_formatted_with_state()
@@ -180,8 +181,8 @@ class ModelHelpersTest extends ModelTestCase
 
         $formatted = $model->setStateFormatted($state);
 
-        $this->assertStringContainsString("color='blue'", $formatted);
-        $this->assertStringContainsString("prepend-icon='mdi-publish'", $formatted);
+        $this->assertStringContainsString('color="blue"', $formatted);
+        $this->assertStringContainsString('prepend-icon="mdi-publish"', $formatted);
         $this->assertStringContainsString('Published', $formatted);
     }
 
@@ -192,8 +193,8 @@ class ModelHelpersTest extends ModelTestCase
         $formatted = $model->setStateFormatted(null);
 
         $this->assertStringContainsString('No Status', $formatted);
-        $this->assertStringContainsString("color='grey'", $formatted);
-        $this->assertStringContainsString("prepend-icon='mdi-alert-circle-outline'", $formatted);
+        $this->assertStringContainsString('color="grey"', $formatted);
+        $this->assertStringContainsString('prepend-icon="mdi-alert-circle-outline"', $formatted);
     }
 
     public function test_get_activity_log_options_basic()

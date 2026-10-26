@@ -119,11 +119,9 @@ class Company extends Model
     {
         return new Attribute(
             get: function ($value) {
-                $label = $this->is_valid ? 'Yes' : 'No';
-                $color = $this->is_valid ? 'success' : 'error';
-                $icon = $this->is_valid ? 'mdi-check' : 'mdi-close';
-
-                return "<v-chip color='{$color}' prepend-icon='{$icon}' variant='text' >{$label}</v-chip>";
+                return $this->is_valid
+                    ? modularous_chip(__('Yes'), 'success', 'mdi-check')
+                    : modularous_chip(__('No'), 'error', 'mdi-close');
             },
         );
     }

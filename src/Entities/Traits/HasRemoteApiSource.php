@@ -138,10 +138,8 @@ trait HasRemoteApiSource
     {
         if ($syncedAt === null) {
             $tooltip = e(__('messages.remote-api.last-sync.never'));
-            $label = e(__('messages.remote-api.last-sync.never-label'));
-
             return "<v-tooltip text=\"{$tooltip}\" location=\"top\">"
-                . "<v-chip color=\"secondary\" prepend-icon=\"mdi-sync-off\" variant=\"text\">{$label}</v-chip>"
+                . modularous_chip(__('messages.remote-api.last-sync.never-label'), 'secondary', 'mdi-sync-off')
                 . '</v-tooltip>';
         }
 
@@ -150,10 +148,8 @@ trait HasRemoteApiSource
             ->format('Y-m-d H:i');
 
         $tooltip = e(__('messages.remote-api.last-sync.synced', ['at' => $formatted]));
-        $label = e($formatted);
-
         return "<v-tooltip text=\"{$tooltip}\" location=\"top\">"
-            . "<v-chip color=\"success\" prepend-icon=\"mdi-sync\" variant=\"text\">{$label}</v-chip>"
+            . modularous_chip($formatted, 'success', 'mdi-sync')
             . '</v-tooltip>';
     }
 

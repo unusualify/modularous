@@ -264,8 +264,8 @@ class HasStateableTest extends ModelTestCase
 
         $formatted = $model->state_formatted;
 
-        $this->assertStringContainsString("color='success'", $formatted);
-        $this->assertStringContainsString("prepend-icon='\$publish'", $formatted);
+        $this->assertStringContainsString('color="success"', $formatted);
+        $this->assertStringContainsString('prepend-icon="$publish"', $formatted);
         $this->assertStringContainsString('Published', $formatted);
     }
 

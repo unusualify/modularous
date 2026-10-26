@@ -419,7 +419,7 @@ trait HasCaching
 
         $tooltipAttr = e($tooltip);
 
-        return "<v-tooltip text=\"{$tooltipAttr}\" location=\"top\"><v-chip color=\"{$color}\" prepend-icon=\"{$icon}\" variant=\"text\">{$chipLabel}</v-chip></v-tooltip>";
+        return "<v-tooltip text=\"{$tooltipAttr}\" location=\"top\">" . modularous_chip($chipLabel, $color, $icon) . '</v-tooltip>';
     }
 
     protected function formatPresentationItemExpiryLabel(?int $timestamp): ?string
