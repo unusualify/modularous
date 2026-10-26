@@ -50,6 +50,7 @@
     "If you did not create an account, no further action is required.": "Hesap oluşturmadıysanız, herhangi bir işlem yapmanız gerekli değildir.",
     "If you did not request a password reset, no further action is required.": "Şifre sıfırlama talebinde bulunmadıysanız, herhangi bir işlem yapmanız gerekli değildir",
     "Invalid email format": "Geçersiz e-posta formatı",
+    "Items per page": "Sayfa başına satır",
 
     "LANGUAGES": "DİLLER",
     "Loading... Please wait": "Yükleniyor, lütfen bekleyin...",
@@ -63,6 +64,7 @@
     "No data available": "Veri bulunamadı",
     "NOTIFICATIONS": "BİLDİRİMLER",
 
+    "of": "/",
     "or": "veya",
     "Open": "Aç",
     "Open chat": "Sohbeti Aç",

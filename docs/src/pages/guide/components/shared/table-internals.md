@@ -69,3 +69,30 @@ A standalone row of action buttons rendered in the table toolbar or below the ta
 | Slot | Description |
 |------|-------------|
 | `prepend` | Content placed before the action buttons |
+
+---
+
+## `TablePaginationFooter` (table/TablePaginationFooter.vue)
+
+Desktop footer used by `tableLayout: 'card'`: `Items per page` selector, `page of N` text and a first/prev/next/last pagination with an outlined active page. Inside-title card tables (dashboard widgets) render only the centered pagination.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `page` | `Number` | `1` | Current page |
+| `pageCount` | `Number` | `1` | Total pages (values below 1 render as 1) |
+| `itemsPerPage` | `Number` | `10` | Selected page size |
+| `itemsPerPageOptions` | `Array` | `[]` | `{ title, value }` options; empty hides the selector |
+| `totalVisible` | `Number\|String` | `5` | Visible page buttons |
+| `hideItemsPerPage` | `Boolean` | `false` | Hide the page-size selector |
+| `hidePageInfo` | `Boolean` | `false` | Hide the `page of N` text |
+| `justify` | `String` | `end` | `start`, `center`, `end` or `space-between` |
+| `loading` | `Boolean` | `false` | Disable controls while the table loads |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:page` | `Number` | Page changed |
+| `update:itemsPerPage` | `Number` | Page size changed (the table resets to page 1) |

@@ -20,7 +20,7 @@ import { makeTableItemActionsProps } from '@/hooks/table/useTableItemActions'
 |------|------|---------|-------------|
 | `isRowEditing` | `Boolean` | — | Whether the row is currently being inline-edited |
 | `hideMobileActions` | `Boolean` | `false` | Hide action buttons on mobile |
-| `rowActionsIcon` | `String` | `'mdi-cog-outline'` | Icon for the dropdown trigger button |
+| `rowActionsIcon` | `String` | `'$list'` | Icon for the dropdown trigger (`rowActionsType: 'dropdown'`), e.g. `'mdi-dots-horizontal-circle-outline'` |
 | `rowActions` | `Array\|Object` | `[]` | Action definitions for each row |
 | `rowActionsType` | `String` | `'inline'` | `'inline'` renders icons; `'dropdown'` renders a menu |
 | `iteratorType` | `String` | `''` | Set to `'iterator'` when used in card/list view |

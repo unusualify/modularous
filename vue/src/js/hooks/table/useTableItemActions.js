@@ -25,7 +25,7 @@ export const makeTableItemActionsProps = propsFactory({
   },
   rowActionsIcon:{
     type: String,
-    default: 'mdi-cog-outline'
+    default: '$list'
   },
   rowActions: {
     type: [Array, Object],

@@ -1,10 +1,14 @@
 <template>
   <v-sheet fluid v-resize="onResize"
+    :border="isTitleOutside ? false : (isCardLayout ? 'sm' : undefined)"
+    :rounded="isTitleOutside ? 0 : (isCardLayout ? 'lg' : undefined)"
     :class="[
-      noFullScreen ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
-      surfaceClasses,
+      noFullScreen || isTitleOutside ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
+      isTitleOutside
+        ? 'bg-transparent ue-table-layout--title-outside'
+        : (isCardLayout ? 'bg-surface elevation-0 overflow-hidden ue-table-layout--card' : surfaceClasses),
     ]"
-    :style="noFullScreen
+    :style="noFullScreen || isTitleOutside
       ? 'min-height: 0; max-height: 100%;'
       : ($vuetify.display.lgAndUp ? 'max-height: calc(100vh - 48px)' : 'max-height: calc(100vh - 24px - 64px)')"
     >
@@ -23,13 +27,18 @@
           'bg-transparent',
           $store.getters.isSuperAdmin && showSelect ? 'ue-table--has-row-select' : '',
           controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'ue-datatable--bottom-controls' : '',
-          fixedLastColumn ? 'ue-datatable--fixed-last-column' : '',
+          fixedLastColumn && (!isCardLayout || headersForDataTable.at(-1)?.key === 'actions') ? 'ue-datatable--fixed-last-column' : '',
           fullWidthWrapper ? '' : 'ue-table--narrow-wrapper',
-          hideBorderRow ? 'ue-datatable--no-border-row' : '',
+          hideBorderRow && !isCardLayout ? 'ue-datatable--no-border-row' : '',
           isDraggableActive ? 'ue-table--draggable' : '',
           options.groupBy?.length ? 'ue-table--has-group-by' : '',
-          roundedRows ? 'ue-datatable--rounded-row' : '',
-          noFullScreen ? 'px-4 d-flex flex-column flex-grow-1 min-height-0' : 'px-4 h-100',
+          roundedRows && !isCardLayout ? 'ue-datatable--rounded-row' : '',
+          isCardLayout ? 'ue-table--card' : '',
+          isTitleOutside
+            ? 'ue-table--title-outside d-flex flex-column flex-grow-1 min-height-0'
+            : (isCardLayout
+              ? (noFullScreen ? 'ue-table--card-inside d-flex flex-column flex-grow-1 min-height-0' : 'ue-table--card-inside h-100')
+              : (noFullScreen ? 'px-4 d-flex flex-column flex-grow-1 min-height-0' : 'px-4 h-100')),
           striped ? 'ue-datatable--striped' : '',
           tableClasses,
         ]"
@@ -51,9 +60,11 @@
         :item-title="titleKey"
         ref="datatable"
 
-        :height="noFullScreen
-          ? '100%'
-          : (windowSize.y - 64 - 48 - 59 - (hideTableFooter ? 0 : 76) - ($vuetify.display.mdAndDown ? 80 : 0))"
+        :height="isTitleOutside
+          ? undefined
+          : (noFullScreen
+            ? '100%'
+            : (windowSize.y - 64 - 48 - 59 - (hideTableFooter ? 0 : 76) - ($vuetify.display.mdAndDown ? 80 : 0)))"
 
         :hide-default-header="hideHeaders || ($vuetify.display.smAndDown && !showMobileHeaders)"
         :hide-default-body="isDraggableActive"
@@ -82,7 +93,7 @@
           <v-toolbar
             v-bind="toolbarOptions"
             :class="[
-              'pt-3',
+              isTitleOutside ? 'ue-table__toolbar--outside' : (isCardLayout ? 'ue-table__toolbar--card' : 'pt-3'),
               $vuetify.display.smAndUp ? 'd-flex' : '',
             ]"
           >
@@ -95,19 +106,13 @@
             >
               <!-- title -->
               <ue-title
-                type="subtitle-1"
-                color="black"
+                v-bind="tableTitleAttributes"
                 :text="tableTitle"
-                padding="a-0"
               />
               <!-- subtitle -->
               <ue-title
                 v-if="tableSubtitle"
-                type="caption"
-                weight="medium"
-                color="grey-darken-1"
-                transform="none"
-                padding="a-0"
+                v-bind="tableSubtitleAttributes"
                 :text="tableSubtitle"
               />
             </div>
@@ -119,7 +124,7 @@
               <div
                 key='table-controls'
                 :class="[
-                  'd-flex ga-2 align-md-center',
+                  'ue-table__controls d-flex ga-2 align-md-center',
                   controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'mb-2' : 'flex-1-1-100 justify-end',
                   $vuetify.display.smAndDown ? 'flex-column' : '',
                 ]"
@@ -152,15 +157,17 @@
                     hide-details
                     density="compact"
                     single-line
+                    :rounded="isCardLayout ? 'xl' : undefined"
                     :placeholder="searchPlaceholder"
                     :class="[
+                      'ue-table__search',
                       controlsPosition === 'bottom' || !$vuetify.display.xs ? 'flex-sm-grow-1' : '',
                     ]"
                     :style="[
                       'display: inline',
                       // controlsPosition === 'top' || $vuetify.display.smAndDown ? 'max-width: 300px' : '',
                       'min-width: 200px',
-                      !(controlsPosition === 'bottom' || $vuetify.display.smAndDown) ? 'max-width: 250px' : '',
+                      !(controlsPosition === 'bottom' || $vuetify.display.smAndDown) ? `max-width: ${isCardLayout ? 300 : 250}px` : '',
                     ]"
                     @click:append-inner="searchItems"
                     :disabled="isTableBusy"
@@ -214,6 +221,7 @@
                         </v-list>
                       </v-menu>
 
+                      <div v-if="isCardLayout" :data-ue-advanced-filter="id" style="display: contents" />
                     </template>
                     <template #append>
                       <!-- create button -->
@@ -223,7 +231,7 @@
                         @click="createForm"
                         :icon="$vuetify.display.smAndDown ? addBtnOptions['prepend-icon'] : null"
                         :text="$vuetify.display.smAndDown ? null : addBtnTitle"
-                        :prepend-icon="$vuetify.display.smAndDown ? null : addBtnOptions['prepend-icon']"
+                        :prepend-icon="$vuetify.display.smAndDown || isCardLayout ? null : addBtnOptions['prepend-icon']"
                         :density="$vuetify.display.smAndDown ? 'compact' : (addBtnOptions['density'] ?? 'comfortable')"
                       />
                     </template>
@@ -242,11 +250,12 @@
             reverse
           ></v-progress-linear>
 
-          <v-divider v-else-if="controlsPosition === 'top' && $vuetify.display.mdAndUp" class="mb-2 mt-2"></v-divider>
+          <v-divider v-else-if="controlsPosition === 'top' && $vuetify.display.mdAndUp && !isCardLayout" class="mb-2 mt-2"></v-divider>
 
-          <div class="d-flex mb-2">
+          <div :class="['d-flex', isCardLayout ? 'ue-table__advanced-filter-row' : 'mb-2']">
             <!-- advanced filter menu -->
             <!-- Active filters chips (place this before or after the filter button) -->
+            <Teleport defer :to="`[data-ue-advanced-filter='${id}']`" :disabled="!isCardLayout || someSelected">
             <v-menu
               v-model="advancedFilterMenuOpen"
               :close-on-content-click="false"
@@ -384,6 +393,7 @@
                 </v-card-actions>
               </v-card>
             </v-menu>
+            </Teleport>
             <div v-if="activeFilterCount > 0" class="d-flex flex-wrap ga-2 mb-2 ml-2">
               <template v-for="(categoryFilters, category) in activeAdvancedFilters" :key="category">
                 <v-chip
@@ -697,6 +707,24 @@
         <!-- MARK PAGINATION BUTTONS -->
         <template v-if="hideTableFooter" v-slot:bottom="{page, pageCount}">
         </template>
+        <template
+          v-else-if="isCardLayout && !$vuetify.display.smAndDown && paginationOptions.footerComponent !== 'infiniteScroll'"
+          v-slot:bottom
+        >
+          <TablePaginationFooter
+            class="ue-table__footer"
+            :hide-items-per-page="!isTitleOutside"
+            :hide-page-info="!isTitleOutside"
+            :justify="isTitleOutside ? 'end' : 'center'"
+            :page="options.page"
+            :page-count="totalNumberOfPages"
+            :items-per-page="options.itemsPerPage"
+            :items-per-page-options="itemsPerPageOptions"
+            :loading="isTableBusy"
+            @update:page="options.page = $event"
+            @update:items-per-page="options.itemsPerPage = $event; options.page = 1"
+          />
+        </template>
         <template v-else-if="enableCustomFooter || $vuetify.display.smAndDown" v-slot:bottom="{page, pageCount}">
           <div class="d-flex justify-end py-4">
             <v-container class="max-width text-center">
@@ -795,9 +823,9 @@
           >
             <template v-slot:activator="{ props }">
               <v-btn
-                size="large"
+                :size="isCardLayout ? 'small' : 'large'"
                 variant="plain"
-                color="black"
+                :color="isCardLayout ? 'grey-darken-3' : 'black'"
                 icon="mdi-cog-outline"
                 v-bind="props"
               />
@@ -969,8 +997,8 @@
               <template v-slot:activator="{ props }">
                 <v-icon
                   size="large"
-                  color="primary"
-                  icon="$list"
+                  :color="isCardLayout ? 'grey-darken-3' : 'primary'"
+                  :icon="rowActionsIcon"
                   v-bind="props"
                   >
                 </v-icon>
@@ -1067,7 +1095,7 @@
         </template>
 
       </v-data-table-server>
-    <div :class="['ue-datatable__container', noFullScreen ? 'd-flex flex-column flex-grow-1 min-height-0' : 'fill-heigh ue-datatable--full-screen' ]">
+    <div v-if="!isCardLayout" :class="['ue-datatable__container', noFullScreen ? 'd-flex flex-column flex-grow-1 min-height-0' : 'fill-heigh ue-datatable--full-screen' ]">
     </div>
   </v-sheet>
 </template>
@@ -1099,6 +1127,7 @@ import {
 import ActiveTableItem from '__components/labs/ActiveTableItem.vue'
 import TableFormatterCell from '__components/table/TableFormatterCell.vue'
 import TableGroupHeaderRow from '__components/table/TableGroupHeaderRow.vue'
+import TablePaginationFooter from '__components/table/TablePaginationFooter.vue'
 
 const { ignoreFormatters } = makeFormatterProps()
 
@@ -1109,7 +1138,8 @@ export default {
     VDataTableRow,
     TableActions,
     TableFormatterCell,
-    TableGroupHeaderRow
+    TableGroupHeaderRow,
+    TablePaginationFooter,
   },
   props: {
     ...makeTableNamesProps(),
@@ -1213,6 +1243,95 @@ export default {
   #ue-table.ue-datatable--striped
     .v-data-table-group-header-row > td
       background: rgb(var(--v-theme-surface)) !important
+
+  // tableLayout: 'card' - shared list design (toolbar controls, flat rows, white header, pagination footer)
+  $ue-table-card-border: thin solid rgba(var(--v-border-color), var(--v-border-opacity))
+  $ue-table-card-radius: 12px
+
+  #ue-table.ue-table--card
+    --v-table-header-height: 52px
+    --v-table-row-height: 60px
+
+    > .v-toolbar
+      .v-toolbar__content
+        height: auto !important
+        align-items: flex-start
+
+      .ue-table__controls,
+      .ue-table__controls > .d-flex
+        gap: 12px !important
+
+      .ue-table__controls .v-btn:not(.v-btn--icon)
+        height: 44px
+        text-transform: none
+
+      .ue-table__search
+        --v-input-control-height: 44px
+
+    > .ue-table__advanced-filter-row:empty
+      display: none !important
+
+    > .v-table__wrapper
+      flex: 1 1 0
+      min-height: 0
+      background: rgb(var(--v-theme-surface))
+
+      > table > thead > tr > th
+        background: rgb(var(--v-theme-surface)) !important
+        font-size: 0.75rem
+        font-weight: 500
+        border-bottom: $ue-table-card-border !important
+
+    &.ue-datatable--striped
+      > .v-table__wrapper > table > tbody > tr
+        > td
+          border-bottom: 0 !important
+
+        &:nth-of-type(2n) > td
+          background-color: var(--ue-table-stripe-color, rgb(var(--v-theme-grey-lighten-6))) !important
+
+    &.ue-datatable--fixed-last-column
+      .v-table__wrapper table
+        th, td
+          &:last-child
+            box-shadow: none
+            border-left: $ue-table-card-border
+
+  // titlePlacement: 'outside' - title/toolbar sit on the page, rows + footer form one bordered card
+  #ue-table.ue-table--title-outside
+    > .ue-table__toolbar--outside
+      padding-bottom: 16px
+
+      .v-toolbar__content
+        padding: 0
+
+    > .v-table__wrapper
+      border: $ue-table-card-border
+      border-bottom: 0
+      border-radius: $ue-table-card-radius $ue-table-card-radius 0 0
+
+    &:not(:has(> .ue-table__footer)) > .v-table__wrapper
+      border-bottom: $ue-table-card-border
+      border-radius: $ue-table-card-radius
+
+    > .ue-table__footer
+      background: rgb(var(--v-theme-surface))
+      border: $ue-table-card-border
+      border-radius: 0 0 $ue-table-card-radius $ue-table-card-radius
+
+  // titlePlacement: 'inside' on the card layout - the sheet is the card; title, rows and footer share it
+  #ue-table.ue-table--card-inside
+    > .ue-table__toolbar--card
+      border-bottom: $ue-table-card-border
+
+      .v-toolbar__content
+        padding: 16px
+
+    > .v-table__wrapper
+      min-height: calc(var(--v-table-header-height) + 3 * var(--v-table-row-height))
+
+      > table > thead > tr > th
+        text-transform: uppercase
 
   .ue-datatable__container
     width: 100%

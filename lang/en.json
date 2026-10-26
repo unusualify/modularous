@@ -51,6 +51,7 @@
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "Invalid email format": "Invalid email format",
+    "Items per page": "Items per page",
 
     "LANGUAGES": "LANGUAGES",
     "Loading... Please wait": "Loading... Please wait",
@@ -64,6 +65,7 @@
     "No data available": "No data available",
     "NOTIFICATIONS": "NOTIFICATIONS",
 
+    "of": "of",
     "or": "or",
     "Open": "Open",
     "Open chat": "Open chat",

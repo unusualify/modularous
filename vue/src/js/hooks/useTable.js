@@ -16,6 +16,7 @@ import { isset } from '@/utils/helpers'
 
 import { useRoot, useFormatter } from '@/hooks'
 import { makeSurfaceProps, useSurface } from '@/hooks/utils/useSurface'
+import { resolveTableTitleAttributes, resolveTableSubtitleAttributes } from '@/hooks/table/tableTitleAttributes'
 
 import {
   useTableItem,
@@ -170,6 +171,24 @@ export const makeTableProps = propsFactory({
   controlsPosition: {
     type: String,
     default: 'top',
+  },
+  titlePlacement: {
+    type: String,
+    default: 'inside',
+    validator: (value) => ['inside', 'outside'].includes(value),
+  },
+  tableLayout: {
+    type: String,
+    default: 'classic',
+    validator: (value) => ['classic', 'card'].includes(value),
+  },
+  titleAttributes: {
+    type: Object,
+    default: () => ({}),
+  },
+  subtitleAttributes: {
+    type: Object,
+    default: () => ({}),
   },
   disableSort: {
     type: Boolean,
@@ -971,6 +990,15 @@ export default function useTable (props, context) {
     return [fixedGroup, ...headers]
   })
 
+  const isTitleOutside = computed(() => props.titlePlacement === 'outside')
+
+  // `outside` always renders the card layout: the title needs a card below it
+  const isCardLayout = computed(() => props.tableLayout === 'card' || isTitleOutside.value)
+
+  const tableTitleAttributes = computed(() => resolveTableTitleAttributes(props.titlePlacement, props.titleAttributes, props.tableLayout))
+
+  const tableSubtitleAttributes = computed(() => resolveTableSubtitleAttributes(props.titlePlacement, props.subtitleAttributes, props.tableLayout))
+
   return {
     form,
     ...useTableActions(props, context),
@@ -990,6 +1018,10 @@ export default function useTable (props, context) {
     hideTableFooter,
     surfaceClasses,
     tableSurfaceClasses,
+    isTitleOutside,
+    isCardLayout,
+    tableTitleAttributes,
+    tableSubtitleAttributes,
     ...formatter,
   }
 }

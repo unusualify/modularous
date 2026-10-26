@@ -26,9 +26,11 @@ class TableWidget extends ModularousWidget
 
         'fullWidthWrapper' => true,
         'fillHeight' => false,
+        'titlePlacement' => 'inside',
 
         'hideHeaders' => false,
         'hideBorderRow' => true,
+        'striped' => false,
         'hideDefaultFooter' => false,
         'hideSearchField' => true,
 

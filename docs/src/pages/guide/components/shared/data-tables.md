@@ -64,6 +64,60 @@ Visual serving option of the item actions like `delete`,`edit` inline or with a 
 - `Variance:` `inline|dropdown`
 - `default`: `inline`
 
+With `dropdown`, `rowActionsIcon` sets the trigger icon (default `$list`, e.g. `mdi-dots-horizontal-circle-outline` for a "⋯" button).
+
+<br/>
+
+#### `tableLayout`
+Visual design of the table, independent of where the title sits.
+
+- `Input Type:` `String`
+- `Variance:` `classic|card`
+- `default`: `classic`
+
+`card` is the shared list design. On desktop it:
+
+- moves the advanced `Filters` button into the toolbar,
+- sizes toolbar controls to 44px with 12px gaps, rounds the search field (`xl`) and drops the create button's prepend icon,
+- uses a white header row and 52px header / 60px body rows,
+- separates rows with borders, or with stripes when `striped` is on (`--ue-table-stripe-color`, falls back to `grey-lighten-6`); `hideBorderRow` and `roundedRows` are ignored,
+- uses `TablePaginationFooter` instead of the default footer,
+- draws the `fixedLastColumn` separator as a border instead of a shadow, only when the last column is `actions`.
+
+Set it once in `default_table_attributes`: both index pages (`ManageTable`) and dashboard tables (`TableWidget`) merge those defaults, so every table follows it.
+
+#### `titlePlacement`
+Where the table title, subtitle and toolbar render.
+
+- `Input Type:` `String`
+- `Variance:` `inside|outside`
+- `default`: `inside`
+
+`outside` renders the title as a regular-weight headline on the page with the toolbar on the same row, and turns only the rows and footer into one flat bordered card that fills the remaining height. The footer shows `Items per page`, `1 of N` and pagination. `outside` always uses the `card` layout.
+
+`inside` with `tableLayout: 'card'` makes the whole table one flat bordered card: an uppercase `title-large` title and the toolbar on top, a full-width divider, uppercase column headers, the rows, and a centered pagination-only footer. The rows area keeps at least three rows of height. `inside` with `classic` keeps the old layout.
+
+`TableWidget` (dashboard tables) pins `titlePlacement: 'inside'` and `striped: false`.
+
+The table's parent must be a flex column that fills the page; `Pages/Index.vue` switches to one when it contains an outside table. Mobile (`smAndDown`) keeps the stacked toolbar and the compact pagination footer.
+
+```php
+'table_options' => [
+    'tableLayout' => 'card',
+    'titlePlacement' => 'outside',
+    'roundedRows' => false,
+    'fixedLastColumn' => true,
+    'rowActionsType' => 'dropdown',
+    'rowActionsIcon' => 'mdi-dots-horizontal-circle-outline',
+],
+```
+
+#### `titleAttributes` / `subtitleAttributes`
+`ue-title` props merged over the placement defaults (outside: `headline-small`, `regular`, `primary-darken-3`; inside on `card`: `title-large`, `regular`, `primary-darken-3`; inside on `classic`: the compact toolbar title).
+
+- `Input Type:` `Object`
+- `default`: `{}`
+
 <br/>
 
 #### `tableClasses` 
