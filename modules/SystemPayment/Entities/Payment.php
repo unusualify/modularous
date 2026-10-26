@@ -37,6 +37,25 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'response',
     ];
 
+    protected $casts = [
+        'provisioned_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'refunded_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+    ];
+
+    /**
+     * Status value => column stamped the first time the payment reaches it.
+     *
+     * @var array<string, string>
+     */
+    public const STATUS_TIMESTAMPS = [
+        'PROVISION' => 'provisioned_at',
+        'COMPLETED' => 'paid_at',
+        'REFUNDED' => 'refunded_at',
+        'CANCELLED' => 'cancelled_at',
+    ];
+
     protected $with = [
         'fileponds',
         'creator.company',
@@ -55,11 +74,27 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'status_icon',
         'status_vuetify_icon',
         'status_vuetify_chip',
+        'paid_date',
         // 'transaction_snapshot',
     ];
 
     protected static function booted(): void
     {
+        // Every status write goes through Eloquent (gateway services, PriceController,
+        // Price::updateOrNewPayment), so stamping here covers all of them.
+        static::saving(function (self $payment) {
+            if (! $payment->isDirty('status')) {
+                return;
+            }
+
+            $status = $payment->status instanceof \BackedEnum ? $payment->status->value : (string) $payment->status;
+            $column = static::STATUS_TIMESTAMPS[$status] ?? null;
+
+            if ($column && is_null($payment->getAttribute($column))) {
+                $payment->setAttribute($column, now());
+            }
+        });
+
         static::addGlobalScope('currency_iso_4217', function (Builder $builder) {
             $currenciesTable = (new Currency)->getTable();
             $paymentTable = (new static)->getTable();
@@ -253,6 +288,16 @@ class Payment extends \Unusualify\Payable\Models\Payment
         );
     }
 
+    /**
+     * Payments recorded before `paid_at` existed fall back to `created_at`.
+     */
+    protected function paidDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->paid_at ?? $this->created_at,
+        );
+    }
+
     protected function transactionSnapshot(): Attribute
     {
         return Attribute::make(
@@ -262,7 +307,8 @@ class Payment extends \Unusualify\Payable\Models\Payment
                 $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
 
                 return [
-                    'paid_at' => $this->updated_at,
+                    'paid_at' => $this->paid_at ?? $this->updated_at,
+                    'provisioned_at' => $this->provisioned_at,
                     'original_amount' => PriceService::formatAmount(
                         $t->original_amount ?? $this->price->raw_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))
