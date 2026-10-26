@@ -37,15 +37,17 @@ final class UserIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'company',
             ],
             [
-                'title' => 'Roles',
+                'title' => 'Role',
                 'key' => 'roles',
                 'itemTitle' => 'title',
+                'minWidth' => 130,
             ],
             [
                 'title' => 'Status',
                 'key' => 'published',
                 'formatter' => [
                     'switch',
+                    ['color' => 'primary-darken-1'],
                 ],
             ],
             [
