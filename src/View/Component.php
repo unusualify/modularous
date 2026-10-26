@@ -112,13 +112,41 @@ class Component extends LaravelComponent
      */
     public function __construct() {}
 
+    /**
+     * Merge `v-col` breakpoint props the way Vuetify cascades them (mobile-first).
+     *
+     * An override breakpoint replaces the base value for itself and every wider
+     * breakpoint, so `['lg' => 8]` over `['cols' => 12, 'lg' => 6, 'xl' => 6]`
+     * yields `['cols' => 12, 'lg' => 8]`. Non-breakpoint keys merge normally.
+     */
+    public static function mergeWidgetCol(array $base, array $override): array
+    {
+        $breakpoints = ['cols', 'sm', 'md', 'lg', 'xl', 'xxl'];
+
+        $overridden = array_intersect($breakpoints, array_keys($override));
+
+        if ($overridden !== []) {
+            $narrowest = array_search(reset($overridden), $breakpoints, true);
+            $base = array_diff_key($base, array_flip(array_slice($breakpoints, $narrowest)));
+        }
+
+        return array_merge($base, $override);
+    }
+
     public static function create($config)
     {
         if (isset($config['widgetAlias'])) {
+            $aliasConfig = Config::get('modularous.widgets.' . $config['widgetAlias'], []);
+            $widgetCol = static::mergeWidgetCol($aliasConfig['widgetCol'] ?? [], $config['widgetCol'] ?? []);
+
             $config = array_merge_recursive_preserve(
-                Config::get('modularous.widgets.' . $config['widgetAlias'], []),
-                array_except($config, ['widgetAlias'])
+                array_except($aliasConfig, ['widgetCol']),
+                array_except($config, ['widgetAlias', 'widgetCol'])
             );
+
+            if ($widgetCol !== []) {
+                $config['widgetCol'] = $widgetCol;
+            }
         }
 
         if (! (isset($config['widget']) || isset($config['component']) || isset($config['tag']))) {
@@ -139,7 +167,7 @@ class Component extends LaravelComponent
 
             $component = $widget->useWidgetConfig()
                 ->mergeSlots($config['slots'] ?? [])
-                ->setWidgetCol(array_merge_recursive_preserve(
+                ->setWidgetCol(static::mergeWidgetCol(
                     $widget->widgetCol ?? [],
                     $config['widgetCol'] ?? [],
                 ))
