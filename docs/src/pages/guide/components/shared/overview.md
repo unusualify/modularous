@@ -92,6 +92,7 @@ Form inputs (30+ `input-*` components) are documented under [Form Inputs](../../
 |-----------|---------|
 | [Btn](./btn) | Button wrapper with consistent styling |
 | [Copy Text](./copy-text) | Copy-to-clipboard text |
+| [Hover Card](./hover-card) | Hover/click preview card for a record object |
 | [Print Request](./print-request) | Print-ready request view |
 | [Well Print](./well-print) | Print wrapper block |
 | [Dynamic Component Renderer](./dynamic-component-renderer) | Renders a component by name |
