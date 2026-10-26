@@ -80,6 +80,7 @@ class UpgradeV11DbCommand extends BaseCommand
         $this->fixGuardNames($dryRun);
         $this->fixTelescope($dryRun);
         $this->fixUmTables($dryRun);
+        $this->fixNotifications($dryRun);
 
         $this->newLine();
         $this->info(sprintf(
@@ -238,6 +239,26 @@ class UpgradeV11DbCommand extends BaseCommand
                 }
                 $this->dbReplace($table, $col, self::NS_OLD, self::NS_NEW, $dryRun);
             }
+        }
+    }
+
+    private function fixNotifications(bool $dryRun): void
+    {
+        $this->line('▶ notifications');
+
+        if (! Schema::hasTable('notifications')) {
+            $this->skip('Table notifications not found.');
+
+            return;
+        }
+
+        foreach (['notifiable_type', 'type'] as $col) {
+            if (! Schema::hasColumn('notifications', $col)) {
+                $this->skip("Column notifications.{$col} not found.");
+
+                continue;
+            }
+            $this->dbReplace('notifications', $col, self::NS_OLD, self::NS_NEW, $dryRun);
         }
     }
 
