@@ -88,7 +88,7 @@ $font-weights: map.deep-merge(
 
 $list-item-nav-subtitle-font-size: 0.75rem !default;
 
-$sidebar-padding: calc($spacer * 6) !default;
+$sidebar-padding: calc($spacer * 5) !default;
 $sidebar-icon-size: 24px !default;
 $sidebar-info-padding: $sidebar-padding !default;
 $sidebar-info-avatar-size: 56px !default;
@@ -100,6 +100,22 @@ $sidebar-info-mini-logo-size: $sidebar-info-logo-size !default;
 $sidebar-info-mini-logo-width: $sidebar-info-mini-logo-size !default;
 $sidebar-info-mini-logo-height: $sidebar-info-mini-logo-size !default;
 $sidebar-list-item-overlay-color: currentColor !default;
+$sidebar-color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !default;
+$sidebar-active-background: rgb(var(--v-theme-primary)) !default;
+$sidebar-active-color: rgb(var(--v-theme-on-primary)) !default;
+$sidebar-item-height: 52px !default;
+$sidebar-item-gap: $spacer * 2 !default;
+$sidebar-item-font-size: 0.875rem !default;
+$sidebar-item-font-weight: 500 !default;
+$sidebar-item-radius: 12px !default;
+$sidebar-item-end-gap: $spacer * 1.5 !default;
+$sidebar-sub-item-height: 40px !default;
+$sidebar-sub-item-font-size: 1rem !default;
+$sidebar-title-font-size: 1.125rem !default;
+$sidebar-user-avatar-size: 48px !default;
+$sidebar-user-name-font-size: 1.25rem !default;
+$sidebar-scrollbar-width: 4px !default;
+$sidebar-scrollbar-thumb-color: rgba(var(--v-theme-on-surface), 0.2) !default;
 
 $stepper-form-summary-final-background: #005868 !default;
 
