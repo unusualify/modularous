@@ -94,6 +94,19 @@ describe('useValidation', () => {
     expect(rule([])).not.toBe(true)
   })
 
+  test('requiredRule array type without max asks for at least, not exactly', async () => {
+    i18n.global.mergeLocaleMessage('en', {
+      validation: {
+        required_at_least: 'Requires at least no item | Requires at least one item | Requires at least {count} items',
+        required_exact: 'Requires exactly no item | Requires exactly one item | Requires exactly {count} items',
+      },
+    })
+    const wrapper = await factory()
+
+    expect(wrapper.vm.requiredRule('array', 1)([])).toBe('Requires at least one item')
+    expect(wrapper.vm.requiredRule('array', 2, 2)([])).toBe('Requires exactly 2 items')
+  })
+
   test('arrayRule returns true for arrays', async () => {
     const wrapper = await factory()
     const rule = wrapper.vm.arrayRule()
@@ -212,6 +225,42 @@ describe('useValidation', () => {
     const result = wrapper.vm.invokeRuleGenerator(schema)
     expect(result.name.rules).toBeDefined()
     expect(Array.isArray(result.name.rules)).toBe(true)
+  })
+
+  describe('Laravel-style placeholders', () => {
+    const laravelMessages = {
+      validation: {
+        required: 'The :attribute field is required.',
+        max: { string: 'The :attribute field must not be greater than :max characters.' },
+      },
+    }
+
+    test('maxRule fills :max placeholder', async () => {
+      i18n.global.mergeLocaleMessage('en', laravelMessages)
+      const wrapper = await factory()
+
+      expect(wrapper.vm.maxRule(5)('abcdef')).toBe('The :attribute field must not be greater than 5 characters.')
+    })
+
+    test('generated rules replace :attribute with input label', async () => {
+      i18n.global.mergeLocaleMessage('en', laravelMessages)
+      const wrapper = await factory()
+
+      const [required, max] = wrapper.vm.generateInputRules({ name: 'email', label: 'Email', rules: 'required|max:5' })
+
+      expect(required('')).toBe('The Email field is required.')
+      expect(max('abcdef')).toBe('The Email field must not be greater than 5 characters.')
+      expect(required('value')).toBe(true)
+    })
+
+    test('generated rules drop :attribute when input has no label', async () => {
+      i18n.global.mergeLocaleMessage('en', laravelMessages)
+      const wrapper = await factory()
+
+      const result = wrapper.vm.invokeRuleGenerator({ name: { name: 'name', rules: 'required' } })
+
+      expect(result.name.rules[0]('')).toBe('The field is required.')
+    })
   })
 
   test('invokeRule processes single input with rules', async () => {

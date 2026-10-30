@@ -18,23 +18,50 @@ export default function useValidation (props) {
   const { valid } = toRefs(props)
   const { t } = useI18n()
 
+  // Laravel validation lines use `:name` placeholders, which vue-i18n does not interpolate
+  const trans = (key, params) => {
+    const message = t(key, params)
+    if (!isObject(params)) return message
+
+    return Object.keys(params)
+      .sort((a, b) => b.length - a.length)
+      .reduce((text, name) => text.replaceAll(`:${name}`, params[name]), message)
+  }
+
+  const resolveAttribute = (message, attribute) => {
+    if (!isString(message) || !message.includes(':attribute')) return message
+
+    const text = message.replaceAll(':attribute', isString(attribute) ? attribute : '').replace(/\s{2,}/g, ' ').trim()
+
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
+  const makeRule = (rule, attribute) => {
+    const method = rule[0] + 'Rule'
+    if (!Object.prototype.hasOwnProperty.call(ruleMethods, method)) return null
+
+    const validator = ruleMethods[method](...(rule.slice(1)))
+
+    return (...args) => resolveAttribute(validator(...args), attribute)
+  }
+
   const state = reactive({
     validModel: valid?.value ?? null,
   })
 
   const ruleMethods = reactive({
-    minRule: (l, msg) => v => (!!v && (typeof v === 'string' ? v.trim().length : v.length) >= l) || msg || `${t('validation.min_label')} ${l} ${Array.isArray(v) ? t('validation.selections') : t('validation.characters')}`,
+    minRule: (l, msg) => v => (!!v && (typeof v === 'string' ? v.trim().length : v.length) >= l) || msg || `${trans('validation.min_label')} ${l} ${Array.isArray(v) ? trans('validation.selections') : trans('validation.characters')}`,
     maxRule: (l, msg) => v => {
       if(Array.isArray(v)) {
-        return v.length <= l || msg || t('validation.max.array', { max: l });
+        return v.length <= l || msg || trans('validation.max.array', { max: l });
       }
 
-      return !v || v.length <= l || msg || t('validation.max.string', { max: l });
+      return !v || v.length <= l || msg || trans('validation.max.string', { max: l });
     },
     nameRule: (msg) => v => {
       if (!v) return true;
       const trimmed = v.trim().replace(/\s+/g, ' ');
-      return /^[\p{L}'\-]+(?: [\p{L}'\-]+)*$/u.test(trimmed) || msg || t('validation.only_letters_apostrophes_hyphens');
+      return /^[\p{L}'\-]+(?: [\p{L}'\-]+)*$/u.test(trimmed) || msg || trans('validation.only_letters_apostrophes_hyphens');
     },
     // requiredRule: msg => v => !!v || msg || 'Required',
     emailRule: (options = {}, msg) => v => {
@@ -52,24 +79,24 @@ export default function useValidation (props) {
         // Basic format check
         const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!basicEmailRegex.test(v)) {
-            return msg || t('validation.email');
+            return msg || trans('validation.email');
         }
 
         // Strict format check
         if (strict) {
             const strictEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!strictEmailRegex.test(v)) {
-                return msg || t('validation.email_contains_invalid_characters');
+                return msg || trans('validation.email_contains_invalid_characters');
             }
         }
 
         // Length checks
         const [localPart, domain] = v.split('@');
         if (localPart.length < minLength) {
-            return msg || t('validation.email_username_min_length', { minLength });
+            return msg || trans('validation.email_username_min_length', { minLength });
         }
         if (v.length > maxLength) {
-            return msg || t('validation.email_max_length', { maxLength });
+            return msg || trans('validation.email_max_length', { maxLength });
         }
 
         // Domain checks
@@ -82,7 +109,7 @@ export default function useValidation (props) {
                 return emailDomain === allowed.toLowerCase();
             });
             if (!isAllowed) {
-                return msg || t('validation.email_domain_must_be_one_of', { allowedDomains: allowedDomains.join(', ') });
+                return msg || trans('validation.email_domain_must_be_one_of', { allowedDomains: allowedDomains.join(', ') });
             }
         }
 
@@ -96,7 +123,7 @@ export default function useValidation (props) {
                 return emailDomain === blocked.toLowerCase();
             });
             if (isBlocked) {
-                return msg || t('validation.email_domain_not_allowed');
+                return msg || trans('validation.email_domain_not_allowed');
             }
         }
 
@@ -114,7 +141,7 @@ export default function useValidation (props) {
 
         const domainWithoutTLD = domain.split('.')[0].toLowerCase();
         if (commonTypos[domainWithoutTLD]) {
-            return msg || t('validation.email_typo_suggestion', { suggestion: commonTypos[domainWithoutTLD] });
+            return msg || trans('validation.email_typo_suggestion', { suggestion: commonTypos[domainWithoutTLD] });
         }
 
         return true;
@@ -122,16 +149,16 @@ export default function useValidation (props) {
     requiredRule: (type ='classic',  minOrExact = 1, max, msg) => v => {
       switch(type) {
         case 'classic':
-          return !!v || msg || t('validation.required', { attribute: '' });
+          return !!v || msg || trans('validation.required');
         case 'array':
         case 'object':
           minOrExact = _.toNumber(minOrExact)
           max = _.toNumber(max)
           max = _.isNaN(max) ? -1 : max;
 
-          let $msg = ((minOrExact == max || max < 0)
-            ? t('validation.required_exact', minOrExact > 1 ? { count: minOrExact } : 1)
-            : t('validation.required_at_least', minOrExact > 1 ? { count: minOrExact } : 1) + ((max != Infinity  && max != undefined) ? ' ' + t('validation.required_maximum', { count: max }) : ''));
+          let $msg = (minOrExact == max)
+            ? trans('validation.required_exact', minOrExact > 1 ? { count: minOrExact } : 1)
+            : trans('validation.required_at_least', minOrExact > 1 ? { count: minOrExact } : 1) + ((max > 0 && max != Infinity) ? ' ' + trans('validation.required_maximum', { count: max }) : '');
 
           if(Array.isArray(v)) {
             return v.length >= minOrExact && ( max < 0 || v.length <= max) || msg || $msg;
@@ -140,7 +167,7 @@ export default function useValidation (props) {
           }
 
           if(v == null) {
-            return msg || t('validation.required');
+            return msg || trans('validation.required');
           }
 
           return 'dev error: nsupported value type';
@@ -148,7 +175,7 @@ export default function useValidation (props) {
           return 'dev error: unknown rule type';
       }
     },
-    arrayRule: (msg) => v => Array.isArray(v) || msg || t('validation.value_must_be_array'),
+    arrayRule: (msg) => v => Array.isArray(v) || msg || trans('validation.value_must_be_array'),
     // requiredArrayRule: (msg, l = 1) => v => (Array.isArray(v) && v.length >= l) || msg || ''
     // confirmedRule: (confirmInputValue, msg) => v => {
     //   // const _val = toRef('model.' + confirmationValue)
@@ -157,25 +184,25 @@ export default function useValidation (props) {
     // }
 
     // Numeric validation rules
-    numberRule: (msg) => v => !isNaN(parseFloat(v)) && isFinite(v) || msg || t('validation.must_be_valid_number'),
-    integerRule: (msg) => v => Number.isInteger(Number(v)) || msg || t('validation.must_be_integer'),
-    minValueRule: (min, msg) => v => v === undefined || v === null || Number(v) >= min  || msg || t('validation.must_be_at_least', { min }),
-    maxValueRule: (max, msg) => v => !v || Number(v) <= max || msg || t('validation.must_not_exceed', { max }),
+    numberRule: (msg) => v => !isNaN(parseFloat(v)) && isFinite(v) || msg || trans('validation.must_be_valid_number'),
+    integerRule: (msg) => v => Number.isInteger(Number(v)) || msg || trans('validation.must_be_integer'),
+    minValueRule: (min, msg) => v => v === undefined || v === null || Number(v) >= min  || msg || trans('validation.must_be_at_least', { min }),
+    maxValueRule: (max, msg) => v => !v || Number(v) <= max || msg || trans('validation.must_not_exceed', { max }),
 
     // String format validation rules
-    phoneRule: (msg) => v => !v || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(v) || msg || t('validation.invalid_phone_number'),
-    urlRule: (msg) => v => !v || /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v) || msg || t('validation.invalid_url'),
-    alphaRule: (msg) => v => !v || /^[A-Za-z]+$/.test(v) || msg || t('validation.only_letters_allowed'),
-    alphaNumRule: (msg) => v => !v || /^[A-Za-z0-9]+$/.test(v) || msg || t('validation.only_letters_numbers_allowed'),
+    phoneRule: (msg) => v => !v || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(v) || msg || trans('validation.invalid_phone_number'),
+    urlRule: (msg) => v => !v || /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v) || msg || trans('validation.invalid_url'),
+    alphaRule: (msg) => v => !v || /^[A-Za-z]+$/.test(v) || msg || trans('validation.only_letters_allowed'),
+    alphaNumRule: (msg) => v => !v || /^[A-Za-z0-9]+$/.test(v) || msg || trans('validation.only_letters_numbers_allowed'),
 
     // Password validation rules
     passwordRule: (minLength = 8, msg) => v => !v || /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{${minLength},}$/.test(v) ||
-        msg || t('validation.password_min_length', { minLength }),
+        msg || trans('validation.password_min_length', { minLength }),
     strongPasswordRule: (minLength = 8, msg) => v => !v || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{${minLength},}$/.test(v) ||
-        msg || t('validation.password_strong', { minLength }),
+        msg || trans('validation.password_strong', { minLength }),
 
     // Date validation rules
-    dateRule: (msg) => v => !v || !isNaN(Date.parse(v)) || msg || t('validation.invalid_date_format'),
+    dateRule: (msg) => v => !v || !isNaN(Date.parse(v)) || msg || trans('validation.invalid_date_format'),
     futureDateRule: (interval = 0, unit = 'day', msg) => v => {
         if (!v) return true;
         let today = new Date();
@@ -237,10 +264,10 @@ export default function useValidation (props) {
 
         return new Date(v) >= futureDate || msg
           || (interval === 0
-            ? t('validation.date_must_be_now', { interval: humanIntervalLabel || t('fields.' + unit, interval) })
+            ? trans('validation.date_must_be_now', { interval: humanIntervalLabel || t('fields.' + unit, interval) })
             : (interval > 0
-              ? t('validation.date_must_be_future', { interval: t('fields.' + unit, interval) })
-              : t('validation.date_must_be_past', { interval: t('fields.' + unit, interval) })
+              ? trans('validation.date_must_be_future', { interval: t('fields.' + unit, interval) })
+              : trans('validation.date_must_be_past', { interval: t('fields.' + unit, interval) })
             )
           );
     },
@@ -270,48 +297,48 @@ export default function useValidation (props) {
         }
 
         return new Date(v) <= pastDate ||
-            msg || t('validation.date_must_be_past', { interval, unit });
+            msg || trans('validation.date_must_be_past', { interval, unit });
     },
 
     // Custom format validation rules
-    zipCodeRule: (msg) => v => !v || /^\d{5}(-\d{4})?$/.test(v) || msg || t('validation.invalid_zip_code'),
-    ipAddressRule: (msg) => v => !v || /^(\d{1,3}\.){3}\d{1,3}$/.test(v) || msg || t('validation.invalid_ip_address'),
+    zipCodeRule: (msg) => v => !v || /^\d{5}(-\d{4})?$/.test(v) || msg || trans('validation.invalid_zip_code'),
+    ipAddressRule: (msg) => v => !v || /^(\d{1,3}\.){3}\d{1,3}$/.test(v) || msg || trans('validation.invalid_ip_address'),
 
     // File validation rules
     fileTypeRule: (types, msg) => v => {
         if (!v || !v.type) return true;
         const allowedTypes = Array.isArray(types) ? types : [types];
-        return allowedTypes.includes(v.type) || msg || t('validation.file_type_must_be', { types: allowedTypes.join(', ') });
+        return allowedTypes.includes(v.type) || msg || trans('validation.file_type_must_be', { types: allowedTypes.join(', ') });
     },
     fileSizeRule: (maxSize, msg) => v => {
         if (!v || !v.size) return true;
-        return v.size <= maxSize || msg || t('validation.file_size_must_not_exceed', { size: (maxSize/1024/1024).toFixed(2) });
+        return v.size <= maxSize || msg || trans('validation.file_size_must_not_exceed', { size: (maxSize/1024/1024).toFixed(2) });
     },
     // Comparison validation rules
-    equalsRule: (target, msg) => v => v === target || msg || t('validation.must_equal', { target }),
-    notEqualsRule: (target, msg) => v => v !== target || msg || t('validation.must_not_equal', { target }),
-    matchesRule: (field, msg) => (v, formData) => v === formData[field] || msg || t('validation.must_match', { field }),
+    equalsRule: (target, msg) => v => v === target || msg || trans('validation.must_equal', { target }),
+    notEqualsRule: (target, msg) => v => v !== target || msg || trans('validation.must_not_equal', { target }),
+    matchesRule: (field, msg) => (v, formData) => v === formData[field] || msg || trans('validation.must_match', { field }),
 
     // Range validation rules
     betweenRule: (min, max, msg) => v => {
         if (!v) return true;
         const num = Number(v);
-        return (num >= min && num <= max) || msg || t('validation.must_be_between', { min, max });
+        return (num >= min && num <= max) || msg || trans('validation.must_be_between', { min, max });
     },
     notBetweenRule: (min, max, msg) => v => {
         if (!v) return true;
         const num = Number(v);
-        return (num < min || num > max) || msg || t('validation.must_not_be_between', { min, max });
+        return (num < min || num > max) || msg || trans('validation.must_not_be_between', { min, max });
     },
 
     // String content validation rules
-    containsRule: (substring, msg) => v => !v || v.includes(substring) || msg || t('validation.must_contain', { substring }),
-    notContainsRule: (substring, msg) => v => !v || !v.includes(substring) || msg || t('validation.must_not_contain', { substring }),
-    startsWithRule: (prefix, msg) => v => !v || v.startsWith(prefix) || msg || t('validation.must_start_with', { prefix }),
-    endsWithRule: (suffix, msg) => v => !v || v.endsWith(suffix) || msg || t('validation.must_end_with', { suffix }),
+    containsRule: (substring, msg) => v => !v || v.includes(substring) || msg || trans('validation.must_contain', { substring }),
+    notContainsRule: (substring, msg) => v => !v || !v.includes(substring) || msg || trans('validation.must_not_contain', { substring }),
+    startsWithRule: (prefix, msg) => v => !v || v.startsWith(prefix) || msg || trans('validation.must_start_with', { prefix }),
+    endsWithRule: (suffix, msg) => v => !v || v.endsWith(suffix) || msg || trans('validation.must_end_with', { suffix }),
 
     // Pattern validation rules
-    patternRule: (pattern, msg) => v => !v || pattern.test(v) || msg || t('validation.invalid_format'),
+    patternRule: (pattern, msg) => v => !v || pattern.test(v) || msg || trans('validation.invalid_format'),
     customFormatRule: (formats, msg) => v => {
         if (!v) return true;
         const patterns = {
@@ -322,31 +349,31 @@ export default function useValidation (props) {
             isbn: /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$/,
         };
         const formatArray = Array.isArray(formats) ? formats : [formats];
-        return formatArray.every(format => patterns[format].test(v)) || msg || t('validation.invalid_custom_format', { formats: formatArray.join(' and ') });
+        return formatArray.every(format => patterns[format].test(v)) || msg || trans('validation.invalid_custom_format', { formats: formatArray.join(' and ') });
     },
 
     // Array/Collection validation rules
     uniqueRule: (msg) => v => {
         if (!Array.isArray(v)) return true;
-        return v.length === new Set(v).size || msg || t('validation.must_contain_unique_values');
+        return v.length === new Set(v).size || msg || trans('validation.must_contain_unique_values');
     },
     includesAnyRule: (values, msg) => v => {
         if (!Array.isArray(v)) return true;
-        return values.some(val => v.includes(val)) || msg || t('validation.must_include_at_least_one_of', { values: values.join(', ') });
+        return values.some(val => v.includes(val)) || msg || trans('validation.must_include_at_least_one_of', { values: values.join(', ') });
     },
     includesAllRule: (values, msg) => v => {
         if (!Array.isArray(v)) return true;
-        return values.every(val => v.includes(val)) || msg || t('validation.must_include_all_of', { values: values.join(', ') });
+        return values.every(val => v.includes(val)) || msg || trans('validation.must_include_all_of', { values: values.join(', ') });
     },
 
     // Conditional validation rules
     whenRule: (condition, thenRules, elseRules = []) => (v, formData) => {
         const rules = (typeof condition === 'function' ? condition(formData) : condition) ? thenRules : elseRules;
-        return rules.every(rule => rule(v, formData) === true) || t('validation.conditional_validation_failed');
+        return rules.every(rule => rule(v, formData) === true) || trans('validation.conditional_validation_failed');
     },
     dependentRule: (field, rules, msg) => (v, formData) => {
         if (!formData[field]) return true;
-        return rules.every(rule => rule(v, formData) === true) || msg || t('validation.invalid_based_on', { field });
+        return rules.every(rule => rule(v, formData) === true) || msg || trans('validation.invalid_based_on', { field });
     },
   })
 
@@ -378,9 +405,9 @@ export default function useValidation (props) {
         if (isString(rule)) {
           rule = rule.split(':')
         }
-        const method = rule[0] + 'Rule'
-        if (Object.prototype.hasOwnProperty.call(ruleMethods, method)) {
-          availableRules.push(ruleMethods[method](...(rule.slice(1))))
+        const validator = makeRule(rule, input.label)
+        if (validator) {
+          availableRules.push(validator)
         }
       })
     }
@@ -423,9 +450,9 @@ export default function useValidation (props) {
         if (isString(rule)) {
           rule = rule.split(':')
         }
-        const method = rule[0] + 'Rule'
-        if (Object.prototype.hasOwnProperty.call(ruleMethods, method)) {
-          Input.rules.push(ruleMethods[method](...(rule.slice(1))))
+        const validator = makeRule(rule, input.label)
+        if (validator) {
+          Input.rules.push(validator)
         }
       })
     }
@@ -462,14 +489,9 @@ export default function useValidation (props) {
             if (isString(rule)) {
               rule = rule.split(':')
             }
-            const method = rule[0] + 'Rule'
-            if (Object.prototype.hasOwnProperty.call(ruleMethods, method)) {
-              inputs[name].rules.push(ruleMethods[method](...(rule.slice(1))))
-              // try {
-              //
-              // } catch (error) {
-              //   delete inputs[name].rules[index]
-              // }
+            const validator = makeRule(rule, inputs[name].label)
+            if (validator) {
+              inputs[name].rules.push(validator)
             }
           })
         }
