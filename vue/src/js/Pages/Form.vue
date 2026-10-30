@@ -34,6 +34,9 @@ defineOptions({
 
 <style scoped>
 .generic-form {
-  /* Generic form styles */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>
