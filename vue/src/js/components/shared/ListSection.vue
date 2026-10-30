@@ -639,6 +639,13 @@ const toggleExpand = () => {
       padding-right: 0;
     }
 
+    /* Vuetify utilities live in a cascade layer, so `text-wrap` cannot beat the unlayered nowrap above */
+    .ue-list-section__cell.text-wrap {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-overflow: clip;
+    }
+
     /* Apply vertical-align: top when the prop is set */
     .ue-list-section__container.align-top .ue-list-section__row {
       align-items: flex-start;
