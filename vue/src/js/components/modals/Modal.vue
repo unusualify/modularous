@@ -66,8 +66,8 @@
               </slot>
             </v-card-text>
             <template v-if="!noActions">
-              <v-divider class="my-2"/>
-              <v-card-actions>
+              <v-divider v-if="hasActionsDivider" class="my-2"/>
+              <v-card-actions :class="{ 'px-4 pb-4': actionsJustify === 'end' }">
                 <slot name="body.options" v-bind="{description}">
                   <v-spacer/>
                   <!-- CANCEL BUTTON -->
@@ -92,7 +92,7 @@
                     {{ textConfirm }}
                   </v-btn>
                 </slot>
-                <v-spacer/>
+                <v-spacer v-if="actionsJustify === 'center'"/>
               </v-card-actions>
             </template>
           </v-card>
