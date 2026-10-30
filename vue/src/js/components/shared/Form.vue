@@ -432,9 +432,9 @@
       <v-spacer v-if="pushButtonToBottom"></v-spacer>
 
       <!-- Bottom Section -->
-      <div :class="['px-1', scrollable ? 'flex-grow-0' : '']" v-if="(!previewable && hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
+      <div :class="[cardWrapsMain ? 'pt-3' : 'px-1', scrollable ? 'flex-grow-0' : '']" v-if="(!previewable && hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
         <v-divider v-if="!previewable && hasSubmit && !stickyButton && hasDivider && hasFooterDivider" class=""></v-divider>
-        <div class="d-flex flex-wrap justify-center justify-md-start pt-6 w-100 ga-4 flex-md-row" v-if="!previewable && hasSubmit && !stickyButton">
+        <div :class="['d-flex flex-wrap justify-center justify-md-start w-100 ga-4 flex-md-row', cardWrapsMain ? 'pt-3' : 'pt-6']" v-if="!previewable && hasSubmit && !stickyButton">
           <template v-if="$store.getters.isSuperAdmin">
             <v-btn-secondary
               :slim="false"
