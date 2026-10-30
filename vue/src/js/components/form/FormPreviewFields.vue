@@ -1,5 +1,5 @@
 <template>
-  <v-row class="ue-form-preview" dense>
+  <v-row class="ue-form-preview" density="comfortable">
     <v-col
       v-for="input in fields"
       :key="input.name"
