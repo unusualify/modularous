@@ -432,7 +432,7 @@
 
             transition="dialog-bottom-transition"
             :fullscreen="false"
-            width-type="lg"
+            width-type="md"
             v-bind="formModalAttributes"
           >
             <template v-slot:body="formModalBodyScope">

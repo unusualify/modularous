@@ -171,7 +171,7 @@ return [
         ],
     ],
     'formModalAttributes' => [
-        'widthType' => 'lg',
+        'widthType' => 'md',
         'fullscreen' => false,
         'transition' => 'dialog-bottom-transition',
     ]
