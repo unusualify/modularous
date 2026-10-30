@@ -142,6 +142,23 @@ Drops the background and border of the rows and footer so they sit directly on t
 
 <br/>
 
+#### `customRow`
+Renders each item with a custom component instead of table rows. As a list, the first entry whose `allowedRoles` matches the user wins. The selected entry's `tableAttributes` are merged over the table attributes, so role-specific table options live next to the component that needs them.
+
+```php
+'customRow' => [
+    [
+        'name' => 'custom-press-release-card-iterator',
+        'allowedRoles' => ['client-manager', 'client-assistant'],
+        'tableAttributes' => [
+            'transparentBody' => true,
+        ],
+    ],
+],
+```
+
+<br/>
+
 #### `hideHeaders`
 Hides the header row of the tabular component
 - `Input Type:` `Boolean`

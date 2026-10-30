@@ -138,7 +138,11 @@ return [
          *     'allowedRoles' => ['manager'],
          *     'col' => [
          *     'cols' => 12,
-         * ]
+         * ],
+         *     // merged over the table attributes only when this entry is selected
+         *     'tableAttributes' => [
+         *         'transparentBody' => true,
+         *     ],
          * ],
          */
     ],

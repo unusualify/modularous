@@ -76,15 +76,16 @@ trait TableAttributes
         $attributes = $this->tableAttributes;
 
         if (isset($attributes['customRow'])) {
+            $customRow = [];
+
             // Handle associative array case
             if (Arr::isAssoc($attributes['customRow'])) {
                 if (isset($attributes['customRow']['name'])) {
-                    $attributes['customRow'] = $this->hydrateCustomRow($attributes['customRow']);
+                    $customRow = $this->hydrateCustomRow($attributes['customRow']);
                 }
             }
             // Handle sequential array case with role-based filtering
             else {
-                $firstMatch = [];
                 foreach ($attributes['customRow'] as $component) {
                     // Skip if component doesn't pass role check
                     if (! $this->isAllowedItem($component, searchKey: 'allowedRoles')) {
@@ -93,15 +94,36 @@ trait TableAttributes
 
                     // Convert first matching component to standard format and break
                     if (isset($component['name'])) {
-                        $firstMatch = $this->hydrateCustomRow($component);
+                        $customRow = $this->hydrateCustomRow($component);
 
                         break;
                     }
                 }
-
-                $attributes['customRow'] = $firstMatch;
             }
+
+            $attributes = $this->mergeCustomRowTableAttributes($attributes, $customRow);
         }
+
+        return $attributes;
+    }
+
+    /**
+     * Apply the selected custom row's `tableAttributes` over the table attributes,
+     * so a role-specific custom row can also restyle the table it renders in.
+     */
+    protected function mergeCustomRowTableAttributes(array $attributes, array $customRow): array
+    {
+        $tableAttributes = $customRow['tableAttributes'] ?? [];
+        unset($customRow['tableAttributes']);
+
+        if (is_array($tableAttributes) && $tableAttributes !== []) {
+            $attributes = array_merge_recursive_preserve(
+                $attributes,
+                Arr::except($tableAttributes, ['customRow'])
+            );
+        }
+
+        $attributes['customRow'] = $customRow;
 
         return $attributes;
     }
