@@ -263,6 +263,22 @@ describe('useValidation', () => {
     })
   })
 
+  test('invokeRuleGenerator does not write rule functions into the given schema', async () => {
+    const wrapper = await factory()
+    const schema = {
+      name: { name: 'name', rules: 'required', schema: { nested: { name: 'nested', rules: 'required' } } },
+    }
+
+    const result = wrapper.vm.invokeRuleGenerator(schema)
+
+    expect(typeof result.name.rules[0]).toBe('function')
+    expect(typeof result.name.schema.nested.rules[0]).toBe('function')
+    expect(schema.name.rules).toBe('required')
+    expect(schema.name.rawRules).toBeUndefined()
+    expect(schema.name.schema.nested.rules).toBe('required')
+    expect(() => structuredClone(schema)).not.toThrow()
+  })
+
   test('invokeRule processes single input with rules', async () => {
     const wrapper = await factory()
     const input = { name: 'test', rules: 'required' }

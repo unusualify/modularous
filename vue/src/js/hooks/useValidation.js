@@ -469,34 +469,32 @@ export default function useValidation (props) {
     return Input
   }
 
-  function invokeRuleGenerator (inputs) {
-    const _inputs = cloneDeep(inputs)
+  // Works on a copy: rule functions must not leak into Inertia page props, which are cloned into history state
+  function invokeRuleGenerator (schema) {
+    const inputs = cloneDeep(schema)
 
-    if (isObject(_inputs)) {
-      Object.keys(_inputs).forEach((name) => {
-        if (Object.prototype.hasOwnProperty.call(_inputs[name], 'rules')) {
-          inputs[name].rawRules = !isset(inputs[name].rawRules)
-            ? _inputs[name].rules
-            : inputs[name].rawRules
+    if (isObject(inputs)) {
+      Object.keys(inputs).forEach((name) => {
+        const input = inputs[name]
 
-          if (isString(inputs[name].rawRules)) {
-            _inputs[name].rules = inputs[name].rawRules.split('|')
-          } else {
-            _inputs[name].rules = inputs[name].rawRules
-          }
-          inputs[name].rules = []
-          _inputs[name].rules.forEach((rule, index) => {
+        if (Object.prototype.hasOwnProperty.call(input, 'rules')) {
+          input.rawRules = !isset(input.rawRules) ? input.rules : input.rawRules
+
+          const rules = isString(input.rawRules) ? input.rawRules.split('|') : input.rawRules
+
+          input.rules = []
+          rules.forEach((rule) => {
             if (isString(rule)) {
               rule = rule.split(':')
             }
-            const validator = makeRule(rule, inputs[name].label)
+            const validator = makeRule(rule, input.label)
             if (validator) {
-              inputs[name].rules.push(validator)
+              input.rules.push(validator)
             }
           })
         }
-        if(isset(inputs[name].schema)){
-          inputs[name].schema = invokeRuleGenerator(inputs[name].schema)
+        if (isset(input.schema)) {
+          input.schema = invokeRuleGenerator(input.schema)
         }
       })
     }
