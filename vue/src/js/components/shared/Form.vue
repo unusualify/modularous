@@ -1,9 +1,11 @@
 <template>
-  <v-sheet
+  <component
+    :is="isPageLayout ? 'div' : 'v-sheet'"
     :class="[
       'ue-form',
-      fillHeight ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
-      sheetClasses,
+      isPageLayout ? 'ue-form--page' : '',
+      (fillHeight || isPageLayout) ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
+      isPageLayout ? '' : sheetClasses,
     ]">
 
     <v-form
@@ -19,11 +21,15 @@
       <input v-if="!async" type="hidden" name="_token" :value="$csrf"/>
 
       <!-- Header Section -->
-      <div :class="[
-        (hasDivider || title) ? 'px-1' : '',
-        scrollable ? 'flex-grow-0' : '',
-        'pb-2'
-      ]">
+      <component
+        :is="isPageLayout && headerCard ? 'v-sheet' : 'div'"
+        :class="[
+          'ue-form__header',
+          isPageLayout
+            ? (headerCard ? 'ue-form__card pa-4 mb-3' : 'pb-4')
+            : [(hasDivider || title) ? 'px-1' : '', scrollable ? 'flex-grow-0' : '', 'pb-2'],
+        ]"
+      >
         <v-alert
           v-if="hasOtherEditors && editPresenceLockMessage"
           type="warning"
@@ -43,7 +49,7 @@
           >
             <template v-slot:default>
               <slot name="header.left" v-bind="{title: titleSerialized, subtitle: subtitle ?? null, model: model, schema: inputSchema, formItem}">
-                <span v-if="titlePlacement !== 'outside'">
+                <span>
                   {{ titleSerialized }}
                   <ue-title v-if="subtitle"
                     :text="subtitle"
@@ -131,13 +137,16 @@
           </ue-title>
         </div>
         <div :class="[
-          'flex-1-0 d-flex align-start ga-2',
+          'flex-1-0 d-flex flex-column align-start align-sm-end ga-2',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
             || (hasAdditionalSection && $vuetify.display.mdAndDown)
             || (formEventSchema && formEventSchema.length && model)
             || ($slots['header.right'])
+            || ($slots['header.right.top'])
           ) ? 'pb-2 pb-md-0 pl-md-2' : ''
         ]">
+          <slot name="header.right.top" v-bind="{model, schema: inputSchema, formItem}"></slot>
+          <div class="d-flex align-center ga-2">
           <FormEvents v-if="formEventSchema && formEventSchema.length && model"
             :events="formEventSchema"
             v-model="model"
@@ -159,6 +168,7 @@
           <slot name="header.right">
 
           </slot>
+          </div>
         </div>
         </div>
         <FormPublicLinks
@@ -167,15 +177,19 @@
           :signed-public-preview="signedPublicPreview"
           :is-editing="isEditing"
         />
-      </div>
+      </component>
 
-      <v-divider v-if="hasDivider && titlePlacement !== 'outside'" class="pb-2"></v-divider>
+      <v-divider v-if="hasDivider && !isPageLayout" class="pb-2"></v-divider>
 
+      <component
+        :is="cardWrapsAll ? 'v-sheet' : 'FormPassthrough'"
+        :class="cardWrapsAll ? ['ue-form__card d-flex flex-column flex-grow-1', sheetClasses] : undefined"
+      >
       <!-- Scrollable Content Section -->
       <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
-        <div :class="['w-100 d-flex align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
+        <div :class="['w-100 d-flex', cardWrapsMain ? 'align-stretch' : 'align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
         >
-          <div class="flex-grow-1 px-1">
+          <div :class="['flex-grow-1', cardWrapsMain ? 'd-flex flex-column min-width-0' : 'px-1']">
             <!-- Top Form Actions -->
             <FormActions v-if="actionsPosition == 'top' && formActionsActive"
               :modelValue="formItem"
@@ -192,6 +206,10 @@
               </template>
             </FormActions>
 
+            <component
+              :is="cardWrapsMain ? 'v-sheet' : 'FormPassthrough'"
+              :class="cardWrapsMain ? ['ue-form__card flex-grow-1', sheetClasses] : undefined"
+            >
             <slot name="top" v-bind="{item: formItem, schema}"></slot>
 
             <!-- Middle Form Actions -->
@@ -311,16 +329,18 @@
                 <slot name="actions.append" v-bind="actionsScope"></slot>
               </template>
             </FormActions>
+            </component>
           </div>
 
           <div v-if="hasAdditionalSection && $vuetify.display.lgAndUp"
             :class="[
-              `flex-grow-0 ml-${rightSlotGap}`,
+              'flex-grow-0',
+              isPageLayout ? 'ms-3' : `ml-${rightSlotGap}`,
             ]"
           >
             <div
               :class="[
-                `pt-2 gr-4`,
+                isPageLayout ? 'gr-3' : 'pt-2 gr-4',
                 $vuetify.display.smAndDown ? 'd-none' : 'd-flex flex-column',
               ]"
               :style="{
@@ -467,16 +487,19 @@
           <slot name="bottom" v-bind="{}"></slot>
         </div>
       </div>
+      </component>
 
     </v-form>
-  </v-sheet>
+  </component>
 </template>
 
 <script>
 import { computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import { useDisplay } from 'vuetify'
 import { useForm, makeFormProps } from '@/hooks/form'
+import { resolveTableTitleAttributes } from '@/hooks/table/tableTitleAttributes'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from '../form/FormActions.vue'
 import FormPreviewFields from '../form/FormPreviewFields.vue'
@@ -484,6 +507,8 @@ import FormPublicLinks from '../form/FormPublicLinks.vue'
 import FormLocaleSelector from '../form/FormLocaleSelector.vue'
 import FormEvents from '../form/FormEvents.vue'
 import FormSecondaryInputs from '../form/FormSecondaryInputs.vue'
+
+const FormPassthrough = (_, { slots }) => slots.default?.()
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -567,6 +592,7 @@ export default {
     FormPublicLinks,
     FormLocaleSelector,
     AdditionalSectionContent,
+    FormPassthrough,
   },
   emits: [
     'update:valid',
@@ -594,15 +620,21 @@ export default {
     const store = useStore()
     const useFormInstance = useForm(props, context)
     const { t, te } = useI18n({ useScope: 'global' })
-    // const i18n = useI18n()
+    const vuetifyDisplay = useDisplay()
 
     const sheetClasses = computed(() => [
       props.noDefaultFormPadding ? '' : 'pa-4',
       props.noDefaultSurface ? 'bg-transparent' : '',
     ])
 
+    const isPageLayout = computed(() => props.titlePlacement === 'outside')
+    const hasRightColumn = computed(() => useFormInstance.hasAdditionalSection.value && vuetifyDisplay.lgAndUp.value)
+    // Page layout: one card for the whole body, or (with a right column) a card for the main column only
+    const cardWrapsAll = computed(() => isPageLayout.value && !hasRightColumn.value)
+    const cardWrapsMain = computed(() => isPageLayout.value && hasRightColumn.value)
+
     const formClasses = computed(() => [
-      (props.fillHeight || props.pushButtonToBottom) ? 'd-flex flex-column flex-grow-1 min-height-0 h-100' : '',
+      (props.fillHeight || props.pushButtonToBottom || isPageLayout.value) ? 'd-flex flex-column flex-grow-1 min-height-0 h-100' : '',
       props.formClass,
     ])
 
@@ -672,6 +704,7 @@ export default {
         }
       } else {
         options = {
+          ...(isPageLayout.value ? resolveTableTitleAttributes('outside') : {}),
           class: 'flex-md-row flex-column justify-md-space-between'
         }
       }
@@ -705,15 +738,7 @@ export default {
       || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
     )
 
-    const showTitleRow = computed(() => {
-      if (props.noTitle || !props.title) return false
-      if (props.titlePlacement !== 'outside') return true
-
-      return props.previewable
-        || (['title-center', 'title-right'].includes(props.actionsPosition) && useFormInstance.formActionsActive.value)
-        || !!context.slots['header.left']
-        || !!context.slots.headerCenter
-    })
+    const showTitleRow = computed(() => !props.noTitle && !!props.title)
 
     return {
       ...useFormInstance,
@@ -725,6 +750,9 @@ export default {
       titleSerialized,
       hasRightSlotContent,
       showTitleRow,
+      isPageLayout,
+      cardWrapsAll,
+      cardWrapsMain,
     }
   }
 }

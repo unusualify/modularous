@@ -1,47 +1,22 @@
 <template>
   <div class="generic-form">
-    <div v-if="pageTitle" class="generic-form__header pb-4">
-      <ue-title v-bind="titleAttributes" :text="pageTitle" />
-      <ue-title v-if="pageSubtitle" v-bind="subtitleAttributes" :text="pageSubtitle" />
-    </div>
     <ue-form
+      title-placement="outside"
       v-bind="formAttributes"
-      :title-placement="pageTitle ? 'outside' : 'inside'"
     />
   </div>
 </template>
 
 <script setup>
-import { computed, h } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { h } from 'vue'
 import MainLayout from '@/Pages/Layouts/MainLayout.vue'
-import {
-  resolveTableTitleAttributes,
-  resolveTableSubtitleAttributes,
-} from '@/hooks/table/tableTitleAttributes'
 
-const props = defineProps({
+defineProps({
   formAttributes: {
     type: Object,
     default: () => ({}),
   }
 })
-
-const { t, te } = useI18n()
-
-const translate = (text) => (te(text) ? t(text) : text)
-
-const pageTitle = computed(() => {
-  const { title, noTitle } = props.formAttributes
-  if (noTitle || !title) return null
-
-  return translate(window.__isObject(title) ? title.text : title)
-})
-
-const pageSubtitle = computed(() => (props.formAttributes.subtitle ? translate(props.formAttributes.subtitle) : null))
-
-const titleAttributes = resolveTableTitleAttributes('outside')
-const subtitleAttributes = resolveTableSubtitleAttributes('outside')
 
 defineOptions({
   layout: (h, page) => h(MainLayout, () => page),

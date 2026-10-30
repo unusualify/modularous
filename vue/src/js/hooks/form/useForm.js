@@ -39,11 +39,16 @@ export const makeFormProps = propsFactory({
     type: Boolean,
     default: false
   },
-  // 'outside': the host page renders the title text; header actions stay in the form
+  // 'outside': page layout; the header row sits above the card(s) and the right section becomes its own column
   titlePlacement: {
     type: String,
     default: 'inside',
     validator: (value) => ['inside', 'outside'].includes(value)
+  },
+  // Page layout only: render the header row as its own card
+  headerCard: {
+    type: Boolean,
+    default: false
   },
   subtitle: {
     type: String,
