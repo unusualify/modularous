@@ -6,6 +6,7 @@ alwaysApply: true
 # Git commits
 
 - Never add a `Co-authored-by: Cursor <cursoragent@cursor.com>` trailer (or any other agent/AI co-author trailer) to commit messages.
+- The agent shell may inject `--trailer` into `git commit`. Commit with plumbing instead: `git add <files> && c=$(git commit-tree "$(git write-tree)" -p HEAD -m "<message>") && git update-ref HEAD "$c"`.
 - If a commit ends up with such a trailer, strip it from unpushed commits before finishing (e.g. `git filter-branch --msg-filter "sed '/^Co-authored-by: Cursor/d'" <upstream>..HEAD`). Do not rewrite already pushed commits without asking.
 - Use Conventional Commits: `type(scope): summary` (`feat`, `fix`, `chore`, `perf`, `refactor`, `docs`, `test`), imperative, lowercase summary, no trailing period.
 - One concern per commit; commit only files you changed, never unrelated working-tree changes.
