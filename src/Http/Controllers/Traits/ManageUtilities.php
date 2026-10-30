@@ -29,6 +29,7 @@ trait ManageUtilities
 
         $scopes = $this->filterScope($this->nestedParentScopes());
         $tableAttributes = $this->hydrateTableAttributes();
+        $tableAttributes['formAttributes'] = $this->getModalFormAttributes($tableAttributes['formAttributes'] ?? []);
         $tableEndpoints = $this->getIndexUrls() + $this->getUrls();
         $tableMainFilters = $this->getTableMainFilters($scopes);
 
@@ -98,6 +99,17 @@ trait ManageUtilities
         ];
 
         return array_replace_recursive($data + $options, $this->indexData($this->request));
+    }
+
+    /**
+     * Form attributes for the index create/edit modal: the route's form options
+     * (`form_options`) as the base, table-level `formAttributes` on top.
+     */
+    protected function getModalFormAttributes(array $tableFormAttributes): array
+    {
+        $formAttributes = property_exists($this, 'formAttributes') ? (array) $this->formAttributes : [];
+
+        return array_merge_recursive_preserve($formAttributes, $tableFormAttributes);
     }
 
     /**

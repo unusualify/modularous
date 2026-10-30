@@ -34,6 +34,8 @@ class ControllerUsingManageUtilities extends Controller
 
     protected $titleColumnKey = 'title';
 
+    protected $formAttributes = [];
+
     public function setRequest(Request $request): void
     {
         $this->request = $request;
@@ -42,6 +44,16 @@ class ControllerUsingManageUtilities extends Controller
     public function setTableAttributes(array $attributes): void
     {
         $this->tableAttributes = $attributes;
+    }
+
+    public function setFormAttributes(array $attributes): void
+    {
+        $this->formAttributes = $attributes;
+    }
+
+    public function invokeGetModalFormAttributes(array $tableFormAttributes): array
+    {
+        return $this->getModalFormAttributes($tableFormAttributes);
     }
 
     /**

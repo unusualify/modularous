@@ -56,6 +56,33 @@ class ManageUtilitiesTest extends TestCase
         $this->assertSame([['slug' => 'all', 'name' => 'All']], $data['tableAttributes']['filterList']);
     }
 
+    public function test_modal_form_attributes_use_form_options_as_base(): void
+    {
+        $this->controller->setFormAttributes([
+            'subtitle' => 'From form options',
+            'rightSlotMaxWidth' => '300',
+            'rowAttribute' => ['class' => 'py-4', 'noGutters' => false],
+        ]);
+
+        $result = $this->controller->invokeGetModalFormAttributes([
+            'rightSlotMaxWidth' => '400',
+            'rowAttribute' => ['class' => 'py-2'],
+        ]);
+
+        $this->assertSame('From form options', $result['subtitle']);
+        $this->assertSame('400', $result['rightSlotMaxWidth']);
+        $this->assertSame(['class' => 'py-2', 'noGutters' => false], $result['rowAttribute']);
+    }
+
+    public function test_get_index_data_passes_form_options_to_modal_form(): void
+    {
+        $this->controller->setFormAttributes(['subtitle' => 'From form options']);
+
+        $data = $this->controller->invokeGetIndexData();
+
+        $this->assertSame('From form options', $data['tableAttributes']['formAttributes']['subtitle']);
+    }
+
     public function test_get_index_data_includes_search_from_request(): void
     {
         $request = Request::create('/', 'GET', ['search' => 'press']);
