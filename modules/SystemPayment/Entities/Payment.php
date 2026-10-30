@@ -302,7 +302,16 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return Attribute::make(
             get: function () {
-                $t = $this->parameters->modularous ?? [];
+                $t = $this->parameters->modularous
+                    ?? $this->parameters->modularity
+                    ?? null;
+
+                if (! $t) {
+                    return [
+                        'paid_at' => $this->paid_at ?? $this->updated_at,
+                        'provisioned_at' => $this->provisioned_at,
+                    ];
+                }
 
                 $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
 
