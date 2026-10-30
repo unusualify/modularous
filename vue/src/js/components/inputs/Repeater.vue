@@ -304,7 +304,7 @@
             <!-- Bottom Actions -->
             <div
               v-if="(totalRepeats < 1 || !noAddButton) || $slots.addButton || $slots.addButtonRight"
-              class="v-input-repeater__bottom mb-12"
+              class="v-input-repeater__bottom mt-2 mb-12"
             >
               <div class="d-flex">
                 <slot name="addButton" v-bind="{text: addButtonContent, addRepeaterBlock, isActive: addButtonIsActive}">
@@ -391,6 +391,9 @@
 
     .v-input-repeater__block
       // margin-left: -1 * 12 * $spacer
+      // inputs hide their details until an error shows, so gutterless rows need their own spacing
+      &.v-row--no-gutters
+        row-gap: 8px
       .v-input-repeater__content
         margin-bottom: 20px
       + .dropdown
