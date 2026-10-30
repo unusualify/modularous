@@ -163,6 +163,7 @@ return [
         'hasSubmit' => false,
         'fillHeight' => true,
         'hasDivider' => true,
+        'hasFooterDivider' => false,
         'noDefaultFormPadding' => true,
         'title' => [
             'transform' => 'uppercase',

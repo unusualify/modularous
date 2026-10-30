@@ -108,6 +108,10 @@ export const makeFormProps = propsFactory({
     type: Boolean,
     default: false
   },
+  hasFooterDivider: {
+    type: Boolean,
+    default: true
+  },
   fillHeight: {
     type: Boolean,
     default: false
