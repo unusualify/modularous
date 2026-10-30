@@ -109,6 +109,10 @@ export const makeTableProps = propsFactory({
     type: [String, Array],
     default: ''
   },
+  transparentBody: {
+    type: Boolean,
+    default: false
+  },
   iteratorType: {
     type: String,
     default: '',

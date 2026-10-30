@@ -133,6 +133,15 @@ Utility classes served under [VuetifyJS-Utility Classes](https://vuetifyjs.com/e
 
 <br/>
 
+#### `transparentBody`
+Drops the background and border of the rows and footer so they sit directly on the page. Useful when a `customRow` component renders its own cards.
+
+- `Input Type:` `Boolean`
+- `Variance`: `true|false`
+- `default`: `false`
+
+<br/>
+
 #### `hideHeaders`
 Hides the header row of the tabular component
 - `Input Type:` `Boolean`

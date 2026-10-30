@@ -40,6 +40,7 @@
               ? (noFullScreen ? 'ue-table--card-inside d-flex flex-column flex-grow-1 min-height-0' : 'ue-table--card-inside h-100')
               : (noFullScreen ? 'px-4 d-flex flex-column flex-grow-1 min-height-0' : 'px-4 h-100')),
           striped ? 'ue-datatable--striped' : '',
+          transparentBody ? 'ue-table--transparent-body' : '',
           tableClasses,
         ]"
         id="ue-table"
@@ -699,7 +700,7 @@
                   </div>
                 </template>
               </component>
-              <v-divider v-if="i < items.length - 1" />
+              <v-divider v-if="i < items.length - 1 && !transparentBody" />
             </v-col>
           </v-row>
         </template>
@@ -1318,6 +1319,16 @@ export default {
       background: rgb(var(--v-theme-surface))
       border: $ue-table-card-border
       border-radius: 0 0 $ue-table-card-radius $ue-table-card-radius
+
+  // transparentBody: rows sit directly on the page (e.g. a custom row rendering its own cards)
+  #ue-table.ue-table--transparent-body
+    background: transparent
+
+    > .v-table__wrapper,
+    > .ue-table__footer
+      background: transparent !important
+      border: 0 !important
+      border-radius: 0 !important
 
   // titlePlacement: 'inside' on the card layout - the sheet is the card; title, rows and footer share it
   #ue-table.ue-table--card-inside

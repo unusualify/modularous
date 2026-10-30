@@ -33,6 +33,7 @@ return [
     'tableClasses' => '',
     'tableDensity' => 'compact', // compact, comfortable, null
     'tableRounded' => true,
+    'transparentBody' => false, // drops the rows/footer card background and border
 
     'toolbarOptions' => [
         'color' => 'transparent', // rgb(255,255,255,1) or utility colors like white, purple
