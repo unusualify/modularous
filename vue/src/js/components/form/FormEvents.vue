@@ -58,12 +58,13 @@ defineOptions({
 <template>
   <template v-for="event in events" :key="event.name">
     <v-tooltip
-      :disabled="$isset(event.tooltip) || event.tooltip === false"
+      :disabled="event.tooltip === false"
       :location="event.tooltipLocation ?? 'top'"
     >
       <template v-slot:activator="tooltipActivatorScope">
         <v-switch v-if="event.type === 'switch'"
-          v-bind="{...$lodash.omit(event, 'labe'), ...props}"
+          v-bind="{...$lodash.omit(event, 'label'), ...props, ...tooltipActivatorScope.props}"
+          :aria-label="event.label"
           hide-details
           :modelValue="input[event.name] ?? event.default ?? false"
           @update:modelValue="updateValue(event.name, $event)"
