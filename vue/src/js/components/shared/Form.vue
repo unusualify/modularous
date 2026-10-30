@@ -440,7 +440,6 @@
                 loading
               }"></slot>
             </div>
-            {{ console.log(buttonDensity) }}
             <v-btn v-if="isSubmittable"
               type="submit"
               :density="buttonDensity"
