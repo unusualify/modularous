@@ -39,6 +39,12 @@ export const makeFormProps = propsFactory({
     type: Boolean,
     default: false
   },
+  // 'outside': the host page renders the title text; header actions stay in the form
+  titlePlacement: {
+    type: String,
+    default: 'inside',
+    validator: (value) => ['inside', 'outside'].includes(value)
+  },
   subtitle: {
     type: String,
   },

@@ -34,7 +34,7 @@
         />
         <div class="d-flex flex-column flex-sm-row">
           <div class="d-flex flex-column flex-1-1-100 min-width-0">
-          <ue-title v-if="!noTitle && title"
+          <ue-title v-if="showTitleRow"
             padding="a-0"
             align="start"
             justify="start"
@@ -43,7 +43,7 @@
           >
             <template v-slot:default>
               <slot name="header.left" v-bind="{title: titleSerialized, subtitle: subtitle ?? null, model: model, schema: inputSchema, formItem}">
-                <span>
+                <span v-if="titlePlacement !== 'outside'">
                   {{ titleSerialized }}
                   <ue-title v-if="subtitle"
                     :text="subtitle"
@@ -169,7 +169,7 @@
         />
       </div>
 
-      <v-divider v-if="hasDivider" class="pb-2"></v-divider>
+      <v-divider v-if="hasDivider && titlePlacement !== 'outside'" class="pb-2"></v-divider>
 
       <!-- Scrollable Content Section -->
       <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
@@ -705,6 +705,16 @@ export default {
       || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
     )
 
+    const showTitleRow = computed(() => {
+      if (props.noTitle || !props.title) return false
+      if (props.titlePlacement !== 'outside') return true
+
+      return props.previewable
+        || (['title-center', 'title-right'].includes(props.actionsPosition) && useFormInstance.formActionsActive.value)
+        || !!context.slots['header.left']
+        || !!context.slots.headerCenter
+    })
+
     return {
       ...useFormInstance,
       t,
@@ -714,6 +724,7 @@ export default {
       titleOptions,
       titleSerialized,
       hasRightSlotContent,
+      showTitleRow,
     }
   }
 }

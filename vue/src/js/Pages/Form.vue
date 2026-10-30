@@ -1,17 +1,25 @@
 <template>
   <div class="generic-form">
+    <div v-if="pageTitle" class="generic-form__header pb-4">
+      <ue-title v-bind="titleAttributes" :text="pageTitle" />
+      <ue-title v-if="pageSubtitle" v-bind="subtitleAttributes" :text="pageSubtitle" />
+    </div>
     <ue-form
       v-bind="formAttributes"
+      :title-placement="pageTitle ? 'outside' : 'inside'"
     />
   </div>
 </template>
 
 <script setup>
-import { onMounted, h } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { computed, h } from 'vue'
+import { useI18n } from 'vue-i18n'
 import MainLayout from '@/Pages/Layouts/MainLayout.vue'
+import {
+  resolveTableTitleAttributes,
+  resolveTableSubtitleAttributes,
+} from '@/hooks/table/tableTitleAttributes'
 
-// Define props
 const props = defineProps({
   formAttributes: {
     type: Object,
@@ -19,12 +27,21 @@ const props = defineProps({
   }
 })
 
-const page = usePage()
+const { t, te } = useI18n()
 
-onMounted(() => {
-  // console.info('Generic Form component mounted for:', page.props)
-  // console.info('Generic Form component mounted props for:', props)
+const translate = (text) => (te(text) ? t(text) : text)
+
+const pageTitle = computed(() => {
+  const { title, noTitle } = props.formAttributes
+  if (noTitle || !title) return null
+
+  return translate(window.__isObject(title) ? title.text : title)
 })
+
+const pageSubtitle = computed(() => (props.formAttributes.subtitle ? translate(props.formAttributes.subtitle) : null))
+
+const titleAttributes = resolveTableTitleAttributes('outside')
+const subtitleAttributes = resolveTableSubtitleAttributes('outside')
 
 defineOptions({
   layout: (h, page) => h(MainLayout, () => page),
