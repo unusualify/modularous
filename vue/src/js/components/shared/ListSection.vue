@@ -1,5 +1,5 @@
 <template>
-  <div class="ue-list-section">
+  <div class="ue-list-section" :class="{ 'ue-list-section--bordered': bordered }">
     <template v-if="shouldWrapInPanel">
       <v-expansion-panels
         v-model="panelState"
@@ -370,6 +370,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  bordered: {
+    type: Boolean,
+    default: false
+  },
   dividerAttributes: {
     type: Object,
     default: () => ({})
@@ -555,6 +559,12 @@ const toggleExpand = () => {
 <style scoped lang="scss">
   .ue-list-section {
     width: 100%;
+
+    &--bordered {
+      border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
 
     :deep(.ue-list-section__expansion-panels) {
       background-color: transparent;
