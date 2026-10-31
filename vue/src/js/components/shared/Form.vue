@@ -98,6 +98,7 @@
                 </v-btn>
                 <!-- Title Center Form Actions -->
                 <FormActions v-if="actionsPosition == 'title-center' && formActionsActive"
+                  justify="center"
                   :modelValue="formItem"
                   :actions="actions"
                   :is-editing="isEditing"
