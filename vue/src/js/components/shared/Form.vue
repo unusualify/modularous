@@ -26,7 +26,7 @@
         :class="[
           'ue-form__header',
           isPageLayout
-            ? (headerCard ? 'ue-form__card pa-4 mb-3' : 'pb-4')
+            ? ['flex-shrink-0', headerCard ? 'ue-form__card pa-4 mb-3' : 'pb-4']
             : [(hasDivider || title) ? 'px-1' : '', scrollable ? 'flex-grow-0' : '', 'pb-2'],
         ]"
       >
@@ -184,11 +184,16 @@
 
       <component
         :is="cardWrapsAll ? 'v-sheet' : 'FormPassthrough'"
-        :class="cardWrapsAll ? ['ue-form__card d-flex flex-column flex-grow-1', sheetClasses] : undefined"
+        :class="cardWrapsAll ? ['ue-form__card d-flex flex-column flex-grow-1 min-height-0', sheetClasses] : undefined"
       >
       <!-- Scrollable Content Section -->
-      <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
-        <div :class="['w-100 d-flex', cardWrapsMain ? 'align-stretch' : 'align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
+      <div :class="[
+        'd-flex',
+        bodyScrolls ? 'flex-grow-1 min-height-0 overflow-hidden' : '',
+        bodyScrolls ? (isPageLayout ? 'mr-n3' : 'mr-n4') : '',
+      ]">
+        <div :class="['w-100 d-flex flex-column', bodyScrolls ? 'overflow-y-auto pr-3' : '']">
+        <div :class="['d-flex flex-grow-1 flex-shrink-0', cardWrapsMain ? 'align-stretch' : 'align-start']"
         >
           <div :class="['flex-grow-1', cardWrapsMain ? 'd-flex flex-column min-width-0' : 'px-1']">
             <!-- Top Form Actions -->
@@ -250,7 +255,12 @@
               v-for="(cardSchema, cardIndex) in schemaCards"
               :key="cardIndex"
               :is="hasCardSections ? 'v-sheet' : 'FormPassthrough'"
-              :class="hasCardSections ? ['ue-form__card', sheetClasses, cardIndex > 0 ? 'mt-3' : ''] : undefined"
+              :class="hasCardSections ? [
+                'ue-form__card',
+                sheetClasses,
+                cardIndex > 0 ? 'mt-3' : '',
+                cardIndex === schemaCards.length - 1 ? 'flex-grow-1' : '',
+              ] : undefined"
             >
             <v-custom-form-base
               :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
@@ -433,6 +443,7 @@
             </v-card>
           </v-dialog>
         </div>
+        </div>
 
 
         <!-- Sticky Frame Section -->
@@ -442,7 +453,7 @@
       <v-spacer v-if="pushButtonToBottom"></v-spacer>
 
       <!-- Bottom Section -->
-      <div :class="[cardWrapsMain ? 'pt-3' : 'px-1', scrollable ? 'flex-grow-0' : '']" v-if="(!previewable && hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
+      <div :class="[cardWrapsMain ? 'pt-3' : 'px-1', bodyScrolls ? 'flex-shrink-0' : '']" v-if="(!previewable && hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
         <v-divider v-if="!previewable && hasSubmit && !stickyButton && hasDivider && hasFooterDivider" class=""></v-divider>
         <div :class="['d-flex flex-wrap justify-center justify-md-start w-100 ga-4 flex-md-row', cardWrapsMain ? 'pt-3' : 'pt-6']" v-if="!previewable && hasSubmit && !stickyButton">
           <template v-if="$store.getters.isSuperAdmin">
@@ -642,6 +653,8 @@ export default {
     // Page layout: one card for the whole body, or (with a right column) a card for the main column only
     const cardWrapsAll = computed(() => isPageLayout.value && !hasRightColumn.value)
     const cardWrapsMain = computed(() => isPageLayout.value && hasRightColumn.value)
+    // Header and footer stay put; only the body between them scrolls
+    const bodyScrolls = computed(() => props.scrollable || isPageLayout.value)
 
     // Inputs flagged `newCard` start a new card; following inputs join it until the next flag
     const inputSchemaCards = computed(() => {
@@ -785,6 +798,7 @@ export default {
       isPageLayout,
       cardWrapsAll,
       cardWrapsMain,
+      bodyScrolls,
       hasCardSections,
       schemaCards,
       cardFormBaseId,
@@ -795,4 +809,11 @@ export default {
 
 <style lang="sass" scoped>
 
+</style>
+
+<style lang="sass">
+// v-main is `flex: 1 0 auto` and grows with its content, so the page form body could never scroll on its own
+@media (min-width: 960px)
+  .v-main:has(.ue-form--page)
+    height: 100dvh
 </style>
