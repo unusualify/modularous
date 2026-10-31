@@ -61,122 +61,67 @@
     </ue-modal>
 
     <v-card
-      :color="status.card_color"
-      :variant="status.card_variant"
-      class="mb-4 w-100 h-100 d-flex flex-column"
+      variant="flat"
+      :class="['ue-process-card w-100 h-100 d-flex flex-column', `ue-process-card--${cardTone}`]"
     >
-      <v-skeleton-loader v-if="loading" type="table-heading, list-item-three-line" class="mb-4 w-100 h-100" style="min-height: 300px;"></v-skeleton-loader>
+      <v-skeleton-loader v-if="loading" type="table-heading, list-item-three-line" class="w-100 h-100" style="min-height: 200px;"></v-skeleton-loader>
 
       <template v-else-if="processModel">
-        <v-card-text class="d-flex flex-column">
+        <div class="ue-process-card__body d-flex flex-column flex-grow-1">
 
           <!-- Processable Title -->
-          <v-row no-gutters class="pb-4">
-            <v-col cols="12" sm="6" md="6" lg="7" xl="8" class="text-headline-medium font-weight-medium text-wrap">
+          <div class="d-flex align-start justify-space-between ga-2 mb-3">
+            <div class="ue-process-card__title text-wrap">
               {{ title }}
-            </v-col>
-            <v-col cols="12" sm="6" md="6" lg="5" xl="4" class="d-flex justify-sm-end">
-              <v-chip
-                :prepend-icon="status.icon"
-                :color="status.color"
-                class="text-body-large"
-              >
-                {{ status.label }}
-              </v-chip>
-            </v-col>
-          </v-row>
-
-          <v-spacer class="flex-grow-0"></v-spacer>
-
-          <!-- Edit Button -->
-          <v-row v-if="hasProcessableEditing">
-            <v-col cols="12" class="text-center" v-if="formSchema && processableModel">
-              <v-btn
-                ref="editButton"
-                colorx="primary"
-                density="compact"
-                :variant="bothFormAndProcessableValid ? 'outlined' : 'elevated'"
-                :elevation="bothFormAndProcessableValid ? null : 10"
-                :color="bothFormAndProcessableValid ? 'success' : onlyOneValid ? 'warning' : 'secondary'"
-                :prepend-icon="bothFormAndProcessableValid ? 'mdi-check-circle-outline' :  (onlyOneValid ? 'mdi-progress-question' : 'mdi-gesture-tap')"
-                @click="$refs.formModal.open()"
-                class="mb-4"
-              >
-                {{ bothFormAndProcessableValid ? $t('Edit') : onlyOneValid ? $t('Complete') : $t('Fill') }}
-              </v-btn>
-            </v-col>
-          </v-row>
-
-          <!-- Processable Details -->
-          <ue-list-section v-if="flattenedProcessableDetails.length > 0"
-            :items="flattenedProcessableDetails"
-            :item-fields="['title', 'value']"
-            :col-classes="['font-weight-medium text-wrap', 'd-flex justify-start']"
-            :col-ratios="[5,7]"
-          >
-          </ue-list-section>
-
-          <!-- Processable Form display -->
-          <template v-if="showProcessableDetails && processableModel">
-            <ue-list-section
-              v-for="formInput in formSchema"
-              :key="formInput.name"
-              :items="[
-                {
-                  title: formInput.label ?? $t('Unknown'),
-                  value: processableModel?.[formInput.name],
-                }
-              ]"
-              col-element="div"
-              :item-fields="['title', 'value']"
-              :col-classes="['font-weight-medium text-wrap', 'd-flex justify-start']"
-              item-classes="text-body-medium"
-              :col-ratios="displayColRatio"
-              vertical-align-top
+            </div>
+            <v-chip
+              :prepend-icon="status.icon"
+              :color="cardTone === 'neutral' ? undefined : cardTone"
+              variant="tonal"
+              size="small"
+              class="flex-shrink-0"
             >
-              <template v-slot:field.1="slotScope">
-                <!-- <div class="d-flex" style=""> -->
-                  <ue-filepond-preview v-if="formInput.type === 'input-filepond'"
-                    :source="slotScope.value"
-                    show-inline-file-name
-                    image-size="24"
-                    style="width: 155px;"
-                  />
-                  <template v-else-if="(formInput.type === 'text' && formInput.ext === 'date') || (['input-date', 'date-input'].includes(formInput.type))"
-                  >
-                    {{ slotScope.value ? $d(slotScope.value, formInput.displayDateFormat ?? 'numeric') : '' }}
-                  </template>
-                  <template v-else
-                    class="text-body-large"
-                  >
-                    {{ slotScope.value }}
-                  </template>
-                <!-- </div> -->
-              </template>
-            </ue-list-section>
-          </template>
+              {{ status.label }}
+            </v-chip>
+          </div>
 
-          <!-- History -->
-          <ue-list-section
-            v-if="processModel.last_history && processModel.last_history.reason"
-            :items="[
-              {
-                title: processModel.status_reason_label,
-                value: processModel.last_history.reason,
-              }
-            ]"
-            :item-fields="['title', 'value']"
-            :col-classes="['font-weight-bold text-wrap', 'd-flex justify-start']"
-            :col-ratios="historyColRatio ?? displayColRatio"
-          >
-            <template v-slot:field.1="slotScope">
-              <div class="d-flex align-center w-100" style="min-width: 0;">
+          <!-- Details -->
+          <div class="ue-process-card__details">
+            <div v-for="detail in flattenedProcessableDetails" :key="detail.title" class="ue-process-card__row">
+              <div class="ue-process-card__label">{{ detail.title }}</div>
+              <div class="ue-process-card__value">{{ detail.value }}</div>
+            </div>
+
+            <template v-if="showProcessableDetails && processableModel">
+              <div v-for="formInput in formSchema" :key="formInput.name" class="ue-process-card__row">
+                <div class="ue-process-card__label">{{ formInput.label ?? $t('Unknown') }}</div>
+                <div class="ue-process-card__value">
+                  <ue-filepond-preview v-if="formInput.type === 'input-filepond'"
+                    :source="processableModel?.[formInput.name]"
+                    show-inline-file-name
+                    image-size="20"
+                    max-file-name-length="18"
+                  />
+                  <template v-else-if="(formInput.type === 'text' && formInput.ext === 'date') || (['input-date', 'date-input'].includes(formInput.type))">
+                    {{ processableModel?.[formInput.name] ? $d(processableModel[formInput.name], formInput.displayDateFormat ?? 'numeric') : '' }}
+                  </template>
+                  <template v-else>
+                    {{ processableModel?.[formInput.name] }}
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <!-- History -->
+            <div v-if="processModel.last_history && processModel.last_history.reason" class="ue-process-card__row">
+              <div class="ue-process-card__label">{{ processModel.status_reason_label }}</div>
+              <div class="ue-process-card__value d-flex align-center" style="min-width: 0;">
                 <div
                   ref="reasonTextEl"
                   class="flex-grow-1 text-truncate"
                   style="min-width: 0;"
                 >
-                  {{ slotScope.value }}
+                  {{ processModel.last_history.reason }}
                 </div>
                 <v-menu
                   v-if="hasReasonOverflow"
@@ -200,48 +145,33 @@
                       class="text-body-medium text-break"
                       style="white-space: pre-line;"
                     >
-                      {{ slotScope.value }}
+                      {{ processModel.last_history.reason }}
                     </v-card-text>
-                    <!--
-                      TODO: copy-to-clipboard icon (disabled in this version, re-enable later)
-                      Requires: position-relative on v-card, pe-10 pb-10 on v-card-text,
-                      and reasonCopied + copyReason from setup().
-                    <v-btn
-                      :icon="reasonCopied ? 'mdi-check' : 'mdi-content-copy'"
-                      :color="reasonCopied ? 'success' : undefined"
-                      size="x-small"
-                      variant="text"
-                      density="compact"
-                      class="position-absolute"
-                      style="bottom: 6px; right: 6px;"
-                      :title="$t('Copy')"
-                      @click.stop="copyReason(slotScope.value)"
-                    />
-                    -->
                   </v-card>
                 </v-menu>
               </div>
-            </template>
-          </ue-list-section>
+            </div>
+          </div>
 
-          <template v-if="!(showProcessableDetails && processableModel)">
-            <!-- show informational message about contents preparing or updating by vuetify compenents in well formatted-->
-            <v-alert
-              type="info"
-              variant="tonal"
-              :color="processModel?.status_card_color ?? color"
-              class="my-4"
+          <p v-if="!(showProcessableDetails && processableModel)" class="text-body-small text-medium-emphasis mt-2 mb-0">
+            {{ informationalMessage }}
+          </p>
+
+          <v-spacer></v-spacer>
+
+          <!-- Actions -->
+          <div class="d-flex flex-wrap justify-end ga-2 pt-4">
+            <v-btn v-if="hasProcessableEditing && formSchema && processableModel"
+              ref="editButton"
+              v-bind="actionButtonProps"
+              :color="bothFormAndProcessableValid ? undefined : 'secondary'"
+              :prepend-icon="bothFormAndProcessableValid ? 'mdi-square-edit-outline' : (onlyOneValid ? 'mdi-progress-question' : 'mdi-gesture-tap')"
+              @click="$refs.formModal.open()"
             >
-              {{ informationalMessage }}
-            </v-alert>
-          </template>
-        </v-card-text>
+              {{ bothFormAndProcessableValid ? $t('Edit') : onlyOneValid ? $t('Complete') : $t('Fill') }}
+            </v-btn>
 
-        <v-spacer></v-spacer>
-
-        <v-card-actions v-if="$hasRoles(processEditableRoles)" class="px-4">
-          <v-row>
-            <v-col v-if="processModel && processModel.status" cols="12" class="text-center">
+            <template v-if="$hasRoles(processEditableRoles) && processModel.status">
               <!-- Waiting for Confirmation -->
               <template v-if="processModel.status.match(/waiting_for_confirmation|waiting_for_reaction/) && canAction(processModel.status)">
                 <ue-modal
@@ -249,16 +179,14 @@
                   v-model="promptModalActive"
                   width-type="sm"
                   transition="dialog-bottom-transition"
-
                   >
                   <template v-slot:activator="{ props }">
                     <v-btn
+                      v-bind="{ ...actionButtonProps, ...props }"
                       color="error"
-                      variant="outlined"
-                      class="mr-2"
-                      v-bind="props"
+                      prepend-icon="mdi-close-circle-outline"
                     >
-                      <v-icon left>mdi-close</v-icon>
+                      {{ $t('Reject') }}
                     </v-btn>
                   </template>
                   <template v-slot:body="modalBodyScope">
@@ -308,35 +236,30 @@
                   </template>
                 </ue-modal>
                 <v-btn
+                  v-bind="actionButtonProps"
                   color="success"
-                  variant="elevated"
+                  prepend-icon="mdi-check-circle-outline"
                   :loading="updating"
                   @click="confirmUpdateProcess('confirmed')"
                 >
-                  <v-icon left>mdi-check</v-icon>
+                  {{ $t('Approve') }}
                 </v-btn>
               </template>
 
               <!-- Process Status Actions -->
-              <template v-else-if="canAction(processModel.status)">
-                <v-btn
-                  :color="status.next_action_color"
-                  variant="elevated"
-                  :loading="updating"
-                  :disabled="processModel.status === 'preparing' && !bothFormAndProcessableValid"
-                  @click="confirmUpdateProcess(
-                    nextActionStatus
-                  )"
-                >
-                  {{ status.next_action_label }}
-                </v-btn>
-              </template>
-
-
-            </v-col>
-          </v-row>
-        </v-card-actions>
-
+              <v-btn v-else-if="canAction(processModel.status)"
+                v-bind="actionButtonProps"
+                :color="nextActionTone"
+                :prepend-icon="nextActionIcon"
+                :loading="updating"
+                :disabled="processModel.status === 'preparing' && !bothFormAndProcessableValid"
+                @click="confirmUpdateProcess(nextActionStatus)"
+              >
+                {{ status.next_action_label }}
+              </v-btn>
+            </template>
+          </div>
+        </div>
       </template>
     </v-card>
 
@@ -903,6 +826,41 @@ export default {
         return status
       }),
 
+      cardTone: computed(() => {
+        const processStatus = processModel.value?.status
+        const configuredTone = props.statusConfiguration?.[processStatus]?.tone
+
+        if(configuredTone){
+          return configuredTone
+        }
+
+        if(/waiting_for_confirmation|waiting_for_reaction/.test(processStatus ?? '')){
+          return 'warning'
+        }
+
+        return ({ rejected: 'error', confirmed: 'success' })[processStatus] ?? 'neutral'
+      }),
+
+      nextActionTone: computed(() => {
+        return processModel.value?.status === 'confirmed'
+          ? undefined
+          : (props.statusConfiguration?.[processModel.value?.status]?.next_action_color ?? processModel.value?.next_action_color)
+      }),
+
+      nextActionIcon: computed(() => {
+        const processStatus = processModel.value?.status
+
+        return props.statusConfiguration?.[processStatus]?.next_action_icon
+          ?? (processStatus === 'confirmed' ? 'mdi-arrow-left-circle-outline' : 'mdi-alert-outline')
+      }),
+
+      actionButtonProps: {
+        variant: 'outlined',
+        size: 'small',
+        rounded: 'pill',
+        class: 'ue-process-card__action',
+      },
+
       nextActionStatus: computed(() => {
         switch(processModel.value?.status){
           case 'preparing':
@@ -1006,5 +964,65 @@ export default {
 </style>
 
 <style lang="scss">
+.ue-process-card {
+  --ue-process-card-tone: rgba(var(--v-border-color), 0.24);
 
+  border: 1px solid var(--ue-process-card-tone);
+  border-radius: 12px;
+
+  &--success { --ue-process-card-tone: rgb(var(--v-theme-success)); }
+  &--warning { --ue-process-card-tone: rgb(var(--v-theme-warning)); }
+  &--error { --ue-process-card-tone: rgb(var(--v-theme-error)); }
+
+  .ue-process-card__body {
+    padding: 16px;
+  }
+
+  .ue-process-card__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+  }
+
+  .ue-process-card__details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ue-process-card__row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    column-gap: 12px;
+    align-items: start;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
+
+  .ue-process-card__label {
+    font-weight: 600;
+  }
+
+  .ue-process-card__value {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+  }
+
+  .ue-process-card__action.v-btn {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .ue-process-card__action.v-btn--variant-outlined:not(.v-btn--disabled) {
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
+  }
+
+  .ue-process-card__action.v-btn--disabled {
+    opacity: 1;
+    border-color: transparent;
+    background-color: rgba(var(--v-theme-on-surface), 0.08);
+    color: rgba(var(--v-theme-on-surface), 0.45);
+  }
+}
 </style>
