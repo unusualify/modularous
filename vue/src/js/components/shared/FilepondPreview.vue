@@ -20,7 +20,7 @@
           @click="canPreviewFile(index) ? previewFile(index) : downloadFile(item.uuid)"
         >
           <!-- Left side: Icon/Image -->
-          <div :style="{ width: `${imageSize}px`, height: `${imageSize}px` }" class="position-relative flex-grow-0">
+          <div :style="{ width: `${imageSize}px`, height: `${imageSize}px` }" class="position-relative flex-grow-0 flex-shrink-0">
             <v-img
               v-if="thumbnailUrls[index]"
               :src="thumbnailUrls[index]"
@@ -51,9 +51,9 @@
           <!-- Right side: Filename (only if showInlineFileName is true) -->
           <div
             v-if="showInlineFileName || showFileName"
-            class="d-flex align-center px-4"
+            :class="['file-preview-item__name d-flex align-center', Number(imageSize) <= 24 ? 'ps-2' : 'px-4']"
           >
-            <span class="text-body-medium text-truncate">{{ shortenFileName(item.file_name) }}</span>
+            <span class="text-body-medium text-truncate" :title="item.file_name">{{ shortenFileName(item.file_name) }}</span>
           </div>
 
           <div v-if="showDate" class="ml-auto mr-1">
@@ -341,6 +341,10 @@
 <style scoped>
   .file-preview-item {
     cursor: pointer;
+  }
+  .file-preview-item__name {
+    flex: 1 1 auto;
+    min-width: 0;
   }
   .overlay-content {
     position: absolute;
