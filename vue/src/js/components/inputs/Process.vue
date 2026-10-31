@@ -998,7 +998,7 @@ export default {
 
   .ue-process-card__row {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-columns: minmax(min-content, 2fr) minmax(0, 3fr);
     column-gap: 12px;
     align-items: start;
     font-size: 0.75rem;
@@ -1007,6 +1007,8 @@ export default {
 
   .ue-process-card__label {
     font-weight: 600;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   .ue-process-card__value {
