@@ -63,8 +63,7 @@ defineOptions({
     >
       <template v-slot:activator="tooltipActivatorScope">
         <v-switch v-if="event.type === 'switch'"
-          v-bind="{...$lodash.omit(event, 'label'), ...props, ...tooltipActivatorScope.props}"
-          :aria-label="event.label"
+          v-bind="{...$lodash.omit(event, 'labe'), ...props}"
           hide-details
           :modelValue="input[event.name] ?? event.default ?? false"
           @update:modelValue="updateValue(event.name, $event)"
@@ -103,7 +102,7 @@ defineOptions({
               variant="outlined"
               append-icon="mdi-chevron-down"
               v-bind="menuActivatorScope.props"
-              density="compact"
+              :density="event.density ?? 'default'"
             >
               {{ getEventActiveLabel(event) }}
             </v-btn>
