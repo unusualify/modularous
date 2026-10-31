@@ -153,14 +153,17 @@
             </div>
           </div>
 
-          <p v-if="!(showProcessableDetails && processableModel)" class="text-body-small text-medium-emphasis mt-2 mb-0">
-            {{ informationalMessage }}
-          </p>
-
           <v-spacer></v-spacer>
 
+          <div v-if="!(showProcessableDetails && processableModel) && informationalMessage"
+            :class="['ue-process-card__notice', `ue-process-card__notice--${cardTone === 'error' ? 'error' : 'neutral'}`]"
+          >
+            <v-icon icon="mdi-alert-circle-outline" size="20" class="flex-shrink-0" />
+            <span>{{ informationalMessage }}</span>
+          </div>
+
           <!-- Actions -->
-          <div class="d-flex flex-wrap justify-end ga-2 pt-4">
+          <div class="ue-process-card__actions d-flex flex-wrap justify-end ga-2 pt-4">
             <v-btn v-if="hasProcessableEditing && formSchema && processableModel"
               ref="editButton"
               v-bind="actionButtonProps"
@@ -183,11 +186,12 @@
                   <template v-slot:activator="{ props }">
                     <v-btn
                       v-bind="{ ...actionButtonProps, ...props }"
+                      v-tooltip:top="$t('Reject')"
+                      :aria-label="$t('Reject')"
+                      class="ue-process-card__action--icon"
                       color="error"
-                      prepend-icon="mdi-close-circle-outline"
-                    >
-                      {{ $t('Reject') }}
-                    </v-btn>
+                      icon="mdi-close"
+                    />
                   </template>
                   <template v-slot:body="modalBodyScope">
                     <v-card>
@@ -237,12 +241,14 @@
                 </ue-modal>
                 <v-btn
                   v-bind="actionButtonProps"
+                  v-tooltip:top="$t('Approve')"
+                  :aria-label="$t('Approve')"
+                  class="ue-process-card__action--approve"
                   color="success"
-                  prepend-icon="mdi-check-circle-outline"
                   :loading="updating"
                   @click="confirmUpdateProcess('confirmed')"
                 >
-                  {{ $t('Approve') }}
+                  <v-icon icon="mdi-check" size="20" />
                 </v-btn>
               </template>
 
@@ -1009,9 +1015,44 @@ export default {
     color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
   }
 
+  .ue-process-card__notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+
+    &--neutral {
+      background-color: rgba(var(--v-theme-on-surface), 0.06);
+      color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+    }
+
+    &--error {
+      background-color: rgba(var(--v-theme-error), 0.1);
+      color: rgb(var(--v-theme-error));
+    }
+  }
+
+  .ue-process-card__actions:empty {
+    display: none;
+  }
+
   .ue-process-card__action.v-btn {
     text-transform: none;
     letter-spacing: 0;
+  }
+
+  .ue-process-card__action--icon.v-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ue-process-card__action--approve.v-btn {
+    min-width: 56px;
+    height: 32px;
   }
 
   .ue-process-card__action.v-btn--variant-outlined:not(.v-btn--disabled) {
