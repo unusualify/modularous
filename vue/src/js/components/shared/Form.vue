@@ -208,8 +208,8 @@
             </FormActions>
 
             <component
-              :is="cardWrapsMain ? 'v-sheet' : 'FormPassthrough'"
-              :class="cardWrapsMain ? ['ue-form__card flex-grow-1', sheetClasses] : undefined"
+              :is="cardWrapsMain && !hasCardSections ? 'v-sheet' : 'FormPassthrough'"
+              :class="cardWrapsMain && !hasCardSections ? ['ue-form__card flex-grow-1', sheetClasses] : undefined"
             >
             <slot name="top" v-bind="{item: formItem, schema}"></slot>
 
@@ -245,12 +245,19 @@
               :model="model"
             />
 
-            <v-custom-form-base v-else-if="!schemaUpdating"
+            <template v-else-if="!schemaUpdating">
+            <component
+              v-for="(cardSchema, cardIndex) in schemaCards"
+              :key="cardIndex"
+              :is="hasCardSections ? 'v-sheet' : 'FormPassthrough'"
+              :class="hasCardSections ? ['ue-form__card', sheetClasses, cardIndex > 0 ? 'mt-3' : ''] : undefined"
+            >
+            <v-custom-form-base
               :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
-              :id="formBaseId"
+              :id="cardFormBaseId(cardIndex)"
 
               v-model="model"
-              :schema="inputSchema"
+              :schema="cardSchema"
               :row="rowAttribute"
               :form-item="formItem"
               no-auto-generate-schema
@@ -264,11 +271,11 @@
               <template
                 v-for="(_slot, key) in formSlots"
                 :key="key"
-                v-slot:[`slot-inject-${_slot.name}-key-${formBaseId}-${_slot.slotPath}`]="_slotScope"
+                v-slot:[`slot-inject-${_slot.name}-key-${cardFormBaseId(cardIndex)}-${_slot.slotPath}`]="_slotScope"
                 >
                 <template v-if="_slot.type == 'form'">
                   <v-custom-form-base
-                    :id="`${formBaseId}-${_slot.name}`"
+                    :id="`${cardFormBaseId(cardIndex)}-${_slot.name}`"
                     v-model="model"
                     v-model:schema="_slot.schema"
                     :row="rowAttribute"
@@ -295,6 +302,8 @@
                 </span>
               </template> -->
             </v-custom-form-base>
+            </component>
+            </template>
 
             <div v-else class="d-flex justify-center align-center h-100 pa-16">
               <v-progress-circular
@@ -495,7 +504,7 @@
 </template>
 
 <script>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
@@ -634,6 +643,28 @@ export default {
     const cardWrapsAll = computed(() => isPageLayout.value && !hasRightColumn.value)
     const cardWrapsMain = computed(() => isPageLayout.value && hasRightColumn.value)
 
+    // Inputs flagged `newCard` start a new card; following inputs join it until the next flag
+    const inputSchemaCards = computed(() => {
+      const cards = [{}]
+
+      Object.entries(useFormInstance.inputSchema.value ?? {}).forEach(([name, input]) => {
+        if (input?.newCard && Object.keys(cards[cards.length - 1]).length > 0) {
+          cards.push({})
+        }
+        cards[cards.length - 1][name] = input
+      })
+
+      return cards
+    })
+    const hasCardSections = computed(() => cardWrapsMain.value && inputSchemaCards.value.length > 1)
+    const schemaCards = computed(() => hasCardSections.value
+      ? inputSchemaCards.value
+      : [useFormInstance.inputSchema.value]
+    )
+    const cardFormBaseId = (cardIndex) => cardIndex === 0
+      ? unref(useFormInstance.formBaseId)
+      : `${unref(useFormInstance.formBaseId)}-card-${cardIndex}`
+
     const formClasses = computed(() => [
       (props.fillHeight || props.pushButtonToBottom || isPageLayout.value) ? 'd-flex flex-column flex-grow-1 min-height-0 h-100' : '',
       props.formClass,
@@ -754,6 +785,9 @@ export default {
       isPageLayout,
       cardWrapsAll,
       cardWrapsMain,
+      hasCardSections,
+      schemaCards,
+      cardFormBaseId,
     }
   }
 }
