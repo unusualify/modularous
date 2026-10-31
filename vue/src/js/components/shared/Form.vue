@@ -147,28 +147,28 @@
           ) ? 'pb-2 pb-md-0 pl-md-2' : ''
         ]">
           <slot name="header.right.top" v-bind="{model, schema: inputSchema, formItem}"></slot>
-          <div class="d-flex align-center ga-2">
-          <FormEvents v-if="formEventSchema && formEventSchema.length && model"
-            :events="formEventSchema"
-            v-model="model"
-            :form-item="formItem"
-          />
-          <FormLocaleSelector :has-translation-inputs="hasTraslationInputs" />
+          <div class="d-flex ga-2">
+            <FormEvents v-if="formEventSchema && formEventSchema.length && model"
+              :events="formEventSchema"
+              v-model="model"
+              :form-item="formItem"
+            />
+            <FormLocaleSelector :has-translation-inputs="hasTraslationInputs" />
 
-          <!-- Mobile dialog/modal for right section -->
-          <v-btn v-if="hasAdditionalSection && $vuetify.display.mdAndDown"
-            :density="buttonDensity"
-            :rounded="true"
-            size="default"
-            icon="mdi-book-information-variant"
-            class=""
-            @click="showAdditionalSectionDialog = true"
-          >
-          </v-btn>
-          <!-- Slot for headerRight -->
-          <slot name="header.right">
+            <!-- Mobile dialog/modal for right section -->
+            <v-btn v-if="hasAdditionalSection && $vuetify.display.mdAndDown"
+              :density="buttonDensity"
+              :rounded="true"
+              size="default"
+              icon="mdi-book-information-variant"
+              class=""
+              @click="showAdditionalSectionDialog = true"
+            >
+            </v-btn>
+            <!-- Slot for headerRight -->
+            <slot name="header.right">
 
-          </slot>
+            </slot>
           </div>
         </div>
         </div>
