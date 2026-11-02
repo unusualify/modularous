@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -55,6 +56,14 @@ trait HasPayment
             $model->offsetUnset('paymentStatusTranslated');
         });
 
+    }
+
+    /**
+     * Load `paymentPrice` for the whole result set before the per-model retrieved listener reads it.
+     */
+    public function retrievedBatchHasPayment(Collection $models): void
+    {
+        $models->loadMissing('paymentPrice');
     }
 
     public function initializeHasPayment(): void

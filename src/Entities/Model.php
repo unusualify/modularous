@@ -32,6 +32,10 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
 
     public $timestamps = true;
 
+    protected static string $builder = Builder::class;
+
+    private static bool $deferRetrievedEvents = false;
+
     // protected $dispatchesEvents = [
     //     'created' => ModelCreated::class,
     // ];
@@ -136,5 +140,63 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
         }
 
         return $instance;
+    }
+
+    /**
+     * @param array $attributes
+     * @param string|null $connection
+     * @return static
+     */
+    public function newFromBuilder($attributes = [], $connection = null)
+    {
+        if (! self::$deferRetrievedEvents) {
+            return parent::newFromBuilder($attributes, $connection);
+        }
+
+        $model = $this->newInstance([], true);
+
+        $model->setRawAttributes((array) $attributes, true);
+
+        $model->setConnection($connection ?? $this->getConnectionName());
+
+        return $model;
+    }
+
+    /**
+     * Run the callback while newFromBuilder() skips the `retrieved` event; the caller
+     * becomes responsible for firing it via fireRetrievedEvent().
+     *
+     * @template T
+     *
+     * @param callable(): T $callback
+     * @return T
+     */
+    public static function withDeferredRetrievedEvents(callable $callback): mixed
+    {
+        $previous = self::$deferRetrievedEvents;
+        self::$deferRetrievedEvents = true;
+
+        try {
+            return $callback();
+        } finally {
+            self::$deferRetrievedEvents = $previous;
+        }
+    }
+
+    public function fireRetrievedEvent(): void
+    {
+        $this->fireModelEvent('retrieved', false);
+    }
+
+    /**
+     * `retrievedBatch{Trait}(Collection $models)` hooks, run before `retrieved` fires for a hydrated result set.
+     *
+     * @return string[]
+     */
+    public static function retrievedBatchMethods(): array
+    {
+        static $methods = [];
+
+        return $methods[static::class] ??= array_values(static::staticTraitsMethods('retrievedBatch'));
     }
 }

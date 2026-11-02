@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -41,6 +42,14 @@ trait Chatable
         static::saving(function (Model $model) {
             $model->offsetUnset('_chat_id');
         });
+    }
+
+    /**
+     * Load `chat` for the whole result set before the per-model retrieved listener reads it.
+     */
+    public function retrievedBatchChatable(Collection $models): void
+    {
+        $models->loadMissing('chat');
     }
 
     /**

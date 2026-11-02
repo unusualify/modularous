@@ -72,6 +72,14 @@ trait HasStateable
         });
     }
 
+    /**
+     * Load `state` for the whole result set before the per-model retrieved listener reads it.
+     */
+    public function retrievedBatchHasStateable(Collection $models): void
+    {
+        $models->loadMissing('state');
+    }
+
     public function initializeHasStateable()
     {
         $this->append(['state_formatted', 'states']);
