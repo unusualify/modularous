@@ -2,7 +2,8 @@
   <v-input
     :class="[
       'v-input-repeater',
-      totalRepeats === 0 && hideIfEmpty ? 'd-none' : ''
+      totalRepeats === 0 && hideIfEmpty ? 'd-none' : '',
+      sectionCollapsible ? 'v-input-repeater--section-collapsible' : '',
     ]"
   >
     <div class="w-100">
@@ -17,7 +18,7 @@
       </div>
       <ue-collapsible
         v-model="isOpen"
-        no-collapse
+        :no-collapse="!sectionCollapsible"
         no-header-background
         :horizontal-padding="0"
         :vertical-padding="0"
@@ -354,6 +355,11 @@
       noToolbar: {
         type: Boolean,
         default: false
+      },
+      // Lets the label/subtitle header open and close the whole repeater section
+      sectionCollapsible: {
+        type: Boolean,
+        default: false
       }
     },
     setup (props, context) {
@@ -485,4 +491,11 @@
     .v-input-repeater__item--body
       &.gutter
         padding: 1.3vw !important
+
+  .v-input-repeater--section-collapsible
+    :deep(.v-input__control > .w-100 > .ue-collapsible > .ue-collapsible__header)
+      align-items: flex-start
+
+      .ue-collapsible__icon
+        font-size: 24px
 </style>
