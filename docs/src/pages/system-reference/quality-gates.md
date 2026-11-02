@@ -199,6 +199,14 @@ Three layers make sure the gate runs even when an agent forgets to call it:
 - **Inputs:** `php-versions` (JSON array), `laravel`, `testbench`, `resolve-matrix`, `quality-php` (default `8.3`), `node-version` (default `22.x`).
 - CI splits the runner into jobs with `--skip`; locally (and for agents) `--skip` must not be used to hide a failing step.
 
+### Pull request description
+
+`pr-template-check.yml` requires a conventional title and a filled `.github/PULL_REQUEST_TEMPLATE.md`: non-empty Description, a Commits table with at least one row, a Behavior changes section (`None` if nothing changes at runtime) and at least one ticked type, including the title's type. The check lives in `.github/scripts/check-pr-body.mjs` and re-runs when the description is edited. Agents follow `.cursor/rules/pull-requests.mdc`.
+
+### Consumer apps
+
+This repository does not test its consumers. Apps track new releases themselves with [`reusable-track-dependency.yml`](https://github.com/galaxous/github-workflows) (bump within their constraint, run their own tests, open a PR). An unreleased branch can be tried from the app with the `constraint` input, e.g. `dev-feature/x as 12.x-dev`.
+
 ## Rules for contributors and agents
 
 - Run `composer check` after every change and `composer check:full` before pushing.
@@ -213,3 +221,4 @@ Three layers make sure the gate runs even when an agent forgets to call it:
 | PHPStan | Enabled at level 8 with `phpstan-baseline.neon` (16583 errors, capped by `baselineMaxErrors`). Next: shrink the baseline; lower `baselineMaxErrors` whenever fixes reduce it |
 | Agent enforcement | Always-applied Cursor rule, Cursor `stop` hook (`check`) and git `pre-push` hook (`full`) |
 | CI | Reusable `quality.yml` (Pint, PHPStan, PHPUnit matrix, coverage gate) with a PR comment from `bin/quality-report` |
+| Pull requests | Title and description sections validated by `pr-template-check.yml` |
