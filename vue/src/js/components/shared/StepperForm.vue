@@ -31,6 +31,7 @@
             @form-valid="updateFormValid($event)"
 
             :cover-height="calculateHeights"
+            :transparent="forms[activeStep - 1]?.transparentBody === true"
           >
             <template #preview>
               <StepperPreview v-if="!lastFormPreviewLoading && isLastStep"
@@ -950,6 +951,19 @@
       .ue-stepper-form__body
         border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
         border-radius: 12px
+
+        &--transparent
+          background: transparent
+          border-color: transparent !important
+
+          .ue-form
+            background: transparent
+
+      .ue-stepper-form__card
+        background: rgb(var(--v-theme-surface))
+        border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+        border-radius: 12px
+        padding: 8px 16px
 
       .v-stepper-window
         margin: 0

@@ -1,6 +1,14 @@
 <template>
-  <v-sheet class="ue-stepper-form__body d-flex w-100 flex-column justify-space-between">
-    <v-stepper-window id="ue-stepper-content-window" class="fill-height overflow-y-auto px-4" :style="`max-height: calc(${maxHeight} - ${coverHeight}px)`">
+  <v-sheet
+    :class="[
+      'ue-stepper-form__body d-flex w-100 flex-column justify-space-between',
+      { 'ue-stepper-form__body--transparent': transparent },
+    ]"
+  >
+    <v-stepper-window id="ue-stepper-content-window"
+      :class="['fill-height overflow-y-auto', transparent ? 'px-0' : 'px-4']"
+      :style="`max-height: calc(${maxHeight} - ${coverHeight}px)`"
+    >
       <!-- Form steps -->
       <v-stepper-window-item
         v-for="(form, i) in forms"
@@ -83,6 +91,10 @@
       coverHeight: {
         type: Number,
         default: 0
+      },
+      transparent: {
+        type: Boolean,
+        default: false
       }
 
     },
