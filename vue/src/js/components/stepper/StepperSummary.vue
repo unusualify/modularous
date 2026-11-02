@@ -1,12 +1,11 @@
 <template>
   <v-sheet
-    class="d-flex flex-column fill-height pa-6"
-    :style="[isLastStep ? '' : '']"
-    :class="[isLastStep ? 'pa-6 bg-primary-darken-2' : '']"
+    class="d-flex flex-column fill-height"
+    :class="[isLastStep ? 'pa-6 bg-primary-darken-2' : 'ue-stepper-summary--cards bg-transparent']"
   >
     <template v-if="!isLastStep">
       <slot name="summary.forms">
-        <v-sheet class="ue-stepper-form__preview fill-height" :border="false">
+        <v-sheet class="ue-stepper-form__preview fill-height bg-transparent" :border="false">
           <!-- Form summaries -->
           <template v-for="(form, i) in forms" :key="`stepper-summary-item-${i}`">
             <slot
@@ -22,7 +21,6 @@
                 length: forms.length
               }"
             >
-              <v-divider v-if="isPreviewModelFilled(i) && i !== 0 && i < forms.length - 1" class="mb-6"/>
               <!-- Default summary content -->
               <ue-form-summary-item
                 v-if="isPreviewModelFilled(i)"
@@ -65,3 +63,8 @@ export default {
   emits: ['next-form', 'complete-form']
 }
 </script>
+
+<style lang="sass">
+  .ue-stepper-summary--cards
+    border: 0 !important
+</style>
