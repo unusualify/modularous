@@ -30,9 +30,29 @@ trait FormActions
         // $this->setFormActions();
     }
 
+    /**
+     * Whether repository/config form actions have been merged into $formActions.
+     *
+     * @var bool
+     */
+    protected $formActionsResolved = false;
+
     public function preloadFormActions()
     {
         $this->defaultFormActions = (array) Config::get(modularousBaseKey() . '.default_form_actions', []);
+    }
+
+    /**
+     * Merge config and repository form actions on first use; repository actions
+     * may hydrate heavy schemas (e.g. payment) that index pages without a form modal never ship.
+     */
+    protected function resolveFormActions(): array
+    {
+        if ($this->formActionsResolved) {
+            return $this->formActions;
+        }
+
+        $this->formActionsResolved = true;
 
         $formActions = [];
 
@@ -51,6 +71,8 @@ trait FormActions
 
             $this->formActions = array_merge_recursive_preserve($formActions, $this->formActions ?? []);
         }
+
+        return $this->formActions;
     }
 
     /**
@@ -69,7 +91,7 @@ trait FormActions
             return [];
         }
 
-        return Collection::make($this->formActions)->reduce(function ($acc, $action, $key) use ($default_action, $editOnModal, $createOnModal, $type) {
+        return Collection::make($this->resolveFormActions())->reduce(function ($acc, $action, $key) use ($default_action, $editOnModal, $createOnModal, $type) {
 
             $creatable = $action['creatable'] ?? true;
             $editable = $action['editable'] ?? true;
