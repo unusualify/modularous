@@ -62,6 +62,9 @@ return [
                     'class' => 'd-flex flex-column flex-grow-1 min-height-0',
                     'style' => 'min-height: 160px',
                 ],
+                'widgetDirectives' => [
+                    'scrollable' => true,
+                ],
                 'allowedRoles' => ['superadmin'],
                 'attributes' => [
                     'class' => 'd-flex flex-column flex-grow-1 min-height-0',
@@ -78,6 +81,9 @@ return [
                 'widgetAttributes' => [
                     'class' => 'd-flex flex-column flex-grow-1 min-height-0',
                     'style' => 'min-height: 160px',
+                ],
+                'widgetDirectives' => [
+                    'scrollable' => true,
                 ],
                 'allowedRoles' => ['superadmin'],
                 'attributes' => [

@@ -18,9 +18,9 @@ return [
      * Superadmin always bypasses this and sees/runs all Artisan commands.
      * Supports exact names and globs (e.g. modularous:cache:*).
      *
-     * SystemConsoleWidget uses down, up, route:clear, route:cache, optimize,
-     * and optimize:clear via the same runner. If you grant admin (non-superadmin)
-     * access to that widget, include those command names in this allowlist.
+     * SystemConsoleWidget uses down, up, cache_commands, and custom_commands
+     * via the same runner. If you grant admin (non-superadmin) access to that
+     * widget, include those command names in this allowlist.
      *
      * @var list<string>
      */
@@ -36,6 +36,13 @@ return [
      * - subprocess: always spawn `php artisan …` (no BridgedQuestionHelper)
      */
     'execution' => env('MODULAROUS_ARTISAN_RUNNER_EXECUTION', 'auto'),
+
+    /**
+     * Absolute path to the PHP CLI binary used for subprocess commands.
+     * Required on many PHP-FPM hosts where PhpExecutableFinder cannot see `php`.
+     * Example: /usr/bin/php8.3
+     */
+    'php_binary' => env('MODULAROUS_ARTISAN_RUNNER_PHP_BINARY'),
 
     /**
      * Commands that must run as a real CLI subprocess when execution=auto.

@@ -53,8 +53,31 @@ final class SiteSettingFormInputs implements ModuleRouteInputsProvider
                     ['name' => 'robots_txt', 'type' => 'textarea', 'label' => 'Global robots.txt', 'rules' => 'nullable|string'],
                     ['name' => 'default_meta_title', 'type' => 'text', 'label' => 'Default meta title', 'translated' => true, 'rules' => 'nullable|string|max:255'],
                     ['name' => 'default_meta_description', 'type' => 'textarea', 'label' => 'Default meta description', 'translated' => true, 'rules' => 'nullable|string'],
-                    ['name' => 'og_image', 'type' => 'image', 'label' => 'Default OG image', 'rules' => 'nullable'],
-                    ['name' => 'json_schema', 'type' => 'textarea', 'label' => 'Global JSON-LD (Schema.org)', 'rules' => 'nullable|string', 'hint' => 'Raw JSON-LD object/array for the site homepage defaults'],
+                    ['name' => 'og_image', 'type' => 'image', 'label' => 'Default OG image', 'rules' => 'nullable', 'imageCol' => ['cols' => 12, 'lg' => 12, 'md' => 12]],
+                    ['name' => 'json_schema', 'type' => 'textarea', 'label' => 'Global JSON-LD (Schema.org)', 'translated' => true, 'rules' => 'nullable|string', 'hint' => 'Raw JSON-LD object/array used when a page has no schema_json'],
+                ],
+            ],
+            [
+                'type' => '@collapsible_group',
+                'name' => 'scripts',
+                'typeIntTitle' => 'Custom Scripts',
+                'schema' => [
+                    [
+                        'name' => 'head',
+                        'type' => 'textarea',
+                        'label' => 'Head scripts',
+                        'rules' => 'nullable|string',
+                        'hint' => 'Raw HTML after consent/GTM and before layout CSS on every public page (verification, extra tags). Trusted admins only.',
+                        'col' => ['cols' => 12],
+                    ],
+                    [
+                        'name' => 'body',
+                        'type' => 'textarea',
+                        'label' => 'Body scripts',
+                        'rules' => 'nullable|string',
+                        'hint' => 'Raw HTML after the layout footer on every public page (tracking pixels). Trusted admins only.',
+                        'col' => ['cols' => 12],
+                    ],
                 ],
             ],
         ];

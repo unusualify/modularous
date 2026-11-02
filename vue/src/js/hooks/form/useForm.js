@@ -813,24 +813,43 @@ export default function useForm(props, context) {
       model.value = cloneDeep(initialModel.value)
       previewEditing.value = false
     },
-    submit: (e, callback = null, errorCallback = null) => {
-      if (props.noValidation || validations.validModel.value) {
-        if (props.async) {
-          e && e.preventDefault()
-          if (!props.actionUrl) {
-            // store.commit(FORM.SET_EDITED_ITEM, states.model)
+    // submit: (e, callback = null, errorCallback = null) => {
+      // if (props.noValidation || validations.validModel.value) {
+        // if (props.async) {
+          // e && e.preventDefault()
+          // if (!props.actionUrl) {
+            // // store.commit(FORM.SET_EDITED_ITEM, states.model)
 
-            nextTick(() => {
-              saveForm(callback, errorCallback)
-            })
-          } else {
+            // nextTick(() => {
+              // saveForm(callback, errorCallback)
+            // })
+          //} else {
+    submit: async (e, callback = null, errorCallback = null) => {
+      e && e.preventDefault()
+
+      // Validate all fields at submit time; validModel can be stale when the
+      // form is submitted via Enter while a field is still focused
+      if (!props.noValidation) {
+        // const { valid } = await states.VForm.validate()
+        const valid = states.VForm
+          ? (await states.VForm.validate()).valid
+          : validations.validModel.value
+
+        if (!valid) return
+      }
+
+      if (props.async) {
+        if (!props.actionUrl) {
+          // store.commit(FORM.SET_EDITED_ITEM, states.model)
+
+          nextTick(() => {
             saveForm(callback, errorCallback)
-          }
+          })
         } else {
-          sendSync(e)
+          saveForm(callback, errorCallback)
         }
       } else {
-        e && e.preventDefault()
+        sendSync(e)
       }
     },
     updatedSlotModel: (value, inputName) => {

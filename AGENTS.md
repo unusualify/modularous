@@ -27,7 +27,7 @@ vue/src/                  # Frontend source
 └── js/store/             # Vuex store
 ```
 
-Before editing a folder, read its local `AGENTS.md` when present (`src/`, `Console/`, `Entities/`, `Repositories/`, `Http/`, `Hydrates/`, `Services/Cache/`, `modules/Cms/`, `vue/src/js/`, `vue/src/sass/`).
+Before editing a folder, read its local `AGENTS.md` when present (`src/`, `Console/`, `Entities/`, `Repositories/`, `Http/`, `Http/Controllers/Traits/Form/`, `Hydrates/`, `Services/Cache/`, `modules/Cms/`, `vue/src/js/`, `vue/src/sass/`, `vue/src/js/utils/formEventFormatters/`).
 
 ## DOCS MAP (agents)
 
@@ -47,6 +47,9 @@ Before editing a folder, read its local `AGENTS.md` when present (`src/`, `Conso
 | Controllers / HTTP | `docs/src/pages/system-reference/backend/http/` |
 | Frontend composables | `docs/src/pages/system-reference/frontend/` |
 | Vue directives | `docs/src/pages/guide/directives/` |
+| Dashboard widgets / System Console | `docs/src/pages/guide/dashboard/` |
+| Form events (`formEvents`) | `docs/src/pages/guide/js/form-events.md` |
+| Form events ADR | `docs/src/pages/system-reference/adr-form-events.md` |
 
 Prefer docs for architecture/env tables; keep AGENTS for hard rules only.
 

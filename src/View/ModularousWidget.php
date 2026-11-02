@@ -29,9 +29,12 @@ class ModularousWidget extends Component
         'widgetTag' => 'v-col',
         'widgetCol' => [
             'cols' => 12,
-        ],
+        ],  
         'widgetAttributes' => [
             'class' => '',
+        ],
+        'widgetDirectives' => [
+            'scrollable' => true,
         ],
         'widgetSlots' => [],
     ];
@@ -70,6 +73,15 @@ class ModularousWidget extends Component
      * @var bool
      */
     public $widgetAutoHeight = false;
+  
+     /**
+     * Vue directives on the wrapper column (e.g. v-scrollable)
+     *
+     * @var array
+     */
+    public $widgetDirectives = [
+        'scrollable' => true,
+    ];
 
     /**
      * Use the widget config on modularous.widgets.{$widgetAlias}
@@ -163,6 +175,13 @@ class ModularousWidget extends Component
     public function setWidgetAutoHeight(bool $widgetAutoHeight = true)
     {
         $this->widgetAutoHeight = $widgetAutoHeight;
+      
+         return $this; 
+    }
+  
+    public function setWidgetDirectives(array $widgetDirectives)
+    {
+        $this->widgetDirectives = $widgetDirectives;
 
         return $this;
     }
@@ -223,6 +242,10 @@ class ModularousWidget extends Component
             'slots' => array_merge(
                 $this->widgetConfigUsable ? $this->widgetDefaultConfig['widgetSlots'] ?? [] : [],
                 $this->widgetSlots ?? []
+            ),
+            'directives' => array_merge_recursive_preserve(
+                $this->widgetConfigUsable ? $this->widgetDefaultConfig['widgetDirectives'] ?? [] : [],
+                $this->widgetDirectives ?? []
             ),
             'elements' => [$component->render()],
         ];

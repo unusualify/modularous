@@ -17,11 +17,12 @@ use Unusualify\Modularous\Entities\Traits\HasTranslation;
 final class TranslatableMetadata
 {
     /**
-     * Translation column names (for {@see $translatedAttributes} / spreads).
+     * SEO-only translation columns. The `--only-fields=seo` alias expands to this list
+     * and must not include JSON-LD ({@see SCHEMA_JSON_ATTRIBUTE}).
      *
      * @var list<string>
      */
-    public const TRANSLATED_ATTRIBUTES = [
+    public const SEO_ATTRIBUTES = [
         'seo_title',
         'seo_description',
         'canonical_url',
@@ -29,6 +30,26 @@ final class TranslatableMetadata
         'robots_follow',
         'sitemap_include',
     ];
+
+    /**
+     * Per-page JSON-LD column (HasTranslation row or IsSingular content JSON locale map).
+     */
+    public const SCHEMA_JSON_ATTRIBUTE = 'schema_json';
+
+    /**
+     * Translation column names (for {@see $translatedAttributes} / spreads).
+     *
+     * @var list<string>
+     */
+    public const TRANSLATED_ATTRIBUTES = [
+        ...self::SEO_ATTRIBUTES,
+        self::SCHEMA_JSON_ATTRIBUTE,
+    ];
+
+    /**
+     * Media-library role for a per-page Open Graph image (HasImages, not a translation column).
+     */
+    public const OG_IMAGE_ROLE = 'og_image';
 
     /**
      * Casts for a dedicated translation model, if you define one (optional).
@@ -41,6 +62,7 @@ final class TranslatableMetadata
             'robots_index' => 'boolean',
             'robots_follow' => 'boolean',
             'sitemap_include' => 'boolean',
+            self::SCHEMA_JSON_ATTRIBUTE => 'array',
         ];
     }
 
@@ -58,6 +80,8 @@ final class TranslatableMetadata
         if ($withSitemapInclude) {
             $table->boolean('sitemap_include')->default(true);
         }
+
+        $table->json(self::SCHEMA_JSON_ATTRIBUTE)->nullable();
     }
 
     /**
@@ -68,12 +92,34 @@ final class TranslatableMetadata
     public static function defaultFormInputs(): array
     {
         return [
-            ['name' => 'seo_title', 'label' => 'SEO Title', 'type' => 'text', 'translated' => true, 'isSecondary' => true],
+            [
+              'name' => self::SCHEMA_JSON_ATTRIBUTE,
+              'label' => 'Schema JSON',
+              'type' => 'source-text',
+              'format' => 'json',
+              'translated' => true,
+              'isSecondary' => true,
+              'hideDetails' => 'auto',
+            ],
+            ['name' => 'seo_title', 'label' => 'SEO Title', 'type' => 'textarea', 'rows' => 2, 'translated' => true, 'isSecondary' => true],
             ['name' => 'seo_description', 'label' => 'SEO Description', 'type' => 'textarea', 'translated' => true, 'isSecondary' => true],
+            [
+                'name' => self::OG_IMAGE_ROLE,
+                'label' => 'OG Image',
+                'type' => 'image',
+                'translated' => true,
+                'isSecondary' => true,
+                'hideDetails' => 'auto',
+                'imageCol' => [
+                    'cols' => 12,
+                    'md' => 12,
+                    'lg' => 12,
+                ],
+            ],
             ['name' => 'canonical_url', 'label' => 'Canonical URL', 'type' => 'text', 'translated' => true, 'isSecondary' => true],
-            ['name' => 'robots_index', 'label' => 'Robots Index', 'type' => 'switch', 'translated' => true, 'isSecondary' => true],
-            ['name' => 'robots_follow', 'label' => 'Robots Follow', 'type' => 'switch', 'translated' => true, 'isSecondary' => true],
-            ['name' => 'sitemap_include', 'label' => 'Include in sitemap', 'type' => 'switch', 'translated' => true, 'isSecondary' => true],
+            ['name' => 'robots_index', 'label' => 'Robots Index', 'type' => 'switch', 'translated' => true, 'isSecondary' => true, 'trueValue' => true, 'falseValue' => false],
+            ['name' => 'robots_follow', 'label' => 'Robots Follow', 'type' => 'switch', 'translated' => true, 'isSecondary' => true, 'trueValue' => true, 'falseValue' => false],
+            ['name' => 'sitemap_include', 'label' => 'Include in sitemap', 'type' => 'switch', 'translated' => true, 'isSecondary' => true, 'trueValue' => true, 'falseValue' => false],
         ];
     }
 }

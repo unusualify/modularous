@@ -66,12 +66,15 @@ use Modules\Cms\Services\Stylesheet\UtilityCssGenerator;
 use Modules\Cms\Support\CmsPublicUrlRegistryAboutReporter;
 use Modules\Cms\Support\CmsPublicUrlRegistryCacheManager;
 use Modules\Cms\Support\DuplicateSystemSettingsToCmsSettings;
+use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Facades\ModularousCache;
 use Unusualify\Modularous\Services\Security\SecurityService;
 use Unusualify\Modularous\Services\SlugInputValidationService;
 
 class CmsServiceProvider extends ServiceProvider
 {
+    private static bool $urlStaleMiddlewarePrepended = false;
+
     public function register(): void
     {
         // $this->app->register(CmsRouteServiceProvider::class);
@@ -186,6 +189,12 @@ class CmsServiceProvider extends ServiceProvider
 
         $this->registerCmsPublishSchedule();
 
+        // One-time seed: skip public front and artisan so a down DB cannot
+        // add 10–20s of PDO wait to every frontend.b2press.test request.
+        if ($this->app->runningInConsole() || Modularous::isFrontUrl()) {
+            return;
+        }
+
         try {
             $this->app->make(DuplicateSystemSettingsToCmsSettings::class)->duplicateIfNeeded();
         } catch (\Throwable) {
@@ -200,6 +209,14 @@ class CmsServiceProvider extends ServiceProvider
     private function registerUrlStaleServeMiddleware(): void
     {
         $prepend = static function (HttpKernel $kernel): void {
+            if (self::$urlStaleMiddlewarePrepended) {
+                return;
+            }
+
+            if (! Modularous::isFrontUrl()) {
+                return;
+            }
+
             if (! ModularousCache::isUrlStaleServeFirst()) {
                 return;
             }
@@ -209,10 +226,13 @@ class CmsServiceProvider extends ServiceProvider
             $prop->setAccessible(true);
             $stack = $prop->getValue($kernel);
             if (in_array(ServeUrlKeyedStaleMiddleware::class, $stack, true)) {
+                self::$urlStaleMiddlewarePrepended = true;
+
                 return;
             }
 
             $kernel->prependMiddleware(ServeUrlKeyedStaleMiddleware::class);
+            self::$urlStaleMiddlewarePrepended = true;
         };
 
         $this->app->afterResolving(HttpKernel::class, $prepend);
@@ -222,7 +242,7 @@ class CmsServiceProvider extends ServiceProvider
         }
 
         $this->app->booted(static function (): void {
-            if (ModularousCache::isUrlStaleServeFirst()) {
+            if (! ModularousCache::isUrlStaleServeFirst()) {
                 return;
             }
 

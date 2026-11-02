@@ -43,6 +43,7 @@ use Unusualify\Modularous\Services\RedirectService;
 use Unusualify\Modularous\Services\UtmParameters;
 use Unusualify\Modularous\Services\View\ModularousNavigation;
 use Unusualify\Modularous\Support\CommandDiscovery;
+use Unusualify\Modularous\Support\ConsoleCommandRegistration;
 use Unusualify\Modularous\Support\FileLoader;
 use Unusualify\Modularous\Support\HostRouteRegistrar;
 use Unusualify\Modularous\Support\HostRouting;
@@ -266,7 +267,7 @@ class BaseServiceProvider extends ServiceProvider
         // Register our modularous exception handler
         $this->app->extend(ExceptionHandler::class, function ($handler, $app) {
             // If the current handler is the default app handler, wrap it with modularous functionality
-            if (get_class($handler) === Handler::class) {
+            if (get_class($handler) === \Illuminate\Foundation\Exceptions\Handler::class) {
                 if ($app['modularous']->isPanelUrl()) {
                     return new \Unusualify\Modularous\Exceptions\Handler($app);
                 }
@@ -319,7 +320,23 @@ class BaseServiceProvider extends ServiceProvider
      */
     private function registerCommands()
     {
+        if (! ConsoleCommandRegistration::shouldRegister(
+            $this->app->runningInConsole(),
+            $this->artisanRunnerRequestPath(),
+        )) {
+            return;
+        }
+
         $this->commands($this->resolveCommands());
+    }
+
+    private function artisanRunnerRequestPath(): ?string
+    {
+        if (! $this->app->bound('request')) {
+            return null;
+        }
+
+        return (string) $this->app['request']->path();
     }
 
     public function registerTranslationService()

@@ -1,5 +1,14 @@
 <?php
 
+use Modules\SystemNotification\Blueprint\MyNotification\Form\MyNotificationFormInputs;
+use Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexActions;
+use Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexColumns;
+use Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexFilters;
+use Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexOptions;
+use Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexRowActions;
+use Modules\SystemNotification\Blueprint\Notification\Form\NotificationFormInputs;
+use Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexColumns;
+use Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexOptions;
 use Unusualify\Modularous\View\Component;
 
 return [
@@ -16,7 +25,7 @@ return [
                 'with' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexWith::class,
             ],
             'form' => [
-                'inputs' => \Modules\SystemNotification\Blueprint\Notification\Form\NotificationFormInputs::class,
+                'inputs' => NotificationFormInputs::class,
             ],
             'name' => 'Notification',
             'headline' => 'All Notifications',
@@ -69,7 +78,7 @@ return [
             //         'type' => 'text',
             //     ],
             // ],
-            /** TODO: Add multiple routes for my-notification and company-notification, sample clone routing configuration */
+        /** TODO: Add multiple routes for my-notification and company-notification, sample clone routing configuration */
             // 'multiple' => [
             //     'my-notification' => [
             //         'url' => 'my-notifications',
@@ -90,14 +99,14 @@ return [
         ],
         'my_notification' => [
             'form' => [
-                'inputs' => \Modules\SystemNotification\Blueprint\MyNotification\Form\MyNotificationFormInputs::class,
+                'inputs' => MyNotificationFormInputs::class,
             ],
             'index' => [
-                'options' => \Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexOptions::class,
-                'columns' => \Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexColumns::class,
-                'filters' => \Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexFilters::class,
-                'actions' => \Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexActions::class,
-                'row_actions' => \Modules\SystemNotification\Blueprint\MyNotification\Index\MyNotificationIndexRowActions::class,
+                'options' => MyNotificationIndexOptions::class,
+                'columns' => MyNotificationIndexColumns::class,
+                'filters' => MyNotificationIndexFilters::class,
+                'actions' => MyNotificationIndexActions::class,
+                'row_actions' => MyNotificationIndexRowActions::class,
             ],
             'name' => 'MyNotification',
             'headline' => 'Notifications',
