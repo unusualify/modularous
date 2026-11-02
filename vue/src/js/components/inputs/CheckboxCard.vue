@@ -9,62 +9,53 @@
     <template v-slot:default="defaultSlot">
       <v-card
         :class="[
-          'v-input-checkbox-card__item border border-sm border-opacity-75',
-          input.includes(value) ? 'border-primary' : 'border-grey-lighten-4',
+          'v-input-checkbox-card__item d-flex flex-column',
+          { 'v-input-checkbox-card__item--selected': isSelected },
           disabled ? 'v-input-checkbox-card__item--disabled' : ''
         ]"
-        :variant="input.includes(value) ? 'elevated' : 'outlined'"
+        variant="flat"
+        role="checkbox"
+        :aria-checked="isSelected"
         @click="toggleSelection"
         :disabled="disabled"
       >
-        <v-card-item>
-          <template #prepend v-if="!checkboxOnRight">
-            <v-checkbox
-              v-model="input"
-              :value="value"
-              :disabled="disabled"
-              :color="checkboxColor"
-              hide-details
-              :readonly="readonly"
-            />
-          </template>
-          <v-card-title
+        <div class="d-flex align-start justify-space-between ga-2 pa-4 pb-2">
+          <div
             :class="[
               'v-input-checkbox-card__title',
-              input.includes(value) ? `border-primary ${activeTitleColor ? `text-${activeTitleColor}` : ''}` : '',
-              input.includes(value) ? `v-input-checkbox-card__title--selected ${activeTitleColor ? `text-${activeTitleColor}` : ''}` : '',
+              isSelected && activeTitleColor ? `text-${activeTitleColor}` : '',
             ]"
           >
             {{ title }}
-          </v-card-title>
-          <template #append>
-            <v-checkbox v-if="checkboxOnRight"
-              v-model="input"
-              :value="value"
-              :disabled="disabled"
-              :color="checkboxColor"
-              hide-details
-              :readonly="readonly"
-            />
-          </template>
-        </v-card-item>
+          </div>
+          <v-chip v-if="isSelected"
+            :color="checkboxColor"
+            variant="flat"
+            size="x-small"
+            prepend-icon="mdi-check"
+            class="flex-shrink-0"
+          >
+            {{ $t('Selected') }}
+          </v-chip>
+        </div>
 
-        <v-card-text v-if="description">
+        <div v-if="description" class="v-input-checkbox-card__description px-4">
           {{ description }}
-        </v-card-text>
+        </div>
 
-        <v-card-text v-if="stats">
-          <v-row no-gutters>
-            <v-col v-for="(stat, index) in stats" :key="index"
-                  :cols="12 / stats.length"
-                  class="text-center">
-              <div class="text-headline-large font-weight-bold" :class="`text-${stat.color || 'primary'}`">
-                {{ stat.value }}
+        <v-spacer />
+
+        <div v-if="stats" class="d-flex px-4 py-5">
+          <template v-for="(stat, index) in stats" :key="index">
+            <v-divider v-if="index > 0" vertical class="my-1" />
+            <div class="flex-1-1 text-center">
+              <div class="v-input-checkbox-card__stat-value" :class="`text-${stat.color || 'primary'}`">
+                {{ formatStat(stat.value) }}
               </div>
-              <div :class="`text-body-medium text-${stat.color || 'primary'}`">{{ stat.label }}</div>
-            </v-col>
-          </v-row>
-        </v-card-text>
+              <div class="v-input-checkbox-card__stat-label">{{ stat.label }}</div>
+            </div>
+          </template>
+        </div>
       </v-card>
     </template>
   </v-input>
@@ -136,7 +127,15 @@
         input_: false
       }
     },
+    computed: {
+      isSelected () {
+        return Array.isArray(this.input) && this.input.includes(this.value)
+      }
+    },
     methods: {
+      formatStat (value) {
+        return Number.isInteger(value) ? String(value).padStart(2, '0') : value
+      },
       toggleSelection() {
         if (!this.disabled && !this.readonly) {
           if(this.input.includes(this.value)) {
@@ -155,18 +154,36 @@
     &__item
       width: 100%
       cursor: pointer
-      transition: all 0.3s ease
+      border: 1px solid rgb(var(--v-theme-grey-lighten-3))
+      border-radius: 12px !important
+      transition: background-color .15s, border-color .15s
+
+      &--selected
+        border-color: rgb(var(--v-theme-primary))
+        background-color: rgba(var(--v-theme-primary), .08) !important
 
       &--disabled
         opacity: 0.6
         cursor: not-allowed
 
-      .v-input-checkbox-card__title
-        padding: 0
+    &__title
+      font-size: 14px
+      font-weight: 500
+      line-height: 24px
+      text-transform: uppercase
+      color: rgb(var(--v-theme-primary-darken-3))
 
-      .v-card-item
-        padding: 16px
+    &__description
+      font-size: 12px
+      line-height: 18px
+      color: rgb(var(--v-theme-primary-darken-3))
 
-      .v-card-text
-        padding-top: 0
+    &__stat-value
+      font-size: 24px
+      font-weight: 500
+      line-height: 32px
+
+    &__stat-label
+      font-size: 12px
+      color: rgb(var(--v-theme-primary-darken-3))
 </style>
