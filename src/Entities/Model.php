@@ -127,9 +127,11 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
      */
     public function newInstance($attributes = [], $exists = false)
     {
+        static $methods = [];
+
         $instance = parent::newInstance($attributes, $exists);
 
-        foreach ($this->traitsMethods(__FUNCTION__) as $method) {
+        foreach ($methods[static::class] ??= $this->traitsMethods(__FUNCTION__) as $method) {
             $instance = $this->$method($instance, $attributes, $exists);
         }
 
