@@ -965,6 +965,10 @@
         border-radius: 12px
         padding: 8px 16px
 
+        &--scroll
+          max-height: calc(var(--ue-stepper-content-height) - var(--ue-stepper-card-offset, 160px))
+          overflow-y: auto
+
       .v-stepper-window
         margin: 0
 

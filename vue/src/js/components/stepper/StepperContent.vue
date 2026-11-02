@@ -7,7 +7,10 @@
   >
     <v-stepper-window id="ue-stepper-content-window"
       :class="['fill-height overflow-y-auto', transparent ? 'px-0' : 'px-4']"
-      :style="`max-height: calc(${maxHeight} - ${coverHeight}px)`"
+      :style="{
+        '--ue-stepper-content-height': `calc(${maxHeight} - ${coverHeight}px)`,
+        maxHeight: 'var(--ue-stepper-content-height)',
+      }"
     >
       <!-- Form steps -->
       <v-stepper-window-item
