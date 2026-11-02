@@ -48,7 +48,6 @@
       <!-- Preview step -->
       <v-stepper-window-item
         :value="forms.length + 1"
-        class="pt-3"
       >
         <slot name="preview"></slot>
       </v-stepper-window-item>

@@ -1,57 +1,48 @@
 <template>
-  <v-sheet class="bg-primary-darken-2">
-    <!-- Title -->
-    <ue-title justify="center" color="white" :text="$t('Total Amount').toUpperCase()" type="h5" />
-    <v-divider style="border-color: rgb(var(--v-theme-on-primary-darken-1));" />
+  <div class="ue-stepper-final-summary">
+    <div class="ue-stepper-final-summary__title">{{ $t('Your Order').toUpperCase() }}</div>
 
     <!-- Summary sections -->
     <slot name="body">
 
     </slot>
+  </div>
 
-  </v-sheet>
-
-  <v-spacer></v-spacer>
-  <v-divider></v-divider>
+  <v-divider class="ue-stepper-final-summary__divider my-4" />
 
   <!-- Total -->
-  <v-table class="bg-transparent my-3">
-    <tbody>
-      <tr class="py-0">
-        <td class="border-0 h-auto py-1 px-0 text-headline-small text-white">
-          <slot name="total.label">
-            {{ $t('Total').toUpperCase() }}
-          </slot>
-        </td>
-        <td class="border-0 h-auto py-1 d-flex justify-end pr-0 font-weight-bold">
-          <slot name="total">
-            <!-- <ue-text-display class="text-headline-small text-white" text="$2500" subText="+ {{ $t('VAT') }}" /> -->
-          </slot>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+  <div class="d-flex align-center justify-space-between ga-4 text-white">
+    <div class="ue-stepper-final-summary__total-label">
+      <slot name="total.label">
+        {{ $t('Total').toUpperCase() }}
+      </slot>
+    </div>
+    <div class="ue-stepper-final-summary__total">
+      <slot name="total">
+      </slot>
+    </div>
+  </div>
 
   <!-- Description -->
-  <div class="text-body-small text-grey-lighten-1 mb-6">
+  <div class="ue-stepper-final-summary__description mt-4 mb-8">
     <slot name="description">
-      At
     </slot>
   </div>
 
   <!-- Complete button -->
-  <div class="pb-0 px-0 ue-stepper-form__preview-bottom">
-    <v-btn-secondary
-      class="v-stepper-form__nextButton"
-      block
-      :disabled="loading || isCompleted"
-      :loading="loading"
-      @click="$emit('complete')"
-    >
-      {{ $t('Complete Request').toUpperCase() }}
-    </v-btn-secondary>
-  </div>
-    <!-- </div> -->
+  <v-btn
+    class="v-stepper-form__nextButton ue-stepper-final-summary__button"
+    block
+    size="x-large"
+    rounded="pill"
+    variant="flat"
+    color="white"
+    :disabled="loading || isCompleted"
+    :loading="loading"
+    @click="$emit('complete')"
+  >
+    {{ $t('Complete Request').toUpperCase() }}
+  </v-btn>
 </template>
 
 <script>
@@ -71,26 +62,35 @@ export default {
 }
 </script>
 
-<style scoped>
-.v-table {
-  background-color: transparent !important;
-}
+<style lang="sass">
+  .ue-stepper-final-summary
+    color: rgb(var(--v-theme-on-primary))
 
-.v-table td {
-  color: inherit !important;
-}
+    &__title
+      font-size: 0.9375rem
+      font-weight: 500
+      letter-spacing: 0.02em
+      margin-bottom: 24px
 
-/* .ue-stepper-form__preview-bottom {
-  margin: 0 -24px -24px;
-  padding: 24px;
-} */
+    &__divider
+      border-color: rgba(var(--v-theme-on-primary), 0.5) !important
+      opacity: 1 !important
 
-/* Dark theme overrides */
-:deep(.v-btn) {
-  color: white;
-}
+    &__total-label
+      font-size: 1.25rem
+      font-weight: 500
 
-:deep(.v-divider) {
-  border-color: rgba(255, 255, 255, 0.12);
-}
+    &__total
+      font-size: 1.75rem
+      font-weight: 500
+
+    &__description
+      font-size: 0.75rem
+      line-height: 1.5
+      color: rgba(var(--v-theme-on-primary), 0.85)
+
+    &__button
+      color: rgb(var(--v-theme-primary)) !important
+      font-weight: 600
+      letter-spacing: 0.02em
 </style>

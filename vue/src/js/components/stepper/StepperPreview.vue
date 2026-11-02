@@ -1,128 +1,87 @@
 <template>
-  <v-sheet>
-    <ue-title type="body-1" weight="bold" padding="a-0">
-      {{ $t('Preview & Summary').toUpperCase() }}
-    </ue-title>
+  <div class="ue-stepper-preview">
+    <div class="mb-4">
+      <h2 class="ue-stepper-preview__heading">{{ previewTitle ?? $t('Review and Confirm Your Order') }}</h2>
+      <p class="ue-stepper-preview__subheading">{{ previewSubtitle ?? $t('Please review your press release details.') }}</p>
+    </div>
 
-    <v-row>
-      <!-- Preview cards -->
-      <template v-for="(context, index) in formattedPreview" :key="`summary-${index}`">
-        <v-col cols="12" :md="context.col || 6" class="d-flex">
-          <ue-configurable-card v-bind="context" elevation="2" title-color="primary" class="my-2 w-100 h-100" col-padding-x="4"/>
+    <v-row dense>
+      <template v-for="(context, index) in previewCards" :key="`summary-${index}`">
+        <!-- Compact cards (e.g. country/package) -->
+        <v-col v-if="!context.wide" cols="12" :md="context.col" class="d-flex">
+          <div class="ue-stepper-preview__card ue-stepper-preview__card--compact w-100">
+            <div class="d-flex align-center justify-space-between ga-2">
+              <span class="ue-stepper-preview__card-title">{{ context.title }}</span>
+              <v-chip v-if="context.badge" size="small" color="primary" variant="tonal" label class="ue-stepper-preview__badge">
+                {{ context.badge }}
+              </v-chip>
+            </div>
+            <div v-for="field in context.fields" :key="field.label" class="ue-stepper-preview__inline-field">
+              <span class="font-weight-medium">{{ field.label }}:</span> {{ field.value }}
+            </div>
+          </div>
+        </v-col>
+
+        <!-- Wide cards (e.g. content) -->
+        <v-col v-else cols="12">
+          <div class="ue-stepper-preview__section-title">{{ context.title }}</div>
+          <div class="ue-stepper-preview__card">
+            <v-row dense>
+              <v-col v-for="field in context.fields" :key="field.label" cols="12" sm="6" class="py-2">
+                <div class="ue-stepper-preview__label">{{ field.label }}</div>
+                <div class="ue-stepper-preview__value">{{ field.value }}</div>
+              </v-col>
+            </v-row>
+          </div>
         </v-col>
       </template>
 
       <!-- Final form data -->
-      <v-col cols="12" v-if="previewFormData.length > 0" v-fit-grid>
-        <v-sheet class="px-0">
-          <div class="d-flex flex-column ga-2 my-4">
-            <ue-title
-              type="body-1"
-              font-weight="bold"
-              padding="a-0"
-            >
-              {{ finalFormTitle }}
-            </ue-title>
-            <ue-title
-              v-if="finalFormSubtitle"
-              type="caption"
-              weight="medium"
-              color="grey-darken-1"
-              transform="none"
-              padding="a-0"
-            >
-              {{ finalFormSubtitle }}
-            </ue-title>
+      <v-col cols="12" v-if="previewFormData.length > 0">
+        <div class="ue-stepper-preview__section-title mb-0">{{ finalFormTitle }}</div>
+        <div v-if="finalFormSubtitle" class="ue-stepper-preview__subheading mb-3">{{ finalFormSubtitle }}</div>
+
+        <div
+          v-for="(data, index) in previewFormData"
+          :key="`final-form-data-${index}`"
+          :class="[
+            'ue-stepper-preview__card ue-stepper-preview__addon mb-3',
+            { 'ue-stepper-preview__addon--selected': fieldSelected(data) }
+          ]"
+        >
+          <div class="d-flex ga-4">
+            <div class="flex-grow-1 min-w-0">
+              <div class="ue-stepper-preview__addon-name">{{ cardItems(data).name }}</div>
+              <p v-if="cardItems(data).description" class="ue-stepper-preview__addon-description" v-html="cardItems(data).description"></p>
+              <div v-if="cardItems(data).tags.length" class="d-flex ga-2 flex-wrap mt-3">
+                <v-chip v-for="tag in cardItems(data).tags" :key="tag.id ?? tag" size="small" label class="ue-stepper-preview__tag">
+                  {{ tag.name ?? tag.slug ?? tag }}
+                </v-chip>
+              </div>
+            </div>
+            <div class="d-flex flex-column align-end justify-space-between flex-shrink-0 ga-3">
+              <div class="ue-stepper-preview__addon-price">{{ cardItems(data).price }}</div>
+              <v-btn
+                size="small"
+                rounded="pill"
+                class="text-none"
+                color="primary"
+                :variant="fieldSelected(data) ? 'outlined' : 'flat'"
+                :prepend-icon="fieldSelected(data) ? 'mdi-minus-circle-outline' : 'mdi-plus-circle-outline'"
+                :readonly="isReadOnly(data)"
+                @click="$emit('final-form-action', {
+                  index: index,
+                  event: !fieldSelected(data)
+                })"
+              >
+                {{ fieldSelected(data) ? $t('Remove') : $t('Add') }}
+              </v-btn>
+            </div>
           </div>
-          <!-- Preview form items -->
-          <template
-            v-for="(data, index) in previewFormData"
-            :key="`final-form-data-${index}`"
-          >
-            <ue-configurable-card
-              row-min-height="120px"
-              style="background-color: transparent; min-height: 150px;"
-              :class="[
-                fieldSelected(data) ? 'bg-primary' : 'bg-grey-lighten-5',
-                'w-100'
-              ]"
-              class="mb-4 py-4"
-              elevation="2"
-              col-padding-x="4"
-              :items="data.form_card_items || [
-                [
-                  data.name || 'N/A ',
-                  data.description || 'N/A',
-                  data.tags || [],
-                ],
-                data.base_price_without_vat_formatted || 'N/A'
-              ]"
-              :actions="[
-                {
-                  onClick: () => {}
-                }
-              ]"
-              hide-separator
-              align-center-columns
-              justify-center-columns
-              :column-styles="{
-                '0': '',
-                '1': '',
-                '_actions': '',
-              }"
-              :column-classes="{
-                // '0': 'flex-1-1-100 flex-md-1-0',
-                '0': 'flex-1-1-0',
-                '1': 'flex-0-1 d-flex align-center',
-                '_actions': 'flex-0-1',
-              }"
-            >
-              <!-- Name, description, and tags -->
-              <template #[`segment.1`]="segmentScope">
-                <div class="text-body-medium font-weight-medium mb-1">
-                  {{ segmentScope.data[0] }}
-                </div>
-                <p class="text-body-small" style="white-space: pre-wrap; word-wrap: break-word;" v-html="segmentScope.data[1]">
-                </p>
-                <div v-if="Array.isArray(segmentScope.data[2]) && segmentScope.data[2].length > 0" class="text-body-small mt-4 d-flex ga-4 flex-wrap" >
-                  <v-chip v-for="tag in segmentScope.data[2]" :key="tag" variant="outlined" size="small" class="">
-                    {{ tag.name ?? tag.slug }}
-                  </v-chip>
-                </div>
-              </template>
-
-              <!-- Price -->
-              <template #[`segment.2`]="segmentScope">
-                <div class="text-headline-large font-weight-medium py-auto justify-center w-100">
-                  {{ segmentScope.data }}
-                </div>
-              </template>
-
-              <!-- Actions -->
-              <template #[`segment.actions`]="segmentScope">
-                <div class="d-flex fill-height align-content-md-center">
-                  <!-- <v-divider v-if="$vuetify.display.lgAndUp ? true : false" vertical></v-divider> -->
-                  <v-btn
-                    class="mx-1 rounded-circle"
-                    :min-width="segmentScope.actionProps.actionIconMinHeight"
-                    :min-height="segmentScope.actionProps.actionIconMinHeight"
-                    :size="segmentScope.actionProps.actionIconSize"
-                    :icon="getFieldIcon(data)"
-                    :color="getFieldColor(data)"
-                    @click="$emit('final-form-action', {
-                      index: index,
-                      event: !fieldSelected(data)
-                    })"
-                    :readonly="isReadOnly(data)"
-                  />
-                </div>
-              </template>
-            </ue-configurable-card>
-          </template>
-        </v-sheet>
+        </div>
       </v-col>
     </v-row>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -144,6 +103,14 @@ export default {
       type: Object,
       required: true
     },
+    previewTitle: {
+      type: String,
+      default: null
+    },
+    previewSubtitle: {
+      type: String,
+      default: null
+    },
     finalFormTitle: {
       type: String,
       required: true
@@ -157,7 +124,50 @@ export default {
       default: () => {}
     }
   },
+  computed: {
+    previewCards() {
+      return this.formattedPreview.map((context) => {
+        const col = context.col || 6
+        const wide = col >= 12
+        const entries = Object.values(context.items ?? {})
+          .flatMap((section) => Object.entries(section ?? {}))
+
+        let badge = null
+        if (!wide && entries.length > 0 && !Array.isArray(entries[0][1]) && !isObject(entries[0][1])) {
+          badge = entries.shift()[1]
+        }
+
+        const fields = entries
+          .map(([label, value]) => ({ label: label.trim(), value: this.formatValue(value) }))
+          .filter((field) => field.value !== '')
+
+        return { title: context.title, col, wide, badge, fields }
+      })
+    }
+  },
   methods: {
+    formatValue(value) {
+      if (Array.isArray(value)) {
+        return value.map((item) => (isObject(item) ? item.name ?? item.title ?? item.file_name ?? '' : item)).filter(Boolean).join(', ')
+      }
+      if (isObject(value)) {
+        return value.name ?? value.title ?? ''
+      }
+      return value ?? ''
+    },
+    cardItems(data) {
+      const [[name, description, tags] = [], price] = data.form_card_items || [
+        [data.name, data.description, data.tags],
+        data.base_price_without_vat_formatted
+      ]
+
+      return {
+        name: name || 'N/A',
+        description,
+        tags: Array.isArray(tags) ? tags : [],
+        price: price || 'N/A'
+      }
+    },
     fieldSelected(data) {
       const fieldName = data.fieldName
       const values = this.lastStepModel[fieldName] ?? []
@@ -167,19 +177,13 @@ export default {
 
       let selected = false
       if(isString(fieldFormat)){
-        result = includes(values, data[fieldFormat])
+        selected = includes(values, data[fieldFormat])
       }else if(isObject(fieldFormat)){
         let item = values.find(item => item[fieldFormatUniqueKey] === data[fieldFormatSourceKey])
         selected = item !== undefined && item !== null
       }
 
       return selected
-    },
-    getFieldIcon(data) {
-      return this.fieldSelected(data) ? 'mdi-minus' : 'mdi-plus'
-    },
-    getFieldColor(data) {
-      return this.fieldSelected(data) ? 'grey' : 'primary'
     },
     isReadOnly(data) {
       const fieldName = data.fieldName
@@ -200,16 +204,91 @@ export default {
 
       return exists
     }
-
-  },
-  created() {
-
   }
 }
 </script>
 
-<style scoped>
-  .ue-configurable-card {
-    transition: background-color 0.2s ease;
-  }
+<style lang="sass">
+  .ue-stepper-preview
+    $border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+
+    &__heading
+      font-size: 1.25rem
+      font-weight: 500
+      line-height: 1.4
+      color: rgb(var(--v-theme-primary-darken-3))
+
+    &__subheading
+      font-size: 0.8125rem
+      color: rgba(var(--v-theme-on-surface), 0.7)
+
+    &__section-title
+      font-size: 0.9375rem
+      font-weight: 600
+      color: rgb(var(--v-theme-primary-darken-3))
+      margin: 8px 0 12px
+
+    &__card
+      background: rgb(var(--v-theme-surface))
+      border: $border
+      border-radius: 12px
+      padding: 16px 20px
+      transition: background-color 0.2s ease, border-color 0.2s ease
+
+      &--compact
+        padding: 12px 16px
+
+    &__card-title
+      font-size: 0.8125rem
+      font-weight: 600
+      text-transform: uppercase
+      color: rgb(var(--v-theme-primary-darken-3))
+
+    &__badge
+      font-size: 0.6875rem !important
+      font-weight: 500
+      height: 20px !important
+
+    &__inline-field
+      margin-top: 6px
+      font-size: 0.75rem
+      color: rgb(var(--v-theme-primary-darken-3))
+
+    &__label
+      font-size: 0.75rem
+      color: rgba(var(--v-theme-on-surface), 0.6)
+
+    &__value
+      margin-top: 2px
+      font-size: 0.875rem
+      color: rgb(var(--v-theme-primary-darken-3))
+      word-break: break-word
+
+    &__addon
+      &--selected
+        background: rgba(var(--v-theme-primary), 0.08)
+        border-color: rgb(var(--v-theme-primary))
+
+    &__addon-name
+      font-size: 0.875rem
+      font-weight: 600
+      color: rgb(var(--v-theme-primary-darken-3))
+
+    &__addon-description
+      margin-top: 8px
+      font-size: 0.8125rem
+      line-height: 1.5
+      color: rgba(var(--v-theme-on-surface), 0.7)
+      white-space: pre-line
+      word-wrap: break-word
+
+    &__addon-price
+      font-size: 1.375rem
+      font-weight: 500
+      color: rgb(var(--v-theme-primary-darken-3))
+
+    &__tag
+      background: rgba(var(--v-theme-primary), 0.08) !important
+      color: rgb(var(--v-theme-primary-darken-3)) !important
+      font-size: 0.6875rem !important
 </style>

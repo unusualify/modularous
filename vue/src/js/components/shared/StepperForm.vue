@@ -32,7 +32,7 @@
 
             max-height="100vh"
             :cover-height="calculateHeights"
-            :transparent="forms[activeStep - 1]?.transparentBody === true"
+            :transparent="isLastStep || forms[activeStep - 1]?.transparentBody === true"
           >
             <template #preview>
               <StepperPreview v-if="!lastFormPreviewLoading && isLastStep"
