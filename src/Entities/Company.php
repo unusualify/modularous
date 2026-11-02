@@ -119,10 +119,15 @@ class Company extends Model
     {
         return new Attribute(
             get: function ($value) {
-                return $this->is_valid
-                    ? modularous_chip(__('Yes'), 'success', 'mdi-check')
-                    : modularous_chip(__('No'), 'error', 'mdi-close');
+                return $this->is_valid ? __('Yes') : __('No');
             },
+        );
+    }
+
+    protected function companyTypeLabel(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => __(ucfirst($this->company_type)),
         );
     }
 
