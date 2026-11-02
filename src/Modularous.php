@@ -57,6 +57,13 @@ class Modularous extends FileRepository
     private $retainModulesPath = null;
 
     /**
+     * Modules resolved during the current HTTP request.
+     *
+     * @var array<string, Module>|null
+     */
+    private ?array $resolvedModules = null;
+
+    /**
      * The callback that should be used to create the page title.
      *
      * @var \Closure|null
@@ -220,6 +227,8 @@ class Modularous extends FileRepository
      */
     public function clearCache()
     {
+        $this->resolvedModules = null;
+
         app('cache')->forget($this->config('cache.key'));
 
         if (method_exists($this->activator, 'flushCache')) {
@@ -232,21 +241,38 @@ class Modularous extends FileRepository
      */
     public function disableCache()
     {
+        $this->resolvedModules = null;
+
         return config([
             'modules.cache.enabled' => false,
         ]);
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function addLocation(string $path): self
+    {
+        $this->resolvedModules = null;
+
+        return parent::addLocation($path);
+    }
+
+    /**
      * Get all modules.
+     *
+     * HTTP requests resolve the module list once; console commands keep
+     * rescanning because generators create modules mid-process.
      */
     public function all(): array
     {
-        if ($this->app->runningInConsole() || ! $this->config('cache.enabled')) {
+        if ($this->app->runningInConsole()) {
             return $this->scan();
         }
 
-        return $this->formatCached($this->getCached());
+        return $this->resolvedModules ??= $this->config('cache.enabled')
+            ? $this->formatCached($this->getCached())
+            : $this->scan();
     }
 
     /**
