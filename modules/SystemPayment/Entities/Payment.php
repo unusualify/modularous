@@ -78,6 +78,22 @@ class Payment extends \Unusualify\Payable\Models\Payment
         // 'transaction_snapshot',
     ];
 
+    /**
+     * Appends added by the payable base model that query the payment gateway API.
+     *
+     * Kept out of default serialization; request them explicitly (e.g. index appends).
+     *
+     * @var list<string>
+     */
+    protected const GATEWAY_APPENDS = ['is_cancelable', 'is_refundable'];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->appends = array_values(array_diff($this->appends, static::GATEWAY_APPENDS));
+    }
+
     protected static function booted(): void
     {
         // Every status write goes through Eloquent (gateway services, PriceController,
