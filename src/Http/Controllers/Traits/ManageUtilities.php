@@ -139,7 +139,7 @@ trait ManageUtilities
     {
         $schema = $this->formSchema;
         $item = $this->getRepositoryItem($id);
-        $formItem = $this->getFormItem($id);
+        $formItem = $this->getFormItem($id, false, $item);
 
         $customFormData = $this->formData($this->request, $item);
 
