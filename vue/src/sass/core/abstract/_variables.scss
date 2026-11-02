@@ -133,6 +133,9 @@ $stepper-header-border-width: null !default;
 $stepper-header-border-style: $border-style-root !default;
 $stepper-header-border-color: $border-color-root !default;
 
+/* DATE PICKER — icon buttons size from $button-height; keeps docked controls within the 328px picker (core/components/VDatePicker.sass also resets the year/month grid button min-width) */
+$date-picker-controls-btn-height: 36px !default;
+
 $field-input-min-height: max(var(--v-input-control-height, 52px), 1.2rem + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom));
 
 /* GRID — drives Vuetify `--v-col-gap-x/y` and `.v-row + .v-row` margin-top */
