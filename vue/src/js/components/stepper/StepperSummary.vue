@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     class="d-flex flex-column"
-    :class="[isLastStep ? 'ue-stepper-summary--final pa-6 bg-primary' : 'fill-height ue-stepper-summary--cards bg-transparent']"
+    :class="[isLastStep ? 'ue-stepper-summary--final pa-6 bg-primary-darken-1' : 'fill-height ue-stepper-summary--cards bg-transparent']"
   >
     <template v-if="!isLastStep">
       <slot name="summary.forms">
