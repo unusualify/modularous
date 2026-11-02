@@ -251,68 +251,68 @@
             />
 
             <template v-else-if="!schemaUpdating">
-            <component
-              v-for="(cardSchema, cardIndex) in schemaCards"
-              :key="cardIndex"
-              :is="hasCardSections ? 'v-sheet' : 'FormPassthrough'"
-              :class="hasCardSections ? [
-                'ue-form__card',
-                sheetClasses,
-                cardIndex > 0 ? 'mt-3' : '',
-                cardIndex === schemaCards.length - 1 ? 'flex-grow-1' : '',
-              ] : undefined"
-            >
-            <v-custom-form-base
-              :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
-              :id="cardFormBaseId(cardIndex)"
+              <component
+                v-for="(cardSchema, cardIndex) in schemaCards"
+                :key="cardIndex"
+                :is="hasCardSections ? 'v-sheet' : 'FormPassthrough'"
+                :class="hasCardSections ? [
+                  'ue-form__card',
+                  sheetClasses,
+                  cardIndex > 0 ? 'mt-3' : '',
+                  cardIndex === schemaCards.length - 1 ? 'flex-grow-1' : '',
+                ] : undefined"
+              >
+                <v-custom-form-base
+                  :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
+                  :id="cardFormBaseId(cardIndex)"
 
-              v-model="model"
-              :schema="cardSchema"
-              :row="rowAttribute"
-              :form-item="formItem"
-              no-auto-generate-schema
+                  v-model="model"
+                  :schema="cardSchema"
+                  :row="rowAttribute"
+                  :form-item="formItem"
+                  no-auto-generate-schema
 
-              @update="handleUpdate"
-              @input="handleInput"
-              @resize="handleResize"
-              @blur="handleBlur"
-              @click="handleClick"
-            >
-              <template
-                v-for="(_slot, key) in formSlots"
-                :key="key"
-                v-slot:[`slot-inject-${_slot.name}-key-${cardFormBaseId(cardIndex)}-${_slot.slotPath}`]="_slotScope"
+                  @update="handleUpdate"
+                  @input="handleInput"
+                  @resize="handleResize"
+                  @blur="handleBlur"
+                  @click="handleClick"
                 >
-                <template v-if="_slot.type == 'form'">
-                  <v-custom-form-base
-                    :id="`${cardFormBaseId(cardIndex)}-${_slot.name}`"
-                    v-model="model"
-                    v-model:schema="_slot.schema"
-                    :row="rowAttribute"
-
+                  <template
+                    v-for="(_slot, key) in formSlots"
+                    :key="key"
+                    v-slot:[`slot-inject-${_slot.name}-key-${cardFormBaseId(cardIndex)}-${_slot.slotPath}`]="_slotScope"
                     >
-                  </v-custom-form-base>
-                </template>
-                <template v-else-if="_slot.type == 'recursive-stuff'">
-                  <ue-recursive-stuff
-                    :configuration="_slot.context"
-                    :bindData="_slotScope">
-                  </ue-recursive-stuff>
+                    <template v-if="_slot.type == 'form'">
+                      <v-custom-form-base
+                        :id="`${cardFormBaseId(cardIndex)}-${_slot.name}`"
+                        v-model="model"
+                        v-model:schema="_slot.schema"
+                        :row="rowAttribute"
 
-                </template>
-              </template>
-              <!-- <template v-slot:[`slot-inject-prepend-key-treeview-slot-permissions`]="{open}" >
-                <v-icon color="blue">
-                    {{open ? 'mdi-folder-open' : 'mdi-folder'}}
-                </v-icon>
-              </template>
-              <template #slot-inject-label-key-treeview-slot-permissions="{item}" >
-                <span class="caption" >
-                  {{item.name.toUpperCase()}}
-                </span>
-              </template> -->
-            </v-custom-form-base>
-            </component>
+                        >
+                      </v-custom-form-base>
+                    </template>
+                    <template v-else-if="_slot.type == 'recursive-stuff'">
+                      <ue-recursive-stuff
+                        :configuration="_slot.context"
+                        :bindData="_slotScope">
+                      </ue-recursive-stuff>
+
+                    </template>
+                  </template>
+                  <!-- <template v-slot:[`slot-inject-prepend-key-treeview-slot-permissions`]="{open}" >
+                    <v-icon color="blue">
+                        {{open ? 'mdi-folder-open' : 'mdi-folder'}}
+                    </v-icon>
+                  </template>
+                  <template #slot-inject-label-key-treeview-slot-permissions="{item}" >
+                    <span class="caption" >
+                      {{item.name.toUpperCase()}}
+                    </span>
+                  </template> -->
+                </v-custom-form-base>
+              </component>
             </template>
 
             <div v-else class="d-flex justify-center align-center h-100 pa-16">
