@@ -956,8 +956,20 @@
           background: transparent
           border-color: transparent !important
 
+          > #ue-stepper-content-window
+            flex: 1 1 0
+            min-height: 0
+            max-height: none !important
+            container-type: size
+
+          .ue-stepper-form__card--scroll
+            max-height: calc(100cqh - var(--ue-stepper-card-offset, 144px))
+
           .ue-form
             background: transparent
+
+            .v-row.py-4
+              padding-bottom: 0 !important
 
       .ue-stepper-form__card
         background: rgb(var(--v-theme-surface))
