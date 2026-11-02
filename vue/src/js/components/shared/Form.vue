@@ -749,7 +749,7 @@ export default {
         }
       } else {
         options = {
-          ...(isPageLayout.value ? resolveTableTitleAttributes('outside') : {}),
+          ...(isPageLayout.value ? resolveTableTitleAttributes('outside', { transform: 'none' }) : {}),
           class: 'flex-md-row flex-column justify-md-space-between'
         }
       }
