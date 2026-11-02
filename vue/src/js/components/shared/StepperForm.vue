@@ -1,5 +1,8 @@
 <template>
-  <v-stepper v-model="activeStep" color="prima"
+  <v-stepper
+    :model-value="activeStep"
+    @update:model-value="goStep"
+    color="prima"
     :class="[
       'ue-stepper-form ue-stepper--no-background fill-height flex-column',
       flexBreakpoint ? `d-${flexBreakpoint}-flex` : 'd-flex'
@@ -378,6 +381,7 @@
         protectedLastStepModel: {},
         previewModel: [],
         pendingHandleFunctions: [],
+        isNavigatingSteps: false,
       }
     },
     methods: {
@@ -449,16 +453,51 @@
         const { event, index } = payload
         this.valids[index] = event
       },
-      goStep(step){
-        // all previous steps are valid
-        if(step < this.activeStep){
+      async goStep(step){
+        if(step <= this.activeStep){
           this.activeStep = step
           return
         }
 
-        if(this.valids.slice(0, step-1).every(v => v === true)){
-          this.activeStep = step
+        if(this.isNavigatingSteps){
+          return
         }
+
+        // Cached valid flags miss inputs still being loaded by requests, so each form is validated in order
+        this.isNavigatingSteps = true
+        try {
+          while(this.activeStep < step){
+            const index = this.activeStep - 1
+            await this.waitForPendingRequests()
+            await this.validateForm(index)
+
+            if(this.formRefs[index].value[0].validModel !== true){
+              return
+            }
+
+            this.activeStep += 1
+            await this.$nextTick()
+          }
+        } finally {
+          this.isNavigatingSteps = false
+        }
+      },
+      waitForPendingRequests() {
+        const isRequestInProgress = () => this.$store.state.config.isRequestInProgress ?? false
+
+        return new Promise((resolve) => {
+          if(!isRequestInProgress()){
+            resolve()
+            return
+          }
+
+          const stop = this.$watch(isRequestInProgress, (inProgress) => {
+            if(!inProgress){
+              stop()
+              resolve()
+            }
+          })
+        })
       },
       async nextForm(index) {
         await this.validateForm(index)
