@@ -10,10 +10,11 @@
       <StepperHeader
         :forms="forms"
         :active-step="activeStep"
+        :summary-title="summaryStepTitle"
         @step-click="goStep"
       />
 
-      <v-row class="mt-6 flex-fil">
+      <v-row class="mt-3 flex-fil">
         <!-- left side -->
         <v-col v-bind="formCol" v-fit-grid class="order-md-1 order-2">
           <StepperContent
@@ -130,22 +131,29 @@
         </v-col>
       </v-row>
 
-      <v-sheet v-if="activeStepIsFullWidth" class="mt-4 pt-4">
-        <v-stepper-actions
-          click:prev @click:prev="goStep(activeStep - 1)"
-        >
-          <template #next>
-            <v-btn-primary
-              class="text-none"
-              density="compact"
-              @click="nextForm(activeStep - 1)"
-              :disabled="$hasRequestInProgress()"
-              >
-              {{ $t('next').toUpperCase() }}
-            </v-btn-primary>
-          </template>
-        </v-stepper-actions>
-      </v-sheet>
+      <div v-if="!isLastStep" class="ue-stepper-form__actions flex-shrink-0 mt-3">
+        <v-divider />
+        <div class="d-flex justify-end align-center ga-4 pt-3">
+          <v-btn
+            variant="text"
+            class="text-none"
+            :disabled="activeStep === 1"
+            @click="goStep(activeStep - 1)"
+          >
+            {{ $t('previous') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            rounded="pill"
+            class="text-capitalize px-8"
+            :disabled="$hasRequestInProgress()"
+            @click="nextForm(activeStep - 1)"
+          >
+            {{ $t('next') }}
+          </v-btn>
+        </div>
+      </div>
 
 
       <ue-modal
@@ -272,6 +280,10 @@
         default: null
       },
       finalFormSubtitle: {
+        type: String,
+        default: null
+      },
+      summaryStepTitle: {
         type: String,
         default: null
       },
@@ -822,7 +834,7 @@
         let stepperActionsHeight = 76
         let topToolbarHeight = 64
 
-        if(this.activeStepIsFullWidth){
+        if(!this.isLastStep){
           height += stepperActionsHeight
         }
 
@@ -934,8 +946,10 @@
 
       .v-stepper-header, .ue-stepper-form__body
         background: rgb(var(--v-theme-surface))
-        // box-shadow: 0px 6px 18px 0px rgba(0, 0, 0, 0.06)
-        // border-radius: 8px
+
+      .ue-stepper-form__body
+        border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+        border-radius: 12px
 
       .v-stepper-window
         margin: 0

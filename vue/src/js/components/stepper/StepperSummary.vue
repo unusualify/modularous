@@ -33,20 +33,6 @@
             </slot>
           </template>
         </v-sheet>
-
-        <v-spacer></v-spacer>
-
-        <!-- Next button -->
-        <v-sheet class="ue-stepper-form__preview-bottom" :border="false">
-          <v-btn-secondary
-            class="v-stepper-form__nextButton"
-            density="comfortable"
-            :disabled="$hasRequestInProgress()"
-            @click="$emit('next-form', activeStep - 1 )"
-          >
-            {{ $t('next').toUpperCase() }}
-          </v-btn-secondary>
-        </v-sheet>
       </slot>
     </template>
     <template v-else>
