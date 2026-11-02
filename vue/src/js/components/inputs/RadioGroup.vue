@@ -10,19 +10,22 @@
       }">
       <v-col v-for="(item, i) in items" :key="`col-${item[itemValue]}`" :cols="12" :md="6">
         <v-sheet
-          v-if="variant === 'card'"
+          v-if="isCardVariant"
           v-ripple
           :class="[
             'v-input-radio-group__card h-100',
-            { 'v-input-radio-group__card--selected': input == item[itemValue] },
+            {
+              'v-input-radio-group__card--tonal': variant === 'tonal',
+              'v-input-radio-group__card--selected': input == item[itemValue],
+            },
           ]"
-          :color="input == item[itemValue] ? color : 'surface'"
+          :color="input == item[itemValue] && variant === 'card' ? color : 'surface'"
           role="button"
           @click="($attrs.disabled || protectInitialValue) ? null : input = item[itemValue]"
         >
           <v-radio
             :value="item[itemValue]"
-            :color="input == item[itemValue] ? 'white' : color"
+            :color="input == item[itemValue] && variant === 'card' ? 'white' : color"
             :disabled="$attrs.disabled ?? false"
             density="compact"
             class="flex-grow-0"
@@ -51,13 +54,14 @@
           {{ item[itemTitle].toUpperCase() }}
         </v-btn>
 
-        <div v-if="variant !== 'card' && item[descriptionTitle]" class="text-body-small pa-2" v-html="item[descriptionTitle]"></div>
+        <div v-if="!isCardVariant && item[descriptionTitle]" class="text-body-small pa-2" v-html="item[descriptionTitle]"></div>
       </v-col>
     </v-row>
   </v-radio-group>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
 
 const props = defineProps({
@@ -97,11 +101,13 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'button',
-    validator: (value) => ['button', 'card'].includes(value)
+    validator: (value) => ['button', 'card', 'tonal'].includes(value)
   }
 })
 
 const emit = defineEmits([...makeInputEmits])
+
+const isCardVariant = computed(() => ['card', 'tonal'].includes(props.variant))
 
 const initializeInput = (val) => {
   return val
@@ -158,6 +164,23 @@ const { input } = useInput(props, {
         .v-input-radio-group__card-title,
         .v-input-radio-group__card-description
           color: rgb(var(--v-theme-on-primary))
+
+      &--tonal
+        align-items: center
+        gap: 12px
+        min-height: 0
+        padding: 10px 16px
+        border-radius: 8px
+
+        .v-input-radio-group__card-title
+          font-weight: 600
+
+        &.v-input-radio-group__card--selected
+          background: rgba(var(--v-theme-primary), 0.08) !important
+          border-color: rgb(var(--v-theme-primary))
+
+          .v-input-radio-group__card-title
+            color: rgb(var(--v-theme-primary-darken-3))
 
 
 </style>
