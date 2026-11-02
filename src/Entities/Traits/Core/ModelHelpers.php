@@ -271,6 +271,11 @@ trait ModelHelpers
                 // }
             }
 
+            if (property_exists($this, 'spreadablePending') && $this->spreadablePending
+                && str_starts_with($method, 'get') && str_ends_with($method, 'Attribute')) {
+                $this->resolvePendingSpreadable();
+            }
+
             if (isset($this->spreadableMutatorMethods) && array_key_exists($method, $this->spreadableMutatorMethods)) {
                 return $this->spreadableMutatorMethods[$method];
             }
@@ -281,6 +286,10 @@ trait ModelHelpers
 
     public function __get($key)
     {
+        if (property_exists($this, 'spreadablePending') && $this->mayBeSpreadableKey($key)) {
+            $this->resolvePendingSpreadable();
+        }
+
         if (isset($this->spreadableMutatorAttributes) && array_key_exists($key, $this->spreadableMutatorAttributes)) {
             return $this->spreadableMutatorAttributes[$key];
         }

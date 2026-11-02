@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
@@ -22,6 +23,8 @@ trait HasSpreadable
     protected $spreadableKeys = [];
 
     protected $spreadableIsUpdated = false;
+
+    protected $spreadablePending = false;
 
     public static function bootHasSpreadable()
     {
@@ -72,30 +75,12 @@ trait HasSpreadable
 
         });
 
+        // Spread content is applied in batch by newCollection(), or lazily on first access
+        // for models that never pass through a collection (e.g. cursor()).
         self::retrieved(static function (Model $model) {
-            // If there's a spread model, load its attributes
-            if ($model->hasSpreadable()) {
-                $model->spreadableKeys = array_keys($model->spreadable?->content ?? []);
-                $jsonData = $model->spreadable?->content ?? [];
+            $exists = $model->getAttributes()['spreadable_exists'] ?? null;
 
-                // Set spreadable attributes on model, excluding protected attributes
-                // dd($jsonData, $model);
-                foreach ($jsonData as $key => $value) {
-                    if (! $model->isProtectedAttribute($key)) {
-                        $model->append($key);
-                        $model->spreadableMutatorMethods['get' . Str::studly($key) . 'Attribute'] = $value;
-                        $model->spreadableMutatorAttributes[$key] = $value;
-                        $model->spreadableMutatorAttributes[Str::camel($key)] = $value;
-                    }
-                }
-
-                // Set _spread attribute
-                // $model->setAttribute($model->getSpreadableSavingKey(), $jsonData);
-
-            } else {
-                // Initialize empty _spread if no spreadable exists
-                // $model->setAttribute($model->getSpreadableSavingKey(), []);
-            }
+            $model->spreadablePending = $exists === null || (bool) $exists;
         });
 
         self::saved(static function (Model $model) {
@@ -221,7 +206,74 @@ trait HasSpreadable
 
     public function getSpreadableKeys(): array
     {
+        $this->resolvePendingSpreadable();
+
         return $this->spreadableKeys;
+    }
+
+    /**
+     * @param array<int, Model> $models
+     */
+    public function newCollection(array $models = [])
+    {
+        $pending = array_values(array_filter(
+            $models,
+            fn ($model) => $model instanceof self && $model->spreadablePending && ! $model->relationLoaded('spreadable')
+        ));
+
+        if (count($pending) > 1) {
+            (new EloquentCollection($pending))->load('spreadable');
+        }
+
+        foreach ($models as $model) {
+            if ($model instanceof self) {
+                $model->resolvePendingSpreadable();
+            }
+        }
+
+        return parent::newCollection($models);
+    }
+
+    public function resolvePendingSpreadable(): void
+    {
+        if (! $this->spreadablePending) {
+            return;
+        }
+
+        $this->spreadablePending = false;
+
+        $jsonData = $this->spreadable?->content ?? [];
+        $this->spreadableKeys = array_keys($jsonData);
+
+        foreach ($jsonData as $key => $value) {
+            if (! $this->isProtectedAttribute($key)) {
+                $this->append($key);
+                $this->spreadableMutatorMethods['get' . Str::studly($key) . 'Attribute'] = $value;
+                $this->spreadableMutatorAttributes[$key] = $value;
+                $this->spreadableMutatorAttributes[Str::camel($key)] = $value;
+            }
+        }
+    }
+
+    /**
+     * Columns, relations and accessors can never come from spread content, so reading
+     * them (e.g. from other retrieved hooks) must not force a per-model spread query.
+     */
+    public function mayBeSpreadableKey(string $key): bool
+    {
+        return $this->spreadablePending
+            && ! array_key_exists($key, $this->attributes)
+            && ! $this->relationLoaded($key)
+            && ! method_exists($this, $key)
+            && ! $this->hasGetMutator($key)
+            && ! $this->hasAttributeMutator($key);
+    }
+
+    protected function getArrayableAppends()
+    {
+        $this->resolvePendingSpreadable();
+
+        return parent::getArrayableAppends();
     }
 
     final public static function getSpreadableSavingKey()
