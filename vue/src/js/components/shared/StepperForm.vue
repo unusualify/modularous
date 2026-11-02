@@ -173,13 +173,13 @@
         <template v-slot:body.description>
           <div class="d-flex flex-column align-center justify-center">
             <v-icon size="64" color="success" class="mb-4">{{ responseModalIcon }}</v-icon>
-            <h2 class="text-headline-large mb-4 text-success">{{ responseModalTitle }}</h2>
+            <h2 class="text-headline-large mb-4 text-primary">{{ responseModalTitle }}</h2>
             <p class="text-body-large text-medium-emphasis text-center" style="white-space: pre-line;">{{ responseModalMessage }}</p>
           </div>
         </template>
         <template v-slot:body.options>
           <div class="d-flex justify-center w-100">
-            <v-btn variant="flat" color="success" @click="completed">
+            <v-btn variant="flat" color="primary" @click="completed">
               {{ responseModalButtonText }}
             </v-btn>
           </div>
