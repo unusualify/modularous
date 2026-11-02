@@ -55,23 +55,30 @@ abstract class Model extends LaravelModel implements CacheableInterface, Modulea
         // and it's a translation model
         // and the baseModel was defined
         // Use the list of translatable attributes on our base model
+        static $translationFillables = [];
+        static $usesAuthorizable = [];
+
         if (
             blank($fillable) &&
             $this->isTranslationModel() &&
             property_exists($this, 'baseModuleModel')
         ) {
-            $fillable = (new $this->baseModuleModel)->getTranslatedAttributes();
+            $fillable = $translationFillables[static::class] ??= (function () {
+                $fillable = (new $this->baseModuleModel)->getTranslatedAttributes();
 
-            if (! collect($fillable)->contains('locale')) {
-                $fillable[] = 'locale';
-            }
+                if (! in_array('locale', $fillable, true)) {
+                    $fillable[] = 'locale';
+                }
 
-            if (! collect($fillable)->contains('active')) {
-                $fillable[] = 'active';
-            }
+                if (! in_array('active', $fillable, true)) {
+                    $fillable[] = 'active';
+                }
+
+                return $fillable;
+            })();
         }
 
-        if (in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive(static::class))) {
+        if ($usesAuthorizable[static::class] ??= in_array('Unusualify\Modularous\Entities\Traits\HasAuthorizable', class_uses_recursive(static::class))) {
             $fillable = array_merge($fillable, static::$hasAuthorizableFillable ?? []);
         }
 
