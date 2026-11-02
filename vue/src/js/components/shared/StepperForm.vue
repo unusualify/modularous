@@ -30,6 +30,7 @@
             @form-input="handleInput($event)"
             @form-valid="updateFormValid($event)"
 
+            max-height="100vh"
             :cover-height="calculateHeights"
             :transparent="forms[activeStep - 1]?.transparentBody === true"
           >
@@ -830,10 +831,11 @@
         } : defaultCol
       },
       calculateHeights(){
-        let height = 0
-        let headerHeight = 72
-        let stepperActionsHeight = 76
+        let headerHeight = 80
+        let layoutPaddingHeight = 48
+        let stepperActionsHeight = 65
         let topToolbarHeight = 64
+        let height = headerHeight + layoutPaddingHeight
 
         if(!this.isLastStep){
           height += stepperActionsHeight
@@ -948,17 +950,30 @@
       .v-stepper-header, .ue-stepper-form__body
         background: rgb(var(--v-theme-surface))
 
+      > .v-row
+        flex: 0 1 auto
+        min-height: 0
+
+        @media (min-width: 960px)
+          flex-wrap: nowrap
+
+        &:has(.v-window-item--active .ue-stepper-form__card--scroll)
+          flex-grow: 1
+
       .ue-stepper-form__body
         border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
         border-radius: 12px
+
+        > #ue-stepper-content-window
+          flex: 1 1 auto
+          min-height: 0
 
         &--transparent
           background: transparent
           border-color: transparent !important
 
-          > #ue-stepper-content-window
+          &:has(.v-window-item--active .ue-stepper-form__card--scroll) > #ue-stepper-content-window
             flex: 1 1 0
-            min-height: 0
             max-height: none !important
             container-type: size
 
