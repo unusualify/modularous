@@ -980,6 +980,38 @@
           .ue-stepper-form__card--scroll
             max-height: calc(100cqh - var(--ue-stepper-card-offset, 144px))
 
+          .v-row:has(> .ue-stepper-form__segment)
+            row-gap: 0
+
+          .ue-stepper-form__segment
+            background: rgb(var(--v-theme-surface))
+            border-inline: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+            padding-inline: 24px !important
+
+            &:not(&--top)
+              padding-top: 8px
+
+            &--top
+              border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+              border-top-left-radius: 12px
+              border-top-right-radius: 12px
+              padding-top: 24px !important
+
+            &--bottom
+              border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+              border-bottom-left-radius: 12px
+              border-bottom-right-radius: 12px
+              padding-bottom: 24px !important
+
+            &:has(> .d-none)
+              display: none
+
+          .ue-stepper-form__gap
+            padding: 8px 0 !important
+
+            > *
+              display: none
+
           .ue-form
             background: transparent
 
