@@ -22,6 +22,9 @@ export const makeTableNamesProps = propsFactory({
   routeName: {
     type: String
   },
+  permissionPrefix: {
+    type: String
+  },
   customTitle: {
     type: String
   },

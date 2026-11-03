@@ -77,6 +77,7 @@ trait ManageUtilities
                         'isModuleRoute' => true,
                         'moduleName' => $this->getHeadline($this->moduleName),
                         'routeName' => $this->routeName,
+                        'permissionPrefix' => $this->module->permissionPrefix($this->routeName),
                         'titleKey' => $this->titleColumnKey,
                     ],
                     $tableAttributes,

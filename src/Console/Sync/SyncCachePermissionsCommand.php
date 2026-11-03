@@ -21,7 +21,7 @@ class SyncCachePermissionsCommand extends BaseCommand
     /**
      * @var string
      */
-    protected $description = 'Create Spatie permissions for cache routes ({route}_cache)';
+    protected $description = 'Create Spatie permissions for cache routes ({module}::{route}_caching)';
 
     public function handle(): int
     {

@@ -139,7 +139,7 @@ return [
                 'name' => 'Permissions',
                 'route_name' => 'admin.system.system_user.permission.index',
                 'icon' => '$accountSettings',
-                'can' => 'permission_view',
+                'can' => 'system_user::permission_view',
             ],
         ],
         'client' => [

@@ -38,17 +38,11 @@ class DefaultPermissionsSeeder extends Seeder
                 'guard_name' => $modularousAuthGuardName,
             ],
             ...permissionRecordsFromRoutes([
-                'User',
-                'Role',
-                'Permission',
-                'Company',
-                'VatRate',
-                'Currency',
-                'PriceType',
-                'Payment',
-                'Notification',
-                'MyNotification',
-                'Country',
+                'SystemUser' => ['User', 'Role', 'Permission', 'Company'],
+                'SystemPricing' => ['VatRate', 'Currency', 'PriceType'],
+                'SystemPayment' => ['Payment'],
+                'SystemNotification' => ['Notification', 'MyNotification'],
+                'SystemUtility' => ['Country'],
             ], $modularousAuthGuardName),
         ]);
 
@@ -59,60 +53,58 @@ class DefaultPermissionsSeeder extends Seeder
         // Assign permissions to roles
         // Admin gets most permissions except some sensitive ones
         $roleInstances['admin']->givePermissionTo(Permission::all()->except([
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'user_forceDelete', 'user_bulkForceDelete',
-            'role_forceDelete', 'role_bulkForceDelete',
-            'company_forceDelete', 'company_bulkForceDelete',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_user::user_forceDelete', 'system_user::user_bulkForceDelete',
+            'system_user::role_forceDelete', 'system_user::role_bulkForceDelete',
+            'system_user::company_forceDelete', 'system_user::company_bulkForceDelete',
             // 'permission_forceDelete', 'permission_bulkForceDelete',
-            'vat-rate_forceDelete', 'vat_rate_bulkForceDelete',
-            'currency_forceDelete', 'currency_bulkForceDelete',
-            'price-type_forceDelete', 'price-type_bulkForceDelete',
-            'payment_forceDelete', 'payment_bulkForceDelete',
-            'country_forceDelete', 'country_bulkForceDelete',
+            'system_pricing::vat-rate_forceDelete', 'system_pricing::vat-rate_bulkForceDelete',
+            'system_pricing::currency_forceDelete', 'system_pricing::currency_bulkForceDelete',
+            'system_pricing::price-type_forceDelete', 'system_pricing::price-type_bulkForceDelete',
+            'system_payment::payment_forceDelete', 'system_payment::payment_bulkForceDelete',
+            'system_utility::country_forceDelete', 'system_utility::country_bulkForceDelete',
         ]));
 
         // Manager gets operational permissions
         $roleInstances['manager']->givePermissionTo([
             'dashboard', 'mediaLibrary',
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'user_view', 'user_create', 'user_edit',
-            'vat-rate_view', 'vat-rate_create', 'vat-rate_edit',
-            'currency_view', 'currency_create', 'currency_edit',
-            'price-type_view', 'price-type_create', 'price-type_edit',
-            'payment_view', 'payment_create', 'payment_edit',
-            'country_view', 'country_create', 'country_edit',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_user::user_view', 'system_user::user_create', 'system_user::user_edit',
+            'system_pricing::vat-rate_view', 'system_pricing::vat-rate_create', 'system_pricing::vat-rate_edit',
+            'system_pricing::currency_view', 'system_pricing::currency_create', 'system_pricing::currency_edit',
+            'system_pricing::price-type_view', 'system_pricing::price-type_create', 'system_pricing::price-type_edit',
+            'system_payment::payment_view', 'system_payment::payment_create', 'system_payment::payment_edit',
+            'system_utility::country_view', 'system_utility::country_create', 'system_utility::country_edit',
         ]);
 
         // Editor gets content-related permissions
         $roleInstances['editor']->givePermissionTo([
             'dashboard', 'mediaLibrary',
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'country_view',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_utility::country_view',
         ]);
 
         // Reporter gets view-only permissions
         $roleInstances['reporter']->givePermissionTo([
             'dashboard', 'mediaLibrary',
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'country_view',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_utility::country_view',
         ]);
 
         // Client Manager gets client-specific permissions
         $roleInstances['client-manager']->givePermissionTo([
             'dashboard',
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'user_view', 'user_create', 'user_edit', 'user_delete',
-            'payment_view', 'payment_create',
-            'country_view',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_payment::payment_view', 'system_payment::payment_create',
+            'system_utility::country_view',
         ]);
 
         // Client Assistant gets limited client permissions
         $roleInstances['client-assistant']->givePermissionTo([
             'dashboard',
-            'my-notification_view', 'my-notification_edit', 'my-notification_delete', 'my-notification_bulkDelete', 'my-notification_forceDelete', 'my-notification_bulkForceDelete',
-            'user_view',
-            'payment_view',
-            'country_view',
+            'system_notification::my-notification_view', 'system_notification::my-notification_edit', 'system_notification::my-notification_delete', 'system_notification::my-notification_bulkDelete', 'system_notification::my-notification_forceDelete', 'system_notification::my-notification_bulkForceDelete',
+            'system_payment::payment_view',
+            'system_utility::country_view',
         ]);
 
     }
