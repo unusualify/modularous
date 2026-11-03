@@ -326,7 +326,7 @@
           type="list-item-two-line"
         />
         <template v-else>
-          <div class="d-flex flex-wrap gc-4">
+          <div class="d-flex flex-wrap align-center ga-3">
 
             <!-- Assignee Details -->
             <AssigneeDetails v-if="hasAssignment"
@@ -351,12 +351,11 @@
                 <template v-slot:activator="{ props }">
                   <v-btn
                     id="createAssignmentBtn"
-                    icon="mdi-account-reactivate"
-                    size="default"
-                    rounded
+                    icon="mdi-account-circle-outline"
+                    variant="outlined"
                     color="success"
                     density="compact"
-                    class="flex-grow-0 flex-shrink-1"
+                    class="v-input-assignment__action flex-grow-0 flex-shrink-1"
                     v-bind="props"
                     :disabled="!input || updating"
                     :loading="updating"
@@ -387,12 +386,11 @@
                     <template v-slot:activator="tooltipActivatorScope">
                       <v-btn
                         id="showHistoryBtn"
-                        icon="mdi-clipboard-list-outline"
-                        size="default"
-                        rounded
+                        icon="mdi-clipboard-text-outline"
+                        variant="outlined"
                         color="info"
                         density="compact"
-                        class="flex-grow-0 flex-shrink-1"
+                        class="v-input-assignment__action flex-grow-0 flex-shrink-1"
 
                         :disabled="!input || updating"
                         :loading="updating"
@@ -473,7 +471,11 @@
 
 <style lang="scss">
   .v-input-assignment {
-    min-height: 60px;
+    min-height: 44px;
+
+    .v-input-assignment__action.v-btn--variant-outlined:not(.v-btn--disabled) {
+      background-color: color-mix(in srgb, currentColor 12%, transparent);
+    }
 
     .v-input-assignment__list--assignee {
       .v-list-item {

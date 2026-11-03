@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularous\Entities\Repeater;
 use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
@@ -324,6 +325,34 @@ class HasRepeatersTest extends ModelTestCase
         $this->assertArrayHasKey('tr', $localeRoles);
         $this->assertEqualsCanonicalizing(['seo', 'features'], $localeRoles['en']);
         $this->assertEqualsCanonicalizing(['seo'], $localeRoles['tr']);
+    }
+
+    public function test_repeater_roles_are_resolved_lazily_with_a_single_query()
+    {
+        $this->model->repeaters()->save(new Repeater([
+            'repeatable_id' => $this->model->id,
+            'repeatable_type' => get_class($this->model),
+            'content' => [],
+            'role' => 'seo',
+            'locale' => 'en',
+        ]));
+
+        $repeaterTable = (new Repeater)->getTable();
+
+        DB::enableQueryLog();
+        $model = TestRepeatableModel::find(1);
+        $queriesAfterRetrieve = collect(DB::getQueryLog())->filter(fn ($query) => str_contains($query['query'], $repeaterTable))->count();
+
+        $model->getRepeaterRoles();
+        $model->getRepeaterLocaleRoles();
+        $model->hasRepeaterRole('seo');
+        $queriesAfterAccess = collect(DB::getQueryLog())->filter(fn ($query) => str_contains($query['query'], $repeaterTable))->count();
+        DB::disableQueryLog();
+
+        $this->assertSame(0, $queriesAfterRetrieve);
+        $this->assertSame(1, $queriesAfterAccess);
+        $this->assertSame(['seo'], $model->getRepeaterRoles());
+        $this->assertSame(['en' => ['seo']], $model->getRepeaterLocaleRoles());
     }
 
     public function test_has_repeater_role_and_has_repeater_locale_role()

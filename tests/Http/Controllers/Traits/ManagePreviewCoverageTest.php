@@ -139,6 +139,7 @@ class ManagePreviewCoverageTest extends TestCase
         ]);
 
         $view = Mockery::mock(ViewContract::class);
+        // Wrapper probes page_layout/{head,body,footer} candidates before falling back.
         View::shouldReceive('exists')->andReturn(false);
         View::shouldReceive('make')
             ->once()

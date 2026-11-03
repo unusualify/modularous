@@ -255,10 +255,8 @@ export default {
           this.$call(item.event);
         }
       } else if (this.isMenuRoute(item)) {
-        props.density = 'compact';
         props.href = item.route || item.href;
         props.slim = true;
-        props.class = { 'px-4': !this.hideIcons, 'ml-2': true };
         Object.assign(props, this.$bindAttributes(item));
       } else if (this.isHeader(item)) {
         props.inactive = true;

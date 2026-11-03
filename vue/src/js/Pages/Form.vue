@@ -1,29 +1,21 @@
 <template>
   <div class="generic-form">
     <ue-form
+      title-placement="outside"
       v-bind="formAttributes"
     />
   </div>
 </template>
 
 <script setup>
-import { onMounted, h } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { h } from 'vue'
 import MainLayout from '@/Pages/Layouts/MainLayout.vue'
 
-// Define props
-const props = defineProps({
+defineProps({
   formAttributes: {
     type: Object,
     default: () => ({}),
   }
-})
-
-const page = usePage()
-
-onMounted(() => {
-  // console.info('Generic Form component mounted for:', page.props)
-  // console.info('Generic Form component mounted props for:', props)
 })
 
 defineOptions({
@@ -34,6 +26,9 @@ defineOptions({
 
 <style scoped>
 .generic-form {
-  /* Generic form styles */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>

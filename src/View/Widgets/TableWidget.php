@@ -26,9 +26,11 @@ class TableWidget extends ModularousWidget
 
         'fullWidthWrapper' => true,
         'fillHeight' => false,
+        'titlePlacement' => 'inside',
 
         'hideHeaders' => false,
         'hideBorderRow' => true,
+        'striped' => false,
         'hideDefaultFooter' => false,
         'hideSearchField' => true,
 
@@ -48,7 +50,7 @@ class TableWidget extends ModularousWidget
         ],
         'noFullScreen' => true,
 
-        'class' => '',
+        'class' => 'd-flex flex-column flex-grow-1 min-height-0',
         'elevation' => 2,
         'rounded' => true,
         'toolbarOptions' => [

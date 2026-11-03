@@ -37,6 +37,25 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'response',
     ];
 
+    protected $casts = [
+        'provisioned_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'refunded_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+    ];
+
+    /**
+     * Status value => column stamped the first time the payment reaches it.
+     *
+     * @var array<string, string>
+     */
+    public const STATUS_TIMESTAMPS = [
+        'PROVISION' => 'provisioned_at',
+        'COMPLETED' => 'paid_at',
+        'REFUNDED' => 'refunded_at',
+        'CANCELLED' => 'cancelled_at',
+    ];
+
     protected $with = [
         'fileponds',
         'creator.company',
@@ -55,11 +74,43 @@ class Payment extends \Unusualify\Payable\Models\Payment
         'status_icon',
         'status_vuetify_icon',
         'status_vuetify_chip',
+        'paid_date',
         // 'transaction_snapshot',
     ];
 
+    /**
+     * Appends added by the payable base model that query the payment gateway API.
+     *
+     * Kept out of default serialization; request them explicitly (e.g. index appends).
+     *
+     * @var list<string>
+     */
+    protected const GATEWAY_APPENDS = ['is_cancelable', 'is_refundable'];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->appends = array_values(array_diff($this->appends, static::GATEWAY_APPENDS));
+    }
+
     protected static function booted(): void
     {
+        // Every status write goes through Eloquent (gateway services, PriceController,
+        // Price::updateOrNewPayment), so stamping here covers all of them.
+        static::saving(function (self $payment) {
+            if (! $payment->isDirty('status')) {
+                return;
+            }
+
+            $status = $payment->status instanceof \BackedEnum ? $payment->status->value : (string) $payment->status;
+            $column = static::STATUS_TIMESTAMPS[$status] ?? null;
+
+            if ($column && is_null($payment->getAttribute($column))) {
+                $payment->setAttribute($column, now());
+            }
+        });
+
         static::addGlobalScope('currency_iso_4217', function (Builder $builder) {
             $currenciesTable = (new Currency)->getTable();
             $paymentTable = (new static)->getTable();
@@ -248,8 +299,18 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return new Attribute(
             get: fn ($value) => $this->status
-                ? "<v-chip variant='text' color='{$this->status_color}' prepend-icon='{$this->status_icon}'>{$this->status_label}</v-chip>"
+                ? modularous_chip($this->status_label, $this->status_color, $this->status_icon)
                 : null
+        );
+    }
+
+    /**
+     * Payments recorded before `paid_at` existed fall back to `created_at`.
+     */
+    protected function paidDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->paid_at ?? $this->created_at,
         );
     }
 
@@ -257,12 +318,22 @@ class Payment extends \Unusualify\Payable\Models\Payment
     {
         return Attribute::make(
             get: function () {
-                $t = $this->parameters->modularous ?? [];
+                $t = $this->parameters->modularous
+                    ?? $this->parameters->modularity
+                    ?? null;
+
+                if (! $t) {
+                    return [
+                        'paid_at' => $this->paid_at ?? $this->updated_at,
+                        'provisioned_at' => $this->provisioned_at,
+                    ];
+                }
 
                 $usingCountryBasedVatRates = $t->using_country_based_vat_rates ?? false;
 
                 return [
-                    'paid_at' => $this->updated_at,
+                    'paid_at' => $this->paid_at ?? $this->updated_at,
+                    'provisioned_at' => $this->provisioned_at,
                     'original_amount' => PriceService::formatAmount(
                         $t->original_amount ?? $this->price->raw_amount,
                         new \Money\Currency(mb_strtoupper($t->original_currency))

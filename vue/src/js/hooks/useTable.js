@@ -15,6 +15,8 @@ import { getSubmitFormData } from '@/utils/getFormData.js'
 import { isset } from '@/utils/helpers'
 
 import { useRoot, useFormatter } from '@/hooks'
+import { makeSurfaceProps, useSurface } from '@/hooks/utils/useSurface'
+import { resolveTableTitleAttributes, resolveTableSubtitleAttributes } from '@/hooks/table/tableTitleAttributes'
 
 import {
   useTableItem,
@@ -32,17 +34,19 @@ import {
 
 
 export const makeTableProps = propsFactory({
-  elevation: {
-    type: [Number, String],
-  },
-  rounded: {
-    type: [Boolean, String],
+  ...makeSurfaceProps(),
+  noDivider: {
+    type: Boolean,
+    default: false
   },
   tableElevation: {
     type: [Number, String],
   },
   tableRounded: {
-    type: [Boolean, String],
+    type: [Boolean, String, Number],
+  },
+  tableBorder: {
+    type: [Boolean, Number, String],
   },
   fillHeight: {
     type: Boolean,
@@ -104,6 +108,10 @@ export const makeTableProps = propsFactory({
   tableClasses: {
     type: [String, Array],
     default: ''
+  },
+  transparentBody: {
+    type: Boolean,
+    default: false
   },
   iteratorType: {
     type: String,
@@ -167,6 +175,24 @@ export const makeTableProps = propsFactory({
   controlsPosition: {
     type: String,
     default: 'top',
+  },
+  titlePlacement: {
+    type: String,
+    default: 'inside',
+    validator: (value) => ['inside', 'outside'].includes(value),
+  },
+  tableLayout: {
+    type: String,
+    default: 'classic',
+    validator: (value) => ['classic', 'card'].includes(value),
+  },
+  titleAttributes: {
+    type: Object,
+    default: () => ({}),
+  },
+  subtitleAttributes: {
+    type: Object,
+    default: () => ({}),
   },
   disableSort: {
     type: Boolean,
@@ -236,6 +262,13 @@ export default function useTable (props, context) {
     return w < display.thresholds.value[bp]
   })
   const { t, te, tm } = useI18n({ useScope: 'global' })
+
+  const { surfaceClasses } = useSurface(props)
+  const { surfaceClasses: tableSurfaceClasses } = useSurface(computed(() => ({
+    elevation: props.tableElevation,
+    rounded: props.tableRounded ?? props.rounded,
+    border: props.tableBorder,
+  })))
 
   if(props.languages && _.isArray(props.languages) && props.languages.length > 0) {
     store.commit(LANGUAGE.SET_LANGUAGES, props.languages)
@@ -961,6 +994,15 @@ export default function useTable (props, context) {
     return [fixedGroup, ...headers]
   })
 
+  const isTitleOutside = computed(() => props.titlePlacement === 'outside')
+
+  // `outside` always renders the card layout: the title needs a card below it
+  const isCardLayout = computed(() => props.tableLayout === 'card' || isTitleOutside.value)
+
+  const tableTitleAttributes = computed(() => resolveTableTitleAttributes(props.titlePlacement, props.titleAttributes, props.tableLayout))
+
+  const tableSubtitleAttributes = computed(() => resolveTableSubtitleAttributes(props.titlePlacement, props.subtitleAttributes, props.tableLayout))
+
   return {
     form,
     ...useTableActions(props, context),
@@ -978,6 +1020,12 @@ export default function useTable (props, context) {
     isDataTableMobile,
     isDraggableActive,
     hideTableFooter,
+    surfaceClasses,
+    tableSurfaceClasses,
+    isTitleOutside,
+    isCardLayout,
+    tableTitleAttributes,
+    tableSubtitleAttributes,
     ...formatter,
   }
 }

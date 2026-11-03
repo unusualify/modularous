@@ -17,6 +17,7 @@
     "Choose Date": "Choose Date",
     "CLIENTS": "CLIENTS",
     "COMPANIES": "COMPANIES",
+    "Company": "Company",
     "Company Information": "Company Information",
     "Complete": "Complete",
     "Complete Request": "Complete Request",
@@ -43,6 +44,7 @@
 
     "Generate Password": "Generate Password",
     "Generate Your Password For New Account": "Generate Your Password For New Account",
+    "Go to user": "Go to user",
 
     "Hello!": "Hello!",
     "Hi :name,": "Hi :name,",
@@ -51,11 +53,12 @@
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "Invalid email format": "Invalid email format",
+    "Items per page": "Items per page",
 
     "LANGUAGES": "LANGUAGES",
     "Loading... Please wait": "Loading... Please wait",
 
-    "Mark All as Read": "Mark All as Read",
+    "Mark All as Read": "Mark all as read",
     "Media": "Media",
     "MM": "MM",
     "Month": "Month",
@@ -64,6 +67,7 @@
     "No data available": "No data available",
     "NOTIFICATIONS": "NOTIFICATIONS",
 
+    "of": "of",
     "or": "or",
     "Open": "Open",
     "Open chat": "Open chat",

@@ -116,13 +116,14 @@
                       >
                         <v-row
                           no-gutters
+                          :class="{ 'mx-n2': checkboxBordered }"
                           :style="[!flexColumn ? 'flex: 1 0 60%;' : '']"
                         >
                           <v-col
                             v-for="item in group.items"
                             :key="`checkbox-${item[itemValue]}`"
                             v-bind="checkboxCol"
-                            class="pb-0 pr-0"
+                            :class="checkboxBordered ? 'pa-2' : 'pb-0 pr-0'"
                           >
                             <div :class="getCheckboxContainerClasses(item)">
                               <v-checkbox-btn
@@ -134,6 +135,7 @@
                                 :label="item[itemTitle]"
                                 :class="getCheckboxClasses(item)"
                                 :readonly="isMandatoryItem(item) || isProtected(item[itemValue]) || readonly"
+                                v-bind="checkboxIcons"
                                 @update:model-value="onSelectionChange"
                               >
                                 <template v-slot:label="{ label: itemLabel, props: labelProps }">
@@ -240,6 +242,7 @@
                 :label="item[itemTitle]"
                 :class="getCheckboxClasses(item)"
                 :readonly="isMandatoryItem(item) || isProtected(item[itemValue]) || readonly"
+                v-bind="checkboxIcons"
                 @update:model-value="onSelectionChange"
               >
                 <template v-slot:label="{ label: itemLabel, props: labelProps }">
@@ -367,6 +370,10 @@
       checkboxHighlightedColor: {
         type: String,
         default: 'grey-lighten-5'
+      },
+      checkboxBordered: {
+        type: Boolean,
+        default: false
       },
       checkboxPosition: {
         type: String,
@@ -617,6 +624,8 @@
           this.checkboxOnRight ? 'pl-2' : '',
           this.checkboxOnRight && isSelected ? 'checked' : '',
           this.checkboxHighlighted && isSelected ? `bg-${this.checkboxHighlightedColor}` : '',
+          this.checkboxBordered ? 'v-input-checklist__box' : '',
+          this.checkboxBordered && isSelected ? 'v-input-checklist__box--selected' : '',
         ]
       },
       isSelectedItem (item) {
@@ -701,6 +710,11 @@
       },
       checkboxOnLeft () {
         return this.checkboxPosition === 'left'
+      },
+      checkboxIcons () {
+        return this.checkboxBordered
+          ? { trueIcon: 'mdi-check-circle', falseIcon: 'mdi-circle-outline' }
+          : {}
       },
       groupedItems () {
         const groups = {}
@@ -892,6 +906,32 @@
             white-space: nowrap !important
             overflow: hidden !important
             text-overflow: ellipsis !important
+
+    &__box
+      min-height: 56px
+      height: 100%
+      padding: 0 12px
+      border: 1px solid rgb(var(--v-theme-grey-lighten-3))
+      border-radius: 10px !important
+      transition: background-color .15s, border-color .15s
+
+      .v-checkbox-btn > label
+        color: rgb(var(--v-theme-primary-darken-3))
+        opacity: 1
+
+      .v-selection-control__input > .v-icon
+        opacity: 1
+        color: rgb(var(--v-theme-grey-lighten-1))
+
+      &--selected
+        border-color: rgb(var(--v-theme-primary))
+        background-color: rgba(var(--v-theme-primary), .08)
+
+        .v-selection-control__input > .v-icon
+          color: rgb(var(--v-theme-primary))
+
+        .v-checkbox-btn > label
+          font-weight: 400
 
     .v-input--horizontal .v-input__prepend
         margin-inline-end: 0px

@@ -45,8 +45,17 @@
           :key="`item-${header.key}`"
           v-slot:[`item.${header.key}`]="{ item }"
           >
-          <v-btn class="my-2" v-if="item[header.key] == '__input'" @click="input=header.id" :variant="input == header.id ? 'elevated' : 'outlined'" :readonly="protectInitialValue">
-              {{ $t('Select') }}
+          <v-btn v-if="item[header.key] == '__input'"
+            class="my-2 text-none"
+            size="small"
+            rounded="pill"
+            variant="flat"
+            :color="input == header.id ? 'primary' : 'grey-lighten-4'"
+            :prepend-icon="input == header.id ? 'mdi-check-circle-outline' : 'mdi-radiobox-blank'"
+            :readonly="protectInitialValue"
+            @click="input=header.id"
+          >
+            {{ input == header.id ? $t('Selected') : $t('Select') }}
           </v-btn>
           <template v-else-if="typeof item[header.key] === 'object' && item[header.key].isTooltip">
             <component :is="item[header.key].tooltipComponent" v-html="item[header.key].value" style="margin-right: 4px;"></component>
@@ -437,9 +446,6 @@
     .v-input__control
       display: block
 
-    th:has(> .v-input-comparison-table__header--selected)
-      background-color: rgb(var(--v-theme-primary)) !important
-      color: rgb(var(--v-theme-on-primary)) !important
     &--striped
       tr
         &:nth-of-type(2n)

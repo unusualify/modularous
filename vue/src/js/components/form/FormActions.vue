@@ -1,6 +1,6 @@
 <template>
   <div :class="[
-      hasActions ? 'd-flex flex-wrap ga-4 py-4' : ''
+      hasActions ? `d-flex flex-wrap align-center ga-2 py-3 justify-${justify}` : ''
     ]"
   >
     <slot name="prepend" v-bind="{item: modelValue, isEditing}"></slot>
@@ -31,13 +31,12 @@
             description-body-class="d-flex flex-column fill-height w-100"
           >
             <template v-slot:activator="modalActivatorScope">
-              {{ console.log(action) }}
               <v-badge v-if="isBadge(action)"
                 v-bind="badgeProps(action)"
               >
                 <v-btn
                   v-bind="{
-                    ...generateButtonProps(action),
+                    ...formActionButtonProps(action),
                     ...modalActivatorScope.props,
                     ...tooltipActivatorScope.props
                   }"
@@ -45,7 +44,7 @@
               </v-badge>
               <v-btn v-else
                 v-bind="{
-                  ...generateButtonProps(action),
+                  ...formActionButtonProps(action),
                   ...modalActivatorScope.props,
                   ...tooltipActivatorScope.props
                 }"
@@ -55,7 +54,6 @@
             <template v-slot:body.description="formModalBodyScope">
               <ue-form
                 :ref="`extra-form-${key}`"
-
                 :modelValue="createModel(action.schema, action)"
                 :title="action.formTitle ?? null"
                 :schema="action.schema"
@@ -66,6 +64,7 @@
                 class="w-100"
                 :style="formModalBodyScope.isFullActive ? 'height: 90vh !important;' : 'height: 70vh !important;'"
 
+                :border="false"
                 fill-height
                 scrollable
 
@@ -89,14 +88,14 @@
             >
               <v-btn
                 v-bind="{
-                  ...generateButtonProps(action),
+                  ...formActionButtonProps(action),
                   ...tooltipActivatorScope.props,
                 }"
                 @click="handleAction(action)"
               />
             </v-badge>
             <v-btn v-else
-              v-bind="{...generateButtonProps(action), ...tooltipActivatorScope.props}"
+              v-bind="{...formActionButtonProps(action), ...tooltipActivatorScope.props}"
               @click="handleAction(action)"
             />
           </template>
@@ -135,6 +134,10 @@ export default {
       type: Boolean,
       default: false
     },
+    justify: {
+      type: String,
+      default: 'end'
+    },
   },
   setup(props, context) {
     const { handleAction, allActions, hasActions } = useItemActions(props, {
@@ -153,6 +156,30 @@ export default {
       return model
     }
 
+    // Disabled buttons get no color so they render as neutral grey instead of a faded theme color
+    const formActionButtonProps = (action) => {
+      const buttonProps = generateButtonProps(action)
+      const hasLabel = !!action.forceLabel
+
+      return {
+        ...buttonProps,
+        class: [
+          'ue-form-action',
+          hasLabel ? 'ue-form-action--label' : 'ue-form-action--icon',
+          buttonProps.class,
+        ],
+        prependIcon: hasLabel ? (buttonProps.prependIcon ?? action.icon) : buttonProps.prependIcon,
+        variant: hasLabel
+          ? (!action.variant || action.variant === 'elevated' ? 'flat' : action.variant)
+          : (action.variant ?? 'outlined'),
+        color: buttonProps.disabled ? undefined : (action.color ?? 'primary'),
+        rounded: 'pill',
+        size: 'default',
+        // Icon buttons size from their own density offsets; compact matches the 44px label height
+        density: hasLabel ? 'default' : 'compact',
+      }
+    }
+
     return {
       hasActions,
       allActions,
@@ -161,11 +188,36 @@ export default {
       valids,
 
       createModel,
-      generateButtonProps,
+      formActionButtonProps,
       isBadge,
       badgeProps
     }
   },
 }
 </script>
+
+<!-- Unscoped so buttons passed through the prepend/append slots can share the .ue-form-action look -->
+<style>
+.ue-form-action.v-btn {
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.ue-form-action--icon.v-btn--variant-outlined:not(.v-btn--disabled) {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ue-form-action.v-btn--disabled {
+  opacity: 1;
+  box-shadow: none;
+  border-color: transparent;
+  background-color: rgba(var(--v-theme-on-surface), 0.08);
+  color: rgba(var(--v-theme-on-surface), 0.45);
+}
+
+.ue-form-action.v-btn--disabled .v-btn__overlay {
+  opacity: 0;
+}
+</style>
 

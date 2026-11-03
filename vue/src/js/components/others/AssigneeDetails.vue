@@ -67,24 +67,20 @@
     Xopen-on-hover
   >
     <template v-slot:activator="{ props }">
-      <v-list v-if="(isAssignee || isAuthorized) && formattedAssignment"
+      <div v-if="(isAssignee || isAuthorized) && formattedAssignment"
         id="assigneeList"
-        :items="[{title: $t('Assignee'), prependAvatar: formattedAssignment.prependAvatar ?? '', subtitle: formattedAssignment.assigneeName}]"
-        lines="three"
-        item-props
-        class="pa-0 v-input-assignment__list--assignee flex-grow-1 flex-shrink-0"
-        color="primary"
+        class="v-input-assignment__assignee d-flex align-center ga-2 flex-shrink-0 cursor-pointer"
         v-bind="props"
-
-        variant="plain"
       >
-        <template v-slot:title="{ title }">
-          <div class="text-primary font-weight-bold" v-html="title"></div>
-        </template>
-        <template v-slot:subtitle="{ subtitle }">
-          <div class="font-weight-medium" v-html="subtitle"></div>
-        </template>
-      </v-list>
+        <v-avatar size="40" color="grey-lighten-3">
+          <v-img v-if="formattedAssignment.prependAvatar" :src="formattedAssignment.prependAvatar" cover />
+          <v-icon v-else icon="mdi-account" color="grey" />
+        </v-avatar>
+        <div class="d-flex flex-column">
+          <span class="text-body-medium font-weight-medium text-high-emphasis">{{ $t('Assignee') }}</span>
+          <span class="text-body-small text-medium-emphasis">{{ formattedAssignment.assigneeName }}</span>
+        </div>
+      </div>
     </template>
     <v-card min-width="300" max-width="500">
 

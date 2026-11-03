@@ -19,12 +19,6 @@ final class CompanyIndexColumns implements ModuleRouteHeadersProvider
                 'align' => 'start',
                 'sortable' => true,
                 'searchable' => true,
-                'formatterName' => 'edit',
-                'formatter' => [
-                    'shorten',
-                    20,
-                ],
-                'width' => 150,
             ],
             [
                 'title' => 'Country',
@@ -36,7 +30,7 @@ final class CompanyIndexColumns implements ModuleRouteHeadersProvider
             ],
             [
                 'title' => 'Type',
-                'key' => 'company_type',
+                'key' => 'company_type_label',
                 'align' => 'start',
                 'groupable' => true,
             ],
@@ -45,9 +39,6 @@ final class CompanyIndexColumns implements ModuleRouteHeadersProvider
                 'key' => 'is_valid_formatted',
                 'align' => 'start',
                 'groupable' => true,
-                'formatter' => [
-                    'dynamic',
-                ],
             ],
             [
                 'title' => 'Users',

@@ -1,12 +1,11 @@
 <template>
-  <v-sheet-rounded
-    class="d-flex flex-column fill-height pa-6 elevation-2"
-    :style="[isLastStep ? '' : '']"
-    :class="[isLastStep ? 'pa-6 bg-primary-darken-2' : '']"
+  <v-sheet
+    class="d-flex flex-column"
+    :class="[isLastStep ? 'ue-stepper-summary--final pa-6 bg-primary-darken-1' : 'fill-height ue-stepper-summary--cards bg-transparent']"
   >
     <template v-if="!isLastStep">
       <slot name="summary.forms">
-        <v-sheet class="ue-stepper-form__preview fill-height">
+        <v-sheet class="ue-stepper-form__preview fill-height bg-transparent" :border="false">
           <!-- Form summaries -->
           <template v-for="(form, i) in forms" :key="`stepper-summary-item-${i}`">
             <slot
@@ -22,7 +21,6 @@
                 length: forms.length
               }"
             >
-              <v-divider v-if="isPreviewModelFilled(i) && i !== 0 && i < forms.length - 1" class="mb-6"/>
               <!-- Default summary content -->
               <ue-form-summary-item
                 v-if="isPreviewModelFilled(i)"
@@ -32,20 +30,6 @@
               />
             </slot>
           </template>
-        </v-sheet>
-
-        <v-spacer></v-spacer>
-
-        <!-- Next button -->
-        <v-sheet class="ue-stepper-form__preview-bottom">
-          <v-btn-secondary
-            class="v-stepper-form__nextButton"
-            density="comfortable"
-            :disabled="$hasRequestInProgress()"
-            @click="$emit('next-form', activeStep - 1 )"
-          >
-            {{ $t('next').toUpperCase() }}
-          </v-btn-secondary>
         </v-sheet>
       </slot>
     </template>
@@ -60,7 +44,7 @@
         }"
       ></slot>
     </template>
-  </v-sheet-rounded>
+  </v-sheet>
 </template>
 
 <script>
@@ -79,3 +63,12 @@ export default {
   emits: ['next-form', 'complete-form']
 }
 </script>
+
+<style lang="sass">
+  .ue-stepper-summary--cards
+    border: 0 !important
+
+  .ue-stepper-summary--final
+    border: 0 !important
+    border-radius: 12px !important
+</style>
