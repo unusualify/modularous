@@ -1,5 +1,8 @@
 <template>
-  <v-stepper v-model="activeStep" color="prima"
+  <v-stepper
+    :model-value="activeStep"
+    @update:model-value="goStep"
+    color="prima"
     :class="[
       'ue-stepper-form ue-stepper--no-background fill-height flex-column',
       flexBreakpoint ? `d-${flexBreakpoint}-flex` : 'd-flex'
@@ -10,12 +13,13 @@
       <StepperHeader
         :forms="forms"
         :active-step="activeStep"
+        :summary-title="summaryStepTitle"
         @step-click="goStep"
       />
 
-      <v-row class="mt-2 flex-fil">
+      <v-row class="mt-3 flex-fil">
         <!-- left side -->
-        <v-col v-bind="formCol" v-fit-grid order-md="1" order="2">
+        <v-col v-bind="formCol" v-fit-grid class="order-md-1 order-2">
           <StepperContent
             v-model="models"
             :schemas="schemas"
@@ -29,7 +33,9 @@
             @form-input="handleInput($event)"
             @form-valid="updateFormValid($event)"
 
+            max-height="100vh"
             :cover-height="calculateHeights"
+            :transparent="isLastStep || forms[activeStep - 1]?.transparentBody === true"
           >
             <template #preview>
               <StepperPreview v-if="!lastFormPreviewLoading && isLastStep"
@@ -64,7 +70,7 @@
         </v-col>
 
         <!-- right side -->
-        <v-col v-bind="summaryCol" order-md="2" order="1">
+        <v-col v-bind="summaryCol" class="order-md-2 order-1">
           <StepperSummary
             :is-last-step="isLastStep"
             :forms="forms"
@@ -115,7 +121,7 @@
                   </template>
                   <template v-slot:total>
                     <slot name='summary.final.total' v-bind="{payload: this.payload}">
-                      <!-- <ue-text-display class="text-h5 text-white" text="$2500" subText="+ {{ $t('VAT') }}" /> -->
+                      <!-- <ue-text-display class="text-headline-small text-white" text="$2500" subText="+ {{ $t('VAT') }}" /> -->
                     </slot>
                   </template>
                   <template v-slot:description>
@@ -130,22 +136,29 @@
         </v-col>
       </v-row>
 
-      <v-sheet-rounded v-if="activeStepIsFullWidth" class="mt-4 elevation-2 pt-4">
-        <v-stepper-actions
-          click:prev @click:prev="goStep(activeStep - 1)"
-        >
-          <template #next>
-            <v-btn
-              variant="elevated"
-              color="secondary"
-              @click="nextForm(activeStep - 1)"
-              :disabled="$hasRequestInProgress()"
-              >
-              {{ $t('next').toUpperCase() }}
-            </v-btn>
-          </template>
-        </v-stepper-actions>
-      </v-sheet-rounded>
+      <div v-if="!isLastStep" class="ue-stepper-form__actions flex-shrink-0 mt-3">
+        <v-divider />
+        <div class="d-flex justify-end align-center ga-4 pt-3">
+          <v-btn
+            variant="text"
+            class="text-none"
+            :disabled="activeStep === 1"
+            @click="goStep(activeStep - 1)"
+          >
+            {{ $t('previous') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            rounded="pill"
+            class="text-capitalize px-8"
+            :disabled="$hasRequestInProgress()"
+            @click="nextForm(activeStep - 1)"
+          >
+            {{ $t('next') }}
+          </v-btn>
+        </div>
+      </div>
 
 
       <ue-modal
@@ -160,13 +173,13 @@
         <template v-slot:body.description>
           <div class="d-flex flex-column align-center justify-center">
             <v-icon size="64" color="success" class="mb-4">{{ responseModalIcon }}</v-icon>
-            <h2 class="text-h4 mb-4 text-success">{{ responseModalTitle }}</h2>
-            <p class="text-subtitle-1 grey--text text-center" style="white-space: pre-line;">{{ responseModalMessage }}</p>
+            <h2 class="text-headline-large mb-4 text-primary">{{ responseModalTitle }}</h2>
+            <p class="text-body-large text-medium-emphasis text-center" style="white-space: pre-line;">{{ responseModalMessage }}</p>
           </div>
         </template>
         <template v-slot:body.options>
           <div class="d-flex justify-center w-100">
-            <v-btn variant="flat" color="success" @click="completed">
+            <v-btn variant="flat" color="primary" @click="completed">
               {{ responseModalButtonText }}
             </v-btn>
           </div>
@@ -275,6 +288,10 @@
         type: String,
         default: null
       },
+      summaryStepTitle: {
+        type: String,
+        default: null
+      },
       finalFormFields: {
         type: Array,
         default: () => {
@@ -364,6 +381,7 @@
         protectedLastStepModel: {},
         previewModel: [],
         pendingHandleFunctions: [],
+        isNavigatingSteps: false,
       }
     },
     methods: {
@@ -435,16 +453,51 @@
         const { event, index } = payload
         this.valids[index] = event
       },
-      goStep(step){
-        // all previous steps are valid
-        if(step < this.activeStep){
+      async goStep(step){
+        if(step <= this.activeStep){
           this.activeStep = step
           return
         }
 
-        if(this.valids.slice(0, step-1).every(v => v === true)){
-          this.activeStep = step
+        if(this.isNavigatingSteps){
+          return
         }
+
+        // Cached valid flags miss inputs still being loaded by requests, so each form is validated in order
+        this.isNavigatingSteps = true
+        try {
+          while(this.activeStep < step){
+            const index = this.activeStep - 1
+            await this.waitForPendingRequests()
+            await this.validateForm(index)
+
+            if(this.formRefs[index].value[0].validModel !== true){
+              return
+            }
+
+            this.activeStep += 1
+            await this.$nextTick()
+          }
+        } finally {
+          this.isNavigatingSteps = false
+        }
+      },
+      waitForPendingRequests() {
+        const isRequestInProgress = () => this.$store.state.config.isRequestInProgress ?? false
+
+        return new Promise((resolve) => {
+          if(!isRequestInProgress()){
+            resolve()
+            return
+          }
+
+          const stop = this.$watch(isRequestInProgress, (inProgress) => {
+            if(!inProgress){
+              stop()
+              resolve()
+            }
+          })
+        })
       },
       async nextForm(index) {
         await this.validateForm(index)
@@ -817,12 +870,13 @@
         } : defaultCol
       },
       calculateHeights(){
-        let height = 0
-        let headerHeight = 72
-        let stepperActionsHeight = 76
+        let headerHeight = 80
+        let layoutPaddingHeight = 48
+        let stepperActionsHeight = 65
         let topToolbarHeight = 64
+        let height = headerHeight + layoutPaddingHeight
 
-        if(this.activeStepIsFullWidth){
+        if(!this.isLastStep){
           height += stepperActionsHeight
         }
 
@@ -934,8 +988,84 @@
 
       .v-stepper-header, .ue-stepper-form__body
         background: rgb(var(--v-theme-surface))
-        // box-shadow: 0px 6px 18px 0px rgba(0, 0, 0, 0.06)
-        // border-radius: 8px
+
+      > .v-row
+        flex: 0 1 auto
+        min-height: 0
+
+        @media (min-width: 960px)
+          flex-wrap: nowrap
+
+        &:has(.v-window-item--active .ue-stepper-form__card--scroll)
+          flex-grow: 1
+
+      .ue-stepper-form__body
+        border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+        border-radius: 12px
+
+        > #ue-stepper-content-window
+          flex: 1 1 auto
+          min-height: 0
+
+        &--transparent
+          background: transparent
+          border-color: transparent !important
+
+          &:has(.v-window-item--active .ue-stepper-form__card--scroll) > #ue-stepper-content-window
+            flex: 1 1 0
+            max-height: none !important
+            container-type: size
+
+          .ue-stepper-form__card--scroll
+            max-height: calc(100cqh - var(--ue-stepper-card-offset, 144px))
+
+          .v-row:has(> .ue-stepper-form__segment)
+            row-gap: 0
+
+          .ue-stepper-form__segment
+            background: rgb(var(--v-theme-surface))
+            border-inline: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+            padding-inline: 24px !important
+
+            &:not(&--top)
+              padding-top: 8px
+
+            &--top
+              border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+              border-top-left-radius: 12px
+              border-top-right-radius: 12px
+              padding-top: 24px !important
+
+            &--bottom
+              border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+              border-bottom-left-radius: 12px
+              border-bottom-right-radius: 12px
+              padding-bottom: 24px !important
+
+            &:has(> .d-none)
+              display: none
+
+          .ue-stepper-form__gap
+            padding: 8px 0 !important
+
+            > *
+              display: none
+
+          .ue-form
+            background: transparent
+
+            .v-row.py-4
+              padding-bottom: 0 !important
+
+      .ue-stepper-form__card
+        background: rgb(var(--v-theme-surface))
+        border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+        border-radius: 12px
+        padding: 8px 16px
+
+        &--scroll
+          max-height: calc(var(--ue-stepper-content-height) - var(--ue-stepper-card-offset, 160px))
+          overflow-y: auto
 
       .v-stepper-window
         margin: 0

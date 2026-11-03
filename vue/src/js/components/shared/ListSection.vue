@@ -1,5 +1,5 @@
 <template>
-  <div class="ue-list-section">
+  <div class="ue-list-section" :class="{ 'ue-list-section--bordered': bordered }">
     <template v-if="shouldWrapInPanel">
       <v-expansion-panels
         v-model="panelState"
@@ -132,7 +132,7 @@
                       :append-icon="isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"
                     >
                       {{ isExpanded ? shrinkText : showMoreText }}
-                      <span v-if="!isExpanded" class="ml-1 text-caption">({{ collapsibleNonDividerCount }} {{ moreItemsText }})</span>
+                      <span v-if="!isExpanded" class="ml-1 text-body-small">({{ collapsibleNonDividerCount }} {{ moreItemsText }})</span>
                     </v-btn>
                   </div>
                 </div>
@@ -272,7 +272,7 @@
               :append-icon="isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             >
               {{ isExpanded ? shrinkText : showMoreText }}
-              <span v-if="!isExpanded" class="ml-1 text-caption">({{ collapsibleNonDividerCount }} {{ moreItemsText }})</span>
+              <span v-if="!isExpanded" class="ml-1 text-body-small">({{ collapsibleNonDividerCount }} {{ moreItemsText }})</span>
             </v-btn>
           </div>
         </div>
@@ -304,15 +304,15 @@ const props = defineProps({
   },
   titleClasses: {
     type: String,
-    default: 'text-body-1 font-weight-medium'
+    default: 'text-body-large font-weight-medium'
   },
   itemClasses: {
     type: String,
-    default: 'text-body-2'
+    default: 'text-body-medium'
   },
   headerClasses: {
     type: String,
-    default: 'text-body-2 font-weight-bold'
+    default: 'text-body-medium font-weight-bold'
   },
   items: {
     type: Array,
@@ -367,6 +367,10 @@ const props = defineProps({
     default: ''
   },
   verticalAlignTop: {
+    type: Boolean,
+    default: false
+  },
+  bordered: {
     type: Boolean,
     default: false
   },
@@ -556,6 +560,12 @@ const toggleExpand = () => {
   .ue-list-section {
     width: 100%;
 
+    &--bordered {
+      border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
     :deep(.ue-list-section__expansion-panels) {
       background-color: transparent;
 
@@ -627,6 +637,13 @@ const toggleExpand = () => {
 
     .ue-list-section__cell:last-child {
       padding-right: 0;
+    }
+
+    /* Vuetify utilities live in a cascade layer, so `text-wrap` cannot beat the unlayered nowrap above */
+    .ue-list-section__cell.text-wrap {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-overflow: clip;
     }
 
     /* Apply vertical-align: top when the prop is set */

@@ -455,8 +455,8 @@ abstract class PanelController extends CoreController implements CacheableInterf
             $with = $this->request->get('eager', []);
             $appends = $this->request->get('appends', []);
             $column = $this->request->get('columns', [$this->titleColumnKey]);
-            $scopes = $this->request->get('scopes', []);
-            $orders = $this->request->get('orders', []);
+            $scopes = $this->decodeQueryArray($this->request->get('scopes', []));
+            $orders = $this->decodeQueryArray($this->request->get('orders', []));
             $perPage = $this->request->get('itemsPerPage', $this->perPage);
 
             return $this->repository->list(
@@ -475,6 +475,24 @@ abstract class PanelController extends CoreController implements CacheableInterf
         $paginator = $this->getIndexItems(with: $with, scopes: $scopes, appends: $appends);
 
         return $this->getFormattedIndexItems($paginator);
+    }
+
+    /**
+     * Associative query arrays arrive JSON-encoded when built through array_to_query_string().
+     */
+    protected function decodeQueryArray(mixed $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_string($value) && $value !== '') {
+            $decoded = json_decode($value, true);
+
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        return [];
     }
 
     /**

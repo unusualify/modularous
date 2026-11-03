@@ -53,7 +53,8 @@ Form inputs (30+ `input-*` components) are documented under [Form Inputs](../../
 | Component | Purpose |
 |-----------|---------|
 | [Configurable Card](./configurable-card) | Card with slot-based sections |
-| [Metric](./metric) | Stat/metric tile |
+| [Metric](./metric) | Stat/metric tile (`ue-metric` / `ue-metrics`) |
+| [Metric Cards](./metric-cards) | Independent glance cards (`ue-metric-card` / `ue-metric-cards`) |
 | [Property List](./property-list) | Key/value list for record detail |
 | [List Section](./list-section) | Titled list block |
 | [Text Display](./text-display) | Truncation, copy-on-click, formatting |
@@ -91,6 +92,7 @@ Form inputs (30+ `input-*` components) are documented under [Form Inputs](../../
 |-----------|---------|
 | [Btn](./btn) | Button wrapper with consistent styling |
 | [Copy Text](./copy-text) | Copy-to-clipboard text |
+| [Hover Card](./hover-card) | Hover/click preview card for a record object |
 | [Print Request](./print-request) | Print-ready request view |
 | [Well Print](./well-print) | Print wrapper block |
 | [Dynamic Component Renderer](./dynamic-component-renderer) | Renders a component by name |

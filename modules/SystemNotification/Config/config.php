@@ -20,8 +20,9 @@ return [
     'routes' => [
         'notification' => [
             'index' => [
-                'options' => NotificationIndexOptions::class,
-                'columns' => NotificationIndexColumns::class,
+                'options' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexOptions::class,
+                'columns' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexColumns::class,
+                'with' => \Modules\SystemNotification\Blueprint\Notification\Index\NotificationIndexWith::class,
             ],
             'form' => [
                 'inputs' => NotificationFormInputs::class,

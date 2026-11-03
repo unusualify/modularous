@@ -50,6 +50,15 @@ export const makeModalProps = propsFactory({
     type: Boolean,
     default: false
   },
+  hasActionsDivider: {
+    type: Boolean,
+    default: true
+  },
+  actionsJustify: {
+    type: String,
+    default: 'center',
+    validator: v => ['center', 'end'].includes(v)
+  },
   noDefaultBodyPadding: {
     type: Boolean,
     default: false

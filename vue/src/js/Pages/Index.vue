@@ -31,7 +31,10 @@ defineOptions({
 </script>
 
 <style scoped>
-.generic-index {
-  /* Generic index styles */
+.generic-index:has(> .ue-table-layout--title-outside) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>

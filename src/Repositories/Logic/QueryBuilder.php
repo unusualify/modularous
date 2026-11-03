@@ -518,6 +518,42 @@ trait QueryBuilder
      */
     public function list($column = 'name', $with = [], $scopes = [], $orders = [], $appends = [], $perPage = -1, $exceptId = null, $forcePagination = false)
     {
+        $memoKey = $forcePagination ? null : $this->listMemoKey([$column, $with, $scopes, $orders, $appends, $perPage, $exceptId]);
+
+        if ($memoKey === null) {
+            return $this->listQuery($column, $with, $scopes, $orders, $appends, $perPage, $exceptId, $forcePagination);
+        }
+
+        $attributes = Container::getInstance()->make('request')->attributes;
+
+        if (! $attributes->has($memoKey)) {
+            $attributes->set($memoKey, $this->listQuery($column, $with, $scopes, $orders, $appends, $perPage, $exceptId, $forcePagination)->all());
+        }
+
+        return Collection::make($attributes->get($memoKey));
+    }
+
+    /**
+     * Select inputs, filters and form drafts on one page often request the same list;
+     * reuse it within a single read-only (GET) request.
+     */
+    protected function listMemoKey(array $arguments): ?string
+    {
+        $container = Container::getInstance();
+
+        if (! $container->bound('request') || ! $container->make('request')->isMethod('GET')) {
+            return null;
+        }
+
+        try {
+            return '_modularous_list:' . md5(serialize([static::class, get_class($this->model), $arguments]));
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    protected function listQuery($column = 'name', $with = [], $scopes = [], $orders = [], $appends = [], $perPage = -1, $exceptId = null, $forcePagination = false)
+    {
         $query = $this->model->newQuery();
 
         if (count($with) > 0) {

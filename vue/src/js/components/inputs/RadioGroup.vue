@@ -9,7 +9,37 @@
         ...(!$vuetify.display.mobile ? {maxWidth: maxWidth, minWidth: minWidth} : {}),
       }">
       <v-col v-for="(item, i) in items" :key="`col-${item[itemValue]}`" :cols="12" :md="6">
+        <v-sheet
+          v-if="isCardVariant"
+          v-ripple
+          :class="[
+            'v-input-radio-group__card h-100',
+            {
+              'v-input-radio-group__card--tonal': variant === 'tonal',
+              'v-input-radio-group__card--selected': input == item[itemValue],
+            },
+          ]"
+          :color="input == item[itemValue] && variant === 'card' ? color : 'surface'"
+          role="button"
+          @click="($attrs.disabled || protectInitialValue) ? null : input = item[itemValue]"
+        >
+          <v-radio
+            :value="item[itemValue]"
+            :color="input == item[itemValue] && variant === 'card' ? 'white' : color"
+            :disabled="$attrs.disabled ?? false"
+            density="compact"
+            class="flex-grow-0"
+          />
+          <div>
+            <div class="v-input-radio-group__card-title">{{ item[itemTitle].toUpperCase() }}</div>
+            <div v-if="item[descriptionTitle]"
+              class="v-input-radio-group__card-description"
+              v-html="item[descriptionTitle]"
+            />
+          </div>
+        </v-sheet>
         <v-btn
+          v-else
           block
           class="v-input-radio-group__btn"
           :color="color"
@@ -24,13 +54,14 @@
           {{ item[itemTitle].toUpperCase() }}
         </v-btn>
 
-        <div v-if="item[descriptionTitle]" class="text-caption pa-2" v-html="item[descriptionTitle]"></div>
+        <div v-if="!isCardVariant && item[descriptionTitle]" class="text-body-small pa-2" v-html="item[descriptionTitle]"></div>
       </v-col>
     </v-row>
   </v-radio-group>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useInput, makeInputProps, makeInputEmits } from '@/hooks'
 
 const props = defineProps({
@@ -66,10 +97,17 @@ const props = defineProps({
   isCentered: {
     type: Boolean,
     default: false
+  },
+  variant: {
+    type: String,
+    default: 'button',
+    validator: (value) => ['button', 'card', 'tonal'].includes(value)
   }
 })
 
 const emit = defineEmits([...makeInputEmits])
+
+const isCardVariant = computed(() => ['card', 'tonal'].includes(props.variant))
 
 const initializeInput = (val) => {
   return val
@@ -97,6 +135,52 @@ const { input } = useInput(props, {
       .v-btn__content
         width: 100%
         white-space: normal
+
+    .v-input-radio-group__card
+      display: flex
+      align-items: flex-start
+      gap: 16px
+      min-height: 92px
+      padding: 24px
+      border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity))
+      border-radius: 12px
+      cursor: pointer
+
+      .v-input-radio-group__card-title
+        font-size: 14px
+        font-weight: 500
+        line-height: 24px
+        color: rgb(var(--v-theme-primary))
+
+      .v-input-radio-group__card-description
+        margin-top: 4px
+        font-size: 12px
+        line-height: 18px
+        color: rgb(var(--v-theme-primary-darken-3))
+
+      &--selected
+        border-color: transparent
+
+        .v-input-radio-group__card-title,
+        .v-input-radio-group__card-description
+          color: rgb(var(--v-theme-on-primary))
+
+      &--tonal
+        align-items: center
+        gap: 12px
+        min-height: 0
+        padding: 10px 16px
+        border-radius: 8px
+
+        .v-input-radio-group__card-title
+          font-weight: 600
+
+        &.v-input-radio-group__card--selected
+          background: rgba(var(--v-theme-primary), 0.08) !important
+          border-color: rgb(var(--v-theme-primary))
+
+          .v-input-radio-group__card-title
+            color: rgb(var(--v-theme-primary-darken-3))
 
 
 </style>

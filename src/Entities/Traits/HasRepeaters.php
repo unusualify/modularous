@@ -18,19 +18,24 @@ trait HasRepeaters
 {
     use HasFiles, HasImages, HasPriceable, HasFileponds;
 
-    private $repeaterRoles = [];
+    private ?array $repeaterRoles = null;
 
-    private $repeaterLocaleRoles = [];
+    private ?array $repeaterLocaleRoles = null;
 
-    public static function bootHasRepeaters()
+    private function resolveRepeaterRoles(): void
     {
-        static::retrieved(function ($model) {
-            $repeaterFields = $model->repeaters()->select('role', 'locale')->get();
-            $model->repeaterLocaleRoles = $repeaterFields->groupBy('locale')->map(function ($group) {
-                return $group->pluck('role')->unique()->values()->toArray();
-            })->toArray();
-            $model->repeaterRoles = $model->repeaters()->get()->pluck('role')->unique()->values()->toArray();
-        });
+        if ($this->repeaterRoles !== null) {
+            return;
+        }
+
+        $repeaterFields = $this->exists
+            ? $this->repeaters()->select('role', 'locale')->get()
+            : collect();
+
+        $this->repeaterLocaleRoles = $repeaterFields->groupBy('locale')->map(function ($group) {
+            return $group->pluck('role')->unique()->values()->toArray();
+        })->toArray();
+        $this->repeaterRoles = $repeaterFields->pluck('role')->unique()->values()->toArray();
     }
 
     /**
@@ -87,24 +92,28 @@ trait HasRepeaters
 
     public function getRepeaterRoles(): array
     {
+        $this->resolveRepeaterRoles();
+
         return $this->repeaterRoles;
     }
 
     public function getRepeaterLocaleRoles(): array
     {
+        $this->resolveRepeaterRoles();
+
         return $this->repeaterLocaleRoles;
     }
 
     public function hasRepeaterRole(string $role): bool
     {
-        return in_array($role, $this->repeaterRoles ?? []);
+        return in_array($role, $this->getRepeaterRoles());
     }
 
     public function hasRepeaterLocaleRole(string $role, ?string $locale = null): bool
     {
         $locale = $locale ?? app()->getLocale();
 
-        return in_array($role, $this->repeaterLocaleRoles[$locale] ?? []);
+        return in_array($role, $this->getRepeaterLocaleRoles()[$locale] ?? []);
     }
 
     // public function emptyRepeaterLocaleRole(string $role, ?string $locale = null): bool

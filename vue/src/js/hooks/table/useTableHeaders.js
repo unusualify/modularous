@@ -40,8 +40,11 @@ export default function useTableHeaders(props) {
     return `table_unvisible_columns_${path}`
   }
 
+  // null when the user has never customized columns on this page
   const getUnvisibleHeaders = () => {
     const unvisibleHeaders = localStorage.getItem(getStorageKey())
+
+    if (unvisibleHeaders === null) return null
 
     return unvisibleHeaders ? unvisibleHeaders.split(',') : []
   }
@@ -55,7 +58,7 @@ export default function useTableHeaders(props) {
     headers.value = _.cloneDeep(headersModel.value.filter(h => h.visible))
   }
 
-  let unvisibleHeaders = getUnvisibleHeaders()
+  const storedUnvisibleHeaders = getUnvisibleHeaders()
 
   // Vuetify's `fixed` column prop is strictly `Boolean`. Some backends serialize
   // it as `'end'` / `'start'` / `'true'` (mimicking other libraries that pin to
@@ -74,8 +77,11 @@ export default function useTableHeaders(props) {
 
   // Initialize headers
   const rawHeaders = (props.columns ?? []).map(normalizeHeader)
-  const headers = ref(rawHeaders.filter(h => !unvisibleHeaders.includes(h.key)))
-  const headersModel = ref(_.cloneDeep(rawHeaders.map(h => ({...h, visible: !unvisibleHeaders.includes(h.key) ? true : false}))))
+  const isInitiallyVisible = (h) => storedUnvisibleHeaders === null
+    ? h.visible !== false
+    : !storedUnvisibleHeaders.includes(h.key)
+  const headers = ref(rawHeaders.filter(isInitiallyVisible))
+  const headersModel = ref(_.cloneDeep(rawHeaders.map(h => ({...h, visible: isInitiallyVisible(h)}))))
 
   const hasSearchableHeader = ref(!!_.find(headers.value, header => isset(header.searchable) && header.searchable === true))
 

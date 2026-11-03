@@ -205,14 +205,57 @@ if (! function_exists('get_modularous_navigation_config')) {
     }
 }
 
+if (! function_exists('get_modularous_gate_abilities')) {
+    /**
+     * Resolve every registered gate ability for the user.
+     *
+     * Abilities backed by a Spatie permission are answered from the user's
+     * permission set (superadmin passes all of them, as the Gate::before hook
+     * does); only the remaining custom abilities go through the Gate.
+     *
+     * @return array<string, bool>
+     */
+    function get_modularous_gate_abilities($user): array
+    {
+        $abilities = array_keys(Gate::abilities());
+
+        if (! $user || ! method_exists($user, 'getAllPermissions') || config('permission.enable_wildcard_permission')) {
+            return Arr::mapWithKeys($abilities, fn ($ability) => [$ability => Gate::allows($ability)]);
+        }
+
+        $isSuperAdmin = (bool) ($user->is_superadmin ?? false);
+        $guardName = \Spatie\Permission\Guard::getDefaultName($user);
+
+        $grantedPermissions = $user->getAllPermissions()
+            ->where('guard_name', $guardName)
+            ->pluck('name')
+            ->flip()
+            ->all();
+
+        $permissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
+            ->getPermissions()
+            ->pluck('name')
+            ->flip()
+            ->all();
+
+        $resolved = [];
+
+        foreach ($abilities as $ability) {
+            $resolved[$ability] = isset($permissionNames[$ability])
+                ? $isSuperAdmin || isset($grantedPermissions[$ability])
+                : Gate::allows($ability);
+        }
+
+        return $resolved;
+    }
+}
+
 if (! function_exists('get_modularous_authorization_config')) {
     function get_modularous_authorization_config()
     {
         $user = Auth::user();
 
-        $permissions = Arr::mapWithKeys(Gate::abilities(), function ($closure, $key) {
-            return [$key => Gate::allows($key)];
-        });
+        $permissions = get_modularous_gate_abilities($user);
 
         $roles = Arr::map($user?->roles?->toArray() ?? [], function ($role) {
             return $role['name'];

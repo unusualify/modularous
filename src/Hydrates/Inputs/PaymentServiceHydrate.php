@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\SystemPayment\Entities\PaymentCurrency;
 use Modules\SystemPayment\Entities\PaymentService;
@@ -10,6 +11,11 @@ use Unusualify\Modularous\Facades\Modularous;
 
 class PaymentServiceHydrate extends InputHydrate
 {
+    /**
+     * Request attribute holding the payment records resolved for the current request.
+     */
+    protected const RECORDS_ATTRIBUTE = '_modularous_payment_service_records';
+
     /**
      * Default values to set before hydrating
      *
@@ -35,98 +41,9 @@ class PaymentServiceHydrate extends InputHydrate
 
         $input['useCountryBasedVatRates'] = Modularous::shouldUseCountryBasedVatRates();
 
-        if ($input['useCountryBasedVatRates']) {
-            if (! $this->skipQueries) {
-                $userPaymentCountryCurrencies = get_user_payment_country_currencies();
-
-                $userPaymentCountryCurrencies = $userPaymentCountryCurrencies->filter(function ($item) {
-                    return $item->paymentServices()->exists() || $item->paymentService()->exists();
-                })->each(function ($item) {
-                    $item->load('paymentServices', 'paymentService');
-                });
-
-                // $defaultPaymentCurrencies = PaymentCurrency::whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))->get();
-                $query = PaymentCurrency::whereHas('paymentServices')
-                    ->orWhereHas('paymentService')
-                    ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
-                    ->with('paymentServices', 'paymentService');
-
-                if (Auth::guard('modularous')->check() && ($user = Auth::guard('modularous')->user()) && $user->is_client && ($user->validCompany)) {
-                    if ($user->company->isCorporateCompany) {
-                        $query = $query->defaultCorporatePaymentCurrency();
-                    } else {
-                        $query = $query->defaultPersonalPaymentCurrency();
-                    }
-                } else {
-                    $query = PaymentCurrency::whereHas('paymentServices')
-                        ->orWhereHas('paymentService')
-                        ->with('paymentServices', 'paymentService');
-                }
-
-                $defaultPaymentCurrencies = $query->get();
-
-                $input['supportedCurrencies'] = $defaultPaymentCurrencies->merge($userPaymentCountryCurrencies)->sortBy('id')->values()->map(function ($item) {
-                    $item->append('has_built_in_form');
-                    $item->setCompanyVatRate();
-
-                    return $item;
-                });
-            } else {
-                $input['supportedCurrencies'] = [];
-            }
-        } else {
-            $input['supportedCurrencies'] = ! $this->skipQueries
-                ? PaymentCurrency::whereHas('paymentServices')
-                    ->orWhereHas('paymentService')
-                    ->with('paymentServices', 'paymentService')
-                    ->get()
-                    ->each(function ($item) {
-                        $item->append('has_built_in_form');
-                    })
-                : [];
-        }
-
-        $input['items'] = ! $this->skipQueries
-            ? PaymentService::published()
-                ->isExternal()
-                ->orWhere(fn ($query) => $query->published()->isTransfer())
-                ->with('paymentCurrencies')
-                ->get()
-                ->toArray()
-            : [];
-
-        $paymentServices = ! $this->skipQueries
-            ? PaymentService::published()
-                ->where('is_internal', 1)
-                ->with(['paymentCurrencies', 'cardTypes'])
-                ->get()
-                ->all()
-            : [];
-
-        $mappedData = [];
-
-        foreach ($paymentServices as $paymentService) {
-            foreach ($paymentService->internalPaymentCurrencies as $internalPaymentCurrency) {
-                $currencyCode = $internalPaymentCurrency->iso_4217 ?? '';
-
-                if (! isset($mappedData[$currencyCode])) {
-                    $mappedData[$currencyCode] = [];
-                }
-
-                foreach ($paymentService->cardTypes as $cardType) {
-                    $cardInfo = [
-                        'name' => mb_strtolower($cardType->name ?? ''),
-                        'logo' => $cardType->image('logo', locale: 'en'),
-                    ];
-
-                    if ($cardInfo['name'] && ! $this->cardExists($mappedData[$currencyCode], $cardInfo['name'])) {
-                        $mappedData[$currencyCode][] = $cardInfo;
-                    }
-                }
-            }
-        }
-
-        $input['currencyCardTypes'] = $mappedData;
+        $input = array_merge($input, $this->skipQueries
+            ? ['supportedCurrencies' => [], 'items' => [], 'currencyCardTypes' => []]
+            : $this->resolvePaymentRecords($input['useCountryBasedVatRates']));
 
         $input['transferFormSchema'] = modularous_format_inputs([
             [
@@ -173,6 +90,115 @@ class PaymentServiceHydrate extends InputHydrate
             : null;
 
         return $input;
+    }
+
+    /**
+     * Resolve supported currencies, payment services and card types once per request;
+     * a single page can render this input several times (row action, form action, form).
+     *
+     * @return array{supportedCurrencies: mixed, items: array, currencyCardTypes: array}
+     */
+    protected function resolvePaymentRecords(bool $useCountryBasedVatRates): array
+    {
+        $attributes = Request::instance()->attributes;
+        $key = self::RECORDS_ATTRIBUTE . ($useCountryBasedVatRates ? ':country' : ':default');
+
+        if (! $attributes->has($key)) {
+            $attributes->set($key, [
+                'supportedCurrencies' => $this->getSupportedCurrencies($useCountryBasedVatRates),
+                'items' => PaymentService::published()
+                    ->isExternal()
+                    ->orWhere(fn ($query) => $query->published()->isTransfer())
+                    ->with('paymentCurrencies')
+                    ->get()
+                    ->toArray(),
+                'currencyCardTypes' => $this->getCurrencyCardTypes(),
+            ]);
+        }
+
+        return $attributes->get($key);
+    }
+
+    protected function getSupportedCurrencies(bool $useCountryBasedVatRates)
+    {
+        if (! $useCountryBasedVatRates) {
+            return PaymentCurrency::whereHas('paymentServices')
+                ->orWhereHas('paymentService')
+                ->with('paymentServices', 'paymentService')
+                ->get()
+                ->each(function ($item) {
+                    $item->append('has_built_in_form');
+                });
+        }
+
+        $userPaymentCountryCurrencies = get_user_payment_country_currencies();
+
+        $userPaymentCountryCurrencies = $userPaymentCountryCurrencies->filter(function ($item) {
+            return $item->paymentServices()->exists() || $item->paymentService()->exists();
+        })->each(function ($item) {
+            $item->load('paymentServices', 'paymentService');
+        });
+
+        // $defaultPaymentCurrencies = PaymentCurrency::whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))->get();
+        $query = PaymentCurrency::whereHas('paymentServices')
+            ->orWhereHas('paymentService')
+            ->whereNotIn('id', $userPaymentCountryCurrencies->pluck('id'))
+            ->with('paymentServices', 'paymentService');
+
+        if (Auth::guard('modularous')->check() && ($user = Auth::guard('modularous')->user()) && $user->is_client && ($user->validCompany)) {
+            if ($user->company->isCorporateCompany) {
+                $query = $query->defaultCorporatePaymentCurrency();
+            } else {
+                $query = $query->defaultPersonalPaymentCurrency();
+            }
+        } else {
+            $query = PaymentCurrency::whereHas('paymentServices')
+                ->orWhereHas('paymentService')
+                ->with('paymentServices', 'paymentService');
+        }
+
+        $defaultPaymentCurrencies = $query->get();
+
+        return $defaultPaymentCurrencies->merge($userPaymentCountryCurrencies)->sortBy('id')->values()->map(function ($item) {
+            $item->append('has_built_in_form');
+            $item->setCompanyVatRate();
+
+            return $item;
+        });
+    }
+
+    protected function getCurrencyCardTypes(): array
+    {
+        $paymentServices = PaymentService::published()
+            ->where('is_internal', 1)
+            ->with(['paymentCurrencies', 'cardTypes'])
+            ->get()
+            ->all();
+
+        $mappedData = [];
+
+        foreach ($paymentServices as $paymentService) {
+            foreach ($paymentService->internalPaymentCurrencies as $internalPaymentCurrency) {
+                $currencyCode = $internalPaymentCurrency->iso_4217 ?? '';
+
+                if (! isset($mappedData[$currencyCode])) {
+                    $mappedData[$currencyCode] = [];
+                }
+
+                foreach ($paymentService->cardTypes as $cardType) {
+                    $cardInfo = [
+                        'name' => mb_strtolower($cardType->name ?? ''),
+                        'logo' => $cardType->image('logo', locale: 'en'),
+                    ];
+
+                    if ($cardInfo['name'] && ! $this->cardExists($mappedData[$currencyCode], $cardInfo['name'])) {
+                        $mappedData[$currencyCode][] = $cardInfo;
+                    }
+                }
+            }
+        }
+
+        return $mappedData;
     }
 
     private function cardExists($currencyCards, $cardName)

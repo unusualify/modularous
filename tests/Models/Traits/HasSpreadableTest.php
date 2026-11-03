@@ -5,7 +5,10 @@ namespace Unusualify\Modularous\Tests\Models\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Unusualify\Modularous\Entities\Spread;
+use Unusualify\Modularous\Entities\Traits\Core\ModelHelpers;
 use Unusualify\Modularous\Entities\Traits\HasSpreadable;
 use Unusualify\Modularous\Tests\ModelTestCase;
 
@@ -176,6 +179,46 @@ class HasSpreadableTest extends ModelTestCase
         $this->assertEquals($content, $model->spreadable->content);
 
     }
+
+    public function test_it_loads_spreadables_of_a_collection_with_a_single_query()
+    {
+        foreach (['Second', 'Third'] as $index => $name) {
+            $model = new TestSpreadableHelpersModel(['name' => $name]);
+            $model->spread_payload = ['type' => $index + 2];
+            $model->save();
+        }
+
+        DB::enableQueryLog();
+        $models = TestSpreadableHelpersModel::query()->orderBy('id')->get();
+        $spreadTable = (new Spread)->getTable();
+        $spreadQueries = collect(DB::getQueryLog())->filter(fn ($query) => str_starts_with($query['query'], "select * from \"{$spreadTable}\""));
+        DB::disableQueryLog();
+
+        $this->assertCount(3, $models);
+        $this->assertCount(1, $spreadQueries);
+        $this->assertSame([1, 2, 3], $models->map(fn ($model) => $model->type)->all());
+        $this->assertSame(['type', 'transfer_details'], $models->first()->getSpreadableKeys());
+        $this->assertSame(2, $models[1]->toArray()['type']);
+    }
+
+    public function test_it_resolves_spreadable_lazily_outside_of_collections()
+    {
+        $model = TestSpreadableHelpersModel::query()->cursor()->first();
+
+        $this->assertSame(1, $model->type);
+        $this->assertSame('B2Press B.V.', $model->toArray()['transfer_details']['account_holder']);
+    }
+}
+
+class TestSpreadableHelpersModel extends Model
+{
+    use HasSpreadable, ModelHelpers;
+
+    protected $table = 'test_spreadable_models';
+
+    protected $fillable = ['name'];
+
+    protected static $spreadableClass = TestSpreadableModel::class;
 }
 
 class TestSpreadableModel extends Model

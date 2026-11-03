@@ -1,0 +1,9 @@
+@use '../abstract' as *
+
+@layer components
+  .v-date-picker-controls .v-btn--icon
+    --v-btn-height: #{$date-picker-controls-btn-height}
+
+  .v-date-picker-years .v-btn,
+  .v-date-picker-months .v-btn
+    min-width: 0

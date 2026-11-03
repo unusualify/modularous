@@ -1,5 +1,5 @@
 <template>
-  <v-tabs v-model="activeTab" align-tabs="center" center-active show-arrows>
+  <v-tabs v-model="activeTab" grow center-active show-arrows color="primary-darken-1" class="border-b">
     <v-tab v-for="key in Object.keys(items)" :key="`tab-${key}`" :value="key">{{ key }}</v-tab>
   </v-tabs>
   <v-tabs-window v-model="activeTab">
