@@ -1,232 +1,153 @@
 <template>
   <div
     :class="[
-      'd-flex mb-4 w-100',
+      'v-input-chat__row d-flex align-start mb-4 w-100',
       reverse ? 'flex-row-reverse' : 'flex-row'
     ]"
     >
+    <!-- Avatar with the sender name below it -->
     <div
-      :style="[
-        $vuetify.display.smAndUp ? 'max-width: 80%; min-width: 50%;' : 'max-width: 100%; min-width: 100%;'
-      ]"
+      class="v-input-chat__author d-flex flex-column align-center flex-shrink-0"
+      :class="reverse ? 'ml-3' : 'mr-3'"
+      :style="{ width: `${authorWidth}px` }"
+    >
+      <v-avatar
+        :size="$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize"
+        :image="message.user_profile.avatar_url"
+        rounded="lg"
+        class="v-input-chat__avatar"
+      />
+      <span class="v-input-chat__author-name text-truncate mt-1">{{ message.user_profile.name }}</span>
+    </div>
+
+    <div
       :class="[
-        'd-flex elevation-2 px-4 py-3 rounded position-relative',
-        reverse ? 'flex-row-reverse bg-primary-lighten-5' : 'flex-row bg-grey-lighten-6',
+        'v-input-chat__bubble position-relative',
+        reverse ? 'v-input-chat__bubble--own' : '',
         isUnread ? 'v-input-chat__message--unread' : '',
         editing ? 'v-input-chat__message--editing' : ''
       ]"
       @mouseenter="startReading"
     >
-      <!-- Time positioned at bottom corner -->
-      <span
-        v-if="$vuetify.display.smAndUp"
-        class="text-body-small text-grey-darken-1"
-        :style="{
-          position: 'absolute',
-          bottom: '8px',
-          fontSize: '10px',
-          whiteSpace: 'nowrap',
-          zIndex: 1,
-          ...(reverse ? { right: '12px', textAlign: 'right' } : { left: '12px', textAlign: 'left' })
-        }"
-      >
-        {{ formatDate(message) }}
-      </span>
-      <!-- Edited label positioned at the bottom corner opposite to the time -->
-      <span
-        v-if="isEdited && $vuetify.display.smAndUp"
-        class="text-caption text-grey-darken-1 v-input-chat__message-edited"
-        :style="{
-          position: 'absolute',
-          bottom: '8px',
-          fontSize: '10px',
-          whiteSpace: 'nowrap',
-          zIndex: 1,
-          ...(reverse ? { left: '12px', textAlign: 'left' } : { right: '12px', textAlign: 'right' })
-        }"
-      >
-        {{ $t('Edited') }}
-      </span>
-      <v-tooltip
-        v-else
-        :text="formattedDateWithEdited"
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <div
-            v-bind="props"
-            :style="{
-              position: 'absolute',
-              bottom: '8px',
-              ...(reverse ? { right: '8px' } : { left: '8px' })
-            }"
-          >
-          </div>
-        </template>
-      </v-tooltip>
-
-      <!-- Avatar -->
       <div
-        class="d-flex flex-column flex-shrink-0"
-        :class="reverse ? 'ml-3 align-end' : 'mr-3 align-start'"
-        :style="{ width: `${$vuetify.display.smAndUp ? avatarSize : mobileAvatarSize}px` }"
+        :class="[
+          'v-input-chat__message-actions d-flex justify-end',
+          message.is_starred || message.is_pinned ? 'v-input-chat__message-actions--active' : ''
+        ]"
       >
-        <v-tooltip
-          v-if="!$vuetify.display.smAndUp"
-          :text="formattedDateWithEdited"
-          location="top"
-        >
-          <template v-slot:activator="{ props }">
-            <v-avatar
-              :size="mobileAvatarSize"
-              :image="message.user_profile.avatar_url"
-              v-bind="props"
+        <v-tooltip v-if="canEdit && !editing" :text="$t('Edit')" location="top">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon
+              v-bind="activatorProps"
+              icon="mdi-pencil-outline"
+              color="grey"
+              size="small"
+              @click="$emit('edit', message)"
             />
           </template>
         </v-tooltip>
-        <v-avatar
-          v-else
-          :size="avatarSize"
-          :image="message.user_profile.avatar_url"
-        />
+        <v-tooltip v-if="canDelete && !editing" :text="$t('Delete')" location="top">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon
+              v-bind="activatorProps"
+              icon="mdi-delete-outline"
+              color="grey"
+              size="small"
+              @click="$emit('delete', message)"
+            />
+          </template>
+        </v-tooltip>
+        <template v-if="!noStarring">
+          <span v-if="updatingFields.is_starred" class="v-input-chat__message-action-loader">
+            <v-progress-circular indeterminate size="14" width="2" color="secondary" />
+          </span>
+          <v-tooltip v-else :text="message.is_starred ? $t('Unstar') : $t('Star')" location="top">
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-icon
+                v-bind="activatorProps"
+                :icon="message.is_starred ? 'mdi-star' : 'mdi-star-outline'"
+                :color="message.is_starred ? 'secondary' : 'grey'"
+                size="small"
+                @click="updateMessage('is_starred', !message.is_starred)"
+              />
+            </template>
+          </v-tooltip>
+        </template>
+        <template v-if="!noPinning">
+          <span v-if="updatingFields.is_pinned" class="v-input-chat__message-action-loader">
+            <v-progress-circular indeterminate size="14" width="2" color="primary" />
+          </span>
+          <v-tooltip v-else :text="message.is_pinned ? $t('Unpin') : $t('Pin')" location="top">
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-icon
+                v-bind="activatorProps"
+                :icon="message.is_pinned ? 'mdi-pin' : 'mdi-pin-outline'"
+                :color="message.is_pinned ? 'primary' : 'grey'"
+                size="small"
+                @click="updateMessage('is_pinned', !message.is_pinned)"
+              />
+            </template>
+          </v-tooltip>
+        </template>
       </div>
 
+      <!-- Blurred content wrapper -->
       <div
-        :stylex="{ width: `calc(50% - ${avatarSize}px)` }"
-        class="w-100">
-        <!-- Header with name and icons (always clear) -->
-        <div
-          :class="[
-            'text-grey text-body-small w-100 d-flex justify-space-between',
-            reverse ? 'flex-row-reverse' : 'flex-row'
-          ]">
-
-          <div
-            v-if="!reverse"
-            :class="[
-              $vuetify.display.smAndUp ? 'w-50' : 'w-75',
-              'text-start'
-            ]"
-          >
-            <div>{{ message.user_profile.name }}</div>
-          </div>
-
-          <div class="d-flex justify-end v-input-chat__message-actions">
-            <v-tooltip v-if="canEdit && !editing" :text="$t('Edit')" location="top">
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-icon
-                  v-bind="activatorProps"
-                  icon="mdi-pencil-outline"
-                  color="grey"
-                  @click="$emit('edit', message)"
-                />
-              </template>
-            </v-tooltip>
-            <v-tooltip v-if="canDelete && !editing" :text="$t('Delete')" location="top">
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-icon
-                  v-bind="activatorProps"
-                  icon="mdi-delete-outline"
-                  color="grey"
-                  @click="$emit('delete', message)"
-                />
-              </template>
-            </v-tooltip>
-            <template v-if="!noStarring">
-              <span v-if="updatingFields.is_starred" class="v-input-chat__message-action-loader">
-                <v-progress-circular indeterminate size="18" width="2" color="secondary" />
-              </span>
-              <v-tooltip v-else :text="message.is_starred ? $t('Unstar') : $t('Star')" location="top">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-icon
-                    v-bind="activatorProps"
-                    :icon="message.is_starred ? 'mdi-star' : 'mdi-star-outline'"
-                    :color="message.is_starred ? 'secondary' : 'grey'"
-                    @click="updateMessage('is_starred', !message.is_starred)"
-                  />
-                </template>
-              </v-tooltip>
-            </template>
-            <template v-if="!noPinning">
-              <span v-if="updatingFields.is_pinned" class="v-input-chat__message-action-loader">
-                <v-progress-circular indeterminate size="18" width="2" color="primary" />
-              </span>
-              <v-tooltip v-else :text="message.is_pinned ? $t('Unpin') : $t('Pin')" location="top">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-icon
-                    v-bind="activatorProps"
-                    :icon="message.is_pinned ? 'mdi-pin' : 'mdi-pin-outline'"
-                    :color="message.is_pinned ? 'primary' : 'grey'"
-                    @click="updateMessage('is_pinned', !message.is_pinned)"
-                  />
-                </template>
-              </v-tooltip>
-            </template>
-          </div>
-        </div>
-
-        <!-- Blurred content wrapper -->
-        <div
-          :class="[
-            'message-content',
-            isUnread ? 'message-content--unread' : ''
-          ]"
-          :style="$vuetify.display.smAndUp ? { paddingBottom: '20px' } : {}"
-        >
-          <!-- Message content -->
-          <div :class="['d-flex mt-2 text-break position-relative', reverse ? 'flex-row-reverse' : 'flex-row']">
-            <div class="w-100" style="color: #32454A; font-weight: 400; font-size: 12px;">
-              <template v-if="message.content && message.content.length > contentTruncateLength">
-                <ue-well-print
-                  v-if="isExpanded"
-                  :text="message.content"
-                  :no-linkify="$attrs.noLinkify"
-                  class="w-100"
-                />
-                <div v-else>
-                  <ue-well-print
-                    :text="truncatedContent"
-                    :full-text="message.content"
-                    :no-linkify="$attrs.noLinkify"
-                    class="w-100"
-                  />
-                  <span class="text-grey-darken-1">...</span>
-                </div>
-
-                <v-expand-transition>
-                  <div v-if="message.content && message.content.length > contentTruncateLength" class="mt-1">
-                    <v-btn
-                      :text="isExpanded ? $t('Show less') : $t('Show more')"
-                      variant="plain"
-                      size="small"
-                      color="primary"
-                      @click="toggleExpand"
-                    />
-                  </div>
-                </v-expand-transition>
-              </template>
-              <template v-else>
-                <ue-well-print
-                  :text="message.content"
-                  :no-linkify="$attrs.noLinkify"
-                  class="w-100"
-                />
-              </template>
-            </div>
-          </div>
-
-          <!-- Attachments -->
-          <div v-if="message.attachments.length > 0" class="mt-2 py-1 rounded">
-            <ue-title :text="$t('Attachments')" padding="b-2" type="caption" color="none" transform="none"/>
-            <ue-filepond-preview
-              :source="message.attachments"
-              image-size="24"
-              show-file-name
-              no-overlay
-              show-datex
+        :class="[
+          'message-content',
+          isUnread ? 'message-content--unread' : ''
+        ]"
+      >
+        <div class="v-input-chat__content text-break">
+          <template v-if="message.content && message.content.length > contentTruncateLength">
+            <ue-well-print
+              v-if="isExpanded"
+              :text="message.content"
+              :no-linkify="$attrs.noLinkify"
+              class="w-100"
             />
-          </div>
+            <div v-else>
+              <ue-well-print
+                :text="truncatedContent"
+                :full-text="message.content"
+                :no-linkify="$attrs.noLinkify"
+                class="w-100"
+              />
+              <span class="text-grey-darken-1">...</span>
+            </div>
+
+            <v-btn
+              :text="isExpanded ? $t('Show less') : $t('Show more')"
+              class="v-input-chat__expand px-0"
+              variant="plain"
+              size="small"
+              color="primary"
+              @click="toggleExpand"
+            />
+          </template>
+          <ue-well-print
+            v-else
+            :text="message.content"
+            :no-linkify="$attrs.noLinkify"
+            class="w-100"
+          />
         </div>
+
+        <!-- Attachments -->
+        <div v-if="message.attachments.length > 0" class="mt-2 py-1">
+          <ue-title :text="$t('Attachments')" padding="b-2" type="caption" color="none" transform="none"/>
+          <ue-filepond-preview
+            :source="message.attachments"
+            image-size="24"
+            show-file-name
+            no-overlay
+          />
+        </div>
+      </div>
+
+      <div class="v-input-chat__meta d-flex align-center ga-2 mt-2">
+        <span>{{ formatDate(message) }}</span>
+        <span v-if="isEdited" class="v-input-chat__message-edited">{{ $t('Edited') }}</span>
       </div>
     </div>
   </div>
@@ -252,7 +173,7 @@
       },
       mobileAvatarSize: {
         type: Number,
-        default: 20
+        default: 32
       },
       reverse: {
         type: Boolean,
@@ -329,9 +250,9 @@
 
         return new Date(this.message.editable_until).getTime() > this.now;
       },
-      formattedDateWithEdited() {
-        const date = this.formatDate(this.message);
-        return this.isEdited ? `${date} · ${this.$t('Edited')}` : date;
+      // the name below the avatar may be wider than the avatar itself
+      authorWidth() {
+        return (this.$vuetify.display.smAndUp ? this.avatarSize : this.mobileAvatarSize) + 16;
       },
       truncatedContent() {
         if (this.message.content && this.message.content.length > this.contentTruncateLength) {
@@ -450,12 +371,80 @@
 </script>
 
 <style lang="scss">
+.v-input-chat__author-name {
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgb(var(--v-theme-grey-darken-1));
+}
+
+.v-input-chat__avatar {
+  background: rgb(var(--v-theme-grey-lighten-3));
+}
+
+.v-input-chat__bubble {
+  max-width: min(70%, 520px);
+  min-width: 160px;
+  padding: 10px 14px 10px;
+  background: rgb(var(--v-theme-surface));
+  border: 1px solid rgba(var(--v-border-color), 0.16);
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  @media (max-width: 599px) {
+    max-width: calc(100% - 56px);
+  }
+}
+
+.v-input-chat__content {
+  font-size: 13px;
+  line-height: 18px;
+  color: rgb(var(--v-theme-primary-darken-3));
+}
+
+.v-input-chat__expand {
+  min-width: 0;
+  height: auto !important;
+}
+
+.v-input-chat__meta {
+  font-size: 11px;
+  line-height: 14px;
+  color: rgb(var(--v-theme-grey-darken-1));
+}
+
+// starring / pinning stays out of the way until the message is hovered
+.v-input-chat__message-actions {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  gap: 2px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  background: rgb(var(--v-theme-surface));
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 2;
+}
+
+.v-input-chat__bubble:hover .v-input-chat__message-actions,
+.v-input-chat__message-actions--active,
+.v-input-chat__message-actions:focus-within {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .v-input-chat__message-actions {
+    opacity: 1;
+  }
+}
+
 .v-input-chat__message-action-loader {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .v-input-chat__message--editing {
@@ -478,9 +467,7 @@
 
   &:hover {
     opacity: 1;
-    border-width: 1px;
     border-color: rgba(var(--v-theme-primary), 0.6);
-    transform: scale(1.002);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
     .message-content--unread {

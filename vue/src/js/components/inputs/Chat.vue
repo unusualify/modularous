@@ -19,7 +19,7 @@
         :heightx="height"
         :disabled="disabled"
       >
-        <v-card-title class="w-100 py-4 text-wrap v-input-chat__dimmable" @click="cancelEditing">
+        <v-card-title class="v-input-chat__header w-100 py-3 text-wrap v-input-chat__dimmable" @click="cancelEditing">
           <ue-title :text="label" align="center" padding="a-0" transform="none" class="w-100" type="body-1" color="grey-darken-4" weight="medium">
             <template v-slot:right>
               <!-- STARRED MESSAGES -->
@@ -270,7 +270,7 @@
           </v-sheet>
         </v-card-title>
 
-        <v-card-text class="mr-n2 mb-n4 mt-n4 pb-0">
+        <v-card-text class="v-input-chat__body pb-0">
           <v-infinite-scroll
             ref="infiniteScroll"
             :height="calculatedBodyHeight"
@@ -349,7 +349,7 @@
         </v-input-filepond>
 
         <!-- READ-ONLY NOTICE (e.g. closed tickets) -->
-        <v-card-actions v-if="!noSendAction && isReadOnlyNoticeVisible" class="bg-surface v-input-chat__read-only">
+        <v-card-actions v-if="!noSendAction && isReadOnlyNoticeVisible" class="v-input-chat__composer v-input-chat__read-only">
           <slot name="read-only">
             <v-alert
               :color="disabledTextColor"
@@ -362,11 +362,10 @@
           </slot>
         </v-card-actions>
 
-        <v-card-actions class="bg-surface" v-else-if="!noSendAction" id="messageBox">
+        <v-card-actions class="v-input-chat__composer" v-else-if="!noSendAction" id="messageBox">
           <slot name="sending">
             <v-textarea
-              _class="position-absolute bg-surface px-4 pb-4"
-              style="bottom: 0; left: 0; right: 0; z-index: 1000;"
+              class="v-input-chat__textarea"
               ref="messageBox"
               v-model="message"
               :variant="inputVariant"
@@ -374,7 +373,8 @@
               hide-details
               :placeholder="$t('Type here...')"
               density="compact"
-              @click:append="sendMessage"
+              bg-color="surface"
+              rounded="xl"
               @keydown.enter="handleEnterKey"
               @keydown.tab="handleTabKey"
               @keydown.esc="handleEscKey"
@@ -382,9 +382,8 @@
               @blur="handleFieldBlur"
               :rows="textareaRows"
             >
-              <template v-slot:prepend v-if="$vuetify.display.smAndUp || editingMessage">
-                <!-- cancel editing, in place of the avatar -->
-                <v-tooltip v-if="editingMessage" :text="$t('Cancel')" location="top">
+              <template v-slot:prepend v-if="editingMessage">
+                <v-tooltip :text="$t('Cancel')" location="top">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn
                       v-bind="activatorProps"
@@ -397,9 +396,6 @@
                     />
                   </template>
                 </v-tooltip>
-                <div v-else class="flex-grow-0">
-                  <v-avatar class="my-aut" :image="$store.getters.userProfile.avatar_url" size="40"/>
-                </div>
               </template>
               <template v-slot:append-inner>
                 <!-- Custom attachment preview with hover delete buttons -->
@@ -427,13 +423,16 @@
                   </div>
                 </div>
 
-                <v-btn v-if="!noEmoji" :disabled="loadingAttachment" :color="color" :size="$vuetify.display.smAndUp ? 'default' : 'small'" icon="mdi-emoticon-outline" density="compact" @click="openEmojiPicker" @focus="handleFieldFocus" @blur="handleFieldBlur" />
-                <v-btn :color="color" :size="$vuetify.display.smAndUp ? 'default' : 'small'" icon="mdi-paperclip" density="compact" @click="handleAttachmentClick" @focus="handleFieldFocus" @blur="handleFieldBlur" />
+                <v-btn v-if="!noEmoji" :disabled="loadingAttachment" variant="text" color="grey-darken-1" :size="$vuetify.display.smAndUp ? 'default' : 'small'" icon="mdi-emoticon-outline" density="compact" @click="openEmojiPicker" @focus="handleFieldFocus" @blur="handleFieldBlur" />
+                <v-btn variant="text" color="grey-darken-1" :size="$vuetify.display.smAndUp ? 'default' : 'small'" icon="mdi-paperclip" density="compact" @click="handleAttachmentClick" @focus="handleFieldFocus" @blur="handleFieldBlur" />
+              </template>
+              <template v-slot:append>
                 <v-btn
-                  variant="elevated"
-                  density="compact"
+                  class="v-input-chat__send"
+                  variant="flat"
+                  color="primary"
                   :icon="sendButtonIcon"
-                  :size="$vuetify.display.smAndUp ? 'small' : 'x-small'"
+                  :size="$vuetify.display.smAndUp ? 40 : 36"
                   :disabled="isSendButtonDisabled"
                   @click="sendMessage"
                   @focus="handleFieldFocus"
@@ -1968,6 +1967,24 @@
 
 <style lang="sass">
   .v-input-chat
+    --v-input-chat-surface: rgba(var(--v-theme-primary), 0.05)
+    .v-input-chat__header
+      font-size: 1rem
+      line-height: 1.5rem
+    .v-input-chat__body,
+    .v-input-chat__composer
+      background: var(--v-input-chat-surface)
+    .v-input-chat__body
+      padding-top: $spacer * 4
+    .v-input-chat__composer
+      padding: $spacer * 2 $spacer * 4 $spacer * 4
+    .v-input-chat__textarea
+      .v-field
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+      .v-input__append
+        align-self: flex-end
+        margin-inline-start: $spacer * 2
+        padding-top: 0
     .v-input-chat__messages
       margin-top: auto
       .v-input-chat__message
