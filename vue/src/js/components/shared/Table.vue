@@ -176,7 +176,7 @@
 
                   >
                     <template #append-inner>
-                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
+                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" :aria-label="$t('fields.search')" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
                     </template>
                   </v-text-field>
 
@@ -828,6 +828,7 @@
                 variant="plain"
                 :color="isCardLayout ? 'grey-darken-3' : 'black'"
                 icon="mdi-cog-outline"
+                :aria-label="$t('fields.column-visibility')"
                 v-bind="props"
               />
             </template>
