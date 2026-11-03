@@ -1005,9 +1005,13 @@
                 </v-icon>
               </template>
 
-              <v-list>
-                <template v-for="(action, k) in visibleRowActions" :key="k">
-                  <v-list-item v-if="itemHasAction(item, action)"
+              <v-list v-for="itemActions in [getItemRowActions(item)]" :key="item.id">
+                <template v-for="(action, k) in itemActions" :key="k">
+                  <v-divider
+                    v-if="action.destructive && k > 0 && !itemActions[k - 1].destructive"
+                    class="my-1"
+                  />
+                  <v-list-item
                     :class="action.class ?? ''"
                     :disabled="isTableBusy"
                     @click="itemAction(item, action)"
