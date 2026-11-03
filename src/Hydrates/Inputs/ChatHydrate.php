@@ -24,8 +24,6 @@ class ChatHydrate extends InputHydrate
 
     /**
      * Manipulate Input Schema Structure
-     *
-     * @return void
      */
     public function hydrate()
     {
