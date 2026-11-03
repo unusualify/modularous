@@ -4,7 +4,7 @@ namespace Unusualify\Modularous\Hydrates\Inputs;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Unusualify\Modularity\Facades\Modularity;
+use Unusualify\Modularous\Facades\Modularous;
 
 class CreatorHydrate extends InputHydrate
 {
@@ -67,7 +67,7 @@ class CreatorHydrate extends InputHydrate
      */
     protected function getImpersonateAction(): ?array
     {
-        $user = Auth::guard(Modularity::getAuthGuardName())->user();
+        $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
         if (! $user || ! $user->can('impersonate')) {
             return null;
