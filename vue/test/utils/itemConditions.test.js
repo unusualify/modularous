@@ -2,6 +2,7 @@ import { describe, expect, test, beforeEach, vi } from 'vitest'
 
 import {
   checkItemConditions,
+  handleItemConditions,
   getNestedValue,
   evaluateCondition,
   evaluateConditionGroup,
@@ -441,6 +442,38 @@ describe('itemConditions tests', () => {
         ['state.code', '=', 'draft']
       ]
       expect(evaluateConditionArray(conditions, testItem)).toBe(true)
+    })
+  })
+
+  describe('handleItemConditions - disabledOnCondition (read-only chat)', () => {
+    const chatInput = () => ({
+      type: 'input-chat',
+      name: '_chat_id',
+      conditions: [['is_chat_closed', '!=', true]],
+      disabledOnCondition: true
+    })
+
+    test('keeps the chat enabled while the chat is open', () => {
+      const input = handleItemConditions(chatInput().conditions, { _chat_id: 1, is_chat_closed: false }, chatInput())
+
+      expect(input).not.toBe(false)
+      expect(input.disabled).toBeFalsy()
+    })
+
+    test('disables the chat instead of hiding it once the chat is closed', () => {
+      const input = handleItemConditions(chatInput().conditions, { _chat_id: 1, is_chat_closed: true }, chatInput())
+
+      expect(input).not.toBe(false)
+      expect(input.disabled).toBe(true)
+    })
+
+    test('re-enables the chat when the item is no longer closed', () => {
+      const input = chatInput()
+
+      handleItemConditions(input.conditions, { _chat_id: 1, is_chat_closed: true }, input)
+      handleItemConditions(input.conditions, { _chat_id: 1, is_chat_closed: false }, input)
+
+      expect(input.disabled).toBe(false)
     })
   })
 
