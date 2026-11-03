@@ -575,6 +575,16 @@
     },
 
     methods: {
+      permissionGroupLabel (groupName) {
+        const startCase = (value) => this.$lodash.startCase(this.$lodash.camelCase(value))
+        const [moduleName, routeName] = groupName.split('::')
+
+        if (routeName === undefined) return startCase(groupName)
+
+        return moduleName === this.$lodash.snakeCase(routeName)
+          ? startCase(routeName)
+          : `${startCase(moduleName)} › ${startCase(routeName)}`
+      },
       isGroupOpened (name) {
         return this.openedGroups.includes(name)
       },
@@ -746,26 +756,27 @@
               }
             }
           } else {
-            const splitted = String(source[this.chunkTitleKey] ?? '').split(this.chunkCharacter)
+            // permission types never contain the chunk character, module prefixes (system_user::) may
+            const raw = String(source[this.chunkTitleKey] ?? '')
+            const separatorIndex = raw.lastIndexOf(this.chunkCharacter)
 
-            if (splitted.length > 1) {
-              const groupName = splitted[0]
-              const checklistTitle = splitted.slice(1).join(this.chunkCharacter)
+            if (separatorIndex > 0) {
+              const groupName = raw.slice(0, separatorIndex)
+              const checklistTitle = raw.slice(separatorIndex + this.chunkCharacter.length)
+              const item = {
+                id: source[this.itemValue] ?? source.id,
+                name: this.$lodash.startCase(this.$lodash.camelCase(checklistTitle))
+              }
+
               if (Object.prototype.hasOwnProperty.call(groups, groupName)) {
                 if (__isset(groups[groupName].id)) delete groups[groupName].id
 
-                groups[groupName].items.push({
-                  id: source[this.itemValue] ?? source.id,
-                  name: this.$lodash.startCase(this.$lodash.camelCase(checklistTitle))
-                })
+                groups[groupName].items.push(item)
               } else {
                 groups[groupName] = {
-                  name: this.$lodash.startCase(this.$lodash.camelCase(groupName)),
+                  name: this.permissionGroupLabel(groupName),
                   title: groupName,
-                  items: [{
-                    id: source[this.itemValue] ?? source.id,
-                    name: this.$lodash.startCase(this.$lodash.camelCase(checklistTitle))
-                  }]
+                  items: [item]
                 }
               }
             } else {

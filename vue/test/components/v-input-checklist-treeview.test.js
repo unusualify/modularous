@@ -20,6 +20,38 @@ function makePermissionItems (groupCount = 5, perGroup = 20) {
 }
 
 describe('checklist treeview (role permissions config)', () => {
+  test('groups module-namespaced permissions by module and route', async () => {
+    const names = [
+      'system_user::user_view',
+      'system_user::user_bulkDelete',
+      'user::user_view',
+      'announcement::announcement_create',
+      'press_release::press-release-package_view',
+      'dashboard'
+    ]
+
+    const wrapper = mount(Checklist, {
+      global: { plugins: [UEConfig] },
+      props: {
+        isTreeview: true,
+        closeAllGroups: true,
+        modelValue: [],
+        items: names.map((name, index) => ({ id: index + 1, name }))
+      }
+    })
+
+    await nextTick()
+
+    const groups = Object.fromEntries(wrapper.vm.groupedItems.map(group => [group.title ?? 'general', group]))
+
+    expect(groups['system_user::user'].name).toBe('System User › User')
+    expect(groups['system_user::user'].items.map(item => item.name)).toEqual(['View', 'Bulk Delete'])
+    expect(groups['user::user'].name).toBe('User')
+    expect(groups['announcement::announcement'].name).toBe('Announcement')
+    expect(groups['press_release::press-release-package'].name).toBe('Press Release › Press Release Package')
+    expect(groups.general.items.map(item => item.name)).toEqual(['Dashboard'])
+  })
+
   test('treeview mounts with permission-like items and opens only first group', async () => {
     const items = makePermissionItems(5, 20)
 
