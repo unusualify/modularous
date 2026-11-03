@@ -6,7 +6,8 @@
       isPageLayout ? 'ue-form--page' : '',
       (fillHeight || isPageLayout) ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
       isPageLayout ? '' : sheetClasses,
-    ]">
+    ]"
+    :border="isPageLayout ? undefined : sheetBorder">
 
     <v-form
       :id="id"
@@ -185,6 +186,7 @@
       <component
         :is="cardWrapsAll ? 'v-sheet' : 'FormPassthrough'"
         :class="cardWrapsAll ? ['ue-form__card d-flex flex-column flex-grow-1 min-height-0', sheetClasses] : undefined"
+        :border="cardWrapsAll ? sheetBorder : undefined"
       >
       <!-- Scrollable Content Section -->
       <div :class="[
@@ -215,6 +217,7 @@
             <component
               :is="cardWrapsMain && !hasCardSections ? 'v-sheet' : 'FormPassthrough'"
               :class="cardWrapsMain && !hasCardSections ? ['ue-form__card flex-grow-1', sheetClasses] : undefined"
+              :border="cardWrapsMain && !hasCardSections ? sheetBorder : undefined"
             >
             <slot name="top" v-bind="{item: formItem, schema}"></slot>
 
@@ -261,6 +264,7 @@
                   cardIndex > 0 ? 'mt-3' : '',
                   cardIndex === schemaCards.length - 1 ? 'flex-grow-1' : '',
                 ] : undefined"
+                :border="hasCardSections ? sheetBorder : undefined"
               >
                 <v-custom-form-base
                   :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
@@ -647,6 +651,8 @@ export default {
       props.noDefaultFormPadding ? '' : 'pa-4',
       props.noDefaultSurface ? 'bg-transparent' : '',
     ])
+    // Theme defaults give every v-sheet a border, so a surface-less form has to opt out explicitly
+    const sheetBorder = computed(() => props.noDefaultSurface ? false : undefined)
 
     const isPageLayout = computed(() => props.titlePlacement === 'outside')
     const hasRightColumn = computed(() => useFormInstance.hasAdditionalSection.value && vuetifyDisplay.lgAndUp.value)
@@ -789,6 +795,7 @@ export default {
       ...useFormInstance,
       t,
       sheetClasses,
+      sheetBorder,
       formClasses,
       formSlots,
       titleOptions,
