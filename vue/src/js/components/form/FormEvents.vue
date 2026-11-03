@@ -58,7 +58,7 @@ defineOptions({
 <template>
   <template v-for="event in events" :key="event.name">
     <v-tooltip
-      :disabled="$isset(event.tooltip) || event.tooltip === false"
+      :disabled="event.tooltip === false"
       :location="event.tooltipLocation ?? 'top'"
     >
       <template v-slot:activator="tooltipActivatorScope">
@@ -102,7 +102,7 @@ defineOptions({
               variant="outlined"
               append-icon="mdi-chevron-down"
               v-bind="menuActivatorScope.props"
-              density="compact"
+              :density="event.density ?? 'default'"
             >
               {{ getEventActiveLabel(event) }}
             </v-btn>

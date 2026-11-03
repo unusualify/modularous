@@ -1,6 +1,17 @@
 <template>
-  <v-sheet-rounded class="ue-stepper-form__body d-flex w-100 flex-column justify-space-between elevation-2">
-    <v-stepper-window id="ue-stepper-content-window" class="fill-height overflow-y-auto px-4" :style="`max-height: calc(${maxHeight} - ${coverHeight}px)`">
+  <v-sheet
+    :class="[
+      'ue-stepper-form__body d-flex w-100 flex-column justify-space-between',
+      { 'ue-stepper-form__body--transparent': transparent },
+    ]"
+  >
+    <v-stepper-window id="ue-stepper-content-window"
+      :class="['fill-height overflow-y-auto', transparent ? 'px-0' : 'px-4']"
+      :style="{
+        '--ue-stepper-content-height': `calc(${maxHeight} - ${coverHeight}px)`,
+        maxHeight: 'var(--ue-stepper-content-height)',
+      }"
+    >
       <!-- Form steps -->
       <v-stepper-window-item
         v-for="(form, i) in forms"
@@ -12,6 +23,7 @@
           :ref="formRefs[i]"
           :id="`stepper-form-${i+1}`"
           :isEditing="isEditing"
+          :border="false"
 
           v-model="models[i]"
           @update:modelValue="val => updateFormModel(val, i)"
@@ -36,12 +48,11 @@
       <!-- Preview step -->
       <v-stepper-window-item
         :value="forms.length + 1"
-        class="pt-3"
       >
         <slot name="preview"></slot>
       </v-stepper-window-item>
     </v-stepper-window>
-  </v-sheet-rounded>
+  </v-sheet>
 </template>
 
 <script>
@@ -82,6 +93,10 @@
       coverHeight: {
         type: Number,
         default: 0
+      },
+      transparent: {
+        type: Boolean,
+        default: false
       }
 
     },

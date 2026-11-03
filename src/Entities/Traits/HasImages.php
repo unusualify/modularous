@@ -28,13 +28,7 @@ trait HasImages
             }
         });
         self::retrieved(static function (Model $model) {
-            $inputs = $model->getRouteInputs();
-
-            $iconInput = collect($inputs)->first(function ($input) {
-                return isset($input['type']) && ($input['type'] == 'image') && isset($input['isIcon']) && $input['isIcon'];
-            });
-
-            if ($iconInput) {
+            if ($model->hasIconImageInput()) {
                 if (($media = $model->findMedia('images'))) {
                     $model->setAttribute('_icon', ImageService::getRawUrl($media->uuid));
                 } else {
@@ -56,27 +50,30 @@ trait HasImages
         //     }
         // });
         self::updating(static function (Model $model) {
-            $inputs = $model->getRouteInputs();
-
-            $iconInput = collect($inputs)->first(function ($input) {
-                return isset($input['type']) && ($input['type'] == 'image') && isset($input['isIcon']) && $input['isIcon'];
-            });
-
-            if ($iconInput) {
+            if ($model->hasIconImageInput()) {
                 $model->offsetUnset('_icon');
             }
         });
         self::saving(static function (Model $model) {
-            $inputs = $model->getRouteInputs();
-
-            $iconInput = collect($inputs)->first(function ($input) {
-                return isset($input['type']) && ($input['type'] == 'image') && isset($input['isIcon']) && $input['isIcon'];
-            });
-
-            if ($iconInput) {
+            if ($model->hasIconImageInput()) {
                 $model->offsetUnset('_icon');
             }
         });
+    }
+
+    /**
+     * Whether the model's route schema has an image input flagged as icon.
+     *
+     * Resolved once per class: route inputs are static per model class and
+     * resolving them on every retrieved model is expensive.
+     */
+    public function hasIconImageInput(): bool
+    {
+        static $resolved = [];
+
+        return $resolved[static::class] ??= collect($this->getRouteInputs())->contains(
+            fn ($input) => ($input['type'] ?? null) == 'image' && ! empty($input['isIcon'])
+        );
     }
 
     /**

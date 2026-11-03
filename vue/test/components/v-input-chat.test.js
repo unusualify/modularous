@@ -41,6 +41,7 @@ function mountChat (props = {}) {
         'ue-modal': true,
         'file-uploader': true,
         'emoji-picker': true,
+        'ue-emojis': true,
       },
     },
     props: {

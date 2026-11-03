@@ -15,7 +15,7 @@
     :item-title="itemTitle"
 
     :loading="itemsLoading"
-    :readonly="$attrs.readonly || readonly || elements.length === 0"
+    :readonly="$attrs.readonly || readonly || (awaitSource && elements.length === 0)"
     :hide-no-data="itemsLoading"
     :no-filter="noFilter"
 

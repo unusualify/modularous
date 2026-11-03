@@ -35,7 +35,7 @@ class UpgradeV11DbCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Upgrade DB records from Modularity to Modularous (namespace, guard_name, migrations)';
+    protected $description = 'Upgrade DB records from Modularity to Modularous (namespace, guard_name, migrations, payment parameters)';
 
     private const NS_OLD = 'Unusualify\\Modularity';
 
@@ -81,6 +81,8 @@ class UpgradeV11DbCommand extends BaseCommand
         $this->fixGuardNames($dryRun);
         $this->fixTelescope($dryRun);
         $this->fixUmTables($dryRun);
+        $this->fixNotifications($dryRun);
+        $this->fixPaymentParameters($dryRun);
 
         $this->newLine();
         $this->info(sprintf(
@@ -240,6 +242,82 @@ class UpgradeV11DbCommand extends BaseCommand
                 $this->dbReplace($table, $col, self::NS_OLD, self::NS_NEW, $dryRun);
             }
         }
+    }
+
+    private function fixNotifications(bool $dryRun): void
+    {
+        $this->line('▶ notifications');
+
+        if (! Schema::hasTable('notifications')) {
+            $this->skip('Table notifications not found.');
+
+            return;
+        }
+
+        foreach (['notifiable_type', 'type'] as $col) {
+            if (! Schema::hasColumn('notifications', $col)) {
+                $this->skip("Column notifications.{$col} not found.");
+
+                continue;
+            }
+            $this->dbReplace('notifications', $col, self::NS_OLD, self::NS_NEW, $dryRun);
+        }
+    }
+
+    /**
+     * Rename the top-level "modularity" key in payment parameters JSON to "modularous".
+     *
+     * Rows that already have a "modularous" key are left untouched.
+     */
+    private function fixPaymentParameters(bool $dryRun): void
+    {
+        $table = config('payable.table', 'unfy_payments');
+
+        $this->line("▶ {$table}.parameters");
+
+        if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'parameters')) {
+            $this->skip("Table/column {$table}.parameters not found.");
+
+            return;
+        }
+
+        $count = 0;
+
+        DB::table($table)
+            ->select(['id', 'parameters'])
+            ->where('parameters', 'like', '%"modularity"%')
+            ->orderBy('id')
+            ->chunkById(500, function ($rows) use ($table, $dryRun, &$count) {
+                foreach ($rows as $row) {
+                    $parameters = json_decode((string) $row->parameters, true);
+
+                    if (! is_array($parameters)
+                        || ! array_key_exists('modularity', $parameters)
+                        || array_key_exists('modularous', $parameters)) {
+                        continue;
+                    }
+
+                    $renamed = [];
+                    foreach ($parameters as $key => $value) {
+                        $renamed[$key === 'modularity' ? 'modularous' : $key] = $value;
+                    }
+
+                    if (! $dryRun) {
+                        DB::table($table)
+                            ->where('id', $row->id)
+                            ->update(['parameters' => json_encode($renamed, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
+                    }
+
+                    $count++;
+                }
+            });
+
+        if ($count === 0) {
+            return;
+        }
+
+        $this->ok(sprintf('%s.parameters — %d row(s)  [modularity → modularous]%s', $table, $count, $dryRun ? ' (dry-run)' : ''));
+        $this->updated += $count;
     }
 
     /**

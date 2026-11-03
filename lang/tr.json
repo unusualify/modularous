@@ -23,6 +23,7 @@
     "Choose how long your pin lasts": "Sabitlemenin ne kadar süreceğini seçin",
     "CLIENTS": "MÜŞTERİLER",
     "COMPANIES": "ŞİRKETLER",
+    "Company": "Şirket",
     "Company Information": "Şirket Bilgileri",
     "Complete": "Tamamla",
     "Complete Request": "Talebi Tamamla",
@@ -53,6 +54,7 @@
 
     "Generate Password": "Şifre Oluştur",
     "Generate Your Password For New Account": "Yeni Hesap İçin Şifre Oluştur",
+    "Go to user": "Kullanıcıya git",
 
     "Hello!": "Merhaba!",
     "Hi :name,": "Merhaba :name,",
@@ -61,6 +63,7 @@
     "If you did not create an account, no further action is required.": "Hesap oluşturmadıysanız, herhangi bir işlem yapmanız gerekli değildir.",
     "If you did not request a password reset, no further action is required.": "Şifre sıfırlama talebinde bulunmadıysanız, herhangi bir işlem yapmanız gerekli değildir",
     "Invalid email format": "Geçersiz e-posta formatı",
+    "Items per page": "Sayfa başına satır",
 
     "LANGUAGES": "DİLLER",
     "Load more": "Daha fazla yükle",
@@ -77,6 +80,7 @@
     "No data available": "Veri bulunamadı",
     "NOTIFICATIONS": "BİLDİRİMLER",
 
+    "of": "/",
     "or": "veya",
     "Open": "Aç",
     "Open chat": "Sohbeti Aç",

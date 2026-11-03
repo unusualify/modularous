@@ -34,6 +34,8 @@ The `ue-form` component is the primary schema-driven form wrapper in Modularous.
 | `title` | `String\|Object` | — | Header title. Pass an object for advanced options (type, weight, color, etc.) |
 | `subtitle` | `String` | — | Subtitle shown below the title |
 | `noTitle` | `Boolean` | `false` | Hide the title row |
+| `titlePlacement` | `String` | `'inside'` | `'outside'` switches to the page layout: the title row (title, form events, locale selector, title actions) sits above the card. Without a right panel the body and submit share one card; with a right panel (lg and up) only the main column is a card, `top` actions sit above it and submit sits below both columns. Generic form pages use `'outside'` |
+| `headerCard` | `Boolean` | `false` | Page layout only: render the title row as its own card |
 | `isEditing` | `Boolean` | `false` | Switches form into edit mode (PUT vs POST) |
 | `async` | `Boolean` | `true` | Submit via axios; if `false`, submits the native HTML form |
 | `hasSubmit` | `Boolean` | `false` | Render a built-in submit button |
@@ -61,6 +63,7 @@ The `ue-form` component is the primary schema-driven form wrapper in Modularous.
 |------|-------|-------------|
 | `header.left` | `{title, subtitle, model, schema, formItem}` | Replaces the left side of the title row |
 | `headerCenter` | — | Extra content injected into the title row center |
+| `header.right.top` | `{model, schema, formItem}` | Content above the form events / locale selector on the right of the title row |
 | `top` | `{item, schema}` | Content above the input block |
 | `underside` | `{isEditing, item, schema}` | Content below the input block |
 | `actions.prepend` | actions scope | Prepend content before action buttons |

@@ -2,7 +2,8 @@
   <v-input
     :class="[
       'v-input-repeater',
-      totalRepeats === 0 && hideIfEmpty ? 'd-none' : ''
+      totalRepeats === 0 && hideIfEmpty ? 'd-none' : '',
+      sectionCollapsible ? 'v-input-repeater--section-collapsible' : '',
     ]"
   >
     <div class="w-100">
@@ -17,7 +18,7 @@
       </div>
       <ue-collapsible
         v-model="isOpen"
-        no-collapse
+        :no-collapse="!sectionCollapsible"
         no-header-background
         :horizontal-padding="0"
         :vertical-padding="0"
@@ -71,7 +72,7 @@
                           icon="mdi-drag-vertical"
                           size="small"
                         />
-                        <span class="text-body-2 text-truncate flex-grow-1 min-width-0">{{ getRepeaterItemTitle(itemSlot.index) }}</span>
+                        <span class="text-body-medium text-truncate flex-grow-1 min-width-0">{{ getRepeaterItemTitle(itemSlot.index) }}</span>
                         <div v-if="!noToolbar" class="d-flex align-center ga-1 ms-2 flex-shrink-0" @click.stop>
                           <v-btn v-if="isAddible" @click="addRepeaterBlock()" color="success" variant="text" density="compact" icon="">
                             <v-icon size="x-small" icon="mdi-plus" />
@@ -198,7 +199,7 @@
                 class="v-input-repeater__panel"
               >
                 <v-expansion-panel-title class="py-2 min-h-auto">
-                  <span class="text-body-2 text-truncate flex-grow-1">{{ getRepeaterItemTitle(index) }}</span>
+                  <span class="text-body-medium text-truncate flex-grow-1">{{ getRepeaterItemTitle(index) }}</span>
                   <div v-if="!noToolbar" class="d-flex align-center ga-1 ms-2 flex-shrink-0" @click.stop>
                     <v-btn v-if="isAddible" @click="addRepeaterBlock()" color="success" variant="text" density="compact" icon="">
                       <v-icon size="x-small" icon="mdi-plus" />
@@ -304,7 +305,7 @@
             <!-- Bottom Actions -->
             <div
               v-if="(totalRepeats < 1 || !noAddButton) || $slots.addButton || $slots.addButtonRight"
-              class="v-input-repeater__bottom mb-12"
+              class="v-input-repeater__bottom mt-2 mb-12"
             >
               <div class="d-flex">
                 <slot name="addButton" v-bind="{text: addButtonContent, addRepeaterBlock, isActive: addButtonIsActive}">
@@ -354,6 +355,11 @@
       noToolbar: {
         type: Boolean,
         default: false
+      },
+      // Lets the label/subtitle header open and close the whole repeater section
+      sectionCollapsible: {
+        type: Boolean,
+        default: false
       }
     },
     setup (props, context) {
@@ -391,6 +397,9 @@
 
     .v-input-repeater__block
       // margin-left: -1 * 12 * $spacer
+      // inputs hide their details until an error shows, so gutterless rows need their own spacing
+      &.v-row--no-gutters
+        row-gap: 8px
       .v-input-repeater__content
         margin-bottom: 20px
       + .dropdown
@@ -482,4 +491,11 @@
     .v-input-repeater__item--body
       &.gutter
         padding: 1.3vw !important
+
+  .v-input-repeater--section-collapsible
+    :deep(.v-input__control > .w-100 > .ue-collapsible > .ue-collapsible__header)
+      align-items: flex-start
+
+      .ue-collapsible__icon
+        font-size: 24px
 </style>

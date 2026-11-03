@@ -96,6 +96,26 @@ class PanelControllerTest extends TestModulesCase
         $this->assertSame(['data' => [['id' => 1]]], $controller->exposeGetJSONData());
     }
 
+    public function test_get_json_data_light_mode_decodes_json_encoded_orders_and_scopes(): void
+    {
+        $repository = Mockery::mock(Repository::class);
+        $repository->shouldReceive('list')
+            ->once()
+            ->withArgs(fn ($column, $with, $scopes, $orders) => $orders === ['name' => 'asc'] && $scopes === ['published' => true])
+            ->andReturn(['data' => []]);
+
+        $request = Request::create('/items', 'GET', [
+            'light' => '1',
+            'orders' => '{"name":"asc"}',
+            'scopes' => '{"published":true}',
+        ]);
+
+        $controller = new PanelControllerStub($this->app, $request, $repository);
+        $controller->preload();
+
+        $this->assertSame(['data' => []], $controller->exposeGetJSONData());
+    }
+
     public function test_get_json_data_returns_formatted_index_items_by_default(): void
     {
         $paginator = new LengthAwarePaginator([['id' => 2]], 1, 10);
