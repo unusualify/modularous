@@ -141,11 +141,11 @@
         <div class="d-flex justify-end align-center ga-4 pt-3">
           <v-btn
             variant="text"
-            class="text-none"
+            class="text-capitalize"
             :disabled="activeStep === 1"
             @click="goStep(activeStep - 1)"
           >
-            {{ $t('previous') }}
+            {{ $t('Previous') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -155,7 +155,7 @@
             :disabled="$hasRequestInProgress()"
             @click="nextForm(activeStep - 1)"
           >
-            {{ $t('next') }}
+            {{ $t('Next') }}
           </v-btn>
         </div>
       </div>
