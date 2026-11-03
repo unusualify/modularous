@@ -661,6 +661,7 @@
                 :is="`ue-${customRow.name}`"
                 :key="element.id"
                 :name="name"
+                :permissionPrefix="permissionName"
                 :titlePrefix="titlePrefix"
                 :titleKey="titleKey"
 
