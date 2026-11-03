@@ -206,20 +206,31 @@ if (! function_exists('get_modularous_navigation_config')) {
 
 if (! function_exists('get_modularous_gate_abilities')) {
     /**
-     * Resolve every registered gate ability for the user.
+     * Resolve every Spatie permission and registered gate ability for the user.
      *
-     * Abilities backed by a Spatie permission are answered from the user's
-     * permission set (superadmin passes all of them, as the Gate::before hook
-     * does); only the remaining custom abilities go through the Gate.
+     * Permissions are not defined on the Gate (Spatie answers them through its
+     * Gate::before hook), so they are listed from the permission registrar and
+     * answered from the user's permission set (superadmin passes all of them);
+     * only the remaining custom abilities go through the Gate.
      *
      * @return array<string, bool>
      */
     function get_modularous_gate_abilities($user): array
     {
-        $abilities = array_keys(Gate::abilities());
+        $permissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
+            ->getPermissions()
+            ->pluck('name')
+            ->unique()
+            ->values()
+            ->all();
+
+        $customAbilities = array_values(array_diff(array_keys(Gate::abilities()), $permissionNames));
 
         if (! $user || ! method_exists($user, 'getAllPermissions') || config('permission.enable_wildcard_permission')) {
-            return Arr::mapWithKeys($abilities, fn ($ability) => [$ability => Gate::allows($ability)]);
+            return Arr::mapWithKeys(
+                [...$permissionNames, ...$customAbilities],
+                fn ($ability) => [$ability => Gate::allows($ability)]
+            );
         }
 
         $isSuperAdmin = (bool) ($user->is_superadmin ?? false);
@@ -231,18 +242,14 @@ if (! function_exists('get_modularous_gate_abilities')) {
             ->flip()
             ->all();
 
-        $permissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
-            ->getPermissions()
-            ->pluck('name')
-            ->flip()
-            ->all();
-
         $resolved = [];
 
-        foreach ($abilities as $ability) {
-            $resolved[$ability] = isset($permissionNames[$ability])
-                ? $isSuperAdmin || isset($grantedPermissions[$ability])
-                : Gate::allows($ability);
+        foreach ($permissionNames as $permission) {
+            $resolved[$permission] = $isSuperAdmin || isset($grantedPermissions[$permission]);
+        }
+
+        foreach ($customAbilities as $ability) {
+            $resolved[$ability] = Gate::allows($ability);
         }
 
         return $resolved;
