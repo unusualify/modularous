@@ -21,6 +21,24 @@ class ComponentHelpersTest extends TestCase
     }
 
     /** @test */
+    public function test_modularous_chip_leaves_variant_to_theme_defaults()
+    {
+        $this->assertSame(
+            '<v-chip color="info" prepend-icon="mdi-clock-outline">Provision</v-chip>',
+            modularous_chip('Provision', 'info', 'mdi-clock-outline')
+        );
+        $this->assertSame('<v-chip>No Status</v-chip>', modularous_chip('No Status'));
+    }
+
+    /** @test */
+    public function test_modularous_chip_escapes_label_and_merges_attributes()
+    {
+        $html = modularous_chip('<b>A & B</b>', 'error', null, ['variant' => 'flat', 'class' => 'x']);
+
+        $this->assertSame('<v-chip color="error" variant="flat" class="x">&lt;b&gt;A &amp; B&lt;/b&gt;</v-chip>', $html);
+    }
+
+    /** @test */
     public function test_modularous_modal_service_returns_array_structure()
     {
         $result = modularous_modal_service(

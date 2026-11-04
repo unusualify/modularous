@@ -83,7 +83,7 @@ trait Assignable
     {
         return new Attribute(
             get: fn ($value) => $this->lastAssignment
-                ? "<v-chip variant='text' color='{$this->lastAssignment->statusIconColor}' prepend-icon='{$this->lastAssignment->statusIcon}'>{$this->lastAssignment->statusLabel}</v-chip>"
+                ? modularous_chip((string) $this->lastAssignment->statusLabel, $this->lastAssignment->statusIconColor, $this->lastAssignment->statusIcon)
                 : null
         );
     }

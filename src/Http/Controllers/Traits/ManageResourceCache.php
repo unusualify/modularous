@@ -33,7 +33,7 @@ trait ManageResourceCache
             return;
         }
 
-        $permissionName = $this->repository->getPermissionName(Permission::CACHING->value, $this->getRouteName());
+        $permissionName = $this->module->generatePermissionName(Permission::CACHING->value, $this->getRouteName());
         if (! $this->user || ! $this->user->can($permissionName)) {
             return;
         }
@@ -237,7 +237,7 @@ trait ManageResourceCache
             abort(404);
         }
 
-        $permissionName = $this->repository->getPermissionName(Permission::CACHING->value, $this->getRouteName());
+        $permissionName = $this->module->generatePermissionName(Permission::CACHING->value, $this->getRouteName());
 
         if (! $this->user || ! $this->user->can($permissionName)) {
             abort(403);

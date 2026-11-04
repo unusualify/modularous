@@ -150,7 +150,6 @@ class ManageResourceCacheTest extends TestCase
         $types = ['record' => true, 'index' => false];
 
         $this->controller->repository = Mockery::mock();
-        $this->controller->repository->shouldReceive('getPermissionName')->andReturn('test_route_caching');
         $this->controller->repository->shouldReceive('getById')->once()->with(42)->andReturn($model);
 
         ModularousCache::shouldReceive('hasAdminCacheActions')
@@ -179,7 +178,6 @@ class ManageResourceCacheTest extends TestCase
         $types = ['record' => true, 'presentationItem' => true, 'index' => false];
 
         $this->controller->repository = Mockery::mock();
-        $this->controller->repository->shouldReceive('getPermissionName')->andReturn('test_route_caching');
         $this->controller->repository->shouldReceive('getById')->once()->with(7)->andReturn($model);
 
         ModularousCache::shouldReceive('hasAdminCacheActions')
@@ -299,7 +297,7 @@ class ManageResourceCacheTest extends TestCase
         $this->controller->repository = $this->makeRepositoryWithCachingPermission();
 
         $user = Mockery::mock();
-        $user->shouldReceive('can')->once()->with('test_route_caching')->andReturn(false);
+        $user->shouldReceive('can')->once()->with('test_module::test-route_caching')->andReturn(false);
         $this->controller->user = $user;
 
         try {
@@ -378,16 +376,13 @@ class ManageResourceCacheTest extends TestCase
     {
         $user = Mockery::mock();
         $user->id = 99;
-        $user->shouldReceive('can')->with('test_route_caching')->andReturn(true);
+        $user->shouldReceive('can')->with('test_module::test-route_caching')->andReturn(true);
         $this->controller->user = $user;
     }
 
     protected function makeRepositoryWithCachingPermission(): MockInterface
     {
-        $repository = Mockery::mock();
-        $repository->shouldReceive('getPermissionName')->andReturn('test_route_caching');
-
-        return $repository;
+        return Mockery::mock();
     }
 
     protected function makeModuleMock(): Module
@@ -399,6 +394,9 @@ class ManageResourceCacheTest extends TestCase
         $module->shouldReceive('panelRouteNamePrefix')
             ->with(false)
             ->andReturn('admin.test_module.');
+        $module->shouldReceive('generatePermissionName')
+            ->with('caching', 'TestRoute')
+            ->andReturn('test_module::test-route_caching');
 
         return $module;
     }

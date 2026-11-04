@@ -51,8 +51,8 @@ Route::resource('', 'DashboardController', ['as' => 'dashboard', 'names' => ['in
 Route::get('artisan-runner', ArtisanRunnerToolController::class)->name('artisan-runner');
 Route::get('module-route-inspect', ModuleRouteInspectToolController::class)->name('module-route-inspect');
 
-Route::get('users/impersonate/stop', 'Utility\ImpersonateController@stopImpersonate')->name('impersonate.stop');
-Route::get('users/impersonate/{id}', 'Utility\ImpersonateController@impersonate')->name('impersonate');
+Route::post('users/impersonate/stop', 'Utility\ImpersonateController@stopImpersonate')->name('impersonate.stop');
+Route::post('users/impersonate/{id}', 'Utility\ImpersonateController@impersonate')->whereNumber('id')->name('impersonate');
 
 // system internal api routes (for ajax web routes)
 Route::prefix('api')->group(function () {
@@ -72,8 +72,13 @@ Route::prefix('api')->group(function () {
         Route::get('{chat}', 'index')->name('index');
         Route::get('{chat}/attachments', 'attachments')->name('attachments');
         Route::get('{chat}/pinned-message', 'pinnedMessage')->name('pinned-message');
+        Route::get('{chat}/pinned-messages', 'pinnedMessages')->name('pinned-messages');
+        Route::get('{chat}/starred-messages', 'starredMessages')->name('starred-messages');
         Route::post('{chat}', 'store')->name('store');
+        Route::put('{chat}/read-all', 'markAllAsRead')->name('read-all');
+        Route::put('{chat}/unstar-all', 'unstarAll')->name('unstar-all');
         Route::put('{chat_message}', 'update')->name('update');
+        Route::put('{chat_message}/edit', 'edit')->name('edit');
         Route::get('show/{chat_message}', 'show')->name('show');
         Route::delete('destroy/{chat_message}', 'destroy')->name('destroy');
     });

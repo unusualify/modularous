@@ -454,7 +454,7 @@ class AssignableTest extends ModelTestCase
         $this->assertNotNull($status);
         $this->assertIsString($status);
         $this->assertStringContainsString('<v-chip', $status);
-        $this->assertStringContainsString('variant=\'text\'', $status);
+        $this->assertStringNotContainsString('variant=', $status);
     }
 
     public function test_active_assignment_status_with_different_statuses()
@@ -500,7 +500,7 @@ class AssignableTest extends ModelTestCase
             $this->assertNotNull($assignmentStatus);
             $this->assertIsString($assignmentStatus);
             $this->assertStringContainsString('<v-chip', $assignmentStatus);
-            $this->assertStringContainsString('variant=\'text\'', $assignmentStatus);
+            $this->assertStringNotContainsString('variant=', $assignmentStatus);
         }
     }
 

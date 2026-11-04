@@ -5,9 +5,9 @@ namespace Unusualify\Modularous\Support;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Spatie\Permission\Middlewares\PermissionMiddleware;
-use Spatie\Permission\Middlewares\RoleMiddleware;
-use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Http\Controllers\ApiController;
 use Unusualify\Modularous\Http\Middleware\AuthenticateMiddleware;
@@ -25,6 +25,7 @@ use Unusualify\Modularous\Http\Middleware\TimezoneMiddleware;
 use Unusualify\Modularous\Http\Middleware\UtmMiddleware;
 use Unusualify\Modularous\Http\Middleware\VerifyModularousCacheWebhook;
 use Unusualify\Modularous\Module;
+use Unusualify\Modularous\Services\DevAuth\DevAutoLoginService;
 
 class ModularousRoutes
 {
@@ -157,11 +158,12 @@ class ModularousRoutes
         Route::aliasMiddleware('modularous.guest', RedirectIfAuthenticatedMiddleware::class);
 
         $authGuardName = Modularous::getAuthGuardName();
-        Route::middlewareGroup('web.auth', [
+        Route::middlewareGroup('web.auth', array_values(array_filter([
             'web',
+            app(DevAutoLoginService::class)->isEnabled() ? 'modularous.dev_auto_login' : null,
             'modularous.auth:' . $authGuardName,
             // 'auth',
-        ]);
+        ])));
         Route::middlewareGroup('api.auth', [
             'api',
             'throttle:api',
@@ -202,10 +204,6 @@ class ModularousRoutes
         // Optional Middlewares for features
         Route::aliasMiddleware('hostable', HostableMiddleware::class);
 
-        /*
-        * Define Spatie Laravel-Permission Middleware (https://github.com/spatie/laravel-permission)
-        * See a typo? Note that since v6 the 'Middleware' namespace is singular. Prior to v6 it was 'Middlewares'. Time to upgrade your implementation!
-        */
         Route::aliasMiddleware('role', RoleMiddleware::class);
         Route::aliasMiddleware('permission', PermissionMiddleware::class);
         Route::aliasMiddleware('role_or_permission', RoleOrPermissionMiddleware::class);

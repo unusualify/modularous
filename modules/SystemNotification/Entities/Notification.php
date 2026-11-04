@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Unusualify\Modularous\Entities\Model;
+use Unusualify\Modularous\Entities\User;
 
 class Notification extends Model
 {
@@ -67,6 +68,39 @@ class Notification extends Model
     public function notifiable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Notifiable owner, eager-loaded with the fields the admin recipient card needs.
+     *
+     * The company name is selected via subquery: loading Company models would trigger a
+     * per-row spreadable lookup (HasSpreadable `retrieved` hook).
+     */
+    public function recipient(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'notifiable_type', 'notifiable_id')
+            ->morphWith([
+                User::class => [
+                    'fileponds' => fn ($query) => $query->where('role', 'avatar'),
+                ],
+            ])
+            ->constrain([
+                User::class => function ($query) {
+                    $company = $query->getModel()->company();
+                    $companyModel = $company->getRelated();
+
+                    $query->addSelect([
+                        'recipient_company_name' => $companyModel->newQueryWithoutScopes()
+                            ->select('name')
+                            ->whereColumn($company->getQualifiedOwnerKeyName(), $company->getQualifiedForeignKeyName())
+                            ->when(
+                                method_exists($companyModel, 'getQualifiedDeletedAtColumn'),
+                                fn ($subquery) => $subquery->whereNull($companyModel->getQualifiedDeletedAtColumn())
+                            )
+                            ->limit(1),
+                    ]);
+                },
+            ]);
     }
 
     /**
@@ -159,6 +193,30 @@ class Notification extends Model
         return new Attribute(
             get: fn ($value) => $this->data['redirectorText'] ?? $this->data['actionText'] ?? '',
         );
+    }
+
+    /**
+     * Compact recipient payload for table cells; null unless `recipient` was eager-loaded.
+     *
+     * Keys intentionally avoid `name` / `title`, which the index formatter collapses to a scalar.
+     */
+    protected function recipientSummary(): Attribute
+    {
+        return Attribute::get(function (): ?array {
+            if (! $this->relationLoaded('recipient') || ! ($recipient = $this->getRelation('recipient'))) {
+                return null;
+            }
+
+            $fullName = trim(implode(' ', array_filter([$recipient->name ?? null, $recipient->surname ?? null])));
+
+            return [
+                'id' => $recipient->getKey(),
+                'full_name' => $fullName !== '' ? $fullName : null,
+                'email' => $recipient->email ?? null,
+                'company_name' => ($recipient->getAttributes()['recipient_company_name'] ?? null) ?: null,
+                'avatar' => $recipient instanceof User ? $recipient->avatar : null,
+            ];
+        })->shouldCache();
     }
 
     /**

@@ -1,13 +1,17 @@
 <template>
-  <v-layout fluid v-resize="onResize"
+  <v-sheet fluid v-resize="onResize"
+    :border="isTitleOutside ? false : (isCardLayout ? 'sm' : undefined)"
+    :rounded="isTitleOutside ? 0 : (isCardLayout ? 'lg' : undefined)"
     :class="[
-      noFullScreen ? 'h-100' : '',
-      rounded ? $lodash.isBoolean(rounded) ? 'rounded' : `rounded-${rounded}` : '',
-      elevation ? `elevation-${elevation}` : '',
+      noFullScreen || isTitleOutside ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
+      isTitleOutside
+        ? 'bg-transparent ue-table-layout--title-outside'
+        : (isCardLayout ? 'bg-surface elevation-0 overflow-hidden ue-table-layout--card' : surfaceClasses),
     ]"
-    :style="$vuetify.display.lgAndUp ? 'max-height: calc(100vh - 24px)' : 'max-height: calc(100vh - 24px - 64px)'"
+    :style="noFullScreen || isTitleOutside
+      ? 'min-height: 0; max-height: 100%;'
+      : ($vuetify.display.lgAndUp ? 'max-height: calc(100vh - 48px)' : 'max-height: calc(100vh - 24px - 64px)')"
     >
-    <div :class="['ue-datatable__container', noFullScreen ? 'fill-height' : 'fill-heigh ue-datatable--full-screen' ]">
       <ActiveTableItem
         class=""
         v-model="activeTableItem"
@@ -20,19 +24,24 @@
       <v-data-table-server
         v-if="!hideTable"
         :class="[
-          'px-4 h-100',
-          options.groupBy?.length ? 'ue-table--has-group-by' : '',
+          'bg-transparent',
           $store.getters.isSuperAdmin && showSelect ? 'ue-table--has-row-select' : '',
-          tableClasses,
-          rounded ? $lodash.isBoolean(rounded) ? 'rounded' : `rounded-${rounded}` : '',
-          fullWidthWrapper ? '' : 'ue-table--narrow-wrapper',
-          tableElevation ? `elevation-${tableElevation}` : '',
-          striped ? 'ue-datatable--striped' : '',
-          roundedRows ? 'ue-datatable--rounded-row' : '',
-          hideBorderRow ? 'ue-datatable--no-border-row' : '',
           controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'ue-datatable--bottom-controls' : '',
-          fixedLastColumn ? 'ue-datatable--fixed-last-column' : '',
+          fixedLastColumn && (!isCardLayout || headersForDataTable.at(-1)?.key === 'actions') ? 'ue-datatable--fixed-last-column' : '',
+          fullWidthWrapper ? '' : 'ue-table--narrow-wrapper',
+          hideBorderRow && !isCardLayout ? 'ue-datatable--no-border-row' : '',
           isDraggableActive ? 'ue-table--draggable' : '',
+          options.groupBy?.length ? 'ue-table--has-group-by' : '',
+          roundedRows && !isCardLayout ? 'ue-datatable--rounded-row' : '',
+          isCardLayout ? 'ue-table--card' : '',
+          isTitleOutside
+            ? 'ue-table--title-outside d-flex flex-column flex-grow-1 min-height-0'
+            : (isCardLayout
+              ? (noFullScreen ? 'ue-table--card-inside d-flex flex-column flex-grow-1 min-height-0' : 'ue-table--card-inside h-100')
+              : (noFullScreen ? 'px-4 d-flex flex-column flex-grow-1 min-height-0' : 'px-4 h-100')),
+          striped ? 'ue-datatable--striped' : '',
+          transparentBody ? 'ue-table--transparent-body' : '',
+          tableClasses,
         ]"
         id="ue-table"
 
@@ -52,7 +61,11 @@
         :item-title="titleKey"
         ref="datatable"
 
-        :height="windowSize.y - 64 - 24 - 59 - (hideTableFooter ? 0 : 76) - ($vuetify.display.mdAndDown ? 80 : 0)"
+        :height="isTitleOutside
+          ? undefined
+          : (noFullScreen
+            ? '100%'
+            : (windowSize.y - 64 - 48 - 59 - (hideTableFooter ? 0 : 76) - ($vuetify.display.mdAndDown ? 80 : 0)))"
 
         :hide-default-header="hideHeaders || ($vuetify.display.smAndDown && !showMobileHeaders)"
         :hide-default-body="isDraggableActive"
@@ -81,7 +94,7 @@
           <v-toolbar
             v-bind="toolbarOptions"
             :class="[
-              'pt-3',
+              isTitleOutside ? 'ue-table__toolbar--outside' : (isCardLayout ? 'ue-table__toolbar--card' : 'pt-3'),
               $vuetify.display.smAndUp ? 'd-flex' : '',
             ]"
           >
@@ -94,19 +107,13 @@
             >
               <!-- title -->
               <ue-title
-                type="subtitle-1"
-                color="black"
+                v-bind="tableTitleAttributes"
                 :text="tableTitle"
-                padding="a-0"
               />
               <!-- subtitle -->
               <ue-title
                 v-if="tableSubtitle"
-                type="caption"
-                weight="medium"
-                color="grey-darken-1"
-                transform="none"
-                padding="a-0"
+                v-bind="tableSubtitleAttributes"
                 :text="tableSubtitle"
               />
             </div>
@@ -118,7 +125,7 @@
               <div
                 key='table-controls'
                 :class="[
-                  'd-flex ga-2 align-md-center',
+                  'ue-table__controls d-flex ga-2 align-md-center',
                   controlsPosition === 'bottom' || $vuetify.display.smAndDown ? 'mb-2' : 'flex-1-1-100 justify-end',
                   $vuetify.display.smAndDown ? 'flex-column' : '',
                 ]"
@@ -151,15 +158,17 @@
                     hide-details
                     density="compact"
                     single-line
+                    :rounded="isCardLayout ? 'xl' : undefined"
                     :placeholder="searchPlaceholder"
                     :class="[
+                      'ue-table__search',
                       controlsPosition === 'bottom' || !$vuetify.display.xs ? 'flex-sm-grow-1' : '',
                     ]"
                     :style="[
                       'display: inline',
                       // controlsPosition === 'top' || $vuetify.display.smAndDown ? 'max-width: 300px' : '',
                       'min-width: 200px',
-                      !(controlsPosition === 'bottom' || $vuetify.display.smAndDown) ? 'max-width: 250px' : '',
+                      !(controlsPosition === 'bottom' || $vuetify.display.smAndDown) ? `max-width: ${isCardLayout ? 300 : 250}px` : '',
                     ]"
                     @click:append-inner="searchItems"
                     :disabled="isTableBusy"
@@ -167,7 +176,7 @@
 
                   >
                     <template #append-inner>
-                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
+                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" :aria-label="$t('fields.search')" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
                     </template>
                   </v-text-field>
 
@@ -213,6 +222,7 @@
                         </v-list>
                       </v-menu>
 
+                      <div v-if="isCardLayout" :data-ue-advanced-filter="id" style="display: contents" />
                     </template>
                     <template #append>
                       <!-- create button -->
@@ -222,7 +232,7 @@
                         @click="createForm"
                         :icon="$vuetify.display.smAndDown ? addBtnOptions['prepend-icon'] : null"
                         :text="$vuetify.display.smAndDown ? null : addBtnTitle"
-                        :prepend-icon="$vuetify.display.smAndDown ? null : addBtnOptions['prepend-icon']"
+                        :prepend-icon="$vuetify.display.smAndDown || isCardLayout ? null : addBtnOptions['prepend-icon']"
                         :density="$vuetify.display.smAndDown ? 'compact' : (addBtnOptions['density'] ?? 'comfortable')"
                       />
                     </template>
@@ -241,11 +251,12 @@
             reverse
           ></v-progress-linear>
 
-          <v-divider v-else-if="controlsPosition === 'top' && $vuetify.display.mdAndUp" class="mb-2 mt-2"></v-divider>
+          <v-divider v-else-if="controlsPosition === 'top' && $vuetify.display.mdAndUp && !isCardLayout" class="mb-2 mt-2"></v-divider>
 
-          <div class="d-flex mb-2">
+          <div :class="['d-flex', isCardLayout ? 'ue-table__advanced-filter-row' : 'mb-2']">
             <!-- advanced filter menu -->
             <!-- Active filters chips (place this before or after the filter button) -->
+            <Teleport defer :to="`[data-ue-advanced-filter='${id}']`" :disabled="!isCardLayout || someSelected">
             <v-menu
               v-model="advancedFilterMenuOpen"
               :close-on-content-click="false"
@@ -284,7 +295,7 @@
                 <v-card-title class="d-flex align-center justify-space-between">
                   <div class="d-flex flex-column">
                     <span>{{ $t('Filters') }}</span>
-                    <!-- <div v-if="activeFilterCount > 0" class="text-caption text-medium-emphasis flex-grow-1 flex-shrink-0">
+                    <!-- <div v-if="activeFilterCount > 0" class="text-body-small text-medium-emphasis flex-grow-1 flex-shrink-0">
                       {{ $t('{count} active filter(s)', { count: activeFilterCount }) }}
                     </div> -->
                   </div>
@@ -313,7 +324,7 @@
                       <!-- Category header -->
                       <v-expansion-panel-title>
                         <div class="d-flex align-center justify-space-between w-100 pr-4">
-                          <span class="text-subtitle-1 font-weight-medium">
+                          <span class="text-body-large font-weight-medium">
                             {{ getCategoryLabel(category) }}
                           </span>
                           <v-chip
@@ -329,7 +340,7 @@
 
                       <!-- Category filters -->
                       <v-expansion-panel-text>
-                        <v-row dense>
+                        <v-row density="compact">
                           <v-col
                             v-for="(filter, index) in filters"
                             :key="`${category}-${index}`"
@@ -383,6 +394,7 @@
                 </v-card-actions>
               </v-card>
             </v-menu>
+            </Teleport>
             <div v-if="activeFilterCount > 0" class="d-flex flex-wrap ga-2 mb-2 ml-2">
               <template v-for="(categoryFilters, category) in activeAdvancedFilters" :key="category">
                 <v-chip
@@ -394,7 +406,7 @@
                   variant="tonal"
                   >
                   <!-- @click:close="removeFilter(category, slug)" -->
-                  <span class="text-caption">
+                  <span class="text-body-small">
                     {{ getFilterLabel(category, slug) }}:
                     <strong>{{ formatFilterValue(category, slug) }}</strong>
                   </span>
@@ -420,13 +432,15 @@
 
             transition="dialog-bottom-transition"
             :fullscreen="false"
-            width-type="lg"
+            width-type="md"
             v-bind="formModalAttributes"
           >
             <template v-slot:body="formModalBodyScope">
               <v-card class="fill-height d-flex flex-column py-4">
                 <ue-form
                   ref="UeForm"
+                  :border="false"
+
                   form-class="px-4"
                   fill-height
                   scrollable
@@ -443,7 +457,7 @@
                   :subtitle="formSubtitle"
                   :isEditing="editedIndex > -1"
                   :languages="languages"
-                  :style="formModalBodyScope.isFullActive ? 'height: 95vh !important;' : 'height: 70vh !important;'"
+                  :style="formModalBodyScope.isFullActive ? 'height: 95vh !important;' : 'max-height: 70vh !important;'"
                   :actions="formActions"
                   :actionUrl="editedIndex > -1 ? endpoints.update.replace(':id', editedItem.id) : endpoints.store"
                   has-submit
@@ -525,6 +539,8 @@
               <v-expand-transition>
                 <v-card class="mb-theme" elevation="4" v-if="formActive">
                   <ue-form
+                    :border="false"
+
                     has-submit
                     button-text="save"
                     :title="formTitle"
@@ -608,6 +624,8 @@
               <template v-slot:body.description>
                 <ue-form
                   ref="customForm"
+                  :border="false"
+
                   v-model="customFormModel"
                   :title="null"
                   fill-height
@@ -643,6 +661,7 @@
                 :is="`ue-${customRow.name}`"
                 :key="element.id"
                 :name="name"
+                :permissionPrefix="permissionName"
                 :titlePrefix="titlePrefix"
                 :titleKey="titleKey"
 
@@ -682,13 +701,31 @@
                   </div>
                 </template>
               </component>
-              <v-divider v-if="i < items.length - 1" />
+              <v-divider v-if="i < items.length - 1 && !transparentBody" />
             </v-col>
           </v-row>
         </template>
 
         <!-- MARK PAGINATION BUTTONS -->
         <template v-if="hideTableFooter" v-slot:bottom="{page, pageCount}">
+        </template>
+        <template
+          v-else-if="isCardLayout && !$vuetify.display.smAndDown && paginationOptions.footerComponent !== 'infiniteScroll'"
+          v-slot:bottom
+        >
+          <TablePaginationFooter
+            class="ue-table__footer"
+            :hide-items-per-page="!isTitleOutside"
+            :hide-page-info="!isTitleOutside"
+            :justify="isTitleOutside ? 'end' : 'center'"
+            :page="options.page"
+            :page-count="totalNumberOfPages"
+            :items-per-page="options.itemsPerPage"
+            :items-per-page-options="itemsPerPageOptions"
+            :loading="isTableBusy"
+            @update:page="options.page = $event"
+            @update:items-per-page="options.itemsPerPage = $event; options.page = 1"
+          />
         </template>
         <template v-else-if="enableCustomFooter || $vuetify.display.smAndDown" v-slot:bottom="{page, pageCount}">
           <div class="d-flex justify-end py-4">
@@ -788,10 +825,11 @@
           >
             <template v-slot:activator="{ props }">
               <v-btn
-                size="large"
+                :size="isCardLayout ? 'small' : 'large'"
                 variant="plain"
-                color="black"
+                :color="isCardLayout ? 'grey-darken-3' : 'black'"
                 icon="mdi-cog-outline"
+                :aria-label="$t('fields.column-visibility')"
                 v-bind="props"
               />
             </template>
@@ -962,23 +1000,27 @@
               <template v-slot:activator="{ props }">
                 <v-icon
                   size="large"
-                  color="primary"
-                  icon="$list"
+                  :color="isCardLayout ? 'grey-darken-3' : 'primary'"
+                  :icon="rowActionsIcon"
                   v-bind="props"
                   >
                 </v-icon>
               </template>
 
-              <v-list>
-                <template v-for="(action, k) in visibleRowActions" :key="k">
-                  <v-list-item v-if="itemHasAction(item, action)"
+              <v-list v-for="itemActions in [getItemRowActions(item)]" :key="item.id">
+                <template v-for="(action, k) in itemActions" :key="k">
+                  <v-divider
+                    v-if="action.destructive && k > 0 && !itemActions[k - 1].destructive"
+                    class="my-1"
+                  />
+                  <v-list-item
                     :class="action.class ?? ''"
                     :disabled="isTableBusy"
                     @click="itemAction(item, action)"
                     >
-                      <v-icon small :color="action.iconColor" left>
-                        {{ action.icon }}
-                      </v-icon>
+                      <template v-if="action.icon" #prepend>
+                        <v-icon size="small" :color="action.menuIconColor ?? action.iconColor" :icon="action.icon" />
+                      </template>
                       {{ $t( action.label ) }}
                   </v-list-item>
                 </template>
@@ -1060,8 +1102,9 @@
         </template>
 
       </v-data-table-server>
+    <div v-if="!isCardLayout" :class="['ue-datatable__container', noFullScreen ? 'd-flex flex-column flex-grow-1 min-height-0' : 'fill-heigh ue-datatable--full-screen' ]">
     </div>
-  </v-layout>
+  </v-sheet>
 </template>
 
 <script>
@@ -1091,6 +1134,7 @@ import {
 import ActiveTableItem from '__components/labs/ActiveTableItem.vue'
 import TableFormatterCell from '__components/table/TableFormatterCell.vue'
 import TableGroupHeaderRow from '__components/table/TableGroupHeaderRow.vue'
+import TablePaginationFooter from '__components/table/TablePaginationFooter.vue'
 
 const { ignoreFormatters } = makeFormatterProps()
 
@@ -1101,7 +1145,8 @@ export default {
     VDataTableRow,
     TableActions,
     TableFormatterCell,
-    TableGroupHeaderRow
+    TableGroupHeaderRow,
+    TablePaginationFooter,
   },
   props: {
     ...makeTableNamesProps(),
@@ -1206,8 +1251,111 @@ export default {
     .v-data-table-group-header-row > td
       background: rgb(var(--v-theme-surface)) !important
 
+  // tableLayout: 'card' - shared list design (toolbar controls, flat rows, white header, pagination footer)
+  $ue-table-card-border: thin solid rgba(var(--v-border-color), var(--v-border-opacity))
+  $ue-table-card-radius: 12px
+
+  #ue-table.ue-table--card
+    --v-table-header-height: 52px
+    --v-table-row-height: 60px
+
+    > .v-toolbar
+      .v-toolbar__content
+        height: auto !important
+        align-items: flex-start
+
+      .ue-table__controls,
+      .ue-table__controls > .d-flex
+        gap: 12px !important
+
+      .ue-table__controls .v-btn:not(.v-btn--icon)
+        height: 44px
+        text-transform: none
+
+      .ue-table__search
+        --v-input-control-height: 44px
+
+    > .ue-table__advanced-filter-row:empty
+      display: none !important
+
+    > .v-table__wrapper
+      flex: 1 1 0
+      min-height: 0
+      background: rgb(var(--v-theme-surface))
+
+      > table > thead > tr > th
+        background: rgb(var(--v-theme-surface)) !important
+        font-size: 0.75rem
+        font-weight: 500
+        border-bottom: $ue-table-card-border !important
+
+    &.ue-datatable--striped
+      > .v-table__wrapper > table > tbody > tr
+        > td
+          border-bottom: 0 !important
+
+        &:nth-of-type(2n) > td
+          background-color: var(--ue-table-stripe-color, rgb(var(--v-theme-grey-lighten-6))) !important
+
+    &.ue-datatable--fixed-last-column
+      .v-table__wrapper table
+        th, td
+          &:last-child
+            box-shadow: none
+            border-left: $ue-table-card-border
+
+  // titlePlacement: 'outside' - title/toolbar sit on the page, rows + footer form one bordered card
+  #ue-table.ue-table--title-outside
+    > .ue-table__toolbar--outside
+      padding-bottom: 16px
+
+      .v-toolbar__content
+        padding: 0
+
+    > .v-table__wrapper
+      border: $ue-table-card-border
+      border-bottom: 0
+      border-radius: $ue-table-card-radius $ue-table-card-radius 0 0
+
+    &:not(:has(> .ue-table__footer)) > .v-table__wrapper
+      border-bottom: $ue-table-card-border
+      border-radius: $ue-table-card-radius
+
+    > .ue-table__footer
+      background: rgb(var(--v-theme-surface))
+      border: $ue-table-card-border
+      border-radius: 0 0 $ue-table-card-radius $ue-table-card-radius
+
+  // transparentBody: rows sit directly on the page (e.g. a custom row rendering its own cards)
+  #ue-table.ue-table--transparent-body
+    background: transparent
+
+    > .v-table__wrapper,
+    > .ue-table__footer
+      background: transparent !important
+      border: 0 !important
+      border-radius: 0 !important
+
+  // titlePlacement: 'inside' on the card layout - the sheet is the card; title, rows and footer share it
+  #ue-table.ue-table--card-inside
+    > .ue-table__toolbar--card
+      border-bottom: $ue-table-card-border
+
+      .v-toolbar__content
+        padding: 16px
+
+    > .v-table__wrapper
+      min-height: calc(var(--v-table-header-height) + 3 * var(--v-table-row-height))
+
+      > table > thead > tr > th
+        text-transform: uppercase
+
   .ue-datatable__container
     width: 100%
+
+    &.d-flex
+      flex: 1 1 auto
+      min-height: 0
 
     // &.ue-datatable--full-screen
     //   height: calc(100vh - (2*8 * $spacer))

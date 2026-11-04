@@ -75,7 +75,17 @@ export default function useModule (props, context) {
       : (props.isModuleRoute ? props.routeName : props.name)
     ),
     transNamePlural: computed(() => t(tableTranslationNotation, 1)),
-    permissionName: computed(() => _.kebabCase(props.isModuleRoute ? props.routeName : props.name)),
+    // module-namespaced, e.g. `system_user::user`; permissions are `${permissionName}_${action}`
+    permissionName: computed(() => {
+      if (props.permissionPrefix) return props.permissionPrefix
+
+      if (props.isModuleRoute && props.moduleName && props.routeName) {
+        return `${moduleSnakeName}::${_.kebabCase(props.routeName)}`
+      }
+
+      return _.kebabCase(props.isModuleRoute ? props.routeName : props.name)
+    }),
+    moduleTitle: computed(() => (props.titlePrefix ?? '') + (props.customTitle ?? state.transNamePlural)),
 
 
     // snakeName: _.snakeCase(props.name),

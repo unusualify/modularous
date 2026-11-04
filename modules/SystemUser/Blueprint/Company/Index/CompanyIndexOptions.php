@@ -16,7 +16,6 @@ final class CompanyIndexOptions implements ModuleRouteTableOptionsProvider
             'createOnModal' => true,
             'editOnModal' => true,
             'isRowEditing' => true,
-            'rowActionsType' => 'inline',
         ];
     }
 }

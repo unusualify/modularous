@@ -1182,25 +1182,32 @@ class RouteGenerator extends Generator
                 return true;
             }
 
-            $kebabCase = $this->getKebabCase($this->getName());
-
             $repository = App::make($repo);
 
             $modularousAuthGuardName = Modularous::getAuthGuardName();
             // default permissions of a module
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CREATE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::VIEW->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::EDIT->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DELETE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::FORCEDELETE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::RESTORE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::DUPLICATE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::REORDER->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULK->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKDELETE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKFORCEDELETE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::BULKRESTORE->value, 'guard_name' => $modularousAuthGuardName]);
-            $repository->firstOrCreate(['name' => $kebabCase . '_' . Permission::CACHING->value, 'guard_name' => $modularousAuthGuardName]);
+            $defaultPermissions = [
+                Permission::CREATE,
+                Permission::VIEW,
+                Permission::EDIT,
+                Permission::DELETE,
+                Permission::FORCEDELETE,
+                Permission::RESTORE,
+                Permission::DUPLICATE,
+                Permission::REORDER,
+                Permission::BULK,
+                Permission::BULKDELETE,
+                Permission::BULKFORCEDELETE,
+                Permission::BULKRESTORE,
+                Permission::CACHING,
+            ];
+
+            foreach ($defaultPermissions as $permission) {
+                $repository->firstOrCreate([
+                    'name' => Permission::generatePermissionName($permission->value, $this->getName(), $this->moduleName),
+                    'guard_name' => $modularousAuthGuardName,
+                ]);
+            }
 
         } catch (\Throwable $e) {
             return true;

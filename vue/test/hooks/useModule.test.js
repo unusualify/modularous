@@ -9,7 +9,10 @@ const TestComponent = defineComponent({
     name: { type: String, default: 'Posts' },
     moduleName: { type: String },
     routeName: { type: String },
+    permissionPrefix: { type: String },
     isModuleRoute: { type: Boolean, default: false },
+    customTitle: { type: String },
+    titlePrefix: { type: String, default: '' },
     items: { type: Array, default: () => [] }
   },
   setup(props, context) {
@@ -51,6 +54,35 @@ describe('useModule', () => {
   test('permissionName uses kebab-case', async () => {
     const wrapper = await factory({ name: 'PostList' })
     expect(wrapper.vm.permissionName).toBe('post-list')
+  })
+
+  test('permissionName prefers the backend permissionPrefix', async () => {
+    const wrapper = await factory({
+      isModuleRoute: true,
+      moduleName: 'System User',
+      routeName: 'User',
+      permissionPrefix: 'system_user::user'
+    })
+    expect(wrapper.vm.permissionName).toBe('system_user::user')
+  })
+
+  test('permissionName is namespaced with the module for module routes', async () => {
+    const wrapper = await factory({
+      isModuleRoute: true,
+      moduleName: 'PressRelease',
+      routeName: 'PressReleasePackage'
+    })
+    expect(wrapper.vm.permissionName).toBe('press_release::press-release-package')
+  })
+
+  test('moduleTitle prefers customTitle and applies titlePrefix', async () => {
+    const wrapper = await factory({ customTitle: 'Frequently Asked Questions', titlePrefix: 'All ' })
+    expect(wrapper.vm.moduleTitle).toBe('All Frequently Asked Questions')
+  })
+
+  test('moduleTitle falls back to the plural translation', async () => {
+    const wrapper = await factory({ name: 'Posts' })
+    expect(wrapper.vm.moduleTitle).toBe(wrapper.vm.transNamePlural)
   })
 
   test('onResize updates windowSize', async () => {

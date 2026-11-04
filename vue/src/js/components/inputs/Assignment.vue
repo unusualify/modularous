@@ -57,6 +57,11 @@
       type: Object,
       default: null,
     },
+    // renders assignment descriptions with ue-well-print (line breaks, links) instead of plain text
+    wellPrint: {
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits([...makeInputEmits])
@@ -122,8 +127,6 @@
       let untilText = `${t('Until')}: <span class="font-weight-bold text-blue-darken-1"> ${d(new Date(assignment.due_at), 'medium')}</span>`
       let fromText = `${t('From')}: <span class="">${d(assignment.created_at ? new Date(assignment.created_at) : new Date(), 'medium')}</span>`
 
-      let subtitle = `${assignment.description} </br> </br>`
-
       let subDescription = ""
 
       let appendInnerIcon = null
@@ -133,12 +136,17 @@
 
       subDescription += ` ${fromText}`
 
-      subtitle += subDescription
+      // with wellPrint, description is rendered separately by ue-well-print, so it stays as the raw text the user typed
+      let subtitle = props.wellPrint
+        ? subDescription
+        : `${assignment.description} </br> </br>${subDescription}`
+
       acc.push({
         prependAvatar,
         assignerName,
         assigneeName,
         title,
+        description: assignment.description,
         subtitle,
         subDescription,
         appendInnerIcon,
@@ -326,7 +334,7 @@
           type="list-item-two-line"
         />
         <template v-else>
-          <div class="d-flex flex-wrap gc-4">
+          <div class="d-flex flex-wrap align-center ga-3">
 
             <!-- Assignee Details -->
             <AssigneeDetails v-if="hasAssignment"
@@ -339,6 +347,7 @@
               :assignment="lastAssignment"
               :formattedAssignment="lastFormattedAssignment"
               :filepond="filepond"
+              :wellPrint="wellPrint"
               @click:complete="openCompleteModal"
               @click:save="updateAssignment"
             />
@@ -351,12 +360,11 @@
                 <template v-slot:activator="{ props }">
                   <v-btn
                     id="createAssignmentBtn"
-                    icon="mdi-account-reactivate"
-                    size="default"
-                    rounded
+                    icon="mdi-account-circle-outline"
+                    variant="outlined"
                     color="success"
                     density="compact"
-                    class="flex-grow-0 flex-shrink-1"
+                    class="v-input-assignment__action flex-grow-0 flex-shrink-1"
                     v-bind="props"
                     :disabled="!input || updating"
                     :loading="updating"
@@ -387,12 +395,11 @@
                     <template v-slot:activator="tooltipActivatorScope">
                       <v-btn
                         id="showHistoryBtn"
-                        icon="mdi-clipboard-list-outline"
-                        size="default"
-                        rounded
+                        icon="mdi-clipboard-text-outline"
+                        variant="outlined"
                         color="info"
                         density="compact"
-                        class="flex-grow-0 flex-shrink-1"
+                        class="v-input-assignment__action flex-grow-0 flex-shrink-1"
 
                         :disabled="!input || updating"
                         :loading="updating"
@@ -418,6 +425,7 @@
                         <div v-html="title"></div>
                       </template>
                       <template v-slot:subtitle="{ item, subtitle }">
+                        <ue-well-print v-if="wellPrint" :text="item.description" class="w-100 mb-2" style="word-break: break-word;" />
                         <div class="w-100" style="word-break: break-word;white-space: pre-wrap;" v-html="subtitle"></div>
                         <v-expansion-panels class="my-2">
                           <v-expansion-panel v-if="item.preliminaries && item.preliminaries.length > 0">
@@ -473,7 +481,11 @@
 
 <style lang="scss">
   .v-input-assignment {
-    min-height: 60px;
+    min-height: 44px;
+
+    .v-input-assignment__action.v-btn--variant-outlined:not(.v-btn--disabled) {
+      background-color: color-mix(in srgb, currentColor 12%, transparent);
+    }
 
     .v-input-assignment__list--assignee {
       .v-list-item {

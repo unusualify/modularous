@@ -113,6 +113,7 @@
         :variant="variant"
         v-bind="$attrs"
         :rules="[]"
+        :error="defaultSlot.isValid?.value === false"
         hide-details
       />
     </template>

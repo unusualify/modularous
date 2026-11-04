@@ -132,20 +132,20 @@ trait ModelHelpers
 
     public function setStateablePreview(State $state)
     {
-        return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
+        return modularous_chip((string) $state->translatedAttribute('name', app()->getLocale()), $state->color, $state->icon);
     }
 
     public function setStateablePreviewNull()
     {
-        return "<v-chip  color='' prepend-icon=''>" . __('No Status') . '</v-chip>';
+        return modularous_chip(__('No Status'));
     }
 
     public function setStateFormatted($state)
     {
         if ($state) {
-            return "<v-chip variant='text' color='{$state->color}' prepend-icon='{$state->icon}'>{$state->translatedAttribute('name', app()->getLocale())}</v-chip>";
+            return modularous_chip((string) $state->translatedAttribute('name', app()->getLocale()), $state->color, $state->icon);
         } else {
-            return "<v-chip variant='text' color='grey' prepend-icon='mdi-alert-circle-outline'>" . __('No Status') . '</v-chip>';
+            return modularous_chip(__('No Status'), 'grey', 'mdi-alert-circle-outline');
         }
     }
 
@@ -271,6 +271,11 @@ trait ModelHelpers
                 // }
             }
 
+            if (property_exists($this, 'spreadablePending') && $this->spreadablePending
+                && str_starts_with($method, 'get') && str_ends_with($method, 'Attribute')) {
+                $this->resolvePendingSpreadable();
+            }
+
             if (isset($this->spreadableMutatorMethods) && array_key_exists($method, $this->spreadableMutatorMethods)) {
                 return $this->spreadableMutatorMethods[$method];
             }
@@ -281,6 +286,10 @@ trait ModelHelpers
 
     public function __get($key)
     {
+        if (property_exists($this, 'spreadablePending') && $this->mayBeSpreadableKey($key)) {
+            $this->resolvePendingSpreadable();
+        }
+
         if (isset($this->spreadableMutatorAttributes) && array_key_exists($key, $this->spreadableMutatorAttributes)) {
             return $this->spreadableMutatorAttributes[$key];
         }

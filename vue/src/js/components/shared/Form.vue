@@ -1,9 +1,14 @@
 <template>
-  <div
+  <component
+    :is="isPageLayout ? 'div' : 'v-sheet'"
     :class="[
       'ue-form',
+      isPageLayout ? 'ue-form--page' : '',
+      (fillHeight || isPageLayout) ? 'd-flex flex-column flex-grow-1 min-height-0' : '',
+      isPageLayout ? '' : sheetClasses,
     ]"
-    :style="{height: fillHeight ? ($vuetify.display.mdAndDown ? `calc(97vh - 64px)` : `calc(97vh)` ) : ''}">
+    :border="isPageLayout ? undefined : sheetBorder">
+
     <v-form
       :id="id"
       ref="VForm"
@@ -13,15 +18,19 @@
       @update:modelValue="updateFormValid"
       @submit="submit"
       :class="formClasses"
-      >
+    >
       <input v-if="!async" type="hidden" name="_token" :value="$csrf"/>
 
       <!-- Header Section -->
-      <div :class="[
-        (hasDivider || title) ? 'px-1' : '',
-        scrollable ? 'flex-grow-0' : '',
-        'pb-2'
-      ]">
+      <component
+        :is="isPageLayout && headerCard ? 'v-sheet' : 'div'"
+        :class="[
+          'ue-form__header',
+          isPageLayout
+            ? ['flex-shrink-0', headerCard ? 'ue-form__card pa-4 mb-3' : 'pb-4']
+            : [(hasDivider || title) ? 'px-1' : '', scrollable ? 'flex-grow-0' : '', 'pb-2'],
+        ]"
+      >
         <v-alert
           v-if="hasOtherEditors && editPresenceLockMessage"
           type="warning"
@@ -32,7 +41,7 @@
         />
         <div class="d-flex flex-column flex-sm-row">
           <div class="d-flex flex-column flex-1-1-100 min-width-0">
-          <ue-title v-if="!noTitle && title"
+          <ue-title v-if="showTitleRow"
             padding="a-0"
             align="start"
             justify="start"
@@ -56,9 +65,41 @@
               </slot>
             </template>
             <template v-slot:right>
-              <div class="d-flex mt-2 mt-md-0 gc-2">
+              <div class="d-flex mt-2 mt-md-0 gc-2 ms-auto align-center">
+                <v-btn
+                  v-if="previewable && canPreviewEdit && !previewEditing"
+                  variant="tonal"
+                  color="primary"
+                  prepend-icon="mdi-pencil-outline"
+                  :density="buttonDensity"
+                  :disabled="loading"
+                  @click="enterPreviewEdit"
+                >
+                  {{ t('Edit') }}
+                </v-btn>
+                <v-btn
+                  v-if="previewable && previewableCancel && previewEditing"
+                  variant="text"
+                  :disabled="loading"
+                  :density="buttonDensity"
+                  @click="cancelPreviewEdit"
+                >
+                  {{ t('Cancel') }}
+                </v-btn>
+                <v-btn
+                  v-if="previewable && previewEditing"
+                  type="submit"
+                  color="primary"
+                  :density="buttonDensity"
+                  prepend-icon="mdi-check"
+                  :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
+                  :loading="loading"
+                >
+                  {{ buttonDefaultText }}
+                </v-btn>
                 <!-- Title Center Form Actions -->
                 <FormActions v-if="actionsPosition == 'title-center' && formActionsActive"
+                  justify="center"
                   :modelValue="formItem"
                   :actions="actions"
                   :is-editing="isEditing"
@@ -98,34 +139,38 @@
           </ue-title>
         </div>
         <div :class="[
-          'flex-1-0 d-flex align-start ga-2',
+          'flex-1-0 d-flex flex-column align-start align-sm-end ga-2',
           (hasTraslationInputs && languages && languages.length && languages.length > 1
             || (hasAdditionalSection && $vuetify.display.mdAndDown)
             || (formEventSchema && formEventSchema.length && model)
             || ($slots['header.right'])
+            || ($slots['header.right.top'])
           ) ? 'pb-2 pb-md-0 pl-md-2' : ''
         ]">
-          <FormEvents v-if="formEventSchema && formEventSchema.length && model"
-            :events="formEventSchema"
-            v-model="model"
-            :form-item="formItem"
-          />
-          <FormLocaleSelector :has-translation-inputs="hasTraslationInputs" />
+          <slot name="header.right.top" v-bind="{model, schema: inputSchema, formItem}"></slot>
+          <div class="d-flex ga-2">
+            <FormEvents v-if="formEventSchema && formEventSchema.length && model"
+              :events="formEventSchema"
+              v-model="model"
+              :form-item="formItem"
+            />
+            <FormLocaleSelector :has-translation-inputs="hasTraslationInputs" />
 
-          <!-- Mobile dialog/modal for right section -->
-          <v-btn v-if="hasAdditionalSection && $vuetify.display.mdAndDown"
-            density="compact"
-            :rounded="true"
-            size="default"
-            icon="mdi-book-information-variant"
-            class=""
-            @click="showAdditionalSectionDialog = true"
-          >
-          </v-btn>
-          <!-- Slot for headerRight -->
-          <slot name="header.right">
+            <!-- Mobile dialog/modal for right section -->
+            <v-btn v-if="hasAdditionalSection && $vuetify.display.mdAndDown"
+              :density="buttonDensity"
+              :rounded="true"
+              size="default"
+              icon="mdi-book-information-variant"
+              class=""
+              @click="showAdditionalSectionDialog = true"
+            >
+            </v-btn>
+            <!-- Slot for headerRight -->
+            <slot name="header.right">
 
-          </slot>
+            </slot>
+          </div>
         </div>
         </div>
         <FormPublicLinks
@@ -134,15 +179,25 @@
           :signed-public-preview="signedPublicPreview"
           :is-editing="isEditing"
         />
-      </div>
+      </component>
 
-      <v-divider v-if="hasDivider" class="pb-2"></v-divider>
+      <v-divider v-if="hasDivider && !isPageLayout" class="pb-2"></v-divider>
 
+      <component
+        :is="cardWrapsAll ? 'v-sheet' : 'FormPassthrough'"
+        :class="cardWrapsAll ? ['ue-form__card d-flex flex-column flex-grow-1 min-height-0', sheetClasses] : undefined"
+        :border="cardWrapsAll ? sheetBorder : undefined"
+      >
       <!-- Scrollable Content Section -->
-      <div :class="['d-flex', scrollable ? 'flex-grow-1 overflow-hidden mr-n4' : '']">
-        <div :class="['w-100 d-flex align-start', scrollable ? 'overflow-y-auto pr-3' : '']"
+      <div :class="[
+        'd-flex',
+        bodyScrolls ? 'flex-grow-1 min-height-0 overflow-hidden' : '',
+        bodyScrolls ? (isPageLayout ? 'mr-n3' : 'mr-n4') : '',
+      ]">
+        <div :class="['w-100 d-flex flex-column', bodyScrolls ? 'overflow-y-auto pr-3' : '']">
+        <div :class="['d-flex flex-grow-1 flex-shrink-0', cardWrapsMain ? 'align-stretch' : 'align-start']"
         >
-          <div class="flex-grow-1 px-1">
+          <div :class="['flex-grow-1', cardWrapsMain ? 'd-flex flex-column min-width-0' : 'px-1']">
             <!-- Top Form Actions -->
             <FormActions v-if="actionsPosition == 'top' && formActionsActive"
               :modelValue="formItem"
@@ -159,6 +214,11 @@
               </template>
             </FormActions>
 
+            <component
+              :is="cardWrapsMain && !hasCardSections ? 'v-sheet' : 'FormPassthrough'"
+              :class="cardWrapsMain && !hasCardSections ? ['ue-form__card flex-grow-1', sheetClasses] : undefined"
+              :border="cardWrapsMain && !hasCardSections ? sheetBorder : undefined"
+            >
             <slot name="top" v-bind="{item: formItem, schema}"></slot>
 
             <!-- Middle Form Actions -->
@@ -187,56 +247,77 @@
               />
             </div>
 
-            <v-custom-form-base v-if="!schemaUpdating"
-              :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
-              :id="formBaseId"
-
-              v-model="model"
+            <FormPreviewFields
+              v-if="isPreviewView && !schemaUpdating"
               :schema="inputSchema"
-              :row="rowAttribute"
-              :form-item="formItem"
-              no-auto-generate-schema
+              :model="model"
+            />
 
-              @update="handleUpdate"
-              @input="handleInput"
-              @resize="handleResize"
-              @blur="handleBlur"
-              @click="handleClick"
-            >
-              <template
-                v-for="(_slot, key) in formSlots"
-                :key="key"
-                v-slot:[`slot-inject-${_slot.name}-key-${formBaseId}-${_slot.slotPath}`]="_slotScope"
+            <template v-else-if="!schemaUpdating">
+              <component
+                v-for="(cardSchema, cardIndex) in schemaCards"
+                :key="cardIndex"
+                :is="hasCardSections ? 'v-sheet' : 'FormPassthrough'"
+                :class="hasCardSections ? [
+                  'ue-form__card',
+                  sheetClasses,
+                  cardIndex > 0 ? 'mt-3' : '',
+                  cardIndex === schemaCards.length - 1 ? 'flex-grow-1' : '',
+                ] : undefined"
+                :border="hasCardSections ? sheetBorder : undefined"
+              >
+                <v-custom-form-base
+                  :class="hasSchemaInputSourceLoading && !noWaitSourceLoading ? 'd-none' : ''"
+                  :id="cardFormBaseId(cardIndex)"
+
+                  v-model="model"
+                  :schema="cardSchema"
+                  :row="rowAttribute"
+                  :form-item="formItem"
+                  no-auto-generate-schema
+
+                  @update="handleUpdate"
+                  @input="handleInput"
+                  @resize="handleResize"
+                  @blur="handleBlur"
+                  @click="handleClick"
                 >
-                <template v-if="_slot.type == 'form'">
-                  <v-custom-form-base
-                    :id="`${formBaseId}-${_slot.name}`"
-                    v-model="model"
-                    v-model:schema="_slot.schema"
-                    :row="rowAttribute"
-
+                  <template
+                    v-for="(_slot, key) in formSlots"
+                    :key="key"
+                    v-slot:[`slot-inject-${_slot.name}-key-${cardFormBaseId(cardIndex)}-${_slot.slotPath}`]="_slotScope"
                     >
-                  </v-custom-form-base>
-                </template>
-                <template v-else-if="_slot.type == 'recursive-stuff'">
-                  <ue-recursive-stuff
-                    :configuration="_slot.context"
-                    :bindData="_slotScope">
-                  </ue-recursive-stuff>
+                    <template v-if="_slot.type == 'form'">
+                      <v-custom-form-base
+                        :id="`${cardFormBaseId(cardIndex)}-${_slot.name}`"
+                        v-model="model"
+                        v-model:schema="_slot.schema"
+                        :row="rowAttribute"
 
-                </template>
-              </template>
-              <!-- <template v-slot:[`slot-inject-prepend-key-treeview-slot-permissions`]="{open}" >
-                <v-icon color="blue">
-                    {{open ? 'mdi-folder-open' : 'mdi-folder'}}
-                </v-icon>
-              </template>
-              <template #slot-inject-label-key-treeview-slot-permissions="{item}" >
-                <span class="caption" >
-                  {{item.name.toUpperCase()}}
-                </span>
-              </template> -->
-            </v-custom-form-base>
+                        >
+                      </v-custom-form-base>
+                    </template>
+                    <template v-else-if="_slot.type == 'recursive-stuff'">
+                      <ue-recursive-stuff
+                        :configuration="_slot.context"
+                        :bindData="_slotScope">
+                      </ue-recursive-stuff>
+
+                    </template>
+                  </template>
+                  <!-- <template v-slot:[`slot-inject-prepend-key-treeview-slot-permissions`]="{open}" >
+                    <v-icon color="blue">
+                        {{open ? 'mdi-folder-open' : 'mdi-folder'}}
+                    </v-icon>
+                  </template>
+                  <template #slot-inject-label-key-treeview-slot-permissions="{item}" >
+                    <span class="caption" >
+                      {{item.name.toUpperCase()}}
+                    </span>
+                  </template> -->
+                </v-custom-form-base>
+              </component>
+            </template>
 
             <div v-else class="d-flex justify-center align-center h-100 pa-16">
               <v-progress-circular
@@ -272,16 +353,18 @@
                 <slot name="actions.append" v-bind="actionsScope"></slot>
               </template>
             </FormActions>
+            </component>
           </div>
 
           <div v-if="hasAdditionalSection && $vuetify.display.lgAndUp"
             :class="[
-              `flex-grow-0 ml-${rightSlotGap}`,
+              'flex-grow-0',
+              isPageLayout ? 'ms-3' : `ml-${rightSlotGap}`,
             ]"
           >
             <div
               :class="[
-                `pt-2 gr-4`,
+                isPageLayout ? 'gr-3' : 'pt-2 gr-4',
                 $vuetify.display.smAndDown ? 'd-none' : 'd-flex flex-column',
               ]"
               :style="{
@@ -328,7 +411,7 @@
               <v-card-title class="d-flex align-center">
                 <span>{{ additionalSectionDialogTitle || 'Additional Options' }}</span>
                 <v-spacer></v-spacer>
-                <v-btn variant="text" size="default" icon @click="showAdditionalSectionDialog = false">
+                <v-btn variant="text" size="default" icon :density="buttonDensity" @click="showAdditionalSectionDialog = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
               </v-card-title>
@@ -364,6 +447,7 @@
             </v-card>
           </v-dialog>
         </div>
+        </div>
 
 
         <!-- Sticky Frame Section -->
@@ -373,13 +457,14 @@
       <v-spacer v-if="pushButtonToBottom"></v-spacer>
 
       <!-- Bottom Section -->
-      <div :class="['px-1', scrollable ? 'flex-grow-0' : '']" v-if="(hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
-        <v-divider v-if="hasSubmit && !stickyButton && hasDivider" class=""></v-divider>
-        <div class="d-flex flex-wrap justify-center justify-md-start pt-6 w-100 ga-4 flex-md-row" v-if="hasSubmit && !stickyButton">
+      <div :class="[cardWrapsMain ? 'pt-3' : 'px-1', bodyScrolls ? 'flex-shrink-0' : '']" v-if="(!previewable && hasSubmit && isSubmittable) || $slots.submit || $slots.options || $slots.bottom">
+        <v-divider v-if="!previewable && hasSubmit && !stickyButton && hasDivider && hasFooterDivider" class=""></v-divider>
+        <div :class="['d-flex flex-wrap justify-center justify-md-start w-100 ga-4 flex-md-row', cardWrapsMain ? 'pt-3' : 'pt-6']" v-if="!previewable && hasSubmit && !stickyButton">
           <template v-if="$store.getters.isSuperAdmin">
             <v-btn-secondary
               :slim="false"
               variant="outlined"
+              :density="buttonDensity"
               @click="validate()"
             >
               {{ $t('fields.validate') }}
@@ -402,8 +487,10 @@
             </div>
             <v-btn v-if="isSubmittable"
               type="submit"
+              :density="buttonDensity"
               :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
-              class="ml-auto flex-1-1-100 flex-md-1-1-0 flex-lg-0-1-1 order-md-last order-first"
+              class="ml-auto px-8 order-md-last order-first"
+              min-width="120"
               :block="$vuetify.display.smAndDown"
               :loading="loading"
               :color="!isSubmittable ? 'warning' : 'primary'"
@@ -413,7 +500,7 @@
           </slot>
         </div>
 
-        <div v-if="hasSubmit && !stickyButton">
+        <div v-if="!previewable && hasSubmit && !stickyButton">
           <v-progress-linear
             v-if="loading"
             indeterminate
@@ -425,22 +512,28 @@
           <slot name="bottom" v-bind="{}"></slot>
         </div>
       </div>
+      </component>
 
     </v-form>
-  </div>
+  </component>
 </template>
 
 <script>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import { useDisplay } from 'vuetify'
 import { useForm, makeFormProps } from '@/hooks/form'
+import { resolveTableTitleAttributes } from '@/hooks/table/tableTitleAttributes'
 import { cloneDeep, omit, isObject } from 'lodash-es'
 import FormActions from '../form/FormActions.vue'
+import FormPreviewFields from '../form/FormPreviewFields.vue'
 import FormPublicLinks from '../form/FormPublicLinks.vue'
 import FormLocaleSelector from '../form/FormLocaleSelector.vue'
 import FormEvents from '../form/FormEvents.vue'
 import FormSecondaryInputs from '../form/FormSecondaryInputs.vue'
+
+const FormPassthrough = (_, { slots }) => slots.default?.()
 
 // Create a new component for the right section content
 const AdditionalSectionContent = {
@@ -518,11 +611,13 @@ export default {
   name: 'ue-form',
   components: {
     FormActions,
+    FormPreviewFields,
     FormEvents,
     FormSecondaryInputs,
     FormPublicLinks,
     FormLocaleSelector,
     AdditionalSectionContent,
+    FormPassthrough,
   },
   emits: [
     'update:valid',
@@ -550,12 +645,47 @@ export default {
     const store = useStore()
     const useFormInstance = useForm(props, context)
     const { t, te } = useI18n({ useScope: 'global' })
-    // const i18n = useI18n()
+    const vuetifyDisplay = useDisplay()
+
+    const sheetClasses = computed(() => [
+      props.noDefaultFormPadding ? '' : 'pa-4',
+      props.noDefaultSurface ? 'bg-transparent' : '',
+    ])
+    // Theme defaults give every v-sheet a border, so a surface-less form has to opt out explicitly
+    const sheetBorder = computed(() => props.noDefaultSurface ? false : undefined)
+
+    const isPageLayout = computed(() => props.titlePlacement === 'outside')
+    const hasRightColumn = computed(() => useFormInstance.hasAdditionalSection.value && vuetifyDisplay.lgAndUp.value)
+    // Page layout: one card for the whole body, or (with a right column) a card for the main column only
+    const cardWrapsAll = computed(() => isPageLayout.value && !hasRightColumn.value)
+    const cardWrapsMain = computed(() => isPageLayout.value && hasRightColumn.value)
+    // Header and footer stay put; only the body between them scrolls
+    const bodyScrolls = computed(() => props.scrollable || isPageLayout.value)
+
+    // Inputs flagged `newCard` start a new card; following inputs join it until the next flag
+    const inputSchemaCards = computed(() => {
+      const cards = [{}]
+
+      Object.entries(useFormInstance.inputSchema.value ?? {}).forEach(([name, input]) => {
+        if (input?.newCard && Object.keys(cards[cards.length - 1]).length > 0) {
+          cards.push({})
+        }
+        cards[cards.length - 1][name] = input
+      })
+
+      return cards
+    })
+    const hasCardSections = computed(() => cardWrapsMain.value && inputSchemaCards.value.length > 1)
+    const schemaCards = computed(() => hasCardSections.value
+      ? inputSchemaCards.value
+      : [useFormInstance.inputSchema.value]
+    )
+    const cardFormBaseId = (cardIndex) => cardIndex === 0
+      ? unref(useFormInstance.formBaseId)
+      : `${unref(useFormInstance.formBaseId)}-card-${cardIndex}`
 
     const formClasses = computed(() => [
-      props.noDefaultFormPadding ? '' : 'pa-4',
-      props.noDefaultSurface ? '' : 'bg-surface',
-      props.fillHeight ? 'd-flex flex-column h-100' : '',
+      (props.fillHeight || props.pushButtonToBottom || isPageLayout.value) ? 'd-flex flex-column flex-grow-1 min-height-0 h-100' : '',
       props.formClass,
     ])
 
@@ -620,11 +750,12 @@ export default {
           padding: props.title.padding || 'a-0',
           margin: props.title.margin || 'a-0',
           align: props.title.align || 'left',
-          justify: props.title.justify || 'start',
+          justify: props.previewable ? 'space-between' : (props.title.justify || 'start'),
           ...(props.title.class ? {class: props.title.class} : {class: 'flex-md-row flex-column justify-md-space-between'})
         }
       } else {
         options = {
+          ...(isPageLayout.value ? resolveTableTitleAttributes('outside', { transform: 'none' }) : {}),
           class: 'flex-md-row flex-column justify-md-space-between'
         }
       }
@@ -658,14 +789,26 @@ export default {
       || ['right-top', 'right-middle', 'right-bottom'].includes(props.actionsPosition)
     )
 
+    const showTitleRow = computed(() => !props.noTitle && !!props.title)
+
     return {
       ...useFormInstance,
       t,
+      sheetClasses,
+      sheetBorder,
       formClasses,
       formSlots,
       titleOptions,
       titleSerialized,
       hasRightSlotContent,
+      showTitleRow,
+      isPageLayout,
+      cardWrapsAll,
+      cardWrapsMain,
+      bodyScrolls,
+      hasCardSections,
+      schemaCards,
+      cardFormBaseId,
     }
   }
 }
@@ -673,4 +816,11 @@ export default {
 
 <style lang="sass" scoped>
 
+</style>
+
+<style lang="sass">
+// v-main is `flex: 1 0 auto` and grows with its content, so the page form body could never scroll on its own
+@media (min-width: 960px)
+  .v-main:has(.ue-form--page)
+    height: 100dvh
 </style>

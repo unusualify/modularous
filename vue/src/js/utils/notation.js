@@ -637,21 +637,19 @@ export function replacePattern(value, haystack) {
   });
 }
 
-export function replaceVariablesFromHaystack(obj, haystack) {
-  if (!obj || typeof obj !== 'object') return obj;
+export function replaceVariablesFromHaystack(value, haystack) {
+  if (typeof value === 'string') {
+    return value.replace(variablePattern, replaceCallback.bind(null, haystack));
+  }
 
-  return Object.keys(obj).reduce((acc, key) => {
-    const value = obj[key];
+  if (Array.isArray(value)) {
+    return value.map(item => replaceVariablesFromHaystack(item, haystack));
+  }
 
-    if (typeof value === 'string') {
-      acc[key] = value.replace(variablePattern, replaceCallback.bind(null, haystack));
-    } else if (Array.isArray(value)) {
-      acc[key] = value.map(item => replaceVariablesFromHaystack(item, haystack));
-    } else if (typeof value === 'object') {
-      acc[key] = replaceVariablesFromHaystack(value, haystack);
-    } else {
-      acc[key] = value;
-    }
+  if (!value || typeof value !== 'object') return value;
+
+  return Object.keys(value).reduce((acc, key) => {
+    acc[key] = replaceVariablesFromHaystack(value[key], haystack);
 
     return acc;
   }, {});

@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import _ from 'lodash-es'
 import { propsFactory } from 'vuetify/lib/util/propsFactory.mjs'
 import { shorten } from '@/utils/helpers'
+import { resolveHoverCardValue } from '@/utils/hoverCard'
 
 export const makeFormatterProps = propsFactory({
   ignoreFormatters: {
@@ -110,13 +111,17 @@ export default function useFormatter (props, context, headers = null) {
           tag: 'v-icon',
           attributes : {
             size: 'small',
-            style: {
-              color: trueValue ? 'green' : 'red'
-            },
-            icon: trueValue ? 'mdi-check' : 'mdi-close'
+            color: trueValue ? 'success' : 'error',
+            icon: trueValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'
           },
         }
 
+      }
+    },
+    /** Plain-text fallback (card title); tables render `hoverCard` via ue-hover-card. */
+    hoverCardFormatter: function (value, options = {}) {
+      return {
+        configuration: methods.makeText(resolveHoverCardValue(value, options.title ?? ['title', 'name']) ?? '')
       }
     },
     shortenFormatter: function (value, max = 10) {

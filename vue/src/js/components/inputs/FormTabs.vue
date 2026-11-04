@@ -20,13 +20,17 @@
       <ue-tabs v-else v-model="activeTab" :items="elements" tab-value="id" tab-title="name">
         <template v-for="(item, i) in elements" :key="`tab-slot-${i}`" v-slot:[`tab.${item.id}`]>
           <v-tab :value="item.id"
-            :color="!this.valids[i] && window.__isBoolean(this.valids[i]) ? 'error' : 'primary'"
-            :class="[window.__isBoolean(this.valids[i]) && !this.valids[i] ? 'bg-red-lighten-5' : '']"
+            :color="!valids[i] && window.__isBoolean(valids[i]) ? 'error' : 'primary-darken-3'"
+            :class="['text-none', { 'text-error': window.__isBoolean(valids[i]) && !valids[i] }]"
           >
-            <span>{{ item.name }}</span>
-            <template v-slot:append>
-              <v-icon v-if="window.__isBoolean(valids[i])" :icon="valids[i] ? '$check' : '$close'"></v-icon>
+            <template v-if="window.__isBoolean(valids[i])" v-slot:prepend>
+              <v-icon
+                :icon="valids[i] ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'"
+                :color="valids[i] ? 'primary' : 'error'"
+                size="small"
+              />
             </template>
+            <span>{{ item.name }}</span>
           </v-tab>
         </template>
         <template v-slot:windows="{active}">
@@ -46,6 +50,7 @@
 
                 v-model:valid="valids[i]"
 
+                :border="false"
                 noDefaultFormPadding
                 class="pt-3"
               />

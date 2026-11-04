@@ -149,6 +149,7 @@ class Connector
     private function setEvents(string $raw)
     {
         $events = [];
+        $raw = $raw === '' ? 'uri' : $raw;
 
         if ($raw !== '') {
             $methodables = explode($this->secondLevelSeparator, $raw); // |
@@ -270,11 +271,6 @@ class Connector
                     // ];
                 }
             }
-        } else {
-            $events[] = [
-                'name' => 'uri',
-                'args' => ['index'],
-            ];
         }
 
         $this->events = $events;
@@ -354,7 +350,7 @@ class Connector
 
         foreach ($this->events as $event) {
             $target = call_user_func_array([$target, $event['name']], [
-                ...$event['args'],
+                ...$event['args'] ?? [],
             ]);
         }
 

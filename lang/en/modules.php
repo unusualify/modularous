@@ -41,7 +41,7 @@ return [
     ],
     'system_notification' => [
         'my_notification' => [
-            'name' => 'My Notification | My Notifications | {n} My Notification',
+            'name' => 'Notification | Notifications | {n} Notification',
         ],
         'notification' => [
             'name' => 'Notification | Notifications | {n} Notification',

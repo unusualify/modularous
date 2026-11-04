@@ -37,6 +37,21 @@ class ModuleServiceProviderTest extends TestModulesCase
         $this->assertTrue($module->isEnabled());
     }
 
+    public function test_presentation_assets_are_not_deferred_without_the_cms_url_stale_middleware(): void
+    {
+        $this->assertFalse(Modularous::find('Cms')?->isEnabled() ?? false);
+
+        $provider = new ModuleServiceProvider($this->app);
+        $provider->register();
+
+        $hasMiddleware = new \ReflectionMethod($provider, 'hasUrlStaleServeMiddleware');
+        $this->assertFalse($hasMiddleware->invoke($provider));
+
+        $provider->bootModules();
+
+        $this->assertFalse($this->app->make(ModulePresentationAssetLoaderInterface::class)->isDeferred());
+    }
+
     public function test_boot_delegates_to_boot_modules(): void
     {
         $provider = $this->getMockBuilder(ModuleServiceProvider::class)

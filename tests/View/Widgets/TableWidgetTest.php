@@ -55,6 +55,9 @@ class TableWidgetTest extends TestCase
             ->with('Payment', true, ':id')
             ->once()
             ->andReturn(['index' => '/admin/payments']);
+        $mockModule->shouldReceive('permissionPrefix')
+            ->with('Payment')
+            ->andReturn('system_payment::payment');
 
         $widget = new TableWidget;
         $attributes = [
@@ -66,6 +69,7 @@ class TableWidgetTest extends TestCase
 
         $this->assertArrayHasKey('endpoints', $result);
         $this->assertIsArray($result['endpoints']);
+        $this->assertSame('system_payment::payment', $result['permissionPrefix']);
     }
 
     public function test_hydrate_attributes_processes_columns_with_allowable_user()

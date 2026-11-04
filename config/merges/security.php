@@ -42,14 +42,14 @@ return [
     ],
 
     'critical_field_permissions' => [
-        'robots_index' => 'page_edit',
-        'robots_follow' => 'page_edit',
-        'canonical_url' => 'page_edit',
-        'head_scripts' => 'site_setting_edit',
-        'body_scripts' => 'site_setting_edit',
-        'redirect_from' => 'redirect_edit',
-        'redirect_to' => 'redirect_edit',
-        'status_code' => 'redirect_edit',
+        'robots_index' => 'cms::page_edit',
+        'robots_follow' => 'cms::page_edit',
+        'canonical_url' => 'cms::page_edit',
+        'head_scripts' => 'cms::site-setting_edit',
+        'body_scripts' => 'cms::site-setting_edit',
+        'redirect_from' => 'cms::redirect_edit',
+        'redirect_to' => 'cms::redirect_edit',
+        'status_code' => 'cms::redirect_edit',
     ],
 
     'step_up' => [

@@ -18,7 +18,6 @@ final class MyNotificationIndexOptions implements ModuleRouteTableOptionsProvide
             'createOnModal' => false,
             'editOnModal' => true,
             'isRowEditing' => false,
-            'rowActionsType' => 'inline',
         ];
     }
 }

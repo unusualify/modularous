@@ -18,7 +18,6 @@ final class PaymentIndexOptions implements ModuleRouteTableOptionsProvider
             'createOnModal' => false,
             'editOnModal' => false,
             'isRowEditing' => false,
-            'rowActionsType' => 'inline',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Unusualify\Modularous\Entities\Enums\Permission;
 use Unusualify\Modularous\Repositories\Repository;
 
 trait Moduleable
@@ -114,7 +115,7 @@ trait Moduleable
      */
     public function getPermissionPrefix(): string
     {
-        return kebabCase($this->getModuleRouteName());
+        return Permission::permissionPrefix($this->getModuleName(), $this->getModuleRouteName());
     }
 
     /**

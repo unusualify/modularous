@@ -12,6 +12,7 @@ use Unusualify\Modularous\Entities\Company;
 use Unusualify\Modularous\Entities\CreatorRecord;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Relations\CreatorCompanyRelation;
+use Unusualify\Modularous\Relations\CreatorHasOneThrough;
 
 trait HasCreator
 {
@@ -191,7 +192,7 @@ trait HasCreator
         $throughInstance = $creatableClass->newRelatedThroughInstance($through); // throughInstance
         $relatedQuery = $creatableClass->newRelatedInstance($related)->newQuery(); // relatedQuery
 
-        $relation = new HasOneThrough(
+        $relation = new CreatorHasOneThrough(
             $relatedQuery,
             $creatableClass,
             $throughInstance,

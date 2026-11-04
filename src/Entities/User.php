@@ -122,7 +122,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return new Attribute(
             get: fn ($value) => $this->fileponds
                 ->filter(fn ($filepond) => $filepond->role === 'avatar')
-                ->first()?->mediableFormat()['source'] ?? '/vendor/modularous/jpg/anonymous.jpg',
+                ->first()?->previewUrl() ?? '/vendor/modularous/jpg/anonymous.jpg',
         );
     }
 
