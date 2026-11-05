@@ -421,7 +421,8 @@ export default {
       })
     },
     loadTagSuggestions: function () {
-      if (!this.type?.tagsEndpoint) {
+      // Guests can't use the media library; the tags endpoint would 401 and redirect public pages to login.
+      if (this.$store.getters.isGuest || !this.type?.tagsEndpoint) {
         return
       }
 
