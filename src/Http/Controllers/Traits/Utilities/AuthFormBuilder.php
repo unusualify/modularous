@@ -221,6 +221,26 @@ trait AuthFormBuilder
     }
 
     /**
+     * Returns "sign in" link slot (above the submit button), e.g. for the forgot password form.
+     */
+    protected function signInOptionSlot(): array
+    {
+        return [
+            'options' => [
+                'tag' => 'v-btn',
+                'elements' => __('authentication.sign-in'),
+                'attributes' => [
+                    'variant' => 'text',
+                    'href' => route(Route::hasAdmin('login.form')),
+                    'class' => 'd-flex flex-1-0 flex-md-grow-0',
+                    'color' => 'grey-lighten-1',
+                    'density' => 'default',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Returns "restart" link slot for complete register form.
      */
     protected function restartOptionSlot(): array
@@ -250,9 +270,9 @@ trait AuthFormBuilder
                 'tag' => 'v-btn',
                 'elements' => __('Resend'),
                 'attributes' => [
-                    'variant' => 'plain',
+                    'variant' => 'text',
                     'href' => route('admin.password.reset.link'),
-                    'class' => '',
+                    'class' => 'd-flex flex-1-0 flex-md-grow-0',
                     'color' => 'grey-lighten-1',
                     'density' => 'default',
                 ],
@@ -323,6 +343,18 @@ trait AuthFormBuilder
         }
 
         $formSlots = $this->resolveFormSlotsPreset($pageConfig['formSlotsPreset'] ?? null);
+
+        // 'fieldSlots' => [inputName => [slotName => element]] are injected into that input's schema slots,
+        // so a preset can place elements next to a single field (e.g. after the email input).
+        foreach (Arr::pull($formSlots, 'fieldSlots', []) as $inputName => $inputSlots) {
+            if (isset($formAttributes['schema'][$inputName])) {
+                $formAttributes['schema'][$inputName]['slots'] = array_merge(
+                    $formAttributes['schema'][$inputName]['slots'] ?? [],
+                    $inputSlots
+                );
+            }
+        }
+
         $formSlots = array_merge($formSlots, $overrides['formSlots'] ?? []);
 
         $slots = $this->resolveSlotsPreset($pageConfig['slotsPreset'] ?? null);
@@ -398,6 +430,7 @@ trait AuthFormBuilder
                 ),
             ],
             'have_account' => $this->haveAccountOptionSlot(),
+            'sign_in' => $this->signInOptionSlot(),
             'register_have_account_below' => [
                 'bottom' => $this->authFormOptionSlot(
                     __('authentication.have-an-account'),
@@ -464,6 +497,25 @@ trait AuthFormBuilder
                                 'class' => '',
                                 'type' => 'submit',
                                 'density' => 'default',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            // V2 login: forgot-password link right after the email input (in its details slot).
+            'forgot_password_after_email' => [
+                'fieldSlots' => [
+                    'email' => [
+                        'details' => [
+                            'tag' => 'v-btn',
+                            'elements' => __('authentication.forgot-password'),
+                            'attributes' => [
+                                'variant' => 'text',
+                                'href' => route('admin.password.reset.link'),
+                                'color' => 'primary',
+                                'density' => 'compact',
+                                'size' => 'small',
+                                'class' => 'text-none px-0 ml-auto auth-v2-forgot',
                             ],
                         ],
                     ],
