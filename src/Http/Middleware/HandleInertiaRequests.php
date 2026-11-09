@@ -9,6 +9,7 @@ use Unusualify\Modularous\Entities\File;
 use Unusualify\Modularous\Entities\Media;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Services\BroadcastManager;
+use Unusualify\Modularous\Services\Staging\StagingGuard;
 use Unusualify\Modularous\Support\ModularousFlashWarnings;
 
 class HandleInertiaRequests extends Middleware
@@ -58,6 +59,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'endpoints' => fn () => $request->attributes->get('endpoints', new \StdClass),
 
+            'staging' => fn () => [
+                'enabled' => app(StagingGuard::class)->enabled(),
+                'label' => app(StagingGuard::class)->label(),
+            ],
             'authorization' => fn () => $this->getAuthorizationData($request),
             'storeData' => fn () => $this->getStoreData($request),
         ]);
