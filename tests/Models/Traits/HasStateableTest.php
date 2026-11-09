@@ -33,6 +33,7 @@ class HasStateableTest extends ModelTestCase
             $table->string('name');
             $table->string('title')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Create test model class
