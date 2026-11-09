@@ -331,7 +331,7 @@ trait HasTranslation
     }
 
     /**
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function getActiveLanguages()
     {
@@ -351,7 +351,7 @@ trait HasTranslation
      * Returns all translations for a given attribute.
      *
      * @param string $key
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function translatedAttribute($key, $locale = null)
     {
