@@ -13,9 +13,11 @@ use Spatie\Activitylog\Facades\LogBatch;
 use Unusualify\Modularous\Contracts\Cache\CacheableInterface;
 use Unusualify\Modularous\Contracts\Cache\UserAwareCacheInterface;
 use Unusualify\Modularous\Contracts\ModuleableInterface;
+use Unusualify\Modularous\Exceptions\StagingLockedException;
 use Unusualify\Modularous\Models\Model;
 use Unusualify\Modularous\Repositories\Contracts\Repository as RepositoryContract;
 use Unusualify\Modularous\Repositories\Traits\Concerns\InteractsWithAttachmentPayloads;
+use Unusualify\Modularous\Services\Staging\StagingGuard;
 use Unusualify\Modularous\Traits\ManageNames;
 
 abstract class Repository implements CacheableInterface, ModuleableInterface, RepositoryContract, UserAwareCacheInterface
@@ -106,6 +108,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function create($fields, $schema = null, $options = [])
     {
+        $this->assertStagingWritable('create');
+
         $this->setSchema($schema);
 
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
@@ -197,6 +201,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function update($id, $fields, $schema = null, $options = [])
     {
+        $this->assertStagingWritable('update');
+
         $this->setSchema($schema);
 
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
@@ -242,6 +248,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function updateBasic($id, $values, $scopes = [])
     {
+        $this->assertStagingWritable('updateBasic');
+
         return DB::transaction(function () use ($id, $values, $scopes) {
             // apply scopes if no id provided
             if (is_null($id)) {
@@ -300,6 +308,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function duplicate($id, $titleColumnKey, $schema)
     {
+        $this->assertStagingWritable('duplicate');
+
         if (($duplicated = $this->model->find($id)) === null) {
             return false;
         }
@@ -353,6 +363,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function delete($id)
     {
+        $this->assertStagingWritable('delete');
+
         return DB::transaction(function () use ($id) {
             if (($object = $this->model->find($id)) === null) {
                 return false;
@@ -378,6 +390,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function bulkDelete($ids)
     {
+        $this->assertStagingWritable('bulkDelete');
+
         return DB::transaction(function () use ($ids) {
             try {
                 Collection::make($ids)->each(function ($id) {
@@ -402,6 +416,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function forceDelete($id)
     {
+        $this->assertStagingWritable('forceDelete');
+
         return DB::transaction(function () use ($id) {
 
             if (($object = $this->model->onlyTrashed()->find($id)) === null) {
@@ -428,6 +444,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function bulkForceDelete($ids)
     {
+        $this->assertStagingWritable('bulkForceDelete');
+
         return DB::transaction(function () use ($ids) {
             try {
                 $query = $this->model->onlyTrashed()->whereIn('id', $ids);
@@ -454,6 +472,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function restore($id)
     {
+        $this->assertStagingWritable('restore');
+
         return DB::transaction(function () use ($id) {
             if (($object = $this->model->withTrashed()->find($id)) != null) {
                 LogBatch::startBatch();
@@ -479,6 +499,8 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
      */
     public function bulkRestore($ids)
     {
+        $this->assertStagingWritable('bulkRestore');
+
         return DB::transaction(function () use ($ids) {
             try {
                 $query = $this->model->withTrashed()->whereIn('id', $ids);
@@ -771,6 +793,14 @@ abstract class Repository implements CacheableInterface, ModuleableInterface, Re
     public function getModel()
     {
         return $this->model;
+    }
+
+    /**
+     * @throws StagingLockedException
+     */
+    protected function assertStagingWritable(string $operation): void
+    {
+        app(StagingGuard::class)->assertWritable($this->model->getTable(), $operation);
     }
 
     /**

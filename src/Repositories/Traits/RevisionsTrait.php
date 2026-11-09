@@ -44,6 +44,8 @@ trait RevisionsTrait
 
     public function update($id, $fields, $schema = null, $options = [])
     {
+        $this->assertStagingWritable('update');
+
         $this->setSchema($schema);
         $this->setColumns($schema ?? $this->chunkInputs(all: true));
 
