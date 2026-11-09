@@ -127,7 +127,7 @@ return [
             'actionRoute' => 'admin.password.reset.update',
             'formTitle' => 'authentication.reset-password',
             'buttonText' => 'authentication.reset-password',
-            'formOverrides' => ['hasSubmit' => true, 'color' => 'primary', 'formClass' => 'px-5'],
+            'formOverrides' => ['hasSubmit' => true], //to solve for  overlapping multiple colors on page /reset/password/{token}.
             'formSlotsPreset' => 'resend',
             'slotsPreset' => null,
         ],
