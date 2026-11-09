@@ -49,18 +49,21 @@ trait HasRevisions
     }
 
     /**
-     * Kebab-case route segment for permissions, e.g. "page" → "page_revision_approve".
+     * Module-namespaced permission prefix, e.g. "cms::page" → "cms::page_revisionApprove".
      * Override in the composed model; do not redeclare as a property.
      */
     protected function revisionPermissionPrefix(): ?string
     {
         if (method_exists($this, 'getModule') && ($module = $this->getModule()) instanceof Module) {
-            $routeName = $this->getRouteName();
-
-            return snakeCase($routeName);
+            return $module->permissionPrefix($this->getRouteName());
         }
 
         return null;
+    }
+
+    protected function revisionPermissionName(string $permission): string
+    {
+        return $this->revisionPermissionPrefix() . '_' . Permission::get($permission);
     }
 
     /**
@@ -157,7 +160,7 @@ trait HasRevisions
 
         $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
-        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_APPROVE', $this->revisionPermissionPrefix()));
+        return $user && Gate::forUser($user)->allows($this->revisionPermissionName('REVISION_APPROVE'));
     }
 
     public function userCanRejectRevisions(): bool
@@ -168,7 +171,7 @@ trait HasRevisions
 
         $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
-        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_REJECT', $this->revisionPermissionPrefix()));
+        return $user && Gate::forUser($user)->allows($this->revisionPermissionName('REVISION_REJECT'));
     }
 
     public function userCanRestoreRevisions(): bool
@@ -179,7 +182,7 @@ trait HasRevisions
 
         $user = Auth::guard(Modularous::getAuthGuardName())->user();
 
-        return $user && Gate::forUser($user)->allows(Permission::generatePermissionName('REVISION_RESTORE', $this->revisionPermissionPrefix()));
+        return $user && Gate::forUser($user)->allows($this->revisionPermissionName('REVISION_RESTORE'));
     }
 
     /**

@@ -48,7 +48,9 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
         $component_class_namespace = GenerateConfigReader::read('component-class')->getNamespace();
 
         $isFront = ! $this->app->runningInConsole() && Modularous::isFrontUrl();
-        $deferPresentationAssets = $isFront && ModularousCache::isUrlStaleServeFirst();
+        $deferPresentationAssets = $isFront
+            && ModularousCache::isUrlStaleServeFirst()
+            && $this->hasUrlStaleServeMiddleware();
 
         $this->app->make(ModulePresentationAssetLoaderInterface::class)->configure(
             $deferPresentationAssets,
@@ -116,6 +118,16 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
         $this->app['events']->listen(RouteMatched::class, function (): void {
             $this->app->make(ModulePresentationAssetLoaderInterface::class)->ensureLoaded();
         });
+    }
+  
+    /**
+     * Deferred assets are only loaded by the Cms url-stale middleware, so without it
+     * module views and translations would never be registered on front requests.
+     */
+    protected function hasUrlStaleServeMiddleware(): bool
+    {
+        return (Modularous::find('Cms')?->isEnabled() ?? false)
+            && (bool) modularousConfig('cms_features.register_middlewares', true);
     }
 
     public function loadDeferredModulePresentationAssets(): void

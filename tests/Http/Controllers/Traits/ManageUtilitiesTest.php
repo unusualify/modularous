@@ -52,6 +52,7 @@ class ManageUtilitiesTest extends TestCase
         $this->assertArrayHasKey('tableAttributes', $data);
         $this->assertTrue($data['tableAttributes']['isModuleTable']);
         $this->assertSame('Test Route', $data['tableAttributes']['name']);
+        $this->assertSame('test_module::test-route', $data['tableAttributes']['permissionPrefix']);
         $this->assertSame('/admin/test', $data['endpoints']['index']);
         $this->assertSame([['slug' => 'all', 'name' => 'All']], $data['tableAttributes']['filterList']);
     }
@@ -157,6 +158,7 @@ class ManageUtilitiesTest extends TestCase
     {
         $module = Mockery::mock(Module::class);
         $module->shouldReceive('getSnakeName')->andReturn('test_module');
+        $module->shouldReceive('permissionPrefix')->andReturn('test_module::test-route');
 
         return $module;
     }

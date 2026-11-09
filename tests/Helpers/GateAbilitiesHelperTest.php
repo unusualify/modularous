@@ -74,7 +74,27 @@ class GateAbilitiesHelperTest extends TestCase
         $this->assertFalse($abilities['articles_edit']);
         $this->assertTrue($abilities['custom_open']);
         $this->assertFalse($abilities['custom_closed']);
-        $this->assertSame(array_keys(Gate::abilities()), array_keys($abilities));
+        $this->assertEqualsCanonicalizing(
+            array_unique(['articles_view', 'articles_edit', ...array_keys(Gate::abilities())]),
+            array_keys($abilities)
+        );
+    }
+
+    public function test_permission_also_defined_on_the_gate_follows_the_users_permission_set(): void
+    {
+        $user = $this->mockUser(isSuperAdmin: false);
+        $guardName = Guard::getDefaultName($user);
+
+        $this->definePermissionAbilities($guardName, ['dashboard_view']);
+        Gate::define('dashboard_view', static fn () => false);
+
+        $user->shouldReceive('getAllPermissions')->andReturn(collect([
+            new Permission(['name' => 'dashboard_view', 'guard_name' => $guardName]),
+        ]));
+
+        $abilities = get_modularous_gate_abilities($user);
+
+        $this->assertTrue($abilities['dashboard_view']);
     }
 
     public function test_superadmin_is_granted_every_permission_ability(): void
@@ -96,11 +116,13 @@ class GateAbilitiesHelperTest extends TestCase
     {
         Gate::define('custom_open', static fn (?User $user = null) => true);
         Gate::define('custom_closed', static fn (?User $user = null) => false);
+        Permission::create(['name' => 'articles_view', 'guard_name' => 'web']);
 
         $abilities = get_modularous_gate_abilities(null);
 
         $this->assertTrue($abilities['custom_open']);
         $this->assertFalse($abilities['custom_closed']);
+        $this->assertFalse($abilities['articles_view']);
     }
 
     /**
@@ -110,7 +132,6 @@ class GateAbilitiesHelperTest extends TestCase
     {
         foreach ($names as $name) {
             Permission::create(['name' => $name, 'guard_name' => $guardName]);
-            Gate::define($name, static fn () => false);
         }
     }
 

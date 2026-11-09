@@ -21,7 +21,7 @@ class SyncRevisionPermissionsCommand extends BaseCommand
     /**
      * @var string
      */
-    protected $description = 'Create Spatie permissions for revision routes ({route}_revision_approve, {route}_revision_reject, {route}_revision_restore) for models using HasRevisions';
+    protected $description = 'Create Spatie permissions for revision routes ({module}::{route}_revisionApprove, _revisionReject, _revisionRestore) for models using HasRevisions';
 
     public function handle(): int
     {
@@ -83,20 +83,13 @@ class SyncRevisionPermissionsCommand extends BaseCommand
     }
 
     /**
-     * Uses {@see HasRevisions::revisionPermissionPrefix()} when overridden on the model.
+     * Uses {@see HasRevisions::revisionPermissionPrefix()}, e.g. `cms::page`.
      *
      * @return list<string>
      */
     protected function resolveRoutePrefixesForModel(string $modelClass): array
     {
         $method = new ReflectionMethod($modelClass, 'revisionPermissionPrefix');
-
-        if ($method->getDeclaringClass()->getName() === HasRevisions::class) {
-            $this->warn("Skipping {$modelClass}: override protected function revisionPermissionPrefix(): ?string (kebab-case route name).");
-
-            return [];
-        }
-
         $method->setAccessible(true);
         $instance = new $modelClass;
         $prefix = $method->invoke($instance);

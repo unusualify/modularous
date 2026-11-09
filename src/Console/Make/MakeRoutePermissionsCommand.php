@@ -127,7 +127,7 @@ class MakeRoutePermissionsCommand extends BaseCommand
     private function createPermissions(Repository $repository, array $permissions, string $guardName, string $moduleName, string $routeName, bool $dryRun): void
     {
         $names = collect($permissions)
-            ->map(fn ($permission) => $repository->getPermissionName($permission->value, $routeName))
+            ->map(fn ($permission) => PermissionEnum::generatePermissionName($permission->value, $routeName, $moduleName))
             ->unique()
             ->values()
             ->all();

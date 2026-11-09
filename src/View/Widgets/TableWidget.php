@@ -89,6 +89,8 @@ class TableWidget extends ModularousWidget
                 getModularousDefaultUrls(),
                 $routeEndpoints,
             );
+
+            $attributes['permissionPrefix'] ??= $attributes['_module']->permissionPrefix($attributes['_routeName']);
         }
 
         if (isset($attributes['columns'])) {

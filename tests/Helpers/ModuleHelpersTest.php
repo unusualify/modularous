@@ -109,22 +109,23 @@ class ModuleHelpersTest extends TestCase
         $this->assertSame('parent', $parent['name']);
         $this->assertSame([], findParentRoute(['routes' => [['name' => 'only']]]));
 
-        $this->assertSame('item_create', formatPermissionName('Item', 'CREATE'));
+        $this->assertSame('system_user::item_create', formatPermissionName('SystemUser', 'Item', 'CREATE'));
         $this->assertSame(
-            ['name' => 'item_view', 'guard_name' => 'modularous'],
-            formatPermissionRecord('Item', 'VIEW', 'modularous')
+            ['name' => 'system_user::item_view', 'guard_name' => 'modularous'],
+            formatPermissionRecord('SystemUser', 'Item', 'VIEW', 'modularous')
         );
 
-        $records = routePermissionRecords('Item', 'modularous', [
+        $records = routePermissionRecords('SystemUser', 'Item', 'modularous', [
             Permission::CREATE,
             Permission::VIEW,
         ]);
         $this->assertCount(2, $records);
-        $this->assertSame('item_create', $records[0]['name']);
+        $this->assertSame('system_user::item_create', $records[0]['name']);
 
-        $fromRoutes = permissionRecordsFromRoutes(['Post'], 'web');
+        $fromRoutes = permissionRecordsFromRoutes(['Blog' => ['BlogPost']], 'web');
         $this->assertNotEmpty($fromRoutes);
         $this->assertSame('web', $fromRoutes[0]['guard_name']);
+        $this->assertSame('blog::blog-post_create', $fromRoutes[0]['name']);
     }
 
     /** @test */

@@ -37,7 +37,7 @@ class RedirectController extends BaseController implements CanBulkSheet
     public function __construct(Application $app, Request $request)
     {
         if (modularousConfig('security.enabled', false)) {
-            $permission = modularousConfig('security.critical_field_permissions.redirect_from', 'redirect_edit');
+            $permission = modularousConfig('security.critical_field_permissions.redirect_from', 'cms::redirect_edit');
             $this->fieldsPermissions = [
                 'from_path' => $permission,
                 'to_path' => modularousConfig('security.critical_field_permissions.redirect_to', $permission),

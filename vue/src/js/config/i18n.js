@@ -57,7 +57,6 @@ const datetimeFormats = {
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      second: 'numeric',
       hour12: true
     },
     long: {
@@ -101,8 +100,7 @@ const datetimeFormats = {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
+      minute: 'numeric'
     },
     long: {
       year: 'numeric',

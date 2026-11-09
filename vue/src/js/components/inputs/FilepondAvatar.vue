@@ -57,31 +57,37 @@ const deactivateLoading = () => {
 <template>
   <div class="v-input-filepond__avatar-wrapper" @click="browse" >
     <v-avatar
-      size="90"
+      size="72"
+      color="grey-lighten-6"
+      border="sm"
       :class="disabled ? '' : 'cursor-pointer'"
     >
       <v-img
         v-if="Input.input.value.length > 0"
         alt="Avatar"
         :src="Input.input.value[0].source"
+        cover
       >
       </v-img>
       <v-icon
         v-else
         icon="mdi-account"
+        size="40"
+        color="grey"
       ></v-icon>
     </v-avatar>
-    <div :class="[
-      'v-input-filepond__edit-icon',
-      !fileLoading ? 'bg-primary-lighten-3' : 'bg-surface'
+    <div v-if="!disabled || fileLoading" :class="[
+      'v-input-filepond__edit-icon d-flex align-center justify-center',
+      !fileLoading ? 'bg-primary' : 'bg-surface'
     ]">
       <v-progress-circular
         v-if="fileLoading"
-        :size="25"
+        :size="16"
+        :width="2"
         color="success"
         indeterminate
       ></v-progress-circular>
-      <v-icon :disabled="disabled" size="default">mdi-account-circle-outline</v-icon>
+      <v-icon v-else size="14">mdi-camera-outline</v-icon>
     </div>
   </div>
   <v-input-filepond
@@ -138,13 +144,12 @@ const deactivateLoading = () => {
 
     .v-input-filepond__edit-icon {
       position: absolute;
-      bottom: 10px;
+      bottom: 0;
       right: 0;
-      transform: translate(25%, 25%);
-      background: rgba(var(--v-theme-primary), 0.5);
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      padding: 2px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+      border: 2px solid rgb(var(--v-theme-surface));
       cursor: pointer;
     }
   }

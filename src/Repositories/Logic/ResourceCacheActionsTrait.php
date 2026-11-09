@@ -105,7 +105,7 @@ trait ResourceCacheActionsTrait
             return [];
         }
 
-        $permissionName = $this->getPermissionName(Permission::CACHING->value, $this->getRouteName());
+        $permissionName = $this->getPermissionName(Permission::CACHING->value);
         if ($user !== null && ! $user->can($permissionName)) {
             return [];
         }

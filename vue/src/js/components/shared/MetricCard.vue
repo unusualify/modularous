@@ -54,6 +54,10 @@
       type: [String, Number, Boolean],
       default: 'sm',
     },
+    href: {
+      type: String,
+      default: null,
+    },
   })
 
   const displayValue = computed(() => {
@@ -97,6 +101,8 @@
     :elevation="elevation"
     :rounded="rounded"
     :border="border"
+    :href="href ?? undefined"
+    :link="!!href"
   >
     <v-card-text class="ue-metric-card__body d-flex align-center px-4 py-4 ga-2">
       <v-sheet v-if="appendIcon"
@@ -112,7 +118,7 @@
         />
       </v-sheet>
 
-      <div :class="[...labelClasses, 'flex-grow-1', 'min-width-0', 'text-truncate', 'text-center']">
+      <div :class="[...labelClasses, 'flex-grow-1', 'min-width-0', 'text-center']">
         {{ label }}
       </div>
 
@@ -145,6 +151,10 @@
   .ue-metric-card__divider
     border-color: rgba(var(--v-border-color), var(--v-border-opacity))
     opacity: 1
+
+  // long single words wrap instead of pushing the value out of the tile
+  .ue-metric-card__label
+    overflow-wrap: anywhere
 
   .ue-metric-card__value
     line-height: 1

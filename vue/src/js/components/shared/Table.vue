@@ -176,7 +176,7 @@
 
                   >
                     <template #append-inner>
-                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
+                      <v-btn :disabled="searchModel === search" icon="mdi-magnify" :aria-label="$t('fields.search')" variant="plain" size="compact" color="grey-darken-5" rounded @click="searchItems()" />
                     </template>
                   </v-text-field>
 
@@ -661,6 +661,7 @@
                 :is="`ue-${customRow.name}`"
                 :key="element.id"
                 :name="name"
+                :permissionPrefix="permissionName"
                 :titlePrefix="titlePrefix"
                 :titleKey="titleKey"
 
@@ -828,6 +829,7 @@
                 variant="plain"
                 :color="isCardLayout ? 'grey-darken-3' : 'black'"
                 icon="mdi-cog-outline"
+                :aria-label="$t('fields.column-visibility')"
                 v-bind="props"
               />
             </template>
@@ -1005,9 +1007,13 @@
                 </v-icon>
               </template>
 
-              <v-list>
-                <template v-for="(action, k) in visibleRowActions" :key="k">
-                  <v-list-item v-if="itemHasAction(item, action)"
+              <v-list v-for="itemActions in [getItemRowActions(item)]" :key="item.id">
+                <template v-for="(action, k) in itemActions" :key="k">
+                  <v-divider
+                    v-if="action.destructive && k > 0 && !itemActions[k - 1].destructive"
+                    class="my-1"
+                  />
+                  <v-list-item
                     :class="action.class ?? ''"
                     :disabled="isTableBusy"
                     @click="itemAction(item, action)"

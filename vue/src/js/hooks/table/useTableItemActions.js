@@ -17,6 +17,8 @@ import { useTableItem, useTableNames } from '@/hooks/table'
 import { checkItemConditions } from '@/utils/itemConditions';
 import useGenerate from '@/hooks/utils/useGenerate.js'
 
+const DESTRUCTIVE_ACTIONS = ['delete', 'forceDelete']
+
 export const makeTableItemActionsProps = propsFactory({
   isRowEditing: Boolean,
   hideMobileActions: {
@@ -442,7 +444,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
         actionsArray = Object.values(props.rowActions)
       }
 
-      return actionsArray.reduce((acc, action) => {
+      const actions = actionsArray.reduce((acc, action) => {
 
         if(Object.prototype.hasOwnProperty.call(action, 'href')){
           console.error('href is not supported in row actions', action)
@@ -493,18 +495,24 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
           iconColor,
           menuIconColor,
           hasTooltip,
+          destructive: action.destructive ?? DESTRUCTIVE_ACTIONS.includes(action.name),
         })
 
         return acc
       }, [])
+
+      return _.sortBy(actions, action => action.destructive ? 1 : 0)
     })
   })
+
+  const getItemRowActions = (item) => states.visibleRowActions.filter(action => itemHasAction(item, action))
 
   return {
     ...toRefs(states),
     // methods
     itemAction,
     itemHasAction,
+    getItemRowActions,
     // Add the action events to the return value
     actionEvents
   }

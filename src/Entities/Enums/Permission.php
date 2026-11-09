@@ -38,13 +38,26 @@ enum Permission: string
         return null;
     }
 
-    public static function generatePermissionName($permission, $routeName)
+    public const MODULE_SEPARATOR = '::';
+
+    /**
+     * Prefix shared by every permission of a module route, e.g. `system_user::user`.
+     *
+     * Same-named routes live in several modules (SystemUser and User both have `user`),
+     * so the module is part of the name to keep their permissions apart.
+     */
+    public static function permissionPrefix(string $moduleName, string $routeName): string
     {
-        return Str::kebab($routeName) . '_' . self::get($permission);
+        return Str::snake(Str::studly($moduleName)) . self::MODULE_SEPARATOR . Str::kebab(Str::studly($routeName));
     }
 
-    public static function generatePermissionMiddlewareDefinition($permission, $routeName)
+    public static function generatePermissionName($permission, $routeName, string $moduleName)
     {
-        return 'can:' . self::generatePermissionName($permission, $routeName);
+        return self::permissionPrefix($moduleName, $routeName) . '_' . self::get($permission);
+    }
+
+    public static function generatePermissionMiddlewareDefinition($permission, $routeName, string $moduleName)
+    {
+        return 'can:' . self::generatePermissionName($permission, $routeName, $moduleName);
     }
 }

@@ -76,6 +76,10 @@
       type: [String, Number, Boolean],
       default: undefined,
     },
+    href: {
+      type: String,
+      default: null,
+    },
   });
 
   const isHorizontal = computed(() => props.layout === 'horizontal');
@@ -142,6 +146,8 @@
     :elevation="elevation"
     :rounded="rounded"
     :border="border"
+    :href="href ?? undefined"
+    :link="!!href"
   >
     <v-card-text v-if="isHorizontal" class="ue-metric__body d-flex align-center flex-grow-1 ga-3 px-4 py-4">
       <v-icon

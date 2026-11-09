@@ -426,8 +426,9 @@ class ModuleTest extends TestCase
         $permissionName = $this->module->generatePermissionName('create', 'Item');
         $middleware = $this->module->generatePermissionMiddlewareDefinition('view', 'Item');
 
-        $this->assertSame('item_create', $permissionName);
-        $this->assertSame('can:item_view', $middleware);
+        $this->assertSame('test_module::item_create', $permissionName);
+        $this->assertSame('can:test_module::item_view', $middleware);
+        $this->assertSame('test_module::press-release', $this->module->permissionPrefix('PressRelease'));
     }
 
     public function test_user_has_permission_returns_false_without_authenticated_user(): void
@@ -685,7 +686,7 @@ class ModuleTest extends TestCase
     public function test_user_has_permission_returns_true_for_authenticated_user(): void
     {
         $user = Mockery::mock();
-        $user->shouldReceive('hasPermission')->once()->with('item_view')->andReturnTrue();
+        $user->shouldReceive('hasPermission')->once()->with('test_module::item_view')->andReturnTrue();
 
         Modularous::shouldReceive('getAuthGuardName')->andReturn('modularous');
         Auth::shouldReceive('guard')->with('modularous')->andReturnSelf();
