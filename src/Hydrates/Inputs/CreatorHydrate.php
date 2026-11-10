@@ -67,7 +67,14 @@ class CreatorHydrate extends InputHydrate
      */
     protected function getImpersonateAction(): ?array
     {
-        $user = Auth::guard(Modularous::getAuthGuardName())->user();
+        $guardName = Modularous::getAuthGuardName();
+
+        // The guard is only enforced for HTTP requests; console and test contexts may lack it.
+        if (blank(config('auth.guards.' . $guardName))) {
+            return null;
+        }
+
+        $user = Auth::guard($guardName)->user();
 
         if (! $user || ! $user->can('impersonate')) {
             return null;
@@ -82,6 +89,7 @@ class CreatorHydrate extends InputHydrate
         return [
             'icon' => 'mdi-account-switch',
             'tooltip' => __('Impersonate User'),
+            'httpMethod' => 'post',
             'color' => 'primary',
             'href' => route($routeName, ['id' => ':id']),
         ];

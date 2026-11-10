@@ -2,9 +2,11 @@
 
 namespace Unusualify\Modularous\Tests\Helpers;
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Unusualify\Modularous\Entities\User;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Tests\TestCase;
@@ -288,6 +290,15 @@ class SourcesHelpersTest extends TestCase
     /** @test */
     public function test_modularous_authorization_localization_and_ui_preferences_for_guest(): void
     {
+        if (! Schema::hasTable('permissions')) {
+            Schema::create('permissions', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('guard_name');
+                $table->timestamps();
+            });
+        }
+
         $auth = get_modularous_authorization_config();
         $this->assertFalse($auth['isSuperAdmin']);
         $this->assertSame([], $auth['roles']);

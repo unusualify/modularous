@@ -24,6 +24,12 @@ const props = defineProps({
 const emit = defineEmits(makeInputEmits);
 
 const Input = useInput(props, { emit, updateModelValue: (val, old) => {
+  // Avatar has no remove control: an empty list only comes from FilePond's
+  // replace step (old file removed before the new one uploads). Emitting it would
+  // let submitOnChange save an empty avatar and treat the new upload as clean.
+  if (!Array.isArray(val) || val.length === 0) {
+    return;
+  }
   if (val.length > 1) {
     Input.input.value = [val[1]];
   } else {

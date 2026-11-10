@@ -228,12 +228,15 @@
 
   const visibleInnerActions = computed(() => selectedId.value != null ? props.innerActions : [])
 
-  const runInnerAction = (action) => {
+  const runInnerAction = async (action) => {
     if (!action.href) return
 
     const url = action.href.replace(':id', encodeURIComponent(selectedId.value))
 
-    if (action.target) {
+    if(action.httpMethod == 'post'){
+      await axios.post(url, {}, { headers: { Accept: 'application/json' } })
+      window.location.reload()
+    } else if (action.target) {
       window.open(url, action.target)
     } else {
       window.location.href = url
