@@ -56,6 +56,8 @@ class StagingGuardTest extends TestCase
         $this->assertTrue($guard->canWriteTable('activity_log'));
         $this->assertTrue($guard->allowsCommand('migrate'));
         $this->assertTrue($guard->allowsCommand('config:cache'));
+        $this->assertTrue($guard->allowsCommand('modularous:flush'));
+        $this->assertTrue($guard->allowsCommand('modularous:cache:versions'));
         $this->assertTrue($guard->allowsCommand(null));
     }
 

@@ -47,7 +47,7 @@ All list values are comma-separated and accept `*` globs.
 
 - **Tables:** `sessions`, `cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs`, `activity_log`.
 - **Routes without guards:** sign-in, two-factor, step-up and sign-out (`*login`, `*login-2fa`, `*logout`, `*step-up.verify`, `*step-up.resend`) run with table and SQL guards lifted so users can sign in.
-- **Commands:** `list`, `help`, `about`, `env`, `migrate`, `migrate:status`, `operations:process`, `package:discover`, `vendor:publish`, `storage:link`, `key:generate`, `optimize`, `optimize:clear`, `config:*`, `route:*`, `view:*`, `event:*`, `schedule:run`, `schedule:work`, `schedule:list`, `modularous:staging:status`.
+- **Commands:** `list`, `help`, `about`, `env`, `migrate`, `migrate:status`, `operations:process`, `package:discover`, `vendor:publish`, `storage:link`, `key:generate`, `optimize`, `optimize:clear`, `config:*`, `route:*`, `view:*`, `event:*`, `schedule:run`, `schedule:work`, `schedule:list`, `modularous:flush`, `modularous:cache:*`, `modularous:staging:status`.
 
 The SQL guard only applies to HTTP requests by default, so deploy commands (`migrate`, `operations:process`) can still change the schema and data.
 
