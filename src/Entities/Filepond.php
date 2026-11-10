@@ -51,12 +51,20 @@ class Filepond extends Model
         return $this->morphTo();
     }
 
+    /**
+     * Preview URL without the file-info lookup done by {@see mediableFormat()}.
+     */
+    public function previewUrl(): string
+    {
+        return route('filepond.preview', ['uuid' => $this->uuid]);
+    }
+
     public function mediableFormat()
     {
         return [
             'uuid' => $this->uuid,
             'file_name' => $this->file_name,
-            'source' => route('filepond.preview', ['uuid' => $this->uuid]),
+            'source' => $this->previewUrl(),
             'created_at' => $this->created_at,
             'file' => FilepondFacade::getFileInfo($this->uuid),
             // 'source' => $this->uuid,

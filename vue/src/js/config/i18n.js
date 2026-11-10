@@ -46,10 +46,18 @@ const datetimeFormats = {
     },
     medium: {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
       // weekday: 'narrow'
       // era: 'long',
+    },
+    'medium-time': {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
     },
     long: {
       year: 'numeric',
@@ -86,6 +94,13 @@ const datetimeFormats = {
       day: 'numeric'
       // weekday: 'narrow'
       // era: 'long',
+    },
+    'medium-time': {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
     },
     long: {
       year: 'numeric',

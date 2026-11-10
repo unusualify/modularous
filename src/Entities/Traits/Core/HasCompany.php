@@ -107,15 +107,11 @@ trait HasCompany
 
     protected function validCompany(): Attribute
     {
-        $valid = true;
-
-        if ($this->company_id != null && ($company = $this->company()->first())) {
-            $valid = $company->isValid ?? false;
-        }
-
         return Attribute::make(
-            get: fn () => $valid,
-        );
+            get: fn () => $this->company_id == null
+                || ! ($company = $this->company)
+                || ($company->isValid ?? false),
+        )->shouldCache();
     }
 
     protected function companyName(): Attribute

@@ -71,7 +71,7 @@
             </v-chip>
           </v-card-title>
           <v-card-text class="pb-3">
-            <v-row dense>
+            <v-row density="comfortable">
               <v-col
                 cols="12"
                 md="3"

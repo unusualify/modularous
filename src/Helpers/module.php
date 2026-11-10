@@ -350,17 +350,11 @@ if (! function_exists('findParentRoute')) {
 
 if (! function_exists('formatPermissionName')) {
     /**
-     * @return string
+     * @return string e.g. `system_user::user_create`
      */
-    function formatPermissionName($routeName, $permissionType)
+    function formatPermissionName($moduleName, $routeName, $permissionType)
     {
-        // dd(
-        //     Permission::get($permissionType)
-        //     // Permission::cases(),
-        //     // get_class_methods(Permission::class)
-        //     // Permission::{$permissionType}->value
-        // );
-        return kebabCase($routeName) . '_' . Permission::get($permissionType);
+        return Permission::generatePermissionName($permissionType, $routeName, $moduleName);
     }
 }
 
@@ -368,9 +362,9 @@ if (! function_exists('formatPermissionRecord')) {
     /**
      * @return array
      */
-    function formatPermissionRecord($routeName, $permissionType, $guardName)
+    function formatPermissionRecord($moduleName, $routeName, $permissionType, $guardName)
     {
-        return ['name' => formatPermissionName($routeName, $permissionType), 'guard_name' => $guardName];
+        return ['name' => formatPermissionName($moduleName, $routeName, $permissionType), 'guard_name' => $guardName];
     }
 }
 
@@ -378,25 +372,30 @@ if (! function_exists('routePermissionRecords')) {
     /**
      * @return array
      */
-    function routePermissionRecords($routeName, $guardName, $cases = null)
+    function routePermissionRecords($moduleName, $routeName, $guardName, $cases = null)
     {
-        return Arr::map($cases ?: Permission::cases(), function ($item) use ($routeName, $guardName) {
-            return ['name' => kebabCase($routeName) . '_' . $item->value, 'guard_name' => $guardName];
+        $prefix = Permission::permissionPrefix($moduleName, $routeName);
+
+        return Arr::map($cases ?: Permission::cases(), function ($item) use ($prefix, $guardName) {
+            return ['name' => $prefix . '_' . $item->value, 'guard_name' => $guardName];
         });
     }
 }
 
 if (! function_exists('permissionRecordsFromRoutes')) {
     /**
+     * @param array<string, array<int, string>> $routesByModule e.g. ['SystemUser' => ['User', 'Role']]
      * @return array
      */
-    function permissionRecordsFromRoutes($routes, $guardName)
+    function permissionRecordsFromRoutes($routesByModule, $guardName)
     {
         $cases = Permission::cases();
         $records = [];
 
-        foreach ($routes as $routeName) {
-            $records = array_merge($records, routePermissionRecords($routeName, $guardName, $cases));
+        foreach ($routesByModule as $moduleName => $routes) {
+            foreach ($routes as $routeName) {
+                $records = array_merge($records, routePermissionRecords($moduleName, $routeName, $guardName, $cases));
+            }
         }
 
         return $records;

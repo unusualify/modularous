@@ -2,14 +2,14 @@
 
 return [
     'user' => [
-        'avatar' => [
-            'type' => 'filepond-avatar',
-            // 'label' => 'Profile Avatar',
-            'name' => 'avatar',
-            'allow-image-preview' => true,
-            'label-idle' => 'Drop files here...',
-            'acceptedExtensions' => ['jpg', 'jpeg', 'png'],
-        ],
+        // 'avatar' => [
+        //     'type' => 'filepond-avatar',
+        //     // 'label' => 'Profile Avatar',
+        //     'name' => 'avatar',
+        //     'allow-image-preview' => true,
+        //     'label-idle' => 'Drop files here...',
+        //     'acceptedExtensions' => ['jpg', 'jpeg', 'png'],
+        //  ],
         'name' => [
             'type' => '_name',
             'col' => [
@@ -231,6 +231,33 @@ return [
         ],
 
     ],
+    'profile_header' => [
+        'id' => [
+            'type' => 'hidden',
+            'name' => 'id',
+        ],
+        'avatar' => [
+            'type' => 'filepond-avatar',
+            'name' => 'avatar',
+            'allow-image-preview' => true,
+            'label-idle' => 'Drop files here...',
+            'acceptedExtensions' => ['jpg', 'jpeg', 'png'],
+            'hideDetails' => true,
+            'col' => [
+                'cols' => 'auto',
+                'class' => 'flex-grow-0',
+            ],
+        ],
+        'identity' => [
+            'type' => 'dynamic-component',
+            'name' => 'identity',
+            'noSubmit' => true,
+            'col' => [
+                'cols' => 'auto',
+                'class' => 'flex-grow-1',
+            ],
+        ],
+    ],
     'profile_shortcut' => [
         'id' => [
             'type' => 'hidden',
@@ -268,12 +295,12 @@ return [
         'email' => [
             'type' => 'email',
             'name' => 'email',
-            'label' => 'E-mail',
+            'label' => __('authentication.email'),
         ],
         'password' => [
             'type' => 'password',
             'name' => 'password',
-            'label' => 'Password',
+            'label' => __('form-labels.Password'),
             'hideDetails' => 'auto',
         ],
     ],
@@ -284,8 +311,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            // 'label' => ___('authentication.email'),
-            'label' => 'E-mail',
+            'label' => __('authentication.email'),
             'hint' => 'enter @example.com',
             'default' => '',
             'col' => [
@@ -298,7 +324,7 @@ return [
         'password' => [
             'type' => 'password',
             'name' => 'password',
-            'label' => 'Password',
+            'label' => __('form-labels.Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -314,7 +340,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'E-mail',
+            'label' => __('authentication.email'),
             'hint' => 'enter @example.com',
             'default' => '',
             'col' => [
@@ -356,7 +382,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'Email',
+            'label' => __('authentication.email'),
             'default' => '',
             'hideDetails' => 'auto',
             'rules' => 'required|email',
@@ -366,7 +392,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'Email',
+            'label' => __('authentication.email'),
             'default' => '',
             'col' => [
                 'cols' => 12,
@@ -377,7 +403,7 @@ return [
         'password' => [
             'type' => 'password',
             'name' => 'password',
-            'label' => 'Password',
+            'label' => __('form-labels.Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -390,7 +416,7 @@ return [
         'password_confirmation' => [
             'type' => 'password',
             'name' => 'password_confirmation',
-            'label' => 'Password Confirmation',
+            'label' => __('form-labels.Confirm Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -411,7 +437,7 @@ return [
         'name' => [
             'type' => 'text',
             'name' => 'name',
-            'label' => 'Name',
+            'label' => __('form-labels.Name'),
             'default' => '',
             'col' => [
                 'cols' => 12,
@@ -422,7 +448,7 @@ return [
         'surname' => [
             'type' => 'text',
             'name' => 'surname',
-            'label' => 'Surname',
+            'label' => __('form-labels.Surname'),
             'default' => '',
             'col' => [
                 'cols' => 12,
@@ -433,7 +459,7 @@ return [
         'company' => [
             'type' => 'text',
             'name' => 'company',
-            'label' => 'Company',
+            'label' => __('form-labels.Company'),
             'default' => '',
             'col' => [
                 'cols' => 12,
@@ -444,7 +470,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'E-mail',
+            'label' => __('authentication.email'),
             'default' => '',
             'col' => [
                 'cols' => 12,
@@ -455,7 +481,7 @@ return [
         'password' => [
             'type' => 'password',
             'name' => 'password',
-            'label' => 'Password',
+            'label' => __('form-labels.Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -505,7 +531,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'Email',
+            'label' => __('authentication.email'),
             'default' => '',
             'rules' => 'required|email',
             'validateOn' => 'lazy input',
@@ -529,7 +555,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => 'Email',
+            'label' => __('authentication.email'),
             'col' => ['cols' => 12, 'lg' => 12],
             'readonly' => true,
             'clearable' => false,
@@ -538,7 +564,7 @@ return [
         'name' => [
             'type' => 'text',
             'name' => 'name',
-            'label' => 'Name',
+            'label' => __('form-labels.Name'),
             'default' => '',
             'col' => ['cols' => 12, 'lg' => 12],
             'rules' => 'min:2|max:99|name',
@@ -547,7 +573,7 @@ return [
         'surname' => [
             'type' => 'text',
             'name' => 'surname',
-            'label' => 'Surname',
+            'label' => __('form-labels.Surname'),
             'default' => '',
             'col' => ['cols' => 12, 'lg' => 12],
             'rules' => 'min:2|max:99|name',
@@ -556,7 +582,7 @@ return [
         'company' => [
             'type' => 'text',
             'name' => 'company',
-            'label' => 'Company',
+            'label' => __('form-labels.Company'),
             'default' => '',
             'col' => ['cols' => 12, 'lg' => 12],
             'rules' => 'min:2|max:99',
@@ -565,7 +591,7 @@ return [
         'password' => [
             'type' => 'password',
             'name' => 'password',
-            'label' => 'Password',
+            'label' => __('form-labels.Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -578,7 +604,7 @@ return [
         'password_confirmation' => [
             'type' => 'password',
             'name' => 'password_confirmation',
-            'label' => 'Confirm Password',
+            'label' => __('form-labels.Confirm Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [

@@ -193,6 +193,34 @@ class ComponentTest extends TestCase
         $this->assertEquals('ue-button', $component->tag);
     }
 
+    public function test_merge_widget_col_override_cascades_to_wider_breakpoints()
+    {
+        $base = ['cols' => 12, 'lg' => 6, 'xl' => 6, 'order' => 1];
+
+        $this->assertSame(['cols' => 12, 'order' => 1, 'lg' => 8], Component::mergeWidgetCol($base, ['lg' => 8]));
+        $this->assertSame(['cols' => 12, 'lg' => 6, 'order' => 1, 'xl' => 4], Component::mergeWidgetCol($base, ['xl' => 4]));
+        $this->assertSame(['order' => 1, 'cols' => 12, 'lg' => 4], Component::mergeWidgetCol($base, ['cols' => 12, 'lg' => 4]));
+        $this->assertSame($base, Component::mergeWidgetCol($base, []));
+    }
+
+    public function test_create_widget_config_col_overrides_class_xl_default()
+    {
+        Config::set('modularous.widgets.test-table', [
+            'widget' => 'TableWidget',
+            'widgetCol' => ['md' => 12, 'lg' => 12],
+        ]);
+
+        $rendered = Component::create([
+            'widgetAlias' => 'test-table',
+            'widgetCol' => ['cols' => 12, 'lg' => 8],
+        ]);
+
+        $this->assertSame(12, $rendered['attributes']['cols']);
+        $this->assertSame(8, $rendered['attributes']['lg']);
+        $this->assertArrayNotHasKey('md', $rendered['attributes']);
+        $this->assertArrayNotHasKey('xl', $rendered['attributes']);
+    }
+
     public function test_create_throws_when_no_tag_widget_or_component()
     {
         $this->expectException(\Exception::class);
@@ -327,6 +355,30 @@ class ComponentTest extends TestCase
         $this->assertIsArray($result);
         $this->assertArrayHasKey('tag', $result);
         $this->assertArrayHasKey('elements', $result);
+    }
+
+    public function test_create_with_widget_auto_height_appends_blocks_auto_class()
+    {
+        $result = Component::create([
+            'widget' => 'MetricsWidget',
+            'widgetAutoHeight' => true,
+            'widgetAttributes' => ['class' => 'd-flex flex-column'],
+            'attributes' => ['title' => 'Dashboard Metrics'],
+        ]);
+
+        $this->assertEquals('d-flex flex-column ue-blocks__col--auto', $result['attributes']['class']);
+    }
+
+    public function test_create_with_widget_auto_height_false_overrides_widget_default()
+    {
+        $result = Component::create([
+            'widget' => 'MetricCardsWidget',
+            'widgetAutoHeight' => false,
+            'widgetAttributes' => ['class' => 'd-flex'],
+            'attributes' => ['title' => 'Glance'],
+        ]);
+
+        $this->assertEquals('d-flex', $result['attributes']['class']);
     }
 
     public function test_create_with_widget_throws_when_widget_class_missing()

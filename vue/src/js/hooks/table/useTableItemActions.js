@@ -17,6 +17,8 @@ import { useTableItem, useTableNames } from '@/hooks/table'
 import { checkItemConditions } from '@/utils/itemConditions';
 import useGenerate from '@/hooks/utils/useGenerate.js'
 
+const DESTRUCTIVE_ACTIONS = ['delete', 'forceDelete']
+
 export const makeTableItemActionsProps = propsFactory({
   isRowEditing: Boolean,
   hideMobileActions: {
@@ -25,7 +27,7 @@ export const makeTableItemActionsProps = propsFactory({
   },
   rowActionsIcon:{
     type: String,
-    default: 'mdi-cog-outline'
+    default: '$list'
   },
   rowActions: {
     type: [Array, Object],
@@ -442,7 +444,7 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
         actionsArray = Object.values(props.rowActions)
       }
 
-      return actionsArray.reduce((acc, action) => {
+      const actions = actionsArray.reduce((acc, action) => {
 
         if(Object.prototype.hasOwnProperty.call(action, 'href')){
           console.error('href is not supported in row actions', action)
@@ -482,24 +484,35 @@ export default function useTableItemActions(props, { TableForms, loadItems, Tabl
         action.componentProps = componentProps
         action.label = action.label ?? headline(action.name)
 
+        // `iconColor` styles the icon inside a filled v-btn (often white); dropdown items sit on the menu surface.
+        const menuIconColor = action.menuIconColor
+          ?? (component === 'v-btn' ? (action.color ?? 'primary') : iconColor)
+
         acc.push({
           ...action,
           is: component,
           icon,
           iconColor,
+          menuIconColor,
           hasTooltip,
+          destructive: action.destructive ?? DESTRUCTIVE_ACTIONS.includes(action.name),
         })
 
         return acc
       }, [])
+
+      return _.sortBy(actions, action => action.destructive ? 1 : 0)
     })
   })
+
+  const getItemRowActions = (item) => states.visibleRowActions.filter(action => itemHasAction(item, action))
 
   return {
     ...toRefs(states),
     // methods
     itemAction,
     itemHasAction,
+    getItemRowActions,
     // Add the action events to the return value
     actionEvents
   }

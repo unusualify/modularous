@@ -22,6 +22,9 @@ export const makeTableNamesProps = propsFactory({
   routeName: {
     type: String
   },
+  permissionPrefix: {
+    type: String
+  },
   customTitle: {
     type: String
   },
@@ -138,7 +141,7 @@ export default function useTableNames(props, context) {
   })
 
   const formSubtitle = computed(() => {
-    let subtitle = props.formSubtitle
+    let subtitle = props.formSubtitle ?? props.formAttributes?.subtitle
 
     let isEditing = context.editedIndex.value !== -1
 
@@ -146,7 +149,11 @@ export default function useTableNames(props, context) {
       subtitle = props.formCreateSubtitle
     }
     if (__isset(props.formEditSubtitle) && isEditing) {
-      subtitle = props.editFormSubtitle
+      subtitle = props.formEditSubtitle
+    }
+
+    if (!subtitle) {
+      return subtitle
     }
 
     return te(subtitle) ? t(subtitle) : subtitle

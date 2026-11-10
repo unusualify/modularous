@@ -101,6 +101,10 @@ export default async function formatSet(args, model, schema, input, index = null
           }
         }
       } else {
+        if (!_.isObject(_.get(schema, targetInputNotation))) {
+          return
+        }
+
         let currentValue = _.get(schema, setterNotation)
         let lastValue = store.getters[CACHE.GET_LAST_CACHE](setterNotation) ?? currentValue
 

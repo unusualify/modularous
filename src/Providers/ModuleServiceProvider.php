@@ -3,6 +3,7 @@
 namespace Unusualify\Modularous\Providers;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Facades\Blade;
 use Nwidart\Modules\Module;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
@@ -47,12 +48,16 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
         $component_class_namespace = GenerateConfigReader::read('component-class')->getNamespace();
 
         $isFront = ! $this->app->runningInConsole() && Modularous::isFrontUrl();
-        $deferPresentationAssets = $isFront && ModularousCache::isUrlStaleServeFirst();
+        $deferPresentationAssets = $isFront
+            && ModularousCache::isUrlStaleServeFirst()
+            && $this->hasUrlStaleServeMiddleware();
 
         $this->app->make(ModulePresentationAssetLoaderInterface::class)->configure(
             $deferPresentationAssets,
             fn () => $this->loadDeferredModulePresentationAssets(),
         );
+
+        $this->ensurePresentationAssetsOnRouteMatch();
 
         foreach (Modularous::allEnabled() as $module) {
 
@@ -98,6 +103,31 @@ class ModuleServiceProvider extends ServiceProvider implements DeferrableProvide
                 );
             }
         }
+    }
+
+    /**
+     * Load deferred module views/translations once a route is matched.
+     *
+     * Deferral only pays off when ServeUrlKeyedStaleMiddleware answers a URL cache hit
+     * before routing. Any request that reaches a route (non-CMS front routes, cache misses,
+     * apps without the Cms module where that middleware is never registered) renders live
+     * and needs module view namespaces such as `press_release::`.
+     */
+    protected function ensurePresentationAssetsOnRouteMatch(): void
+    {
+        $this->app['events']->listen(RouteMatched::class, function (): void {
+            $this->app->make(ModulePresentationAssetLoaderInterface::class)->ensureLoaded();
+        });
+    }
+  
+    /**
+     * Deferred assets are only loaded by the Cms url-stale middleware, so without it
+     * module views and translations would never be registered on front requests.
+     */
+    protected function hasUrlStaleServeMiddleware(): bool
+    {
+        return (Modularous::find('Cms')?->isEnabled() ?? false)
+            && (bool) modularousConfig('cms_features.register_middlewares', true);
     }
 
     public function loadDeferredModulePresentationAssets(): void

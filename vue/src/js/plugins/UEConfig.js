@@ -1,5 +1,6 @@
 import pluralize from 'pluralize'
 import { upperFirst } from 'lodash-es'
+import { toRef } from 'vue'
 
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { useI18n } from 'vue-i18n'
@@ -79,9 +80,15 @@ export default {
     loadLocaleMessages(i18n, window[import.meta.env.VUE_APP_NAME]?.ENDPOINTS.languages ?? '')
     moment.locale(store.state.user.locale)
 
+    const localeAdapter = createVueI18nAdapter({ i18n, useI18n })
+    // vue-i18n 11 ignores `part` for keyless n(), so Vuetify's group separator inference throws in VNumberInput
+    localeAdapter.numericGroupSeparator = toRef(() =>
+      new Intl.NumberFormat(i18n.global.locale.value).formatToParts(10000).find(p => p.type === 'group')?.value ?? ' '
+    )
+
     const vuetify = createModularousVuetify({
       locale: {
-        adapter: createVueI18nAdapter({ i18n, useI18n }),
+        adapter: localeAdapter,
       }
     })
     app.use(vuetify)

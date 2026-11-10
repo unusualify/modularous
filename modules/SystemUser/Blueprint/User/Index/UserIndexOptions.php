@@ -16,7 +16,6 @@ final class UserIndexOptions implements ModuleRouteTableOptionsProvider
             'createOnModal' => true,
             'editOnModal' => true,
             'isRowEditing' => true,
-            'rowActionsType' => 'inline',
         ];
     }
 }

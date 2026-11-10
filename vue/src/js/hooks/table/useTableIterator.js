@@ -10,6 +10,9 @@ export const makeTableIteratorProps = propsFactory({
     type: String,
     default: ''
   },
+  permissionPrefix: {
+    type: String
+  },
   titlePrefix: {
     type: String,
     default: ''

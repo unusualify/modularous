@@ -260,10 +260,11 @@ return [
         ],
         'payment' => [
             'index' => [
-                'columns' => PaymentIndexColumns::class,
-                'options' => PaymentIndexOptions::class,
-                'row_actions' => PaymentIndexRowActions::class,
-                'advanced_filters' => PaymentIndexAdvancedFilters::class,
+                'columns' => \Modules\SystemPayment\Blueprint\Payment\Index\PaymentIndexColumns::class,
+                'options' => \Modules\SystemPayment\Blueprint\Payment\Index\PaymentIndexOptions::class,
+                'row_actions' => \Modules\SystemPayment\Blueprint\Payment\Index\PaymentIndexRowActions::class,
+                'advanced_filters' => \Modules\SystemPayment\Blueprint\Payment\Index\PaymentIndexAdvancedFilters::class,
+                'appends' => \Modules\SystemPayment\Blueprint\Payment\Index\PaymentIndexAppends::class,
             ],
             'form' => [
                 'inputs' => PaymentFormInputs::class,

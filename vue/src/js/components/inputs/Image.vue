@@ -14,7 +14,7 @@
             :class="{ 'ue-input-image--slide': isSlide }"
           >
             <div class="ue-input-image__field">
-              <v-row dense no-gutters>
+              <v-row density="compact" no-gutters>
                 <v-col
                   v-for="index in totalElementCount"
                   :key="index"

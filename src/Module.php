@@ -1032,7 +1032,7 @@ class Module extends NwidartModule
      */
     public function generatePermissionName(string $permission, string $routeName): string
     {
-        return Permission::generatePermissionName($permission, $routeName);
+        return Permission::generatePermissionName($permission, $routeName, $this->getName());
     }
 
     /**
@@ -1043,7 +1043,15 @@ class Module extends NwidartModule
      */
     public function generatePermissionMiddlewareDefinition(string $permission, string $routeName): string
     {
-        return Permission::generatePermissionMiddlewareDefinition($permission, $routeName);
+        return Permission::generatePermissionMiddlewareDefinition($permission, $routeName, $this->getName());
+    }
+
+    /**
+     * Permission prefix of a route of this module, e.g. `system_user::user`
+     */
+    public function permissionPrefix(string $routeName): string
+    {
+        return Permission::permissionPrefix($this->getName(), $routeName);
     }
 
     /**

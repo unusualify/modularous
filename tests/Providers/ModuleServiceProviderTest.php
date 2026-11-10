@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Unusualify\Modularous\Tests\Providers;
 
+use Illuminate\Http\Request;
+use Illuminate\Routing\Events\RouteMatched;
+use Illuminate\Routing\Route;
 use Unusualify\Modularous\Contracts\ModulePresentationAssetLoaderInterface;
 use Unusualify\Modularous\Facades\Modularous;
 use Unusualify\Modularous\Providers\ModuleServiceProvider;
@@ -37,6 +40,21 @@ class ModuleServiceProviderTest extends TestModulesCase
         $this->assertTrue($module->isEnabled());
     }
 
+    public function test_presentation_assets_are_not_deferred_without_the_cms_url_stale_middleware(): void
+    {
+        $this->assertFalse(Modularous::find('Cms')?->isEnabled() ?? false);
+
+        $provider = new ModuleServiceProvider($this->app);
+        $provider->register();
+
+        $hasMiddleware = new \ReflectionMethod($provider, 'hasUrlStaleServeMiddleware');
+        $this->assertFalse($hasMiddleware->invoke($provider));
+
+        $provider->bootModules();
+
+        $this->assertFalse($this->app->make(ModulePresentationAssetLoaderInterface::class)->isDeferred());
+    }
+
     public function test_boot_delegates_to_boot_modules(): void
     {
         $provider = $this->getMockBuilder(ModuleServiceProvider::class)
@@ -46,5 +64,26 @@ class ModuleServiceProviderTest extends TestModulesCase
 
         $provider->expects($this->once())->method('bootModules');
         $provider->boot();
+    }
+
+    public function test_route_match_loads_deferred_presentation_assets(): void
+    {
+        $provider = new ModuleServiceProvider($this->app);
+        $provider->register();
+        $provider->bootModules();
+
+        $loads = 0;
+        $loader = $this->app->make(ModulePresentationAssetLoaderInterface::class);
+        $loader->configure(true, function () use (&$loads): void {
+            $loads++;
+        });
+
+        $route = new Route('GET', '/submit', fn () => null);
+        $request = Request::create('/submit');
+
+        $this->app['events']->dispatch(new RouteMatched($route, $request));
+        $this->app['events']->dispatch(new RouteMatched($route, $request));
+
+        $this->assertSame(1, $loads);
     }
 }

@@ -191,4 +191,29 @@ describe('TableFormatterCell', () => {
     const out = cell.vm.handleFormatter(cell.vm.colFormatterForShortenPass, long)
     expect(out.configuration.elements).toBe(shorten(long, MOBILE_SHORTEN_MAX))
   })
+
+  test.each([
+    [1, 1, 0],
+    [true, true, false],
+  ])('switch formatter treats %s as the checked value', (value, trueValue, falseValue) => {
+    const VSwitchStub = { name: 'VSwitch', props: ['modelValue', 'trueValue', 'falseValue'], template: '<div />' }
+    const wrapper = mount(TableFormatterCell, {
+      global: {
+        plugins: [i18n],
+        mocks: { $lodash: { isBoolean: (v) => typeof v === 'boolean' } },
+        stubs: { 'v-switch': VSwitchStub }
+      },
+      props: {
+        col: { key: 'published', formatter: ['switch'] },
+        item: { published: value },
+        handleFormatter: () => {},
+        itemAction: () => {},
+        cellOptions: {}
+      }
+    })
+    const sw = wrapper.findComponent(VSwitchStub)
+    expect(sw.props('modelValue')).toBe(sw.props('trueValue'))
+    expect(sw.props('trueValue')).toBe(trueValue)
+    expect(sw.props('falseValue')).toBe(falseValue)
+  })
 })

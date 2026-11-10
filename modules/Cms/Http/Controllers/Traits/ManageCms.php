@@ -28,9 +28,9 @@ trait ManageCms
     {
         if (modularousConfig('security.enabled', false)) {
             $this->fieldsPermissions = [
-                'canonical_url' => modularousConfig('security.critical_field_permissions.canonical_url', 'page_edit'),
-                'robots_index' => modularousConfig('security.critical_field_permissions.robots_index', 'page_edit'),
-                'robots_follow' => modularousConfig('security.critical_field_permissions.robots_follow', 'page_edit'),
+                'canonical_url' => modularousConfig('security.critical_field_permissions.canonical_url', 'cms::page_edit'),
+                'robots_index' => modularousConfig('security.critical_field_permissions.robots_index', 'cms::page_edit'),
+                'robots_follow' => modularousConfig('security.critical_field_permissions.robots_follow', 'cms::page_edit'),
             ];
         }
     }

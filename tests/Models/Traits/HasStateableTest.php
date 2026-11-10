@@ -33,6 +33,7 @@ class HasStateableTest extends ModelTestCase
             $table->string('name');
             $table->string('title')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Create test model class
@@ -264,8 +265,8 @@ class HasStateableTest extends ModelTestCase
 
         $formatted = $model->state_formatted;
 
-        $this->assertStringContainsString("color='success'", $formatted);
-        $this->assertStringContainsString("prepend-icon='\$publish'", $formatted);
+        $this->assertStringContainsString('color="success"', $formatted);
+        $this->assertStringContainsString('prepend-icon="$publish"', $formatted);
         $this->assertStringContainsString('Published', $formatted);
     }
 
@@ -573,6 +574,72 @@ class HasStateableTest extends ModelTestCase
         $this->assertEquals($publishedState->id, $model->currentStateableState()->id);
 
         $this->assertEquals($publishedState->id, $model->stateable->state_id);
+    }
+
+    public function test_saving_without_a_state_change_keeps_stateable_updated_at()
+    {
+        $draftState = State::create([
+            'code' => 'draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+            'en' => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $model = $this->testModel::create(['name' => 'Test Model']);
+
+        Stateable::create([
+            'stateable_id' => $model->id,
+            'stateable_type' => get_class($model),
+            'state_id' => $draftState->id,
+        ]);
+
+        $enteredAt = now()->subDays(40)->startOfSecond();
+        Stateable::query()->update(['updated_at' => $enteredAt]);
+
+        // reload so stateable_id is filled from the current state, as on a form update
+        $model = $this->testModel::find($model->id);
+        $model->name = 'Renamed Model';
+        $model->save();
+
+        $this->assertEquals($draftState->id, $model->fresh()->stateable->state_id);
+        $this->assertTrue($enteredAt->equalTo($model->fresh()->stateable->updated_at));
+    }
+
+    public function test_changing_the_state_updates_stateable_updated_at()
+    {
+        $draftState = State::create([
+            'code' => 'draft',
+            'icon' => '$edit',
+            'color' => 'warning',
+            'en' => ['name' => 'Draft', 'active' => true],
+        ]);
+
+        $publishedState = State::create([
+            'code' => 'published',
+            'icon' => '$publish',
+            'color' => 'success',
+            'en' => ['name' => 'Published', 'active' => true],
+        ]);
+
+        $model = $this->testModel::create(['name' => 'Test Model']);
+
+        Stateable::create([
+            'stateable_id' => $model->id,
+            'stateable_type' => get_class($model),
+            'state_id' => $draftState->id,
+        ]);
+
+        $enteredAt = now()->subDays(40)->startOfSecond();
+        Stateable::query()->update(['updated_at' => $enteredAt]);
+
+        $model = $this->testModel::find($model->id);
+        $model->stateable_id = $publishedState->id;
+        $model->save();
+
+        $stateable = $model->fresh()->stateable;
+
+        $this->assertEquals($publishedState->id, $stateable->state_id);
+        $this->assertTrue($stateable->updated_at->greaterThan($enteredAt));
     }
 
     public function test_stateable_updating_check_with_new_state_is_null()

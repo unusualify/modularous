@@ -122,6 +122,34 @@ class ModularousTest extends TestModulesCase
         $this->assertArrayHasKey('systemmodule', $modules);
     }
 
+    public function test_all_resolves_modules_once_per_http_request(): void
+    {
+        $this->app['config']->set('modules.cache.enabled', false);
+
+        $app = Mockery::mock($this->app)->makePartial();
+        $app->shouldReceive('runningInConsole')->andReturn(false);
+
+        $modularous = new Modularous($app, $this->app['config']->get('modules.paths.modules'));
+
+        $first = $modularous->all();
+        $this->assertSame($first, $modularous->all());
+        $this->assertSame($first['testmodule'], $modularous->find('TestModule'));
+
+        $modularous->clearCache();
+        $afterClear = $modularous->all();
+        $this->assertNotSame($first['testmodule'], $afterClear['testmodule']);
+
+        $modularous->disableCache();
+        $this->assertNotSame($afterClear['testmodule'], $modularous->all()['testmodule']);
+    }
+
+    public function test_all_rescans_on_every_call_in_console(): void
+    {
+        $modularous = new Modularous($this->app, $this->app['config']->get('modules.paths.modules'));
+
+        $this->assertNotSame($modularous->all()['testmodule'], $modularous->all()['testmodule']);
+    }
+
     public function test_has_module()
     {
         $this->assertTrue($this->modularous->has('systemmodule'));

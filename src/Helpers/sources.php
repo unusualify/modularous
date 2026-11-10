@@ -204,14 +204,64 @@ if (! function_exists('get_modularous_navigation_config')) {
     }
 }
 
+if (! function_exists('get_modularous_gate_abilities')) {
+    /**
+     * Resolve every Spatie permission and registered gate ability for the user.
+     *
+     * Permissions are not defined on the Gate (Spatie answers them through its
+     * Gate::before hook), so they are listed from the permission registrar and
+     * answered from the user's permission set (superadmin passes all of them);
+     * only the remaining custom abilities go through the Gate.
+     *
+     * @return array<string, bool>
+     */
+    function get_modularous_gate_abilities($user): array
+    {
+        $permissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
+            ->getPermissions()
+            ->pluck('name')
+            ->unique()
+            ->values()
+            ->all();
+
+        $customAbilities = array_values(array_diff(array_keys(Gate::abilities()), $permissionNames));
+
+        if (! $user || ! method_exists($user, 'getAllPermissions') || config('permission.enable_wildcard_permission')) {
+            return Arr::mapWithKeys(
+                [...$permissionNames, ...$customAbilities],
+                fn ($ability) => [$ability => Gate::allows($ability)]
+            );
+        }
+
+        $isSuperAdmin = (bool) ($user->is_superadmin ?? false);
+        $guardName = \Spatie\Permission\Guard::getDefaultName($user);
+
+        $grantedPermissions = $user->getAllPermissions()
+            ->where('guard_name', $guardName)
+            ->pluck('name')
+            ->flip()
+            ->all();
+
+        $resolved = [];
+
+        foreach ($permissionNames as $permission) {
+            $resolved[$permission] = $isSuperAdmin || isset($grantedPermissions[$permission]);
+        }
+
+        foreach ($customAbilities as $ability) {
+            $resolved[$ability] = Gate::allows($ability);
+        }
+
+        return $resolved;
+    }
+}
+
 if (! function_exists('get_modularous_authorization_config')) {
     function get_modularous_authorization_config()
     {
         $user = Auth::user();
 
-        $permissions = Arr::mapWithKeys(Gate::abilities(), function ($closure, $key) {
-            return [$key => Gate::allows($key)];
-        });
+        $permissions = get_modularous_gate_abilities($user);
 
         $roles = Arr::map($user?->roles?->toArray() ?? [], function ($role) {
             return $role['name'];

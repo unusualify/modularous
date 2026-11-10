@@ -39,20 +39,49 @@
       padding-inline-start: 0 !important
 
 .v-navigation-drawer
-  // &--rail:not(.v-navigation-drawer--is-hovering):not(.v-navigation-mobile)
-  //   width: 130px !important
+  color: $sidebar-color
+
   .v-icon
     font-size: $sidebar-icon-size
-  .v-list
-    &.ue-sidebar__menu
-      margin-top: calc($spacer * 15)
-    &.ue-sidebar__info
-      padding-top: calc($spacer * 3)
-      // padding-bottom: calc($spacer * 6)
-      margin-right: unset
 
-      .v-card-item
-        padding: $sidebar-info-padding !important
+  > .v-navigation-drawer__content
+    &::-webkit-scrollbar
+      width: $sidebar-scrollbar-width
+    &::-webkit-scrollbar-thumb,
+    &::-webkit-scrollbar-thumb:hover
+      background: $sidebar-scrollbar-thumb-color
+      border: 0
+      border-radius: 9999px
+
+    @supports not selector(::-webkit-scrollbar)
+      scrollbar-width: thin
+      scrollbar-color: $sidebar-scrollbar-thumb-color transparent
+
+  .ue-sidebar__divider
+    margin-inline: $sidebar-padding
+    width: auto
+
+  .v-list
+    &.v-list--nav
+      padding: 0
+
+    &.ue-sidebar__info
+      padding: $sidebar-padding 0 calc($spacer * 5)
+
+      .ue-sidebar__info-item
+        padding-inline: $sidebar-padding calc($spacer * 3) !important
+        margin: 0
+        background: none
+        .v-list-item-title
+          font-size: $sidebar-title-font-size
+          font-weight: 700
+          line-height: 1.4
+          text-transform: uppercase
+        .v-list-item-subtitle
+          font-size: 0.75rem
+          opacity: 1
+          color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))
+
       .ue-sidebar__avatar
         width: $sidebar-info-avatar-size
         height: $sidebar-info-avatar-size
@@ -66,28 +95,88 @@
       text-decoration: none !important
       color: inherit
 
+  #ue-sidebar__menu
+    padding-top: $sidebar-padding
+
   .v-list-group__items
     .v-list-item
       &--nav
         padding-inline-start: calc($sidebar-padding + calc($sidebar-padding / 2)) !important
 
   .v-list-item
-    margin-right: calc($spacer * 5)
-    margin-bottom: calc($spacer * 3)
+    min-height: $sidebar-item-height
+    margin: 0 $sidebar-item-end-gap $sidebar-item-gap 0
+    padding-inline: $sidebar-padding calc($spacer * 1) !important
+    border-radius: 0 $sidebar-item-radius $sidebar-item-radius 0
+    color: $sidebar-color
+
+    .v-list-item-title
+      font-size: $sidebar-item-font-size
+      font-weight: $sidebar-item-font-weight
+      line-height: 1.25
+      letter-spacing: 0
+
+    .v-list-item__prepend > .v-icon,
+    .v-list-item__prepend .v-badge .v-icon
+      opacity: 1
+
+    .v-list-item__spacer
+      width: calc($spacer * 2.5) !important
+
     &--active
-      background: rgba(var(--v-theme-primary), 1)
-      color: rgba(var(--v-theme-on-primary), 1) !important
+      background: $sidebar-active-background
+      color: $sidebar-active-color !important
       > .v-list-item__overlay
         opacity: 0
 
     > .v-list-item__overlay
-      // opacity: 0
-      background: rgba(var(--v-theme-primary), 1)
-      border-bottom-right-radius: 4px
-      border-top-right-radius: 4px
+      background: $sidebar-active-background
+      border-radius: inherit
 
     .v-avatar
       --v-avatar-height: #{$sidebar-info-avatar-size}
+
+  .ue-sidebar__user
+    padding: calc($spacer * 5) $sidebar-padding calc($spacer * 3)
+
+    .ue-sidebar__info-item
+      min-height: $sidebar-user-avatar-size
+      margin: 0
+      padding: 0 !important
+      background: none
+      .v-avatar
+        --v-avatar-height: #{$sidebar-user-avatar-size}
+        width: $sidebar-user-avatar-size
+        height: $sidebar-user-avatar-size
+        cursor: pointer
+      .v-list-item__spacer
+        width: calc($spacer * 4) !important
+      .v-list-item-title
+        font-size: $sidebar-user-name-font-size
+        font-weight: 700
+        line-height: 1.3
+      .v-list-item-subtitle
+        font-size: 0.75rem
+        font-weight: 500
+        opacity: 1
+        color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))
+
+  .ue-sidebar__profile
+    padding-top: calc($spacer * 3)
+
+    > .v-list
+      margin-bottom: 0 !important
+
+    .v-list-item
+      min-height: $sidebar-sub-item-height
+      margin: 0 0 calc($spacer * 3)
+      padding-inline: calc($spacer * 5) calc($spacer * 4) !important
+      border-radius: 9999px
+      .v-list-item-title
+        font-size: $sidebar-sub-item-font-size
+        font-weight: 400
+      .v-list-item__spacer
+        width: calc($spacer * 4) !important
 
 
   &--rail:not(.v-navigation-drawer--expand-on-hover),

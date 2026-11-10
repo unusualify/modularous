@@ -14,7 +14,8 @@
 
   const emit = defineEmits([
     ...makeInputEmits,
-    'search'
+    'search',
+    'click:item'
   ])
 
   const props = defineProps({
@@ -50,10 +51,35 @@
     lockInitialItems: {
       type: Boolean,
       default: false
+    },
+    // loads the items when the dialog opens and allows an empty search, which lists every item
+    loadOnOpen: {
+      type: Boolean,
+      default: false
+    },
+    // hides the selection checkboxes and disables selecting items, e.g. when the browser only lists items
+    noSelection: {
+      type: Boolean,
+      default: false
+    },
+    // replaces the pagination with a "Load more" button that appends the next page to the list
+    loadMore: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Icon actions rendered inside the field (before the search icon) when a single value is selected.
+     * Each action: { icon, tooltip?, color?, href, target? } — ':id' in href is replaced by the selected id.
+     */
+    innerActions: {
+      type: Array,
+      default: () => []
     }
   })
 
   const dialog = ref(false)
+  // the next page is being appended to the list (loadMore)
+  const loadingMore = ref(false)
   // const initialValue = ref(props.modelValue)
   const selectedItems = ref([])
 
@@ -192,11 +218,43 @@
     return props.max ? selectedItems.value.length < props.max : true
   })
 
+  const selectedId = computed(() => {
+    if (props.multiple || input.value == null || input.value === '') return null
+
+    return isObject(input.value)
+      ? input.value[props.objectIdDefiner ?? props.itemValue]
+      : input.value
+  })
+
+  const visibleInnerActions = computed(() => selectedId.value != null ? props.innerActions : [])
+
+  const runInnerAction = async (action) => {
+    if (!action.href) return
+
+    const url = action.href.replace(':id', encodeURIComponent(selectedId.value))
+
+    if(action.httpMethod == 'post'){
+      await axios.post(url, {}, { headers: { Accept: 'application/json' } })
+      window.location.reload()
+    } else if (action.target) {
+      window.open(url, action.target)
+    } else {
+      window.location.href = url
+    }
+  }
+
   // Perform search
   const performSearch = async () => {
-    if (!searchModel.value.trim()) return
+    if (!props.loadOnOpen && !searchModel.value.trim()) return
 
-    setItemsLoading(true)
+    // with loadMore, the pages after the first one are appended to the listed items
+    const appending = props.loadMore && activePage.value > 1
+
+    if (appending) {
+      loadingMore.value = true
+    } else {
+      setItemsLoading(true)
+    }
 
     try {
       const exceptIds = cloneDeep(initialExceptIds.value)
@@ -228,6 +286,13 @@
 
       // Combine initial items with search results
       const searchResults = response.data.resource.data || []
+
+      if (appending) {
+        const listedIds = elements.value.map(element => element[props.itemValue])
+        appendElements(searchResults.filter(searchResult => !listedIds.includes(searchResult[props.itemValue])))
+        return
+      }
+
       const combinedElements = [
         ...searchResults
       ]
@@ -309,7 +374,26 @@
       console.error('Search error:', error)
     } finally {
       setItemsLoading(false)
+      loadingMore.value = false
     }
+  }
+
+  // a new search starts from the first page when the next pages are appended (loadMore)
+  const searchFromStart = () => {
+    if (props.loadMore && activePage.value !== 1) {
+      // changing the page searches by itself (see the activePage watcher)
+      setActivePage(1)
+    } else {
+      performSearch()
+    }
+  }
+
+  const hasMoreItems = computed(() => activePage.value < activeLastPage.value)
+
+  const loadMoreItems = () => {
+    if (loadingMore.value || !hasMoreItems.value) return
+
+    setActivePage(activePage.value + 1)
   }
 
   // Open dialog and prepare items
@@ -337,6 +421,15 @@
     // will populate the list) or if results are already loaded.
     if (!input.value && !elements.value.length && props.recentItems.length) {
       setElements([...props.recentItems])
+    }
+
+    if (props.loadOnOpen) {
+      // changing the page searches by itself (see the activePage watcher)
+      if (activePage.value !== 1) {
+        setActivePage(1)
+      } else {
+        performSearch()
+      }
     }
   }
 
@@ -500,8 +593,18 @@
     }
   })
 
+  const closeDialog = () => {
+    dialog.value = false
+  }
+
   onMounted(() => {
     fetchInitialItems()
+  })
+
+  // lets a parent using its own activator open and close the dialog
+  defineExpose({
+    openDialog,
+    closeDialog,
   })
 </script>
 
@@ -552,6 +655,28 @@
           @click="openDialog"
           @keyup.enter="performSearch"
         >
+          <template v-if="visibleInnerActions.length" v-slot:append-inner>
+            <v-tooltip
+              v-for="(action, i) in visibleInnerActions"
+              :key="`inner-action-${i}`"
+              :text="action.tooltip"
+              :disabled="!action.tooltip"
+              location="top"
+            >
+              <template v-slot:activator="{ props: tooltipProps }">
+                <v-btn
+                  v-bind="tooltipProps"
+                  :icon="action.icon"
+                  :color="action.color"
+                  size="small"
+                  variant="text"
+                  density="comfortable"
+                  @click.stop="runInnerAction(action)"
+                  @mousedown.stop
+                />
+              </template>
+            </v-tooltip>
+          </template>
           <template v-slot:selection="{ item, index }">
             <v-chip v-if="item === Object(item)"
               :color="isInitialItem(item)
@@ -588,12 +713,12 @@
               :density="density"
               clearable
               clear-icon="mdi-close"
-              @keyup.enter="performSearch"
-              @click:append-inner="performSearch"
+              @keyup.enter="searchFromStart"
+              @click:append-inner="searchFromStart"
               append-inner-icon="mdi-magnify"
             />
 
-            <div class="overflow-y-auto" style="height: 360px;">
+            <div class="overflow-y-auto" :style="{ height: loadMore ? '420px' : '360px' }">
               <v-progress-linear v-if="itemsLoading"
                 indeterminate
                 color="primary"
@@ -604,11 +729,11 @@
               >
                 <v-list-item v-for="item in elements"
                   :key="`${item[props.itemValue]}-${itemIsClickable(item)}`"
-                  @click="toggleItemSelection(item)"
+                  @click="noSelection ? emit('click:item', item) : toggleItemSelection(item)"
 
-                  :disabled="!itemIsClickable(item)"
+                  :disabled="!noSelection && !itemIsClickable(item)"
                 >
-                  <template v-slot:prepend>
+                  <template v-if="!noSelection" v-slot:prepend>
                     <v-checkbox-btn
                       :model-value="itemIsSelected(item)"
                       @click.stop="toggleItemSelection(item)"
@@ -669,9 +794,20 @@
               <div v-if="!itemsLoading && elements.length === 0" class="text-center pa-4">
                 No items found
               </div>
+
+              <div v-if="loadMore && !itemsLoading && hasMoreItems" class="d-flex justify-center pa-2">
+                <v-btn
+                  variant="text"
+                  color="primary"
+                  :loading="loadingMore"
+                  @click="loadMoreItems"
+                >
+                  {{ $t('Load more') }}
+                </v-btn>
+              </div>
             </div>
 
-            <div class="d-flex justify-center pa-2">
+            <div v-if="!loadMore" class="d-flex justify-center pa-2">
               <v-pagination
                 v-model="activePage"
                 :length="activeLastPage"

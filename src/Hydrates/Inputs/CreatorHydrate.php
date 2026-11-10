@@ -2,6 +2,10 @@
 
 namespace Unusualify\Modularous\Hydrates\Inputs;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Unusualify\Modularous\Facades\Modularous;
+
 class CreatorHydrate extends InputHydrate
 {
     /**
@@ -16,6 +20,7 @@ class CreatorHydrate extends InputHydrate
         'appends' => ['email_with_company'],
         'with' => ['company'],
         'allowedRoles' => ['superadmin'],
+        'impersonatable' => true,
     ];
 
     /**
@@ -46,8 +51,47 @@ class CreatorHydrate extends InputHydrate
         ]);
         unset($input['appends'], $input['with']);
 
+        if (($input['impersonatable'] ?? true) && ($impersonateAction = $this->getImpersonateAction())) {
+            $input['innerActions'] = array_merge($input['innerActions'] ?? [], [$impersonateAction]);
+        }
+        unset($input['impersonatable']);
+
         // add your logic
 
         return $input;
+    }
+
+    /**
+     * Build the inner icon action that impersonates the selected creator,
+     * only when the authenticated user is allowed to impersonate.
+     */
+    protected function getImpersonateAction(): ?array
+    {
+        $guardName = Modularous::getAuthGuardName();
+
+        // The guard is only enforced for HTTP requests; console and test contexts may lack it.
+        if (blank(config('auth.guards.' . $guardName))) {
+            return null;
+        }
+
+        $user = Auth::guard($guardName)->user();
+
+        if (! $user || ! $user->can('impersonate')) {
+            return null;
+        }
+
+        $routeName = Route::hasAdmin('impersonate');
+
+        if (! $routeName) {
+            return null;
+        }
+
+        return [
+            'icon' => 'mdi-account-switch',
+            'tooltip' => __('Impersonate User'),
+            'httpMethod' => 'post',
+            'color' => 'primary',
+            'href' => route($routeName, ['id' => ':id']),
+        ];
     }
 }

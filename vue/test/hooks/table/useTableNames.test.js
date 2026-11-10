@@ -28,12 +28,14 @@ const TestComponent = defineComponent({
     name: { type: String, default: 'posts' },
     customTitle: { type: String, default: undefined },
     titleKey: { type: String, default: 'name' },
+    formAttributes: { type: Object, default: () => ({}) },
+    editing: { type: Boolean, default: false },
     ...makeTableNamesProps()
   },
   setup(props, context) {
     const editedItem = ref({ name: 'Test Post', id: 1 })
     const isSoftDeletableItem = ref(false)
-    const editedIndex = ref(-1)
+    const editedIndex = ref(props.editing ? 0 : -1)
     const ctx = {
       ...context,
       TableItem: { editedItem, isSoftDeletableItem },
@@ -71,6 +73,33 @@ describe('useTableNames', () => {
     const store = createStoreStub()
     const wrapper = await factory(store, { subtitle: 'fields.subtitle' })
     expect(wrapper.vm.tableSubtitle).toBeDefined()
+  })
+
+  test('formSubtitle falls back to formAttributes.subtitle', async () => {
+    const wrapper = await factory(createStoreStub(), { formAttributes: { subtitle: 'From form options' } })
+    expect(wrapper.vm.formSubtitle).toBe('From form options')
+  })
+
+  test('formSubtitle prefers formSubtitle over formAttributes.subtitle', async () => {
+    const wrapper = await factory(createStoreStub(), {
+      formSubtitle: 'Table subtitle',
+      formAttributes: { subtitle: 'From form options' },
+    })
+    expect(wrapper.vm.formSubtitle).toBe('Table subtitle')
+  })
+
+  test('formSubtitle uses formEditSubtitle while editing', async () => {
+    const wrapper = await factory(createStoreStub(), {
+      editing: true,
+      formSubtitle: 'Table subtitle',
+      formEditSubtitle: 'Edit subtitle',
+    })
+    expect(wrapper.vm.formSubtitle).toBe('Edit subtitle')
+  })
+
+  test('formSubtitle is empty when no subtitle is configured', async () => {
+    const wrapper = await factory(createStoreStub())
+    expect(wrapper.vm.formSubtitle).toBeFalsy()
   })
 
   test('deleteQuestion includes item name for soft-deletable', async () => {

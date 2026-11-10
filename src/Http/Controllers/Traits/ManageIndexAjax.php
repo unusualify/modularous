@@ -67,6 +67,12 @@ trait ManageIndexAjax
         $with = is_string($with) ? explode(',', $with) : $with;
         $with = is_array($with) ? $with : [];
 
+        if ($this->request->boolean('light')) {
+            return Response::json([
+                'resource' => $this->getJSONData(with: $with),
+            ]);
+        }
+
         return Response::json([
             'resource' => $this->getJSONData(with: $with),
             'mainFilters' => $this->getTableMainFilters($this->getExactScope()),
