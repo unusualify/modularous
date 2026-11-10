@@ -89,6 +89,7 @@ class CreatorHydrate extends InputHydrate
         return [
             'icon' => 'mdi-account-switch',
             'tooltip' => __('Impersonate User'),
+            'httpMethod' => 'post',
             'color' => 'primary',
             'href' => route($routeName, ['id' => ':id']),
         ];
