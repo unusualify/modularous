@@ -117,6 +117,8 @@ return [
             'schedule:run',
             'schedule:work',
             'schedule:list',
+            'modularous:flush',
+            'modularous:cache:*',
             'modularous:staging:status',
         ],
     ],
