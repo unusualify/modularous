@@ -1,6 +1,6 @@
 <template>
   <template v-for="(price,i) in deepModel" :key="`price-${i}`">
-    <div class="d-flex w-100 ga-2">
+    <div class="d-flex w-100 ga-2" :class="{ 'mb-4': i < deepModel.length - 1 }">
       <v-input
         :ref="(el) => setInputRef(i, el)"
         v-model="deepModel[i][priceInputName]"
