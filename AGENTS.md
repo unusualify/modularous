@@ -116,6 +116,7 @@ Entity traits and repository traits must be added **together**.
 |---------|----------|
 | Coverage | `CoverageServiceProvider` |
 | Security | `SecurityServiceProvider` |
+| Staging guard | `StagingServiceProvider` |
 | RemoteApi | `RemoteApiServiceProvider` |
 | ArtisanRunner | `ArtisanRunnerServiceProvider` |
 | ModuleRouteInspect | `ModuleRouteInspectServiceProvider` |

@@ -224,6 +224,7 @@ class UpgradeV11DbCommand extends BaseCommand
             'um_tagged' => ['taggable_type'],
             'um_tags' => ['namespace'],
             'um_creator_records' => ['creator_type', 'creatable_type'],
+            'um_assignments' => ['assignee_type', 'assigner_type' ],
         ];
 
         foreach ($umMap as $table => $columns) {

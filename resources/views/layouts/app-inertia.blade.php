@@ -53,6 +53,8 @@
             @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.icons.svg-sprite")
         @endif
 
+        @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.staging-banner")
+
         @php
             // $_mainConfiguration = array_merge_recursive_preserve([
             //     'headerTitle' => $headerTitle ?? config('app.name'),

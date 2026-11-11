@@ -75,6 +75,7 @@ class HandleInertiaRequestsCoverageTest extends TestCase
         $this->assertSame([['text' => 'warn']], ($shared['flash']['warnings'])());
         $this->assertSame('Modularous', $shared['config']['js_namespace']);
         $this->assertSame([], ($shared['authorization'])());
+        $this->assertSame(['enabled' => false, 'label' => null], ($shared['staging'])());
 
         $store = ($shared['storeData'])();
         $this->assertTrue($store['user']['isGuest']);

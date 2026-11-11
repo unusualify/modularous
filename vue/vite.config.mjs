@@ -58,9 +58,23 @@ const svgConfig = (suffix = null, isProduction = true) => {
   }
 }
 
+// The package lives at packages/modularous (path repo) or vendor/unusualify/modularous (composer).
+const resolveAppEnvPath = () => {
+  const candidates = [
+    process.env.BASE_PATH,
+    path.resolve(__dirname, '../../..'),
+    path.resolve(__dirname, '../../../..'),
+  ].filter(Boolean).map((dir) => path.resolve(dir, '.env'))
+
+  return candidates.find((file) => fs.existsSync(file)) ?? candidates[0]
+}
+
 export default defineConfig(({ command, mode }) => {
-  const env = dotenv.config({ path: path.resolve(__dirname, '../../../.env') }).parsed // prevent writing to `process.env`
+  const env = dotenv.config({ path: resolveAppEnvPath() }).parsed
   dotenvExpand.expand(env)
+
+  // Must match config('modularous.js_namespace'); an empty value breaks every window[VUE_APP_NAME] lookup.
+  process.env.VUE_APP_NAME ||= 'MODULAROUS'
 
   const ENV = loadEnv(mode, process.cwd(), '')
   const envPrefix = ['VUE', 'VITE']

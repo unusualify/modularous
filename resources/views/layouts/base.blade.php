@@ -11,6 +11,8 @@
             @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.icons.svg-sprite")
         @endif
 
+        @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.staging-banner")
+
         @yield('body')
 
         @include("{$MODULAROUS_VIEW_NAMESPACE}::partials.footer")
