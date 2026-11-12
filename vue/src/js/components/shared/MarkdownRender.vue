@@ -52,7 +52,7 @@ watch(() => props.markdown, (newValue) => {
   renderer.heading = (headingObj) => {
     const level = headingObj.depth;
     const text = headingObj.text;
-    const id = slugger(text);
+    const id = `section-${slugger(text)}`;
     if (level <= 3) { // Include h1, h2, and h3 in the TOC
       toc.push({
           level,
