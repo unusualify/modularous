@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import i18n from '../../src/js/config/i18n'
 import useFilepond, { makeFilepondProps } from '../../src/js/hooks/useFilepond.js'
@@ -44,6 +44,45 @@ describe('useFilepond', () => {
   test('max equals min when min greater than max', async () => {
     const wrapper = await factory({ maxFiles: 2, min: 5 })
     expect(wrapper.vm.max).toBe(5)
+  })
+
+  test('reports upload state to the parent form while a file is loading or processing', async () => {
+    const calls = []
+    const wrapper = mount(TestComponent, {
+      global: {
+        plugins: [i18n],
+        provide: { setFormInputUploading: (uid, uploading) => calls.push(uploading) },
+      },
+      props: { obj: {} },
+    })
+
+    // FilePond statuses: PROCESSING = 3, PROCESSING_COMPLETE = 5
+    wrapper.vm.onPondFilesChange([{ status: 3 }])
+    await nextTick()
+    expect(wrapper.vm.pondBusy).toBe(true)
+
+    wrapper.vm.onPondFilesChange([{ status: 5 }])
+    await nextTick()
+    expect(wrapper.vm.pondBusy).toBe(false)
+
+    expect(calls).toEqual([true, false])
+  })
+
+  test('clears its upload state when unmounted mid-upload', async () => {
+    const calls = []
+    const wrapper = mount(TestComponent, {
+      global: {
+        plugins: [i18n],
+        provide: { setFormInputUploading: (uid, uploading) => calls.push(uploading) },
+      },
+      props: { obj: {} },
+    })
+
+    wrapper.vm.onPondFilesChange([{ status: 7 }])
+    await nextTick()
+    wrapper.unmount()
+
+    expect(calls.at(-1)).toBe(false)
   })
 
   test('makeFilepondProps defines expected props', () => {

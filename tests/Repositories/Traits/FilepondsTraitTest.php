@@ -59,6 +59,28 @@ class FilepondsTraitTest extends RepositoryTestCase
         $this->repository->afterSaveFilepondsTrait((object) ['id' => 1], $fields);
     }
 
+    /**
+     * A cleared input sends an empty list; existing fileponds of that role must be removed.
+     */
+    public function test_after_save_fileponds_trait_saves_empty_list_to_clear_role(): void
+    {
+        $schema = [
+            'pond-1' => ['type' => 'filepond', 'name' => 'pond-1', 'translated' => false],
+            'pond-2' => ['type' => 'filepond', 'name' => 'pond-2', 'translated' => false],
+        ];
+        $this->repository->setColumns($schema);
+
+        $fields = [
+            'pond-1' => [],
+        ];
+
+        Filepond::shouldReceive('saveFile')->once()->withArgs(function ($object, $files, $role, $locale = null) {
+            return $role === 'pond-1' && $files === [] && $locale === null;
+        });
+
+        $this->repository->afterSaveFilepondsTrait((object) ['id' => 1], $fields);
+    }
+
     public function test_after_save_fileponds_trait_saves_translated_role_by_locale(): void
     {
         $schema = [

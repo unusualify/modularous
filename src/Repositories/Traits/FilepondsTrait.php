@@ -207,9 +207,15 @@ trait FilepondsTrait
         $columns = $this->getColumns(__TRAIT__);
 
         foreach ($columns as $column) {
-            $files = data_get($fields, $column) ?? null;
+            // Skip only when the field is absent from the payload; an empty list means
+            // the user cleared the input, so existing fileponds must be deleted.
+            if (! $this->dataHasFilepondPayloadKey($fields, $column)) {
+                continue;
+            }
 
-            if (! $files) {
+            $files = data_get($fields, $column);
+
+            if (! is_array($files)) {
                 continue;
             }
 

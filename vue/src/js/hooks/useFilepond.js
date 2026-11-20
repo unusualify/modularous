@@ -1,6 +1,6 @@
 // hooks/useFilepond.js
 
-import { reactive, toRefs, computed, ref, inject, watch } from 'vue'
+import { reactive, toRefs, computed, ref, inject, watch, getCurrentInstance, onBeforeUnmount } from 'vue'
 import { propsFactory } from 'vuetify/lib/util/index.mjs' // Types
 
 import { omit } from 'lodash-es'
@@ -169,6 +169,29 @@ export default function useFilepond(props, context) {
     pendingUploads.value = Math.max(0, pendingUploads.value - 1)
   }
 
+  // FilePond item statuses that mean "not finished yet" (filepond ItemStatus:
+  // PROCESSING = 3, LOADING = 7, PROCESSING_QUEUED = 9).
+  const BUSY_FILE_STATUSES = [3, 7, 9]
+
+  // Lets the parent ue-form disable submit while any of its fileponds is uploading.
+  const setFormInputUploading = inject('setFormInputUploading', null)
+  const instanceUid = getCurrentInstance()?.uid
+  const pondBusy = ref(false)
+
+  // vue-filepond emits `input` with pond.getFiles() on every FilePond event
+  // (add, process start/progress/complete/abort, revert, remove, ...).
+  const onPondFilesChange = (files = []) => {
+    pondBusy.value = files.some((file) => BUSY_FILE_STATUSES.includes(file?.status))
+  }
+
+  watch(pondBusy, (busy) => {
+    setFormInputUploading?.(instanceUid, busy)
+  })
+
+  onBeforeUnmount(() => {
+    setFormInputUploading?.(instanceUid, false)
+  })
+
   const commitProcessedInput = (currentInput, file) => {
     return commitProcessedFilepondInput(currentInput, file, props.endPoints, {
       allowMultiple: props.allowMultiple,
@@ -187,6 +210,8 @@ export default function useFilepond(props, context) {
     max,
     pendingUploads,
     isUploading,
+    pondBusy,
+    onPondFilesChange,
     startUpload,
     finishUpload,
     commitProcessedInput,
