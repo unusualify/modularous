@@ -92,7 +92,7 @@
                   color="primary"
                   :density="buttonDensity"
                   prepend-icon="mdi-check"
-                  :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
+                  :disabled="!(validModel || !serverValid) || loading || isUploading || !isSubmittable"
                   :loading="loading"
                 >
                   {{ buttonDefaultText }}
@@ -488,7 +488,7 @@
             <v-btn v-if="isSubmittable"
               type="submit"
               :density="buttonDensity"
-              :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
+              :disabled="!(validModel || !serverValid) || loading || isUploading || !isSubmittable"
               class="ml-auto px-8 order-md-last order-first"
               min-width="120"
               :block="$vuetify.display.smAndDown"
@@ -519,7 +519,7 @@
 </template>
 
 <script>
-import { computed, onMounted, unref, watch } from 'vue'
+import { computed, onMounted, reactive, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
@@ -636,6 +636,7 @@ export default {
       return {
         manualValidation: computed(() => this.manualValidation),
         submitForm: computed(() => this.submit),
+        setFormInputUploading: this.setFormInputUploading,
         mergeFormFieldErrors: computed(() => this.mergeFormFieldErrors),
         clearFormFieldErrorKey: computed(() => this.clearFormFieldErrorKey),
         resetFieldSchemaErrors: computed(() => this.resetFieldSchemaErrors),
@@ -791,6 +792,19 @@ export default {
 
     const showTitleRow = computed(() => !props.noTitle && !!props.title)
 
+    // Inputs (e.g. fileponds) report in-progress uploads here, keyed by component uid, so the
+    // submit buttons stay disabled until uploads finish (a disabled default button also
+    // blocks implicit Enter-key submission).
+    const uploadingInputs = reactive({})
+    const isUploading = computed(() => Object.keys(uploadingInputs).length > 0)
+    const setFormInputUploading = (uid, uploading) => {
+      if (uploading) {
+        uploadingInputs[uid] = true
+      } else {
+        delete uploadingInputs[uid]
+      }
+    }
+
     return {
       ...useFormInstance,
       t,
@@ -809,6 +823,8 @@ export default {
       hasCardSections,
       schemaCards,
       cardFormBaseId,
+      isUploading,
+      setFormInputUploading,
     }
   }
 }

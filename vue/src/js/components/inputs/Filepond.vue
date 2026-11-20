@@ -83,6 +83,7 @@
             :server="server"
             @processfile="onProcessFile"
             @removefile="removeFilepond"
+            @input="onPondFilesChange"
 
             @addfilestart="onAddFileStart"
             @addfileprogress="$emit('loadingFileProgress', $event)"
