@@ -451,7 +451,7 @@ trait HasImages
      */
     public function cmsImage($role, $crop = 'default', $params = [])
     {
-        return $this->image($role, $crop, $params, false, true, false) ?? ImageService::getTransparentFallbackUrl($params);
+        return $this->image($role, $crop, $params, false, true, false) ?? ImageService::getTransparentFallbackUrl();
     }
 
     /**
@@ -465,10 +465,10 @@ trait HasImages
         $media = $this->medias->first();
 
         if ($media) {
-            return $this->image(null, null, $params, true, true, $media) ?? ImageService::getTransparentFallbackUrl($params);
+            return $this->image(null, null, $params, true, true, $media) ?? ImageService::getTransparentFallbackUrl();
         }
 
-        return ImageService::getTransparentFallbackUrl($params);
+        return ImageService::getTransparentFallbackUrl();
     }
 
     /**
