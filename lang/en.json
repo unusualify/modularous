@@ -18,6 +18,7 @@
     "By signing up, you agree to the ": "By signing up, you agree to the ",
 
     "Calculating...": "Calculating...",
+    "Cancel": "Cancel",
     "Card Holder": "Card Holder",
     "Card Number": "Card Number",
     "Choose Date": "Choose Date",
@@ -98,6 +99,9 @@
     "Regards, :appName Support": "Regards, \n:appName Support",
     "Regards, :appName Team": "Regards,  \n:appName Team",
     "REGIONS": "REGIONS",
+    "Remove": "Remove",
+    "Remove profile picture": "Remove profile picture",
+    "Remove profile picture?": "Remove profile picture?",
     "Replace": "Replace",
     "Replace oldest pin?": "Replace oldest pin?",
     "Report": "Report",
@@ -163,6 +167,7 @@
     "You can easily monitor the entire process by following the notifications.": "You can easily monitor the entire process by following the notifications.",
     "You can unpin at any time.": "You can unpin at any time.",
     "Your new pin will replace the oldest one.": "Your new pin will replace the oldest one.",
+    "Your profile picture will be removed.": "Your profile picture will be removed.",
     "Your Request Has Been Sent Successfully": "Your Request Has Been Sent Successfully",
     "messages": {
         "success": "Completed Successfully!",

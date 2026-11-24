@@ -17,6 +17,7 @@
     "By signing up, you agree to the ": "Kayıt olarak, ",
 
     "Calculating...": "Hesaplanıyor...",
+    "Cancel": "İptal",
     "Card Holder": "Kart Üstündeki İsim",
     "Card Number": "Kart No",
     "Choose Date": "Tarih Seç",
@@ -97,6 +98,9 @@
     "Regards, :appName Support": "Saygılar,  \n:appName Destek",
     "Regards, :appName Team": "Saygılar,  \n:appName Ekibi",
     "REGIONS": "BÖLGELER",
+    "Remove": "Kaldır",
+    "Remove profile picture": "Profil fotoğrafını kaldır",
+    "Remove profile picture?": "Profil fotoğrafı kaldırılsın mı?",
     "Replace": "Değiştir",
     "Replace oldest pin?": "En eski sabitleme değiştirilsin mi?",
     "Report": "Rapor",
@@ -162,6 +166,7 @@
     "You are receiving this email because we received a password reset request for your account.": "Hesabınızın şifresini sıfırlamak için bu maili alıyorsunuz",
     "You can unpin at any time.": "Sabitlemeyi istediğiniz zaman kaldırabilirsiniz.",
     "Your new pin will replace the oldest one.": "Yeni sabitlemeniz en eski sabitlemenin yerini alacak.",
+    "Your profile picture will be removed.": "Profil fotoğrafınız kaldırılacak.",
     "Your Request Has Been Sent Successfully": "Başvurunuz Başarıyla Gönderildi",
     "messages": {
         "success": "Başarıyla Tamamlandı!",
