@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useInput, makeInputProps, makeInputEmits, makeFilepondProps } from '@/hooks';
 
 // This component renders a fragment (two sibling root elements: the avatar
@@ -24,9 +24,10 @@ const props = defineProps({
 const emit = defineEmits(makeInputEmits);
 
 const Input = useInput(props, { emit, updateModelValue: (val, old) => {
-  // Avatar has no remove control: an empty list only comes from FilePond's
-  // replace step (old file removed before the new one uploads). Emitting it would
-  // let submitOnChange save an empty avatar and treat the new upload as clean.
+  // An empty list coming from FilePond only means its replace step (old file
+  // removed before the new one uploads). Emitting it would let submitOnChange
+  // save an empty avatar and treat the new upload as clean. Explicit removal
+  // goes through `removeAvatar` instead.
   if (!Array.isArray(val) || val.length === 0) {
     return;
   }
@@ -48,6 +49,36 @@ const browse = () => {
   FilepondRef.value.browse();
 }
 
+const hasAvatar = computed(() => Array.isArray(Input.input.value) && Input.input.value.length > 0);
+
+const canRemove = computed(() => hasAvatar.value && !props.disabled && !fileLoading.value);
+
+const confirmRemoveOpen = ref(false);
+
+/**
+ * Removal saves immediately (submitOnChange), so ask before doing it.
+ */
+const askRemoveAvatar = () => {
+  if (!canRemove.value) {
+    return;
+  }
+  confirmRemoveOpen.value = true;
+}
+
+/**
+ * Clear the avatar: emit an empty list (the repository deletes existing
+ * fileponds on an empty payload) and drop FilePond's own file items so the
+ * inner pond stays in sync. The pond's resulting empty update is swallowed
+ * by `updateModelValue` above, so only this single emit reaches the form.
+ */
+const removeAvatar = () => {
+  if (!canRemove.value) {
+    return;
+  }
+  emit('update:modelValue', []);
+  FilepondRef.value?.removeFiles?.();
+}
+
 const activateLoading = () => {
   console.log('activateLoading');
   fileLoading.value = true;
@@ -62,6 +93,15 @@ const deactivateLoading = () => {
 
 <template>
   <div class="v-input-filepond__avatar-wrapper" @click="browse" >
+    <v-btn
+      v-if="canRemove"
+      class="v-input-filepond__remove-icon"
+      variant="flat"
+      :aria-label="$t('Remove profile picture')"
+      @click.stop="askRemoveAvatar"
+    >
+      <v-icon size="14">mdi-trash-can-outline</v-icon>
+    </v-btn>
     <v-avatar
       size="72"
       color="grey-lighten-6"
@@ -69,7 +109,7 @@ const deactivateLoading = () => {
       :class="disabled ? '' : 'cursor-pointer'"
     >
       <v-img
-        v-if="Input.input.value.length > 0"
+        v-if="hasAvatar"
         alt="Avatar"
         :src="Input.input.value[0].source"
         cover
@@ -124,6 +164,17 @@ const deactivateLoading = () => {
 
     </template>
   </v-input-filepond>
+  <ue-modal
+    v-model="confirmRemoveOpen"
+    width-type="sm"
+    :title="$t('Remove profile picture?')"
+    :description="$t('Your profile picture will be removed.')"
+    :confirm-text="$t('Remove')"
+    :cancel-text="$t('Cancel')"
+    :confirm-button-attributes="{ color: 'error', variant: 'elevated' }"
+    :reject-button-attributes="{ color: 'grey-darken-1', variant: 'outlined' }"
+    @confirm="removeAvatar"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -157,6 +208,26 @@ const deactivateLoading = () => {
       border-radius: 50%;
       border: 2px solid rgb(var(--v-theme-surface));
       cursor: pointer;
+    }
+
+    // Always visible while an avatar exists (rendered with v-if="canRemove").
+    .v-input-filepond__remove-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      // Light teal tint (opaque, so the photo underneath doesn't show through)
+      // with a teal glyph: softer than the solid camera badge.
+      background-color: rgb(230, 245, 245);
+      color: rgb(5, 151, 155);
+      border: 2px solid rgb(var(--v-theme-surface));
+
+      // Match the camera badge (.v-input-filepond__edit-icon) exactly.
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      padding: 0;
+      border-radius: 50%;
     }
   }
 

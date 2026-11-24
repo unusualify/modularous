@@ -285,7 +285,9 @@ return [
             'max' => 1,
             'allowImagePreview' => true,
             'label-idle' => 'Drop files here...',
-            'rules' => 'sometimes|required:array',
+            // Not required: an empty list is a valid submit and removes the avatar
+            // (FilepondsTrait deletes existing fileponds on an empty payload).
+            'rules' => 'sometimes|array',
         ],
     ],
     'login_shortcut' => [

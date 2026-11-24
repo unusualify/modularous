@@ -347,12 +347,23 @@ function loginFormSubmitted(res) {
   }
 }
 
-function profileFormSubmitted() {
-  if (typeof URLS !== 'undefined' && URLS) {
-    axios.get(URLS.profileShow).then((res) => {
-      store.commit(USER.SET_PROFILE_DATA, res.data)
-    })
+/**
+ * "Upload Profile Image" dialog saved. On success, close the dialog and reload
+ * the page so every avatar (topbar, sidebar, profile header) shows the new
+ * picture, or none after removal. Failed saves keep the dialog open so the
+ * user can see the error.
+ *
+ * @param {Object} data Response payload from ue-form `submitted`
+ */
+function profileFormSubmitted(data = {}) {
+  const failed = !!data?.errors || (!!data?.variant && data.variant !== 'success')
+
+  if (failed) {
+    return
   }
+
+  store.state.user.profileDialog = false
+  window.location.reload()
 }
 
 onMounted(() => {
