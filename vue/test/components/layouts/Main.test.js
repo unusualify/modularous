@@ -158,4 +158,57 @@ describe('Main', () => {
     expect(wrapper.find('[data-testid="main-content"]').exists()).toBe(true)
     expect(wrapper.find('[data-testid="main-content"]').text()).toBe('Main content')
   })
+
+  describe('profile image dialog', () => {
+    const mountWithProfileForm = () => {
+      const store = createTestStore()
+      store.state.user.profileDialog = true
+
+      const wrapper = mountMain({
+        store,
+        props: { headerTitle: 'Test', navigation: defaultNavigation },
+        global: {
+          stubs: {
+            ...mainStubs,
+            // Render the body slot so the profile ue-form is mounted.
+            'ue-modal': {
+              template: '<div><slot name="body" v-bind="{ isActive: true, toggleFullscreen: () => {}, close: () => {}, isFullActive: false }" /></div>',
+            },
+            'ue-form': { name: 'UeForm', emits: ['submitted'], template: '<div class="ue-form-stub" />' },
+          },
+        },
+      })
+
+      return { store, wrapper }
+    }
+
+    const stubReload = () => {
+      const reload = vi.fn()
+      const original = window.location
+      Object.defineProperty(window, 'location', { configurable: true, value: { ...original, reload } })
+      return { reload, restore: () => Object.defineProperty(window, 'location', { configurable: true, value: original }) }
+    }
+
+    test('closes the dialog and reloads the page after a successful save', () => {
+      const { store, wrapper } = mountWithProfileForm()
+      const { reload, restore } = stubReload()
+
+      wrapper.findComponent({ name: 'UeForm' }).vm.$emit('submitted', { variant: 'success', message: 'ok' })
+
+      expect(store.state.user.profileDialog).toBe(false)
+      expect(reload).toHaveBeenCalledTimes(1)
+      restore()
+    })
+
+    test('keeps the dialog open when the save fails', () => {
+      const { store, wrapper } = mountWithProfileForm()
+      const { reload, restore } = stubReload()
+
+      wrapper.findComponent({ name: 'UeForm' }).vm.$emit('submitted', { errors: { avatar: ['Invalid'] } })
+
+      expect(store.state.user.profileDialog).toBe(true)
+      expect(reload).not.toHaveBeenCalled()
+      restore()
+    })
+  })
 })
