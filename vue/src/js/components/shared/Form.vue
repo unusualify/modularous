@@ -70,7 +70,7 @@
                   v-if="previewable && canPreviewEdit && !previewEditing"
                   variant="tonal"
                   color="primary"
-                  prepend-icon="mdi-pencil-outline"
+                  prepend-icon="mdi-square-edit-outline"
                   :density="buttonDensity"
                   :disabled="loading"
                   @click="enterPreviewEdit"
@@ -91,7 +91,7 @@
                   type="submit"
                   color="primary"
                   :density="buttonDensity"
-                  prepend-icon="mdi-check"
+                  prepend-icon="mdi-check-circle-outline"
                   :disabled="!(validModel || !serverValid) || loading || !isSubmittable"
                   :loading="loading"
                 >
