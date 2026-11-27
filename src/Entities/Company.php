@@ -105,6 +105,7 @@ class Company extends Model
                     : ! (! $this->name
                         || ! $this->tax_id
                         || ! $this->email
+                        || ! $this->phone
                         || ! $this->address
                         || ! $this->country_id
                         || ! $this->city
