@@ -133,7 +133,7 @@ class ProfileController extends BaseController
             'formClass' => 'rounded d-flex flex-column flex-grow-1',
 
             'title' => [
-                'text' => __('User Profile'),
+                'text' => __('Personal Information'),
                 // 'tag' => 'p',
                 'type' => 'h6',
                 'weight' => 'bold',
@@ -144,9 +144,10 @@ class ProfileController extends BaseController
                 // 'margin' => 'b-11',
             ],
 
-            'buttonText' => 'Update',
+            'buttonText' => 'Save',
             'hasSubmit' => true,
             'previewable' => true,
+            'previewableCancel' => true,
             'stickyButton' => false,
             'modelValue' => $userFields,
             'refreshOnSaved' => true,
@@ -200,9 +201,10 @@ class ProfileController extends BaseController
                             // 'margin' => 'y-6',
                         ],
 
-                        'buttonText' => 'Update',
+                        'buttonText' => 'Save',
                         'hasSubmit' => true,
                         'previewable' => true,
+                        'previewableCancel' => true,
                         'stickyButton' => false,
 
                         'schema' => $userPasswordSchema,
@@ -243,7 +245,7 @@ class ProfileController extends BaseController
                             'pushButtonToBottom' => true,
                             'formClass' => 'rounded d-flex flex-column flex-grow-1',
                             'title' => [
-                                'text' => __('Billing Profile'),
+                                'text' => __('Billing Information'),
                                 'type' => 'h6',
                                 'weight' => 'bold',
                                 'transform' => '',
@@ -253,9 +255,10 @@ class ProfileController extends BaseController
                                 // 'margin' => 'y-6',
                             ],
                             // 'editable' => true,
-                            'buttonText' => 'Update',
+                            'buttonText' => 'Save',
                             'hasSubmit' => ! $lockCompanyEdit,
                             'previewable' => true,
+                            'previewableCancel' => true,
                             'stickyButton' => false,
 
                             'modelValue' => $companyFields,
@@ -269,7 +272,7 @@ class ProfileController extends BaseController
                             'actionUrl' => $lockCompanyEdit ? null : route(Route::hasAdmin('profile.company')),
                         ]),
                 ],
-            ];
+                ];
         }
 
         $elements = [

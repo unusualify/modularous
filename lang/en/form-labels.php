@@ -17,6 +17,7 @@ return [
     'Description' => 'Description',
     'Details' => 'Details',
     'E-mail' => 'E-mail',
+    'Email Address' => 'Email Address',
     'File' => 'File',
     'Guard Name' => 'Guard Name',
     'Job Title' => 'Job Title',
@@ -37,5 +38,5 @@ return [
     'Timezone' => 'Timezone',
     'Vat Number' => 'Vat Number',
     'Work E-mail' => 'Work E-mail',
-    'ZIP/Postal Code' => 'ZIP/Postal Code',
+    'Zip/Postal Code' => 'Zip/Postal Code',
 ];

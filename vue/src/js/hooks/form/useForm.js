@@ -811,6 +811,10 @@ export default function useForm(props, context) {
         return
       }
       model.value = cloneDeep(initialModel.value)
+      // formEvents mutate inputSchema (e.g. `disabled` set by a checkbox); rebuild it so
+      // cancelled toggles don't leave fields disabled on the next edit
+      const restored = { ...model.value, ...formItem.value }
+      inputSchema.value = validations.invokeRuleGenerator(getSchema(rawSchema.value, restored, props.isEditing, restored.id))
       previewEditing.value = false
     },
     // submit: (e, callback = null, errorCallback = null) => {

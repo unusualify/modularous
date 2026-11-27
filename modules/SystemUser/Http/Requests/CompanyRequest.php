@@ -24,6 +24,7 @@ class CompanyRequest extends Request
             'state' => 'required|min:3',
             'zip_code' => 'required|min:5',
             'email' => 'sometimes|required_if:is_personal,false',
+            'phone' => 'sometimes|nullable|required_if:is_personal,false|string|min:7|max:20',
         ];
     }
 
@@ -67,6 +68,7 @@ class CompanyRequest extends Request
             'name.required_if' => 'The name field is required when the company is not personal.',
             'tax_id.required_if' => 'The tax id field is required when the company is not personal.',
             'email.required_if' => 'The email field is required when the company is not personal.',
+            'phone.required_if' => 'The phone field is required when the company is not personal.',
         ];
     }
 }

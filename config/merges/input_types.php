@@ -65,20 +65,20 @@ return [
     '_phone' => [
         'type' => 'input-phone',
         'name' => 'phone',
-        'label' => 'Phone Number',
+        'label' => 'Phone',
         'default' => '',
         'clearable' => false,
     ],
     '_email' => [
         'type' => 'text',
         'name' => 'email',
-        'label' => 'E-mail',
+        'label' => 'Email',
         'rules' => 'email',
     ],
     '_password_confirmation' => [
         'type' => 'password',
         'name' => 'password_confirmation',
-        'label' => 'New Password',
+        'label' => 'Confirm Password',
         'appendInnerIcon' => '$non-visibility',
         'slotHandlers' => [
             'appendInner' => 'password',

@@ -7,6 +7,7 @@
           class="flex-grow-1 flex-shrink-0"
           v-model="phone"
           v-bind="boundProps"
+          :rules="phoneRules"
 
           @input="onInput"
           @blur="onBlur"
@@ -298,7 +299,17 @@ export default {
       } else {
         this.boundProps.validate = false
       }
-      return this.phoneObject.number[key] || ''
+      // awesome-phonenumber has no `_phone` key; fall back to the raw input so an
+      // invalid number is surfaced by validation instead of being silently emptied
+      return this.phoneObject.number[key] || this.phoneObject.number.input || ''
+    },
+    phoneRules () {
+      const rules = Array.isArray(this.boundProps.rules) ? this.boundProps.rules : []
+
+      return [
+        ...rules,
+        v => !v || this.phoneObject.isValid || this.invalidMsg || this.$t('Invalid phone number')
+      ]
     }
   },
   watch: {

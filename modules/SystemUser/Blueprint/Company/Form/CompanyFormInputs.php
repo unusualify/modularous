@@ -180,7 +180,7 @@ final class CompanyFormInputs implements ModuleRouteInputsProvider
             [
                 'type' => 'text',
                 'name' => 'email',
-                'label' => 'Work E-mail',
+                'label' => 'Work Email',
                 'default' => '',
                 'col' => ['sm' => 6],
                 'spreadable' => true,
