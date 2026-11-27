@@ -12,6 +12,8 @@ return [
         //  ],
         'name' => [
             'type' => '_name',
+            'name' => 'name',
+            'label' => __('First Name'),
             'col' => [
                 'sm' => 6,
             ],
@@ -20,7 +22,7 @@ return [
         'surname' => [
             'type' => '_name',
             'name' => 'surname',
-            'label' => 'Surname',
+            'label' => __('Last Name'),
             'col' => [
                 'sm' => 6,
             ],
@@ -38,6 +40,7 @@ return [
         'email' => [
             'type' => '_email',
             'default' => '',
+            'label' => __('authentication.email'),
             'col' => [
                 'sm' => 6,
             ],
@@ -46,7 +49,7 @@ return [
         'country_id' => [
             'type' => 'select',
             'name' => 'country_id',
-            'label' => 'Country',
+            'label' => __('Country'),
             'col' => [
                 'sm' => 6,
             ],
@@ -59,11 +62,13 @@ return [
             'col' => [
                 'sm' => 6,
             ],
+            // optional, but if given it must fit the users.phone varchar(20) column
+            'rules' => 'nullable|string|max:20|regex:/^\+?[0-9\s().-]+$/',
         ],
         'language' => [
             'type' => '_language',
             'name' => 'language',
-            'label' => 'Preferred Language',
+            'label' => __('Preferred Language'),
             'col' => ['sm' => 6],
         ],
         // 'timezone' => [
@@ -78,9 +83,10 @@ return [
         'current_password' => [
             'type' => '_password',
             'name' => 'current_password',
-            'label' => 'Current Password',
+            'label' => __('Current Password'),
             'default' => '',
             'col' => ['sm' => 6],
+            'previewCol' => ['cols' => 12],
             'rules' => 'sometimes|current_password',
         ],
         'gap-1' => [
@@ -93,16 +99,16 @@ return [
                 'class' => 'd-none d-sm-block',
             ],
         ],
-        'password_confirmation' => [
-            'type' => '_password_confirmation',
-            'col' => ['sm' => 6],
-        ],
         'password' => [
             'type' => '_password',
             'name' => 'password',
-            'label' => 'Confirm Password',
+            'label' => 'New Password',
             'col' => ['sm' => 6],
             'rules' => 'sometimes|min:8|confirmed',
+        ],
+        'password_confirmation' => [
+            'type' => '_password_confirmation',
+            'col' => ['sm' => 6],
         ],
     ],
     'company' => [
@@ -158,7 +164,7 @@ return [
         'tax_id' => [
             'type' => 'text',
             'name' => 'tax_id',
-            'label' => __('Tax ID / Personal ID'),
+            'label' => __('Tax ID/Personal ID'),
             'default' => '',
             'col' => ['sm' => 6],
             // San Marino and Liechtenstein have a 6 character personal id
@@ -168,17 +174,25 @@ return [
         'address' => [
             'type' => 'text',
             'name' => 'address',
-            'label' => 'Address',
+            'label' => __('Address'),
             'col' => [
                 'cols' => 12,
                 'sm' => 12,
             ],
             'rules' => 'min:5',
         ],
+        'city' => [
+            'type' => 'text',
+            'name' => 'city',
+            'label' => __('City'),
+            'default' => '',
+            'col' => ['sm' => 6],
+            'rules' => 'sometimes|min:3|max:50',
+        ],
         'country_id' => [
             'type' => 'select',
             'name' => 'country_id',
-            'label' => 'Country',
+            'label' => __('Country'),
             'default' => '',
             'connector' => 'SystemUtility:Country|repository:list',
             'col' => ['sm' => 6],
@@ -187,15 +201,7 @@ return [
         'state' => [
             'type' => 'text',
             'name' => 'state',
-            'label' => 'State/Province',
-            'default' => '',
-            'col' => ['sm' => 6],
-            'rules' => 'sometimes|min:3|max:50',
-        ],
-        'city' => [
-            'type' => 'text',
-            'name' => 'city',
-            'label' => 'City',
+            'label' => __('State/Province'),
             'default' => '',
             'col' => ['sm' => 6],
             'rules' => 'sometimes|min:3|max:50',
@@ -203,7 +209,7 @@ return [
         'zip_code' => [
             'type' => 'text',
             'name' => 'zip_code',
-            'label' => 'ZIP/Postal Code',
+            'label' => __('Zip/Postal Code'),
             'default' => '',
             'col' => ['sm' => 6],
             'rules' => 'sometimes|min:5|max:30',
@@ -223,7 +229,7 @@ return [
         'email' => [
             'type' => 'text',
             'name' => 'email',
-            'label' => __('Work E-mail'),
+            'label' => __('Work Email'),
             'default' => '',
             'col' => ['sm' => 6],
             'rules' => 'sometimes|email',
@@ -356,7 +362,7 @@ return [
         'verify_code' => [
             'type' => 'otp-input',
             'name' => 'verify-code',
-            'label' => 'One Time Password',
+            'label' => __('One Time Password'),
             'default' => '',
             'col' => [
                 'lg' => 12,
@@ -369,7 +375,7 @@ return [
         'verify_code' => [
             'type' => 'otp-input',
             'name' => 'verify-code',
-            'label' => 'Verification Code',
+            'label' => __('Verification Code'),
             'default' => '',
             'col' => [
                 'lg' => 12,
@@ -500,7 +506,7 @@ return [
         'password_confirmation' => [
             'type' => 'password',
             'name' => 'password_confirmation',
-            'label' => 'Repeat Password',
+            'label' => __('Repeat Password'),
             'default' => '',
             'appendInnerIcon' => '$non-visibility',
             'slotHandlers' => [
@@ -518,7 +524,7 @@ return [
         'tos' => [
             'type' => 'input-terms-checkbox',
             'name' => 'tos',
-            'label' => 'I accept the terms of service',
+            'label' => __('I accept the terms of service'),
             'default' => '',
             'col' => [
                 'cols' => 12,
