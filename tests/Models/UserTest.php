@@ -197,7 +197,7 @@ class UserTest extends ModelTestCase
         config(['modularous.use_country_based_vat_rates' => true]);
         $this->assertTrue($user->show_billing_banner);
 
-        // for corporate company, name, tax_id, email, address, country_id, city, state, zip_code are required
+        // for corporate company, name, tax_id, email, phone, address, country_id, city, state, zip_code are required
         $user->company->update([
             'spread_payload' => [
                 'is_personal' => false,
@@ -210,6 +210,13 @@ class UserTest extends ModelTestCase
         $user->company->update([
             'tax_id' => '1234567890',
             'country_id' => 1,
+        ]);
+        $user->refresh();
+        // phone is still missing
+        $this->assertFalse($user->valid_company);
+
+        $user->company->update([
+            'phone' => '+90 212 345 67 89',
         ]);
         $user->refresh();
         $this->assertTrue($user->valid_company);
