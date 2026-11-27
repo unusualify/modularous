@@ -37,5 +37,5 @@ return [
     'Timezone' => 'Saat Dilimi',
     'Vat Number' => 'KDV Kayıt No',
     'Work E-mail' => 'İş E-postası',
-    'ZIP/Postal Code' => 'ZIP/Posta Kodu',
+    'Zip/Postal Code' => 'Zip/Posta Kodu',
 ];
